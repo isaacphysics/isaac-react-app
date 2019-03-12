@@ -19,12 +19,34 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "eslint:all",
+      "plugin:react/all"
+    ],
+    "plugins": [
+      "react-hooks",
+      "@typescript-eslint"
+    ],
+    "rules": {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    }
   },
   "browserslist": [
     ">0.2%",
     "not dead",
-    "not ie <= 11",
+    "not ie <= 10",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^1.4.2",
+    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react-hooks": "^1.5.0"
+  }
 }
