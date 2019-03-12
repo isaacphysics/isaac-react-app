@@ -7,8 +7,8 @@
     "@types/node": "11.11.0",
     "@types/react": "16.8.7",
     "@types/react-dom": "16.8.2",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
+    "react": "16.8.4",
+    "react-dom": "16.8.4",
     "react-scripts": "2.1.8",
     "typescript": "3.3.3333"
   },
@@ -45,8 +45,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^1.4.2",
-    "eslint-plugin-react": "^7.12.4",
-    "eslint-plugin-react-hooks": "^1.5.0"
+    "@typescript-eslint/eslint-plugin": "1.4.2",
+    "eslint-plugin-react": "7.12.4",
+    "eslint-plugin-react-hooks": "1.5.0"
   }
 }

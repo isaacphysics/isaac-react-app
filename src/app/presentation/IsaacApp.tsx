@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import logo from "./logo.svg";
-import './IsaacApp.css';
 
 class IsaacApp extends Component {
   render() {
