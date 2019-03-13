@@ -1,23 +1,22 @@
 import React from "react";
 
-const QuestionPage = ({match, question, setQuestion}: {
-        match: {params: {questionId: string}},
+const QuestionPage = ({urlQuestionId, question, getQuestion}: {
+        urlQuestionId: string,
         question: {id?: string},
-        setQuestion: (question: object) => void
+        getQuestion: (questionId: string) => void
     }) => {
 
     if (question.id === undefined) {
-        setQuestion({
-            id: "abc123",
-            content: "This is some question content to display"
-        });
+        getQuestion(urlQuestionId);
     }
 
-    return (<div>
-        <h2>Content Body</h2>
-        <p>Question with ID: {match.params.questionId}</p>
-        <p>{JSON.stringify(question)}</p>
-    </div>);
-}
+    return (
+        <div>
+            <h2>Content Body</h2>
+            <p>Question with ID: {urlQuestionId}</p>
+            <p>{JSON.stringify(question)}</p>
+        </div>
+    );
+};
 
 export default QuestionPage;

@@ -4,11 +4,11 @@ import NavBar from "./components/presentational/NavBar";
 import PageNotFound from "./components/presentational/PageNotFound";
 import {storeFactory} from "./store";
 import {Provider} from "react-redux";
-import {Home, Question} from "./components/container/containers";
+import {HomeContainer} from "./components/container/HomeContainer";
+import {QuestionContainer} from "./components/container/QuestionContainer";
 
 const IsaacApp = () => {
     const store = storeFactory({});
-
     return (
         <Provider store={store}>
             <Router>
@@ -16,8 +16,8 @@ const IsaacApp = () => {
                   <NavBar />
                   <hr />
                   <Switch>
-                      <Route exact path="/" component={Home} />
-                      <Route path="/question/:questionId" component={Question} />
+                      <Route exact path="/" component={HomeContainer} />
+                      <Route path="/question/:questionId" component={QuestionContainer} />
                       <Route component={PageNotFound} />
                   </Switch>
               </div>
