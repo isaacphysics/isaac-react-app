@@ -12,7 +12,7 @@ const requestQuestion = (questionId: string): object => ({
 
 const receiveQuestion = (question: object): object => ({
     type: actionTypes.RECEIVE_QUESTION,
-    question: question,
+    question: question
 });
 
 export const fetchQuestion = (questionId: string) => {
