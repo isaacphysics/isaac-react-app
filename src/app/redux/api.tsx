@@ -8,6 +8,6 @@ const endpoint = axios.create({
 
 export const api = {
     question: (id: string) => {
-        return endpoint.get("/pages/questions/" + id);
+        return endpoint.get(`/pages/questions/${id}`);
     }
 };

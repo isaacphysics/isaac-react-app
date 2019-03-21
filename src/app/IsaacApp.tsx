@@ -1,11 +1,11 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import NavBar from "./components/presentational/NavBar";
-import PageNotFound from "./components/presentational/PageNotFound";
-import {storeFactory} from "./store";
+import NavBar from "./components/NavBar";
+import PageNotFound from "./components/PageNotFound";
+import {storeFactory} from "./redux/store";
 import {Provider} from "react-redux";
-import {Home} from "./components/container/Home";
-import {Question} from "./components/container/Question";
+import {HomePage} from "./components/HomePage";
+import {QuestionPage} from "./components/QuestionPage";
 
 const IsaacApp = () => {
     const store = storeFactory({});
@@ -16,8 +16,8 @@ const IsaacApp = () => {
                   <NavBar />
                   <hr />
                   <Switch>
-                      <Route exact path="/" component={Home} />
-                      <Route path="/question/:questionId" component={Question} />
+                      <Route exact path="/" component={HomePage} />
+                      <Route path="/questions/:questionId" component={QuestionPage} />
                       <Route component={PageNotFound} />
                   </Switch>
               </div>

@@ -9,6 +9,7 @@
     "@types/react-dom": "16.8.2",
     "@types/react-redux": "7.0.3",
     "@types/react-router-dom": "4.3.1",
+    "@types/redux-logger": "3.0.7",
     "axios": "0.18.0",
     "react": "16.8.4",
     "react-dom": "16.8.4",
@@ -16,6 +17,7 @@
     "react-router-dom": "4.3.1",
     "react-scripts": "2.1.8",
     "redux": "4.0.1",
+    "redux-logger": "3.0.6",
     "redux-thunk": "2.3.0",
     "typescript": "3.3.3333"
   },
@@ -28,11 +30,13 @@
   "eslintConfig": {
     "extends": [
       "eslint:all",
-      "plugin:react/all"
+      "plugin:react/all",
+      "plugin:jsx-a11y/recommended"
     ],
     "plugins": [
       "react-hooks",
-      "@typescript-eslint"
+      "@typescript-eslint",
+      "jsx-a11y"
     ],
     "rules": {
       "react-hooks/rules-of-hooks": "error",
