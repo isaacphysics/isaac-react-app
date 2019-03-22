@@ -10,4 +10,15 @@ export const doc = (docState: object | null = null, action: any) => {
     }
 };
 
-export const rootReducer = combineReducers({doc});
+export const questions = (questionsState: any[] = [], action: any) => {
+    switch (action.type) {
+        case ACTION.QUESTION_REGISTRATION:
+            return [...questionsState, action.question];
+        case ACTION.QUESTION_DEREGISTRATION:
+            return questionsState.filter((question) => question.id == action.questionId);
+        default:
+            return questionsState;
+    }
+};
+
+export const rootReducer = combineReducers({doc, questions});

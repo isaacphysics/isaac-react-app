@@ -3,7 +3,7 @@ import {rootReducer} from "./reducers";
 import thunk from "redux-thunk";
 import {createLogger} from "redux-logger";
 
-export const storeFactory = (initialState: object = {doc: {}}) => {
+export const storeFactory = (initialState: object = {doc: null, questions: []}) => {
     const middleware: any[] = [thunk];
     if (process.env.NODE_ENV !== 'production') {
         middleware.push(createLogger())
