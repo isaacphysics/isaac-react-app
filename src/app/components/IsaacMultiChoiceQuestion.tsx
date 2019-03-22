@@ -26,6 +26,7 @@ const IsaacMultiChoiceQuestionContainer = (props: any) => {
                         type="radio"
                         checked={currentAttempt == choice}
                         onClick={() => setCurrentAttempt(questionId, choice)}
+                        readOnly
                     />
                     <label>
                         <IsaacContentValueOrChildren value={choice.value} encoding={encoding} children={[]} />
