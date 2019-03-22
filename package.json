@@ -13,6 +13,7 @@
     "@types/remarkable": "1.7.3",
     "axios": "0.18.0",
     "react": "16.8.4",
+    "react-app-polyfill": "^0.2.2",
     "react-dom": "16.8.4",
     "react-redux": "6.0.1",
     "react-router-dom": "4.3.1",
