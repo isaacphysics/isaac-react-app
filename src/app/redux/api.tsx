@@ -13,6 +13,5 @@ export const api = {
         answer: (id: string, answer: object) => {
             return endpoint.post(`questions/${id}/answer`, answer);
         }
-
     }
 };

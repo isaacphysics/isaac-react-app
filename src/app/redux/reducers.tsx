@@ -1,27 +1,42 @@
 import {ACTION} from "./actions";
 import {combineReducers} from "redux";
 
-export const doc = (docState: object | null = null, action: any) => {
+export const doc = (doc: object | null = null, action: any) => {
     switch (action.type) {
         case ACTION.DOCUMENT_RESPONSE_SUCCESS:
             return {...action.doc};
         default:
-            return docState;
+            return doc;
     }
 };
 
-export const questions = (questionsState: any[] = [], action: any) => {
+export const questions = (questions: any[] = [], action: any) => {
     switch (action.type) {
         case ACTION.QUESTION_REGISTRATION:
-            return [...questionsState, action.question];
+            // TODO MT handle bestAttempt for validation response and currentAttempt
+            return [...questions, {...action.question}];
         case ACTION.QUESTION_DEREGISTRATION:
-            return questionsState.filter((question) => question.id == action.questionId);
+            return questions.filter((question) => question.id == action.questionId);
+        case ACTION.QUESTION_ATTEMPT_REQUEST:
+            return questions.map((question) =>
+                question.id == action.questionId ?
+                    {...question, canSubmit: false} :
+                    question
+            );
         case ACTION.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
-            return questionsState.map((question) => {
-                return question.id == action.questionId ? {...question, validationResponse: action.response} : question;
-            });
+            return questions.map((question) =>
+                question.id == action.questionId ?
+                    {...question, validationResponse: action.response} :
+                    question
+            );
+        case ACTION.QUESTION_SET_CURRENT_ATTEMPT:
+            return questions.map((question) =>
+                question.id == action.questionId ?
+                    {...question, currentAttempt: action.attempt, canSubmit: true} :
+                    question
+            );
         default:
-            return questionsState;
+            return questions;
     }
 };
 

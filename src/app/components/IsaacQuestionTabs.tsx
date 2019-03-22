@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
-import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
-import {attemptQuestion, deregisterQuestion, registerQuestion} from "../redux/actions";
 import {connect} from "react-redux";
+import {attemptQuestion, deregisterQuestion, registerQuestion} from "../redux/actions";
+import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
 import {IsaacContent} from "./IsaacContent";
 
 const stateToProps = ({questions}: any, {doc}: any) => {
@@ -9,48 +9,46 @@ const stateToProps = ({questions}: any, {doc}: any) => {
     const question = questions.filter((question: any) => question.id == doc.id)[0];
     return (question) ? {
         validationResponse: question.validationResponse,
-        bestAttempt: question.bestAttempt,
-        currentAttempt: question.currentAttempt
+        currentAttempt: question.currentAttempt,
+        canSubmit: question.canSubmit
     } : {};
 };
 const dispatchToProps = {registerQuestion, deregisterQuestion, attemptQuestion};
 
 const IsaacQuestionTabsContainer = (props: any) => {
     const {
-        doc, currentAttempt, bestAttempt, validationResponse,
+        doc, currentAttempt, validationResponse, canSubmit,
         registerQuestion, deregisterQuestion, attemptQuestion
     } = props;
 
     useEffect((): () => void =>{
         registerQuestion(doc);
-        return function cleanup() {
-            deregisterQuestion(doc.id);
-        }
+        return () => deregisterQuestion(doc.id);
     }, [doc.id]);
-
-    const currentAttemptTemp = {"type":"choice","encoding":"markdown","children":[],"value":"The weight of the block and the reaction force from the ground on the block.","published":false};
-    bestAttempt && console.log("TODO MT best attempt registered:", bestAttempt);
 
     // switch question answer area on type
     return (
-        <div>
+        <React.Fragment>
             <hr />
 
             // hints
+            <IsaacMultiChoiceQuestion {...props} questionId={doc.id} />
 
-            <IsaacMultiChoiceQuestion {...props}/>
+            <hr />
 
-            {validationResponse && (validationResponse.correct ? <div>Correct!</div> : <div>Incorrect</div>)}
+            {validationResponse && (validationResponse.correct ? <h1>Correct!</h1> : <h1>Incorrect</h1>)}
             {validationResponse && <IsaacContent doc={validationResponse.explanation} />}
-
             <div>
-                <button onClick={() => attemptQuestion(doc.id, currentAttemptTemp)}>
+                <button
+                    onClick={() => attemptQuestion(doc.id, currentAttempt)}
+                    disabled={!canSubmit}
+                >
                     Check my answer
                 </button>
             </div>
 
             <hr />
-        </div>
+        </React.Fragment>
     );
 };
 
