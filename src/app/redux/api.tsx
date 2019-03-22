@@ -6,7 +6,13 @@ const endpoint = axios.create({
 });
 
 export const api = {
-    question: (id: string) => {
-        return endpoint.get(`/pages/questions/${id}`);
+    questions: {
+        get: (id: string) => {
+            return endpoint.get(`/pages/questions/${id}`);
+        },
+        answer: (id: string, answer: object) => {
+            return endpoint.post(`questions/${id}/answer`, answer);
+        }
+
     }
 };

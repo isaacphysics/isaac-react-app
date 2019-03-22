@@ -32,8 +32,8 @@ const IsaacContentContainer = (props: any) => {
         // accordion: IsaacAccordion,
         // horizontal: IsaacHorizontal
     };
-    const container: any = contentMap[type] || layoutMap[layout] || IsaacContentValueOrChildren;
-    return React.createElement(container, {...props, encoding, value, children});
+    const Container: any = contentMap[type] || layoutMap[layout] || IsaacContentValueOrChildren;
+    return <Container {...props} encoding={encoding} value={value} children={children} />;
 };
 
 export const IsaacContent = connect(stateToProps, dispatchToProps)(IsaacContentContainer);

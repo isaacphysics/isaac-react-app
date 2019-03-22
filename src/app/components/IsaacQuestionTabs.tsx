@@ -1,30 +1,54 @@
 import React, {useEffect} from "react";
 import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
-import {deregisterQuestion, registerQuestion} from "../redux/actions";
+import {attemptQuestion, deregisterQuestion, registerQuestion} from "../redux/actions";
 import {connect} from "react-redux";
+import {IsaacContent} from "./IsaacContent";
 
-const stateToProps = null;
-const dispatchToProps = {registerQuestion, deregisterQuestion};
+const stateToProps = ({questions}: any, {doc}: any) => {
+    // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
+    const question = questions.filter((question: any) => question.id == doc.id)[0];
+    return (question) ? {
+        validationResponse: question.validationResponse,
+        bestAttempt: question.bestAttempt,
+        currentAttempt: question.currentAttempt
+    } : {};
+};
+const dispatchToProps = {registerQuestion, deregisterQuestion, attemptQuestion};
 
 const IsaacQuestionTabsContainer = (props: any) => {
-    const {doc: {id, type}, registerQuestion, deregisterQuestion} = props;
+    const {
+        doc, currentAttempt, bestAttempt, validationResponse,
+        registerQuestion, deregisterQuestion, attemptQuestion
+    } = props;
 
-    useEffect((): any => {
-        registerQuestion({id: id});
-        return function cleanup(id: string) {
-            deregisterQuestion(id);
+    useEffect((): () => void =>{
+        registerQuestion(doc);
+        return function cleanup() {
+            deregisterQuestion(doc.id);
         }
-    }, [id]);
+    }, [doc.id]);
+
+    const currentAttemptTemp = {"type":"choice","encoding":"markdown","children":[],"value":"The weight of the block and the reaction force from the ground on the block.","published":false};
+    bestAttempt && console.log("TODO MT best attempt registered:", bestAttempt);
 
     // switch question answer area on type
     return (
         <div>
             <hr />
+
             // hints
+
             <IsaacMultiChoiceQuestion {...props}/>
-            // incorrect OR correct panel
-            // answer response
-            // submission button
+
+            {validationResponse && (validationResponse.correct ? <div>Correct!</div> : <div>Incorrect</div>)}
+            {validationResponse && <IsaacContent doc={validationResponse.explanation} />}
+
+            <div>
+                <button onClick={() => attemptQuestion(doc.id, currentAttemptTemp)}>
+                    Check my answer
+                </button>
+            </div>
+
             <hr />
         </div>
     );
