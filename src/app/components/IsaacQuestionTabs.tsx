@@ -36,8 +36,8 @@ const IsaacQuestionTabsContainer = (props: any) => {
 
             <hr />
 
-            {validationResponse && (validationResponse.correct ? <h1>Correct!</h1> : <h1>Incorrect</h1>)}
-            {validationResponse && <IsaacContent doc={validationResponse.explanation} />}
+            {validationResponse && !canSubmit && (validationResponse.correct ? <h1>Correct!</h1> : <h1>Incorrect</h1>)}
+            {validationResponse && !canSubmit && <IsaacContent doc={validationResponse.explanation} />}
             <div>
                 <button
                     onClick={() => attemptQuestion(doc.id, currentAttempt)}
