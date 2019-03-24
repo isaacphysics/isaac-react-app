@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {withRouter} from "react-router";
 import {connect} from "react-redux";
-import {fetchQuestion} from "../redux/actions";
+import {fetchQuestion} from "../state/actions";
 import {ShowLoading} from "./ShowLoading";
 import {IsaacContent} from "./IsaacContent";
 

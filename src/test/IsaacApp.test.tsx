@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import IsaacApp from '../app/IsaacApp';
+import IsaacApp from '../app/components/IsaacApp';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');

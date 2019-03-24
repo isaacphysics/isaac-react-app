@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
-import {attemptQuestion, deregisterQuestion, registerQuestion} from "../redux/actions";
+import {attemptQuestion, deregisterQuestion, registerQuestion} from "../state/actions";
 import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
 import {IsaacContent} from "./IsaacContent";
 

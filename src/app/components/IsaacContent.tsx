@@ -9,6 +9,7 @@ const dispatchToProps = null;
 const IsaacContentContainer = (props: any) => {
     const {doc: {type, layout, encoding, value, children}} = props;
 
+    // TODO MT consider moving map to constants
     const contentMap: any = {
         // figure: IsaacFigure,
         // image: IsaacImage,
@@ -32,8 +33,8 @@ const IsaacContentContainer = (props: any) => {
         // accordion: IsaacAccordion,
         // horizontal: IsaacHorizontal
     };
-    const Container: any = contentMap[type] || layoutMap[layout] || IsaacContentValueOrChildren;
-    return <Container {...props} encoding={encoding} value={value} children={children} />;
+    const Component: any = contentMap[type] || layoutMap[layout] || IsaacContentValueOrChildren;
+    return <Component {...props} encoding={encoding} value={value} children={children} />;
 };
 
 export const IsaacContent = connect(stateToProps, dispatchToProps)(IsaacContentContainer);

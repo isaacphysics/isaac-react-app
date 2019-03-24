@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
-import {setCurrentAttempt} from "../redux/actions";
+import {setCurrentAttempt} from "../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 
 const stateToProps = ({questions}: any, {questionId}: any) => {
@@ -10,26 +10,21 @@ const stateToProps = ({questions}: any, {questionId}: any) => {
 };
 const dispatchToProps = {setCurrentAttempt};
 
-const IsaacMultiChoiceQuestionContainer = (props: any) => {
-    const {
-        doc: {value, encoding, children, choices},
-        questionId, currentAttempt,
-        setCurrentAttempt
-    } = props;
-
+const IsaacMultiChoiceQuestionContainer = ({doc, questionId, currentAttempt, setCurrentAttempt}: any) => {
+    const currentAttemptValue = currentAttempt && currentAttempt.value;
     return (
         <div>
-            <h3><IsaacContentValueOrChildren value={value} encoding={encoding} children={children} /></h3>
-            <ul>{choices.map((choice: any, index: number) =>
+            <h3><IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding} children={doc.children} /></h3>
+            <ul>{doc.choices.map((choice: any, index: number) =>
                 <li key={index}>
                     <input
                         type="radio"
-                        checked={currentAttempt == choice}
+                        checked={currentAttemptValue == choice.value}
                         onClick={() => setCurrentAttempt(questionId, choice)}
                         readOnly
                     />
                     <label>
-                        <IsaacContentValueOrChildren value={choice.value} encoding={encoding} children={[]} />
+                        <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} children={[]} />
                     </label>
                 </li>)
             }</ul>
