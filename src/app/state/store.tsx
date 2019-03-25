@@ -1,7 +1,7 @@
 import {applyMiddleware, createStore} from "redux";
-import {rootReducer} from "./reducers";
 import thunk from "redux-thunk";
 import {createLogger} from "redux-logger";
+import {rootReducer} from "./reducers";
 
 export const storeFactory = (initialState: object = {doc: null, questions: []}) => {
     const middleware: any[] = [thunk];

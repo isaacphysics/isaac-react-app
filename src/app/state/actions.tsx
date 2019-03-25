@@ -1,6 +1,4 @@
 import {api} from "../services/api";
-import {Redirect} from "react-router";
-import * as React from "react";
 
 export const ACTION = {
     DOCUMENT_REQUEST: "DOCUMENT_REQUEST",

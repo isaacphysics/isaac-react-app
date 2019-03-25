@@ -1,5 +1,5 @@
-import {ACTION} from "./actions";
 import {combineReducers} from "redux";
+import {ACTION} from "./actions";
 
 const user = (user: object | null = null, action: any) => {
     switch (action.type) {
