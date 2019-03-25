@@ -1,16 +1,22 @@
 import React, {useEffect} from 'react';
+import {connect} from "react-redux";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import NavBar from "./NavBar";
-import PageNotFound from "./PageNotFound";
+
+import {NavBar} from "./NavBar";
 import {HomePage} from "./HomePage";
 import {QuestionPage} from "./QuestionPage";
-import {connect} from "react-redux";
+import {LogInPage} from "./LogInPage";
+import {LogOutHandler} from "./LogOutHandler";
+import {ProviderCallbackHandler} from "./ProviderCallbackHandler";
+import {LandingPage} from "./LandingPage";
+import {AccountPage} from "./AccountPage";
 import {requestCurrentUser} from "../state/actions";
+import PageNotFound from "./PageNotFound";
 
-const mapStateToProps = null;
+const mapStateToProps = (state: any) => ({user: state.user});
 const mapDispatchToProps = {requestCurrentUser};
 
-const IsaacApp = ({requestCurrentUser}: any) => {
+const IsaacApp = ({user, requestCurrentUser}: any) => {
     useEffect(() => {
         requestCurrentUser();
     }, []); // run only once on mount
@@ -21,7 +27,11 @@ const IsaacApp = ({requestCurrentUser}: any) => {
                 <NavBar />
                 <hr />
                 <Switch>
-                    <Route exact path="/" component={HomePage} />
+                    <Route exact path="/" component={user ? HomePage : LandingPage} />
+                    <Route path="/login" component={LogInPage}/> :
+                    <Route path="/logout" component={LogOutHandler}/>
+                    <Route path="/auth/:provider/callback" component={ProviderCallbackHandler} />
+                    <Route path="/account" component={AccountPage} />
                     <Route path="/questions/:questionId" component={QuestionPage} />
                     <Route component={PageNotFound} />
                 </Switch>

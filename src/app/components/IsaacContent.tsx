@@ -6,7 +6,7 @@ import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
 const stateToProps = null;
 const dispatchToProps = null;
 
-const IsaacContentContainer = (props: any) => {
+const IsaacContentComponent = (props: any) => {
     const {doc: {type, layout, encoding, value, children}} = props;
 
     // TODO MT consider moving map to constants
@@ -37,4 +37,4 @@ const IsaacContentContainer = (props: any) => {
     return <Component {...props} encoding={encoding} value={value} children={children} />;
 };
 
-export const IsaacContent = connect(stateToProps, dispatchToProps)(IsaacContentContainer);
+export const IsaacContent = connect(stateToProps, dispatchToProps)(IsaacContentComponent);

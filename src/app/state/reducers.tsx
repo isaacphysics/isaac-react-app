@@ -1,7 +1,18 @@
 import {ACTION} from "./actions";
 import {combineReducers} from "redux";
 
-export const doc = (doc: object | null = null, action: any) => {
+const user = (user: object | null = null, action: any) => {
+    switch (action.type) {
+        case ACTION.USER_LOG_IN:
+            return {...action.user};
+        case ACTION.USER_LOG_OUT:
+            return null;
+        default:
+            return user;
+    }
+};
+
+const doc = (doc: object | null = null, action: any) => {
     switch (action.type) {
         case ACTION.DOCUMENT_RESPONSE_SUCCESS:
             return {...action.doc};
@@ -10,12 +21,12 @@ export const doc = (doc: object | null = null, action: any) => {
     }
 };
 
-export const questions = (questions: any[] = [], action: any) => {
+const questions = (questions: any[] = [], action: any) => {
     switch (action.type) {
         case ACTION.QUESTION_REGISTRATION:
             const bestAttempt = action.question.bestAttempt;
             const newQuestion = bestAttempt ?
-                {...action.question, currentAttempt: bestAttempt.answer, validationResponse: bestAttempt} :
+                {...action.question, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer} :
                 action.question;
             return [...questions, newQuestion];
         case ACTION.QUESTION_DEREGISTRATION:
@@ -50,4 +61,4 @@ export const questions = (questions: any[] = [], action: any) => {
     }
 };
 
-export const rootReducer = combineReducers({doc, questions});
+export const rootReducer = combineReducers({user, doc, questions});

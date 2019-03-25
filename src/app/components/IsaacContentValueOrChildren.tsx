@@ -1,6 +1,6 @@
 import React from "react";
 import {IsaacContent} from "./IsaacContent";
-import {TrustedHTML} from "./TrustedHTML";
+import {TrustedHtml} from "./TrustedHtml";
 import {TrustedMarkdown} from "./TrustedMarkdown";
 
 interface ContentValueOrChildren {
@@ -20,7 +20,7 @@ export const IsaacContentValueOrChildren = ({value="", encoding, children=[]}: C
         <div>
             {value && (
                 (encoding == "markdown" && <TrustedMarkdown markdown={value} />) ||
-                (encoding == "html" && <TrustedHTML html={value} />) ||
+                (encoding == "html" && <TrustedHtml html={value} />) ||
                 (<div>[CONTENT WITH UNKNOWN ENCODING: <i>{encoding} | {value} </i>]</div>)
             )}
             {children.map((child: any, index: number) =>

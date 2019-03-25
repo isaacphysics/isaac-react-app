@@ -5,11 +5,23 @@ const endpoint = axios.create({
     baseURL: API_PATH,
     withCredentials: true,
 });
+// TODO MT add middleware/interceptor to handle api exceptions sensibly
 
 export const api = {
     users: {
         getCurrent: () => {
             return endpoint.get(`/users/current_user`);
+        }
+    },
+    authentication: {
+        getRedirect: (provider: string) => {
+            return endpoint.get(`/auth/${provider}/authenticate`);
+        },
+        checkProviderCallback: (provider: string, params: any) => {
+            return endpoint.get(`/auth/${provider}/callback${params}`);
+        },
+        logout: () => {
+            return endpoint.post(`/auth/logout`);
         }
     },
     questions: {

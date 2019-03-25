@@ -15,7 +15,7 @@ const stateToProps = ({questions}: any, {doc}: any) => {
 };
 const dispatchToProps = {registerQuestion, deregisterQuestion, attemptQuestion};
 
-const IsaacQuestionTabsContainer = (props: any) => {
+const IsaacQuestionTabsComponent = (props: any) => {
     const {
         doc, currentAttempt, validationResponse, canSubmit,
         registerQuestion, deregisterQuestion, attemptQuestion
@@ -52,4 +52,4 @@ const IsaacQuestionTabsContainer = (props: any) => {
     );
 };
 
-export const IsaacQuestionTabs = connect(stateToProps, dispatchToProps)(IsaacQuestionTabsContainer);
+export const IsaacQuestionTabs = connect(stateToProps, dispatchToProps)(IsaacQuestionTabsComponent);

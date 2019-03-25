@@ -10,7 +10,7 @@ const stateToProps = ({questions}: any, {questionId}: any) => {
 };
 const dispatchToProps = {setCurrentAttempt};
 
-const IsaacMultiChoiceQuestionContainer = ({doc, questionId, currentAttempt, setCurrentAttempt}: any) => {
+const IsaacMultiChoiceQuestionComponent = ({doc, questionId, currentAttempt, setCurrentAttempt}: any) => {
     const currentAttemptValue = currentAttempt && currentAttempt.value;
     return (
         <div>
@@ -32,4 +32,4 @@ const IsaacMultiChoiceQuestionContainer = ({doc, questionId, currentAttempt, set
     );
 };
 
-export const IsaacMultiChoiceQuestion = connect(stateToProps, dispatchToProps)(IsaacMultiChoiceQuestionContainer);
+export const IsaacMultiChoiceQuestion = connect(stateToProps, dispatchToProps)(IsaacMultiChoiceQuestionComponent);

@@ -13,7 +13,7 @@ const stateToProps = (state: any, {match: {params}}: any) => {
 };
 const dispatchToProps = {fetchQuestion};
 
-const QuestionPageContainer = (props: any) => {
+const QuestionPageComponent = (props: any) => {
     let {urlQuestionId, fetchQuestion, doc} = props;
     useEffect(() => {fetchQuestion(urlQuestionId);}, [urlQuestionId]);
 
@@ -32,4 +32,4 @@ const QuestionPageContainer = (props: any) => {
     );
 };
 
-export const QuestionPage = withRouter(connect(stateToProps, dispatchToProps)(QuestionPageContainer));
+export const QuestionPage = withRouter(connect(stateToProps, dispatchToProps)(QuestionPageComponent));
