@@ -31,14 +31,12 @@ const questions = (questions: any[] = [], action: any) => {
             return [...questions, newQuestion];
         case ACTION.QUESTION_DEREGISTRATION:
             return questions.filter((question) => question.id != action.questionId);
-
         case ACTION.QUESTION_SET_CURRENT_ATTEMPT:
             return questions.map((question) =>
                 question.id == action.questionId ?
                     {...question, currentAttempt: action.attempt, canSubmit: true} :
                     question
             );
-
         case ACTION.QUESTION_ATTEMPT_REQUEST:
             return questions.map((question) =>
                 question.id == action.questionId ?
@@ -55,10 +53,18 @@ const questions = (questions: any[] = [], action: any) => {
                     return question;
                 }
             });
-
         default:
             return questions;
     }
 };
 
-export const rootReducer = combineReducers({user, doc, questions});
+const assignments = (assignments: object[] | null = null, action: any) => {
+    switch (action.type) {
+        case ACTION.ASSIGNMENTS_RESPONSE_SUCCESS:
+            return action.assignments;
+        default:
+            return assignments;
+    }
+};
+
+export const rootReducer = combineReducers({user, doc, questions, assignments});
