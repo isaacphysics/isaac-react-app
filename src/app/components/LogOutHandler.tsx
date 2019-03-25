@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
-import {Redirect} from "react-router";
+import {Redirect} from "react-router-dom";
 import {logOutUser} from "../state/actions";
 
 const stateToProps = (state: {user: object | null}) => ({user: state.user});

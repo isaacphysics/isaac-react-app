@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
-import {Redirect, withRouter} from "react-router";
+import {Redirect, withRouter} from "react-router-dom";
 import {handleProviderCallback} from "../state/actions";
 
 const stateToProps = (state: any, props: any) => ({user: state.user});

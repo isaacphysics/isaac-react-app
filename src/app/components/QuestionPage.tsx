@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {withRouter} from "react-router";
+import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {fetchQuestion} from "../state/actions";
 import {ShowLoading} from "./ShowLoading";
