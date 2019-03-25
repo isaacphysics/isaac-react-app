@@ -1,27 +1,32 @@
 import {combineReducers} from "redux";
 import {ACTION} from "./actions";
 
-const user = (user: object | null = null, action: any) => {
+const defaultUserState: null = null;
+const user = (user: object | null = defaultUserState, action: any) => {
     switch (action.type) {
         case ACTION.USER_LOG_IN:
             return {...action.user};
         case ACTION.USER_LOG_OUT:
-            return null;
+            return defaultUserState;
         default:
             return user;
     }
 };
 
-const doc = (doc: object | null = null, action: any) => {
+const defaultDocState: null = null;
+const doc = (doc: object | null = defaultDocState, action: any) => {
     switch (action.type) {
         case ACTION.DOCUMENT_RESPONSE_SUCCESS:
             return {...action.doc};
+        case ACTION.USER_LOG_OUT:
+            return defaultDocState;
         default:
             return doc;
     }
 };
 
-const questions = (questions: any[] = [], action: any) => {
+const defaultQuestionsState: [] = [];
+const questions = (questions: any[] = defaultQuestionsState, action: any) => {
     switch (action.type) {
         case ACTION.QUESTION_REGISTRATION:
             const bestAttempt = action.question.bestAttempt;
@@ -53,15 +58,20 @@ const questions = (questions: any[] = [], action: any) => {
                     return question;
                 }
             });
+        case ACTION.USER_LOG_OUT:
+            return defaultQuestionsState;
         default:
             return questions;
     }
 };
 
-const assignments = (assignments: object[] | null = null, action: any) => {
+const defaultAssignmentsState: null = null;
+const assignments = (assignments: object[] | null = defaultAssignmentsState, action: any) => {
     switch (action.type) {
         case ACTION.ASSIGNMENTS_RESPONSE_SUCCESS:
             return action.assignments;
+        case ACTION.USER_LOG_OUT:
+            return defaultAssignmentsState;
         default:
             return assignments;
     }
