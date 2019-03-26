@@ -9,9 +9,10 @@ import {LogOutHandler} from "./LogOutHandler";
 import {ProviderCallbackHandler} from "./ProviderCallbackHandler";
 import {LandingPage} from "./LandingPage";
 import {AccountPage} from "./AccountPage";
-import {requestCurrentUser} from "../state/actions";
-import PageNotFound from "./PageNotFound";
 import {MyAssignmentsPage} from "./MyAssignmentsPage";
+import {GameboardPage} from "./GameboardPage";
+import {PageNotFound} from "./PageNotFound";
+import {requestCurrentUser} from "../state/actions";
 
 const mapStateToProps = (state: any) => ({user: state.user});
 const mapDispatchToProps = {requestCurrentUser};
@@ -33,6 +34,7 @@ const IsaacApp = ({user, requestCurrentUser}: any) => {
                     <Route path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                     <Route path="/account" component={AccountPage} />
                     <Route path="/assignments" component={MyAssignmentsPage} />
+                    <Route path="/gameboards" component={GameboardPage}/>
                     <Route path="/questions/:questionId" component={QuestionPage} />
                     <Route component={PageNotFound} />
                 </Switch>

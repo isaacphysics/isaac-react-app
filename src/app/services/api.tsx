@@ -32,6 +32,11 @@ export const api = {
             return endpoint.post(`questions/${id}/answer`, answer);
         }
     },
+    gameboards: {
+        get: (gameboardId: string) => {
+            return endpoint.get(`/gameboards/${gameboardId}`);
+        }
+    },
     assignments: {
         getMyAssignments: () => {
             return endpoint.get(`/assignments`);
