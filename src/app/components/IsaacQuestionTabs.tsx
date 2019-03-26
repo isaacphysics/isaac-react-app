@@ -4,10 +4,10 @@ import {attemptQuestion, deregisterQuestion, registerQuestion} from "../state/ac
 import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
 import {IsaacContent} from "./IsaacContent";
 
-const stateToProps = ({questions}: any, {doc}: any) => {
+const stateToProps = ({questions}: {questions: any[] | null}, {doc}: any) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
-    const question = questions.filter((question: any) => question.id == doc.id)[0];
-    return (question) ? {
+    const question = questions && questions.filter((question: any) => question.id == doc.id)[0];
+    return question ? {
         validationResponse: question.validationResponse,
         currentAttempt: question.currentAttempt,
         canSubmit: question.canSubmit

@@ -21,46 +21,47 @@ const doc = (doc: object | null = defaultDocState, action: any) => {
     }
 };
 
-const defaultQuestionsState: [] = [];
-const questions = (questions: any[] = defaultQuestionsState, action: any) => {
+const question = (question: any, action: any) => {
+    switch (action.type) {
+        case ACTION.QUESTION_SET_CURRENT_ATTEMPT:
+            return {...question, currentAttempt: action.attempt, canSubmit: true};
+        case ACTION.QUESTION_ATTEMPT_REQUEST:
+            return {...question, canSubmit: false};
+        case ACTION.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
+            return (!question.bestAttempt || !question.bestAttempt.correct) ?
+                {...question, validationResponse: action.response, bestAttempt: action.response} :
+                {...question, validationResponse: action.response};
+        default:
+            return question
+    }
+};
+
+const questions = (questions: any[] | null = null, action: any) => {
     switch (action.type) {
         case ACTION.QUESTION_REGISTRATION:
+            const currentQuestions = questions !== null ? [...questions] : [];
             const bestAttempt = action.question.bestAttempt;
             const newQuestion = bestAttempt ?
                 {...action.question, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer} :
                 action.question;
-            return [...questions, newQuestion];
+            return [...currentQuestions, newQuestion];
+
         case ACTION.QUESTION_DEREGISTRATION:
-            return questions.filter((question) => question.id != action.questionId);
+            const filteredQuestions = questions && questions.filter((q) => q.id != action.questionId);
+            return filteredQuestions && filteredQuestions.length ? filteredQuestions : null;
+
+        // Delegate processing the question matching action.questionId to the question reducer
         case ACTION.QUESTION_SET_CURRENT_ATTEMPT:
-            return questions.map((question) =>
-                question.id == action.questionId ?
-                    {...question, currentAttempt: action.attempt, canSubmit: true} :
-                    question
-            );
         case ACTION.QUESTION_ATTEMPT_REQUEST:
-            return questions.map((question) =>
-                question.id == action.questionId ?
-                    {...question, canSubmit: false} :
-                    question
-            );
         case ACTION.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
-            return questions.map((question) => {
-                if (question.id == action.questionId) {
-                    return (!question.bestAttempt || !question.bestAttempt.correct) ?
-                        {...question, validationResponse: action.response, bestAttempt: action.response} :
-                        {...question, validationResponse: action.response};
-                } else {
-                    return question;
-                }
-            });
+            return questions && questions.map((q) => q.id === action.questionId ? question(q, action) : q);
+
         default:
             return questions;
     }
 };
 
-const defaultAssignmentsState: null = null;
-const assignments = (assignments: object[] | null = defaultAssignmentsState, action: any) => {
+const assignments = (assignments: object[] | null = null, action: any) => {
     switch (action.type) {
         case ACTION.ASSIGNMENTS_RESPONSE_SUCCESS:
             return action.assignments;
@@ -69,8 +70,7 @@ const assignments = (assignments: object[] | null = defaultAssignmentsState, act
     }
 };
 
-const defaultGameboardState: null = null;
-const currentGameboard = (currentGameboard: object | null = defaultGameboardState, action: any) => {
+const currentGameboard = (currentGameboard: object | null = null, action: any) => {
     switch (action.type) {
         case ACTION.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;

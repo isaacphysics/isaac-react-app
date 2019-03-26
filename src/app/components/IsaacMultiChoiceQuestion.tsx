@@ -5,8 +5,8 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 
 const stateToProps = ({questions}: any, {questionId}: any) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
-    const question = questions.filter((question: any) => question.id == questionId)[0];
-    return (question) ? {currentAttempt: question.currentAttempt} : {};
+    const question = questions && questions.filter((question: any) => question.id == questionId)[0];
+    return question ? {currentAttempt: question.currentAttempt} : {};
 };
 const dispatchToProps = {setCurrentAttempt};
 
