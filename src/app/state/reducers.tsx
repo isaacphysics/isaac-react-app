@@ -6,8 +6,6 @@ const user = (user: object | null = defaultUserState, action: any) => {
     switch (action.type) {
         case ACTION.USER_LOG_IN_RESPONSE_SUCCESS:
             return {...action.user};
-        case ACTION.USER_LOG_OUT_RESPONSE_SUCCESS:
-            return defaultUserState;
         default:
             return user;
     }
@@ -18,8 +16,6 @@ const doc = (doc: object | null = defaultDocState, action: any) => {
     switch (action.type) {
         case ACTION.DOCUMENT_RESPONSE_SUCCESS:
             return {...action.doc};
-        case ACTION.USER_LOG_OUT_RESPONSE_SUCCESS:
-            return defaultDocState;
         default:
             return doc;
     }
@@ -58,8 +54,6 @@ const questions = (questions: any[] = defaultQuestionsState, action: any) => {
                     return question;
                 }
             });
-        case ACTION.USER_LOG_OUT_RESPONSE_SUCCESS:
-            return defaultQuestionsState;
         default:
             return questions;
     }
@@ -70,8 +64,6 @@ const assignments = (assignments: object[] | null = defaultAssignmentsState, act
     switch (action.type) {
         case ACTION.ASSIGNMENTS_RESPONSE_SUCCESS:
             return action.assignments;
-        case ACTION.USER_LOG_OUT_RESPONSE_SUCCESS:
-            return defaultAssignmentsState;
         default:
             return assignments;
     }
@@ -82,14 +74,16 @@ const currentGameboard = (currentGameboard: object | null = defaultGameboardStat
     switch (action.type) {
         case ACTION.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;
-        case ACTION.USER_LOG_OUT_RESPONSE_SUCCESS:
-            return defaultAssignmentsState;
         default:
             return currentGameboard;
     }
 };
 
-// TODO MT handle USER_LOG_OUT_RESPONSE_SUCCESS in a better way
-// https://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store/35641992#35641992
+const appReducer = combineReducers({user, doc, questions, currentGameboard, assignments});
 
-export const rootReducer = combineReducers({user, doc, questions, currentGameboard, assignments});
+export const rootReducer = (state: any, action: {type: string}) => {
+    if (action.type === ACTION.USER_LOG_OUT_RESPONSE_SUCCESS) {
+        state = undefined;
+    }
+    return appReducer(state, action);
+};
