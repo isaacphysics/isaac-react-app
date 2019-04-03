@@ -5,6 +5,7 @@
   "dependencies": {
     "@babel/core": "7.2.2",
     "@svgr/webpack": "4.1.0",
+    "@types/enzyme": "^3.9.1",
     "@types/jest": "24.0.11",
     "@types/node": "11.11.0",
     "@types/react": "16.8.7",
@@ -12,6 +13,7 @@
     "@types/react-redux": "7.0.3",
     "@types/redux-logger": "3.0.7",
     "@types/remarkable": "1.7.3",
+    "@typescript-eslint/eslint-plugin": "^1.6.0",
     "axios": "0.18.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
@@ -30,7 +32,8 @@
     "eslint-plugin-flowtype": "2.50.1",
     "eslint-plugin-import": "2.14.0",
     "eslint-plugin-jsx-a11y": "6.1.2",
-    "eslint-plugin-react": "7.12.4",
+    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react-hooks": "^1.6.0",
     "file-loader": "2.0.0",
     "fs-extra": "7.0.1",
     "html-webpack-plugin": "4.0.0-alpha.2",
@@ -74,7 +77,27 @@
     "test": "node scripts/test.js"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "eslint:all",
+      "plugin:react/all",
+      "plugin:jsx-a11y/recommended"
+    ],
+    "plugins": [
+      "react-hooks",
+      "@typescript-eslint",
+      "jsx-a11y"
+    ],
+    "rules": {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    }
   },
   "browserslist": [
     ">0.2%",
@@ -83,9 +106,10 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "1.4.2",
-    "eslint-plugin-react": "7.12.4",
-    "eslint-plugin-react-hooks": "1.5.0"
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.11.2",
+    "jest-environment-enzyme": "^7.0.2",
+    "jest-enzyme": "^7.0.2"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -96,11 +120,12 @@
     "setupFiles": [
       "react-app-polyfill/jsdom"
     ],
+    "setupTestFrameworkScriptFile": "jest-enzyme",
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
       "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
     ],
-    "testEnvironment": "jsdom",
+    "testEnvironment": "enzyme",
     "testURL": "http://localhost",
     "transform": {
       "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
@@ -126,6 +151,9 @@
       "web.jsx",
       "jsx",
       "node"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
     ],
     "watchPlugins": [
       "C:\\dev\\isaac-cs-app\\node_modules\\jest-watch-typeahead\\filename.js",

@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomePageComponent prints out the user's name when it is provided 1`] = `
+<div>
+  <h2>
+    Home
+  </h2>
+  <p>
+    Hi 
+    Alan
+    !
+  </p>
+</div>
+`;
+
+exports[`HomePageComponent renders correctly with a null valued user 1`] = `
+<div>
+  <h2>
+    Home
+  </h2>
+  <p>
+    Hi 
+    !
+  </p>
+</div>
+`;

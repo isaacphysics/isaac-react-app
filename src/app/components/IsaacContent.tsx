@@ -1,5 +1,5 @@
 import React from "react";
-import {connect, ConnectedComponentClass} from "react-redux";
+import {connect} from "react-redux";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
 import {ContentDTO} from "../../IsaacApiTypes";
