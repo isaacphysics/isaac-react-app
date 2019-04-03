@@ -5,18 +5,32 @@ import queryString from "query-string";
 import {fetchQuestion} from "../state/actions";
 import {ShowLoading} from "./ShowLoading";
 import {IsaacContent} from "./IsaacContent";
+import {AppState} from "../state/reducers";
+import {ContentDTO} from "../../IsaacApiTypes";
 
-const stateToProps = (state: any, {match: {params}, location: {search}}: any) => {
+const stateToProps = (state: AppState, {match: {params}, location: {search}}: any) => {
     return {
-        doc: state.doc,
+        doc: state ? state.doc : null,
         urlQuestionId: params.questionId,
         queryParams: queryString.parse(search)
     };
 };
 const dispatchToProps = {fetchQuestion};
 
-const QuestionPageComponent = ({doc, urlQuestionId, queryParams, history, fetchQuestion}: any) => {
-    useEffect(() => {fetchQuestion(urlQuestionId);}, [urlQuestionId]);
+interface QuestionPageProps {
+    doc: ContentDTO | null,
+    urlQuestionId: string,
+    queryParams: {board?: string},
+    history: any,
+    fetchQuestion: (questionId: string) => void
+}
+const QuestionPageComponent = (props: QuestionPageProps) => {
+    const {doc, urlQuestionId, queryParams, history, fetchQuestion} = props;
+
+    useEffect(
+        () => {fetchQuestion(urlQuestionId);},
+        [urlQuestionId]
+    );
 
     const goBackToBoard = () => {
         history.push(`/gameboards#${queryParams.board}`);
@@ -24,19 +38,21 @@ const QuestionPageComponent = ({doc, urlQuestionId, queryParams, history, fetchQ
 
     return (
         <ShowLoading until={doc}>
-            {/*FastTrack progress bar*/}
-            {/*Print options*/}
-            {/*Filter breadcrumb trail*/}
-            {/*High contrast option*/}
-            <article>
-                <IsaacContent doc={doc}/>
-                {doc && <p>{doc.attribution}</p>}
-                {/*Superseded notice*/}
-                {queryParams && queryParams.board &&
-                    <button onClick={goBackToBoard}>Back to board</button>
-                }
-            </article>
-            {/*FooterPods related-content="questionPage.relatedContent"*/}
+            {doc &&
+                // FastTrack progress bar
+                // Print options
+                // Filter breadcrumb trail
+                // High contrast option
+                <article>
+                    <IsaacContent doc={doc}/>
+                    <p>{doc.attribution}</p>
+                    {/*Superseded notice*/}
+                    {queryParams && queryParams.board &&
+                        <button onClick={goBackToBoard}>Back to board</button>
+                    }
+                </article>
+                // FooterPods related-content="questionPage.relatedContent"
+            }
         </ShowLoading>
     );
 };

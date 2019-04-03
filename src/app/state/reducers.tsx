@@ -1,33 +1,34 @@
 import {combineReducers} from "redux";
-import {ACTION} from "./actions";
+import {Action, ActionType, AppQuestionDTO} from "../../IsaacAppTypes";
+import {AssignmentDTO, ContentDTO, GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 
-const defaultUserState: null = null;
-const user = (user: object | null = defaultUserState, action: any) => {
+type UserState = RegisteredUserDTO | null;
+const user = (user: UserState = null, action: Action) => {
     switch (action.type) {
-        case ACTION.USER_LOG_IN_RESPONSE_SUCCESS:
+        case ActionType.USER_LOG_IN_RESPONSE_SUCCESS:
             return {...action.user};
         default:
             return user;
     }
 };
 
-const defaultDocState: null = null;
-const doc = (doc: object | null = defaultDocState, action: any) => {
+type DocState = ContentDTO | null;
+const doc = (doc: DocState = null, action: Action) => {
     switch (action.type) {
-        case ACTION.DOCUMENT_RESPONSE_SUCCESS:
+        case ActionType.DOCUMENT_RESPONSE_SUCCESS:
             return {...action.doc};
         default:
             return doc;
     }
 };
 
-const question = (question: any, action: any) => {
+const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {
-        case ACTION.QUESTION_SET_CURRENT_ATTEMPT:
+        case ActionType.QUESTION_SET_CURRENT_ATTEMPT:
             return {...question, currentAttempt: action.attempt, canSubmit: true};
-        case ACTION.QUESTION_ATTEMPT_REQUEST:
+        case ActionType.QUESTION_ATTEMPT_REQUEST:
             return {...question, canSubmit: false};
-        case ACTION.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
+        case ActionType.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
             return (!question.bestAttempt || !question.bestAttempt.correct) ?
                 {...question, validationResponse: action.response, bestAttempt: action.response} :
                 {...question, validationResponse: action.response};
@@ -36,9 +37,10 @@ const question = (question: any, action: any) => {
     }
 };
 
-const questions = (questions: any[] | null = null, action: any) => {
+type QuestionsState = AppQuestionDTO[] | null;
+const questions = (questions: QuestionsState = null, action: Action) => {
     switch (action.type) {
-        case ACTION.QUESTION_REGISTRATION:
+        case ActionType.QUESTION_REGISTRATION:
             const currentQuestions = questions !== null ? [...questions] : [];
             const bestAttempt = action.question.bestAttempt;
             const newQuestion = bestAttempt ?
@@ -46,14 +48,14 @@ const questions = (questions: any[] | null = null, action: any) => {
                 action.question;
             return [...currentQuestions, newQuestion];
 
-        case ACTION.QUESTION_DEREGISTRATION:
+        case ActionType.QUESTION_DEREGISTRATION:
             const filteredQuestions = questions && questions.filter((q) => q.id != action.questionId);
             return filteredQuestions && filteredQuestions.length ? filteredQuestions : null;
 
         // Delegate processing the question matching action.questionId to the question reducer
-        case ACTION.QUESTION_SET_CURRENT_ATTEMPT:
-        case ACTION.QUESTION_ATTEMPT_REQUEST:
-        case ACTION.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
+        case ActionType.QUESTION_SET_CURRENT_ATTEMPT:
+        case ActionType.QUESTION_ATTEMPT_REQUEST:
+        case ActionType.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
             return questions && questions.map((q) => q.id === action.questionId ? question(q, action) : q);
 
         default:
@@ -61,18 +63,20 @@ const questions = (questions: any[] | null = null, action: any) => {
     }
 };
 
-const assignments = (assignments: object[] | null = null, action: any) => {
+type AssignmentsState = AssignmentDTO[] | null;
+const assignments = (assignments: AssignmentsState = null, action: Action) => {
     switch (action.type) {
-        case ACTION.ASSIGNMENTS_RESPONSE_SUCCESS:
+        case ActionType.ASSIGNMENTS_RESPONSE_SUCCESS:
             return action.assignments;
         default:
             return assignments;
     }
 };
 
-const currentGameboard = (currentGameboard: object | null = null, action: any) => {
+type CurrentGameboardState = GameboardDTO | null;
+const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action) => {
     switch (action.type) {
-        case ACTION.GAMEBOARD_RESPONSE_SUCCESS:
+        case ActionType.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;
         default:
             return currentGameboard;
@@ -81,8 +85,17 @@ const currentGameboard = (currentGameboard: object | null = null, action: any) =
 
 const appReducer = combineReducers({user, doc, questions, currentGameboard, assignments});
 
-export const rootReducer = (state: any, action: {type: string}) => {
-    if (action.type === ACTION.USER_LOG_OUT_RESPONSE_SUCCESS) {
+
+export type AppState = undefined | {
+    user: UserState,
+    doc: DocState,
+    questions: QuestionsState,
+    currentGameboard: CurrentGameboardState,
+    assignments: AssignmentsState
+}
+
+export const rootReducer = (state: AppState, action: {type: string}) => {
+    if (action.type === ActionType.USER_LOG_OUT_RESPONSE_SUCCESS) {
         state = undefined;
     }
     return appReducer(state, action);

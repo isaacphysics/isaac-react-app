@@ -2,14 +2,15 @@ import React from "react";
 import {IsaacContent} from "./IsaacContent";
 import {TrustedHtml} from "./TrustedHtml";
 import {TrustedMarkdown} from "./TrustedMarkdown";
+import {ContentDTO} from "../../IsaacApiTypes";
 
-interface ContentValueOrChildren {
-    value: string,
-    encoding: string,
-    children: {type: string, layout: string}[],
+interface ContentValueOrChildrenProps {
+    value?: string,
+    encoding?: string,
+    children?: ContentDTO[],
 }
+export const IsaacContentValueOrChildren = ({value="", encoding, children=[]}: ContentValueOrChildrenProps) => {
 
-export const IsaacContentValueOrChildren = ({value="", encoding, children=[]}: ContentValueOrChildren) => {
     if (value != "" && children.length > 0) {
         throw new Error("Cannot render both value and children:\n" +
             "\tVALUE:\n" +  JSON.stringify(value) + "\n\n" +
@@ -23,7 +24,7 @@ export const IsaacContentValueOrChildren = ({value="", encoding, children=[]}: C
                 (encoding == "html" && <TrustedHtml html={value} />) ||
                 (<div>[CONTENT WITH UNKNOWN ENCODING: <i>{encoding} | {value} </i>]</div>)
             )}
-            {children.map((child: any, index: number) =>
+            {children.map((child, index) =>
                 <IsaacContent doc={child} key={index}/>
             )}
         </div>

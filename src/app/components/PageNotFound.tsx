@@ -1,7 +1,15 @@
 import React from "react";
+import {withRouter} from "react-router-dom";
 
-export const PageNotFound = () => (
-    <div>
-        <h2>Page Not Found</h2>
-    </div>
-);
+interface PageNotFoundProps {readonly location: {readonly pathname: string}}
+
+const PageNotFoundComponent = ({location: {pathname}}: PageNotFoundProps): JSX.Element => {
+    return <React.Fragment>
+        <div>
+            <h2>Page Not Found</h2>
+            <p>Page not found: {pathname}</p>
+        </div>
+    </React.Fragment>;
+};
+
+export const PageNotFound = withRouter(PageNotFoundComponent);

@@ -5,7 +5,10 @@ import {handleProviderLoginRedirect} from "../state/actions";
 const stateToProps = null;
 const dispatchToProps = {loginProviderRedirect: handleProviderLoginRedirect};
 
-const LogInPageComponent = ({loginProviderRedirect}: any) => {
+interface LogInPageProps {
+    loginProviderRedirect: (provider: string) => any
+}
+const LogInPageComponent = ({loginProviderRedirect}: LogInPageProps) => {
     return <React.Fragment>
         <div><a onClick={() => {loginProviderRedirect("google")}}>Google</a></div>
         <div><del><a onClick={() => {/*loginProviderRedirect("twitter")*/}}>Twitter</a></del></div>

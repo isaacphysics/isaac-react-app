@@ -3,24 +3,36 @@ import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {loadMyAssignments} from "../state/actions";
 import {ShowLoading} from "./ShowLoading";
+import {AppState} from "../state/reducers";
+import {AssignmentDTO} from "../../IsaacApiTypes";
 
-const stateToProps = ({assignments}: any) => ({assignments});
+const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments};
 
-const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: any) => {
+interface MyAssignmentsPageProps {
+    assignments: AssignmentDTO[] | null,
+    loadMyAssignments: () => void
+}
+const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignmentsPageProps) => {
     useEffect(() => {loadMyAssignments();}, []);
 
     return <React.Fragment>
         <h1>My Assignments</h1>
         <hr />
         <ShowLoading until={assignments}>
-            {assignments && assignments.map((assignment: any, index: number) =>
+            {assignments && assignments.map((assignment, index) =>
                 <div key={index}>
                     <Link to={`/gameboards#${assignment.gameboardId}`}>
-                        <h3>{assignment.gameboard.title}</h3>
-                        <p>Assigned: {new Date(assignment.creationDate).toDateString()}</p>
-                        {assignment.dueDate && <p>Due: {new Date(assignment.dueDate).toDateString()}</p>}
-                        <p>By: {assignment.assignerSummary.familyName}</p>
+                        <h3>{assignment.gameboard && assignment.gameboard.title}</h3>
+                        {assignment.creationDate &&
+                            <p>Assigned: {new Date(assignment.creationDate).toDateString()}</p>
+                        }
+                        {assignment.dueDate &&
+                            <p>Due: {new Date(assignment.dueDate).toDateString()}</p>
+                        }
+                        {assignment.assignerSummary &&
+                            <p>By: {assignment.assignerSummary.familyName}</p>
+                        }
                     </Link>
                     <hr />
                 </div>

@@ -2,11 +2,20 @@ import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import {Redirect, withRouter} from "react-router-dom";
 import {handleProviderCallback} from "../state/actions";
+import {AppState} from "../state/reducers";
+import {RegisteredUserDTO} from "../../IsaacApiTypes";
 
-const stateToProps = (state: any, props: any) => ({user: state.user});
+const stateToProps = (state: AppState) => (state && {user: state.user});
 const dispatchToProps = {handleProviderCallback: handleProviderCallback};
 
-const ProviderCallbackHandlerComponent = (props: any) => {
+interface ProviderCallbackHandlerProps {
+    match: {params: {provider: string}},
+    location: {search: string},
+    user: RegisteredUserDTO | null,
+    handleProviderCallback: (provider: string, search: string) => void
+}
+
+const ProviderCallbackHandlerComponent = (props: ProviderCallbackHandlerProps) => {
     const {match: {params: {provider}}, location: {search}, user, handleProviderCallback} = props;
 
     useEffect(() => {

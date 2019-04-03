@@ -1,16 +1,20 @@
 import React from "react";
-import {connect} from "react-redux";
+import {connect, ConnectedComponentClass} from "react-redux";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
+import {ContentDTO} from "../../IsaacApiTypes";
 
 const stateToProps = null;
 const dispatchToProps = null;
 
-const IsaacContentComponent = (props: any) => {
+interface IsaacContentProps {
+    doc: ContentDTO
+}
+const IsaacContentComponent = (props: IsaacContentProps) => {
     const {doc: {type, layout, encoding, value, children}} = props;
 
     // TODO MT consider moving map to constants
-    const contentMap: any = {
+    const contentMap: {[index: string]: React.ComponentType<any>} = {
         // figure: IsaacFigure,
         // image: IsaacImage,
         // video: IsaacVideo,
@@ -28,12 +32,17 @@ const IsaacContentComponent = (props: any) => {
         // isaacStringMatchQuestion: IsaacQuestionTabs,
         // isaacFreeTextQuestion: IsaacQuestionTabs,
     };
-    const layoutMap: any = {
+    const layoutMap: {[index: string]: React.ComponentType<any>} = {
         // tabs: IsaacTabs,
         // accordion: IsaacAccordion,
         // horizontal: IsaacHorizontal
     };
-    const Component: any = contentMap[type] || layoutMap[layout] || IsaacContentValueOrChildren;
+
+    const Component =
+        (type && contentMap[type]) ||
+        (layout && layoutMap[layout]) ||
+        IsaacContentValueOrChildren;
+
     return <Component {...props} encoding={encoding} value={value} children={children} />;
 };
 

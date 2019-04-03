@@ -1,11 +1,17 @@
 import React from "react";
 import {connect} from "react-redux";
+import {RegisteredUserDTO} from "../../IsaacApiTypes";
+import {AppState} from "../state/reducers";
 
-const stateToProps = (state: any) => ({user: state.user});
+const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
-const AccountPageComponent = ({user}: any) => (
+
+interface AccountPageProps {user: RegisteredUserDTO | null}
+const AccountPageComponent = ({user}: AccountPageProps) => (
     <div>
-        <h2>{user.givenName}'s Account Page</h2>
+        {user &&
+            <h2>{user.givenName}'s Account Page</h2>
+        }
         <p>Hello!</p>
     </div>
 );

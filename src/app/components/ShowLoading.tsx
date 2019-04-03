@@ -1,5 +1,11 @@
-import React from "react";
+import React, {ReactElement} from "react";
 
-export const ShowLoading = ({until, children, placeholder = <p>Loading...</p>}: any) => {
+interface ShowLoadingProps {
+    until: any,
+    children?: any,
+    placeholder?: ReactElement
+}
+
+export const ShowLoading = ({until, children, placeholder = <p>Loading...</p>}: ShowLoadingProps) => {
     return until ? children : placeholder;
 };

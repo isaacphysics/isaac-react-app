@@ -13,11 +13,17 @@ import {MyAssignmentsPage} from "./MyAssignmentsPage";
 import {GameboardPage} from "./GameboardPage";
 import {PageNotFound} from "./PageNotFound";
 import {requestCurrentUser} from "../state/actions";
+import {AppState} from "../state/reducers";
+import {RegisteredUserDTO} from "../../IsaacApiTypes";
 
-const mapStateToProps = (state: any) => ({user: state.user});
+const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
 const mapDispatchToProps = {requestCurrentUser};
 
-const IsaacApp = ({user, requestCurrentUser}: any) => {
+interface IsaacAppProps {
+    user: RegisteredUserDTO | null,
+    requestCurrentUser: () => void
+}
+const IsaacApp = ({user, requestCurrentUser}: IsaacAppProps) => {
     useEffect(() => {
         requestCurrentUser();
     }, []); // run only once on mount

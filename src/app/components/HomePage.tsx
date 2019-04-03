@@ -1,12 +1,18 @@
 import React from "react";
 import {connect} from "react-redux";
+import {RegisteredUserDTO} from "../../IsaacApiTypes";
+import {AppState} from "../state/reducers";
 
-const stateToProps = (state: any) => ({user: state.user});
+const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
-const HomePageComponent = ({user}: any) => (
+
+interface HomePageProps {
+    user: RegisteredUserDTO | null
+}
+const HomePageComponent = ({user}: HomePageProps) => (
     <div>
         <h2>Home</h2>
-        <p>Hello {user.givenName}!</p>
+        <p>Hello {user && user.givenName}!</p>
     </div>
 );
 export const HomePage = connect(stateToProps, dispatchToProps)(HomePageComponent);

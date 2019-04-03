@@ -3,10 +3,18 @@ import {connect} from "react-redux";
 import {attemptQuestion, deregisterQuestion, registerQuestion} from "../state/actions";
 import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
 import {IsaacContent} from "./IsaacContent";
+import {AppState} from "../state/reducers";
+import {
+    ChoiceDTO,
+    ContentDTO,
+    IsaacMultiChoiceQuestionDTO,
+    QuestionDTO,
+    QuestionValidationResponseDTO
+} from "../../IsaacApiTypes";
 
-const stateToProps = ({questions}: {questions: any[] | null}, {doc}: any) => {
+const stateToProps = (state: AppState, {doc}: {doc: ContentDTO}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
-    const question = questions && questions.filter((question: any) => question.id == doc.id)[0];
+    const question = state && state.questions && state.questions.filter((question) => question.id == doc.id)[0];
     return question ? {
         validationResponse: question.validationResponse,
         currentAttempt: question.currentAttempt,
@@ -15,41 +23,49 @@ const stateToProps = ({questions}: {questions: any[] | null}, {doc}: any) => {
 };
 const dispatchToProps = {registerQuestion, deregisterQuestion, attemptQuestion};
 
-const IsaacQuestionTabsComponent = (props: any) => {
-    const {
-        doc, currentAttempt, validationResponse, canSubmit,
-        registerQuestion, deregisterQuestion, attemptQuestion
-    } = props;
+interface IsaacQuestionTabsProps {
+    doc: IsaacMultiChoiceQuestionDTO & {id: string}, // Can assume id is always defined
+    currentAttempt?: ChoiceDTO,
+    canSubmit?: boolean,
+    validationResponse?: QuestionValidationResponseDTO,
+    registerQuestion: (question: QuestionDTO) => void,
+    deregisterQuestion: (questionId: string) => void,
+    attemptQuestion: (questionId: string, attempt: ChoiceDTO) => void,
+}
+const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
+    const {doc, currentAttempt, validationResponse, canSubmit, registerQuestion, deregisterQuestion, attemptQuestion} = props;
 
-    useEffect((): () => void =>{
+    useEffect((): (() => void) => {
         registerQuestion(doc);
         return () => deregisterQuestion(doc.id);
     }, [doc.id]);
 
-    // switch question answer area on type
-    return (
-        <React.Fragment>
-            <hr />
+    return <React.Fragment>
+        <hr />
 
-            // hints
-            <IsaacMultiChoiceQuestion {...props} questionId={doc.id} />
+        // hints
 
-            <hr />
+        {/* switch question answer area on type */}
+        <IsaacMultiChoiceQuestion questionId={doc.id} doc={doc}/>
 
-            {validationResponse && !canSubmit && (validationResponse.correct ? <h1>Correct!</h1> : <h1>Incorrect</h1>)}
-            {validationResponse && !canSubmit && <IsaacContent doc={validationResponse.explanation} />}
-            <div>
-                <button
-                    onClick={() => attemptQuestion(doc.id, currentAttempt)}
-                    disabled={!canSubmit}
-                >
-                    Check my answer
-                </button>
-            </div>
+        <hr />
 
-            <hr />
-        </React.Fragment>
-    );
+        {validationResponse && !canSubmit && (validationResponse.correct ?
+            <h1>Correct!</h1> :
+            <h1>Incorrect</h1>)
+        }
+        {validationResponse && validationResponse.explanation && !canSubmit &&
+            <IsaacContent doc={validationResponse.explanation} />
+        }
+
+        <div>
+            <button onClick={() => currentAttempt && attemptQuestion(doc.id, currentAttempt)} disabled={!canSubmit}>
+                Check my answer
+            </button>
+        </div>
+
+        <hr />
+    </React.Fragment>;
 };
 
 export const IsaacQuestionTabs = connect(stateToProps, dispatchToProps)(IsaacQuestionTabsComponent);

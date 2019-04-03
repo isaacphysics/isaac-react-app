@@ -2,11 +2,17 @@ import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
 import {logOutUser} from "../state/actions";
+import {AppState} from "../state/reducers";
+import {RegisteredUserDTO} from "../../IsaacApiTypes";
 
-const stateToProps = (state: {user: object | null}) => ({user: state.user});
+const stateToProps = (state: AppState) => (state && {user: state.user});
 const dispatchToProps = {logOutUser};
 
-const LogOutHandlerComponent = ({user, logOutUser}: any) => {
+interface LogOutHandlerProps {
+    user: RegisteredUserDTO | null,
+    logOutUser: () => void
+}
+const LogOutHandlerComponent = ({user, logOutUser}: LogOutHandlerProps) => {
     useEffect(() => {logOutUser()});
     return <React.Fragment>
         {user ? <div>Logging out...</div> : <Redirect to="/" />}
