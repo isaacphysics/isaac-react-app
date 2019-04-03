@@ -156,8 +156,8 @@
       "enzyme-to-json/serializer"
     ],
     "watchPlugins": [
-      "C:\\dev\\isaac-cs-app\\node_modules\\jest-watch-typeahead\\filename.js",
-      "C:\\dev\\isaac-cs-app\\node_modules\\jest-watch-typeahead\\testname.js"
+      "<rootDir>/node_modules/jest-watch-typeahead/filename.js",
+      "<rootDir>/node_modules/jest-watch-typeahead/testname.js"
     ]
   },
   "babel": {
