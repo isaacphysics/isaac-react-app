@@ -6,9 +6,12 @@ import {ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
 // User Authentication
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ActionType.USER_UPDATE_REQUEST});
-    const currentUser = await api.users.getCurrent();
-    dispatch({type: ActionType.USER_LOG_IN_RESPONSE_SUCCESS, user: currentUser.data});
-    // TODO MT handle error case properly
+    try {
+        const currentUser = await api.users.getCurrent();
+        dispatch({type: ActionType.USER_LOG_IN_RESPONSE_SUCCESS, user: currentUser.data});
+    } catch (e) {
+        dispatch({type: ActionType.USER_UPDATE_FAILURE});
+    }
 };
 
 export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
@@ -25,6 +28,7 @@ export const handleProviderLoginRedirect = (provider: string) => async (dispatch
     dispatch({type: ActionType.AUTHENTICATION_REDIRECT, provider, redirectUrl: redirectUrl});
     window.location.href = redirectUrl;
     // TODO MT handle error case
+    // TODO MT handle case when user is already logged in
 };
 
 export const handleProviderCallback = (provider: string, parameters: string) => async (dispatch: Dispatch<Action>) => {

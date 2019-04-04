@@ -1,17 +1,10 @@
-import {
-    AssignmentDTO,
-    ChoiceDTO,
-    ContentDTO,
-    GameboardDTO,
-    QuestionDTO,
-    QuestionValidationResponseDTO,
-    RegisteredUserDTO,
-} from "./IsaacApiTypes";
+import * as ApiTypes from "./IsaacApiTypes";
 
 export enum ActionType {
     TEST_ACTION = "TEST_ACTION",
 
     USER_UPDATE_REQUEST = "USER_UPDATE_REQUEST",
+    USER_UPDATE_FAILURE = "USER_UPDATE_FAILURE",
     USER_LOG_IN_REQUEST = "USER_LOG_IN_REQUEST",
     USER_LOG_IN_RESPONSE_SUCCESS = "USER_LOG_IN_RESPONSE_SUCCESS",
     USER_LOG_OUT_REQUEST = "USER_LOG_OUT_REQUEST",
@@ -41,9 +34,11 @@ export enum ActionType {
 export type Action =
     | {type: ActionType.TEST_ACTION}
 
-    | {type: ActionType.USER_LOG_IN_REQUEST}
     | {type: ActionType.USER_UPDATE_REQUEST}
-    | {type: ActionType.USER_LOG_IN_RESPONSE_SUCCESS, user: RegisteredUserDTO}
+    | {type: ActionType.USER_UPDATE_FAILURE}
+
+    | {type: ActionType.USER_LOG_IN_REQUEST}
+    | {type: ActionType.USER_LOG_IN_RESPONSE_SUCCESS, user: ApiTypes.RegisteredUserDTO}
     | {type: ActionType.USER_LOG_OUT_REQUEST}
     | {type: ActionType.USER_LOG_OUT_RESPONSE_SUCCESS}
     | {type: ActionType.AUTHENTICATION_REQUEST_REDIRECT, provider: string}
@@ -51,24 +46,24 @@ export type Action =
     | {type: ActionType.AUTHENTICATION_HANDLE_CALLBACK}
 
     | {type: ActionType.DOCUMENT_REQUEST, questionId: string}
-    | {type: ActionType.DOCUMENT_RESPONSE_SUCCESS, doc: ContentDTO}
+    | {type: ActionType.DOCUMENT_RESPONSE_SUCCESS, doc: ApiTypes.ContentDTO}
     | {type: ActionType.DOCUMENT_RESPONSE_FAILURE}
 
-    | {type: ActionType.QUESTION_REGISTRATION, question: QuestionDTO}
+    | {type: ActionType.QUESTION_REGISTRATION, question: ApiTypes.QuestionDTO}
     | {type: ActionType.QUESTION_DEREGISTRATION, questionId: string}
-    | {type: ActionType.QUESTION_ATTEMPT_REQUEST, questionId: string, attempt: ChoiceDTO}
-    | {type: ActionType.QUESTION_ATTEMPT_RESPONSE_SUCCESS, questionId: string, response: QuestionValidationResponseDTO}
+    | {type: ActionType.QUESTION_ATTEMPT_REQUEST, questionId: string, attempt: ApiTypes.ChoiceDTO}
+    | {type: ActionType.QUESTION_ATTEMPT_RESPONSE_SUCCESS, questionId: string, response: ApiTypes.QuestionValidationResponseDTO}
     | {type: ActionType.QUESTION_ATTEMPT_RESPONSE_FAILURE}
-    | {type: ActionType.QUESTION_SET_CURRENT_ATTEMPT, questionId: string, attempt: ChoiceDTO}
+    | {type: ActionType.QUESTION_SET_CURRENT_ATTEMPT, questionId: string, attempt: ApiTypes.ChoiceDTO}
 
     | {type: ActionType.GAMEBOARD_REQUEST, gameboardId: string | null}
-    | {type: ActionType.GAMEBOARD_RESPONSE_SUCCESS, gameboard: GameboardDTO}
+    | {type: ActionType.GAMEBOARD_RESPONSE_SUCCESS, gameboard: ApiTypes.GameboardDTO}
 
     | {type: ActionType.ASSIGNMENTS_REQUEST}
-    | {type: ActionType.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: AssignmentDTO[]};
+    | {type: ActionType.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: ApiTypes.AssignmentDTO[]};
 
-export interface AppQuestionDTO extends QuestionDTO {
-    validationResponse?: QuestionValidationResponseDTO,
-    currentAttempt?: ChoiceDTO,
+export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
+    validationResponse?: ApiTypes.QuestionValidationResponseDTO,
+    currentAttempt?: ApiTypes.ChoiceDTO,
     canSubmit?: boolean
 }

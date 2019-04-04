@@ -3,21 +3,21 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import {registerQuestion, requestCurrentUser} from "../../app/state/actions";
 import {ActionType} from "../../IsaacAppTypes";
-import {questionDTOs, registeredUserDTOs} from "../test-factory";
 import {endpoint} from "../../app/services/api";
+import {errorResponses, questionDTOs, registeredUserDTOs} from "../test-factory";
 
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
-const axiosMock = new MockAdapter(endpoint);
+let axiosMock = new MockAdapter(endpoint);
 
 describe("requestCurrentUser action", async () => {
     afterEach(() => {
-        axiosMock.restore();
+        axiosMock.reset();
     });
 
-    it("asynchronously dispatch user log in response success action on successful get request", async () => {
+    it("dispatches USER_LOG_IN_RESPONSE_SUCCESS after a successful request", async () => {
         const {dameShirley} = registeredUserDTOs;
-        axiosMock.onGet(`/users/current_user`).reply(200, dameShirley);
+        axiosMock.onGet(`/users/current_user`).replyOnce(200, dameShirley);
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
@@ -25,7 +25,45 @@ describe("requestCurrentUser action", async () => {
             {type: ActionType.USER_LOG_IN_RESPONSE_SUCCESS, user: dameShirley}
         ];
         expect(store.getActions()).toEqual(expectedActions);
-    })
+        expect(axiosMock.history.get.length).toBe(1);
+    });
+
+    it("dispatches USER_UPDATE_FAILURE on a 401 response", async () => {
+        const {mustBeLoggedIn401} = errorResponses;
+        axiosMock.onGet(`/users/current_user`).replyOnce(401, mustBeLoggedIn401);
+        const store = mockStore();
+        await store.dispatch(requestCurrentUser() as any);
+        const expectedActions = [
+            {type: ActionType.USER_UPDATE_REQUEST},
+            {type: ActionType.USER_UPDATE_FAILURE}
+        ];
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(axiosMock.history.get.length).toBe(1);
+    });
+
+    it("dispatches USER_UPDATE_FAILURE when no connection to the api", async () => {
+        axiosMock.onGet(`/users/current_user`).networkError();
+        const store = mockStore();
+        await store.dispatch(requestCurrentUser() as any);
+        const expectedActions = [
+            {type: ActionType.USER_UPDATE_REQUEST},
+            {type: ActionType.USER_UPDATE_FAILURE}
+        ];
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(axiosMock.history.get.length).toBe(1);
+    });
+
+    it("does not care if the response times-out", async () => {
+        axiosMock.onGet(`/users/current_user`).timeout();
+        const store = mockStore();
+        await store.dispatch(requestCurrentUser() as any);
+        const expectedActions = [
+            {type: ActionType.USER_UPDATE_REQUEST},
+            {type: ActionType.USER_UPDATE_FAILURE}
+        ];
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(axiosMock.history.get.length).toBe(1);
+    });
 });
 
 describe("registerQuestion action", () => {

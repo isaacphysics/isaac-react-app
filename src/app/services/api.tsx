@@ -1,26 +1,15 @@
 import axios, {AxiosPromise, AxiosResponse} from "axios";
 import {API_PATH} from "./constants";
-import {ChoiceDTO} from "../../IsaacApiTypes";
+import * as ApiTypes from "../../IsaacApiTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
     withCredentials: true,
 });
 
-// TODO MT do something sensible with errors
-// endpoint.interceptors.response.use(
-//     (response: AxiosResponse): AxiosResponse => {
-//         return response
-//     },
-//     (error: AxiosPromise): AxiosPromise => {
-//         console.log("Error returned as a response", error);
-//         return error
-//     }
-// );
-
 export const api = {
     users: {
-        getCurrent: (): AxiosPromise => {
+        getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
         }
     },
@@ -36,20 +25,20 @@ export const api = {
         }
     },
     questions: {
-        get: (id: string): AxiosPromise => {
+        get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
             return endpoint.get(`/pages/questions/${id}`);
         },
-        answer: (id: string, answer: ChoiceDTO): AxiosPromise => {
+        answer: (id: string, answer: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`questions/${id}/answer`, answer);
         }
     },
     gameboards: {
-        get: (gameboardId: string): AxiosPromise => {
+        get: (gameboardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${gameboardId}`);
         }
     },
     assignments: {
-        getMyAssignments: (): AxiosPromise => {
+        getMyAssignments: (): AxiosPromise<ApiTypes.AssignmentDTO[]> => {
             return endpoint.get(`/assignments`);
         }
     }

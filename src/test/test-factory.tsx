@@ -1,5 +1,14 @@
 import {QuestionDTO, RegisteredUserDTO} from "../IsaacApiTypes";
 
+export const errorResponses: {[key: string]: object} = {
+    mustBeLoggedIn401: {
+        "responseCode":401,
+        "responseCodeType":"Unauthorized",
+        "errorMessage":"You must be logged in to access this resource.",
+        "bypassGenericSiteErrorPage":false
+    }
+};
+
 export const registeredUserDTOs: {[key: string]: RegisteredUserDTO} = {
     dameShirley: {
         givenName: "Steve",
