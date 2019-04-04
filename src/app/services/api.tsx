@@ -2,7 +2,7 @@ import axios, {AxiosPromise, AxiosResponse} from "axios";
 import {API_PATH} from "./constants";
 import {ChoiceDTO} from "../../IsaacApiTypes";
 
-const endpoint = axios.create({
+export const endpoint = axios.create({
     baseURL: API_PATH,
     withCredentials: true,
 });

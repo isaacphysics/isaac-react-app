@@ -1,6 +1,7 @@
 import {questions, rootReducer, user} from "../../app/state/reducers";
 import {Action, ActionType, AppQuestionDTO} from "../../IsaacAppTypes";
 import {RegisteredUserDTO} from "../../IsaacApiTypes";
+import {questionDTOs, registeredUserDTOs} from "../test-factory";
 
 const ignoredTestAction: Action = {type: ActionType.TEST_ACTION};
 
@@ -32,17 +33,7 @@ describe("root reducer", () => {
 });
 
 describe("user reducer", () => {
-    const dameShirley: RegisteredUserDTO = {
-        givenName: "Steve",
-        familyName: "Shirley",
-        gender: "FEMALE",
-        id: 1
-    };
-    const profWheeler: RegisteredUserDTO = {
-        givenName: "David",
-        familyName: "Wheeler",
-        id: 2
-    };
+    const {profWheeler, dameShirley} = registeredUserDTOs;
 
     it("returns null as an initial value", () => {
         const actualState = user(undefined, ignoredTestAction);
@@ -68,14 +59,7 @@ describe("user reducer", () => {
 });
 
 describe("questions reducer", () => {
-    const manVsHorseId = "man_vs_horse|test";
-    const manVsHorse: AppQuestionDTO = {
-        id: manVsHorseId
-    };
-    const aTobogganId = "a_toboggan|123abc";
-    const aToboggan: AppQuestionDTO = {
-        id: aTobogganId
-    };
+    const {aToboggan, manVsHorse} = questionDTOs;
 
     it("returns null as an initial value", () => {
         const actualState = questions(undefined, ignoredTestAction);
@@ -104,7 +88,8 @@ describe("questions reducer", () => {
     });
 
     it("should deregister questions correctly", () => {
-        const deregisterManVsHorse: Action = {type: ActionType.QUESTION_DEREGISTRATION, questionId: manVsHorseId};
+        const deregisterManVsHorse: Action =
+            {type: ActionType.QUESTION_DEREGISTRATION, questionId: (manVsHorse.id as string)};
         const testCases = [
             [null, null],
             [[manVsHorse], null],
