@@ -9,6 +9,8 @@ import {
 } from "./IsaacApiTypes";
 
 export enum ActionType {
+    TEST_ACTION = "TEST_ACTION",
+
     USER_UPDATE_REQUEST = "USER_UPDATE_REQUEST",
     USER_LOG_IN_REQUEST = "USER_LOG_IN_REQUEST",
     USER_LOG_IN_RESPONSE_SUCCESS = "USER_LOG_IN_RESPONSE_SUCCESS",
@@ -37,6 +39,8 @@ export enum ActionType {
 }
 
 export type Action =
+    | {type: ActionType.TEST_ACTION}
+
     | {type: ActionType.USER_LOG_IN_REQUEST}
     | {type: ActionType.USER_UPDATE_REQUEST}
     | {type: ActionType.USER_LOG_IN_RESPONSE_SUCCESS, user: RegisteredUserDTO}

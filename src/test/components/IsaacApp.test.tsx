@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from "react-redux";
-import {storeFactory} from "../app/state/store";
-import IsaacApp from '../app/components/IsaacApp';
+import {storeFactory} from "../../app/state/store";
+import IsaacApp from '../../app/components/IsaacApp';
 
 describe('IsaacApp', () => {
 

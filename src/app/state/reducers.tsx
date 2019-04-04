@@ -3,7 +3,7 @@ import {Action, ActionType, AppQuestionDTO} from "../../IsaacAppTypes";
 import {AssignmentDTO, ContentDTO, GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 
 type UserState = RegisteredUserDTO | null;
-const user = (user: UserState = null, action: Action) => {
+export const user = (user: UserState = null, action: Action) => {
     switch (action.type) {
         case ActionType.USER_LOG_IN_RESPONSE_SUCCESS:
             return {...action.user};
@@ -13,7 +13,7 @@ const user = (user: UserState = null, action: Action) => {
 };
 
 type DocState = ContentDTO | null;
-const doc = (doc: DocState = null, action: Action) => {
+export const doc = (doc: DocState = null, action: Action) => {
     switch (action.type) {
         case ActionType.DOCUMENT_RESPONSE_SUCCESS:
             return {...action.doc};
@@ -22,7 +22,7 @@ const doc = (doc: DocState = null, action: Action) => {
     }
 };
 
-const question = (question: AppQuestionDTO, action: Action) => {
+export const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {
         case ActionType.QUESTION_SET_CURRENT_ATTEMPT:
             return {...question, currentAttempt: action.attempt, canSubmit: true};
@@ -38,7 +38,7 @@ const question = (question: AppQuestionDTO, action: Action) => {
 };
 
 type QuestionsState = AppQuestionDTO[] | null;
-const questions = (questions: QuestionsState = null, action: Action) => {
+export const questions = (questions: QuestionsState = null, action: Action) => {
     switch (action.type) {
         case ActionType.QUESTION_REGISTRATION:
             const currentQuestions = questions !== null ? [...questions] : [];
@@ -64,7 +64,7 @@ const questions = (questions: QuestionsState = null, action: Action) => {
 };
 
 type AssignmentsState = AssignmentDTO[] | null;
-const assignments = (assignments: AssignmentsState = null, action: Action) => {
+export const assignments = (assignments: AssignmentsState = null, action: Action) => {
     switch (action.type) {
         case ActionType.ASSIGNMENTS_RESPONSE_SUCCESS:
             return action.assignments;
@@ -74,7 +74,7 @@ const assignments = (assignments: AssignmentsState = null, action: Action) => {
 };
 
 type CurrentGameboardState = GameboardDTO | null;
-const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action) => {
+export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action) => {
     switch (action.type) {
         case ActionType.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;
@@ -84,8 +84,6 @@ const currentGameboard = (currentGameboard: CurrentGameboardState = null, action
 };
 
 const appReducer = combineReducers({user, doc, questions, currentGameboard, assignments});
-
-
 export type AppState = undefined | {
     user: UserState,
     doc: DocState,
@@ -94,7 +92,7 @@ export type AppState = undefined | {
     assignments: AssignmentsState
 }
 
-export const rootReducer = (state: AppState, action: {type: string}) => {
+export const rootReducer = (state: AppState, action: Action) => {
     if (action.type === ActionType.USER_LOG_OUT_RESPONSE_SUCCESS) {
         state = undefined;
     }
