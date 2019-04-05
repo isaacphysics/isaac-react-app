@@ -1,49 +1,40 @@
 import React from "react";
-import {connect} from "react-redux";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
 import {ContentDTO} from "../../IsaacApiTypes";
 
-const stateToProps = null;
-const dispatchToProps = null;
-
 interface IsaacContentProps {
     doc: ContentDTO
 }
-const IsaacContentComponent = (props: IsaacContentProps) => {
+export const IsaacContent = (props: IsaacContentProps) => {
     const {doc: {type, layout, encoding, value, children}} = props;
 
-    // TODO MT consider moving map to constants
-    const contentMap: {[index: string]: React.ComponentType<any>} = {
-        // figure: IsaacFigure,
-        // image: IsaacImage,
-        // video: IsaacVideo,
-        // isaacFeaturedProfile: IsaacFeaturedProfile,
-        // isaacQuestion: IsaacQuickQuestion,
-        // anvilApp: AnvilApp,
-
-        isaacMultiChoiceQuestion: IsaacQuestionTabs,
-        // isaacNumericQuestion: IsaacQuestionTabs,
-        // isaacSymbolicQuestion: IsaacQuestionTabs,
-        // isaacSymbolicChemistryQuestion: IsaacQuestionTabs,
-        // isaacSymbolicLogicQuestion: IsaacQuestionTabs,
-        // isaacGraphSketcherQuestion: IsaacQuestionTabs,
-        // isaacAnvilQuestion: IsaacQuestionTabs,
-        // isaacStringMatchQuestion: IsaacQuestionTabs,
-        // isaacFreeTextQuestion: IsaacQuestionTabs,
-    };
-    const layoutMap: {[index: string]: React.ComponentType<any>} = {
-        // tabs: IsaacTabs,
-        // accordion: IsaacAccordion,
-        // horizontal: IsaacHorizontal
-    };
-
-    const Component =
-        (type && contentMap[type]) ||
-        (layout && layoutMap[layout]) ||
-        IsaacContentValueOrChildren;
-
-    return <Component {...props} encoding={encoding} value={value} children={children} />;
+    let selectedComponent;
+    switch (type) {
+        // case "figure": selectedComponent = <IsaacFigure {...props} />; break;
+        // case "image": selectedComponent = <IsaacImage {...props} />; break;
+        // case "video": selectedComponent = <IsaacVideo {...props} />; break;
+        // case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break;
+        // case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break;
+        // case "anvilApp": selectedComponent = <AnvilApp {...props} />; break;
+        case "isaacMultiChoiceQuestion":
+        case "isaacNumericQuestion":
+        case "isaacSymbolicQuestion":
+        case "isaacSymbolicChemistryQuestion":
+        case "isaacSymbolicLogicQuestion":
+        case "isaacGraphSketcherQuestion":
+        case "isaacAnvilQuestion":
+        case "isaacStringMatchQuestion":
+        case "isaacFreeTextQuestion":
+            selectedComponent = <IsaacQuestionTabs {...props} />; break;
+        default:
+            switch (layout) {
+                // case "tabs": selectedComponent = <IsaacTabs {...props} />; break;
+                // case "accordion": selectedComponent = <IsaacAccordion {...props} />; break;
+                // case "horizontal": selectedComponent = <IsaacHorizontal {...props} />; break;
+                default: selectedComponent =
+                    <IsaacContentValueOrChildren encoding={encoding} value={value} children={children} />;
+            }
+    }
+    return selectedComponent;
 };
-
-export const IsaacContent = connect(stateToProps, dispatchToProps)(IsaacContentComponent);

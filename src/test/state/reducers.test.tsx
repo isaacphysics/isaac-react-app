@@ -1,5 +1,5 @@
 import {questions, rootReducer, user} from "../../app/state/reducers";
-import {Action, ActionType, AppQuestionDTO} from "../../IsaacAppTypes";
+import {Action, ActionType} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs} from "../test-factory";
 
 const ignoredTestAction: Action = {type: ActionType.TEST_ACTION};

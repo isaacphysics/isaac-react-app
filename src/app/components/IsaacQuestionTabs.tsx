@@ -24,7 +24,7 @@ const stateToProps = (state: AppState, {doc}: {doc: ContentDTO}) => {
 const dispatchToProps = {registerQuestion, deregisterQuestion, attemptQuestion};
 
 interface IsaacQuestionTabsProps {
-    doc: IsaacMultiChoiceQuestionDTO & {id: string}, // Can assume id is always defined
+    doc: IsaacMultiChoiceQuestionDTO, // Can assume id is always defined
     currentAttempt?: ChoiceDTO,
     canSubmit?: boolean,
     validationResponse?: QuestionValidationResponseDTO,
@@ -37,7 +37,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
 
     useEffect((): (() => void) => {
         registerQuestion(doc);
-        return () => deregisterQuestion(doc.id);
+        return () => deregisterQuestion(doc.id as string);
     }, [doc.id]);
 
     return <React.Fragment>
@@ -46,7 +46,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         // hints
 
         {/* switch question answer area on type */}
-        <IsaacMultiChoiceQuestion questionId={doc.id} doc={doc}/>
+        <IsaacMultiChoiceQuestion questionId={doc.id as string} doc={doc}/>
 
         <hr />
 
@@ -59,7 +59,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         }
 
         <div>
-            <button onClick={() => currentAttempt && attemptQuestion(doc.id, currentAttempt)} disabled={!canSubmit}>
+            <button onClick={() => currentAttempt && attemptQuestion(doc.id as string, currentAttempt)} disabled={!canSubmit}>
                 Check my answer
             </button>
         </div>
