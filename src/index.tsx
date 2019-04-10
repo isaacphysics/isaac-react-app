@@ -1,4 +1,5 @@
 import 'react-app-polyfill/ie9';
+import 'bootstrap/dist/css/bootstrap.css';///bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from "react-redux";
