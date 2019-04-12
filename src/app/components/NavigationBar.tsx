@@ -19,7 +19,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => (
                     <Link to="/">Home</Link>
                 </NavItem>
                 <NavItem>
-                    <Link to="/questions/action_reaction_pairs">Featured Question</Link>
+                    <Link to="/questions/prog_files_04_aqa">Featured Question</Link>
                 </NavItem>
                 <NavItem>
                     <Link to="/account" disabled={!user}>My Account</Link>
