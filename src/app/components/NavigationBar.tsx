@@ -12,7 +12,7 @@ interface NavigationBarProps {
 }
 const NavigationBarComponent = ({user}: NavigationBarProps) => (
     <div>
-        <Navbar color="light" expand="md">
+        <Navbar light color="secondary" expand="sm">
             <NavbarBrand href="/">Isaac Computer Science</NavbarBrand>
             <Nav className="ml-auto" navbar>
                 <NavItem>

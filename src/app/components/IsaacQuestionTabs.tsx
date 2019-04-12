@@ -5,6 +5,7 @@ import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../state/reducers";
 import * as ApiTypes from "../../IsaacApiTypes";
+import {Button} from "reactstrap";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -53,9 +54,9 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         }
 
         <div>
-            <button onClick={() => currentAttempt && attemptQuestion(doc.id as string, currentAttempt)} disabled={!canSubmit}>
+            <Button color="primary" onClick={() => currentAttempt && attemptQuestion(doc.id as string, currentAttempt)} disabled={!canSubmit}>
                 Check my answer
-            </button>
+            </Button>
         </div>
 
         <hr />

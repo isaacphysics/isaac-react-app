@@ -1,4 +1,13 @@
-$body-bg: #333;
-$body-color: #666;
+$hot_pink: #ff3369;
+$mustard_yellow: #ffb53f;
+
+$body-bg: #ececec;
+$spacer: 1rem;
+//$body-color: #666;
+
+$theme-colors: (
+  "primary": $hot_pink,
+  "secondary": $mustard_yellow
+);
 
 @import "~bootstrap/scss/bootstrap";

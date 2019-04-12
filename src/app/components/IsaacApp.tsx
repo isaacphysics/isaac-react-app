@@ -32,17 +32,19 @@ const IsaacApp = ({user, requestCurrentUser}: IsaacAppProps) => {
         <Router>
             <React.Fragment>
                 <NavigationBar />
-                <Switch>
-                    <Route exact path="/" component={user ? HomePage : LandingPage} />
-                    <Route path="/login" component={LogInPage}/> :
-                    <Route path="/logout" component={LogOutHandler}/>
-                    <Route path="/auth/:provider/callback" component={ProviderCallbackHandler} />
-                    <Route path="/account" component={AccountPage} />
-                    <Route path="/assignments" component={MyAssignmentsPage} />
-                    <Route path="/gameboards" component={GameboardPage}/>
-                    <Route path="/questions/:questionId" component={QuestionPage} />
-                    <Route component={PageNotFound} />
-                </Switch>
+                <div className={"container"}>
+                    <Switch>
+                        <Route exact path="/" component={user ? HomePage : LandingPage} />
+                        <Route path="/login" component={LogInPage}/> :
+                        <Route path="/logout" component={LogOutHandler}/>
+                        <Route path="/auth/:provider/callback" component={ProviderCallbackHandler} />
+                        <Route path="/account" component={AccountPage} />
+                        <Route path="/assignments" component={MyAssignmentsPage} />
+                        <Route path="/gameboards" component={GameboardPage}/>
+                        <Route path="/questions/:questionId" component={QuestionPage} />
+                        <Route component={PageNotFound} />
+                    </Switch>
+                </div>
             </React.Fragment>
         </Router>
     );

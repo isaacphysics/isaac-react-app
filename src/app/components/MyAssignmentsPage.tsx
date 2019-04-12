@@ -23,17 +23,17 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignme
             {assignments && assignments.map((assignment, index) =>
                 <div key={index}>
                     <Link to={`/gameboards#${assignment.gameboardId}`}>
-                        <h3>{assignment.gameboard && assignment.gameboard.title}</h3>
-                        {assignment.creationDate &&
-                            <p>Assigned: {new Date(assignment.creationDate).toDateString()}</p>
-                        }
-                        {assignment.dueDate &&
-                            <p>Due: {new Date(assignment.dueDate).toDateString()}</p>
-                        }
-                        {assignment.assignerSummary &&
-                            <p>By: {assignment.assignerSummary.familyName}</p>
-                        }
+                    <h3>{assignment.gameboard && assignment.gameboard.title}</h3>
                     </Link>
+                    {assignment.creationDate &&
+                        <p>Assigned: {new Date(assignment.creationDate).toDateString()}</p>
+                    }
+                    {assignment.dueDate &&
+                        <p>Due: {new Date(assignment.dueDate).toDateString()}</p>
+                    }
+                    {assignment.assignerSummary &&
+                        <p>By: {assignment.assignerSummary.familyName}</p>
+                    }
                     <hr />
                 </div>
             )}
