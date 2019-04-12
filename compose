@@ -21,7 +21,7 @@ if [ $1 = "create" ] || [ $1 = "exec" ] || [ $1 = "pull" ] || [ $1 = "push" ] ||
   API_VERSION=`docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-cs-app:$APP_VERSION`
   docker pull docker.isaacscience.org/isaac-api:$API_VERSION
 else
-  API_VERSION=`docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-app:$APP_VERSION`
+  API_VERSION=`docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-cs-app:$APP_VERSION`
 fi 
 
 API_NAME=cs-api-$ENV-$API_VERSION
@@ -81,12 +81,12 @@ services:
     links:
       - pg-$ENV:postgres
     external_links:
-      - elasticsearch-live:elasticsearch
+      - cs-elasticsearch-live:elasticsearch
     volumes:
       - /local/data/m2:/root/.m2:rw
-      - /local/data/cs-config/segue-config.$ENV.properties:/local/data/rutherford/conf/segue-config.properties:ro
-      - /local/data/cs-content:/local/data/rutherford/git-contentstore/rutherford-content:rw
-      - /local/data/keys:/local/data/rutherford/keys:ro
+      - /local/data/isaac-config/cs/segue-config.$ENV.properties:/local/data/rutherford/conf/segue-config.properties:ro
+      - /local/data/cs-content:/local/data/cs-content:rw
+      - /local/data/keys:/local/data/keys:ro
       - /local/data/school_list_2016.csv:/local/data/rutherford/school_list_2016.csv:ro
       - /var/log/isaac/cs-$ENV:/isaac-logs:rw
     networks:
