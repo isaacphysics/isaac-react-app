@@ -1,0 +1,22 @@
+FROM ubuntu:latest
+
+RUN apt update
+RUN apt install -y ca-certificates curl openssl git apt-transport-https gnupg-agent software-properties-common python-software-properties
+
+# Install Node
+RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
+RUN apt install -yy nodejs
+
+
+# Install Docker
+
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN add-apt-repository \
+        "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) \
+        stable"
+RUN apt update && apt install -y docker-ce docker-ce-cli containerd.io
+
+COPY ./build.sh /build.sh
+
+CMD ["./build.sh"]
