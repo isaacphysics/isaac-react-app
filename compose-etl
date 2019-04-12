@@ -1,0 +1,62 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]
+  then
+    echo "Usage: compose-etl VERSION"
+    echo "Note: VERSION is the *APP* version, not API."
+    exit 1
+fi
+
+
+APP_VERSION=$1
+ENV=alpha # Yes, we'll want to change this later
+
+# We're done with the first argument. The remainder will be passed to docker-compose
+shift 1
+
+if [ $1 = "create" ] || [ $1 = "exec" ] || [ $1 = "pull" ] || [ $1 = "push" ] || [ $1 = "run" ] || [ $1 = "start" ] || [ $1 = "up" ]; then
+  docker pull docker.isaacscience.org/isaac-cs-app:$APP_VERSION
+  API_VERSION=`docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-cs-app:$APP_VERSION`
+  docker pull docker.isaacscience.org/isaac-api:$API_VERSION
+else
+  API_VERSION=`docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-cs-app:$APP_VERSION`
+fi 
+
+docker pull docker.isaacscience.org/isaac-api:$API_VERSION
+
+
+ETL_NAME=cs-etl-$API_VERSION
+
+cat << EOF | docker-compose -p dc-cs-etl -f - $@
+version: '2'
+services:
+  etl:
+    container_name: $ETL_NAME
+    image: docker.isaacscience.org/isaac-api:$API_VERSION
+    volumes:
+      - /local/data/m2:/root/.m2:rw
+      - /local/data/isaac-config/cs/segue-config.$ENV.properties:/local/data/rutherford/conf/segue-config.properties:ro
+      - /local/data/cs-content:/local/data/cs-content:rw
+      - /local/data/isaac-config/cs/content_indices.properties:/local/data/rutherford/conf/content_indices.properties:rw
+      - /local/data/keys:/local/data/keys:ro
+      - /local/data/school_list_2016.csv:/local/data/rutherford/school_list_2016.csv:ro
+      - /var/log/isaac/cs-etl:/isaac-logs:rw
+    command: ["mvn", "jetty:run", "-P", "etl"]
+    external_links:
+      - cs-elasticsearch-live:elasticsearch
+    networks:
+      default:
+        aliases:
+          - cs-etl
+    logging:
+      driver: journald
+      options:
+        tag: cs-isaac-etl
+networks:
+  default:
+    external:
+      name: isaac
+EOF
+
+exit 0
+
