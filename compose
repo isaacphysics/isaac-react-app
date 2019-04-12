@@ -1,0 +1,111 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]
+  then
+    echo "Usage: compose [alpha|dev|staging|test] VERSION"
+    exit 1
+fi
+
+ENV=$1
+APP_VERSION=$2
+
+if [ $2 = "dev" ] || [ $2 = "staging" ] || [ $2 = "test" ] || [ $2 = "live" ]; then
+  echo "Environment is now first argument to this script. Sorry James."
+  echo "Usage: compose [alpha|dev|staging|test] VERSION"
+  exit 1
+fi
+shift 2
+
+if [ $1 = "create" ] || [ $1 = "exec" ] || [ $1 = "pull" ] || [ $1 = "push" ] || [ $1 = "run" ] || [ $1 = "start" ] || [ $1 = "up" ]; then
+  docker pull docker.isaacscience.org/isaac-cs-app:$APP_VERSION
+  API_VERSION=`docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-cs-app:$APP_VERSION`
+  docker pull docker.isaacscience.org/isaac-api:$API_VERSION
+else
+  API_VERSION=`docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-app:$APP_VERSION`
+fi 
+
+API_NAME=cs-api-$ENV-$API_VERSION
+APP_NAME=cs-app-$ENV-$APP_VERSION
+
+# Define the Postgres YML. Note that when ENV is "test" an additional volume line is appended to the end!
+read -r -d '' PG_SERVICE << EOM
+pg-$ENV:
+    container_name: cs-pg-$ENV
+    restart: unless-stopped
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: rutherford
+      POSTGRES_PASSWORD: rutherf0rd
+    volumes:
+      - cs-pg-$ENV:/pgdata
+      - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-create-script.sql:/docker-entrypoint-initdb.d/00-isaac-create.sql:ro
+      - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-functions.sql:/docker-entrypoint-initdb.d/01-isaac-functions.sql:ro
+EOM
+
+
+if [ "$ENV" == "alpha" ]; then
+  : # Continue
+elif [ "$ENV" == "dev" ]; then
+  : # Continue
+elif [ "$ENV" == "staging" ]; then
+  : # Continue
+elif [ "$ENV" == "live" ]; then
+  echo "Cannot manage live deployment with this script any more. Please use compose-live."
+  exit 1
+elif [ "$ENV" == "test" ]; then
+  # Need to add the SQL script that loads the test data to pg-test:
+  TEST_INIT_DATA="      - /local/data/test-db-schema.sql:/docker-entrypoint-initdb.d/test-db-schema.sql"
+  PG_SERVICE="$PG_SERVICE"$'\n'"$TEST_INIT_DATA"
+else
+  echo "Must set environment to alpha, dev, staging or test"
+  exit 1
+fi
+
+cat << EOF | docker-compose -p dc-$APP_NAME -f - $@
+version: '2'
+services:
+  $APP_NAME:
+    container_name: $APP_NAME
+    image: docker.isaacscience.org/isaac-cs-app:$APP_VERSION
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - cs-app-$ENV
+  $API_NAME:
+    container_name: $API_NAME
+    image: docker.isaacscience.org/isaac-api:$API_VERSION
+    restart: unless-stopped
+    extra_hosts:
+      - local-smtp:$LOCAL_SMTP
+    links:
+      - pg-$ENV:postgres
+    external_links:
+      - elasticsearch-live:elasticsearch
+    volumes:
+      - /local/data/m2:/root/.m2:rw
+      - /local/data/cs-config/segue-config.$ENV.properties:/local/data/rutherford/conf/segue-config.properties:ro
+      - /local/data/cs-content:/local/data/rutherford/git-contentstore/rutherford-content:rw
+      - /local/data/keys:/local/data/rutherford/keys:ro
+      - /local/data/school_list_2016.csv:/local/data/rutherford/school_list_2016.csv:ro
+      - /var/log/isaac/cs-$ENV:/isaac-logs:rw
+    networks:
+      default:
+        aliases:
+          - cs-api-$ENV-any
+    logging:
+      driver: journald
+      options:
+        tag: cs-isaac-api-$ENV
+  $PG_SERVICE
+networks:
+  default:
+    external:
+      name: isaac
+volumes:
+  cs-pg-$ENV:
+    external: true
+
+EOF
+
+exit 0
