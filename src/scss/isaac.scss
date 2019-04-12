@@ -11,3 +11,7 @@ $theme-colors: (
 );
 
 @import "~bootstrap/scss/bootstrap";
+
+li.nav-item {
+    margin: 0 10px;
+}
