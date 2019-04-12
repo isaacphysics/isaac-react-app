@@ -32,7 +32,6 @@ const IsaacApp = ({user, requestCurrentUser}: IsaacAppProps) => {
         <Router>
             <React.Fragment>
                 <NavigationBar />
-                <hr />
                 <Switch>
                     <Route exact path="/" component={user ? HomePage : LandingPage} />
                     <Route path="/login" component={LogInPage}/> :
