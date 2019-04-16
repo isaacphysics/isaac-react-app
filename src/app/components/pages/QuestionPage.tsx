@@ -2,11 +2,11 @@ import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import queryString from "query-string";
-import {fetchQuestion} from "../state/actions";
-import {ShowLoading} from "./ShowLoading";
-import {IsaacContent} from "./IsaacContent";
-import {AppState} from "../state/reducers";
-import {ContentDTO} from "../../IsaacApiTypes";
+import {fetchQuestion} from "../../state/actions";
+import {ShowLoading} from "../handlers/ShowLoading";
+import {IsaacContent} from "../content/IsaacContent";
+import {AppState} from "../../state/reducers";
+import {ContentDTO} from "../../../IsaacApiTypes";
 
 const stateToProps = (state: AppState, {match: {params}, location: {search}}: any) => {
     return {

@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import {Redirect, withRouter} from "react-router-dom";
-import {handleProviderCallback} from "../state/actions";
-import {AppState} from "../state/reducers";
-import {RegisteredUserDTO} from "../../IsaacApiTypes";
+import {handleProviderCallback} from "../../state/actions";
+import {AppState} from "../../state/reducers";
+import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 
 const stateToProps = (state: AppState) => (state && {user: state.user});
 const dispatchToProps = {handleProviderCallback: handleProviderCallback};

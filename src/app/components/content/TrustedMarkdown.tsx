@@ -1,5 +1,5 @@
 import React from "react";
-import {MARKDOWN_RENDERER} from "../services/constants";
+import {MARKDOWN_RENDERER} from "../../services/constants";
 import {TrustedHtml} from "./TrustedHtml";
 
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {

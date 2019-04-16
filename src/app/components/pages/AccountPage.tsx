@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
-import {RegisteredUserDTO} from "../../IsaacApiTypes";
-import {AppState} from "../state/reducers";
+import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {AppState} from "../../state/reducers";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;

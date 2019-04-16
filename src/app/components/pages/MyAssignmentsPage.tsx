@@ -1,10 +1,10 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {loadMyAssignments} from "../state/actions";
-import {ShowLoading} from "./ShowLoading";
-import {AppState} from "../state/reducers";
-import {AssignmentDTO} from "../../IsaacApiTypes";
+import {loadMyAssignments} from "../../state/actions";
+import {ShowLoading} from "../handlers/ShowLoading";
+import {AppState} from "../../state/reducers";
+import {AssignmentDTO} from "../../../IsaacApiTypes";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments};
@@ -23,7 +23,7 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignme
             {assignments && assignments.map((assignment, index) =>
                 <div key={index}>
                     <Link to={`/gameboards#${assignment.gameboardId}`}>
-                    <h3>{assignment.gameboard && assignment.gameboard.title}</h3>
+                        <h3>{assignment.gameboard && assignment.gameboard.title}</h3>
                     </Link>
                     {assignment.creationDate &&
                         <p>Assigned: {new Date(assignment.creationDate).toDateString()}</p>

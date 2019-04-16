@@ -1,9 +1,9 @@
 import React from "react";
 import {connect} from "react-redux";
-import {setCurrentAttempt} from "../state/actions";
+import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {AppState} from "../state/reducers";
-import {ChoiceDTO, IsaacMultiChoiceQuestionDTO} from "../../IsaacApiTypes";
+import {AppState} from "../../state/reducers";
+import {ChoiceDTO, IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers

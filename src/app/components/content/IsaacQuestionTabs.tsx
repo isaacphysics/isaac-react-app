@@ -1,10 +1,10 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
-import {attemptQuestion, deregisterQuestion, registerQuestion} from "../state/actions";
+import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
 import {IsaacContent} from "./IsaacContent";
-import {AppState} from "../state/reducers";
-import * as ApiTypes from "../../IsaacApiTypes";
+import {AppState} from "../../state/reducers";
+import * as ApiTypes from "../../../IsaacApiTypes";
 import {Button} from "reactstrap";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {

@@ -1,7 +1,7 @@
 import React from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
-import {ContentDTO} from "../../IsaacApiTypes";
+import {ContentDTO} from "../../../IsaacApiTypes";
 
 interface IsaacContentProps {
     doc: ContentDTO

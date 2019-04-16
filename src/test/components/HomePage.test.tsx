@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import {HomePageComponent} from "../../app/components/HomePage";
+import {HomePageComponent} from "../../app/components/pages/HomePage";
 import {RegisteredUserDTO} from "../../IsaacApiTypes";
 
 describe('HomePageComponent', () => {

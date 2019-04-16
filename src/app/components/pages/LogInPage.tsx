@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {handleProviderLoginRedirect} from "../state/actions";
+import {handleProviderLoginRedirect} from "../../state/actions";
 
 const stateToProps = null;
 const dispatchToProps = {loginProviderRedirect: handleProviderLoginRedirect};

@@ -1,10 +1,10 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom"
-import {loadGameboard} from "../state/actions";
-import {ShowLoading} from "./ShowLoading";
-import {GameboardDTO} from "../../IsaacApiTypes";
-import {AppState} from "../state/reducers";
+import {loadGameboard} from "../../state/actions";
+import {ShowLoading} from "../handlers/ShowLoading";
+import {GameboardDTO} from "../../../IsaacApiTypes";
+import {AppState} from "../../state/reducers";
 
 const stateFromProps = (state: AppState, currentProps: object) => (state && {gameboard: state.currentGameboard});
 const dispatchFromProps = {loadGameboard};

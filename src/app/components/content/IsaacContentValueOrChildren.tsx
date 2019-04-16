@@ -2,7 +2,7 @@ import React from "react";
 import {IsaacContent} from "./IsaacContent";
 import {TrustedHtml} from "./TrustedHtml";
 import {TrustedMarkdown} from "./TrustedMarkdown";
-import {ContentDTO} from "../../IsaacApiTypes";
+import {ContentDTO} from "../../../IsaacApiTypes";
 
 interface ContentValueOrChildrenProps {
     value?: string,
