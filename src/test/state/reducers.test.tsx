@@ -1,8 +1,9 @@
 import {questions, rootReducer, user} from "../../app/state/reducers";
-import {Action, ActionType} from "../../IsaacAppTypes";
+import {Action} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs} from "../test-factory";
+import {ACTION_TYPES} from "../../app/services/constants";
 
-const ignoredTestAction: Action = {type: ActionType.TEST_ACTION};
+const ignoredTestAction: Action = {type: ACTION_TYPES.TEST_ACTION};
 
 describe("root reducer", () => {
 
@@ -48,7 +49,7 @@ describe("user reducer", () => {
     });
 
     it("should always add a user on login response success", () => {
-        const addProfWheelerAction: Action = {type: ActionType.USER_LOG_IN_RESPONSE_SUCCESS, user: profWheeler};
+        const addProfWheelerAction: Action = {type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS, user: profWheeler};
         const previousStates = [null, dameShirley, profWheeler];
         previousStates.map((previousState) => {
             const actualNextState = user(previousState, addProfWheelerAction);
@@ -74,7 +75,7 @@ describe("questions reducer", () => {
     });
 
     it("should register a question correctly", () => {
-        const registerManVsHorse: Action = {type: ActionType.QUESTION_REGISTRATION, question: manVsHorse};
+        const registerManVsHorse: Action = {type: ACTION_TYPES.QUESTION_REGISTRATION, question: manVsHorse};
         const testCases = [
             [null, [manVsHorse]],
             [[aToboggan], [aToboggan, manVsHorse]],
@@ -88,7 +89,7 @@ describe("questions reducer", () => {
 
     it("should deregister questions correctly", () => {
         const deregisterManVsHorse: Action =
-            {type: ActionType.QUESTION_DEREGISTRATION, questionId: (manVsHorse.id as string)};
+            {type: ACTION_TYPES.QUESTION_DEREGISTRATION, questionId: (manVsHorse.id as string)};
         const testCases = [
             [null, null],
             [[manVsHorse], null],

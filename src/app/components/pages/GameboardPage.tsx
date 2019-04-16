@@ -17,7 +17,7 @@ interface GameboardPageProps {
 const GameboardPageComponent = ({location: {hash}, gameboard, loadGameboard}: GameboardPageProps) => {
     useEffect(() => {loadGameboard(hash || null);}, [hash]);
 
-    return (
+    return <React.Fragment>
         <ShowLoading until={gameboard}>
             <h2>{gameboard && gameboard.title || "Filter Generated Gameboard"}</h2>
             <hr />
@@ -30,7 +30,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, loadGameboard}: Ga
                 </div>
             )}
         </ShowLoading>
-    );
+    </React.Fragment>;
 };
 
 export const GameboardPage = withRouter(connect(stateFromProps, dispatchFromProps)(GameboardPageComponent));

@@ -25,7 +25,7 @@ const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps)
         <div>
             <h3><IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding} children={doc.children} /></h3>
             <ul>{doc.choices && doc.choices.map((choice, index) =>
-                <li key={index}>
+                <li key={index} className="list-unstyled">
                     <input
                         type="radio"
                         checked={currentAttemptValue == choice.value}

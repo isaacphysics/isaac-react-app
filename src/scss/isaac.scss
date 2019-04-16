@@ -3,7 +3,6 @@ $mustard_yellow: #ffb53f;
 
 $body-bg: #ececec;
 $spacer: 1rem;
-//$body-color: #666;
 
 $theme-colors: (
   "primary": $hot_pink,
@@ -14,4 +13,10 @@ $theme-colors: (
 
 li.nav-item {
     margin: 0 10px;
+}
+
+a.disabled {
+    color: $gray-600;
+    pointer-events: none;
+    cursor: default;
 }

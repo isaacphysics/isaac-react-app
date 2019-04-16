@@ -1,69 +1,53 @@
 import * as ApiTypes from "./IsaacApiTypes";
-
-export enum ActionType {
-    TEST_ACTION = "TEST_ACTION",
-
-    USER_UPDATE_REQUEST = "USER_UPDATE_REQUEST",
-    USER_UPDATE_FAILURE = "USER_UPDATE_FAILURE",
-    USER_LOG_IN_REQUEST = "USER_LOG_IN_REQUEST",
-    USER_LOG_IN_RESPONSE_SUCCESS = "USER_LOG_IN_RESPONSE_SUCCESS",
-    USER_LOG_OUT_REQUEST = "USER_LOG_OUT_REQUEST",
-    USER_LOG_OUT_RESPONSE_SUCCESS = "USER_LOG_OUT_RESPONSE_SUCCESS",
-    AUTHENTICATION_REQUEST_REDIRECT = "AUTHENTICATION_REQUEST_REDIRECT",
-    AUTHENTICATION_REDIRECT = "AUTHENTICATION_REDIRECT",
-    AUTHENTICATION_HANDLE_CALLBACK = "AUTHENTICATION_HANDLE_CALLBACK",
-
-    DOCUMENT_REQUEST = "DOCUMENT_REQUEST",
-    DOCUMENT_RESPONSE_SUCCESS = "DOCUMENT_RESPONSE_SUCCESS",
-    DOCUMENT_RESPONSE_FAILURE = "DOCUMENT_RESPONSE_FAILURE",
-
-    QUESTION_REGISTRATION = "QUESTION_REGISTRATION",
-    QUESTION_DEREGISTRATION = "QUESTION_DEREGISTRATION",
-    QUESTION_ATTEMPT_REQUEST = "QUESTION_ATTEMPT_REQUEST",
-    QUESTION_ATTEMPT_RESPONSE_SUCCESS = "QUESTION_ATTEMPT_RESPONSE_SUCCESS",
-    QUESTION_ATTEMPT_RESPONSE_FAILURE = "QUESTION_ATTEMPT_RESPONSE_FAILURE",
-    QUESTION_SET_CURRENT_ATTEMPT = "QUESTION_SET_CURRENT_ATTEMPT",
-
-    GAMEBOARD_REQUEST = "GAMEBOARD_REQUEST",
-    GAMEBOARD_RESPONSE_SUCCESS = "GAMEBOARD_RESPONSE_SUCCESS",
-
-    ASSIGNMENTS_REQUEST = "ASSIGNMENTS_REQUEST",
-    ASSIGNMENTS_RESPONSE_SUCCESS = "ASSIGNMENTS_RESPONSE_SUCCESS",
-}
+import {ACTION_TYPES, EXAM_BOARDS} from "./app/services/constants";
 
 export type Action =
-    | {type: ActionType.TEST_ACTION}
+    | {type: ACTION_TYPES.TEST_ACTION}
 
-    | {type: ActionType.USER_UPDATE_REQUEST}
-    | {type: ActionType.USER_UPDATE_FAILURE}
+    | {type: ACTION_TYPES.USER_UPDATE_REQUEST}
+    | {type: ACTION_TYPES.USER_UPDATE_FAILURE}
 
-    | {type: ActionType.USER_LOG_IN_REQUEST}
-    | {type: ActionType.USER_LOG_IN_RESPONSE_SUCCESS, user: ApiTypes.RegisteredUserDTO}
-    | {type: ActionType.USER_LOG_OUT_REQUEST}
-    | {type: ActionType.USER_LOG_OUT_RESPONSE_SUCCESS}
-    | {type: ActionType.AUTHENTICATION_REQUEST_REDIRECT, provider: string}
-    | {type: ActionType.AUTHENTICATION_REDIRECT, provider: string, redirectUrl: string}
-    | {type: ActionType.AUTHENTICATION_HANDLE_CALLBACK}
+    | {type: ACTION_TYPES.USER_LOG_IN_REQUEST}
+    | {type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS, user: ApiTypes.RegisteredUserDTO}
+    | {type: ACTION_TYPES.USER_LOG_OUT_REQUEST}
+    | {type: ACTION_TYPES.USER_LOG_OUT_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPES.AUTHENTICATION_REQUEST_REDIRECT, provider: string}
+    | {type: ACTION_TYPES.AUTHENTICATION_REDIRECT, provider: string, redirectUrl: string}
+    | {type: ACTION_TYPES.AUTHENTICATION_HANDLE_CALLBACK}
 
-    | {type: ActionType.DOCUMENT_REQUEST, questionId: string}
-    | {type: ActionType.DOCUMENT_RESPONSE_SUCCESS, doc: ApiTypes.ContentDTO}
-    | {type: ActionType.DOCUMENT_RESPONSE_FAILURE}
+    | {type: ACTION_TYPES.DOCUMENT_REQUEST, questionId: string}
+    | {type: ACTION_TYPES.DOCUMENT_RESPONSE_SUCCESS, doc: ApiTypes.ContentDTO}
+    | {type: ACTION_TYPES.DOCUMENT_RESPONSE_FAILURE}
 
-    | {type: ActionType.QUESTION_REGISTRATION, question: ApiTypes.QuestionDTO}
-    | {type: ActionType.QUESTION_DEREGISTRATION, questionId: string}
-    | {type: ActionType.QUESTION_ATTEMPT_REQUEST, questionId: string, attempt: ApiTypes.ChoiceDTO}
-    | {type: ActionType.QUESTION_ATTEMPT_RESPONSE_SUCCESS, questionId: string, response: ApiTypes.QuestionValidationResponseDTO}
-    | {type: ActionType.QUESTION_ATTEMPT_RESPONSE_FAILURE}
-    | {type: ActionType.QUESTION_SET_CURRENT_ATTEMPT, questionId: string, attempt: ApiTypes.ChoiceDTO}
+    | {type: ACTION_TYPES.QUESTION_REGISTRATION, question: ApiTypes.QuestionDTO}
+    | {type: ACTION_TYPES.QUESTION_DEREGISTRATION, questionId: string}
+    | {type: ACTION_TYPES.QUESTION_ATTEMPT_REQUEST, questionId: string, attempt: ApiTypes.ChoiceDTO}
+    | {type: ACTION_TYPES.QUESTION_ATTEMPT_RESPONSE_SUCCESS, questionId: string, response: ApiTypes.QuestionValidationResponseDTO}
+    | {type: ACTION_TYPES.QUESTION_ATTEMPT_RESPONSE_FAILURE}
+    | {type: ACTION_TYPES.QUESTION_SET_CURRENT_ATTEMPT, questionId: string, attempt: ApiTypes.ChoiceDTO}
 
-    | {type: ActionType.GAMEBOARD_REQUEST, gameboardId: string | null}
-    | {type: ActionType.GAMEBOARD_RESPONSE_SUCCESS, gameboard: ApiTypes.GameboardDTO}
+    | {type: ACTION_TYPES.GAMEBOARD_REQUEST, gameboardId: string | null}
+    | {type: ACTION_TYPES.GAMEBOARD_RESPONSE_SUCCESS, gameboard: ApiTypes.GameboardDTO}
 
-    | {type: ActionType.ASSIGNMENTS_REQUEST}
-    | {type: ActionType.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: ApiTypes.AssignmentDTO[]};
+    | {type: ACTION_TYPES.ASSIGNMENTS_REQUEST}
+    | {type: ACTION_TYPES.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: ApiTypes.AssignmentDTO[]};
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO,
     currentAttempt?: ApiTypes.ChoiceDTO,
     canSubmit?: boolean
+}
+
+export interface TopicLink {
+    comingSoon?: boolean,
+    onlyFor?: EXAM_BOARDS[],
+    destination?: string
+}
+
+export interface AllTopicsDTO {
+    [category: string]: {
+        [subCategory: string]: {
+            [topicHeading: string]: TopicLink
+        }
+    }
 }
