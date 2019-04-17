@@ -2,7 +2,7 @@ import {api} from "../services/api";
 import {Dispatch} from "react";
 import {Action} from "../../IsaacAppTypes";
 import {ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
-import {ACTION_TYPES} from "../services/constants";
+import {ACTION_TYPES, TOPICS} from "../services/constants";
 
 // User Authentication
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
@@ -66,6 +66,19 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
 
 export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPES.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
+};
+
+
+// Topic
+export const fetchTopicDetails = (topicName: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPES.TOPIC_REQUEST, topicName});
+    try {
+        // could check local storage first
+        // const topicDetailResponse = await api.topics.get(topicName);
+        dispatch({type: ACTION_TYPES.TOPIC_RESPONSE_SUCCESS, topic: TOPICS[topicName]});
+    } catch (e) {
+        //dispatch({type: ACTION_TYPES.TOPIC_RESPONSE_FAILURE}); // TODO MT handle response failure
+    }
 };
 
 

@@ -19,7 +19,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
 
     return <div>
         <ReactStrap.Navbar light color="secondary" expand="sm">
-            <ReactStrap.NavbarBrand><Link to="/">Isaac Computer Science</Link></ReactStrap.NavbarBrand>
+            <ReactStrap.NavbarBrand to="/">Isaac Computer Science</ReactStrap.NavbarBrand>
             <ReactStrap.Nav className="ml-auto" navbar>
 
                 <ReactStrap.UncontrolledDropdown nav inNavbar>

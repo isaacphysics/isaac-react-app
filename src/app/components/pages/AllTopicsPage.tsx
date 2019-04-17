@@ -1,13 +1,13 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {ALL_TOPICS} from "../../services/constants";
-import {TopicLink} from "../../../IsaacAppTypes";
+import {TopicLinkDTO} from "../../../IsaacAppTypes";
 import {Badge} from "reactstrap";
 
 export const AllTopicsPage = () => {
-    const renderTopicLink = (topicName: string, topicProperties: TopicLink) => {
+    const renderTopicLink = (topicName: string, topicProperties: TopicLinkDTO) => {
         const examBoardTags = topicProperties.onlyFor &&
-            <>{topicProperties.onlyFor.map((examBoard) => <Badge color="dark">{examBoard}</Badge>)}</>;
+            <>{topicProperties.onlyFor.map((examBoard, index) => <Badge color="dark" key={index}>{examBoard}</Badge>)}</>;
         const comingSoonBadge = topicProperties.comingSoon && <Badge color="light">Coming Soon</Badge>;
         const className = topicProperties.comingSoon ? "disabled" : "";
         return <React.Fragment>
@@ -23,17 +23,17 @@ export const AllTopicsPage = () => {
         <hr />
 
         <div className="row">
-            {Object.keys(ALL_TOPICS).map((categoryHeading) => {
+            {Object.keys(ALL_TOPICS).map((categoryHeading, index) => {
                 const category = ALL_TOPICS[categoryHeading];
-                return <div className="col">
+                return <div key={index} className="col">
                     <h2>{categoryHeading}</h2>
-                    {Object.keys(category).map((subCategoryHeading) => {
+                    {Object.keys(category).map((subCategoryHeading, index) => {
                         const subCategory = category[subCategoryHeading];
-                        return <React.Fragment>
+                        return <React.Fragment key={index}>
                             <h3>{subCategoryHeading}</h3>
-                            <ul>{Object.keys(subCategory).map((topicName) => {
+                            <ul>{Object.keys(subCategory).map((topicName, index) => {
                                 const topicLink = subCategory[topicName];
-                                return <li className="list-unstyled">
+                                return <li className="list-unstyled" key={index}>
                                     {renderTopicLink(topicName, topicLink)}
                                 </li>
                             })}</ul>

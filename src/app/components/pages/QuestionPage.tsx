@@ -8,10 +8,10 @@ import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
 
-const stateToProps = (state: AppState, {match: {params}, location: {search}}: any) => {
+const stateToProps = (state: AppState, {match: {params: {questionId}}, location: {search}}: any) => {
     return {
         doc: state ? state.doc : null,
-        urlQuestionId: params.questionId,
+        urlQuestionId: questionId,
         queryParams: queryString.parse(search)
     };
 };

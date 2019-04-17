@@ -1,5 +1,5 @@
 import {combineReducers} from "redux";
-import {Action, AppQuestionDTO} from "../../IsaacAppTypes";
+import {Action, AppQuestionDTO, TopicDTO} from "../../IsaacAppTypes";
 import {AssignmentDTO, ContentDTO, GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPES} from "../services/constants";
 
@@ -84,11 +84,22 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
     }
 };
 
-const appReducer = combineReducers({user, doc, questions, currentGameboard, assignments});
+type CurrentTopicState = TopicDTO | null;
+export const currentTopic = (currentTopic: CurrentTopicState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPES.TOPIC_RESPONSE_SUCCESS:
+            return action.topic;
+        default:
+            return currentTopic;
+    }
+};
+
+const appReducer = combineReducers({user, doc, questions, currentTopic, currentGameboard, assignments});
 export type AppState = undefined | {
     user: UserState,
     doc: DocState,
     questions: QuestionsState,
+    currentTopic: CurrentTopicState,
     currentGameboard: CurrentGameboardState,
     assignments: AssignmentsState
 }

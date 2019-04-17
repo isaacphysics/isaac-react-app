@@ -8,7 +8,7 @@ import {ACTION_TYPES} from "../../app/services/constants";
 
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
-let axiosMock = new MockAdapter(endpoint);
+const axiosMock = new MockAdapter(endpoint);
 
 describe("requestCurrentUser action", async () => {
     afterEach(() => {

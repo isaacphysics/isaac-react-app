@@ -1,5 +1,6 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPES, EXAM_BOARDS} from "./app/services/constants";
+import {ContentDTO} from "./IsaacApiTypes";
 
 export type Action =
     | {type: ACTION_TYPES.TEST_ACTION}
@@ -26,6 +27,9 @@ export type Action =
     | {type: ACTION_TYPES.QUESTION_ATTEMPT_RESPONSE_FAILURE}
     | {type: ACTION_TYPES.QUESTION_SET_CURRENT_ATTEMPT, questionId: string, attempt: ApiTypes.ChoiceDTO}
 
+    | {type: ACTION_TYPES.TOPIC_REQUEST, topicName: string}
+    | {type: ACTION_TYPES.TOPIC_RESPONSE_SUCCESS, topic: TopicDTO}
+
     | {type: ACTION_TYPES.GAMEBOARD_REQUEST, gameboardId: string | null}
     | {type: ACTION_TYPES.GAMEBOARD_RESPONSE_SUCCESS, gameboard: ApiTypes.GameboardDTO}
 
@@ -38,16 +42,31 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     canSubmit?: boolean
 }
 
-export interface TopicLink {
+export interface TopicLinkDTO {
     comingSoon?: boolean,
     onlyFor?: EXAM_BOARDS[],
-    destination?: string
+    destination: string
 }
 
 export interface AllTopicsDTO {
     [category: string]: {
         [subCategory: string]: {
-            [topicHeading: string]: TopicLink
+            [topicHeading: string]: TopicLinkDTO
         }
     }
+}
+
+export enum LinkType {CURRICULUM = "CURRICULUM", QUESTION = "QUESTION"}
+
+export interface ContentLinkDTO {
+    value: string,
+    destination: string,
+    type: LinkType
+    comingSoon?: boolean,
+}
+
+export interface TopicDTO {
+    title: string,
+    description: ContentDTO,
+    contentLinks: ContentLinkDTO[]
 }

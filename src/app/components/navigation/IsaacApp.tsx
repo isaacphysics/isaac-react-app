@@ -13,6 +13,7 @@ import {AccountPage} from "../pages/AccountPage";
 import {MyAssignmentsPage} from "../pages/MyAssignmentsPage";
 import {GameboardPage} from "../pages/GameboardPage";
 import {AllTopicsPage} from "../pages/AllTopicsPage";
+import {TopicPage} from "../pages/TopicPage";
 import {PageNotFound} from "../pages/PageNotFound";
 import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
@@ -46,6 +47,7 @@ const IsaacApp = ({user, requestCurrentUser}: IsaacAppProps) => {
                             <Route path="/gameboards" component={GameboardPage}/>
                             <Route path="/questions/:questionId" component={QuestionPage} />
                             <Route exact path="/topics" component={AllTopicsPage} />
+                            <Route path="/topics/:topicName" component={TopicPage} />
                             <Route component={PageNotFound} />
                         </Switch>
                     </div>
