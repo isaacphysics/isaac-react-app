@@ -13,7 +13,7 @@ interface NavigationBarProps {
 const NavigationBarComponent = ({user}: NavigationBarProps) => {
     const DropdownItemComingSoon = (props: {children: string}) => {
         return <ReactStrap.DropdownItem className="disabled" aria-disabled="true">
-            {props.children} <ReactStrap.Badge color="primary">Coming Soon</ReactStrap.Badge>
+            {props.children} <ReactStrap.Badge color="light">Coming Soon</ReactStrap.Badge>
         </ReactStrap.DropdownItem>
     };
 
