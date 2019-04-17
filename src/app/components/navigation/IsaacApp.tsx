@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import {NavigationBar} from "./NavigationBar";
+import {Footer} from "./Footer";
 import {HomePage} from "../pages/HomePage";
 import {QuestionPage} from "../pages/QuestionPage";
 import {LogInPage} from "../pages/LogInPage";
@@ -33,20 +34,23 @@ const IsaacApp = ({user, requestCurrentUser}: IsaacAppProps) => {
         <Router>
             <React.Fragment>
                 <NavigationBar />
-                <div className={"container"}>
-                    <Switch>
-                        <Route exact path="/" component={user ? HomePage : LandingPage} />
-                        <Route path="/login" component={LogInPage}/> :
-                        <Route path="/logout" component={LogOutHandler}/>
-                        <Route path="/auth/:provider/callback" component={ProviderCallbackHandler} />
-                        <Route path="/account" component={AccountPage} />
-                        <Route path="/assignments" component={MyAssignmentsPage} />
-                        <Route path="/gameboards" component={GameboardPage}/>
-                        <Route path="/questions/:questionId" component={QuestionPage} />
-                        <Route exact path="/topics" component={AllTopicsPage} />
-                        <Route component={PageNotFound} />
-                    </Switch>
-                </div>
+                <main>
+                    <div className={"container"}>
+                        <Switch>
+                            <Route exact path="/" component={user ? HomePage : LandingPage} />
+                            <Route path="/login" component={LogInPage}/> :
+                            <Route path="/logout" component={LogOutHandler}/>
+                            <Route path="/auth/:provider/callback" component={ProviderCallbackHandler} />
+                            <Route path="/account" component={AccountPage} />
+                            <Route path="/assignments" component={MyAssignmentsPage} />
+                            <Route path="/gameboards" component={GameboardPage}/>
+                            <Route path="/questions/:questionId" component={QuestionPage} />
+                            <Route exact path="/topics" component={AllTopicsPage} />
+                            <Route component={PageNotFound} />
+                        </Switch>
+                    </div>
+                </main>
+                {/*<Footer />*/}
             </React.Fragment>
         </Router>
     );
