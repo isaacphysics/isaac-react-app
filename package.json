@@ -84,10 +84,10 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "eslint:all",
+      "eslint:recommended",
       "plugin:react/all",
-      "plugin:jsx-a11y/recommended",
-      "plugin:@typescript-eslint/recommended"
+      "plugin:@typescript-eslint/recommended",
+      "plugin:jsx-a11y/strict"
     ],
     "plugins": [
       "react-hooks",

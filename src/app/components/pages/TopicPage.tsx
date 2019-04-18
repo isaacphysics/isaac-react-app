@@ -31,7 +31,7 @@ const TopicPageComponent = ({topicName, topic, fetchTopicDetails}: TopicPageProp
         const comingSoonBadge = contentLink.comingSoon && <Badge color="light">Coming Soon</Badge>;
         return (
             <ListGroupItem key={index} className={itemClasses}>
-                <Link to={contentLink.destination} className={linkClasses}>
+                <Link to={`/${contentLink.type}/${contentLink.destination}`} className={linkClasses}>
                     {contentLink.value}{" "}{comingSoonBadge}
                     <span className="float-right">&gt;</span>
                 </Link>

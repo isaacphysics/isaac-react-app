@@ -77,7 +77,7 @@ export const ALL_TOPICS: AllTopicsDTO = {
             "Internet": {destination: "", comingSoon: true},
         },
         "Computer systems": {
-            "Boolean logic": {destination: "/topics/boolean_logic"},
+            "Boolean logic": {destination: "", comingSoon: true},
             "Architecture": {destination: "", comingSoon: true},
             "Hardware": {destination: "", comingSoon: true},
             "Operating systems and software": {destination: "", comingSoon: true},
@@ -135,31 +135,43 @@ export const TOPICS: {[topicName: string]: TopicDTO} = {
         contentLinks: [
             {
                 value: "Defining and calling",
-                destination: "/curriculum/defining_and_calling",
-                type: LinkType.CURRICULUM,
-                comingSoon: true
-            },
-            {
-                value: "Types of subroutines",
-                destination: "/curriculum/types_of_subroutines",
-                type: LinkType.CURRICULUM,
-            },
-            {
-                value: "Advantages of using subroutines",
-                destination: "/curriculum/advantages_of_subroutines",
-                type: LinkType.CURRICULUM,
-                comingSoon: true
-            },
-            {
-                value: "Question section 1",
-                destination: "/questions/advantages_of_subroutines",
-                type: LinkType.QUESTION,
+                destination: "prog_sub_define_and_call",
+                type: LinkType.CONTENT
             },
             {
                 value: "Using parameters and arguments",
-                destination: "/curriculum/using_paramaters_and_arguments",
-                type: LinkType.CURRICULUM,
-                comingSoon: true
+                destination: "prog_sub_parameters",
+                type: LinkType.CONTENT
+            },
+            {
+                value: "Passing by value and by reference",
+                destination: "prog_sub_value_reference",
+                type: LinkType.CONTENT,
+            },
+            {
+                value: "Return values",
+                destination: "prog_sub_return_value",
+                type: LinkType.CONTENT,
+            },
+            {
+                value: "Local and global variables",
+                destination: "prog_sub_local_and_global",
+                type: LinkType.CONTENT,
+            },
+            {
+                value: "Advantages of using subroutines",
+                destination: "prog_sub_advantages",
+                type: LinkType.CONTENT
+            },
+            {
+                value: "Question section 1",
+                destination: "prog_sub_01_aqa",
+                // TODO MT handle exam board links
+                // destination: {
+                //     [EXAM_BOARDS.AQA]: "prog_sub_01_aqa",
+                //     [EXAM_BOARDS.OCR]: "prog_sub_01_ocr"
+                // },
+                type: LinkType.QUESTION,
             },
         ]
     }
