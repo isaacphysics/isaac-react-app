@@ -23,7 +23,7 @@ describe("root reducer", () => {
         ];
         previousStates.map((previousState) => {
             // @ts-ignore initial state so that we don't need to keep updating the test unnecessarily
-            const actualNextState = rootReducer(previousState, {type: ActionType.USER_LOG_OUT_RESPONSE_SUCCESS});
+            const actualNextState = rootReducer(previousState, {type: ACTION_TYPES.USER_LOG_OUT_RESPONSE_SUCCESS});
             expect(actualNextState).toEqual(actualInitialState);
         });
     });
