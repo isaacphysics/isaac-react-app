@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
+import {IsaacSymbolicLogicQuestion} from "./IsaacSymbolicLogicQuestion";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
 import * as ApiTypes from "../../../IsaacApiTypes";
@@ -19,7 +20,7 @@ const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
 const dispatchToProps = {registerQuestion, deregisterQuestion, attemptQuestion};
 
 interface IsaacQuestionTabsProps {
-    doc: ApiTypes.IsaacMultiChoiceQuestionDTO, // Can assume id is always defined
+    doc: ApiTypes.IsaacQuestionBaseDTO, // Can assume id is always defined
     currentAttempt?: ApiTypes.ChoiceDTO,
     canSubmit?: boolean,
     validationResponse?: ApiTypes.QuestionValidationResponseDTO,
@@ -35,13 +36,24 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         return () => deregisterQuestion(doc.id as string);
     }, [doc.id]);
 
+    let QuestionBlock: JSX.Element;
+    switch (doc.type) {
+    case 'isaacSymbolicLogicQuestion':
+        QuestionBlock = <IsaacSymbolicLogicQuestion questionId={doc.id as string} doc={doc} />;
+        break;
+    case 'isaacMultiChoiceQuestion':
+    default:
+        QuestionBlock = <IsaacMultiChoiceQuestion questionId={doc.id as string} doc={doc} />;
+        break;
+    }
+
     return <React.Fragment>
         <hr />
 
         // hints
 
         {/* switch question answer area on type */}
-        <IsaacMultiChoiceQuestion questionId={doc.id as string} doc={doc}/>
+        {QuestionBlock}
 
         <hr />
 
