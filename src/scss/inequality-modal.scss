@@ -1,0 +1,51 @@
+#inequality-modal,
+#inequality-modal canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    z-index: 254;
+}
+
+#inequality-modal {
+    .inequality-ui {
+        position: fixed;
+        z-index: 255;
+
+        &.button {
+            width: 100px;
+            height: 100px;
+            background: red;
+            bottom: 20px;
+            right: 20px;
+
+            text-indent: -1000px;
+            overflow: hidden;
+
+            &.confirm {
+                background: lime;
+            }
+        }
+
+        &.menubar {
+            ul {
+                background: lime;
+                padding: 0;
+                list-style-type: none;
+
+                li {
+                    display: inline-block;
+                    background: red;
+                    text-indent: 0;
+                    width: 50px;
+                    height: 50px;
+                    text-align: center;
+                    line-height: 50px;
+                    font-size: 2em;
+                }
+            }
+        }
+    }
+}

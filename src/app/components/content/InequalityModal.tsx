@@ -1,35 +1,37 @@
-import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
+import React from "react";
 import { connect } from "react-redux";
 import { Inequality, makeInequality } from "inequality";
-import P5Wrapper from "react-p5-wrapper";
 
 interface InequalityModalProps {
-    visible: boolean,
-    sketch: Inequality
+    availableSymbols?: Array<string>,
+    sketch?: Inequality,
+    close: () => void,
 }
-export class InequalityModal extends React.Component {
+export class InequalityModal extends React.Component<InequalityModalProps> {
 
     state: {
-        visible?: boolean,
         sketch?: Inequality,
-        canvas?: any
     };
+
+    availableSymbols?: Array<string>
+
+    close: () => void;
 
     constructor(props: InequalityModalProps) {
         super(props);
         this.state = {
-            visible: props.visible,
-            sketch: props.sketch
+            sketch: props.sketch,
         }
+        this.availableSymbols = props.availableSymbols;
+        this.close = props.close;
     }
 
     componentDidMount() {
         const { sketch, p } = makeInequality(
-            document.getElementById('inequalityBox'),
+            document.getElementById('inequality-modal'),
             window.innerWidth,
             window.innerHeight,
-            [],
+            [{ type:'Symbol', position: {x: 0, y: 0}, properties: {letter: 'M'} } as any, { type:'LogicBinaryOperation', position: {x: 0, y: 0}, properties: {operation: 'and'} } as any],
             {
                 editorMode: 'logic',
                 textEntry: false,
@@ -44,52 +46,31 @@ export class InequalityModal extends React.Component {
                 timestamp: Date.now()
             }]
         };
-        sketch.onNewEditorState = (s) => { console.log(s); };
+        sketch.onNewEditorState = (s: any) => { console.log(s); };
         sketch.onCloseMenus = () => { console.log("closeMenus"); };
         sketch.isUserPrivileged = () => { return true; };
-        sketch.onNotifySymbolDrag = (x, y) => {  };
-        sketch.isTrashActive = () => { return true };
-        // debugger;
+        sketch.onNotifySymbolDrag = (x: number, y: number) => {  };
+        sketch.isTrashActive = () => { return false };
+
         this.state = { sketch };
+
+        if (this.availableSymbols && this.availableSymbols.length > 0) {
+            console.log(`Parsing available symbols: ${this.availableSymbols}`);
+        } else {
+            console.log("No symbols available, generating default menu.");
+        }
     }
 
     render() {
-        return <P5Wrapper sketch={this.state.sketch} />
+        return <div id="inequality-modal">
+            <nav className="inequality-ui menubar">
+                <ul>
+                    <li>A</li>
+                    <li>A</li>
+                    <li>A</li>
+                </ul>
+            </nav>
+            <div className="inequality-ui confirm button" onClick={this.close}>Close</div>
+        </div>;
     }
 }
-// const InequalityModalComponent = (props: InequalityModalProps) => {
-//     const [sketch, setSketch] = useState();
-
-//     const box = React.createElement('div');
-//     const inequality = makeInequality(
-//         box,
-//         window.innerWidth,
-//         window.innerHeight,
-//         [],
-//         {
-//             editorMode: 'logic',
-//             textEntry: false,
-//             fontItalicPath: '/fonts/STIXGeneral-Italic.ttf',
-//             fontRegularPath: '/fonts/STIXGeneral-Regular.ttf'
-//         }
-//     );
-//     const _sketch = inequality.sketch;
-//     _sketch.log = {
-//         initialState: [],
-//         actions: [{
-//             event: "OPEN",
-//             timestamp: Date.now()
-//         }]
-//     };
-//     _sketch.onNewEditorState = (s) => { console.log(s); };
-//     _sketch.onCloseMenus = () => { console.log("closeMenus"); };
-//     _sketch.isUserPrivileged = () => { return true; };
-//     _sketch.onNotifySymbolDrag = (x, y) => {  };
-//     _sketch.isTrashActive = () => { return true };
-//     // debugger;
-//     setSketch(_sketch);
-
-//     return <div>{box}</div>
-// }
-
-// export const InequalityModal = connect()(InequalityModalComponent);

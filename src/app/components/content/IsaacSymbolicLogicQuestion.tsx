@@ -13,10 +13,6 @@ const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
 };
 const dispatchToProps = {setCurrentAttempt};
 
-const onTextInputClick = (_e: React.MouseEvent) => {
-    
-}
-
 interface IsaacSymbolicLogicQuestionProps {
     doc: IsaacSymbolicLogicQuestionDTO,
     questionId: string,
@@ -30,12 +26,15 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
 
     const {doc, questionId, currentAttempt, showInequality, setCurrentAttempt} = props;
     const currentAttemptValue = currentAttempt && currentAttempt.value;
-    const inequalityModal = <InequalityModal />; //showInequality ? <InequalityModal /> : null;
-    console.log(inequalityModal);
+    const inequalityModal = modalVisible ? <InequalityModal
+        close={() => setModalVisible(false)}
+        availableSymbols={doc.availableSymbols}
+        /> : (void null);
+
     return (
         <div>
             <h3><IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding} children={doc.children} /></h3>
-            <div className="eqn-editor-preview" onClick={() => setModalVisible(!modalVisible)}>TEST</div>
+            <div className="eqn-editor-preview" onClick={() => setModalVisible(true)}>TEST</div>
             {inequalityModal}
         </div>
     );
