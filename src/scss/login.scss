@@ -1,0 +1,84 @@
+#login-panel {
+  form {width: 100%;}
+
+  // Social Login
+  .login-social {
+    float: right;
+    margin-top: 35px;
+  }
+
+  .login-social-google,
+  .login-social-twitter,
+  .login-social-facebook {
+    position: relative;
+    text-indent: -99999em;
+    display: inline-block;
+    text-align: center;
+    width: 79px;
+    height: 78px;
+    background: url(/assets/social-login-sprite.png) no-repeat 0 0;
+    -webkit-transition: top 2s ease-in-out;
+    -moz-transition: top 2s ease-in-out;
+    -o-transition: top 2s ease-in-out;
+    -ms-transition: top 2s ease-in-out;
+    transition: top 0.2s ease-in-out;
+    margin-right: 10px;
+    margin-top: 8px;
+    top: 0;
+
+    &:hover {
+      top: -4px;
+    }
+  }
+
+  @media only screen and (min-resolution: 192dpi) {
+    .login-social-google,
+    .login-social-twitter,
+    .login-social-facebook {
+      background-image: url(/assets/social-login-sprite@2x.png);
+      background-size: 79px 468px;
+    }
+  }
+
+  .login-social-facebook {
+    background-position: 0 0;
+  }
+
+  .login-social-google {
+    background-position: 0 -156px;
+  }
+
+  .login-social-twitter {
+    background-position: 0 -312px;
+  }
+
+
+  // Login Separator
+  .login-separator {
+    padding: 77px 0;
+    background: url(/assets/blank-1px-grey.png) repeat-y center 0;
+
+    span {
+      font-weight: bold;
+      font-style: italic;
+      text-align: center;
+      background-color: #fff;
+      margin: 0;
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    .login-separator {
+      background-repeat: repeat-x;
+      background-position: 0 center;
+      padding: 0;
+      margin: 0 0 10px;
+
+      span {
+        font-size: 24px;
+        background: #f6f6f6;
+        padding: 0 20px;
+      }
+    }
+  }
+}

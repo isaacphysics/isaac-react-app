@@ -17,7 +17,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
         </ReactStrap.DropdownItem>
     };
 
-    return <div>
+    return <React.Fragment>
         <ReactStrap.Navbar light color="secondary" expand="sm">
             <ReactStrap.NavbarBrand to="/">Isaac Computer Science</ReactStrap.NavbarBrand>
             <ReactStrap.Nav className="ml-auto" navbar>
@@ -90,7 +90,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                 </ReactStrap.NavItem>
             </ReactStrap.Nav>
         </ReactStrap.Navbar>
-    </div>;
+    </React.Fragment>;
 };
 
 export const NavigationBar = connect(stateToProps)(NavigationBarComponent);

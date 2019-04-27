@@ -11,6 +11,7 @@ $theme-colors: (
 
 @import "~bootstrap/scss/bootstrap";
 
+@import "./login";
 @import "./inequality-modal.scss";
 
 li.nav-item {
