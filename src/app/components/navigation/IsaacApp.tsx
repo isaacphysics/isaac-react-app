@@ -18,6 +18,7 @@ import {PageNotFound} from "../pages/PageNotFound";
 import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {RegistrationPage} from "../pages/RegistrationPage";
 
 const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
 const mapDispatchToProps = {requestCurrentUser};
@@ -39,8 +40,9 @@ const IsaacApp = ({user, requestCurrentUser}: IsaacAppProps) => {
                     <div className={"container"}>
                         <Switch>
                             <Route exact path="/" component={user ? HomePage : LandingPage} />
-                            <Route path="/login" component={LogInPage}/> :
-                            <Route path="/logout" component={LogOutHandler}/>
+                            <Route path="/login" component={LogInPage} />
+                            <Route path="/logout" component={LogOutHandler} />
+                            <Route path="/register" component={RegistrationPage} />>
                             <Route path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                             <Route path="/account" component={AccountPage} />
                             <Route path="/assignments" component={MyAssignmentsPage} />
