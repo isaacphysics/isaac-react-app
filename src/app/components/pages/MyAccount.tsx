@@ -15,4 +15,4 @@ const AccountPageComponent = ({user}: AccountPageProps) => (
         <p>Hello!</p>
     </div>
 );
-export const AccountPage = connect(stateToProps, dispatchToProps)(AccountPageComponent);
+export const MyAccount = connect(stateToProps, dispatchToProps)(AccountPageComponent);

@@ -3,22 +3,21 @@ import {connect} from "react-redux";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import {NavigationBar} from "./NavigationBar";
 import {Footer} from "./Footer";
-import {HomePage} from "../pages/HomePage";
-import {QuestionPage} from "../pages/QuestionPage";
-import {LogInPage} from "../pages/LogInPage";
+import {Homepage} from "../pages/Homepage";
+import {Question} from "../pages/Question";
+import {LogIn} from "../pages/LogIn";
+import {Registration} from "../pages/Registration";
 import {LogOutHandler} from "../handlers/LogOutHandler";
 import {ProviderCallbackHandler} from "../handlers/ProviderCallbackHandler";
-import {LandingPage} from "../pages/LandingPage";
-import {AccountPage} from "../pages/AccountPage";
-import {MyAssignmentsPage} from "../pages/MyAssignmentsPage";
-import {GameboardPage} from "../pages/GameboardPage";
-import {AllTopicsPage} from "../pages/AllTopicsPage";
-import {TopicPage} from "../pages/TopicPage";
+import {MyAccount} from "../pages/MyAccount";
+import {MyAssignments} from "../pages/MyAssignments";
+import {Gameboard} from "../pages/Gameboard";
+import {AllTopics} from "../pages/AllTopics";
+import {Topic} from "../pages/Topic";
 import {PageNotFound} from "../pages/PageNotFound";
 import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {RegistrationPage} from "../pages/RegistrationPage";
 
 const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
 const mapDispatchToProps = {requestCurrentUser};
@@ -36,25 +35,25 @@ const IsaacApp = ({user, requestCurrentUser}: IsaacAppProps) => {
         <Router>
             <React.Fragment>
                 <NavigationBar />
-                <main>
+                <main role="main" className="flex-fill py-4">
                     <div className={"container"}>
                         <Switch>
-                            <Route exact path="/" component={user ? HomePage : LandingPage} />
-                            <Route path="/login" component={LogInPage} />
+                            <Route exact path="/" component={Homepage} />
+                            <Route path="/login" component={LogIn} />
                             <Route path="/logout" component={LogOutHandler} />
-                            <Route path="/register" component={RegistrationPage} />>
+                            <Route path="/register" component={Registration} />>
                             <Route path="/auth/:provider/callback" component={ProviderCallbackHandler} />
-                            <Route path="/account" component={AccountPage} />
-                            <Route path="/assignments" component={MyAssignmentsPage} />
-                            <Route path="/gameboards" component={GameboardPage}/>
-                            <Route path="/questions/:questionId" component={QuestionPage} />
-                            <Route exact path="/topics" component={AllTopicsPage} />
-                            <Route path="/topics/:topicName" component={TopicPage} />
+                            <Route path="/account" component={MyAccount} />
+                            <Route path="/assignments" component={MyAssignments} />
+                            <Route path="/gameboards" component={Gameboard}/>
+                            <Route path="/questions/:questionId" component={Question} />
+                            <Route exact path="/topics" component={AllTopics} />
+                            <Route path="/topics/:topicName" component={Topic} />
                             <Route component={PageNotFound} />
                         </Switch>
                     </div>
                 </main>
-                {/*<Footer />*/}
+                <Footer />
             </React.Fragment>
         </Router>
     );

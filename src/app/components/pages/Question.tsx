@@ -57,4 +57,4 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
     );
 };
 
-export const QuestionPage = withRouter(connect(stateToProps, dispatchToProps)(QuestionPageComponent));
+export const Question = withRouter(connect(stateToProps, dispatchToProps)(QuestionPageComponent));

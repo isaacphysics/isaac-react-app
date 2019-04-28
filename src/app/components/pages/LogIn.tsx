@@ -79,4 +79,4 @@ const LogInPageComponent = ({loginProviderRedirect}: LogInPageProps) => {
     </div>;
 };
 
-export const LogInPage = connect(stateToProps, dispatchToProps)(LogInPageComponent);
+export const LogIn = connect(stateToProps, dispatchToProps)(LogInPageComponent);

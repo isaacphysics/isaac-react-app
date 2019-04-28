@@ -55,4 +55,4 @@ const TopicPageComponent = ({topicName, topic, fetchTopicDetails}: TopicPageProp
     )
 };
 
-export const TopicPage = withRouter(connect(stateToProps, actionsToProps)(TopicPageComponent));
+export const Topic = withRouter(connect(stateToProps, actionsToProps)(TopicPageComponent));

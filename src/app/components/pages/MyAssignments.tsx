@@ -41,4 +41,4 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignme
     </React.Fragment>;
 };
 
-export const MyAssignmentsPage = connect(stateToProps, dispatchToProps)(MyAssignmentsPageComponent);
+export const MyAssignments = connect(stateToProps, dispatchToProps)(MyAssignmentsPageComponent);

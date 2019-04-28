@@ -33,4 +33,4 @@ const GameboardPageComponent = ({location: {hash}, gameboard, loadGameboard}: Ga
     </React.Fragment>;
 };
 
-export const GameboardPage = withRouter(connect(stateFromProps, dispatchFromProps)(GameboardPageComponent));
+export const Gameboard = withRouter(connect(stateFromProps, dispatchFromProps)(GameboardPageComponent));

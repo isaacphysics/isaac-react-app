@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
-import * as ReactStrap from "reactstrap";
+import * as RS from "reactstrap";
 
 const stateToProps = (state: AppState) => (state && {user: state.user});
 
@@ -12,84 +12,107 @@ interface NavigationBarProps {
 }
 const NavigationBarComponent = ({user}: NavigationBarProps) => {
     const DropdownItemComingSoon = (props: {children: string}) => {
-        return <ReactStrap.DropdownItem className="disabled" aria-disabled="true">
-            {props.children} <ReactStrap.Badge color="light">Coming Soon</ReactStrap.Badge>
-        </ReactStrap.DropdownItem>
+        return <RS.DropdownItem className="disabled" aria-disabled="true">
+            {props.children} <RS.Badge color="light">Coming Soon</RS.Badge>
+        </RS.DropdownItem>
     };
 
     return <React.Fragment>
-        <ReactStrap.Navbar light color="secondary" expand="sm">
-            <ReactStrap.NavbarBrand to="/">Isaac Computer Science</ReactStrap.NavbarBrand>
-            <ReactStrap.Nav className="ml-auto" navbar>
-
-                <ReactStrap.UncontrolledDropdown nav inNavbar>
-                    <ReactStrap.DropdownToggle nav caret>
+        <RS.Navbar light color="secondary" expand="sm">
+            <RS.NavbarBrand tag={Link} to="/">
+                <img src="assets/logo_black.png" height={60} alt="Isaac Computer Science"/>
+            </RS.NavbarBrand>
+            <RS.Nav className="ml-auto" navbar>
+                {!user &&
+                    <React.Fragment>
+                        <RS.NavItem>
+                            <RS.NavLink tag={Link} to="/login">LOGIN</RS.NavLink>
+                        </RS.NavItem>
+                        <RS.NavItem>
+                            <RS.NavLink tag={Link} to="/register">SIGN UP</RS.NavLink>
+                        </RS.NavItem>
+                    </React.Fragment>
+                }
+                {user &&
+                    <React.Fragment>
+                        <RS.NavItem>
+                            <RS.NavLink tag={Link} to="/account">MY ACCOUNT</RS.NavLink>
+                        </RS.NavItem>
+                        <RS.NavItem>
+                            <RS.NavLink tag={Link} to="/logout">LOG OUT</RS.NavLink>
+                        </RS.NavItem>
+                    </React.Fragment>
+                }
+                <RS.Form inline>
+                    <RS.InputGroup>
+                        <RS.Input type="search" placeholder="Search" aria-label="Search" />
+                        <RS.InputGroupAddon addonType="append">🔍</RS.InputGroupAddon>
+                    </RS.InputGroup>
+                </RS.Form>
+            </RS.Nav>
+        </RS.Navbar>
+        <RS.Navbar light color="white" expand="sm">
+            <RS.Nav className="mx-auto" navbar>
+                <RS.UncontrolledDropdown nav inNavbar>
+                    <RS.DropdownToggle nav caret>
                         About Us
-                    </ReactStrap.DropdownToggle>
-                    <ReactStrap.DropdownMenu>
+                    </RS.DropdownToggle>
+                    <RS.DropdownMenu>
                         <DropdownItemComingSoon>What We Do</DropdownItemComingSoon>
                         <DropdownItemComingSoon>News</DropdownItemComingSoon>
                         <DropdownItemComingSoon>Get Involved</DropdownItemComingSoon>
                         <DropdownItemComingSoon>Isaac Physics</DropdownItemComingSoon>
                         <DropdownItemComingSoon>Events</DropdownItemComingSoon>
-                    </ReactStrap.DropdownMenu>
-                </ReactStrap.UncontrolledDropdown>
+                    </RS.DropdownMenu>
+                </RS.UncontrolledDropdown>
 
-                <ReactStrap.UncontrolledDropdown nav inNavbar>
-                    <ReactStrap.DropdownToggle nav caret>
+                <RS.UncontrolledDropdown nav inNavbar>
+                    <RS.DropdownToggle nav caret>
                         For Students
-                    </ReactStrap.DropdownToggle>
-                    <ReactStrap.DropdownMenu>
+                    </RS.DropdownToggle>
+                    <RS.DropdownMenu>
                         <DropdownItemComingSoon>My Gameboards</DropdownItemComingSoon>
                         <DropdownItemComingSoon>My Assignments</DropdownItemComingSoon>
                         <DropdownItemComingSoon>My Progress</DropdownItemComingSoon>
                         <DropdownItemComingSoon>Problem Solving</DropdownItemComingSoon>
-                    </ReactStrap.DropdownMenu>
-                </ReactStrap.UncontrolledDropdown>
+                    </RS.DropdownMenu>
+                </RS.UncontrolledDropdown>
 
-                <ReactStrap.UncontrolledDropdown nav inNavbar>
-                    <ReactStrap.DropdownToggle nav caret>
+                <RS.UncontrolledDropdown nav inNavbar>
+                    <RS.DropdownToggle nav caret>
                         For Teachers
-                    </ReactStrap.DropdownToggle>
-                    <ReactStrap.DropdownMenu>
+                    </RS.DropdownToggle>
+                    <RS.DropdownMenu>
                         <DropdownItemComingSoon>Set Assignments</DropdownItemComingSoon>
                         <DropdownItemComingSoon>Assignment Progress</DropdownItemComingSoon>
                         <DropdownItemComingSoon>Manage Groups</DropdownItemComingSoon>
                         <DropdownItemComingSoon>My Progress</DropdownItemComingSoon>
-                    </ReactStrap.DropdownMenu>
-                </ReactStrap.UncontrolledDropdown>
+                    </RS.DropdownMenu>
+                </RS.UncontrolledDropdown>
 
-                <ReactStrap.UncontrolledDropdown nav inNavbar>
-                    <ReactStrap.DropdownToggle nav caret>
+                <RS.UncontrolledDropdown nav inNavbar>
+                    <RS.DropdownToggle nav caret>
                         Topics
-                    </ReactStrap.DropdownToggle>
-                    <ReactStrap.DropdownMenu>
-                        <ReactStrap.DropdownItem><Link to="/topics">All Topics</Link></ReactStrap.DropdownItem>
+                    </RS.DropdownToggle>
+                    <RS.DropdownMenu>
+                        <RS.DropdownItem><Link to="/topics">All Topics</Link></RS.DropdownItem>
                         <DropdownItemComingSoon>Syllabus View</DropdownItemComingSoon>
                         <DropdownItemComingSoon>Suggested Teaching</DropdownItemComingSoon>
-                    </ReactStrap.DropdownMenu>
-                </ReactStrap.UncontrolledDropdown>
+                    </RS.DropdownMenu>
+                </RS.UncontrolledDropdown>
 
-                <ReactStrap.UncontrolledDropdown nav inNavbar>
-                    <ReactStrap.DropdownToggle nav caret>
+                <RS.UncontrolledDropdown nav inNavbar>
+                    <RS.DropdownToggle nav caret>
                         Help and Support
-                    </ReactStrap.DropdownToggle>
-                    <ReactStrap.DropdownMenu>
+                    </RS.DropdownToggle>
+                    <RS.DropdownMenu>
                         <DropdownItemComingSoon>Teacher Support</DropdownItemComingSoon>
                         <DropdownItemComingSoon>Student Support</DropdownItemComingSoon>
                         <DropdownItemComingSoon>Contact Us</DropdownItemComingSoon>
-                    </ReactStrap.DropdownMenu>
-                </ReactStrap.UncontrolledDropdown>
-
-                {user && <ReactStrap.NavItem>
-                    <Link to="/account">My Account</Link>
-                </ReactStrap.NavItem>}
-
-                <ReactStrap.NavItem>
-                    {!user ? <Link to="/login">Log in</Link> : <Link to="/logout">Log out</Link>}
-                </ReactStrap.NavItem>
-            </ReactStrap.Nav>
-        </ReactStrap.Navbar>
+                    </RS.DropdownMenu>
+                </RS.UncontrolledDropdown>
+            </RS.Nav>
+        </RS.Navbar>
     </React.Fragment>;
 };
 

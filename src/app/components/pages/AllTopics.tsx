@@ -4,7 +4,7 @@ import {ALL_TOPICS} from "../../services/constants";
 import {TopicLinkDTO} from "../../../IsaacAppTypes";
 import {Badge} from "reactstrap";
 
-export const AllTopicsPage = () => {
+export const AllTopics = () => {
     const renderTopicLink = (topicName: string, topicProperties: TopicLinkDTO) => {
         const examBoardTags = topicProperties.onlyFor &&
             <>{topicProperties.onlyFor.map((examBoard, index) => <Badge color="dark" key={index}>{examBoard}</Badge>)}</>;

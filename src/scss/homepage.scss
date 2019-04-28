@@ -1,0 +1,19 @@
+#homepage {
+  section {padding: 2rem 0;}
+
+  section#why-sign-up {
+    h1 {padding-bottom: 2rem;}
+  }
+
+  section#headline-content {
+    background-color: $mustard_light;
+  }
+
+  section#events {
+    img {
+      height: 151px !important;
+      width: 151px !important;
+      margin: 1rem;
+    }
+  }
+}

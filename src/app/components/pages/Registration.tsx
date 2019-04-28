@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {Button, Card, CardBody, Col, CustomInput, Form, FormGroup, Input, Row, Label} from "reactstrap";
+import {Button, Card, CardBody, CardTitle, Col, CustomInput, Form, FormGroup, Input, Row, Label} from "reactstrap";
 
 const stateToProps = null;
 const dispatchToProps = null;
@@ -13,10 +13,11 @@ const RegistrationPageComponent = (props: LogInPageProps) => {
 
     return <div id="registration-page">
         <h1>Register</h1>
-
         <Card>
             <CardBody>
-                <h2>Sign up to {" "} <Link to="/">Isaac</Link></h2>
+                <CardTitle tag="h2">
+                    <small className="text-muted">Sign up to {" "} <Link to="/">Isaac</Link></small>
+                </CardTitle>
                 <Form name="register" onSubmit={register}>
                     <Row>
                         <Col size={12} md={6}>
@@ -89,4 +90,4 @@ const RegistrationPageComponent = (props: LogInPageProps) => {
     </div>;
 };
 
-export const RegistrationPage = connect(stateToProps, dispatchToProps)(RegistrationPageComponent);
+export const Registration = connect(stateToProps, dispatchToProps)(RegistrationPageComponent);
