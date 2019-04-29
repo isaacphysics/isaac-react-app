@@ -47,6 +47,7 @@
     "jest-pnp-resolver": "1.0.2",
     "jest-resolve": "23.6.0",
     "jest-watch-typeahead": "^0.2.1",
+    "katex": "^0.10.1",
     "mini-css-extract-plugin": "0.5.0",
     "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
@@ -116,6 +117,7 @@
   ],
   "devDependencies": {
     "@types/axios-mock-adapter": "^1.10.0",
+    "@types/katex": "^0.10.1",
     "@types/redux-mock-store": "^1.0.0",
     "axios-mock-adapter": "^1.16.0",
     "enzyme": "^3.9.0",

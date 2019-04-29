@@ -11,6 +11,7 @@ $theme-colors: (
 );
 
 @import "~bootstrap/scss/bootstrap";
+@import "~katex/dist/katex.min.css";
 
 @import "./navigation-bar";
 @import "./homepage";
