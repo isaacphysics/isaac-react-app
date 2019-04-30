@@ -59,7 +59,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         sketch.onNewEditorState = (s: any) => { console.log(s); };
         sketch.onCloseMenus = () => { console.log("closeMenus"); };
         sketch.isUserPrivileged = () => { return true; };
-        sketch.onNotifySymbolDrag = (x: number, y: number) => {  };
+        sketch.onNotifySymbolDrag = () => { };
         sketch.isTrashActive = () => { return false };
 
         this.state = { sketch };
@@ -121,10 +121,33 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 menu: { label: "(x)", texLabel: true }
             }
         ];
-    };
+    }
+
+    onMenuItemDragStart(spec: MenuItem, event: React.DragEvent) {
+        if (this.state.sketch) {
+            this.state.sketch.updatePotentialSymbol(spec, event.clientX, event.clientY);
+        }
+    }
+
+    onMenuItemDrag(spec: MenuItem, event: React.DragEvent) {
+        if (this.state.sketch) {
+            this.state.sketch.updatePotentialSymbol(spec, event.clientX, event.clientY);
+        }
+    }
+
+    onMenuItemDragEnd(_event: React.DragEvent) {
+        if (this.state.sketch) {
+            this.state.sketch.commitPotentialSymbol();
+        }
+    }
 
     render() {
         let logicFunctionItems = this.generateLogicFunctionsItems();
+        let letters = "ABCDEGHIJKLMNOPQRSUVWZ".split("").map((l) => ({
+            type: "Symbol", properties: { letter: l },
+            menu: { label: l, texLabel: true}
+        }));
+        // debugger;
 
         if (this.availableSymbols && this.availableSymbols.length > 0) {
             console.log(`Parsing available symbols: ${this.availableSymbols}`);
@@ -134,9 +157,17 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
         return <div id="inequality-modal">
             <nav className="inequality-ui menubar">
-                <ul>
-                    {logicFunctionItems.map((e, i) => <li key={i} dangerouslySetInnerHTML={ {__html: katex.renderToString(e.menu.label)} }></li>)}
-                </ul>
+                <ul>{
+                    logicFunctionItems.map((item, index) =>
+                        <li key={index}
+                            dangerouslySetInnerHTML={{ __html: katex.renderToString(item.menu.label) }}
+                            draggable
+                            onDragStart={ event => this.onMenuItemDragStart(item, event) }
+                            onDrag={ event => this.onMenuItemDrag(item, event) }
+                            onDragEnd={ event => this.onMenuItemDragEnd(event) }
+                        />
+                    )
+                }</ul>
             </nav>
             <div className="inequality-ui confirm button" onClick={this.close}>Close</div>
         </div>;
