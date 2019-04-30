@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`HomePage prints out the user's name when it is provided 1`] = `
+exports[`HomepageComponent prints out the user's name when it is provided 1`] = `
 <div
   id="homepage"
 >
@@ -489,7 +489,7 @@ OUTPUT num1 + num2 + num3
 </div>
 `;
 
-exports[`HomePage renders correctly with a null valued user 1`] = `
+exports[`HomepageComponent renders correctly with a null valued user 1`] = `
 <div
   id="homepage"
 >
