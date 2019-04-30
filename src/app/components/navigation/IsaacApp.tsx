@@ -23,8 +23,8 @@ const mapStateToProps = (state: AppState) => ({user: state ? state.user : null})
 const mapDispatchToProps = {requestCurrentUser};
 
 interface IsaacAppProps {
-    user: RegisteredUserDTO | null,
-    requestCurrentUser: () => void
+    user: RegisteredUserDTO | null;
+    requestCurrentUser: () => void;
 }
 const IsaacApp = ({user, requestCurrentUser}: IsaacAppProps) => {
     useEffect(() => {
@@ -41,7 +41,7 @@ const IsaacApp = ({user, requestCurrentUser}: IsaacAppProps) => {
                             <Route exact path="/" component={Homepage} />
                             <Route path="/login" component={LogIn} />
                             <Route path="/logout" component={LogOutHandler} />
-                            <Route path="/register" component={Registration} />>
+                            <Route path="/register" component={Registration} />
                             <Route path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                             <Route path="/account" component={MyAccount} />
                             <Route path="/assignments" component={MyAssignments} />

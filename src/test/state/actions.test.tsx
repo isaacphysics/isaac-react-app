@@ -10,7 +10,7 @@ const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
 const axiosMock = new MockAdapter(endpoint);
 
-describe("requestCurrentUser action", async () => {
+describe("requestCurrentUser action", () => {
     afterEach(() => {
         axiosMock.reset();
     });
