@@ -16,13 +16,18 @@ interface InequalityModalProps {
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
 
+    private _ghost?: HTMLElement;
+
     state: {
         sketch?: Inequality,
     };
 
-    availableSymbols?: Array<string> = [];
-    menuElements: Array<HTMLElement> = [];
-    menuRef: any;
+    private availableSymbols?: Array<string> = [];
+    private menuElements: Array<HTMLElement> = [];
+    private menuRef: any;
+
+    private mouseX: number = -1;
+    private mouseY: number = -1;
 
     close: () => void;
 
@@ -37,8 +42,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     componentDidMount() {
+        const inequalityElement = document.getElementById('inequality-modal');
         const { sketch, p } = makeInequality(
-            document.getElementById('inequality-modal'),
+            inequalityElement,
             window.innerWidth,
             window.innerHeight,
             [{ type:'Symbol', position: {x: 0, y: 0}, properties: {letter: 'M'} } as any, { type:'LogicBinaryOperation', position: {x: 0, y: 0}, properties: {operation: 'and'} } as any],
@@ -63,6 +69,18 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         sketch.isTrashActive = () => { return false };
 
         this.state = { sketch };
+
+        // Firefox does not report coordinates correctly on drag, so we supplement them here.
+        document.ondragover = (event) => {
+            this.mouseX = event.clientX;
+            this.mouseY = event.clientY;
+        }
+
+        this._ghost = document.createElement('div');
+        this._ghost.style.opacity = "0";
+        this._ghost.innerHTML = '_';
+        this._ghost.id = 'the-ghost-of-inequality';
+        document.body.appendChild(this._ghost);
     }
 
     generateLogicFunctionsItems(syntax = 'logic'): Array<MenuItem> {
@@ -124,6 +142,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     onMenuItemDragStart(spec: MenuItem, event: React.DragEvent) {
+        event.dataTransfer.setData('text/plain', ''); // Somehow, Firefox needs some data to be set on the drag start event to continue firing drag events.
+        event.dataTransfer.setDragImage(this._ghost as Element, event.clientX, event.clientY);
         if (this.state.sketch) {
             this.state.sketch.updatePotentialSymbol(spec, event.clientX, event.clientY);
         }
@@ -131,7 +151,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
     onMenuItemDrag(spec: MenuItem, event: React.DragEvent) {
         if (this.state.sketch) {
-            this.state.sketch.updatePotentialSymbol(spec, event.clientX, event.clientY);
+            this.state.sketch.updatePotentialSymbol(spec, this.mouseX, this.mouseY);
         }
     }
 
@@ -147,7 +167,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             type: "Symbol", properties: { letter: l },
             menu: { label: l, texLabel: true}
         }));
-        // debugger;
 
         if (this.availableSymbols && this.availableSymbols.length > 0) {
             console.log(`Parsing available symbols: ${this.availableSymbols}`);
@@ -165,7 +184,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                             onDragStart={ event => this.onMenuItemDragStart(item, event) }
                             onDrag={ event => this.onMenuItemDrag(item, event) }
                             onDragEnd={ event => this.onMenuItemDragEnd(event) }
-                        />
+                            />
                     )
                 }</ul>
             </nav>

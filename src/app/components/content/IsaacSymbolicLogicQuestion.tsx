@@ -26,8 +26,14 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
 
     const {doc, questionId, currentAttempt, showInequality, setCurrentAttempt} = props;
     const currentAttemptValue = currentAttempt && currentAttempt.value;
+
+    const closeModal = () => {
+        document.body.removeChild(document.getElementById('the-ghost-of-inequality') as Node);
+        setModalVisible(false);
+    }
+
     const inequalityModal = modalVisible ? <InequalityModal
-        close={() => setModalVisible(false)}
+        close={closeModal}
         availableSymbols={doc.availableSymbols}
         /> : (void null);
 
