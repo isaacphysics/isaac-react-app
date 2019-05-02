@@ -3,50 +3,54 @@ import { connect } from "react-redux";
 import { Inequality, makeInequality } from "inequality";
 import katex from "katex";
 
-interface MenuItem {
-    type: string,
-    properties: any,
-    menu: { label: string, texLabel: boolean }
+class MenuItem {
+    constructor(public type: string,
+                public properties: any,
+                public menu: { label: string, texLabel: boolean }) {}
 }
 
 interface InequalityModalProps {
-    availableSymbols?: Array<string>,
-    sketch?: Inequality,
-    close: () => void,
+    availableSymbols?: Array<string>;
+    sketch?: Inequality;
+    close: () => void;
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
-
-    private _ghost?: HTMLElement;
-
     state: {
         sketch?: Inequality,
+        activeMenu: string,
+        activeSubMenu: string,
+        mouseX: number,
+        mouseY: number,
     };
 
-    private availableSymbols?: Array<string> = [];
-    private menuElements: Array<HTMLElement> = [];
-    private menuRef: any;
+    // Available symbols if any are specified
+    availableSymbols?: Array<string> = [];
 
-    private mouseX: number = -1;
-    private mouseY: number = -1;
+    // Drag ghost "image" thing
+    private _ghost?: HTMLElement;
 
+    // Call this to close the editor
     close: () => void;
 
     constructor(props: InequalityModalProps) {
         super(props);
         this.state = {
             sketch: props.sketch,
+            activeMenu: "letters",
+            activeSubMenu: "upperCaseLetters",
+            mouseX: -1,
+            mouseY: -1,
         }
         this.availableSymbols = props.availableSymbols;
         this.close = props.close;
-        this.menuRef = React.createRef();
     }
 
     componentDidMount() {
         const inequalityElement = document.getElementById('inequality-modal');
         const { sketch, p } = makeInequality(
             inequalityElement,
-            window.innerWidth,
-            window.innerHeight,
+            window.innerWidth * Math.ceil(window.devicePixelRatio),
+            window.innerHeight * Math.ceil(window.devicePixelRatio),
             [{ type:'Symbol', position: {x: 0, y: 0}, properties: {letter: 'M'} } as any, { type:'LogicBinaryOperation', position: {x: 0, y: 0}, properties: {operation: 'and'} } as any],
             {
                 editorMode: 'logic',
@@ -68,12 +72,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         sketch.onNotifySymbolDrag = () => { };
         sketch.isTrashActive = () => { return false };
 
-        this.state = { sketch };
+        this.setState({ sketch });
 
         // Firefox does not report coordinates correctly on drag, so we supplement them here.
         document.ondragover = (event) => {
-            this.mouseX = event.clientX;
-            this.mouseY = event.clientY;
+            this.state.mouseX = event.clientX;
+            this.state.mouseY = event.clientY;
         }
 
         this._ghost = document.createElement('div');
@@ -81,67 +85,27 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         this._ghost.innerHTML = '_';
         this._ghost.id = 'the-ghost-of-inequality';
         document.body.appendChild(this._ghost);
+        document.body.style.overflow = "hidden";
     }
 
-    generateLogicFunctionsItems(syntax = 'logic'): Array<MenuItem> {
+    private generateLogicFunctionsItems(syntax = 'logic'): Array<MenuItem> {
         let labels: any = {
-            logic: {
-                and: "\\land",
-                or: "\\lor",
-                not: "\\lnot",
-                equiv: "\\equiv",
-                True: "\\mathsf{T}",
-                False: "\\mathsf{F}"
-            },
-            binary: {
-                and: "\\cdot",
-                or: "+",
-                not: "\\overline{x}",
-                equiv: "\\equiv",
-                True: "1",
-                False: "0"
-            }
+            logic: { and: "\\land", or: "\\lor", not: "\\lnot", equiv: "\\equiv", True: "\\mathsf{T}", False: "\\mathsf{F}" },
+            binary: { and: "\\cdot", or: "+", not: "\\overline{x}", equiv: "\\equiv", True: "1", False: "0" }
         };
         return [
-            {
-                type: "LogicBinaryOperation",
-                properties: { operation: "and" },
-                menu: { label: labels[syntax]['and'], texLabel: true }
-            },
-            {
-                type: "LogicBinaryOperation",
-                properties: { operation: "or" },
-                menu: { label: labels[syntax]['or'], texLabel: true }
-            },
-            {
-                type: "LogicNot",
-                properties: {},
-                menu: { label: labels[syntax]['not'], texLabel: true }
-            },
-            {
-                type: "Relation",
-                properties: { relation: "equiv" },
-                menu: { label: labels[syntax]['equiv'], texLabel: true }
-            },
-            {
-                type: "LogicLiteral",
-                properties: { value: true },
-                menu: { label: labels[syntax]['True'], texLabel: true }
-            },
-            {
-                type: "LogicLiteral",
-                properties: { value: false },
-                menu: { label: labels[syntax]['False'], texLabel: true }
-            },
-            {
-                type: "Brackets",
-                properties: { type: "round" },
-                menu: { label: "(x)", texLabel: true }
-            }
+            new MenuItem("LogicBinaryOperation", { operation: "and" }, { label: labels[syntax]['and'], texLabel: true }),
+            new MenuItem("LogicBinaryOperation", { operation: "or" }, { label: labels[syntax]['or'], texLabel: true }),
+            new MenuItem("LogicNot", {}, { label: labels[syntax]['not'], texLabel: true }),
+            new MenuItem("Relation", { relation: "equiv" }, { label: labels[syntax]['equiv'], texLabel: true }),
+            new MenuItem("LogicLiteral", { value: true }, { label: labels[syntax]['True'], texLabel: true }),
+            new MenuItem("LogicLiteral", { value: false }, { label: labels[syntax]['False'], texLabel: true }),
+            new MenuItem("Brackets", { type: "round" }, { label: "(x)", texLabel: true })
         ];
     }
 
-    onMenuItemDragStart(spec: MenuItem, event: React.DragEvent) {
+    private onMenuItemDragStart(spec: MenuItem, event: React.DragEvent) {
+        console.log(event);
         event.dataTransfer.setData('text/plain', ''); // Somehow, Firefox needs some data to be set on the drag start event to continue firing drag events.
         event.dataTransfer.setDragImage(this._ghost as Element, event.clientX, event.clientY);
         if (this.state.sketch) {
@@ -149,45 +113,92 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
     }
 
-    onMenuItemDrag(spec: MenuItem, event: React.DragEvent) {
+    private onMenuItemDrag(spec: MenuItem, event: React.DragEvent) {
+        console.log(event);
         if (this.state.sketch) {
-            this.state.sketch.updatePotentialSymbol(spec, this.mouseX, this.mouseY);
+            this.state.sketch.updatePotentialSymbol(spec, this.state.mouseX, this.state.mouseY);
         }
     }
 
-    onMenuItemDragEnd(_event: React.DragEvent) {
+    private onMenuItemDragEnd(_event: React.DragEvent) {
         if (this.state.sketch) {
             this.state.sketch.commitPotentialSymbol();
         }
     }
 
+    // Fat arrow form for correct "this" binding (?!)
+    private menuItem = (item: MenuItem, index: number) => {
+        return <li key={index}
+            dangerouslySetInnerHTML={{ __html: katex.renderToString(item.menu.label) }}
+            draggable
+            onDragStart={ event => this.onMenuItemDragStart(item, event) }
+            onDrag={ event => this.onMenuItemDrag(item, event) }
+            onDragEnd={ event => this.onMenuItemDragEnd(event) }
+            />;
+    }
+
     render() {
         let logicFunctionItems = this.generateLogicFunctionsItems();
-        let letters = "ABCDEGHIJKLMNOPQRSUVWZ".split("").map((l) => ({
-            type: "Symbol", properties: { letter: l },
-            menu: { label: l, texLabel: true}
-        }));
+        let upperCaseLetters: Array<MenuItem> = [];
+        let lowerCaseLetters: Array<MenuItem> = [];
+        let letters: Array<MenuItem> = [];
+        let defaultMenu = true;
 
         if (this.availableSymbols && this.availableSymbols.length > 0) {
             console.log(`Parsing available symbols: ${this.availableSymbols}`);
+            // Assuming these are only letters... might become more complicated in the future.
+            letters = this.availableSymbols.map( l =>
+                new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true })
+                );
+            defaultMenu = false;
         } else {
             console.log("No symbols available, generating default menu.");
+            upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( l =>
+                new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true })
+                );
+            lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( l =>
+                new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true })
+                );
+        }
+        
+        let menu: JSX.Element;
+        if (defaultMenu) {
+            menu = 
+            <nav className="inequality-ui">
+                <div className="inequality-ui menu-bar">
+                    {this.state.activeMenu == "letters" && <div className="top-menu">
+                        <ul className="sub-menu-tabs">
+                            <li className={this.state.activeSubMenu == "upperCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A") }} onClick={() => this.setState({ activeSubMenu: "upperCaseLetters" })} />
+                            <li className={this.state.activeSubMenu == "lowerCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("a") }} onClick={() => this.setState({ activeSubMenu: "lowerCaseLetters"})} />
+                        </ul>
+                        {(this.state.activeSubMenu == "upperCaseLetters") && <ul className="sub-menu">{
+                            upperCaseLetters.map(this.menuItem)
+                        }</ul>}
+                        {(this.state.activeSubMenu == "lowerCaseLetters") && <ul className="sub-menu">{
+                            lowerCaseLetters.map(this.menuItem)
+                        }</ul>}
+                    </div>}
+                    {this.state.activeMenu == "functions" && <div className="top-menu">
+                        <ul className="sub-menu">{
+                            logicFunctionItems.map(this.menuItem)
+                        }</ul>
+                    </div>}
+                </div>
+                <div className="menu-tabs">
+                    <ul>
+                        <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A\\ b") }} onClick={() => this.setState({ activeMenu: "letters" })} />
+                        <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("\\wedge\\ \\lnot") }} onClick={() => this.setState({ activeMenu: "functions" })} />
+                    </ul>
+                </div>
+            </nav>
+        } else {
+            menu = <nav className="inequality-ui menubar">
+                NOPE
+            </nav>
         }
 
         return <div id="inequality-modal">
-            <nav className="inequality-ui menubar">
-                <ul>{
-                    logicFunctionItems.map((item, index) =>
-                        <li key={index}
-                            dangerouslySetInnerHTML={{ __html: katex.renderToString(item.menu.label) }}
-                            draggable
-                            onDragStart={ event => this.onMenuItemDragStart(item, event) }
-                            onDrag={ event => this.onMenuItemDrag(item, event) }
-                            onDragEnd={ event => this.onMenuItemDragEnd(event) }
-                            />
-                    )
-                }</ul>
-            </nav>
+            { menu }
             <div className="inequality-ui confirm button" onClick={this.close}>Close</div>
         </div>;
     }

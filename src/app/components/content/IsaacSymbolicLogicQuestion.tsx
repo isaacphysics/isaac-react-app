@@ -29,6 +29,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
 
     const closeModal = () => {
         document.body.removeChild(document.getElementById('the-ghost-of-inequality') as Node);
+        document.body.style.overflow = "initial";
         setModalVisible(false);
     }
 

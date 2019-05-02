@@ -11,7 +11,8 @@
 
 #inequality-modal {
     .inequality-ui {
-        position: fixed;
+        position: absolute;
+        width: 100%;
         z-index: 255;
 
         &.button {
@@ -29,26 +30,72 @@
             }
         }
 
-        &.menubar {
+        &.menu-bar {
+            position: relative;
+            width: 100%;
+            display: block;
+            right: 0;
+            left: 0;
+            overflow: auto;
+            background: theme-color("secondary");
+
             ul {
-                background: whitesmoke;
+                position: relative;
                 padding: 0;
                 list-style-type: none;
+                white-space: nowrap;
+                margin: 0 auto;
+                background: darken(theme-color("secondary"), 20%);
 
                 li {
                     display: inline-block;
                     box-sizing: content-box;
-                    border: 0.1px solid lightgray;
-                    padding: 10px;
+                    padding: 8px;
                     text-indent: 0;
-                    width: 50px;
-                    height: 50px;
+                    width: 40px;
+                    height: 40px;
                     text-align: center;
-                    line-height: 50px;
-                    font-size: 2em;
+                    font-size: 1.8em;
+
+                    &.active {
+                        background: theme-color("secondary");
+                    }
 
                     .katex {
                         display: block;
+                    }
+                }
+
+                &.sub-menu {
+                    background: theme-color("secondary");
+                }
+            }
+        }
+
+        .menu-tabs {
+            position: relative;
+            height: 40px;
+            text-align: center;
+
+            ul {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+
+                li {
+                    display: inline-block;
+                    box-sizing: content-box;
+                    padding: 0px 8px;
+                    text-indent: 0;
+                    width: 60px;
+                    text-align: center;
+                    font-size: 1.8em;
+                    background: black;
+                    color: white;
+
+                    &.active {
+                        color: black;
+                        background: theme-color("secondary");
                     }
                 }
             }
