@@ -17,7 +17,9 @@ interface AccountPageProps {user: RegisteredUserDTO | null}
 const AccountPageComponent = ({user}: AccountPageProps) => {
     const updateDetails = () => console.log("Account updated"); // TODO BH account update action
 
-    const [activeTab, setTab] = useState('1');
+    {/• TODO handle #... in with react-router? •/}
+
+    const [activeTab, setTab] = useState('0');
 
     return <div id="account-page">
         <h1>My Account</h1>
@@ -27,16 +29,16 @@ const AccountPageComponent = ({user}: AccountPageProps) => {
                     <Nav tabs>
                         <NavItem>
                             <NavLink
-                                className={classnames({ active: activeTab === '1' })}
-                                onClick={() => setTab('1')}
+                                className={classnames({ active: activeTab === '0' })}
+                                onClick={() => setTab('0')}
                             >
                                 Profile
                             </NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink
-                                className={classnames({ active: activeTab === '2' })}
-                                onClick={() => setTab('2')}
+                                className={classnames({ active: activeTab === '1' })}
+                                onClick={() => setTab('1')}
                             >
                                 <span className="d-none d-lg-block d-md-block">Change Password</span>
                                 <span className="d-block d-md-none">Password</span>
@@ -44,8 +46,8 @@ const AccountPageComponent = ({user}: AccountPageProps) => {
                         </NavItem>
                         <NavItem>
                             <NavLink
-                                className={classnames({ active: activeTab === '3' })}
-                                onClick={() => setTab('3')}
+                                className={classnames({ active: activeTab === '2' })}
+                                onClick={() => setTab('2')}
                             >
                                 <span className="d-none d-lg-block d-md-block">Email Preferences</span>
                                 <span className="d-block d-md-none">Email</span>
@@ -53,7 +55,7 @@ const AccountPageComponent = ({user}: AccountPageProps) => {
                         </NavItem>
                     </Nav>
                     <TabContent activeTab={activeTab}>
-                        <TabPane tabId="1">
+                        <TabPane tabId="0">
                                 <CardBody>
                                     <Form name="userDetails" onSubmit={updateDetails}>
                                         <Row>
@@ -128,7 +130,7 @@ const AccountPageComponent = ({user}: AccountPageProps) => {
                                     </Form>
                                 </CardBody>
                         </TabPane>
-                        <TabPane tabId="2">
+                        <TabPane tabId="1">
                                 <CardBody>
                                     <Form name="userPassword" onSubmit={updateDetails}>
                                         <Row>
@@ -148,7 +150,8 @@ const AccountPageComponent = ({user}: AccountPageProps) => {
                                     </Form>
                                 </CardBody>
                         </TabPane>
-                        <TabPane tabId="3">
+                        {/*TODO move default and defined email pref to redux*/}
+                        <TabPane tabId="2">
                                 <CardBody>
                                     <Form name="emailPreferences" onSubmit={updateDetails}>
                                         Tell us which emails you would like to receive. These settings can be changed at any time.
