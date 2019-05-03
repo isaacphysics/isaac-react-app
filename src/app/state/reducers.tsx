@@ -26,7 +26,7 @@ export const doc = (doc: DocState = null, action: Action) => {
 export const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {
         case ACTION_TYPES.QUESTION_SET_CURRENT_ATTEMPT:
-            return {...question, currentAttempt: action.attempt, canSubmit: true};
+            return {...question, currentAttempt: action.attempt, canSubmit: true, validationResponse: null};
         case ACTION_TYPES.QUESTION_ATTEMPT_REQUEST:
             return {...question, canSubmit: false};
         case ACTION_TYPES.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
