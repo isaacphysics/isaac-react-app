@@ -22,6 +22,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         mouseX: number,
         mouseY: number,
         menuOpen: boolean,
+        editorState: any,
     };
 
     // Available symbols if any are specified
@@ -42,6 +43,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             mouseX: -1,
             mouseY: -1,
             menuOpen: false,
+            editorState: {}
         }
         this.availableSymbols = props.availableSymbols;
         this.close = props.close;
@@ -68,7 +70,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 timestamp: Date.now()
             }]
         };
-        sketch.onNewEditorState = (s: any) => { console.log(s); };
+        sketch.onNewEditorState = (s: any) => {
+            this.setState({ editorState: s });
+            console.log("New editor state: ", s);
+        };
         sketch.onCloseMenus = () => { console.log("closeMenus"); };
         sketch.isUserPrivileged = () => { return true; };
         sketch.onNotifySymbolDrag = () => { };
@@ -209,6 +214,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         return <div id="inequality-modal">
             { menu }
             <div className="inequality-ui confirm button" onClick={this.close}>Close</div>
+            <div className="inequality-ui katex-preview" dangerouslySetInnerHTML={{ __html: katex.renderToString((this.state.editorState.result || { tex: ""}).tex) }}></div>
+            <div className="inequality-ui centre button" onClick={() => { if (this.state.sketch) this.state.sketch.centre() }}>Centre</div>
         </div>;
     }
 }

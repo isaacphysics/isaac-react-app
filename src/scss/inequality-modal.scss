@@ -16,18 +16,35 @@
         z-index: 255;
 
         &.button {
-            width: 100px;
-            height: 100px;
-            background: red;
-            bottom: 20px;
-            right: 20px;
-
+            background: theme-color("secondary");
             text-indent: -1000px;
             overflow: hidden;
 
             &.confirm {
-                background: lime;
+                width: 80px;
+                height: 80px;
+                bottom: 20px;
+                right: 20px;
+                background: darkgreen;
             }
+
+            &.centre {
+                width: 60px;
+                height: 60px;    
+                bottom: 20px;
+                left: 20px;
+                background: dodgerblue;
+            }
+        }
+
+        &.katex-preview {
+            background: red;
+            bottom: 20px;
+            right: 100px;
+            height: 80px;
+            padding: 0 40px;
+            width: fit-content;
+            z-index: 255 !important;
         }
 
         &.menu-bar {
