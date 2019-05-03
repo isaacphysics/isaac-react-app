@@ -3,6 +3,7 @@ import {Dispatch} from "react";
 import {Action} from "../../IsaacAppTypes";
 import {ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPES, TOPICS} from "../services/constants";
+import {AppState} from "./reducers";
 
 // User Authentication
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
@@ -40,6 +41,22 @@ export const handleProviderCallback = (provider: string, parameters: string) => 
     // TODO MT handle error case
 };
 
+// Constants
+export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    // Don't request this again if it has already been fetched successfully
+    const state = getState();
+    if (state && state.constants && state.constants.units) {
+        return;
+    }
+
+    dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST});
+    try {
+        const units = await api.constants.getUnits();
+        dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: units.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_FAILURE});
+    }
+};
 
 // Questions
 export const fetchQuestion = (questionId: string) => async (dispatch: Dispatch<Action>) => {

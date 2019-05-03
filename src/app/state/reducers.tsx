@@ -13,6 +13,16 @@ export const user = (user: UserState = null, action: Action) => {
     }
 };
 
+type ConstantsState = {units: string[]} | null;
+export const constants = (constants: ConstantsState = null, action: Action) => {
+    switch  (action.type) {
+        case ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS:
+            return {...constants, units: action.units};
+        default:
+            return constants;
+    }
+}
+
 type DocState = ContentDTO | null;
 export const doc = (doc: DocState = null, action: Action) => {
     switch (action.type) {
@@ -95,9 +105,10 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
     }
 };
 
-const appReducer = combineReducers({user, doc, questions, currentTopic, currentGameboard, assignments});
+const appReducer = combineReducers({user, constants, doc, questions, currentTopic, currentGameboard, assignments});
 export type AppState = undefined | {
     user: UserState,
+    constants: ConstantsState,
     doc: DocState,
     questions: QuestionsState,
     currentTopic: CurrentTopicState,
