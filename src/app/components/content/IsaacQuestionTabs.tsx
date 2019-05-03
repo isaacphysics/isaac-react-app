@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
+import {IsaacStringMatchQuestion} from "./IsaacStringMatchQuestion";
 import {IsaacSymbolicLogicQuestion} from "./IsaacSymbolicLogicQuestion";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
@@ -40,6 +41,9 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
     switch (doc.type) {
     case 'isaacSymbolicLogicQuestion':
         QuestionBlock = <IsaacSymbolicLogicQuestion questionId={doc.id as string} doc={doc} />;
+        break;
+    case 'isaacStringMatchQuestion':
+        QuestionBlock = <IsaacStringMatchQuestion questionId={doc.id as string} doc={doc} />;
         break;
     case 'isaacMultiChoiceQuestion':
     default:
