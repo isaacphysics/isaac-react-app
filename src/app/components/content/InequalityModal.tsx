@@ -21,6 +21,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         activeSubMenu: string,
         mouseX: number,
         mouseY: number,
+        menuOpen: boolean,
     };
 
     // Available symbols if any are specified
@@ -40,6 +41,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             activeSubMenu: "upperCaseLetters",
             mouseX: -1,
             mouseY: -1,
+            menuOpen: false,
         }
         this.availableSymbols = props.availableSymbols;
         this.close = props.close;
@@ -105,7 +107,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onMenuItemDragStart(spec: MenuItem, event: React.DragEvent) {
-        console.log(event);
         event.dataTransfer.setData('text/plain', ''); // Somehow, Firefox needs some data to be set on the drag start event to continue firing drag events.
         event.dataTransfer.setDragImage(this._ghost as Element, event.clientX, event.clientY);
         if (this.state.sketch) {
@@ -114,7 +115,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onMenuItemDrag(spec: MenuItem, event: React.DragEvent) {
-        console.log(event);
         if (this.state.sketch) {
             this.state.sketch.updatePotentialSymbol(spec, this.state.mouseX, this.state.mouseY);
         }
@@ -135,6 +135,14 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             onDrag={ event => this.onMenuItemDrag(item, event) }
             onDragEnd={ event => this.onMenuItemDragEnd(event) }
             />;
+    }
+
+    private onMenuTabClick(menuName: string) {
+        if (this.state.activeMenu == menuName) {
+            this.setState({ menuOpen: !this.state.menuOpen });
+        } else {
+            this.setState({ menuOpen: true, activeMenu: menuName});
+        }
     }
 
     render() {
@@ -165,7 +173,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         if (defaultMenu) {
             menu = 
             <nav className="inequality-ui">
-                <div className="inequality-ui menu-bar">
+                <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
                     {this.state.activeMenu == "letters" && <div className="top-menu">
                         <ul className="sub-menu-tabs">
                             <li className={this.state.activeSubMenu == "upperCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A") }} onClick={() => this.setState({ activeSubMenu: "upperCaseLetters" })} />
@@ -186,13 +194,14 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 </div>
                 <div className="menu-tabs">
                     <ul>
-                        <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A\\ b") }} onClick={() => this.setState({ activeMenu: "letters" })} />
-                        <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("\\wedge\\ \\lnot") }} onClick={() => this.setState({ activeMenu: "functions" })} />
+                        <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A\\ b") }} onClick={() => this.onMenuTabClick("letters")} />
+                        <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("\\wedge\\ \\lnot") }} onClick={() => this.onMenuTabClick("functions")} />
                     </ul>
                 </div>
             </nav>
         } else {
-            menu = <nav className="inequality-ui menubar">
+            menu =
+            <nav className="inequality-ui menubar">
                 NOPE
             </nav>
         }

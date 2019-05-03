@@ -39,6 +39,11 @@
             overflow: auto;
             background: theme-color("secondary");
 
+            &.closed {
+                height: 0;
+                overflow: hidden;
+            }
+
             ul {
                 position: relative;
                 padding: 0;
