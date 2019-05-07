@@ -213,7 +213,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
         return <div id="inequality-modal">
             { menu }
-            <div className="inequality-ui confirm button" onClick={this.close}>Close</div>
+            <div className="inequality-ui confirm button" onClick={this.close}>OK</div>
             <div className="inequality-ui katex-preview" dangerouslySetInnerHTML={{ __html: katex.renderToString((this.state.editorState.result || { tex: ""}).tex) }}></div>
             <div className="inequality-ui centre button" onClick={() => { if (this.state.sketch) this.state.sketch.centre() }}>Centre</div>
         </div>;
