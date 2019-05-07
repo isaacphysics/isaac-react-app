@@ -190,7 +190,7 @@ const AccountPageComponent = ({user}: AccountPageProps) => {
                     <CardFooter>
                         <Row>
                             <Col size={12} md={{size: 6, offset: 3}}>
-                                <Button color="primary" block href={'/'}>Save</Button>
+                                <Button color="secondary" block href={'/'}>Save</Button>
                             </Col>
                         </Row>
                     </CardFooter>

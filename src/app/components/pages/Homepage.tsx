@@ -30,12 +30,12 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     </Row>
                     <Row>
                         <Col size={6}>
-                            <Button tag={Link} to={user ? "/topics" : "/register"} color="primary" block>
+                            <Button tag={Link} to={user ? "/topics" : "/register"} color="secondary" block>
                                 {user ? "Find a topic" : "Sign up"}
                             </Button>
                         </Col>
                         <Col size={6}>
-                            <Button tag={Link} to={user ? "/events" : "/login"} color="dark" outline block>
+                            <Button tag={Link} to={user ? "/events" : "/login"} color="primary" outline block>
                                 {user ? "Find an event" : "Log in"}
                             </Button>
                         </Col>
@@ -57,7 +57,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         <Card>
                             <CardBody>
                                 <CardTitle tag="h2">
-                                    Benefits for{" "}<span className="text-primary">teachers</span>
+                                    Benefits for{" "}<span className="text-secondary">teachers</span>
                                 </CardTitle>
                                 <ul>
                                     <li>Easy to set homework</li>
@@ -75,7 +75,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         <Card>
                             <CardBody>
                                 <CardTitle tag="h2">
-                                    Benefits for{" "}<span className="text-primary">students</span>
+                                    Benefits for{" "}<span className="text-secondary">students</span>
                                 </CardTitle>
                                 <ul>
                                     <li>Easy to set homework</li>

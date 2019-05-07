@@ -63,7 +63,7 @@ const LogInPageComponent = ({loginProviderRedirect}: LogInPageProps) => {
                             <FormGroup>
                                 <Row>
                                     <Col size={12} md={6}>
-                                        <Button color="primary" type="submit" block>Log in</Button>
+                                        <Button color="secondary" type="submit" block>Log in</Button>
                                     </Col>
                                     <Col size={12} md={6}>
                                         <Button tag={Link} to="/register" color="primary" outline block>Sign up</Button>
