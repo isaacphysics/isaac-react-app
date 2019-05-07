@@ -17,13 +17,7 @@ interface LogInPageProps {
     logInUser: (provider: AuthenticationProvider, params: {email: string, password: string}) => void
 }
 
-interface LogInHandlerProps {
-    email: string
-    password: string
-}
-
 const LogInPageComponent = ({loginProviderRedirect, logInUser}: LogInPageProps) => {
-    const login = () => console.log("Log-in attempt"); // TODO: implement logging in
     const resetPassword = () => console.log("Reset password attempt"); // TODO: implement password reset
 
 
