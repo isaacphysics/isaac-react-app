@@ -38,13 +38,14 @@
         }
 
         &.katex-preview {
-            background: red;
+            border: 1px solid darkgreen;
             bottom: 20px;
             right: 100px;
             height: 80px;
-            padding: 0 40px;
+            padding: 0 20px;
             width: fit-content;
-            z-index: 255 !important;
+            vertical-align: middle;
+            line-height: 80px;
         }
 
         &.menu-bar {
