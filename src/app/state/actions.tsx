@@ -3,7 +3,7 @@ import {Dispatch} from "react";
 import {Action} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPES, TOPICS} from "../services/constants";
-import history from "../../history";
+import history from "../services/history";
 
 
 // User Authentication

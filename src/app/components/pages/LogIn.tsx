@@ -4,20 +4,20 @@ import {Link} from "react-router-dom";
 import {Button, Card, CardBody, Col, Form, FormGroup, Input, Row, Label} from "reactstrap";
 import {handleProviderLoginRedirect} from "../../state/actions";
 import {logInUser} from "../../state/actions";
-import {AuthenticationProvider, RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {AuthenticationProvider} from "../../../IsaacApiTypes";
 
 const stateToProps = null;
 const dispatchToProps = {
-    loginProviderRedirect: handleProviderLoginRedirect,
+    handleProviderLoginRedirect,
     logInUser
 };
 
 interface LogInPageProps {
-    loginProviderRedirect: (provider: AuthenticationProvider) => void,
-    logInUser: (provider: AuthenticationProvider, params: {email: string, password: string}) => void
+    handleProviderLoginRedirect: (provider: AuthenticationProvider) => void;
+    logInUser: (provider: AuthenticationProvider, params: {email: string, password: string}) => void;
 }
 
-const LogInPageComponent = ({loginProviderRedirect, logInUser}: LogInPageProps) => {
+const LogInPageComponent = ({handleProviderLoginRedirect, logInUser}: LogInPageProps) => {
     const resetPassword = () => console.log("Reset password attempt"); // TODO: implement password reset
 
 
@@ -42,13 +42,13 @@ const LogInPageComponent = ({loginProviderRedirect, logInUser}: LogInPageProps) 
                             </Row>
                             <Row size={12}>
                                 <Col>
-                                    <a className="login-google" onClick={() => loginProviderRedirect("GOOGLE")} tabIndex={0}>
+                                    <a className="login-google" onClick={() => handleProviderLoginRedirect("GOOGLE")} tabIndex={0}>
                                         Google {/* TODO: Update from google plus logo */}
                                     </a>
-                                    <a className="login-twitter" onClick={() => loginProviderRedirect("TWITTER")} tabIndex={0}>
+                                    <a className="login-twitter" onClick={() => handleProviderLoginRedirect("TWITTER")} tabIndex={0}>
                                         Twitter
                                     </a>
-                                    <a className="login-facebook" onClick={() => loginProviderRedirect("FACEBOOK")} tabIndex={0}>
+                                    <a className="login-facebook" onClick={() => handleProviderLoginRedirect("FACEBOOK")} tabIndex={0}>
                                         Facebook
                                     </a>
                                 </Col>
@@ -74,8 +74,7 @@ const LogInPageComponent = ({loginProviderRedirect, logInUser}: LogInPageProps) 
                             <FormGroup>
                                 <Row>
                                     <Col size={12} md={6}>
-                                        <Button color="primary" type="submit"
-                                                 block>Log in</Button>
+                                        <Button color="primary" type="submit" block>Log in</Button>
                                     </Col>
                                     <Col size={12} md={6}>
                                         <Button tag={Link} to="/register" color="primary" outline block>Sign up</Button>

@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {Router, Route, Switch} from "react-router-dom";
 import {NavigationBar} from "./NavigationBar";
 import {Footer} from "./Footer";
 import {Homepage} from "../pages/Homepage";
@@ -18,7 +18,7 @@ import {PageNotFound} from "../pages/PageNotFound";
 import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import history from "../../../history"
+import history from "../../services/history"
 
 const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
 const mapDispatchToProps = {requestCurrentUser};
