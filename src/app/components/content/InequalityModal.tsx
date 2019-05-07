@@ -19,6 +19,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         sketch?: Inequality,
         activeMenu: string,
         activeSubMenu: string,
+        trashActive: boolean,
         mouseX: number,
         mouseY: number,
         menuOpen: boolean,
@@ -40,6 +41,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             sketch: props.sketch,
             activeMenu: "letters",
             activeSubMenu: "upperCaseLetters",
+            trashActive: false,
             mouseX: -1,
             mouseY: -1,
             menuOpen: false,
@@ -76,13 +78,19 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         };
         sketch.onCloseMenus = () => { console.log("closeMenus"); };
         sketch.isUserPrivileged = () => { return true; };
-        sketch.onNotifySymbolDrag = () => { };
-        sketch.isTrashActive = () => { return false };
+        sketch.onNotifySymbolDrag = () => {
+            const trash = document.getElementById("inequality-trash");
+            if (trash) {
+                const rect = trash.getBoundingClientRect();
+                this.setState({ trashActive: rect.left <= this.state.mouseX && rect.right >= this.state.mouseX && rect.top <= this.state.mouseY && rect.bottom >= this.state.mouseY });
+            }
+        };
+        sketch.isTrashActive = () => { return this.state.trashActive };
 
         this.setState({ sketch });
 
         // Firefox does not report coordinates correctly on drag, so we supplement them here.
-        document.ondragover = (event) => {
+        document.onmousemove = (event) => {
             this.state.mouseX = event.clientX;
             this.state.mouseY = event.clientY;
         }
@@ -127,7 +135,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
     private onMenuItemDragEnd(_event: React.DragEvent) {
         if (this.state.sketch) {
-            this.state.sketch.commitPotentialSymbol();
+            // if (this.state.trashActive) {
+            //     this.state.sketch.
+            // } else {
+                this.state.sketch.commitPotentialSymbol();
+            // }
         }
     }
 
@@ -151,6 +163,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     render() {
+        // FIXME Factor this out of render() because it takes a long time!
         let logicFunctionItems = this.generateLogicFunctionsItems();
         let upperCaseLetters: Array<MenuItem> = [];
         let lowerCaseLetters: Array<MenuItem> = [];
@@ -216,6 +229,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             <div className="inequality-ui confirm button" onClick={this.close}>OK</div>
             <div className="inequality-ui katex-preview" dangerouslySetInnerHTML={{ __html: katex.renderToString((this.state.editorState.result || { tex: ""}).tex) }}></div>
             <div className="inequality-ui centre button" onClick={() => { if (this.state.sketch) this.state.sketch.centre() }}>Centre</div>
+            <div id="inequality-trash" className={"inequality-ui trash button" + (this.state.trashActive ? " active" : " inactive")}
+                 onDragEnter={() => { this.setState({ trashActive: true }) }}
+                 onDragLeave={() => { this.setState({ trashActive: false }) }}
+            >Trash</div>
         </div>;
     }
 }
