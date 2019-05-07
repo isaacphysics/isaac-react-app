@@ -1,0 +1,41 @@
+// NOMENSA typography
+
+p {
+  &.p-small {
+    font-size: 0.8125em;
+    line-height: 1.69;
+  }
+}
+
+a {
+  color: $gray-940;
+  text-decoration: underline;
+
+  &:hover{
+    color: $gray-940;
+    text-decoration: none;
+  }
+
+  &.a-alt {
+    color: $purple;
+  }
+}
+
+.btn {
+  &.btn-sm{
+    &.a-alt {
+      color: $purple;
+    }
+  }
+}
+
+blockquote {
+
+  &.blockquote {
+    padding: 0.5rem 1rem;
+    border-left: 0.25rem solid $gray-200;
+  }
+}
+small {
+  line-height: 1.69;
+}

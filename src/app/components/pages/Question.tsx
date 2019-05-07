@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
+import {Button, Col, Container, Row} from "reactstrap";
 import queryString from "query-string";
 import {fetchQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -18,11 +19,11 @@ const stateToProps = (state: AppState, {match: {params: {questionId}}, location:
 const dispatchToProps = {fetchQuestion};
 
 interface QuestionPageProps {
-    doc: ContentDTO | null,
-    urlQuestionId: string,
-    queryParams: {board?: string},
-    history: any,
-    fetchQuestion: (questionId: string) => void
+    doc: ContentDTO | null;
+    urlQuestionId: string;
+    queryParams: {board?: string};
+    history: any;
+    fetchQuestion: (questionId: string) => void;
 }
 const QuestionPageComponent = (props: QuestionPageProps) => {
     const {doc, urlQuestionId, queryParams, history, fetchQuestion} = props;
@@ -38,21 +39,34 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
 
     return (
         <ShowLoading until={doc}>
-            {doc &&
-                // FastTrack progress bar
-                // Print options
-                // Filter breadcrumb trail
-                // High contrast option
-                <article>
-                    <IsaacContent doc={doc}/>
-                    <p>{doc.attribution}</p>
-                    {/*Superseded notice*/}
-                    {queryParams && queryParams.board &&
-                        <button onClick={goBackToBoard}>Back to board</button>
-                    }
-                </article>
-                // FooterPods related-content="questionPage.relatedContent"
-            }
+            {doc && <div className="pattern-01">
+                <Container>
+                    {/*FastTrack progress bar*/}
+                    {/*Print options*/}
+                    {/*High contrast option*/}
+                    <Row>
+                        <Col>
+                            {/* Breadcrumb */}
+                            <h1 className="h-title">{doc.title}</h1>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col sm="12" md={{size: 8, offset: 2}} className="py-4 question-panel">
+                            <IsaacContent doc={doc} />
+
+                            {/* Superseded notice */}
+
+                            <p>{doc.attribution}</p>
+
+                            {queryParams && queryParams.board &&
+                                <Button color="secondary" onClick={goBackToBoard}>Back to board</Button>
+                            }
+
+                            {/*FooterPods related-content="questionPage.relatedContent"*/}
+                        </Col>
+                    </Row>
+                </Container>
+            </div>}
         </ShowLoading>
     );
 };

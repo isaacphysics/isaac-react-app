@@ -4,10 +4,10 @@ import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state
 import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
 import {IsaacStringMatchQuestion} from "./IsaacStringMatchQuestion";
 import {IsaacSymbolicLogicQuestion} from "./IsaacSymbolicLogicQuestion";
+import {Button, Col, Row} from "reactstrap";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
 import * as ApiTypes from "../../../IsaacApiTypes";
-import {Button} from "reactstrap";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -21,13 +21,13 @@ const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
 const dispatchToProps = {registerQuestion, deregisterQuestion, attemptQuestion};
 
 interface IsaacQuestionTabsProps {
-    doc: ApiTypes.IsaacQuestionBaseDTO, // Can assume id is always defined
-    currentAttempt?: ApiTypes.ChoiceDTO,
-    canSubmit?: boolean,
-    validationResponse?: ApiTypes.QuestionValidationResponseDTO,
-    registerQuestion: (question: ApiTypes.QuestionDTO) => void,
-    deregisterQuestion: (questionId: string) => void,
-    attemptQuestion: (questionId: string, attempt: ApiTypes.ChoiceDTO) => void,
+    doc: ApiTypes.IsaacQuestionBaseDTO;
+    currentAttempt?: ApiTypes.ChoiceDTO;
+    canSubmit?: boolean;
+    validationResponse?: ApiTypes.QuestionValidationResponseDTO;
+    registerQuestion: (question: ApiTypes.QuestionDTO) => void;
+    deregisterQuestion: (questionId: string) => void;
+    attemptQuestion: (questionId: string, attempt: ApiTypes.ChoiceDTO) => void;
 }
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
     const {doc, currentAttempt, validationResponse, canSubmit, registerQuestion, deregisterQuestion, attemptQuestion} = props;
@@ -37,45 +37,50 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         return () => deregisterQuestion(doc.id as string);
     }, [doc.id]);
 
-    let QuestionBlock: JSX.Element;
+    const submitCurrentAttempt = currentAttempt && attemptQuestion(doc.id as string, currentAttempt)
+
+    let QuestionComponent;
     switch (doc.type) {
-    case 'isaacSymbolicLogicQuestion':
-        QuestionBlock = <IsaacSymbolicLogicQuestion questionId={doc.id as string} doc={doc} />;
-        break;
-    case 'isaacStringMatchQuestion':
-        QuestionBlock = <IsaacStringMatchQuestion questionId={doc.id as string} doc={doc} />;
-        break;
-    case 'isaacMultiChoiceQuestion':
-    default:
-        QuestionBlock = <IsaacMultiChoiceQuestion questionId={doc.id as string} doc={doc} />;
-        break;
+        case 'isaacSymbolicLogicQuestion': QuestionComponent = IsaacSymbolicLogicQuestion; break;
+        case 'isaacStringMatchQuestion': QuestionComponent = IsaacStringMatchQuestion; break;
+        case 'isaacMultiChoiceQuestion': default: QuestionComponent = IsaacMultiChoiceQuestion; break;
     }
 
     return <React.Fragment>
-        <hr />
+        <h2 className="h-question d-flex pb-3">
+            <span className="mr-3">Q1</span>
+        </h2>
 
-        // hints
+        {/* Difficulty bar */}
 
-        {/* switch question answer area on type */}
-        {QuestionBlock}
+        <div className="question-component p-md-5">
+            <QuestionComponent questionId={doc.id as string} doc={doc} />
 
-        <hr />
+            {validationResponse && !canSubmit && (validationResponse.correct ?
+                <h1>Correct!</h1> :
+                <h1>Incorrect</h1>)
+            }
 
-        {validationResponse && !canSubmit && (validationResponse.correct ?
-            <h1>Correct!</h1> :
-            <h1>Incorrect</h1>)
-        }
-        {validationResponse && validationResponse.explanation && !canSubmit &&
-            <IsaacContent doc={validationResponse.explanation} />
-        }
+            {validationResponse && validationResponse.explanation && !canSubmit &&
+                <IsaacContent doc={validationResponse.explanation} />
+            }
 
-        <div>
-            <Button color="primary" onClick={() => currentAttempt && attemptQuestion(doc.id as string, currentAttempt)} disabled={!canSubmit}>
-                Check my answer
-            </Button>
+            <Row>
+                <Col sm="12" md={{ size: 6, offset: 3 }}>
+                    <Button color="secondary" disabled={!canSubmit} block onClick={submitCurrentAttempt}>
+                        Check my answer
+                    </Button>
+                </Col>
+            </Row>
+
+            <Row>
+                <Col sm="12" md={{size: 4, offset: 4}} >
+                    <p className="text-center pt-2">
+                        <small>Don't forget to use the hints above if you need help.</small>
+                    </p>
+                </Col>
+            </Row>
         </div>
-
-        <hr />
     </React.Fragment>;
 };
 

@@ -81,7 +81,7 @@ const RegistrationPageComponent = (props: LogInPageProps) => {
                     </Row>
                     <Row>
                         <Col size={12} md={{size: 6, offset: 3}}>
-                            <Button color="primary" block>Register Now</Button>
+                            <Button color="secondary" block>Register Now</Button>
                         </Col>
                     </Row>
                 </Form>
