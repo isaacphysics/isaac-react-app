@@ -1,18 +1,35 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, Col, Form, FormGroup, Input, Row, Label} from "reactstrap";
 import {handleProviderLoginRedirect} from "../../state/actions";
+import {logInUser} from "../../state/actions";
+import {AuthenticationProvider, RegisteredUserDTO} from "../../../IsaacApiTypes";
 
 const stateToProps = null;
-const dispatchToProps = {loginProviderRedirect: handleProviderLoginRedirect};
+const dispatchToProps = {
+    loginProviderRedirect: handleProviderLoginRedirect,
+    logInUser
+};
 
 interface LogInPageProps {
-    loginProviderRedirect: (provider: string) => void
+    loginProviderRedirect: (provider: AuthenticationProvider) => void,
+    logInUser: (provider: AuthenticationProvider, params: {email: string, password: string}) => void
 }
-const LogInPageComponent = ({loginProviderRedirect}: LogInPageProps) => {
+
+interface LogInHandlerProps {
+    email: string
+    password: string
+}
+
+const LogInPageComponent = ({loginProviderRedirect, logInUser}: LogInPageProps) => {
     const login = () => console.log("Log-in attempt"); // TODO: implement logging in
     const resetPassword = () => console.log("Reset password attempt"); // TODO: implement password reset
+
+
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     return <div id="login-page">
         <h1 className="d-none d-md-block">
@@ -21,7 +38,7 @@ const LogInPageComponent = ({loginProviderRedirect}: LogInPageProps) => {
 
         <Card>
             <CardBody>
-                <Form name="login" onSubmit={login}>
+                <Form name="login" onSubmit={(e: any) => {e.preventDefault(); logInUser("SEGUE", {email: email, password: password})}}>
                     <Row>
                         <Col size={12} md={5} className="text-sm-center">
                             <Row size={12}>
@@ -31,13 +48,13 @@ const LogInPageComponent = ({loginProviderRedirect}: LogInPageProps) => {
                             </Row>
                             <Row size={12}>
                                 <Col>
-                                    <a className="login-google" onClick={() => loginProviderRedirect("google")} tabIndex={0}>
+                                    <a className="login-google" onClick={() => loginProviderRedirect("GOOGLE")} tabIndex={0}>
                                         Google {/* TODO: Update from google plus logo */}
                                     </a>
-                                    <a className="login-twitter" onClick={() => loginProviderRedirect("twitter")} tabIndex={0}>
+                                    <a className="login-twitter" onClick={() => loginProviderRedirect("TWITTER")} tabIndex={0}>
                                         Twitter
                                     </a>
-                                    <a className="login-facebook" onClick={() => loginProviderRedirect("facebook")} tabIndex={0}>
+                                    <a className="login-facebook" onClick={() => loginProviderRedirect("FACEBOOK")} tabIndex={0}>
                                         Facebook
                                     </a>
                                 </Col>
@@ -55,15 +72,16 @@ const LogInPageComponent = ({loginProviderRedirect}: LogInPageProps) => {
 
                             <FormGroup>
                                 <Label htmlFor="email-input">Email</Label>
-                                <Input id="email-input" type="email" name="email" required />
+                                <Input id="email-input" type="email" name="email" onChange={(e: any) => setEmail(e.target.value)} required />
                                 <Label htmlFor="password-input">Password</Label>
-                                <Input id="password-input" type="password" name="password" required />
+                                <Input id="password-input" type="password" name="password" onChange={(e: any) => setPassword(e.target.value)} required />
                             </FormGroup>
 
                             <FormGroup>
                                 <Row>
                                     <Col size={12} md={6}>
-                                        <Button color="primary" type="submit" block>Log in</Button>
+                                        <Button color="primary" type="submit"
+                                                 block>Log in</Button>
                                     </Col>
                                     <Col size={12} md={6}>
                                         <Button tag={Link} to="/register" color="primary" outline block>Sign up</Button>

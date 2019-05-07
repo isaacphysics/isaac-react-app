@@ -18,6 +18,7 @@ import {PageNotFound} from "../pages/PageNotFound";
 import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import history from "../../../history"
 
 const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
 const mapDispatchToProps = {requestCurrentUser};
@@ -32,7 +33,7 @@ const IsaacApp = ({user, requestCurrentUser}: IsaacAppProps) => {
     }, []); // run only once on mount
 
     return (
-        <Router>
+        <Router history={history}>
             <React.Fragment>
                 <NavigationBar />
                 <main role="main" className="flex-fill py-4">

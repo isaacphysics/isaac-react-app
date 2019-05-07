@@ -3,16 +3,16 @@ import {connect} from "react-redux";
 import {Redirect, withRouter} from "react-router-dom";
 import {handleProviderCallback} from "../../state/actions";
 import {AppState} from "../../state/reducers";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {AuthenticationProvider, RegisteredUserDTO} from "../../../IsaacApiTypes";
 
 const stateToProps = (state: AppState) => (state && {user: state.user});
 const dispatchToProps = {handleProviderCallback: handleProviderCallback};
 
 interface ProviderCallbackHandlerProps {
-    match: {params: {provider: string}},
+    match: {params: {provider: AuthenticationProvider}},
     location: {search: string},
     user: RegisteredUserDTO | null,
-    handleProviderCallback: (provider: string, search: string) => void
+    handleProviderCallback: (provider: AuthenticationProvider, search: string) => void
 }
 
 const ProviderCallbackHandlerComponent = (props: ProviderCallbackHandlerProps) => {
