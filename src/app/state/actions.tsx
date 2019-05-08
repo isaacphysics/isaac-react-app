@@ -26,11 +26,21 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
 
 export const logInUser = (provider: AuthenticationProvider, params: {email: string, password: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPES.USER_LOG_IN_REQUEST});
-    const response = await api.authentication.login(provider, params);
-    dispatch({type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
-    history.push('/');
-    history.go(0);
-    // TODO handle error case
+    try {
+        const response = await api.authentication.login(provider, params);
+        dispatch({type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
+        history.push('/');
+        history.go(0);
+    } catch (e) {
+        dispatch({type: ACTION_TYPES.USER_LOG_IN_FAILURE, errorMessage: e.response.data.errorMessage})
+    }
+};
+
+export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPES.USER_PASSWORD_RESET_REQUEST});
+    const response = await api.users.passwordReset(params);
+    dispatch({type: ACTION_TYPES.USER_PASSWORD_RESET_REQUEST_SUCCESS});;
+
 }
 
 export const handleProviderLoginRedirect = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {

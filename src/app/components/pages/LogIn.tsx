@@ -1,89 +1,86 @@
 import React, {useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {Button, Card, CardBody, Col, Form, FormGroup, Input, Row, Label} from "reactstrap";
+import {Button, Card, CardBody, Col, Form, FormGroup, FormFeedback, Input, Row, Label} from "reactstrap";
 import {handleProviderLoginRedirect} from "../../state/actions";
-import {logInUser} from "../../state/actions";
+import {logInUser, resetPassword} from "../../state/actions";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
+import {AppState} from "../../state/reducers";
 
-const stateToProps = null;
+const stateToProps = (state: AppState) => ({errorMessage: state ? state.error : null});
+
 const dispatchToProps = {
     handleProviderLoginRedirect,
-    logInUser
+    logInUser,
+    resetPassword
 };
 
 interface LogInPageProps {
     handleProviderLoginRedirect: (provider: AuthenticationProvider) => void;
     logInUser: (provider: AuthenticationProvider, params: {email: string, password: string}) => void;
+    resetPassword: (params: {email: string}) => void;
+    errorMessage: string | null;
 }
 
-const LogInPageComponent = ({handleProviderLoginRedirect, logInUser}: LogInPageProps) => {
-    const resetPassword = () => console.log("Reset password attempt"); // TODO: implement password reset
-
-
+const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPassword, errorMessage}: LogInPageProps) => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [logInAttempt, setLoginAttempt] = useState(false);
+
+    const isValidEmail = email.length > 0 && email.includes("@");
+    const isValidPassword = password.length > 5;
+    const [passwordResetRequest, setPasswordResetRequest] = useState(false);
 
     return <div id="login-page">
-        <h1 className="d-none d-md-block">
-            Log in or Sign up to {" "} <Link to="/">Isaac</Link>.
-        </h1>
 
         <Card>
             <CardBody>
-                <Form name="login" onSubmit={(e: any) => {e.preventDefault(); logInUser("SEGUE", {email: email, password: password})}}>
-                    <Row>
-                        <Col size={12} md={5} className="text-sm-center">
-                            <Row size={12}>
-                                <Col>
-                                    <h2>Log in or sign up with:</h2>
+                <Form name="login" onSubmit={(e: any) => {e.preventDefault(); (isValidPassword && isValidEmail) ? logInUser("SEGUE", {email: email, password: password}) : null}} noValidate>
+                    <Col size={4} className="">
+                        <Row size={6}>
+                            <Col>
+                                <h2>Log in or sign up with:</h2>
+                            </Col>
+                        </Row>
+
+                        <FormGroup>
+                            <h3 className="login-error">{errorMessage}</h3>
+                            <Label htmlFor="email-input">Email</Label>
+                            <Input invalid={!isValidEmail && (logInAttempt || passwordResetRequest)} id="email-input" type="email" name="email" placeholder="Email address" onChange={(e: any) => setEmail(e.target.value)} required/>
+                            <FormFeedback>{(!isValidEmail) ? "Enter a valid email address" : null}</FormFeedback>
+                            <Label htmlFor="password-input">Password</Label>
+                            <Input invalid={!isValidPassword && (logInAttempt)} id="password-input" type="password" name="password" placeholder="Password" onChange={(e: any) => setPassword(e.target.value)} required/>
+                            <FormFeedback>{(!isValidPassword) ? "Enter a valid password" : null}</FormFeedback>
+                        </FormGroup>
+                        {!passwordResetRequest &&
+                        <a tabIndex={0} className="password-reset" onClick={() => {
+                            (isValidEmail) ? resetPassword({email: email}) : null;
+                            (isValidEmail) ? setPasswordResetRequest(!passwordResetRequest) : null;
+                        }}>Forgotten your password?</a>
+                        }
+                        {passwordResetRequest &&
+                        <p><strong>Your password reset request is being processed. Please check your inbox.
+                        </strong></p>
+                        }
+                        <FormGroup>
+                            <Row>
+                                <Col size={3} md={6}>
+                                    <Button color="primary" type="submit" onClick={() => {setLoginAttempt(true)}} block>Log in</Button>
+                                </Col>
+                                <Col size={3} md={6}>
+                                    <Button tag={Link} to="/register" color="primary" outline block>Sign up</Button>
                                 </Col>
                             </Row>
-                            <Row size={12}>
-                                <Col>
-                                    <a className="login-google" onClick={() => handleProviderLoginRedirect("GOOGLE")} tabIndex={0}>
-                                        Google {/* TODO: Update from google plus logo */}
-                                    </a>
-                                    <a className="login-twitter" onClick={() => handleProviderLoginRedirect("TWITTER")} tabIndex={0}>
-                                        Twitter
-                                    </a>
-                                    <a className="login-facebook" onClick={() => handleProviderLoginRedirect("FACEBOOK")} tabIndex={0}>
-                                        Facebook
-                                    </a>
-                                </Col>
-                            </Row>
-                        </Col>
 
-                        <Col size={12} md={2} className="text-center">
-                            <h2 className="login-separator"><span>or</span></h2>
-                        </Col>
-
-                        <Col size={12} md={5}>
-                            {/* TODO: Password request is being processed   */}
-                            {/* TODO: Error Message */}
-                            {/* TODO: Input Validation */}
-
-                            <FormGroup>
-                                <Label htmlFor="email-input">Email</Label>
-                                <Input id="email-input" type="email" name="email" onChange={(e: any) => setEmail(e.target.value)} required />
-                                <Label htmlFor="password-input">Password</Label>
-                                <Input id="password-input" type="password" name="password" onChange={(e: any) => setPassword(e.target.value)} required />
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Row>
-                                    <Col size={12} md={6}>
-                                        <Button color="primary" type="submit" block>Log in</Button>
-                                    </Col>
-                                    <Col size={12} md={6}>
-                                        <Button tag={Link} to="/register" color="primary" outline block>Sign up</Button>
-                                    </Col>
-                                </Row>
-                                <a tabIndex={0} onClick={resetPassword}>Forgotten your password?</a>
-                            </FormGroup>
-                        </Col>
-                    </Row>
+                        </FormGroup>
+                        <Row size={12} tm={5}>
+                            <h3>Or:</h3>
+                        </Row>
+                        <Row size={12} tm={5}>
+                            <a className="login-google" onClick={() => handleProviderLoginRedirect("GOOGLE")} tabIndex={0}/>
+                        </Row>
+                    </Col>
                 </Form>
             </CardBody>
         </Card>

@@ -11,6 +11,9 @@ export const api = {
     users: {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
+        },
+        passwordReset: (params: {email: string}): AxiosPromise => {
+            return endpoint.post(`/users/resetpassword`, params);
         }
     },
     authentication: {

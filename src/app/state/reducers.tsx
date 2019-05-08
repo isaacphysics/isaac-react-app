@@ -95,14 +95,25 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
     }
 };
 
-const appReducer = combineReducers({user, doc, questions, currentTopic, currentGameboard, assignments});
+type LoginErrorState = string | null;
+export const error = (error: LoginErrorState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPES.USER_LOG_IN_FAILURE:
+            return action.errorMessage;
+        default:
+            return null;
+    }
+};
+
+const appReducer = combineReducers({user, doc, questions, currentTopic, currentGameboard, assignments, error});
 export type AppState = undefined | {
     user: UserState,
     doc: DocState,
     questions: QuestionsState,
     currentTopic: CurrentTopicState,
     currentGameboard: CurrentGameboardState,
-    assignments: AssignmentsState
+    assignments: AssignmentsState,
+    error: LoginErrorState
 }
 
 export const rootReducer = (state: AppState, action: Action) => {
