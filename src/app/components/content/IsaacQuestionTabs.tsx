@@ -42,7 +42,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         return () => deregisterQuestion(doc.id as string);
     }, [doc.id]);
 
-    const submitCurrentAttempt = currentAttempt && attemptQuestion(doc.id as string, currentAttempt)
+    const submitCurrentAttempt = () => currentAttempt && attemptQuestion(doc.id as string, currentAttempt);
 
     let QuestionComponent;
     switch (doc.type) {
