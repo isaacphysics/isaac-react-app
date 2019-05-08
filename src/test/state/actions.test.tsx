@@ -1,9 +1,9 @@
 import MockAdapter from 'axios-mock-adapter';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import {registerQuestion, requestCurrentUser} from "../../app/state/actions";
+import {registerQuestion, requestConstantsUnits, requestCurrentUser} from "../../app/state/actions";
 import {endpoint} from "../../app/services/api";
-import {errorResponses, questionDTOs, registeredUserDTOs} from "../test-factory";
+import {errorResponses, questionDTOs, registeredUserDTOs, unitsList} from "../test-factory";
 import {ACTION_TYPES} from "../../app/services/constants";
 
 const middleware = [thunk];
@@ -73,5 +73,54 @@ describe("registerQuestion action", () => {
         const store = mockStore();
         store.dispatch(registerQuestion(manVsHorse) as any);
         expect(store.getActions()).toEqual(expectedActions);
+    });
+});
+
+describe("requestConstantsUnits action", () => {
+    afterEach(() => {
+        axiosMock.reset();
+    });
+
+    it("dispatches CONSTANTS_UNITS_RESPONSE_SUCCESS after a successful request", async () => {
+        axiosMock.onGet(`/content/units`).replyOnce(200, unitsList);
+        const store = mockStore();
+        await store.dispatch(requestConstantsUnits() as any);
+        const expectedActions = [
+            {type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST},
+            {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList}
+        ];
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(axiosMock.history.get.length).toBe(1);
+    });
+
+    it("doesn't dispatch CONSTANTS_UNITS_REQUEST if already in the store", async () => {
+        const store = mockStore({constants: {units: unitsList}});
+        await store.dispatch(requestConstantsUnits() as any);
+        expect(store.getActions().length).toBe(0);
+        expect(axiosMock.history.get.length).toBe(0);
+    });
+
+    it("dispatches USER_UPDATE_FAILURE when no connection to the api", async () => {
+        axiosMock.onGet(`/content/units`).networkError();
+        const store = mockStore();
+        await store.dispatch(requestConstantsUnits() as any);
+        const expectedActions = [
+            {type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST},
+            {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_FAILURE}
+        ];
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(axiosMock.history.get.length).toBe(1);
+    });
+
+    it("does not care if the response times-out", async () => {
+        axiosMock.onGet(`/content/units`).timeout();
+        const store = mockStore();
+        await store.dispatch(requestConstantsUnits() as any);
+        const expectedActions = [
+            {type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST},
+            {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_FAILURE}
+        ];
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(axiosMock.history.get.length).toBe(1);
     });
 });
