@@ -11,11 +11,15 @@ import * as ApiTypes from "../../../IsaacApiTypes";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
-    const question = state && state.questions && state.questions.filter((question) => question.id == doc.id)[0];
-    return question ? {
-        validationResponse: question.validationResponse,
-        currentAttempt: question.currentAttempt,
-        canSubmit: question.canSubmit
+    const indexedQuestion = state && state.questions &&
+        state.questions
+            .map((question, index) => ({question, index}))
+            .filter(({question}) => question.id == doc.id)[0];
+    return indexedQuestion ? {
+        validationResponse: indexedQuestion.question.validationResponse,
+        currentAttempt: indexedQuestion.question.currentAttempt,
+        canSubmit: indexedQuestion.question.canSubmit,
+        questionIndex: indexedQuestion.index
     } : {};
 };
 const dispatchToProps = {registerQuestion, deregisterQuestion, attemptQuestion};
@@ -25,12 +29,13 @@ interface IsaacQuestionTabsProps {
     currentAttempt?: ApiTypes.ChoiceDTO;
     canSubmit?: boolean;
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
+    questionIndex?: number;
     registerQuestion: (question: ApiTypes.QuestionDTO) => void;
     deregisterQuestion: (questionId: string) => void;
     attemptQuestion: (questionId: string, attempt: ApiTypes.ChoiceDTO) => void;
 }
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
-    const {doc, currentAttempt, validationResponse, canSubmit, registerQuestion, deregisterQuestion, attemptQuestion} = props;
+    const {doc, currentAttempt, validationResponse, questionIndex, canSubmit, registerQuestion, deregisterQuestion, attemptQuestion} = props;
 
     useEffect((): (() => void) => {
         registerQuestion(doc);
@@ -48,7 +53,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
 
     return <React.Fragment>
         <h2 className="h-question d-flex pb-3">
-            <span className="mr-3">Q1</span>
+            <span className="mr-3">{questionIndex !== undefined ? `Q${questionIndex + 1}` : "Question"}</span>
         </h2>
 
         {/* Difficulty bar */}
