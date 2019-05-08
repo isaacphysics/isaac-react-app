@@ -19,6 +19,7 @@ interface IsaacMultiChoiceQuestionProps {
     currentAttempt?: ChoiceDTO;
     setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => void;
 }
+
 const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const currentAttemptValue = currentAttempt && currentAttempt.value;
@@ -27,15 +28,14 @@ const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps)
         <div>
             <h4><IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding} children={doc.children} /></h4>
 
-            <ul>{doc.choices && doc.choices.map((choice, index) =>
-                <li key={index} className="list-unstyled">
-                    <input
-                        type="radio"
-                        checked={currentAttemptValue == choice.value}
-                        onClick={() => setCurrentAttempt(questionId, choice)}
-                        readOnly
-                    />
-                    <label>
+            <ul>{doc.choices && doc.choices.map((choice) =>
+                <li key={choice.value} className="list-unstyled">
+                    <label className="label-radio">
+                        <input
+                            type="radio"
+                            checked={currentAttemptValue == choice.value}
+                            onChange={() => setCurrentAttempt(questionId, choice)}
+                        />
                         <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} children={[]} />
                     </label>
                 </li>)
