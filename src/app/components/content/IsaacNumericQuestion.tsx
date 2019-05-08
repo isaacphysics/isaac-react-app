@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {ChangeEventHandler, useEffect} from "react";
 import {connect} from "react-redux";
 import seedrandom from "seedrandom";
 import {requestConstantsUnits, setCurrentAttempt} from "../../state/actions";
@@ -107,45 +107,59 @@ function unwrapUnitFromSelect(unit: string): string|undefined {
     }
 }
 
+type Unwrapper = (item: string) => string | undefined;
+
 const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
     const {doc, userId, questionId, units, currentAttempt, setCurrentAttempt, requestConstantsUnits} = props;
     const currentAttemptValue = currentAttempt && currentAttempt.value;
-    const currentAttemptUnits = wrapUnitForSelect(currentAttempt && currentAttempt.units);
+    const currentAttemptUnits = currentAttempt && currentAttempt.units;
 
-    useEffect(() => {
+    useEffect((): void => {
         requestConstantsUnits();
-    }, []);
+    }, [requestConstantsUnits]);
     const selectedUnits = selectUnits(doc, questionId, units, userId);
 
-    function update(newValues: {value?: string; units?: string}): void {
-        setCurrentAttempt(questionId, {
-            type: "quantity",
-            value: currentAttemptValue,
-            units: unwrapUnitFromSelect(currentAttemptUnits),
-            ...newValues
-        });
+    function update(what: "value"|"units", f?: Unwrapper): ChangeEventHandler<HTMLInputElement> {
+        return (event): void => {
+            let attempt = {
+                type: "quantity",
+                value: currentAttemptValue,
+                units: currentAttemptUnits
+            };
+            attempt[what] = f !== undefined ? f(event.target.value) : event.target.value;
+            setCurrentAttempt(questionId, attempt);
+        };
     }
+
     return (
         <div>
             <h3><IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding} children={doc.children} /></h3>
             <Row>
                 <Col sm={3}>
-                    <Label>Value<br />
+                    <Label>
+                        Value
+                        <br />
                         <Input type="text" placeholder="Type your answer here." value={currentAttemptValue || ""}
-                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => update({value: event.target.value}) }
+                            onChange={update("value")}
                         />
                     </Label>
+                    <br />
+                    <small>Please answer to an appropriate number of significant figures.</small>
                 </Col>
                 {doc.requireUnits &&
                     <Col sm={3}>
-                        <Label>Units<br/>
-                            <Input type="select" value={currentAttemptUnits} onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                update({units: unwrapUnitFromSelect(event.target.value)})}>
+                        <Label>
+                            Units
+                            <br/>
+                            <Input type="select" value={wrapUnitForSelect(currentAttemptUnits)}
+                                onChange={update("units", unwrapUnitFromSelect)}>
                                 {selectedUnits && selectedUnits.map((unit, index) =>
                                     <option key={index}>{unit}</option>
                                 )}
                             </Input>
                         </Label>
+                        <br />
+                        <small>Please choose an appropriate unit of measurement.</small>
                     </Col>
                 }
             </Row>
