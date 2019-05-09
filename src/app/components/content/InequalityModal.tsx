@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
 import { Inequality, makeInequality } from "inequality";
 import katex from "katex";
 
@@ -13,6 +12,7 @@ interface InequalityModalProps {
     availableSymbols?: Array<string>;
     sketch?: Inequality;
     close: () => void;
+    onEditorStateChange: (state: any) => void;
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
     state: {
@@ -93,14 +93,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         };
         sketch.onNewEditorState = (s: any) => {
             this.setState({ editorState: s });
+            this.props.onEditorStateChange(s);
             console.log("New editor state: ", s);
         };
-        sketch.onCloseMenus = () => { console.log("closeMenus"); };
-        sketch.isUserPrivileged = () => { return true; };
-        sketch.onNotifySymbolDrag = () => { };
-        sketch.isTrashActive = () => {
-            return this.state.trashActive;
-        };
+        sketch.onCloseMenus = () => { this.setState({ menuOpen: false }) }; // TODO Maybe nice to have
+        sketch.isUserPrivileged = () => true; // TODO Integrate with currentUser object
+        sketch.onNotifySymbolDrag = () => { }; // This is probably irrelevant now
+        sketch.isTrashActive = () => this.state.trashActive;
 
         this.setState({ sketch });
 
@@ -183,7 +182,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     render() {
-        console.log('render()');
+        // console.log('render()');
         let menu: JSX.Element;
         if (this.state.defaultMenu) {
             menu = 
