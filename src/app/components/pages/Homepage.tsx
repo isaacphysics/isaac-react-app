@@ -144,7 +144,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     <CardDeck>
                         <Card>
                             <div className="text-center">
-                                <CardImg top src="assets/event-1.png" alt="Teacher event illustration" />
+                                <CardImg top src="/assets/event-1.png" alt="Teacher event illustration" />
                             </div>
                             <CardBody>
                                 <CardTitle className="font-weight-bold">Teacher Workshop</CardTitle>
@@ -165,7 +165,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         </Card>
                         <Card>
                             <div className="text-center">
-                                <CardImg top src="assets/event-2.png" alt="CPD event illustration" />
+                                <CardImg top src="/assets/event-2.png" alt="CPD event illustration" />
                             </div>
                             <CardBody>
                                 <CardTitle className="font-weight-bold">Virtual teacher CPD</CardTitle>
@@ -186,7 +186,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         </Card>
                         <Card>
                             <div className="text-center">
-                                <CardImg top src="assets/event-3.png" alt="Teacher event illustration" />
+                                <CardImg top src="/assets/event-3.png" alt="Teacher event illustration" />
                             </div>
                             <CardBody>
                                 <CardTitle className="font-weight-bold">Student Workshop</CardTitle>

@@ -21,7 +21,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
     return <React.Fragment>
         <RS.Navbar light color="primary" expand="sm">
             <RS.NavbarBrand tag={Link} to="/">
-                <img src="assets/logo_black.png" height={60} alt="Isaac Computer Science"/>
+                <img src="/assets/logo_black.png" height={60} alt="Isaac Computer Science"/>
             </RS.NavbarBrand>
             <RS.Nav className="ml-auto" navbar>
                 {!user &&
