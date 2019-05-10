@@ -1,4 +1,3 @@
-import './app/services/mathjax';
 import 'react-app-polyfill/ie9';
 import './scss/isaac.scss';
 import React from 'react';
