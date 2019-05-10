@@ -16,7 +16,7 @@
         z-index: 255;
 
         &.button {
-            background: theme-color("secondary");
+            background: theme-color("primary");
             text-indent: -1000px;
             overflow: hidden;
 
@@ -35,16 +35,31 @@
                 left: 20px;
                 background: dodgerblue;
             }
+
+            &.trash {
+                width: 80px;
+                height: 100px;
+                bottom: 120px;
+                right: 20px;
+                background: black;
+                opacity: 0.5;
+
+                &:hover, &.active {
+                    opacity: 1.0;
+                }
+            }    
         }
 
         &.katex-preview {
-            background: red;
+            border: 1px solid darkgreen;
             bottom: 20px;
             right: 100px;
             height: 80px;
-            padding: 0 40px;
-            width: fit-content;
-            z-index: 255 !important;
+            padding: 0 20px;
+            width: fit-content; // This is contentious with browsers
+            vertical-align: middle;
+            line-height: 80px;
+            font-size: 2em;
         }
 
         &.menu-bar {
@@ -54,7 +69,7 @@
             right: 0;
             left: 0;
             overflow: auto;
-            background: theme-color("secondary");
+            background: theme-color("primary");
 
             &.closed {
                 height: 0;
@@ -67,7 +82,7 @@
                 list-style-type: none;
                 white-space: nowrap;
                 margin: 0 auto;
-                background: darken(theme-color("secondary"), 20%);
+                background: darken(theme-color("primary"), 20%);
 
                 li {
                     display: inline-block;
@@ -80,7 +95,7 @@
                     font-size: 1.8em;
 
                     &.active {
-                        background: theme-color("secondary");
+                        background: theme-color("primary");
                     }
 
                     .katex {
@@ -89,7 +104,7 @@
                 }
 
                 &.sub-menu {
-                    background: theme-color("secondary");
+                    background: theme-color("primary");
                 }
             }
         }
@@ -117,7 +132,7 @@
 
                     &.active {
                         color: black;
-                        background: theme-color("secondary");
+                        background: theme-color("primary");
                     }
                 }
             }

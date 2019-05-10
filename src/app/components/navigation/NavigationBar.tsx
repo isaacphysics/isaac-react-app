@@ -4,11 +4,12 @@ import {connect} from "react-redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import * as RS from "reactstrap";
+import {SearchButton} from "../content/SearchButton";
 
 const stateToProps = (state: AppState) => (state && {user: state.user});
 
 interface NavigationBarProps {
-    user: RegisteredUserDTO | null
+    user: RegisteredUserDTO | null;
 }
 const NavigationBarComponent = ({user}: NavigationBarProps) => {
     const DropdownItemComingSoon = (props: {children: string}) => {
@@ -18,9 +19,9 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
     };
 
     return <React.Fragment>
-        <RS.Navbar light color="secondary" expand="sm">
+        <RS.Navbar light color="primary" expand="sm">
             <RS.NavbarBrand tag={Link} to="/">
-                <img src="assets/logo_black.png" height={60} alt="Isaac Computer Science"/>
+                <img src="/assets/logo_black.png" height={60} alt="Isaac Computer Science"/>
             </RS.NavbarBrand>
             <RS.Nav className="ml-auto" navbar>
                 {!user &&
@@ -44,10 +45,10 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     </React.Fragment>
                 }
                 <RS.Form inline>
-                    <RS.InputGroup>
-                        <RS.Input type="search" placeholder="Search" aria-label="Search" />
-                        <RS.InputGroupAddon addonType="append">🔍</RS.InputGroupAddon>
-                    </RS.InputGroup>
+                    <RS.FormGroup className="search--main-group">
+                        <RS.Input type="search" name="search" placeholder="Search" aria-label="Search" />
+                        <SearchButton />
+                    </RS.FormGroup>
                 </RS.Form>
             </RS.Nav>
         </RS.Navbar>

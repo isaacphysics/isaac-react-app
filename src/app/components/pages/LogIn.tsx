@@ -72,7 +72,6 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                                     <Button tag={Link} to="/register" color="primary" outline block>Sign up</Button>
                                 </Col>
                             </Row>
-
                         </FormGroup>
                         <Row size={12} tm={5}>
                             <h3>Or:</h3>
