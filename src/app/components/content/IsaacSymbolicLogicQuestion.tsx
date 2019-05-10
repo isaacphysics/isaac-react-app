@@ -3,8 +3,9 @@ import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {ChoiceDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiTypes";
+import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiTypes";
 import { InequalityModal } from "./InequalityModal";
+import katex from "katex";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -16,16 +17,22 @@ const dispatchToProps = {setCurrentAttempt};
 interface IsaacSymbolicLogicQuestionProps {
     doc: IsaacSymbolicLogicQuestionDTO,
     questionId: string,
-    currentAttempt?: ChoiceDTO,
-    showInequality?: boolean,
-    setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => void
+    currentAttempt?: LogicFormulaDTO,
+    setCurrentAttempt: (questionId: string, attempt: LogicFormulaDTO) => void
 }
 const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    const {doc, questionId, currentAttempt, showInequality, setCurrentAttempt} = props;
-    const currentAttemptValue = currentAttempt && currentAttempt.value;
+    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
+    let currentAttemptValue: any | undefined;
+    if (currentAttempt && currentAttempt.value) {
+        try {
+            currentAttemptValue = JSON.parse(currentAttempt.value);
+        } catch(e) {
+            currentAttemptValue = { result: { tex: '\\textrm{PLACEHOLDER HERE}' } };
+        }
+    }
 
     const closeModal = () => {
         document.body.removeChild(document.getElementById('the-ghost-of-inequality') as Node);
@@ -33,16 +40,15 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
         setModalVisible(false);
     }
 
-    const inequalityModal = modalVisible ? <InequalityModal
-        close={closeModal}
-        availableSymbols={doc.availableSymbols}
-        /> : (void null);
-
     return (
         <div>
             <h3><IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding} children={doc.children} /></h3>
-            <div className="eqn-editor-preview" onClick={() => setModalVisible(true)}>TEST</div>
-            {inequalityModal}
+            <div className="eqn-editor-preview" onClick={() => setModalVisible(true)} dangerouslySetInnerHTML={{ __html: katex.renderToString((currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex) ? currentAttemptValue.result.tex : '') }} />
+            {modalVisible && <InequalityModal
+                close={closeModal}
+                onEditorStateChange={(state: any) => { setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(state), pythonExpression: state.result.python }) }}
+                availableSymbols={doc.availableSymbols}
+            />}
         </div>
     );
 };
