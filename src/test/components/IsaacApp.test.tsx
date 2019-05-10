@@ -6,11 +6,11 @@ import IsaacApp from '../../app/components/navigation/IsaacApp';
 
 describe('IsaacApp', () => {
 
-  it('renders without crashing', () => {
-    const div = document.createElement('div');
-    const store = storeFactory({});
-    ReactDOM.render(<React.StrictMode><Provider store={store}><IsaacApp/></Provider></React.StrictMode>, div);
-    ReactDOM.unmountComponentAtNode(div);
-  });
+    it('renders without crashing', () => {
+        const div = document.createElement('div');
+        const store = storeFactory({});
+        ReactDOM.render(<React.StrictMode><Provider store={store}><IsaacApp/></Provider></React.StrictMode>, div);
+        ReactDOM.unmountComponentAtNode(div);
+    });
 
 });

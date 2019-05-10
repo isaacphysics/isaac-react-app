@@ -1,0 +1,114 @@
+// ISAAC
+a.btn {
+  text-decoration: none;
+}
+
+
+// NOMENSA button.scss
+
+.btn {
+  min-width: 180px;
+  border-radius: 0.25rem;
+  font-size: 1.125rem;
+  font-family: $secondary-font;
+  font-weight: 700;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.btn-secondary,
+  .btn-link {
+    color: $black;
+  }
+
+  &.btn-link {
+    color: $black;
+    min-width: initial;
+    padding: initial;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    &:not(:disabled):not(.disabled):active {
+      background-color: $gray-180;
+      border-color: $gray-180;
+    }
+
+    &.focus,
+    &:focus,
+    &:not(:disabled):not(.disabled):active:focus {
+      box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.3);
+    }
+
+    &.disabled,
+    &:disabled {
+      border-color: $gray-630;
+      color: $gray-630;
+    }
+
+    &.btn-sm {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  }
+  //Button Secondary
+  &.btn-secondary:not(:disabled):not(.disabled):active {
+    background-color: $reddish;
+    border: 1px solid transparent;
+    color: $black;
+    text-decoration: underline;
+  }
+  //Button - Primary Outline
+  &.btn-outline-primary {
+    color: $black;
+    border-color: $black;
+    border-width: 2px;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    &:not(:disabled):not(.disabled):active {
+      background-color: $gray-180;
+      border-color: $gray-180;
+    }
+
+    &.focus,
+    &:focus,
+    &:not(:disabled):not(.disabled):active:focus {
+      box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.3);
+    }
+
+    &.disabled,
+    &:disabled {
+      border-color: $gray-630;
+      color: $gray-630;
+    }
+  }
+  //Button - Secondary Outline
+  &.btn-outline-secondary {
+    color: $white;
+    background-color: $black;
+    border-color: $white;
+    border-width: 2px;
+
+    &:not(:disabled):not(.disabled):active {
+      background-color: $gray-180;
+      border-color: $gray-180;
+    }
+
+    &.focus,
+    &:focus,
+    &:not(:disabled):not(.disabled):active:focus {
+      box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.3);
+    }
+
+    &.disabled,
+    &:disabled {
+      border-color: $gray-390;
+      color: $gray-390;
+    }
+  }
+}

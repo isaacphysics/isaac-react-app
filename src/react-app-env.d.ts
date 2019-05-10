@@ -66,3 +66,5 @@ declare module '*.module.sass' {
 declare module "react-router-dom" // TODO MT react router types for 5.0.0 will be available eventually
 declare module "bootstrap" // TODO MT types for 4.3.1 will be available at some point
 declare module "reactstrap" // TODO MT types for 8.0.0 waiting for a pull request review
+
+declare var MathJax: any;
