@@ -32,7 +32,7 @@ module.exports = function(proxy, allowedHost) {
       !proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === 'true',
     // Add some custom headers to all responses:
     headers: {
-      "Content-Security-Policy-Report-Only": "default-src 'self' localhost:8080; object-src 'none';",
+      "Content-Security-Policy-Report-Only": "default-src 'self' localhost:8080 https://www.google-analytics.com https://stats.g.doubleclick.net; object-src 'none';",
       "Feature-Policy": "geolocation 'none'; camera 'none'; microphone 'none'; accelerometer 'none';",
       "X-Clacks-Overhead": "GNU Terry Pratchett",
     },
