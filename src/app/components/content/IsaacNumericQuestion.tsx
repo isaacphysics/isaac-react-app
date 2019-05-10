@@ -1,11 +1,12 @@
-import React, {ChangeEventHandler, useEffect} from "react";
+import React, {ChangeEventHandler, FormEvent, useEffect, useState} from "react";
 import {connect} from "react-redux";
 import seedrandom from "seedrandom";
 import {requestConstantsUnits, setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {IsaacNumericQuestionDTO, QuantityDTO} from "../../../IsaacApiTypes";
-import {Input, Row, Col, Label} from "reactstrap";
+import {Input, Row, Col, Label, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from "reactstrap";
+import {TrustedHtml} from "./TrustedHtml";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
@@ -26,7 +27,7 @@ interface IsaacNumericQuestionProps {
     requestConstantsUnits: () => void;
 }
 
-function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): string[] {
+function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
     const seed = userId + "|" + questionId;
     const rand = seedrandom(seed);
 
@@ -52,7 +53,7 @@ function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: s
     }
     /* eslint-enable @typescript-eslint/no-explicit-any */
 
-    const unitsToShow: string[] = [];
+    const unitsToShow: (string|undefined)[] = [];
     function addUnitToShow(unit: string): void {
         unit = unit.trim();
         if (unit === "" || unitsToShow.includes(unit)) return;
@@ -81,33 +82,20 @@ function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: s
     }
 
     shuffle(unitsToShow);
-    unitsToShow.unshift("", "None");
+    unitsToShow.unshift(undefined, "");
     return unitsToShow;
 }
 
 function wrapUnitForSelect(unit?: string): string {
     switch (unit) {
         case undefined:
-            return "";
+            return "&nbsp;";
         case "":
             return "None";
         default:
-            return unit;
+            return "$\\units{" + unit + "}$";
     }
 }
-
-function unwrapUnitFromSelect(unit: string): string|undefined {
-    switch (unit) {
-        case "None":
-            return "";
-        case "":
-            return undefined;
-        default:
-            return unit;
-    }
-}
-
-type Unwrapper = (item: string) => string | undefined;
 
 const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
     const {doc, userId, questionId, units, currentAttempt, setCurrentAttempt, requestConstantsUnits} = props;
@@ -119,17 +107,25 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
     }, [requestConstantsUnits]);
     const selectedUnits = selectUnits(doc, questionId, units, userId);
 
-    function update(what: "value"|"units", f?: Unwrapper): ChangeEventHandler<HTMLInputElement> {
-        return (event): void => {
-            let attempt = {
-                type: "quantity",
-                value: currentAttemptValue,
-                units: currentAttemptUnits
-            };
-            attempt[what] = f !== undefined ? f(event.target.value) : event.target.value;
-            setCurrentAttempt(questionId, attempt);
+    function updateValue(event: FormEvent<HTMLInputElement>) {
+        let attempt = {
+            type: "quantity",
+            value: event.currentTarget.value,
+            units: currentAttemptUnits
         };
+        setCurrentAttempt(questionId, attempt);
     }
+
+    function updateUnits(units?: string) {
+        let attempt = {
+            type: "quantity",
+            value: currentAttemptValue,
+            units: units
+        };
+        setCurrentAttempt(questionId, attempt);
+    }
+
+    let [isOpen, setIsOpen] = useState(false);
 
     return (
         <div>
@@ -140,27 +136,35 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
                         Value
                         <br />
                         <Input type="text" placeholder="Type your answer here." value={currentAttemptValue || ""}
-                            onChange={update("value")}
+                            onChange={updateValue}
                         />
                     </Label>
                     <br />
                     <small>Please answer to an appropriate number of significant figures.</small>
                 </Col>
                 {doc.requireUnits &&
-                    <Col sm={3}>
-                        <Label>
-                            Units
-                            <br/>
-                            <Input type="select" value={wrapUnitForSelect(currentAttemptUnits)}
-                                onChange={update("units", unwrapUnitFromSelect)}>
-                                {selectedUnits && selectedUnits.map((unit, index) =>
-                                    <option key={index}>{unit}</option>
+                <Col sm={3}>
+                    <Label>
+                        Units
+                        <br/>
+                        <Dropdown isOpen={isOpen} toggle={() => {setIsOpen(!isOpen);}}>
+                            <DropdownToggle caret>
+                                <TrustedHtml span html={wrapUnitForSelect(currentAttemptUnits)}/>
+                            </DropdownToggle>
+                            <DropdownMenu right>
+                                {selectedUnits && selectedUnits.map((unit) =>
+                                    <DropdownItem key={wrapUnitForSelect(unit)}
+                                        className={unit == currentAttemptUnits ? "btn btn-primary" : null}
+                                        onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
+                                        <TrustedHtml span html={wrapUnitForSelect(unit)}/>
+                                    </DropdownItem>
                                 )}
-                            </Input>
-                        </Label>
-                        <br />
-                        <small>Please choose an appropriate unit of measurement.</small>
-                    </Col>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </Label>
+                    <br />
+                    <small>Please choose an appropriate unit of measurement.</small>
+                </Col>
                 }
             </Row>
         </div>
