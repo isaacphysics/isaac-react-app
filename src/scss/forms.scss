@@ -1,10 +1,3 @@
-// ISAAC
-
-label.label-radio > div {
-  display: inline-block;
-  padding-left: 1em;
-}
-
 // NOMENSA forms.scss
 
 input {
@@ -88,3 +81,19 @@ button.search-main {
     margin: 0;
   }
 }
+
+// ISAAC
+
+label.label-radio > div {
+  display: inline-block;
+  padding-left: 1em;
+}
+
+// Override Nomensa's padding which does not compile properly
+input[type="search"] {
+  padding-top: initial;
+  padding-right: 40px;
+  padding-bottom: initial;
+  padding-left: 1rem;
+}
+
