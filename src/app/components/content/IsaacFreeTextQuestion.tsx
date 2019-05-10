@@ -4,7 +4,8 @@ import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {ChoiceDTO, IsaacFreeTextQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
-import {Alert, Input} from "reactstrap";
+import {Alert, FormGroup, Input} from "reactstrap";
+import {ValidatedChoice} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -17,48 +18,82 @@ interface IsaacFreeTextQuestionProps {
     doc: IsaacFreeTextQuestionDTO;
     questionId: string;
     currentAttempt?: ChoiceDTO;
-    setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => void;
+    setCurrentAttempt: (questionId: string, attempt: ValidatedChoice<ChoiceDTO>) => void;
 }
 
-function choiceDTOfromEvent(event: React.ChangeEvent<HTMLInputElement>): StringChoiceDTO {
-    return {
-        type: "stringChoice", // Note there is no FreeTextChoice
-        value: event.target.value
-    };
+interface Limit {
+    exceeded: boolean;
+    limit: number;
+    current: number;
 }
 
-const IsaacFreeTextQuestionComponent = (props: IsaacFreeTextQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
-    const currentAttemptValue = currentAttempt && currentAttempt.value || "";
+interface Validation {
+    validValue: boolean;
+    wordLimit: Limit;
+    charLimit: Limit;
+}
 
+function validate(answer: string): Validation {
     const wordLimit = 20;
     const charLimit = 200;
-    const wordMatches = currentAttemptValue.match(/\S+/g);
+    const wordMatches = answer.match(/\S+/g);
     const currentNumberOfWords = wordMatches ? wordMatches.length : 0;
-    const currentNumberOfChars = currentAttemptValue.length;
+    const currentNumberOfChars = answer.length;
 
     const wordLimitExceeded = currentNumberOfWords > wordLimit;
     const charLimitExceeded = currentNumberOfChars > charLimit;
 
     const validValue = !wordLimitExceeded && !charLimitExceeded;
-    // TODO: Pass validValue as passedFrontEndValidation through in the choiceDTO and then make QuestionTabs look at it to allow submission only when true
+
+    return {
+        validValue,
+        wordLimit : {exceeded: wordLimitExceeded, limit: wordLimit, current: currentNumberOfWords},
+        charLimit : {exceeded: charLimitExceeded, limit: charLimit, current: currentNumberOfChars},
+    };
+}
+
+function validatedChoiceDTOfromEvent(event: React.ChangeEvent<HTMLInputElement>): ValidatedChoice<StringChoiceDTO> {
+    const value = event.target.value;
+    const frontEndValidation = validate(value).validValue;
+    return {
+        choice: {
+            type: "stringChoice", // Note there is no freeTextChoice
+            value
+        },
+        frontEndValidation
+    };
+}
+
+const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
+    return validValue ? null
+        : <Alert color="warning">
+            <strong>Warning:</strong>
+            <ul>
+                {charLimit.exceeded && <li>Character limit exceeded ({charLimit.current}/{charLimit.limit})</li>}
+                {wordLimit.exceeded && <li>Word limit exceeded ({wordLimit.current}/{wordLimit.limit})</li>}
+            </ul>
+        </Alert>;
+};
+
+const IsaacFreeTextQuestionComponent = (props: IsaacFreeTextQuestionProps) => {
+    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
+    const currentAttemptValue = currentAttempt && currentAttempt.value || "";
+
+    const validation = validate(currentAttemptValue);
 
     return (
         <div>
             <h3><IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding} children={doc.children} /></h3>
-            <Input placeholder="Type your answer here."
-                spellCheck={true}
-                rows={3}
-                value={currentAttemptValue}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                    setCurrentAttempt(questionId, choiceDTOfromEvent(event))}/>
-            {!validValue && <Alert color="warning">
-                <strong>Warning:</strong>
-                <ul>
-                    {charLimitExceeded && <li>Character limit exceeded ({currentNumberOfChars}/{charLimit})</li>}
-                    {wordLimitExceeded && <li>Word limit exceeded ({currentNumberOfWords}/{wordLimit})</li>}
-                </ul>
-            </Alert>}
+            <FormGroup>
+                <Input type="textarea"
+                    placeholder="Type your answer here."
+                    spellCheck={true}
+                    rows={3}
+                    value={currentAttemptValue}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        setCurrentAttempt(questionId, validatedChoiceDTOfromEvent(event))}/>
+            </FormGroup>
+            <FreeTextValidation {...validation} />
         </div>
     );
 };

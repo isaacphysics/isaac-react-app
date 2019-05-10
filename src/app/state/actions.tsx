@@ -1,6 +1,6 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {Action} from "../../IsaacAppTypes";
+import {Action, ValidatedChoice} from "../../IsaacAppTypes";
 import {ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPES, TOPICS} from "../services/constants";
 import {AppState} from "./reducers";
@@ -81,7 +81,7 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
     // TODO MT handle response failure with a timed canSubmit
 };
 
-export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO) => (dispatch: Dispatch<Action>) => {
+export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|ValidatedChoice<ChoiceDTO>) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPES.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
 };
 

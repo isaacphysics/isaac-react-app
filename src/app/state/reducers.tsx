@@ -1,5 +1,5 @@
 import {combineReducers} from "redux";
-import {Action, AppQuestionDTO, TopicDTO} from "../../IsaacAppTypes";
+import {Action, AppQuestionDTO, isValidatedChoice, TopicDTO} from "../../IsaacAppTypes";
 import {AssignmentDTO, ContentDTO, GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPES} from "../services/constants";
 
@@ -36,7 +36,11 @@ export const doc = (doc: DocState = null, action: Action) => {
 export const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {
         case ACTION_TYPES.QUESTION_SET_CURRENT_ATTEMPT:
-            return {...question, currentAttempt: action.attempt, canSubmit: true, validationResponse: null};
+            if (isValidatedChoice(action.attempt)) {
+                return {...question, currentAttempt: action.attempt.choice, canSubmit: action.attempt.frontEndValidation, validationResponse: null};
+            } else {
+                return {...question, currentAttempt: action.attempt, canSubmit: true, validationResponse: null};
+            }
         case ACTION_TYPES.QUESTION_ATTEMPT_REQUEST:
             return {...question, canSubmit: false};
         case ACTION_TYPES.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
