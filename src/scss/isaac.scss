@@ -41,7 +41,8 @@ $theme-colors: (
 @import "~bootstrap/scss/bootstrap";
 @import "~katex/dist/katex.min.css";
 
-@import "_mixins.scss";
+@import "./_preload.scss";
+@import "./_mixins.scss";
 
 @import "./typography";
 @import "./headings";

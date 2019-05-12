@@ -1,75 +1,21 @@
 #login-page {
-  .card {
-    width: 50%;
-    margin-left: 25%;
-  }
-
-  .login-error {
-    color: #f00013;
-  }
-
-  .password-reset {
-    margin-left: 60%;
-  }
-
-  // Login Separator
-  .login-separator {
-    padding: 77px 0;
-    background: url(/assets/blank-1px-grey.png) repeat-y center 0;
-    span {
-      font-weight: bold;
-      font-style: italic;
-      text-align: center;
-      background-color: #fff;
-      margin: 0;
-    }
-  }
-
-  @include media-breakpoint-down(sm) {
-    .login-separator {
-      background-repeat: repeat-x;
-      background-position: 0 center;
-      padding: 0;
-      margin: 1rem 0;
-      span {
-        font-size: 24px;
-        padding: 0 20px;
-      }
-    }
-  }
-
-  // Social Login
   .login-google {
-    position: relative;
-    text-indent: -99999em;
     display: inline-block;
-    text-align: center;
+    text-indent: -99999em;
     width: 191px;
     height: 46px;
     background: url(/assets/google-login-sprite-dark.png) no-repeat 0 0;
-    -webkit-transition: top 2s ease-in-out;
-    -moz-transition: top 2s ease-in-out;
-    -o-transition: top 2s ease-in-out;
-    -ms-transition: top 2s ease-in-out;
-    transition: top 0.2s ease-in-out;
-    margin-left: 32%;
-    top: 0;
     &:hover {
       background: url(/assets/google-login-sprite-dark-pressed.png) no-repeat 0 0;
-      width: 191px;
-      height: 46px;
     }
   }
-
   @media only screen and (min-resolution: 192dpi) {
     .login-google {
       background-image: url(/assets/google-login-sprite-dark@2x.png);
       background-size: 191px 46px;
       &:hover {
         background-image: url(/assets/google-login-sprite-dark-pressed@2x.png);
-        background-size: 191px 46px;
       }
     }
   }
-  .login-google {background-position: center;}
 }
