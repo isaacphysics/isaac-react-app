@@ -7,6 +7,8 @@
     background: url(/assets/google-login-sprite-dark.png) no-repeat 0 0;
     &:hover {
       background: url(/assets/google-login-sprite-dark-pressed.png) no-repeat 0 0;
+      width: 191px;
+      height: 46px;
     }
   }
   @media only screen and (min-resolution: 192dpi) {
@@ -15,6 +17,7 @@
       background-size: 191px 46px;
       &:hover {
         background-image: url(/assets/google-login-sprite-dark-pressed@2x.png);
+        background-size: 191px 46px;
       }
     }
   }
