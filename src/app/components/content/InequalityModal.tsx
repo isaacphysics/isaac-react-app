@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
 import { Inequality, makeInequality } from "inequality";
 import katex from "katex";
 
@@ -13,16 +12,20 @@ interface InequalityModalProps {
     availableSymbols?: Array<string>;
     sketch?: Inequality;
     close: () => void;
+    onEditorStateChange: (state: any) => void;
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
     state: {
         sketch?: Inequality,
         activeMenu: string,
         activeSubMenu: string,
+        trashActive: boolean,
         mouseX: number,
         mouseY: number,
         menuOpen: boolean,
         editorState: any,
+        menuItems: { [key: string]: Array<MenuItem> },
+        defaultMenu: boolean,
     };
 
     // Available symbols if any are specified
@@ -40,12 +43,30 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             sketch: props.sketch,
             activeMenu: "letters",
             activeSubMenu: "upperCaseLetters",
+            trashActive: false,
             mouseX: -1,
             mouseY: -1,
             menuOpen: false,
-            editorState: {}
+            editorState: {},
+            menuItems: {
+                logicFunctionItems: this.generateLogicFunctionsItems(),
+                upperCaseLetters: [],
+                lowerCaseLetters: [],
+                letters: [],
+            },
+            defaultMenu: true,
         }
-        this.availableSymbols = props.availableSymbols;
+
+        if (props.availableSymbols && props.availableSymbols.length > 0) {
+            console.log(`Parsing available symbols: ${this.availableSymbols}`);
+            // Assuming these are only letters... might become more complicated in the future.
+            this.state.menuItems.letters = props.availableSymbols.map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true }) );
+            this.state.defaultMenu = false;
+        } else {
+            console.log("No symbols available, generating default menu.");
+            this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true }) );
+            this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true }) );
+        }
         this.close = props.close;
     }
 
@@ -72,16 +93,21 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         };
         sketch.onNewEditorState = (s: any) => {
             this.setState({ editorState: s });
+            this.props.onEditorStateChange(s);
             console.log("New editor state: ", s);
         };
-        sketch.onCloseMenus = () => { console.log("closeMenus"); };
-        sketch.isUserPrivileged = () => { return true; };
-        sketch.onNotifySymbolDrag = () => { };
-        sketch.isTrashActive = () => { return false };
+        sketch.onCloseMenus = () => { this.setState({ menuOpen: false }) }; // TODO Maybe nice to have
+        sketch.isUserPrivileged = () => true; // TODO Integrate with currentUser object
+        sketch.onNotifySymbolDrag = () => { }; // This is probably irrelevant now
+        sketch.isTrashActive = () => this.state.trashActive;
 
         this.setState({ sketch });
 
         // Firefox does not report coordinates correctly on drag, so we supplement them here.
+        document.onmousemove = (event) => {
+            this.state.mouseX = event.clientX;
+            this.state.mouseY = event.clientY;
+        }
         document.ondragover = (event) => {
             this.state.mouseX = event.clientX;
             this.state.mouseY = event.clientY;
@@ -119,7 +145,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
     }
 
-    private onMenuItemDrag(spec: MenuItem, event: React.DragEvent) {
+    private onMenuItemDrag(spec: MenuItem, _event: React.DragEvent) {
         if (this.state.sketch) {
             this.state.sketch.updatePotentialSymbol(spec, this.state.mouseX, this.state.mouseY);
         }
@@ -127,7 +153,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
     private onMenuItemDragEnd(_event: React.DragEvent) {
         if (this.state.sketch) {
-            this.state.sketch.commitPotentialSymbol();
+            const rect = document.getElementById("inequality-trash")!.getBoundingClientRect();
+            if (rect && rect.left <= this.state.mouseX && rect.right >= this.state.mouseX && rect.top <= this.state.mouseY && rect.bottom >= this.state.mouseY) {
+                this.state.sketch.abortPotentialSymbol();
+            } else {
+                this.state.sketch.commitPotentialSymbol();
+            }
         }
     }
 
@@ -151,54 +182,40 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     render() {
-        let logicFunctionItems = this.generateLogicFunctionsItems();
-        let upperCaseLetters: Array<MenuItem> = [];
-        let lowerCaseLetters: Array<MenuItem> = [];
-        let letters: Array<MenuItem> = [];
-        let defaultMenu = true;
-
-        if (this.availableSymbols && this.availableSymbols.length > 0) {
-            console.log(`Parsing available symbols: ${this.availableSymbols}`);
-            // Assuming these are only letters... might become more complicated in the future.
-            letters = this.availableSymbols.map( l =>
-                new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true })
-                );
-            defaultMenu = false;
-        } else {
-            console.log("No symbols available, generating default menu.");
-            upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( l =>
-                new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true })
-                );
-            lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( l =>
-                new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true })
-                );
-        }
-        
+        // console.log('render()');
         let menu: JSX.Element;
-        if (defaultMenu) {
+        if (this.state.defaultMenu) {
             menu = 
             <nav className="inequality-ui">
                 <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
-                    {this.state.activeMenu == "letters" && <div className="top-menu">
+                    {/* {this.state.activeMenu == "numbers" && <div className="top-menu numbers">
+                        <ul className="sub-menu">{
+                            "0123456789".split("").map((n, i) => {
+                                return this.menuItem(new MenuItem("Num", { significand: n }, { label: n, texLabel: true}), i);
+                            })
+                        }</ul>
+                    </div>} */}
+                    {this.state.activeMenu == "letters" && <div className="top-menu letters">
                         <ul className="sub-menu-tabs">
                             <li className={this.state.activeSubMenu == "upperCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A") }} onClick={() => this.setState({ activeSubMenu: "upperCaseLetters" })} />
                             <li className={this.state.activeSubMenu == "lowerCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("a") }} onClick={() => this.setState({ activeSubMenu: "lowerCaseLetters"})} />
                         </ul>
-                        {(this.state.activeSubMenu == "upperCaseLetters") && <ul className="sub-menu">{
-                            upperCaseLetters.map(this.menuItem)
+                        {(this.state.activeSubMenu == "upperCaseLetters") && <ul className="sub-menu uppercaseletters">{
+                            this.state.menuItems.upperCaseLetters.map(this.menuItem)
                         }</ul>}
-                        {(this.state.activeSubMenu == "lowerCaseLetters") && <ul className="sub-menu">{
-                            lowerCaseLetters.map(this.menuItem)
+                        {(this.state.activeSubMenu == "lowerCaseLetters") && <ul className="sub-menu lowercaseletters">{
+                            this.state.menuItems.lowerCaseLetters.map(this.menuItem)
                         }</ul>}
                     </div>}
-                    {this.state.activeMenu == "functions" && <div className="top-menu">
+                    {this.state.activeMenu == "functions" && <div className="top-menu function">
                         <ul className="sub-menu">{
-                            logicFunctionItems.map(this.menuItem)
+                            this.state.menuItems.logicFunctionItems.map(this.menuItem)
                         }</ul>
                     </div>}
                 </div>
                 <div className="menu-tabs">
                     <ul>
+                        {/* <li className={this.state.activeMenu == "numbers" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("1\\ 2") }} onClick={() => this.onMenuTabClick("numbers")} /> */}
                         <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A\\ b") }} onClick={() => this.onMenuTabClick("letters")} />
                         <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("\\wedge\\ \\lnot") }} onClick={() => this.onMenuTabClick("functions")} />
                     </ul>
@@ -212,10 +229,16 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
 
         return <div id="inequality-modal">
-            { menu }
-            <div className="inequality-ui confirm button" onClick={this.close}>Close</div>
+            <div className="inequality-ui confirm button" onClick={this.close}>OK</div>
             <div className="inequality-ui katex-preview" dangerouslySetInnerHTML={{ __html: katex.renderToString((this.state.editorState.result || { tex: ""}).tex) }}></div>
             <div className="inequality-ui centre button" onClick={() => { if (this.state.sketch) this.state.sketch.centre() }}>Centre</div>
+            <div id="inequality-trash" className={"inequality-ui trash button" + (this.state.trashActive ? " active" : " inactive")}
+                 onDragEnter={() => { this.setState({ trashActive: true }) }}
+                 onDragLeave={() => { this.setState({ trashActive: false }) }}
+                 onMouseEnter={() => { this.setState({ trashActive: true }) }}
+                 onMouseLeave={() => { this.setState({ trashActive: false }) }} // This is a bit ridiculous but hey...
+            >Trash</div>
+            { menu }
         </div>;
     }
 }

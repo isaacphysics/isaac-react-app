@@ -1,0 +1,89 @@
+// NOMENSA headings.scss
+h1,
+h2,
+h3,
+h4 {
+  font-family: $secondary-font;
+}
+
+h1 {
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1.14;
+}
+
+h1.h-m {
+  font-size: 2.625rem;
+  font-weight: 700;
+  line-height: 1.26;
+}
+
+h1.h-s {
+  font-size: 2.375rem;
+  font-weight: 700;
+  line-height: 1.26;
+}
+
+h2 {
+  font-size: 2.125rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 1.625rem;
+  line-height: 1.54;
+  font-weight: 500;
+}
+
+h4 {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+.h-question {
+  align-items: center;
+  font-size: 1.25rem;
+  line-height: 1.6;
+
+  > span {
+    display: inline-block;
+    font-size: 2.375rem;
+    line-height: 1.26;
+    font-weight: 700;
+  }
+}
+
+.h-title {
+  font-size: 2.125rem;
+  line-height: 1.47;
+  position: relative;
+  padding-bottom: 1.25rem;
+
+  &:after {
+    @include pseudo-element;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    border-bottom: 1px solid $black;
+  }
+
+  &:before {
+    @include pseudo-element;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    border-bottom: 5px solid $black;
+    width: 32%;
+    max-width: 158px;
+    @include respond-above(sm) {
+      max-width: 380px;
+    }
+  }
+
+  &.text-center {
+    &:before {
+      margin: auto;
+    }
+  }
+}

@@ -56,8 +56,8 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     // TODO MT handle error case
 };
 
-export const logInUser = (provider: AuthenticationProvider, params: {email: string, password: string}) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPES.USER_LOG_IN_REQUEST});
+export const logInUser = (provider: AuthenticationProvider, params: {email: string; password: string}) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPES.USER_LOG_IN_REQUEST, provider});
     try {
         const response = await api.authentication.login(provider, params);
         dispatch({type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
@@ -71,9 +71,8 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
 export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPES.USER_PASSWORD_RESET_REQUEST});
     const response = await api.users.passwordReset(params);
-    dispatch({type: ACTION_TYPES.USER_PASSWORD_RESET_REQUEST_SUCCESS});;
-
-}
+    dispatch({type: ACTION_TYPES.USER_PASSWORD_RESET_REQUEST_SUCCESS});
+};
 
 export const handleProviderLoginRedirect = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPES.AUTHENTICATION_REQUEST_REDIRECT, provider});

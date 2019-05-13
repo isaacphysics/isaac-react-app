@@ -1,6 +1,5 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPES, EXAM_BOARDS} from "./app/services/constants";
-import {ContentDTO} from "./IsaacApiTypes";
 
 export type Action =
     | {type: ACTION_TYPES.TEST_ACTION}
@@ -11,7 +10,7 @@ export type Action =
     | {type: ACTION_TYPES.USER_DETAILS_UPDATE_SUCCESS}
     | {type: ACTION_TYPES.USER_DETAILS_UPDATE_FAILURE; errorMessage: string}
 
-    | {type: ACTION_TYPES.USER_LOG_IN_REQUEST}
+    | {type: ACTION_TYPES.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
     | {type: ACTION_TYPES.USER_LOG_IN_FAILURE; errorMessage: string}
     | {type: ACTION_TYPES.USER_PASSWORD_RESET_REQUEST}
@@ -76,6 +75,6 @@ export interface ContentLinkDTO {
 
 export interface TopicDTO {
     title: string;
-    description: ContentDTO;
+    description: ApiTypes.ContentDTO;
     contentLinks: ContentLinkDTO[];
 }
