@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
-import {BrowserRouter as Router, Switch} from "react-router-dom";
+import {Router, Switch} from "react-router-dom";
 import {NavigationBar} from "./NavigationBar";
 import {Footer} from "./Footer";
 import {Homepage} from "../pages/Homepage";
@@ -18,6 +18,7 @@ import {PageNotFound} from "../pages/PageNotFound";
 import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import history from "../../services/history"
 import {TrackedRoute} from "./TrackedRoute";
 
 const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
@@ -33,7 +34,7 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
     }, []); // run only once on mount
 
     return (
-        <Router>
+        <Router history={history}>
             <React.Fragment>
                 <NavigationBar />
                 <main role="main" className="flex-fill py-4">

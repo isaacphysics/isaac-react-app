@@ -11,17 +11,23 @@ export const api = {
     users: {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
+        },
+        passwordReset: (params: {email: string}): AxiosPromise => {
+            return endpoint.post(`/users/resetpassword`, params);
         }
     },
     authentication: {
-        getRedirect: (provider: string): AxiosPromise => {
+        getRedirect: (provider: ApiTypes.AuthenticationProvider): AxiosPromise => {
             return endpoint.get(`/auth/${provider}/authenticate`);
         },
-        checkProviderCallback: (provider: string, params: string): AxiosPromise => {
+        checkProviderCallback: (provider: ApiTypes.AuthenticationProvider, params: string): AxiosPromise => {
             return endpoint.get(`/auth/${provider}/callback${params}`);
         },
         logout: (): AxiosPromise => {
             return endpoint.post(`/auth/logout`);
+        },
+        login: (provider: ApiTypes.AuthenticationProvider, params: {email: string, password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+            return endpoint.post(`/auth/${provider}/authenticate`, params);
         }
     },
     questions: {
