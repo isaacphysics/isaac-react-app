@@ -1,6 +1,7 @@
 import axios, {AxiosPromise, AxiosResponse} from "axios";
 import {API_PATH, TOPICS} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
+import {RegisteredUserDTO} from "../../IsaacApiTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -12,8 +13,14 @@ export const api = {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
         },
+        getPreferences: (): AxiosPromise<ApiTypes.userPreferences> => {
+            return endpoint.get(`users/user_preferences`)
+        },
         passwordReset: (params: {email: string}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword`, params);
+        },
+        updateCurrent: (params: {registeredUser: RegisteredUserDTO}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+            return endpoint.post(`/users`, params);
         }
     },
     authentication: {
@@ -28,6 +35,11 @@ export const api = {
         },
         login: (provider: ApiTypes.AuthenticationProvider, params: {email: string, password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/auth/${provider}/authenticate`, params);
+        }
+    },
+    email: {
+        verifyEmail: (params: {userId: string | null, token: string | null}): AxiosPromise => {
+            return endpoint.get(`/users/verifyemail/${params.userId}/${params.token}`);
         }
     },
     questions: {

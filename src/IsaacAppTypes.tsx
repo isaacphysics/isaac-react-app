@@ -7,6 +7,9 @@ export type Action =
 
     | {type: ACTION_TYPES.USER_UPDATE_REQUEST}
     | {type: ACTION_TYPES.USER_UPDATE_FAILURE}
+    | {type: ACTION_TYPES.USER_DETAILS_UPDATE}
+    | {type: ACTION_TYPES.USER_DETAILS_UPDATE_SUCCESS}
+    | {type: ACTION_TYPES.USER_DETAILS_UPDATE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPES.USER_LOG_IN_REQUEST}
     | {type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
@@ -18,6 +21,9 @@ export type Action =
     | {type: ACTION_TYPES.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
     | {type: ACTION_TYPES.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPES.AUTHENTICATION_HANDLE_CALLBACK}
+    | {type: ACTION_TYPES.EMAIL_AUTHENTICATION_REQUEST}
+    | {type: ACTION_TYPES.EMAIL_AUTHENTICATION_SUCCESS}
+    | {type: ACTION_TYPES.EMAIL_AUTHENTICATION_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPES.DOCUMENT_REQUEST; questionId: string}
     | {type: ACTION_TYPES.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}

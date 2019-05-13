@@ -9,6 +9,7 @@ import {LogIn} from "../pages/LogIn";
 import {Registration} from "../pages/Registration";
 import {LogOutHandler} from "../handlers/LogOutHandler";
 import {ProviderCallbackHandler} from "../handlers/ProviderCallbackHandler";
+import {EmailAlterHandler} from "../handlers/EmailAlterHandler";
 import {MyAccount} from "../pages/MyAccount";
 import {MyAssignments} from "../pages/MyAssignments";
 import {Gameboard} from "../pages/Gameboard";
@@ -44,6 +45,7 @@ const IsaacApp = ({user, requestCurrentUser}: IsaacAppProps) => {
                             <Route path="/logout" component={LogOutHandler} />
                             <Route path="/register" component={Registration} />
                             <Route path="/auth/:provider/callback" component={ProviderCallbackHandler} />
+                            <Route path="/verifyemail" component={EmailAlterHandler}/>
                             <Route path="/account" component={MyAccount} />
                             <Route path="/assignments" component={MyAssignments} />
                             <Route path="/gameboards" component={Gameboard}/>

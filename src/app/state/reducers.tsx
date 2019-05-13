@@ -95,10 +95,12 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
     }
 };
 
-type LoginErrorState = string | null;
-export const error = (error: LoginErrorState = null, action: Action) => {
+type ErrorState = string | null;
+export const error = (error: ErrorState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPES.USER_LOG_IN_FAILURE:
+        case ACTION_TYPES.USER_DETAILS_UPDATE_FAILURE:
+        case ACTION_TYPES.EMAIL_AUTHENTICATION_FAILURE:
             return action.errorMessage;
         default:
             return null;
@@ -113,7 +115,7 @@ export type AppState = undefined | {
     currentTopic: CurrentTopicState,
     currentGameboard: CurrentGameboardState,
     assignments: AssignmentsState,
-    error: LoginErrorState
+    error: ErrorState
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

@@ -430,6 +430,12 @@ export interface Address {
     country?: string;
 }
 
+export interface userPreferences {
+    BETA_FEATURE?: {};
+    EMAIL_PREFERENCE?: {};
+    SUBJECT_INTEREST?: {};
+}
+
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
 
 export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY";

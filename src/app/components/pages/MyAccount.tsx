@@ -1,21 +1,65 @@
 import React, {useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {TabContent, TabPane, Nav, NavItem, NavLink, Button, Card, CardBody, CardTitle, CardText, CardFooter, Col, CustomInput, Form, FormGroup, Input, Row, Label, Table} from "reactstrap";
+import {
+    TabContent,
+    TabPane,
+    Nav,
+    NavItem,
+    NavLink,
+    Button,
+    Card,
+    CardBody,
+    CardTitle,
+    CardText,
+    CardFooter,
+    Col,
+    CustomInput,
+    Form,
+    FormGroup,
+    Input,
+    Row,
+    Label,
+    Table,
+    FormFeedback
+} from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
+import {updateCurrentUser} from "../../state/actions";
 import classnames from 'classnames';
 
 
 
-const stateToProps = (state: AppState) => ({user: state ? state.user : null});
+const stateToProps = (state: AppState) => ({
+    user: state ? state.user : null,
+    errorMessage: state ? state.error : null
+});
 
-const dispatchToProps = null;
+const dispatchToProps = {
+    updateCurrentUser
+};
 
-interface AccountPageProps {user: RegisteredUserDTO | null}
+interface AccountPageProps {
+    user: RegisteredUserDTO | null
+    updateCurrentUser: (params: {registeredUser: RegisteredUserDTO}, currentUser: RegisteredUserDTO) => void;
+    errorMessage: string | null
+}
 
-const AccountPageComponent = ({user}: AccountPageProps) => {
-    const updateDetails = () => console.log("Account updated"); // TODO BH account update action
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPageProps) => {
+    const updateDetails = () => console.log("Account updated");
+
+    const emailPreferences = {"NEWS_AND_UPDATES": true, "ASSIGNMENTS": true, "EVENTS": true};
+
+    const tempUser = {};
+    const myUser = Object.assign(tempUser, user);
+    const [isValidEmail, setValidEmail] = useState(true);
+    const [isValidDob, setValidDob] = useState(true);
+
+    let today = new Date();
+    let thirteen_years_ago = Date.UTC(today.getFullYear() - 13, today.getMonth(), today.getDate())/1000;
+
+
+    let dob_unix = new Date(String(myUser.dateOfBirth)).getTime()/1000;
 
     {/• TODO handle #... in with react-router? •/}
 
@@ -56,96 +100,105 @@ const AccountPageComponent = ({user}: AccountPageProps) => {
                     </Nav>
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId="0">
-                                <CardBody>
-                                    <Form name="userDetails" onSubmit={updateDetails}>
-                                        <Row>
-                                            <Col size={12} md={6}>
-                                                <FormGroup>
-                                                    <Label htmlFor="first-name-input">First Name</Label>
-                                                    <Input id="first-name-input" type="text" name="first-name" defaultValue={user.givenName} required/>
-                                                </FormGroup>
-                                            </Col>
-                                            <Col size={12} md={6}>
-                                                <FormGroup>
-                                                    <Label htmlFor="last-name-input">Last Name</Label>
-                                                    <Input id="last-name-input" type="text" name="last-name" defaultValue={user.familyName} required/>
-                                                </FormGroup>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col size={12} md={6}>
-                                                <FormGroup>
-                                                    <Label htmlFor="email-input">Email</Label>
-                                                    <Input id="email-input" type="email" name="email" defaultValue={user.email} required/>
-                                                </FormGroup>
-                                            </Col>
-                                            <Col size={12} md={6}>
-                                                <FormGroup>
-                                                    <Label htmlFor="dob-input">Date of Birth</Label>
-                                                    <Input
-                                                        id="dob-input"
-                                                        type="date"
-                                                        name="date-of-birth"
-                                                        defaultValue={user.dateOfBirth}
-                                                    />
-                                                </FormGroup>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col size={12} md={6}>
-                                                <FormGroup>
-                                                    <Label htmlFor="dob-input">Gender</Label>
-                                                    <Row>
-                                                        <Col size={6} lg={2}>
-                                                            <CustomInput id="gender-male" type="radio" name="gender" label="Male"
-                                                                         defaultChecked={user.gender == 'MALE'} required/>
-                                                        </Col>
-                                                        <Col size={6} lg={2}>
-                                                            <CustomInput id="gender-female" type="radio" name="gender" label="Female"
-                                                                         defaultChecked={user.gender == 'FEMALE'} required/>
-                                                        </Col>
-                                                        <Col size={6} lg={2}>
-                                                            <CustomInput id="gender-other" type="radio" name="gender" label="Other"
-                                                                         defaultChecked={user.gender == 'OTHER'} required/>
-                                                        </Col>
-                                                    </Row>
-                                                </FormGroup>
-                                            </Col>
-                                            <Col size={12} md={6}>
-                                                <FormGroup>
-                                                    <Label htmlFor="school-input">School</Label>
-                                                    <Input id="school-input" type="text" name="school" defaultValue={user.schoolId} required/>
-                                                    {/* TODO lookup school */}
-                                                </FormGroup>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col size={12} md={6}>
-                                                <FormGroup>
-                                                    <Label htmlFor="linked-accounts">Linked Accounts</Label>
-                                                    <Row>Placeholder</Row> {/* TODO add linked account control */}
-                                                </FormGroup>
-                                            </Col>
-                                        </Row>
-                                    </Form>
-                                </CardBody>
+                            <CardBody>
+                                <Form name="userDetails" onSubmit={updateDetails}>
+                                    <Row>
+                                        <Col size={12} md={6}>
+                                            <FormGroup>
+                                                <Label htmlFor="first-name-input">First Name</Label>
+                                                <Input id="first-name-input" type="text" name="givenName" defaultValue={myUser.givenName} onBlur={(e: any) => {myUser.givenName = e.target.value}} required/>
+                                            </FormGroup>
+                                        </Col>
+                                        <Col size={12} md={6}>
+                                            <FormGroup>
+                                                <Label htmlFor="last-name-input">Last Name</Label>
+                                                <Input id="last-name-input" type="text" name="last-name" defaultValue={myUser.familyName} onBlur={(e: any) => {myUser.familyName = e.target.value}} required/>
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col size={12} md={6}>
+                                            <FormGroup>
+                                                <Label htmlFor="email-input">Email</Label>
+                                                <Input invalid={!isValidEmail || errorMessage} id="email-input" type="email" name="email" defaultValue={myUser.email} onBlur={(e: any) => {setValidEmail((e.target.value.length > 0 && e.target.value.includes("@")));
+                                                (isValidEmail) ? myUser.email = e.target.value : null}} required/>
+                                                <FormFeedback>{(!isValidEmail) ? "Enter a valid email address" : null}</FormFeedback>
+                                            </FormGroup>
+                                        </Col>
+                                        <Col size={12} md={6}>
+                                            <FormGroup>
+                                                <Label htmlFor="dob-input">Date of Birth</Label>
+                                                <Input
+                                                    invalid={!isValidDob}
+                                                    id="dob-input"
+                                                    type="date"
+                                                    name="date-of-birth"
+                                                    defaultValue={myUser.dateOfBirth}
+                                                    onBlur={(e: any) => {setValidDob((myUser.dateOfBirth != undefined) && ((new Date(String(e.target.value)).getTime()/1000) <= thirteen_years_ago)); (isValidDob) ? myUser.dateOfBirth = e.target.value : null}}
+                                                />
+                                                <FormFeedback>{(!isValidDob) ? "You must be over 13 years old" : null}</FormFeedback>
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col size={12} md={6}>
+                                            <FormGroup>
+                                                <Label htmlFor="dob-input">Gender</Label>
+                                                <Row>
+                                                    <Col size={6} lg={2}>
+                                                        <CustomInput id="gender-male" type="radio" name="gender" label="Male"
+                                                                     defaultChecked={myUser.gender == 'MALE'} onClick={(e: any) => {myUser.gender = 'MALE'}} required/>
+                                                    </Col>
+                                                    <Col size={6} lg={2}>
+                                                        <CustomInput id="gender-female" type="radio" name="gender" label="Female"
+                                                                     defaultChecked={myUser.gender == 'FEMALE'} onClick={(e: any) => {myUser.gender = 'FEMALE'}} required/>
+                                                    </Col>
+                                                    <Col size={6} lg={2}>
+                                                        <CustomInput id="gender-other" type="radio" name="gender" label="Other"
+                                                                     defaultChecked={myUser.gender == 'OTHER'} onClick={(e: any) => {myUser.gender = 'OTHER'}} required/>
+                                                    </Col>
+                                                </Row>
+                                            </FormGroup>
+                                        </Col>
+                                        <Col size={12} md={6}>
+                                            <FormGroup>
+                                                <Label htmlFor="school-input">School</Label>
+                                                <Input id="school-input" type="text" name="school" defaultValue={myUser.schoolId} required/>
+                                                {/* TODO lookup school */}
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col size={12} md={6}>
+                                            <FormGroup>
+                                                <Label htmlFor="linked-accounts">Linked Accounts</Label>
+                                                <Row>Placeholder</Row> {/* TODO add linked account control */}
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                </Form>
+                            </CardBody>
                         </TabPane>
                         <TabPane tabId="1">
                                 <CardBody>
                                     <Form name="userPassword" onSubmit={updateDetails}>
                                         <Row>
-                                            <Col size={12} md={6}>
-                                                <FormGroup>
-                                                    <Label htmlFor="password-input">Password</Label>
-                                                    <Input id="password" type="password" name="password" required/>
-                                                </FormGroup>
-                                            </Col>
-                                            <Col size={12} md={6}>
-                                                <FormGroup>
-                                                    <Label htmlFor="password-confirm">Re-enter Password</Label>
-                                                    <Input id="password-confirm" type="password" name="password" required/>
-                                                </FormGroup>
-                                            </Col>
+                                            <FormGroup>
+                                                <Label htmlFor="password-input">Current Password</Label>
+                                                <Input id="password-current" type="password" name="password" required/>
+                                            </FormGroup>
+                                        </Row>
+                                        <Row>
+                                            <FormGroup>
+                                                <Label htmlFor="password-input">New Password</Label>
+                                                <Input id="password" type="password" name="password" required/>
+                                            </FormGroup>
+                                        </Row>
+                                        <Row>
+                                            <FormGroup>
+                                                <Label htmlFor="password-confirm">Re-enter New Password</Label>
+                                                <Input id="password-confirm" type="password" name="password" required/>
+                                            </FormGroup>
                                         </Row>
                                     </Form>
                                 </CardBody>
@@ -168,17 +221,17 @@ const AccountPageComponent = ({user}: AccountPageProps) => {
                                                 <tr>
                                                     <td>News and Updates</td>
                                                     <td>New content and website feature updates, as well as interesting news about Isaac.</td>
-                                                    <td><CustomInput id="news" type="checkbox" name="news" defaultChecked={true}/></td>
+                                                    <td><CustomInput id="news" type="checkbox" name="news" defaultChecked={emailPreferences.NEWS_AND_UPDATES}/></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Assignments</td>
                                                     <td>Get notified when your teacher gives your group a new assignment.</td>
-                                                    <td><CustomInput id="assignments" type="checkbox" name="assignments" defaultChecked={true}/></td>
+                                                    <td><CustomInput id="assignments" type="checkbox" name="assignments" defaultChecked={emailPreferences.ASSIGNMENTS}/></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Events</td>
                                                     <td>Information about new virtual or real world physics events.</td>
-                                                    <td><CustomInput id="events" type="checkbox" name="events" defaultChecked={true}/></td>
+                                                    <td><CustomInput id="events" type="checkbox" name="events" defaultChecked={emailPreferences.EVENTS}/></td>
                                                 </tr>
                                                 </tbody>
                                             </Table>
@@ -190,7 +243,8 @@ const AccountPageComponent = ({user}: AccountPageProps) => {
                     <CardFooter>
                         <Row>
                             <Col size={12} md={{size: 6, offset: 3}}>
-                                <Button color="primary" block href={'/'}>Save</Button>
+                                <h3>{errorMessage}</h3>
+                                <Button color="primary" onClick={() => {(isValidEmail) ? updateCurrentUser({registeredUser: myUser}, user) : null}} block >Save</Button>
                             </Col>
                         </Row>
                     </CardFooter>
