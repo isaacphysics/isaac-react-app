@@ -1,82 +1,143 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {Button, Card, CardBody, Col, Form, FormGroup, Input, Row, Label} from "reactstrap";
+import {Button, Card, CardBody, Col, Container, Form, FormGroup, FormFeedback, Input, Row, Label} from "reactstrap";
 import {handleProviderLoginRedirect} from "../../state/actions";
+import {logInUser, resetPassword} from "../../state/actions";
+import {AuthenticationProvider} from "../../../IsaacApiTypes";
+import {AppState} from "../../state/reducers";
 
-const stateToProps = null;
-const dispatchToProps = {loginProviderRedirect: handleProviderLoginRedirect};
+const stateToProps = (state: AppState) => ({errorMessage: state ? state.error : null});
+
+const dispatchToProps = {
+    handleProviderLoginRedirect,
+    logInUser,
+    resetPassword
+};
 
 interface LogInPageProps {
-    loginProviderRedirect: (provider: string) => void
+    handleProviderLoginRedirect: (provider: AuthenticationProvider) => void;
+    logInUser: (provider: AuthenticationProvider, params: {email: string; password: string}) => void;
+    resetPassword: (params: {email: string}) => void;
+    errorMessage: string | null;
 }
-const LogInPageComponent = ({loginProviderRedirect}: LogInPageProps) => {
-    const login = () => console.log("Log-in attempt"); // TODO: implement logging in
-    const resetPassword = () => console.log("Reset password attempt"); // TODO: implement password reset
 
-    return <div id="login-page">
-        <h1 className="d-none d-md-block">
-            Log in or Sign up to {" "} <Link to="/">Isaac</Link>.
-        </h1>
+const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPassword, errorMessage}: LogInPageProps) => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [logInAttempted, setLoginAttempted] = useState(false);
 
-        <Card>
-            <CardBody>
-                <Form name="login" onSubmit={login}>
-                    <Row>
-                        <Col size={12} md={5} className="text-sm-center">
-                            <Row size={12}>
-                                <Col>
-                                    <h2>Log in or sign up with:</h2>
-                                </Col>
-                            </Row>
-                            <Row size={12}>
-                                <Col>
-                                    <a className="login-google" onClick={() => loginProviderRedirect("google")} tabIndex={0}>
-                                        Google {/* TODO: Update from google plus logo */}
-                                    </a>
-                                    <a className="login-twitter" onClick={() => loginProviderRedirect("twitter")} tabIndex={0}>
-                                        Twitter
-                                    </a>
-                                    <a className="login-facebook" onClick={() => loginProviderRedirect("facebook")} tabIndex={0}>
-                                        Facebook
-                                    </a>
-                                </Col>
-                            </Row>
-                        </Col>
+    const isValidEmail = email.length > 0 && email.includes("@");
+    const isValidPassword = password.length > 5;
+    const [passwordResetRequest, setPasswordResetRequest] = useState(false);
 
-                        <Col size={12} md={2} className="text-center">
-                            <h2 className="login-separator"><span>or</span></h2>
-                        </Col>
+    const validateAndLogIn = (event: React.FormEvent<HTMLFontElement>) => {
+        event.preventDefault();
+        if ((isValidPassword && isValidEmail)) {
+            logInUser("SEGUE", {email: email, password: password});
+        }
+    };
 
-                        <Col size={12} md={5}>
-                            {/* TODO: Password request is being processed   */}
-                            {/* TODO: Error Message */}
-                            {/* TODO: Input Validation */}
+    const resetPasswordIfValidEmail = () => {
+        if (isValidEmail) {
+            resetPassword({email: email});
+            setPasswordResetRequest(!passwordResetRequest);
+        }
+    };
+
+    const logInWithGoogle = () => {
+        handleProviderLoginRedirect("GOOGLE");
+    };
+
+    const attemptLogIn = () => {
+        setLoginAttempted(true);
+    };
+
+    return <Container id="login-page" className="my-4">
+        <Row>
+            <Col size={12} md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
+                <Card>
+                    <CardBody>
+                        <Form name="login" onSubmit={validateAndLogIn} noValidate>
+
+                            <h2 className="h-title mb-4">Log&nbsp;in or sign&nbsp;up:</h2>
 
                             <FormGroup>
                                 <Label htmlFor="email-input">Email</Label>
-                                <Input id="email-input" type="email" name="email" required />
-                                <Label htmlFor="password-input">Password</Label>
-                                <Input id="password-input" type="password" name="password" required />
+                                <Input
+                                    id="email-input" type="email" name="email" placeholder="Email address"
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
+                                    invalid={!!errorMessage || (!isValidEmail && (logInAttempted || passwordResetRequest))}
+                                    aria-describedby="emailValidationMessage"
+                                    required
+                                />
+                                <FormFeedback id="emailValidationMessage">
+                                    {!isValidEmail && "Please enter a valid email address"}
+                                </FormFeedback>
                             </FormGroup>
 
-                            <FormGroup>
-                                <Row>
-                                    <Col size={12} md={6}>
-                                        <Button color="secondary" type="submit" block>Log in</Button>
-                                    </Col>
-                                    <Col size={12} md={6}>
-                                        <Button tag={Link} to="/register" color="primary" outline block>Sign up</Button>
-                                    </Col>
-                                </Row>
-                                <a tabIndex={0} onClick={resetPassword}>Forgotten your password?</a>
+                            <FormGroup className="mb-0">
+                                <Label htmlFor="password-input">Password</Label>
+                                <Input
+                                    id="password-input" type="password" name="password" placeholder="Password"
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
+                                    invalid={!!errorMessage || (!isValidPassword && (logInAttempted))}
+                                    aria-describedby="passwordValidationMessage"
+                                    required
+                                />
+                                <FormFeedback id="passwordValidationMessage">
+                                    {!isValidPassword && "Passwords must be at least six characters long"}
+                                </FormFeedback>
                             </FormGroup>
-                        </Col>
-                    </Row>
-                </Form>
-            </CardBody>
-        </Card>
-    </div>;
+
+                            <Row className="mb-4 text-right">
+                                <Col>
+                                    <h4 role="alert" className="text-danger text-right mb-0">
+                                        {errorMessage}
+                                    </h4>
+                                    {!passwordResetRequest ?
+                                        <Button color="link" onClick={resetPasswordIfValidEmail}>
+                                            Forgotten your password?
+                                        </Button> :
+                                        <p>
+                                            <strong className="d-block">Your password reset request is being processed.</strong>
+                                            <strong className="d-block">Please check your inbox.</strong>
+                                        </p>
+                                    }
+                                </Col>
+                            </Row>
+
+                            <Row className="mb-4">
+                                <Col size={12} sm={6}>
+                                    <Button
+                                        tag="input" value="Log in"
+                                        color="secondary" type="submit" className="mb-2" block
+                                        onClick={attemptLogIn}
+                                    />
+                                </Col>
+                                <Col size={12} sm={6}>
+                                    <Button tag={Link} to="/register" color="primary" className="mb-2" outline block>
+                                        Sign up
+                                    </Button>
+                                </Col>
+                            </Row>
+
+                            <hr /> {/* TODO try replacing with divider when delivered by Nomensa */}
+
+                            <Row className="my-4">
+                                <Col className="text-center">
+                                    <Button block className="login-google" color="link" onClick={logInWithGoogle}>
+                                        Log in with Google
+                                    </Button>
+                                </Col>
+                            </Row>
+
+                        </Form>
+                    </CardBody>
+                </Card>
+            </Col>
+        </Row>
+    </Container>;
 };
 
 export const LogIn = connect(stateToProps, dispatchToProps)(LogInPageComponent);

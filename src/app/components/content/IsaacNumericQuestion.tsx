@@ -1,4 +1,4 @@
-import React, {ChangeEventHandler, FormEvent, useEffect, useState} from "react";
+import React, {FormEvent, useEffect, useState} from "react";
 import {connect} from "react-redux";
 import seedrandom from "seedrandom";
 import {requestConstantsUnits, setCurrentAttempt} from "../../state/actions";

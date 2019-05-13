@@ -15,13 +15,13 @@ export const user = (user: UserState = null, action: Action) => {
 
 type ConstantsState = {units: string[]} | null;
 export const constants = (constants: ConstantsState = null, action: Action) => {
-    switch  (action.type) {
+    switch (action.type) {
         case ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS:
             return {...constants, units: action.units};
         default:
             return constants;
     }
-}
+};
 
 type DocState = ContentDTO | null;
 export const doc = (doc: DocState = null, action: Action) => {
@@ -109,15 +109,36 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
     }
 };
 
-const appReducer = combineReducers({user, constants, doc, questions, currentTopic, currentGameboard, assignments});
+type LoginErrorState = string | null;
+export const error = (error: LoginErrorState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPES.USER_LOG_IN_FAILURE:
+            return action.errorMessage;
+        default:
+            return null;
+    }
+};
+
+const appReducer = combineReducers({
+    user,
+    constants,
+    doc,
+    questions,
+    currentTopic,
+    currentGameboard,
+    assignments,
+    error
+});
+
 export type AppState = undefined | {
-    user: UserState,
-    constants: ConstantsState,
-    doc: DocState,
-    questions: QuestionsState,
-    currentTopic: CurrentTopicState,
-    currentGameboard: CurrentGameboardState,
-    assignments: AssignmentsState
+    user: UserState;
+    constants: ConstantsState;
+    doc: DocState;
+    questions: QuestionsState;
+    currentTopic: CurrentTopicState;
+    currentGameboard: CurrentGameboardState;
+    assignments: AssignmentsState;
+    error: LoginErrorState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

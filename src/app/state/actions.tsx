@@ -1,9 +1,10 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
 import {Action, ValidatedChoice} from "../../IsaacAppTypes";
-import {ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPES, TOPICS} from "../services/constants";
 import {AppState} from "./reducers";
+import history from "../services/history";
 
 // User Authentication
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
@@ -23,7 +24,25 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     // TODO MT handle error case
 };
 
-export const handleProviderLoginRedirect = (provider: string) => async (dispatch: Dispatch<Action>) => {
+export const logInUser = (provider: AuthenticationProvider, params: {email: string; password: string}) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPES.USER_LOG_IN_REQUEST, provider});
+    try {
+        const response = await api.authentication.login(provider, params);
+        dispatch({type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
+        history.push('/');
+        history.go(0);
+    } catch (e) {
+        dispatch({type: ACTION_TYPES.USER_LOG_IN_FAILURE, errorMessage: e.response.data.errorMessage})
+    }
+};
+
+export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPES.USER_PASSWORD_RESET_REQUEST});
+    const response = await api.users.passwordReset(params);
+    dispatch({type: ACTION_TYPES.USER_PASSWORD_RESET_REQUEST_SUCCESS});
+};
+
+export const handleProviderLoginRedirect = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPES.AUTHENTICATION_REQUEST_REDIRECT, provider});
     const redirectResponse = await api.authentication.getRedirect(provider);
     const redirectUrl = redirectResponse.data.redirectUrl;
@@ -33,7 +52,7 @@ export const handleProviderLoginRedirect = (provider: string) => async (dispatch
     // TODO MT handle case when user is already logged in
 };
 
-export const handleProviderCallback = (provider: string, parameters: string) => async (dispatch: Dispatch<Action>) => {
+export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPES.AUTHENTICATION_HANDLE_CALLBACK});
     const response = await api.authentication.checkProviderCallback(provider, parameters);
     dispatch({type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});

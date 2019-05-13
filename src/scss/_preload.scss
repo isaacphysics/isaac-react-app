@@ -1,0 +1,11 @@
+// Pre-load hover images to avoid the initial flash (if "disable cache" is off)
+body:after{
+  display:none;
+  content: url(/assets/google-login-sprite-dark-pressed.png);
+  width: 191px;
+  height: 46px;
+  @media only screen and (min-resolution: 192dpi) {
+    content: url(/assets/google-login-sprite-dark-pressed@2x.png);
+    background-size: 191px 46px;
+  }
+}
