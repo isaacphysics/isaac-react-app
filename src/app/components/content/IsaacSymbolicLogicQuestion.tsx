@@ -6,6 +6,7 @@ import {AppState} from "../../state/reducers";
 import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiTypes";
 import { InequalityModal } from "./InequalityModal";
 import katex from "katex";
+import {Hints} from "./Hints";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -15,10 +16,10 @@ const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
 const dispatchToProps = {setCurrentAttempt};
 
 interface IsaacSymbolicLogicQuestionProps {
-    doc: IsaacSymbolicLogicQuestionDTO,
-    questionId: string,
-    currentAttempt?: LogicFormulaDTO,
-    setCurrentAttempt: (questionId: string, attempt: LogicFormulaDTO) => void
+    doc: IsaacSymbolicLogicQuestionDTO;
+    questionId: string;
+    currentAttempt?: LogicFormulaDTO;
+    setCurrentAttempt: (questionId: string, attempt: LogicFormulaDTO) => void;
 }
 const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
 
@@ -38,17 +39,23 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
         document.body.removeChild(document.getElementById('the-ghost-of-inequality') as Node);
         document.body.style.overflow = "initial";
         setModalVisible(false);
-    }
+    };
 
     return (
         <div>
-            <h3><IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding} children={doc.children} /></h3>
+            <h4>
+                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                    {doc.children}
+                </IsaacContentValueOrChildren>
+            </h4>
+            {/* TODO Accessibility */}
             <div className="eqn-editor-preview" onClick={() => setModalVisible(true)} dangerouslySetInnerHTML={{ __html: katex.renderToString((currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex) ? currentAttemptValue.result.tex : '') }} />
             {modalVisible && <InequalityModal
                 close={closeModal}
                 onEditorStateChange={(state: any) => { setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(state), pythonExpression: state.result.python }) }}
                 availableSymbols={doc.availableSymbols}
             />}
+            {doc.hints && <Hints hints={doc.hints}/>}
         </div>
     );
 };

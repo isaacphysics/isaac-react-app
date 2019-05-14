@@ -85,7 +85,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
             <Row>
                 <Col sm="12" md={{size: 4, offset: 4}} >
                     <p className="text-center pt-2">
-                        <small>Don't forget to use the hints above if you need help.</small>
+                        <small>Don&apos;t forget to use the hints above if you need help.</small>
                     </p>
                 </Col>
             </Row>
