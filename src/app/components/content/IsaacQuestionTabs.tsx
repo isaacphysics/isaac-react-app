@@ -1,6 +1,8 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
+import {IsaacFreeTextQuestion} from "./IsaacFreeTextQuestion";
+import {IsaacNumericQuestion} from "./IsaacNumericQuestion";
 import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
 import {IsaacStringMatchQuestion} from "./IsaacStringMatchQuestion";
 import {IsaacSymbolicLogicQuestion} from "./IsaacSymbolicLogicQuestion";
@@ -46,6 +48,8 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
 
     let QuestionComponent;
     switch (doc.type) {
+        case 'isaacFreeTextQuestion': QuestionComponent = IsaacFreeTextQuestion; break;
+        case 'isaacNumericQuestion': QuestionComponent = IsaacNumericQuestion; break;
         case 'isaacSymbolicLogicQuestion': QuestionComponent = IsaacSymbolicLogicQuestion; break;
         case 'isaacStringMatchQuestion': QuestionComponent = IsaacStringMatchQuestion; break;
         case 'isaacMultiChoiceQuestion': default: QuestionComponent = IsaacMultiChoiceQuestion; break;
@@ -81,7 +85,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
             <Row>
                 <Col sm="12" md={{size: 4, offset: 4}} >
                     <p className="text-center pt-2">
-                        <small>Don't forget to use the hints above if you need help.</small>
+                        <small>Don&apos;t forget to use the hints above if you need help.</small>
                     </p>
                 </Col>
             </Row>

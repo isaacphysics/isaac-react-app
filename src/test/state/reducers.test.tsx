@@ -1,6 +1,6 @@
-import {questions, rootReducer, user} from "../../app/state/reducers";
+import {constants, questions, rootReducer, user} from "../../app/state/reducers";
 import {Action} from "../../IsaacAppTypes";
-import {questionDTOs, registeredUserDTOs} from "../test-factory";
+import {questionDTOs, registeredUserDTOs, unitsList} from "../test-factory";
 import {ACTION_TYPES} from "../../app/services/constants";
 
 const ignoredTestAction: Action = {type: ACTION_TYPES.TEST_ACTION};
@@ -102,4 +102,28 @@ describe("questions reducer", () => {
             expect(actualNextState).toEqual(expectedNextState);
         })
     });
+});
+
+describe("constants reducer", () => {
+    it("returns null as an initial value", () => {
+        const actualState = constants(undefined, ignoredTestAction);
+        expect(actualState).toBe(null);
+    });
+
+    it("returns the previous state by default", () => {
+        const previousStates = [null, {units: unitsList}];
+        previousStates.map((previousState) => {
+            const actualNextState = constants(previousState, ignoredTestAction);
+            expect(actualNextState).toEqual(previousState);
+        });
+    });
+
+    it("should always add the list of units on login response success", () => {
+        const unitsAction: Action = {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList};
+        const previousStates = [null, {units: ["foo"]}];
+        previousStates.map((previousState) => {
+            const actualNextState = constants(previousState, unitsAction);
+            expect(actualNextState).toEqual({units: unitsList});
+        })
+    })
 });

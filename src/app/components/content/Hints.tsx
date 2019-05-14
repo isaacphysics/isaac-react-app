@@ -4,7 +4,7 @@ import React from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
 
 interface HintsProps {
-    hints: ContentDTO[]
+    hints: ContentDTO[];
 }
 export const Hints = ({hints}: HintsProps) => {
     return <ListGroup className="questionHints mb-1 pt-3">

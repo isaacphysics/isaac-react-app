@@ -5,6 +5,7 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {ChoiceDTO, IsaacStringMatchQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
 import {Input} from "reactstrap";
+import {Hints} from "./Hints";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -32,9 +33,19 @@ const IsaacStringMatchQuestionComponent = (props: IsaacStringMatchQuestionProps)
     const currentAttemptValue = currentAttempt && currentAttempt.value;
     return (
         <div>
-            <h3><IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding} children={doc.children} /></h3>
-            <Input type="text" placeholder="Type your answer here." value={currentAttemptValue || ""} onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setCurrentAttempt(questionId, choiceDTOfromEvent(event))} />
+            <h4>
+                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                    {doc.children}
+                </IsaacContentValueOrChildren>
+            </h4>
+            <Input type={doc.multiLineEntry ? "textarea" : "text"} placeholder="Type your answer here."
+                maxLength={doc.multiLineEntry ? 250 : 75}
+                spellCheck={false}
+                rows={doc.multiLineEntry ? 3 : undefined}
+                value={currentAttemptValue || ""}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    setCurrentAttempt(questionId, choiceDTOfromEvent(event))}/>
+            {doc.hints && <Hints hints={doc.hints}/>}
         </div>
     );
 };

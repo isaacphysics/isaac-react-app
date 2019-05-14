@@ -18,6 +18,10 @@ export type Action =
     | {type: ACTION_TYPES.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPES.AUTHENTICATION_HANDLE_CALLBACK}
 
+    | {type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST}
+    | {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_FAILURE}
+    | {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS; units: string[]}
+
     | {type: ACTION_TYPES.DOCUMENT_REQUEST; questionId: string}
     | {type: ACTION_TYPES.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
     | {type: ACTION_TYPES.DOCUMENT_RESPONSE_FAILURE}
@@ -27,7 +31,7 @@ export type Action =
     | {type: ACTION_TYPES.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: ApiTypes.ChoiceDTO}
     | {type: ACTION_TYPES.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}
     | {type: ACTION_TYPES.QUESTION_ATTEMPT_RESPONSE_FAILURE}
-    | {type: ACTION_TYPES.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO}
+    | {type: ACTION_TYPES.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>}
 
     | {type: ACTION_TYPES.TOPIC_REQUEST; topicName: string}
     | {type: ACTION_TYPES.TOPIC_RESPONSE_SUCCESS; topic: TopicDTO}
@@ -71,4 +75,13 @@ export interface TopicDTO {
     title: string;
     description: ApiTypes.ContentDTO;
     contentLinks: ContentLinkDTO[];
+}
+
+export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
+    frontEndValidation: boolean;
+    choice: C;
+}
+
+export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>): choice is ValidatedChoice<ApiTypes.ChoiceDTO> {
+    return choice.hasOwnProperty("frontEndValidation");
 }

@@ -52,5 +52,10 @@ export const api = {
         getMyAssignments: (): AxiosPromise<ApiTypes.AssignmentDTO[]> => {
             return endpoint.get(`/assignments`);
         }
+    },
+    constants: {
+        getUnits: (): AxiosPromise<string[]> => {
+            return endpoint.get(`/content/units`)
+        }
     }
 };

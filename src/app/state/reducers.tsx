@@ -1,5 +1,5 @@
 import {combineReducers} from "redux";
-import {Action, AppQuestionDTO, TopicDTO} from "../../IsaacAppTypes";
+import {Action, AppQuestionDTO, isValidatedChoice, TopicDTO} from "../../IsaacAppTypes";
 import {AssignmentDTO, ContentDTO, GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPES} from "../services/constants";
 
@@ -10,6 +10,16 @@ export const user = (user: UserState = null, action: Action) => {
             return {...action.user};
         default:
             return user;
+    }
+};
+
+type ConstantsState = {units: string[]} | null;
+export const constants = (constants: ConstantsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS:
+            return {...constants, units: action.units};
+        default:
+            return constants;
     }
 };
 
@@ -26,7 +36,11 @@ export const doc = (doc: DocState = null, action: Action) => {
 export const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {
         case ACTION_TYPES.QUESTION_SET_CURRENT_ATTEMPT:
-            return {...question, currentAttempt: action.attempt, canSubmit: true, validationResponse: null};
+            if (isValidatedChoice(action.attempt)) {
+                return {...question, currentAttempt: action.attempt.choice, canSubmit: action.attempt.frontEndValidation, validationResponse: null};
+            } else {
+                return {...question, currentAttempt: action.attempt, canSubmit: true, validationResponse: null};
+            }
         case ACTION_TYPES.QUESTION_ATTEMPT_REQUEST:
             return {...question, canSubmit: false};
         case ACTION_TYPES.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
@@ -105,15 +119,26 @@ export const error = (error: LoginErrorState = null, action: Action) => {
     }
 };
 
-const appReducer = combineReducers({user, doc, questions, currentTopic, currentGameboard, assignments, error});
+const appReducer = combineReducers({
+    user,
+    constants,
+    doc,
+    questions,
+    currentTopic,
+    currentGameboard,
+    assignments,
+    error
+});
+
 export type AppState = undefined | {
-    user: UserState,
-    doc: DocState,
-    questions: QuestionsState,
-    currentTopic: CurrentTopicState,
-    currentGameboard: CurrentGameboardState,
-    assignments: AssignmentsState,
-    error: LoginErrorState
+    user: UserState;
+    constants: ConstantsState;
+    doc: DocState;
+    questions: QuestionsState;
+    currentTopic: CurrentTopicState;
+    currentGameboard: CurrentGameboardState;
+    assignments: AssignmentsState;
+    error: LoginErrorState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

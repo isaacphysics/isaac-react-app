@@ -1,10 +1,10 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {Action} from "../../IsaacAppTypes";
+import {Action, ValidatedChoice} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPES, TOPICS} from "../services/constants";
+import {AppState} from "./reducers";
 import history from "../services/history";
-
 
 // User Authentication
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
@@ -60,6 +60,22 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     // TODO MT handle error case
 };
 
+// Constants
+export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    // Don't request this again if it has already been fetched successfully
+    const state = getState();
+    if (state && state.constants && state.constants.units) {
+        return;
+    }
+
+    dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST});
+    try {
+        const units = await api.constants.getUnits();
+        dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: units.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_FAILURE});
+    }
+};
 
 // Questions
 export const fetchQuestion = (questionId: string) => async (dispatch: Dispatch<Action>) => {
@@ -84,7 +100,7 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
     // TODO MT handle response failure with a timed canSubmit
 };
 
-export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO) => (dispatch: Dispatch<Action>) => {
+export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|ValidatedChoice<ChoiceDTO>) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPES.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
 };
 
