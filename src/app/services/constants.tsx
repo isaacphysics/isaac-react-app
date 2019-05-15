@@ -1,5 +1,5 @@
 import Remarkable from "remarkable";
-import {AllTopicsDTO, LinkType, TopicDTO} from "../../IsaacAppTypes";
+import {LinkType, TopicDTO} from "../../IsaacAppTypes";
 
 export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
 
@@ -62,72 +62,87 @@ export enum EXAM_BOARDS {
     OCR = "OCR"
 }
 
-export const ALL_TOPICS: AllTopicsDTO = {
-    Theory: {
-        "GCSE to A-Level transition": {
-            "Boolean logic": {destination: "", comingSoon: true},
-            "Programming concepts": {destination: "", comingSoon: true},
-            "Networking": {destination: "", comingSoon: true, onlyFor: [EXAM_BOARDS.OCR]},
-            "Data Representation": {destination: "", comingSoon: true},
-            "Systems": {destination: "", comingSoon: true},
-        },
-        "Data structures and algorithms": {
-            "Searching, sorting & pathfinding": {destination: "", comingSoon: true},
-            "Complexity": {destination: "", comingSoon: true},
-            "Models of computation": {destination: "", comingSoon: true, onlyFor: [EXAM_BOARDS.OCR]},
-            "Planning and debugging": {destination: "", comingSoon: true},
-            "Data structures (theory)": {destination: "", comingSoon: true},
-        },
-        "Computer networks": {
-            "Security": {destination: "", comingSoon: true},
-            "Network structure": {destination: "", comingSoon: true},
-            "Network hardware": {destination: "", comingSoon: true},
-            "Communication": {destination: "", comingSoon: true},
-            "Internet": {destination: "", comingSoon: true},
-        },
-        "Computer systems": {
-            "Boolean logic": {destination: "", comingSoon: true},
-            "Architecture": {destination: "", comingSoon: true},
-            "Hardware": {destination: "", comingSoon: true},
-            "Operating systems and software": {destination: "", comingSoon: true},
-            "Translators": {destination: "", comingSoon: true},
-            "Programming languages": {destination: "", comingSoon: true},
-        },
-        "Data and information": {
-            "Number systems": {destination: "", comingSoon: true},
-            "Number bases": {destination: "", comingSoon: true},
-            "Representation": {destination: "", comingSoon: true},
-            "Transmission": {destination: "", comingSoon: true},
-            "Databases": {destination: "", comingSoon: true},
-            "Big Data": {destination: "", comingSoon: true},
-            "Compression": {destination: "", comingSoon: true},
-            "Encryption": {destination: "", comingSoon: true},
-        },
-    },
-    Programming: {
-        "Functional programming": {
-            "Functions": {destination: "", comingSoon: true},
-            "Lists": {destination: "", comingSoon: true},
-            "Higher order functions": {destination: "", comingSoon: true},
-        },
-        "Object oriented programming": {
-            "Creating objects": {destination: "", comingSoon: true},
-            "OOP concepts": {destination: "", comingSoon: true},
-            "Class diagrams": {destination: "", comingSoon: true},
-        },
-        "Procedural programming": {
-            "Programming concepts": {destination: "", comingSoon: true},
-            "Subroutines": {destination: "/topics/subroutines"},
-            "Files": {destination: "", comingSoon: true, onlyFor: [EXAM_BOARDS.OCR]},
-            "Structure & robustness": {destination: "", comingSoon: true},
-            "Data structures (implementation)": {destination: "", comingSoon: true},
-            "Recursion": {destination: "", comingSoon: true},
-            "String manipulation": {destination: "", comingSoon: true},
-            "GUIs": {destination: "", comingSoon: true},
-            "Software engineering principles": {destination: "", comingSoon: true},
-        }
-    }
-};
+export enum TAG_ID {
+    // Categories
+    theory = "theory",
+    programming = "programming",
+
+    // Theory sub-categories
+    gcseToALevel = "gcse_to_a_level",
+    dataStructuresAndAlgorithms = "data_structures_and_algorithms",
+    computerNetworks = "computer_networks",
+    computerSystems = "computer_systems",
+    dataAndInformation = "data_and_information",
+    // Programming sub-categories
+    functionalProgramming = "functional_programming",
+    objectOrientedProgramming = "object_oriented_programming",
+    proceduralProgramming = "procedural_programming",
+
+    // GCSE to A-Level transition topics
+    gcseBooleanLogic = "gcse_boolean_logic",
+    gcseProgrammingConcepts = "gcse_programming_concepts",
+    gcseNetworking = "gcse_networking",
+    gcseDataRepresentation = "gcse_data_representation",
+    gcseSystems = "gcse_systems",
+    // Data structures and algorithms topics
+    searchingSortingPathfinding = "searching_sorting_pathfinding",
+    complexity = "complexity",
+    modelsOfComputation = "models_of_computation",
+    planningAndDebugging = "planning_and_debugging",
+    dataStructuresTheory = "data_structures_theory",
+    // Computer networks topics
+    security = "security",
+    networkStructure = "network_structure",
+    networkHardware = "network_hardware",
+    communication = "communication",
+    internet = "internet",
+    // Computer systems topics
+    booleanLogic = "boolean_logic",
+    architecture = "architecture",
+    hardware = "hardware",
+    operatingSystemsAndSoftware = "operating_systems_and_software",
+    translators = "translators",
+    programmingLanguages = "programming_languages",
+    // Data and information topics
+    numberSystems = "number_systems",
+    numberBases = "number_bases",
+    representation = "representation",
+    transmission = "transmission",
+    databases = "databases",
+    bigData = "big_data",
+    compression = "compression",
+    encryption = "encryption",
+
+    // Functional programming topics
+    functions = "functions",
+    lists = "lists",
+    higherOrderFunctions = "higher_order_functions",
+    // Object oriented programming topics
+    creatingObjects = "creating_objects",
+    oopConcepts = "oop_concepts",
+    classDiagrams = "class_diagrams",
+    // Procedural programming topics
+    programmingConcepts = "programming_concepts",
+    subroutines = "subroutines",
+    files = "files",
+    structureAndRobustness = "structure_and_robustness",
+    dataStructuresImplementation = "data_structures_implementation",
+    recursion = "recursion",
+    stringManipulation = "string_manipulation",
+    guis = "guis",
+    softwareEngineeringPrinciples = "software_engineering_principles",
+    softwareProject = "software_project",
+}
+
+export enum TAG_LEVEL {
+    category = "category",
+    subcategory = "subcategory",
+    topic = "topic",
+}
+
+export const TAG_HIERARCHY = [TAG_LEVEL.category, TAG_LEVEL.subcategory, TAG_LEVEL.topic];
+
+
 
 export const TOPICS: {[topicName: string]: TopicDTO} = {
     "subroutines": {

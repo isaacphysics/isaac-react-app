@@ -14,6 +14,7 @@ import {MyAssignments} from "../pages/MyAssignments";
 import {Gameboard} from "../pages/Gameboard";
 import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
+import {ComingSoon} from "../pages/ComingSoon";
 import {PageNotFound} from "../pages/PageNotFound";
 import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
@@ -51,6 +52,7 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                             <TrackedRoute path="/questions/:questionId" component={Question} />
                             <TrackedRoute exact path="/topics" component={AllTopics} />
                             <TrackedRoute path="/topics/:topicName" component={Topic} />
+                            <TrackedRoute path="/page/coming_soon" component={ComingSoon} />
                             <TrackedRoute component={PageNotFound} />
                         </Switch>
                     </div>

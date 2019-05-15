@@ -48,20 +48,6 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     canSubmit?: boolean;
 }
 
-export interface TopicLinkDTO {
-    comingSoon?: boolean;
-    onlyFor?: EXAM_BOARDS[];
-    destination: string;
-}
-
-export interface AllTopicsDTO {
-    [category: string]: {
-        [subCategory: string]: {
-            [topicHeading: string]: TopicLinkDTO;
-        };
-    };
-}
-
 export enum LinkType {CONTENT = "contents", QUESTION = "questions"}
 
 export interface ContentLinkDTO {
