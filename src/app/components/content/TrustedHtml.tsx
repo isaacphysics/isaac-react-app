@@ -1,14 +1,11 @@
-/*global MathJax*/
-import React, {useLayoutEffect, useRef} from "react";
+import React from "react";
+import {useMathJaxRef} from "../../services/useMathJaxRef";
 
-export const TrustedHtml = ({html}: {html: string}) => {
-    const itemRef = useRef(null);
-
-    useLayoutEffect((): void => {
-        if (itemRef.current) {
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub, itemRef.current]);
-        }
-    }, [html]);
-
-    return <div ref={itemRef} dangerouslySetInnerHTML={{__html: html}} />;
+export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
+    const ref = useMathJaxRef([html, span]);
+    if (span) {
+        return <span ref={ref} dangerouslySetInnerHTML={{__html: html}} />;
+    } else {
+        return <div ref={ref} dangerouslySetInnerHTML={{__html: html}}/>;
+    }
 };

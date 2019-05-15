@@ -32,3 +32,9 @@ export const questionDTOs: {[key: string]: QuestionDTO} = {
         id: "man_vs_horse|test"
     }
 };
+
+export const unitsList: string[] = [
+    "kg",
+    "m",
+    "s"
+];

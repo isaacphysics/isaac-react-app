@@ -26,7 +26,11 @@ const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps)
 
     return (
         <div>
-            <h4><IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding} children={doc.children} /></h4>
+            <h4>
+                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                    {doc.children}
+                </IsaacContentValueOrChildren>
+            </h4>
 
             <ul>{doc.choices && doc.choices.map((choice) =>
                 <li key={choice.value} className="list-unstyled">
@@ -36,7 +40,7 @@ const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps)
                             checked={currentAttemptValue == choice.value}
                             onChange={() => setCurrentAttempt(questionId, choice)}
                         />
-                        <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} children={[]} />
+                        <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} />
                     </label>
                 </li>)
             }</ul>

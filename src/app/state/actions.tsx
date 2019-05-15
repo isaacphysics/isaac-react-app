@@ -1,10 +1,10 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {Action} from "../../IsaacAppTypes";
-import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import {Action, ValidatedChoice} from "../../IsaacAppTypes";
+import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPES, TOPICS} from "../services/constants";
+import {AppState} from "./reducers";
 import history from "../services/history";
-
 
 // User Authentication
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
@@ -14,38 +14,6 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
         dispatch({type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS, user: currentUser.data});
     } catch (e) {
         dispatch({type: ACTION_TYPES.USER_UPDATE_FAILURE});
-    }
-};
-
-export const requestUserPreferences = () => async (dispatch: Dispatch<Action>) => {
-
-};
-
-export const updateCurrentUser = (params: {registeredUser: RegisteredUserDTO}, currentUser: RegisteredUserDTO) => async (dispatch: Dispatch<Action>) => {
-    if (currentUser.email !== params.registeredUser.email) {
-        let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
-        if (!!emailChange) {
-            try {
-                const changedUser = await api.users.updateCurrent(params);
-                dispatch({type: ACTION_TYPES.USER_DETAILS_UPDATE_SUCCESS});
-                history.push('/');
-                history.go(0);
-            } catch (e) {
-                dispatch({type: ACTION_TYPES.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
-            }
-        } else {
-            params.registeredUser.email = currentUser.email;
-        }
-    } else {
-        dispatch({type: ACTION_TYPES.USER_DETAILS_UPDATE});
-        try {
-            const currentUser = await api.users.updateCurrent(params);
-            dispatch({type: ACTION_TYPES.USER_DETAILS_UPDATE_SUCCESS});
-            history.push('/');
-            history.go(0);
-        } catch (e) {
-            dispatch({type: ACTION_TYPES.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
-        }
     }
 };
 
@@ -92,13 +60,20 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     // TODO MT handle error case
 };
 
-export const handleEmailAlter = (params: {userId: string | null, token: string | null}) => async (dispatch: Dispatch<Action>) => {
+// Constants
+export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    // Don't request this again if it has already been fetched successfully
+    const state = getState();
+    if (state && state.constants && state.constants.units) {
+        return;
+    }
+
+    dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST});
     try {
-        dispatch({type: ACTION_TYPES.EMAIL_AUTHENTICATION_REQUEST});
-        const response = await api.email.verifyEmail(params);
-        dispatch({type: ACTION_TYPES.EMAIL_AUTHENTICATION_SUCCESS});
-    } catch(e) {
-        dispatch({type: ACTION_TYPES.EMAIL_AUTHENTICATION_FAILURE, errorMessage: e.response.data.errorMessage});
+        const units = await api.constants.getUnits();
+        dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: units.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_FAILURE});
     }
 };
 
@@ -125,7 +100,7 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
     // TODO MT handle response failure with a timed canSubmit
 };
 
-export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO) => (dispatch: Dispatch<Action>) => {
+export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|ValidatedChoice<ChoiceDTO>) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPES.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
 };
 

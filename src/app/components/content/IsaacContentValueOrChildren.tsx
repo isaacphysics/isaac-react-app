@@ -18,20 +18,18 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
             "\tCHILDREN:\n" + JSON.stringify(children));
     }
 
-    return (
-        <React.Fragment>
-            {value && <div className="content-value">
-                <Row>
-                    <Col>{
-                        (encoding == "markdown" && <TrustedMarkdown markdown={value}/>) ||
-                        (encoding == "html" && <TrustedHtml html={value}/>) ||
-                        (<div>[CONTENT WITH UNKNOWN ENCODING: <i>{encoding} | {value} </i>]</div>)
-                    }</Col>
-                </Row>
-            </div>}
-            {children && children.map((child, index) =>
-                <IsaacContent doc={child} key={index}/>
-            )}
-        </React.Fragment>
-    );
+    return <React.Fragment>
+        {value && <div className="content-value">
+            <Row>
+                <Col>{
+                    (encoding == "markdown" && <TrustedMarkdown markdown={value}/>) ||
+                    (encoding == "html" && <TrustedHtml html={value}/>) ||
+                    (<div>[CONTENT WITH UNKNOWN ENCODING: <i>{encoding} | {value} </i>]</div>)
+                }</Col>
+            </Row>
+        </div>}
+        {children && children.map((child, index) =>
+            <IsaacContent doc={child} key={index}/>
+        )}
+    </React.Fragment>;
 };

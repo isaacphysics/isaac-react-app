@@ -15,7 +15,7 @@ export const HintModal = (props: HintModalProps) => {
 
     const toggle = () => setIsOpen(!isOpen);
 
-    const close = <button className="close" onClick={toggle}>Close</button>
+    const close = <button className="close" onClick={toggle}>Close</button>;
 
     return <div>
         <Button color="link" size="sm" className="a-alt" onClick={toggle}>
@@ -29,14 +29,6 @@ export const HintModal = (props: HintModalProps) => {
             <ModalBody>
                 <IsaacContent doc={body} />
             </ModalBody>
-            {/*<ModalFooter className="d-flex flex-wrap justify-content-center">*/}
-            {/*    <Button color="primary" outline onClick={toggle}>*/}
-            {/*        Do Something*/}
-            {/*    </Button>{' '}*/}
-            {/*    <Button color="danger" onClick={toggle}>*/}
-            {/*        Cancel*/}
-            {/*    </Button>*/}
-            {/*</ModalFooter>*/}
         </Modal>
     </div>
 };
