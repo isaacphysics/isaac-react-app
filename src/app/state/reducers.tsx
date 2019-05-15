@@ -113,23 +113,19 @@ type LoginErrorState = string | null;
 export const error = (error: LoginErrorState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPES.USER_LOG_IN_FAILURE:
+        case ACTION_TYPES.USER_DETAILS_UPDATE_FAILURE:
+        case ACTION_TYPES.EMAIL_AUTHENTICATION_FAILURE:
+        case ACTION_TYPES.USER_INCOMING_PASSWORD_RESET_REQUEST_FAILURE:
+        case ACTION_TYPES.USER_PASSWORD_RESET_FAILURE:
             return action.errorMessage;
         default:
             return null;
     }
 };
 
-const appReducer = combineReducers({
-    user,
-    constants,
-    doc,
-    questions,
-    currentTopic,
-    currentGameboard,
-    assignments,
-    error
-});
 
+// TODO decide on how to delete error state
+const appReducer = combineReducers({user, doc, questions, currentTopic, currentGameboard, assignments, error});
 export type AppState = undefined | {
     user: UserState;
     constants: ConstantsState;

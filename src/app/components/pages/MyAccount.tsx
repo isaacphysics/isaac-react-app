@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {
@@ -27,6 +27,7 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import classnames from 'classnames';
+import {errorResponses} from "../../../test/test-factory";
 
 
 
@@ -39,27 +40,38 @@ const dispatchToProps = {
     updateCurrentUser
 };
 
+interface validationUser extends RegisteredUserDTO {
+    password: string | null
+}
+
 interface AccountPageProps {
     user: RegisteredUserDTO | null
-    updateCurrentUser: (params: {registeredUser: RegisteredUserDTO}, currentUser: RegisteredUserDTO) => void;
+    updateCurrentUser: (params: {registeredUser: validationUser; passwordCurrent: string}, currentUser: RegisteredUserDTO) => void
     errorMessage: string | null
 }
 
 const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPageProps) => {
     const updateDetails = () => console.log("Account updated");
 
+    // useEffect(() => {
+    //     errorMessage = null;
+    // }, []);
+
     const emailPreferences = {"NEWS_AND_UPDATES": true, "ASSIGNMENTS": true, "EVENTS": true};
 
+    // userSettings.passwordCurrent = $scope.passwordChangeState.passwordCurrent;
+
     const tempUser = {};
-    const myUser = Object.assign(tempUser, user);
+    const myUser1 = Object.assign(tempUser, user);
+    const myUser = Object.assign(myUser1, {password: ""});
     const [isValidEmail, setValidEmail] = useState(true);
     const [isValidDob, setValidDob] = useState(true);
+    const [isValidPassword, setValidPassword] = useState(true);
+    const [currentPassword, setCurrentPassword] = useState("");
 
     let today = new Date();
     let thirteen_years_ago = Date.UTC(today.getFullYear() - 13, today.getMonth(), today.getDate())/1000;
 
-
-    let dob_unix = new Date(String(myUser.dateOfBirth)).getTime()/1000;
 
     {/• TODO handle #... in with react-router? •/}
 
@@ -120,7 +132,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                                         <Col size={12} md={6}>
                                             <FormGroup>
                                                 <Label htmlFor="email-input">Email</Label>
-                                                <Input invalid={!isValidEmail || errorMessage} id="email-input" type="email" name="email" defaultValue={myUser.email} onBlur={(e: any) => {setValidEmail((e.target.value.length > 0 && e.target.value.includes("@")));
+                                                <Input invalid={!isValidEmail} id="email-input" type="email" name="email" defaultValue={myUser.email} onBlur={(e: any) => {setValidEmail((e.target.value.length > 0 && e.target.value.includes("@")));
                                                 (isValidEmail) ? myUser.email = e.target.value : null}} required/>
                                                 <FormFeedback>{(!isValidEmail) ? "Enter a valid email address" : null}</FormFeedback>
                                             </FormGroup>
@@ -185,7 +197,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                                         <Row>
                                             <FormGroup>
                                                 <Label htmlFor="password-input">Current Password</Label>
-                                                <Input id="password-current" type="password" name="password" required/>
+                                                <Input id="password-current" type="password" name="password" onBlur={(e: any) => setCurrentPassword(e.target.value)} required/>
                                             </FormGroup>
                                         </Row>
                                         <Row>
@@ -197,7 +209,9 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                                         <Row>
                                             <FormGroup>
                                                 <Label htmlFor="password-confirm">Re-enter New Password</Label>
-                                                <Input id="password-confirm" type="password" name="password" required/>
+                                                <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password" onBlur={(e: any) => {((e.target.value == (document.getElementById("password") as HTMLInputElement).value) && ((document.getElementById("password") as HTMLInputElement).value != undefined) && ((document.getElementById("password") as HTMLInputElement).value.length > 5)) ? setValidPassword(true) : setValidPassword(false);
+                                                (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ? myUser.password = e.target.value : console.log("password mismatch");}} required/>
+                                                <FormFeedback>{(!isValidPassword) ? "Password must be at least 6 characters long" : null}</FormFeedback>
                                             </FormGroup>
                                         </Row>
                                     </Form>
@@ -243,8 +257,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                     <CardFooter>
                         <Row>
                             <Col size={12} md={{size: 6, offset: 3}}>
-                                <h3>{errorMessage}</h3>
-                                <Button color="primary" onClick={() => {(isValidEmail) ? updateCurrentUser({registeredUser: myUser}, user) : null}} block >Save</Button>
+                                <h3 role="alert" className="text-danger text-center">{errorMessage}</h3>
+                                <Button color="secondary" onClick={() => {(isValidEmail && isValidDob && isValidPassword) ? updateCurrentUser({registeredUser: myUser, passwordCurrent: currentPassword}, user) : null}} block >Save</Button>
                             </Col>
                         </Row>
                     </CardFooter>

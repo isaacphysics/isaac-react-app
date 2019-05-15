@@ -19,7 +19,13 @@ export const api = {
         passwordReset: (params: {email: string}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword`, params);
         },
-        updateCurrent: (params: {registeredUser: RegisteredUserDTO}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        verifyPasswordReset: (token: string | null): AxiosPromise => {
+            return endpoint.get(`/users/resetpassword/${token}`)
+        },
+        handlePasswordReset: (params: {token: string | null, password: string | null}): AxiosPromise => {
+            return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
+        },
+        updateCurrent: (params: {registeredUser: RegisteredUserDTO; passwordCurrent: string}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/users`, params);
         }
     },

@@ -6,7 +6,6 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {Button, Col} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import history from "../../services/history";
-import {Action} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState) => ({
     user: state ? state.user : null,
@@ -26,8 +25,10 @@ const EmailAlterHandlerComponent = ({user, handleEmailAlter, errorMessage}: Emai
     const token = urlParams.get('token');
 
     useEffect(() => {
-        setTimeout(function(){handleEmailAlter({userId: userId, token: token})},0);
-    }, [userId, token]);
+        setTimeout(function(){handleEmailAlter({userId: userId, token: token})},10);
+        // handleEmailAlter({userId: userId, token: token})
+        console.log("useEffect called in emailAlterHandler")
+    }, []);
 
     return <div id="email-verification">
         {!errorMessage &&

@@ -27,7 +27,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                 {!user &&
                     <React.Fragment>
                         <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/login">LOGIN</RS.NavLink>
+                            <RS.NavLink id="login-tab" tag={Link} to="/login">LOGIN</RS.NavLink>
                         </RS.NavItem>
                         <RS.NavItem>
                             <RS.NavLink tag={Link} to="/register">SIGN UP</RS.NavLink>

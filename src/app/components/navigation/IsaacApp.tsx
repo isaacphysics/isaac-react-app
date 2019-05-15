@@ -8,6 +8,7 @@ import {Question} from "../pages/Question";
 import {LogIn} from "../pages/LogIn";
 import {Registration} from "../pages/Registration";
 import {LogOutHandler} from "../handlers/LogOutHandler";
+import {EmailAlterHandler} from "../handlers/EmailAlterHandler";
 import {ProviderCallbackHandler} from "../handlers/ProviderCallbackHandler";
 import {MyAccount} from "../pages/MyAccount";
 import {MyAssignments} from "../pages/MyAssignments";
@@ -20,18 +21,31 @@ import {AppState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import history from "../../services/history"
 import {TrackedRoute} from "./TrackedRoute";
+import {Route} from "react-router";
+import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 
-const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
+const mapStateToProps = (state: AppState) => ({
+    user: state ? state.user : null,
+    errorMessage: state ? state.error : null
+});
 const mapDispatchToProps = {requestCurrentUser};
 
 interface IsaacAppProps {
     user: RegisteredUserDTO | null;
     requestCurrentUser: () => void;
+    errorMessage: string | null
 }
+
+
 const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
     useEffect(() => {
         requestCurrentUser();
     }, []); // run only once on mount
+
+    // history.listen( (location, action) => {
+    //     console.log(action, location.pathname, location.state);
+    //     errorMessage = null;
+    // });
 
     return (
         <Router history={history}>
@@ -48,6 +62,8 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                             <TrackedRoute path="/account" component={MyAccount} />
                             <TrackedRoute path="/assignments" component={MyAssignments} />
                             <TrackedRoute path="/gameboards" component={Gameboard}/>
+                            <TrackedRoute path="/verifyemail" component={EmailAlterHandler}/>
+                            <TrackedRoute path="/resetpassword" component={ResetPasswordHandler}/>
                             <TrackedRoute path="/questions/:questionId" component={Question} />
                             <TrackedRoute exact path="/topics" component={AllTopics} />
                             <TrackedRoute path="/topics/:topicName" component={Topic} />

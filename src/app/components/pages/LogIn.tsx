@@ -110,6 +110,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                             <Row className="mb-4">
                                 <Col size={12} sm={6}>
                                     <Button
+                                        id="log-in"
                                         tag="input" value="Log in"
                                         color="secondary" type="submit" className="mb-2" block
                                         onClick={attemptLogIn}
