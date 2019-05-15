@@ -1,5 +1,7 @@
 import React from "react";
 import katex from "katex";
+import '../../services/mhchem';
+import he from "he";
 
 type MathJaxMacro = string|[string, number];
 
@@ -62,7 +64,7 @@ function sortLength(a: string, b: string) {
 
 const config = {
     inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{equation}", "\\end{equation}"] ],
     processEscapes: true,
     processEnvironments: true,
     processRefs: true
@@ -122,7 +124,6 @@ function startMatch(match: RegExpMatchArray): Search {
     const key: string = match[0];
     // @ts-ignore
     var delim = matchers[key];
-    console.log("S", match, delim);
     if (delim != null) {                              // a start delimiter
         return {
             end: delim.end, endPattern: new RegExp(patternQuote(delim.end), "g"), mode: delim.mode, pcount: 0,
@@ -148,7 +149,6 @@ function startMatch(match: RegExpMatchArray): Search {
 }
 
 function endMatch(match: RegExpExecArray, search: Search) {
-    console.log("E", match, search);
     if (match[0] == search.end) {
         if (search.pcount === 0) {
             search.matched = true;
@@ -170,24 +170,21 @@ function katexify(html: string) {
 
         // Find blocks of LaTeX
         let search = startMatch(match);
-        console.log("K", search);
         if (search.just) {
             output += search.just;
             index = match.index + match[0].length;
         } else if (search.endPattern) {
             search.endPattern.lastIndex = start.lastIndex;
-            console.log("T", html.substr(search.endPattern.lastIndex, 20));
             while (!search.matched && (match = search.endPattern.exec(html)) !== null) {
                 endMatch(match, search);
             }
             if (search.matched && match) {
                 const latex = html.substring(index + (search.olen || 0), match.index + match[0].length - (search.clen || 0));
-                output += katex.renderToString(latex, {...KatexOptions, displayMode: search.mode == "display"});
+                const latexUnEntitied = he.decode(latex);
+                output += katex.renderToString(latexUnEntitied, {...KatexOptions, displayMode: search.mode == "display"});
                 index = match.index + match[0].length;
-                console.log("M", match, latex, index, html.substr(index, 20));
             } else {
                 // That isn't meant to happen
-                console.log("Failed to match delimiter ", search.end);
                 output += html.substring(index, search.endPattern.lastIndex);
                 index = search.endPattern.lastIndex;
             }
