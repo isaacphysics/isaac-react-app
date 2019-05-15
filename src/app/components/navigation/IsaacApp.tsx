@@ -17,6 +17,7 @@ import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
 import {PageNotFound} from "../pages/PageNotFound";
+import {Search} from "../pages/Search";
 import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
@@ -55,6 +56,7 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                             <TrackedRoute exact path="/topics" component={AllTopics} />
                             <TrackedRoute path="/topics/:topicName" component={Topic} />
                             <TrackedRoute path="/page/coming_soon" component={ComingSoon} />
+                            <TrackedRoute path="/search" component={Search} />
                             <TrackedRoute component={PageNotFound} />
                         </Switch>
                     </div>

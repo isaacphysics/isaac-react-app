@@ -148,3 +148,13 @@ export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     const assignmentsResponse = await api.assignments.getMyAssignments();
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
 };
+
+// Search
+export const fetchSearch = (query: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query});
+    if (query === "") {
+        return;
+    }
+    const searchResponse = await api.search.get(query);
+    dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
+};

@@ -1,6 +1,6 @@
 import {combineReducers} from "redux";
-import {Action, AppQuestionDTO, isValidatedChoice} from "../../IsaacAppTypes";
-import {AssignmentDTO, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import {Action, AppQuestionDTO, isValidatedChoice, TopicDTO} from "../../IsaacAppTypes";
+import {AssignmentDTO, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO, RegisteredUserDTO, ResultsWrapper} from "../../IsaacApiTypes";
 import {ACTION_TYPE} from "../services/constants";
 
 type UserState = RegisteredUserDTO | null;
@@ -119,6 +119,20 @@ export const error = (error: LoginErrorState = null, action: Action) => {
     }
 };
 
+interface SearchState {
+    searchResults: ResultsWrapper<ContentSummaryDTO> | null;
+}
+export const search = (search: SearchState = {searchResults: null}, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.SEARCH_REQUEST:
+            return {...search, searchResults: null};
+        case ACTION_TYPE.SEARCH_RESPONSE_SUCCESS:
+            return {...search, searchResults: action.searchResults};
+        default:
+            return search;
+    }
+};
+
 const appReducer = combineReducers({
     user,
     constants,
@@ -127,7 +141,8 @@ const appReducer = combineReducers({
     currentTopic,
     currentGameboard,
     assignments,
-    error
+    error,
+    search
 });
 
 export type AppState = undefined | {
@@ -139,6 +154,7 @@ export type AppState = undefined | {
     currentGameboard: CurrentGameboardState;
     assignments: AssignmentsState;
     error: LoginErrorState;
+    search: SearchState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

@@ -1,22 +1,36 @@
-import React from "react";
+import React, {ChangeEvent, useState} from "react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import * as RS from "reactstrap";
 import {SearchButton} from "../content/SearchButton";
+import {RouteComponentProps, withRouter} from "react-router";
+import {History} from "history";
 
-const stateToProps = (state: AppState) => (state && {user: state.user});
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
 
 interface NavigationBarProps {
     user: RegisteredUserDTO | null;
+    history: History;
 }
-const NavigationBarComponent = ({user}: NavigationBarProps) => {
+const NavigationBarComponent = ({user, history}: NavigationBarProps) => {
     const DropdownItemComingSoon = (props: {children: string}) => {
         return <RS.DropdownItem className="disabled" aria-disabled="true">
             {props.children} <RS.Badge color="light">Coming Soon</RS.Badge>
         </RS.DropdownItem>
     };
+
+    const [searchText, setSearchText] = useState("");
+
+    function doSearch(e: Event) {
+        e.preventDefault();
+        history.push({
+            pathname: "/search",
+            search: searchText ? `?query=${searchText}` : ''
+        });
+    }
 
     return <React.Fragment>
         <RS.Navbar light color="primary" expand="sm">
@@ -44,9 +58,10 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         </RS.NavItem>
                     </React.Fragment>
                 }
-                <RS.Form inline>
+                <RS.Form inline action="/form" onSubmit={doSearch}>
                     <RS.FormGroup className="search--main-group">
-                        <RS.Input type="search" name="search" placeholder="Search" aria-label="Search" />
+                        <RS.Input type="search" name="query" placeholder="Search" aria-label="Search" value={searchText}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)} />
                         <SearchButton />
                     </RS.FormGroup>
                 </RS.Form>
@@ -117,4 +132,4 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
     </React.Fragment>;
 };
 
-export const NavigationBar = connect(stateToProps)(NavigationBarComponent);
+export const NavigationBar = withRouter(connect(stateToProps)(NavigationBarComponent));
