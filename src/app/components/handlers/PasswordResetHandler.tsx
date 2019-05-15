@@ -5,7 +5,6 @@ import {verifyPasswordReset, handlePasswordReset} from "../../state/actions";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {Button, Col, FormFeedback, Input, Label, Row, Card, CardBody, Form, FormGroup, CardFooter} from "reactstrap";
 import {AppState} from "../../state/reducers";
-import history from "../../services/history";
 const stateToProps = (state: AppState) => ({
     user: state ? state.user : null,
     errorMessage: state ? state.error : null
@@ -28,6 +27,14 @@ const ResetPasswordHandlerComponent = ({user, handleResetPassword, verifyPasswor
     const [isValidPassword, setValidPassword] = useState(true);
     const [currentPassword, setCurrentPassword] = useState("");
 
+    const validateAndSetPassword = (event: any) => {
+        setValidPassword(
+            (event.target.value == (document.getElementById("password") as HTMLInputElement).value) &&
+            ((document.getElementById("password") as HTMLInputElement).value != undefined) &&
+            ((document.getElementById("password") as HTMLInputElement).value.length > 5)
+        )
+    };
+
     useEffect(() => {
         console.log("useeffect in reset password");
         setTimeout(function(){verifyPasswordReset(resetToken)},10);
@@ -48,13 +55,11 @@ const ResetPasswordHandlerComponent = ({user, handleResetPassword, verifyPasswor
                         <Row>
                             <FormGroup>
                                 <Label htmlFor="password-confirm">Re-enter New Password</Label>
-                                <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password" onBlur={(e: any) => {(
-                                    (e.target.value == (document.getElementById("password") as HTMLInputElement).value) &&
-                                    ((document.getElementById("password") as HTMLInputElement).value != undefined) &&
-                                    ((document.getElementById("password") as HTMLInputElement).value.length > 5)) ? setValidPassword(true) : setValidPassword(false);
+                                <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password" onBlur={(e: any) => {
+                                    validateAndSetPassword(e);
                                     (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ? setCurrentPassword(e.target.value) : null}
-                                } required/>
-                                <FormFeedback>{(!isValidPassword) ? "Password must be at least 6 characters long" : null}</FormFeedback>
+                                } aria-describedby="invalidPassword" required/>
+                                <FormFeedback id="invalidPassword">{(!isValidPassword) ? "Passwords must match and be at least 6 characters long" : null}</FormFeedback>
                             </FormGroup>
                         </Row>
                     </Form>

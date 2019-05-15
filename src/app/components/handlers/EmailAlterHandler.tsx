@@ -25,9 +25,7 @@ const EmailAlterHandlerComponent = ({user, handleEmailAlter, errorMessage}: Emai
     const token = urlParams.get('token');
 
     useEffect(() => {
-        setTimeout(function(){handleEmailAlter({userId: userId, token: token})},10);
-        // handleEmailAlter({userId: userId, token: token})
-        console.log("useEffect called in emailAlterHandler")
+        setTimeout(function(){handleEmailAlter({userId: userId, token: token})},0);
     }, []);
 
     return <div id="email-verification">

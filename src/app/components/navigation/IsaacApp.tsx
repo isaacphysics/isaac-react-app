@@ -21,7 +21,6 @@ import {AppState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import history from "../../services/history"
 import {TrackedRoute} from "./TrackedRoute";
-import {Route} from "react-router";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 
 const mapStateToProps = (state: AppState) => ({
@@ -41,11 +40,6 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
     useEffect(() => {
         requestCurrentUser();
     }, []); // run only once on mount
-
-    // history.listen( (location, action) => {
-    //     console.log(action, location.pathname, location.state);
-    //     errorMessage = null;
-    // });
 
     return (
         <Router history={history}>
