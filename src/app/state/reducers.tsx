@@ -123,9 +123,8 @@ export const error = (error: LoginErrorState = null, action: Action) => {
     }
 };
 
-
 // TODO decide on how to delete error state
-const appReducer = combineReducers({user, doc, questions, currentTopic, currentGameboard, assignments, error});
+const appReducer = combineReducers({user, constants, doc, questions, currentTopic, currentGameboard, assignments, error});
 export type AppState = undefined | {
     user: UserState;
     constants: ConstantsState;

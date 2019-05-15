@@ -122,22 +122,32 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     // TODO MT handle error case
 };
 
+export const handleEmailAlter = (params: ({userId: string | null, token: string | null})) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPES.EMAIL_AUTHENTICATION_REQUEST});
+        const response = await api.email.verifyEmail(params);
+        dispatch({type: ACTION_TYPES.EMAIL_AUTHENTICATION_SUCCESS});
+    } catch(e) {
+        dispatch({type:ACTION_TYPES.EMAIL_AUTHENTICATION_FAILURE, errorMessage: e.response.data.errorMessage});
+    }
+};
+
 // Constants
-// export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-//     // Don't request this again if it has already been fetched successfully
-//     const state = getState();
-//     if (state && state.constants && state.constants.units) {
-//         return;
-//     }
-//
-//     dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST});
-//     try {
-//         const units = await api.constants.getUnits();
-//         dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: units.data});
-//     } catch (e) {
-//         dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_FAILURE});
-//     }
-// };
+export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    // Don't request this again if it has already been fetched successfully
+    const state = getState();
+    if (state && state.constants && state.constants.units) {
+        return;
+    }
+
+    dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST});
+    try {
+        const units = await api.constants.getUnits();
+        dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: units.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_FAILURE});
+    }
+};
 
 // Questions
 export const fetchQuestion = (questionId: string) => async (dispatch: Dispatch<Action>) => {
