@@ -3,6 +3,7 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
 import {IsaacVideo} from "./IsaacVideo";
 import {ContentDTO} from "../../../IsaacApiTypes";
+import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
 
 interface IsaacContentProps {
     doc: ContentDTO;
@@ -16,7 +17,7 @@ export const IsaacContent = (props: IsaacContentProps) => {
         // case "image": selectedComponent = <IsaacImage {...props} />; break; // TODO
         case "video": selectedComponent = <IsaacVideo {...props} />; break;
         // case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break; // TODO
-        // case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break; // TODO
+        case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break;
         // case "anvilApp": selectedComponent = <AnvilApp {...props} />; break; // TODO
         case "isaacMultiChoiceQuestion":
         case "isaacNumericQuestion":
