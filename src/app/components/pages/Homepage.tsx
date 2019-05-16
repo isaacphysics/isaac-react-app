@@ -15,7 +15,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
     return <div id="homepage">
         <section id="call-to-action">
             <Row>
-                <Col size={12} md={6}>
+                <Col md={6}>
                     <Row>
                         <Col>
                             <h1>{
@@ -41,7 +41,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         </Col>
                     </Row>
                 </Col>
-                <Col size={12} md={6}>
+                <Col md={6}>
                     <img src="/assets/ics_hero.svg" className="img-fluid" alt="Students illustration"/>
                 </Col>
             </Row>
@@ -53,7 +53,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
             <section id="why-sign-up">
                 <h1 className="text-center">Why sign up?</h1>
                 <Row>
-                    <Col size={12} md={6}>
+                    <Col md={6}>
                         <Card>
                             <CardBody>
                                 <CardTitle tag="h2">
@@ -71,7 +71,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                             </CardBody>
                         </Card>
                     </Col>
-                    <Col size={12} md={6}>
+                    <Col md={6}>
                         <Card>
                             <CardBody>
                                 <CardTitle tag="h2">
@@ -96,7 +96,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
         <section id="headline-content" className="px-5 py-4">
             <h3>Featured-question</h3>
             <Row className="p-1">
-                <Col size={12} md={6}>
+                <Col md={6}>
                     <p className="font-weight-bold">
                         Trace the pseudocode and enter the output that will be produced when the program is run
                     </p>
@@ -115,7 +115,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         }
                     </pre>
                 </Col>
-                <Col size={12} md={6}>
+                <Col md={6}>
                     <div className="text-center">
                         <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration" />
                     </div>
@@ -125,13 +125,13 @@ export const HomepageComponent = ({user}: HomePageProps) => {
 
         <section id="events">
             <Row>
-                <Col size={12}>
+                <Col>
                     <h1 className="text-center">We run events</h1>
                     <hr />
                 </Col>
             </Row>
             <Row>
-                <Col size={12} md={{size: 6, offset: 3}}>
+                <Col md={{size: 6, offset: 3}}>
                     <p className="text-center">
                         We have a number of events throughout the year. Below you can see a snapshot of some of the
                         events we run. On our events page you will see more, and see how you can sign up for more
@@ -140,7 +140,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                 </Col>
             </Row>
             <Row>
-                <Col size={12}>
+                <Col>
                     <CardDeck>
                         <Card>
                             <div className="text-center">

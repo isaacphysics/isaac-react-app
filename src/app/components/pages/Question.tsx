@@ -37,38 +37,36 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
         history.push(`/gameboards#${queryParams.board}`);
     };
 
-    return (
-        <ShowLoading until={doc}>
-            {doc && <div className="pattern-01">
-                <Container>
-                    {/*FastTrack progress bar*/}
-                    {/*Print options*/}
-                    {/*High contrast option*/}
-                    <Row>
-                        <Col>
-                            {/* Breadcrumb */}
-                            <h1 className="h-title">{doc.title}</h1>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col sm="12" md={{size: 8, offset: 2}} className="py-4 question-panel">
-                            <IsaacContent doc={doc} />
+    return <ShowLoading until={doc}>
+        {doc && <div className="pattern-01">
+            <Container>
+                {/*FastTrack progress bar*/}
+                {/*Print options*/}
+                {/*High contrast option*/}
+                <Row>
+                    <Col>
+                        {/* Breadcrumb */}
+                        <h1 className="h-title">{doc.title}</h1>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
+                        <IsaacContent doc={doc} />
 
-                            {/* Superseded notice */}
+                        {/* Superseded notice */}
 
-                            <p>{doc.attribution}</p>
+                        <p>{doc.attribution}</p>
 
-                            {queryParams && queryParams.board &&
-                                <Button color="secondary" onClick={goBackToBoard}>Back to board</Button>
-                            }
+                        {queryParams && queryParams.board &&
+                            <Button color="secondary" onClick={goBackToBoard}>Back to board</Button>
+                        }
 
-                            {/*FooterPods related-content="questionPage.relatedContent"*/}
-                        </Col>
-                    </Row>
-                </Container>
-            </div>}
-        </ShowLoading>
-    );
+                        {/*FooterPods related-content="questionPage.relatedContent"*/}
+                    </Col>
+                </Row>
+            </Container>
+        </div>}
+    </ShowLoading>;
 };
 
 export const Question = withRouter(connect(stateToProps, dispatchToProps)(QuestionPageComponent));
