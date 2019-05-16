@@ -1,5 +1,5 @@
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
-import {Link, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
 import {Col, Container, Form, Input, Label, Row} from "reactstrap";
@@ -9,6 +9,8 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {ContentSummaryDTO, ResultsWrapper, Role} from "../../../IsaacApiTypes";
 import {History} from "history";
+import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
+import {DOCUMENT_TYPE} from "../../services/constants";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -18,8 +20,6 @@ const stateToProps = (state: AppState) => {
 };
 const dispatchToProps = {fetchSearch};
 
-const PROBLEMS_FILTER = "isaacQuestionPage";
-const CONCEPTS_FILTER = "isaacConceptPage";
 
 interface SearchPageProps {
     searchResults: ResultsWrapper<ContentSummaryDTO> | null;
@@ -33,10 +33,10 @@ interface SearchPageProps {
 function calculateTypes(problems: boolean, concepts: boolean) {
     const typesArray = [];
     if (problems) {
-        typesArray.push(PROBLEMS_FILTER);
+        typesArray.push(DOCUMENT_TYPE.QUESTION);
     }
     if (concepts) {
-        typesArray.push(CONCEPTS_FILTER);
+        typesArray.push(DOCUMENT_TYPE.CONCEPT);
     }
     return typesArray.join(",");
 }
@@ -52,8 +52,8 @@ const SearchPageComponent = (props: SearchPageProps) => {
     const filterParsed = (searchParsed.types || "");
     const filters = (filterParsed instanceof Array ? filterParsed[0] : filterParsed).split(",");
 
-    const problems = filters.includes(PROBLEMS_FILTER);
-    const concepts = filters.includes(CONCEPTS_FILTER);
+    const problems = filters.includes(DOCUMENT_TYPE.QUESTION);
+    const concepts = filters.includes(DOCUMENT_TYPE.CONCEPT);
 
     let [searchText, setSearchText] = useState(query);
     let [searchFilterProblems, setSearchFilterProblems] = useState(problems);
@@ -104,7 +104,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
     const filteredSearchResults = searchResults && searchResults.results && searchResults.results.filter(filterResult);
 
     return (
-        <Container>
+        <Container id="search-page">
             <Row>
                 <Col>
                     <h1 className="h-title">Search</h1>
@@ -136,12 +136,9 @@ const SearchPageComponent = (props: SearchPageProps) => {
                         </RS.CardHeader>
                         <RS.CardBody>
                             <ShowLoading until={filteredSearchResults}>
-                                {filteredSearchResults && filteredSearchResults.length > 0 ?<RS.ListGroup>
-                                    {filteredSearchResults.map(result =>
-                                        <RS.ListGroupItem key={result.type + "/" + result.id}><Link
-                                            to={"/questions/" + result.id}>{result.title}</Link></RS.ListGroupItem>
-                                    )}
-                                </RS.ListGroup> : <em>No results found</em>}
+                                {filteredSearchResults && filteredSearchResults.length > 0 ?
+                                    <LinkToContentSummaryList items={filteredSearchResults}/>
+                                    : <em>No results found</em>}
                             </ShowLoading>
                         </RS.CardBody>
                     </RS.Card>

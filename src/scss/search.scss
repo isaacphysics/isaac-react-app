@@ -1,16 +1,18 @@
 // Search page
 
-.search-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
+#search-page {
+  .search-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
 
-.search-filters {
-  justify-content: flex-end;
-  flex-grow: 1;
-}
+  .search-filters {
+    justify-content: flex-end;
+    flex-grow: 1;
+  }
 
-.search-filters label {
-  margin-left: 0.5rem;
+  .search-filters label {
+    margin-left: 0.5rem;
+  }
 }
