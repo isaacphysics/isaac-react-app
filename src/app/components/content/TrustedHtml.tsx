@@ -159,6 +159,12 @@ function endMatch(match: RegExpExecArray, search: Search) {
     else if (match[0] === "}" && search.pcount) {search.pcount--}
 }
 
+function munge(latex: string) {
+    return latex
+        .replace(/eqnarray/g, "aligned")
+        .replace(/\\newline/g, "\\\\");
+}
+
 function katexify(html: string) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
@@ -181,7 +187,8 @@ function katexify(html: string) {
             if (search.matched && match) {
                 const latex = html.substring(index + (search.olen || 0), match.index + match[0].length - (search.clen || 0));
                 const latexUnEntitied = he.decode(latex);
-                output += katex.renderToString(latexUnEntitied, {...KatexOptions, displayMode: search.mode == "display"});
+                const latexMunged = munge(latexUnEntitied);
+                output += katex.renderToString(latexMunged, {...KatexOptions, displayMode: search.mode == "display"});
                 index = match.index + match[0].length;
             } else {
                 // That isn't meant to happen
