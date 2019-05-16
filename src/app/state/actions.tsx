@@ -2,7 +2,7 @@ import {api} from "../services/api";
 import {Dispatch} from "react";
 import {Action, ValidatedChoice} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID, TOPICS} from "../services/constants";
+import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
 import history from "../services/history";
 

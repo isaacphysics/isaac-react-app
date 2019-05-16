@@ -1,6 +1,14 @@
 import {combineReducers} from "redux";
-import {Action, AppQuestionDTO, isValidatedChoice, TopicDTO} from "../../IsaacAppTypes";
-import {AssignmentDTO, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO, RegisteredUserDTO, ResultsWrapper} from "../../IsaacApiTypes";
+import {Action, AppQuestionDTO, isValidatedChoice} from "../../IsaacAppTypes";
+import {
+    AssignmentDTO,
+    ContentDTO,
+    ContentSummaryDTO,
+    GameboardDTO,
+    IsaacTopicSummaryPageDTO,
+    RegisteredUserDTO,
+    ResultsWrapper
+} from "../../IsaacApiTypes";
 import {ACTION_TYPE} from "../services/constants";
 
 type UserState = RegisteredUserDTO | null;
