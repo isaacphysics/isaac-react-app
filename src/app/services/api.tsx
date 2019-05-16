@@ -64,9 +64,9 @@ export const api = {
         }
     },
     search: {
-        get: (query: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+        get: (query: string, types: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
             return endpoint.get(`/search/` + query,
-                {params: {types: "isaacConceptPage,isaacQuestionPage"}});
+                {params: {types}});
         }
     }
 };

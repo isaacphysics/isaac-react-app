@@ -2,7 +2,7 @@ import {api} from "../services/api";
 import {Dispatch} from "react";
 import {Action, ValidatedChoice} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
+import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID, TOPICS} from "../services/constants";
 import {AppState} from "./reducers";
 import history from "../services/history";
 
@@ -150,11 +150,11 @@ export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
 };
 
 // Search
-export const fetchSearch = (query: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query});
+export const fetchSearch = (query: string, types: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query, types});
     if (query === "") {
         return;
     }
-    const searchResponse = await api.search.get(query);
+    const searchResponse = await api.search.get(query, types);
     dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
 };

@@ -1,8 +1,8 @@
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {Col, Container, Form, FormGroup, Input, Label, Row} from "reactstrap";
 import * as RS from "reactstrap";
+import {Col, Container, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {fetchSearch} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -18,50 +18,81 @@ const stateToProps = (state: AppState) => {
 };
 const dispatchToProps = {fetchSearch};
 
+const PROBLEMS_FILTER = "isaacQuestionPage";
+const CONCEPTS_FILTER = "isaacConceptPage";
+
 interface SearchPageProps {
     searchResults: ResultsWrapper<ContentSummaryDTO> | null;
     userRole: Role | null;
-    queryParams: {query?: string};
+    queryParams: {query?: string; types?: string};
     history: History;
-    fetchSearch: (query: string) => void;
+    location: Location;
+    fetchSearch: (query: string, types: string) => void;
 }
-const SearchPageComponent = (props: SearchPageProps) => {
-    const {searchResults, userRole, history, fetchSearch} = props;
 
-    const queryParsed = queryString.parse(location.search).query || "";
+function calculateTypes(problems: boolean, concepts: boolean) {
+    const typesArray = [];
+    if (problems) {
+        typesArray.push(PROBLEMS_FILTER);
+    }
+    if (concepts) {
+        typesArray.push(CONCEPTS_FILTER);
+    }
+    return typesArray.join(",");
+}
+
+const SearchPageComponent = (props: SearchPageProps) => {
+    const {searchResults, userRole, location, history, fetchSearch} = props;
+
+    const searchParsed = queryString.parse(location.search);
+
+    const queryParsed = searchParsed.query || "";
     const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
 
+    const filterParsed = (searchParsed.types || "");
+    const filters = (filterParsed instanceof Array ? filterParsed[0] : filterParsed).split(",");
+
+    const problems = filters.includes(PROBLEMS_FILTER);
+    const concepts = filters.includes(CONCEPTS_FILTER);
+
     let [searchText, setSearchText] = useState(query);
+    let [searchFilterProblems, setSearchFilterProblems] = useState(problems);
+    let [searchFilterConcepts, setSearchFilterConcepts] = useState(concepts);
 
     useEffect(
         () => {
             setSearchText(query);
-            fetchSearch(query);
+            setSearchFilterProblems(problems);
+            setSearchFilterConcepts(concepts);
+            fetchSearch(query, calculateTypes(problems, concepts));
         },
-        [query]
+        [query, problems, concepts]
     );
 
     function doSearch(e?: Event) {
         if (e) {
             e.preventDefault();
         }
-        history.push({
-            search: searchText ? `?query=${searchText}` : ''
-        });
+        if (searchText != query || searchFilterProblems != problems || searchFilterConcepts != concepts) {
+            history.push({
+                search: `?query=${searchText}&types=${calculateTypes(searchFilterProblems, searchFilterConcepts)}`
+            });
+        }
     }
 
     const timer: MutableRefObject<number | undefined> = useRef();
     useEffect(() => {
-        clearTimeout(timer.current);
-        if (searchText != query) {
-            timer.current = window.setTimeout(() => {
-                doSearch();
-            }, 800);
-        }
+        timer.current = window.setTimeout(() => {
+            doSearch();
+        }, 800);
         return () => {
             clearTimeout(timer.current);
         };
     }, [searchText]);
+
+    useEffect(() => {
+        doSearch();
+    }, [searchFilterProblems, searchFilterConcepts]);
 
     const isStaffUser = userRole && (userRole == 'ADMIN' || userRole == 'EVENT_MANAGER' || userRole == 'CONTENT_EDITOR' || userRole == 'STAFF');
 
@@ -82,17 +113,27 @@ const SearchPageComponent = (props: SearchPageProps) => {
             <Row>
                 <Col>
                     <Form inline onSubmit={doSearch}>
-                        <FormGroup>
-                            <Label>Search: &nbsp; <Input type="text" value={searchText} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)} />
-                            </Label>
-                        </FormGroup>
+                        <Label>Search: &nbsp; <Input type="text" value={searchText} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)} /></Label>
                     </Form>
                 </Col>
             </Row>
             {query !== "" && <Row>
-                <Col className="py-4 search-panel">
+                <Col className="py-4">
                     <RS.Card>
-                        <RS.CardHeader tag="h3">Search Results {filteredSearchResults ? <RS.Badge color="primary">{filteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" />}</RS.CardHeader>
+                        <RS.CardHeader className="search-header">
+                            <Col md={5} xs={12}>
+                                <h3>
+                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {filteredSearchResults ? <RS.Badge color="primary">{filteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" />}
+                                </h3>
+                            </Col>
+                            <Col md={7} xs={12}>
+                                <Form inline className="search-filters">
+                                    <Label className="d-none d-sm-inline-block">Filter</Label>
+                                    <Label><Input type="checkbox" checked={searchFilterProblems} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterProblems(e.target.checked)} />Search problems</Label>
+                                    <Label><Input type="checkbox" checked={searchFilterConcepts} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterConcepts(e.target.checked)} />Search concepts</Label>
+                                </Form>
+                            </Col>
+                        </RS.CardHeader>
                         <RS.CardBody>
                             <ShowLoading until={filteredSearchResults}>
                                 {filteredSearchResults && filteredSearchResults.length > 0 ?<RS.ListGroup>

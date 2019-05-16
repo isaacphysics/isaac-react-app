@@ -28,7 +28,7 @@ const NavigationBarComponent = ({user, history}: NavigationBarProps) => {
         e.preventDefault();
         history.push({
             pathname: "/search",
-            search: searchText ? `?query=${searchText}` : ''
+            search: searchText ? `?query=${searchText}&types=isaacQuestionPage,isaacConceptPage` : ''
         });
     }
 
@@ -63,6 +63,7 @@ const NavigationBarComponent = ({user, history}: NavigationBarProps) => {
                         <RS.Input type="search" name="query" placeholder="Search" aria-label="Search" value={searchText}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)} />
                         <SearchButton />
+                        <input type="hidden" name="types" value="isaacQuestionPage,isaacConceptPage" />
                     </RS.FormGroup>
                 </RS.Form>
             </RS.Nav>
