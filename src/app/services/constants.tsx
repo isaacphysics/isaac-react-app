@@ -1,5 +1,4 @@
 import Remarkable from "remarkable";
-import {LinkType, TopicDTO} from "../../IsaacAppTypes";
 
 export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
 
@@ -14,9 +13,10 @@ if (document.location.hostname === "localhost") {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
 }
 export const API_PATH: string = apiPath;
+
 export const MARKDOWN_RENDERER: Remarkable = new Remarkable();
 
-export enum ACTION_TYPES {
+export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
 
     USER_UPDATE_REQUEST = "USER_UPDATE_REQUEST",
@@ -57,7 +57,7 @@ export enum ACTION_TYPES {
     ASSIGNMENTS_RESPONSE_SUCCESS = "ASSIGNMENTS_RESPONSE_SUCCESS",
 }
 
-export enum EXAM_BOARDS {
+export enum EXAM_BOARD {
     AQA = "AQA",
     OCR = "OCR"
 }
@@ -142,61 +142,4 @@ export enum TAG_LEVEL {
 
 export const TAG_HIERARCHY = [TAG_LEVEL.category, TAG_LEVEL.subcategory, TAG_LEVEL.topic];
 
-
-
-export const TOPICS: {[topicName: string]: TopicDTO} = {
-    "subroutines": {
-        title: "Subroutines",
-        description: {
-            encoding: "markdown",
-            value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ornare euismod purus, vitae" +
-                "tincidunt urna finibus in. Pellentesque habitant morbi tristique senectus et netus et malesuada fames " +
-                "ac turpis egestas. In bibendum, tellus ut vestibulum tempor, ex urna sollicitudin diam, id " +
-                "sollicitudin mauris est at arcu. Quisque ullamcorper nisl sit amet massa fermentum, nec interdum velit " +
-                "luctus. Aenean turpis tortor, dictum a mauris ut, rutrum suscipit massa. Ut varius mauris tortor, " +
-                "vitae interdum erat interdum eget."
-        },
-        contentLinks: [
-            {
-                value: "Defining and calling",
-                destination: "prog_sub_define_and_call",
-                type: LinkType.CONTENT
-            },
-            {
-                value: "Using parameters and arguments",
-                destination: "prog_sub_parameters",
-                type: LinkType.CONTENT
-            },
-            {
-                value: "Passing by value and by reference",
-                destination: "prog_sub_value_reference",
-                type: LinkType.CONTENT,
-            },
-            {
-                value: "Return values",
-                destination: "prog_sub_return_value",
-                type: LinkType.CONTENT,
-            },
-            {
-                value: "Local and global variables",
-                destination: "prog_sub_local_and_global",
-                type: LinkType.CONTENT,
-            },
-            {
-                value: "Advantages of using subroutines",
-                destination: "prog_sub_advantages",
-                type: LinkType.CONTENT
-            },
-            {
-                value: "Question section 1",
-                destination: "prog_sub_01_aqa",
-                // TODO MT handle exam board links
-                // destination: {
-                //     [EXAM_BOARDS.AQA]: "prog_sub_01_aqa",
-                //     [EXAM_BOARDS.OCR]: "prog_sub_01_ocr"
-                // },
-                type: LinkType.QUESTION,
-            },
-        ]
-    }
-};
+export enum DOCUMENT_TYPE {CONCEPT = "isaacConceptPage", QUESTION = "isaacQuestionPage"}

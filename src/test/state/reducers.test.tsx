@@ -1,9 +1,9 @@
 import {constants, questions, rootReducer, user} from "../../app/state/reducers";
 import {Action} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, unitsList} from "../test-factory";
-import {ACTION_TYPES} from "../../app/services/constants";
+import {ACTION_TYPE} from "../../app/services/constants";
 
-const ignoredTestAction: Action = {type: ACTION_TYPES.TEST_ACTION};
+const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
 describe("root reducer", () => {
 
@@ -23,7 +23,7 @@ describe("root reducer", () => {
         ];
         previousStates.map((previousState) => {
             // @ts-ignore initial state so that we don't need to keep updating the test unnecessarily
-            const actualNextState = rootReducer(previousState, {type: ACTION_TYPES.USER_LOG_OUT_RESPONSE_SUCCESS});
+            const actualNextState = rootReducer(previousState, {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
             expect(actualNextState).toEqual(actualInitialState);
         });
     });
@@ -49,7 +49,7 @@ describe("user reducer", () => {
     });
 
     it("should always add a user on login response success", () => {
-        const addProfWheelerAction: Action = {type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS, user: profWheeler};
+        const addProfWheelerAction: Action = {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: profWheeler};
         const previousStates = [null, dameShirley, profWheeler];
         previousStates.map((previousState) => {
             const actualNextState = user(previousState, addProfWheelerAction);
@@ -75,7 +75,7 @@ describe("questions reducer", () => {
     });
 
     it("should register a question correctly", () => {
-        const registerManVsHorse: Action = {type: ACTION_TYPES.QUESTION_REGISTRATION, question: manVsHorse};
+        const registerManVsHorse: Action = {type: ACTION_TYPE.QUESTION_REGISTRATION, question: manVsHorse};
         const testCases = [
             [null, [manVsHorse]],
             [[aToboggan], [aToboggan, manVsHorse]],
@@ -89,7 +89,7 @@ describe("questions reducer", () => {
 
     it("should deregister questions correctly", () => {
         const deregisterManVsHorse: Action =
-            {type: ACTION_TYPES.QUESTION_DEREGISTRATION, questionId: (manVsHorse.id as string)};
+            {type: ACTION_TYPE.QUESTION_DEREGISTRATION, questionId: (manVsHorse.id as string)};
         const testCases = [
             [null, null],
             [[manVsHorse], null],
@@ -119,7 +119,7 @@ describe("constants reducer", () => {
     });
 
     it("should always add the list of units on login response success", () => {
-        const unitsAction: Action = {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList};
+        const unitsAction: Action = {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList};
         const previousStates = [null, {units: ["foo"]}];
         previousStates.map((previousState) => {
             const actualNextState = constants(previousState, unitsAction);

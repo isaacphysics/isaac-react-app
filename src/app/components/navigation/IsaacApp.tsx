@@ -5,6 +5,7 @@ import {NavigationBar} from "./NavigationBar";
 import {Footer} from "./Footer";
 import {Homepage} from "../pages/Homepage";
 import {Question} from "../pages/Question";
+import {Concept} from "../pages/Concept";
 import {LogIn} from "../pages/LogIn";
 import {Registration} from "../pages/Registration";
 import {LogOutHandler} from "../handlers/LogOutHandler";
@@ -50,6 +51,7 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                             <TrackedRoute path="/assignments" component={MyAssignments} />
                             <TrackedRoute path="/gameboards" component={Gameboard}/>
                             <TrackedRoute path="/questions/:questionId" component={Question} />
+                            <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                             <TrackedRoute exact path="/topics" component={AllTopics} />
                             <TrackedRoute path="/topics/:topicName" component={Topic} />
                             <TrackedRoute path="/page/coming_soon" component={ComingSoon} />

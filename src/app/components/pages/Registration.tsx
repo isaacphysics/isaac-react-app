@@ -20,13 +20,13 @@ const RegistrationPageComponent = (props: LogInPageProps) => {
                 </CardTitle>
                 <Form name="register" onSubmit={register}>
                     <Row>
-                        <Col size={12} md={6}>
+                        <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="first-name-input">First Name</Label>
                                 <Input id="first-name-input" type="text" name="first-name" required />
                             </FormGroup>
                         </Col>
-                        <Col size={12} md={6}>
+                        <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="last-name-input">Last Name</Label>
                                 <Input id="last-name-input" type="text" name="last-name" required />
@@ -34,13 +34,13 @@ const RegistrationPageComponent = (props: LogInPageProps) => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col size={12} md={6}>
+                        <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="password-input">Password</Label>
                                 <Input id="password-input" type="password" name="password" required />
                             </FormGroup>
                         </Col>
-                        <Col size={12} md={6}>
+                        <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="password-input">Confirm Password</Label>
                                 <Input id="password-input" type="password" name="password" required />
@@ -48,17 +48,17 @@ const RegistrationPageComponent = (props: LogInPageProps) => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col size={12} md={6}>
+                        <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="email-input">Email</Label>
                                 <Input id="email-input" type="email" name="email" required />
                             </FormGroup>
                         </Col>
-                        <Col size={12} md={6}>
+                        <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="dob-input">Date of Birth</Label>
                                 <Row>
-                                    <Col size={12} lg={5}>
+                                    <Col lg={5}>
                                         <Input
                                             id="dob-input"
                                             type="date"
@@ -66,7 +66,7 @@ const RegistrationPageComponent = (props: LogInPageProps) => {
                                             placeholder="date placeholder"
                                         />
                                     </Col>
-                                    <Col size={12} lg={7}>
+                                    <Col lg={7}>
                                         <CustomInput
                                             id="age-confirmation-input"
                                             type="checkbox"
@@ -80,7 +80,7 @@ const RegistrationPageComponent = (props: LogInPageProps) => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col size={12} md={{size: 6, offset: 3}}>
+                        <Col md={{size: 6, offset: 3}}>
                             <Button color="secondary" block>Register Now</Button>
                         </Col>
                     </Row>
