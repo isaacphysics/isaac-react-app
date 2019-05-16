@@ -7,6 +7,18 @@ export const endpoint = axios.create({
     withCredentials: true,
 });
 
+export const apiHelper = {
+    determineImageUrl: (path: string) => {
+        // Check if the image source is a fully qualified link (suggesting it is external to the Isaac site),
+        // or else an asset link served by the APP, not the API.
+        if ((path.indexOf("http") > -1) || (path.indexOf("/assets/") > -1)) {
+            return path;
+        } else {
+            return API_PATH + "/images/" + path;
+        }
+    }
+};
+
 export const api = {
     users: {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
