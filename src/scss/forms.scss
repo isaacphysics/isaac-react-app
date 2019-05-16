@@ -98,21 +98,6 @@ label.label-radio > div {
   margin-left: 0;
 }
 
-.search-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.search-filters {
-  justify-content: flex-end;
-  flex-grow: 1;
-}
-
-.search-filters label {
-  margin-left: 0.5rem;
-}
-
 // Override Nomensa's padding which does not compile properly
 input[type="search"] {
   padding-top: initial;

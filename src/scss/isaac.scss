@@ -59,6 +59,7 @@ $theme-colors: (
 @import "./registration";
 @import "./topic";
 @import "./inequality-modal.scss";
+@import "./search";
 
 a.disabled {
     color: $gray-600;

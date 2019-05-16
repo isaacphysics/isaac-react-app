@@ -119,10 +119,11 @@ export const error = (error: LoginErrorState = null, action: Action) => {
     }
 };
 
-interface SearchState {
+type SearchState = {
     searchResults: ResultsWrapper<ContentSummaryDTO> | null;
-}
-export const search = (search: SearchState = {searchResults: null}, action: Action) => {
+} | null;
+
+export const search = (search: SearchState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.SEARCH_REQUEST:
             return {...search, searchResults: null};
