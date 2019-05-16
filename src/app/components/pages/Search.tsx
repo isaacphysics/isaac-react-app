@@ -7,25 +7,26 @@ import queryString from "query-string";
 import {fetchSearch} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {ContentSummaryDTO, ResultsWrapper} from "../../../IsaacApiTypes";
-import {History, Location} from "history";
+import {ContentSummaryDTO, ResultsWrapper, Role} from "../../../IsaacApiTypes";
+import {History} from "history";
 
 const stateToProps = (state: AppState) => {
     return {
-        searchResults: state && state.search && state.search.searchResults || null
+        searchResults: state && state.search && state.search.searchResults || null,
+        userRole: state && state.user && state.user.role || null
     };
 };
 const dispatchToProps = {fetchSearch};
 
 interface SearchPageProps {
     searchResults: ResultsWrapper<ContentSummaryDTO> | null;
+    userRole: Role | null;
     queryParams: {query?: string};
     history: History;
-    location: Location;
     fetchSearch: (query: string) => void;
 }
 const SearchPageComponent = (props: SearchPageProps) => {
-    const {searchResults, history, location, fetchSearch} = props;
+    const {searchResults, userRole, history, fetchSearch} = props;
 
     const queryParsed = queryString.parse(location.search).query || "";
     const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
@@ -45,7 +46,6 @@ const SearchPageComponent = (props: SearchPageProps) => {
             e.preventDefault();
         }
         history.push({
-            //pathname: "/search",
             search: searchText ? `?query=${searchText}` : ''
         });
     }
@@ -63,7 +63,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
         };
     }, [searchText]);
 
-    const isStaffUser = false; // ($scope.user._id && ($scope.user.role == 'ADMIN' || $scope.user.role == 'EVENT_MANAGER' || $scope.user.role == 'CONTENT_EDITOR' || $scope.user.role == 'STAFF'));
+    const isStaffUser = userRole && (userRole == 'ADMIN' || userRole == 'EVENT_MANAGER' || userRole == 'CONTENT_EDITOR' || userRole == 'STAFF');
 
     const filterResult = function(r: ContentSummaryDTO) {
         const keepElement = (r.id != "_regression_test_" && (!r.tags || r.tags.indexOf("nofilter") < 0 && !r.supersededBy));
@@ -76,7 +76,6 @@ const SearchPageComponent = (props: SearchPageProps) => {
         <Container>
             <Row>
                 <Col>
-                    {/* Breadcrumb */}
                     <h1 className="h-title">Search</h1>
                 </Col>
             </Row>
