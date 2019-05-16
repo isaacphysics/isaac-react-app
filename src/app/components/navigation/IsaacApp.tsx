@@ -22,15 +22,20 @@ import {AppState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import history from "../../services/history"
 import {TrackedRoute} from "./TrackedRoute";
+import {ConsistencyErrorModal} from "./ConsistencyErrorModal";
 
-const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
+const mapStateToProps = (state: AppState) => ({
+    user: state ? state.user : null,
+    consistencyError: state && state.error && state.error.type == "consistencyError" || false
+});
 const mapDispatchToProps = {requestCurrentUser};
 
 interface IsaacAppProps {
     user: RegisteredUserDTO | null;
+    consistencyError: boolean;
     requestCurrentUser: () => void;
 }
-const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
+const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
     useEffect(() => {
         requestCurrentUser();
     }, []); // run only once on mount
@@ -60,6 +65,7 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                     </div>
                 </main>
                 <Footer />
+                <ConsistencyErrorModal consistencyError={consistencyError} />
             </React.Fragment>
         </Router>
     );

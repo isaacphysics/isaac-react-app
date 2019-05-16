@@ -1,6 +1,12 @@
 import {combineReducers} from "redux";
 import {Action, AppQuestionDTO, isValidatedChoice} from "../../IsaacAppTypes";
-import {AssignmentDTO, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import {
+    AssignmentDTO,
+    ContentDTO,
+    GameboardDTO,
+    IsaacTopicSummaryPageDTO,
+    RegisteredUserDTO
+} from "../../IsaacApiTypes";
 import {ACTION_TYPE} from "../services/constants";
 
 type UserState = RegisteredUserDTO | null;
@@ -109,11 +115,13 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
     }
 };
 
-type LoginErrorState = string | null;
-export const error = (error: LoginErrorState = null, action: Action) => {
+type ErrorState = {type: "loginError"; loginError: string} | {type: "consistencyError"} | null;
+export const error = (error: ErrorState = null, action: Action): ErrorState => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_FAILURE:
-            return action.errorMessage;
+            return {type: "loginError", loginError: action.errorMessage};
+        case ACTION_TYPE.USER_CONSISTENCY_ERROR:
+            return {type: "consistencyError"};
         default:
             return null;
     }
@@ -138,11 +146,11 @@ export type AppState = undefined | {
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
     assignments: AssignmentsState;
-    error: LoginErrorState;
+    error: ErrorState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {
-    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS) {
+    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         state = undefined;
     }
     return appReducer(state, action);
