@@ -21,6 +21,7 @@ import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import history from "../../services/history"
 import {TrackedRoute} from "./TrackedRoute";
+import {Admin} from "../pages/Admin";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 
 const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
@@ -30,7 +31,7 @@ interface IsaacAppProps {
     user: LoggedInUser | null;
     requestCurrentUser: () => void;
 }
-const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
+const IsaacApp = ({requestCurrentUser, user}: IsaacAppProps) => {
     useEffect(() => {
         requestCurrentUser();
     }, []); // run only once on mount
@@ -55,6 +56,7 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                             <TrackedRoute exact path="/topics" component={AllTopics} />
                             <TrackedRoute path="/topics/:topicName" component={Topic} />
                             <TrackedRoute path="/page/coming_soon" component={ComingSoon} />
+                            <TrackedRoute user={user} onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} path="/admin" component={Admin} />
                             <TrackedRoute component={PageNotFound} />
                         </Switch>
                     </div>

@@ -113,6 +113,17 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         <DropdownItemComingSoon>Contact Us</DropdownItemComingSoon>
                     </RS.DropdownMenu>
                 </RS.UncontrolledDropdown>
+
+                {user && user.loggedIn && user.role == "ADMIN" &&
+                    <RS.UncontrolledDropdown nav inNavbar>
+                        <RS.DropdownToggle nav caret>
+                            Admin
+                        </RS.DropdownToggle>
+                        <RS.DropdownMenu>
+                            <RS.DropdownItem><Link to="/admin">Admin Tools</Link></RS.DropdownItem>
+                        </RS.DropdownMenu>
+                    </RS.UncontrolledDropdown>
+                }
             </RS.Nav>
         </RS.Navbar>
     </React.Fragment>;
