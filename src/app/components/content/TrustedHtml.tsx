@@ -126,7 +126,7 @@ function startMatch(match: RegExpMatchArray): Search {
     var delim = matchers[key];
     if (delim != null) {                              // a start delimiter
         return {
-            end: delim.end, endPattern: new RegExp(patternQuote(delim.end), "g"), mode: delim.mode, pcount: 0,
+            end: delim.end, endPattern: new RegExp(endPattern(delim.end), "g"), mode: delim.mode, pcount: 0,
             olen: match[0].length
         };
     } else if (match[0].substr(0,6) === "\\begin") {  // \begin{...}
@@ -155,8 +155,8 @@ function endMatch(match: RegExpExecArray, search: Search) {
             search.clen = search.isBeginEnd ? 0 : match[0].length;
         }
     }
-    else if (match[0] === "{" && search.pcount) {search.pcount++}
-    else if (match[0] === "}" && search.pcount) {search.pcount--}
+    else if (match[0] === "{" && search.pcount !== undefined) {search.pcount++;}
+    else if (match[0] === "}" && search.pcount !== undefined) {search.pcount--;}
 }
 
 function munge(latex: string) {
@@ -165,7 +165,7 @@ function munge(latex: string) {
         .replace(/\\newline/g, "\\\\");
 }
 
-function katexify(html: string) {
+export function katexify(html: string) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -191,9 +191,9 @@ function katexify(html: string) {
                 output += katex.renderToString(latexMunged, {...KatexOptions, displayMode: search.mode == "display"});
                 index = match.index + match[0].length;
             } else {
-                // That isn't meant to happen
-                output += html.substring(index, search.endPattern.lastIndex);
-                index = search.endPattern.lastIndex;
+                // Unmatched start, so output the start and continue searching from after it.
+                output += html.substring(index, start.lastIndex);
+                index = start.lastIndex;
             }
         } else {
             // It's a ref
