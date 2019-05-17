@@ -27,14 +27,16 @@ const checkUserConsistency = ({getState, dispatch}: MiddlewareAPI) => {
 };
 
 const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
-    setUserId(user._id);
     clearTimeout(timeoutHandle);
-    scheduleNextCheck(api.dispatch);
+    // Only start checking if we can successfully store the user id
+    if (setUserId(user._id)) {
+        scheduleNextCheck(api.dispatch);
+    }
 };
 
 const clearCurrentUser = () => {
     clearTimeout(timeoutHandle);
-    setUserId(null);
+    setUserId(undefined);
 };
 
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
