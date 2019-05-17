@@ -56,3 +56,5 @@ export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
 export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>): choice is ValidatedChoice<ApiTypes.ChoiceDTO> {
     return choice.hasOwnProperty("frontEndValidation");
 }
+
+export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {loggedIn: false};

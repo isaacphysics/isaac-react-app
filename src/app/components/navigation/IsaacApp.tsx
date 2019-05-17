@@ -19,15 +19,15 @@ import {ComingSoon} from "../pages/ComingSoon";
 import {PageNotFound} from "../pages/PageNotFound";
 import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import history from "../../services/history"
 import {TrackedRoute} from "./TrackedRoute";
+import {LoggedInUser} from "../../../IsaacAppTypes";
 
 const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
 const mapDispatchToProps = {requestCurrentUser};
 
 interface IsaacAppProps {
-    user: RegisteredUserDTO | null;
+    user: LoggedInUser | null;
     requestCurrentUser: () => void;
 }
 const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {

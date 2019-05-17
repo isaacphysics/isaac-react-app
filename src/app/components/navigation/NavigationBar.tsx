@@ -1,15 +1,15 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import * as RS from "reactstrap";
 import {SearchButton} from "../content/SearchButton";
+import {LoggedInUser} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState) => (state && {user: state.user});
 
 interface NavigationBarProps {
-    user: RegisteredUserDTO | null;
+    user: LoggedInUser | null;
 }
 const NavigationBarComponent = ({user}: NavigationBarProps) => {
     const DropdownItemComingSoon = (props: {children: string}) => {

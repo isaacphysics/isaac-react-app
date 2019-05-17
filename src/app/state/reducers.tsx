@@ -1,13 +1,15 @@
 import {combineReducers} from "redux";
-import {Action, AppQuestionDTO, isValidatedChoice} from "../../IsaacAppTypes";
+import {Action, AppQuestionDTO, isValidatedChoice, LoggedInUser} from "../../IsaacAppTypes";
 import {AssignmentDTO, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE} from "../services/constants";
 
-type UserState = RegisteredUserDTO | null;
-export const user = (user: UserState = null, action: Action) => {
+type UserState = LoggedInUser | null;
+export const user = (user: UserState = null, action: Action): UserState => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
-            return {...action.user};
+            return {loggedIn: true, ...action.user};
+        case ACTION_TYPE.USER_UPDATE_FAILURE:
+            return {loggedIn: false};
         default:
             return user;
     }

@@ -2,14 +2,14 @@ import React from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardDeck, CardImg, CardText, CardTitle, Col, Row} from "reactstrap";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
+import {LoggedInUser} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
 
 interface HomePageProps {
-    user: RegisteredUserDTO | null;
+    user: LoggedInUser | null;
 }
 export const HomepageComponent = ({user}: HomePageProps) => {
     return <div id="homepage">
@@ -19,7 +19,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     <Row>
                         <Col>
                             <h1>{
-                                user ? `Welcome ${user.givenName}!` : "A-level Computer Science Learning"
+                                user && user.loggedIn ? `Welcome ${user.givenName}!` : "A-level Computer Science Learning"
                             }</h1>
                             <p>
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla feugiat lorem nisl, sed
