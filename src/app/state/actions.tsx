@@ -32,7 +32,7 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
         history.push('/');
         history.go(0);
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_FAILURE, errorMessage: e.response.data.errorMessage})
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : "There may be an error connecting to the Isaac platform."})
     }
 };
 
@@ -75,6 +75,16 @@ export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, ge
         dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: units.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE});
+    }
+};
+
+export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND});
+    try {
+        const response = await api.contactForm.send(extra, params);
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_SUCCESS})
+    } catch(e) {
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : "There may be an error connecting to the Isaac platform."})
     }
 };
 

@@ -62,5 +62,10 @@ export const api = {
         getUnits: (): AxiosPromise<string[]> => {
             return endpoint.get(`/content/units`)
         }
+    },
+    contactForm: {
+        send: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
+            return endpoint.post(`/contact/`, params, {});
+        }
     }
 };

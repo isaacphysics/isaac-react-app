@@ -109,7 +109,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <RS.DropdownMenu>
                         <DropdownItemComingSoon>Teacher Support</DropdownItemComingSoon>
                         <DropdownItemComingSoon>Student Support</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>Contact Us</DropdownItemComingSoon>
+                        <RS.DropdownItem><Link to="/contact">Contact Us</Link></RS.DropdownItem>
                     </RS.DropdownMenu>
                 </RS.UncontrolledDropdown>
             </RS.Nav>
