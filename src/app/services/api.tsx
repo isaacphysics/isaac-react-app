@@ -1,7 +1,6 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {RegisteredUserDTO} from "../../IsaacApiTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -25,7 +24,7 @@ export const api = {
         handlePasswordReset: (params: {token: string | null, password: string | null}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
         },
-        updateCurrent: (params: {registeredUser: RegisteredUserDTO; passwordCurrent: string}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        updateCurrent: (params: {registeredUser: ApiTypes.RegisteredUserDTO; passwordCurrent: string}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/users`, params);
         }
     },
@@ -44,7 +43,7 @@ export const api = {
         }
     },
     email: {
-        verifyEmail: (params: {userId: string | null, token: string | null}): AxiosPromise => {
+        verify: (params: {userId: string | null, token: string | null}): AxiosPromise => {
             return endpoint.get(`/users/verifyemail/${params.userId}/${params.token}`);
         }
     },

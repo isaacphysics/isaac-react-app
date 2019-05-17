@@ -1,5 +1,6 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "./app/services/constants";
+import {RegisteredUserDTO} from "./IsaacApiTypes";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -64,6 +65,10 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
     frontEndValidation: boolean;
     choice: C;
+}
+
+export interface ValidationUser extends RegisteredUserDTO {
+    password: string | null;
 }
 
 export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>): choice is ValidatedChoice<ApiTypes.ChoiceDTO> {

@@ -1,15 +1,13 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {Action, ValidatedChoice} from "../../IsaacAppTypes";
+import {Action, ValidatedChoice, ValidationUser} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
 import history from "../services/history";
 
 
-interface ValidationUser extends RegisteredUserDTO {
-    password: string | null;
-}
+
 
 
 // User Authentication
@@ -31,28 +29,26 @@ export const requestUserPreferences = () => async (dispatch: Dispatch<Action>) =
 export const updateCurrentUser = (params: {registeredUser: ValidationUser; passwordCurrent: string}, currentUser: RegisteredUserDTO) => async (dispatch: Dispatch<Action>) => {
     if (currentUser.email !== params.registeredUser.email) {
         let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
+        // TODO handle the alert ourselves
         if (!!emailChange) {
-            try {
-                const changedUser = await api.users.updateCurrent(params);
-                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
-                history.push('/');
-                history.go(0);
-            } catch (e) {
-                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
-            }
+            setUserDetails(params);
         } else {
             params.registeredUser.email = currentUser.email;
         }
     } else {
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE});
-        try {
-            const currentUser = await api.users.updateCurrent(params);
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
-            history.push('/');
-            history.go(0);
-        } catch (e) {
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
-        }
+        setUserDetails(params);
+    }
+};
+
+export const setUserDetails = (params: {registeredUser: ValidationUser; passwordCurrent: string}) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE});
+    try {
+        const currentUser = await api.users.updateCurrent(params);
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
+        history.push('/');
+        history.go(0);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
     }
 };
 
@@ -125,7 +121,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
 export const handleEmailAlter = (params: ({userId: string | null; token: string | null})) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST});
-        const response = await api.email.verifyEmail(params);
+        const response = await api.email.verify(params);
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_SUCCESS});
     } catch(e) {
         dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_FAILURE, errorMessage: e.response.data.errorMessage});

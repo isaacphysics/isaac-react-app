@@ -27,6 +27,7 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import classnames from 'classnames';
+import {ValidationUser} from "../../../IsaacAppTypes";
 
 
 
@@ -39,14 +40,10 @@ const dispatchToProps = {
     updateCurrentUser
 };
 
-interface validationUser extends RegisteredUserDTO {
-    password: string | null
-}
-
 interface AccountPageProps {
     user: RegisteredUserDTO | null
     updateCurrentUser: (
-        params: {registeredUser: validationUser; passwordCurrent: string},
+        params: {registeredUser: ValidationUser; passwordCurrent: string},
         currentUser: RegisteredUserDTO
     ) => void
     errorMessage: string | null
@@ -57,16 +54,14 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
 
     const emailPreferences = {"NEWS_AND_UPDATES": true, "ASSIGNMENTS": true, "EVENTS": true};
 
-    const tempUser = {};
-    const myUser1 = Object.assign(tempUser, user);
-    const myUser = Object.assign(myUser1, {password: ""});
+    const myUser = Object.assign({}, user, {password: ""});
     const [isValidEmail, setValidEmail] = useState(true);
     const [isValidDob, setValidDob] = useState(true);
     const [isValidPassword, setValidPassword] = useState(true);
     const [currentPassword, setCurrentPassword] = useState("");
 
     let today = new Date();
-    let thirteen_years_ago = Date.UTC(today.getFullYear() - 13, today.getMonth(), today.getDate())/1000;
+    let thirteenYearsAgo = Date.UTC(today.getFullYear() - 13, today.getMonth(), today.getDate())/1000;
 
 
     const validateAndSetEmail = (event: any) => {
@@ -75,7 +70,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
 
     const validateAndSetDob = (event: any) => {
         setValidDob((myUser.dateOfBirth != undefined) &&
-        ((new Date(String(event.target.value)).getTime()/1000) <= thirteen_years_ago))
+        ((new Date(String(event.target.value)).getTime()/1000) <= thirteenYearsAgo))
     };
 
     const validateAndSetPassword = (event: any) => {
@@ -86,9 +81,9 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
         )
     };
 
-    {/• TODO handle #... in with react-router? •/}
+    {/• TODO handle #... in with react-router for tab url navigation? •/}
 
-    const [activeTab, setTab] = useState('0');
+    const [activeTab, setTab] = useState(0);
 
     return <div id="account-page">
         <h1>My Account</h1>
@@ -98,16 +93,16 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                     <Nav tabs>
                         <NavItem>
                             <NavLink
-                                className={classnames({ active: activeTab === '0' })}
-                                onClick={() => setTab('0')}
+                                className={classnames({ active: activeTab === 0 })}
+                                onClick={() => setTab(0)}
                             >
                                 Profile
                             </NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink
-                                className={classnames({ active: activeTab === '1' })}
-                                onClick={() => setTab('1')}
+                                className={classnames({ active: activeTab === 1 })}
+                                onClick={() => setTab(1)}
                             >
                                 <span className="d-none d-lg-block d-md-block">Change Password</span>
                                 <span className="d-block d-md-none">Password</span>
@@ -115,8 +110,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                         </NavItem>
                         <NavItem>
                             <NavLink
-                                className={classnames({ active: activeTab === '2' })}
-                                onClick={() => setTab('2')}
+                                className={classnames({ active: activeTab === 2 })}
+                                onClick={() => setTab(2)}
                             >
                                 <span className="d-none d-lg-block d-md-block">Email Preferences</span>
                                 <span className="d-block d-md-none">Email</span>
