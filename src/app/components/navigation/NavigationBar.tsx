@@ -24,26 +24,27 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                 <img src="/assets/logo_black.png" height={60} alt="Isaac Computer Science"/>
             </RS.NavbarBrand>
             <RS.Nav className="ml-auto" navbar>
-                {!user &&
-                    <React.Fragment>
-                        <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/login">LOGIN</RS.NavLink>
-                        </RS.NavItem>
-                        <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/register">SIGN UP</RS.NavLink>
-                        </RS.NavItem>
-                    </React.Fragment>
-                }
-                {user &&
-                    <React.Fragment>
-                        <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/account">MY ACCOUNT</RS.NavLink>
-                        </RS.NavItem>
-                        <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/logout">LOG OUT</RS.NavLink>
-                        </RS.NavItem>
-                    </React.Fragment>
-                }
+                {user && ( !user.loggedIn ?
+                    (
+                        <React.Fragment>
+                            <RS.NavItem>
+                                <RS.NavLink tag={Link} to="/login">LOGIN</RS.NavLink>
+                            </RS.NavItem>
+                            <RS.NavItem>
+                                <RS.NavLink tag={Link} to="/register">SIGN UP</RS.NavLink>
+                            </RS.NavItem>
+                        </React.Fragment>
+                    ) : (
+                        <React.Fragment>
+                            <RS.NavItem>
+                                <RS.NavLink tag={Link} to="/account">MY ACCOUNT</RS.NavLink>
+                            </RS.NavItem>
+                            <RS.NavItem>
+                                <RS.NavLink tag={Link} to="/logout">LOG OUT</RS.NavLink>
+                            </RS.NavItem>
+                        </React.Fragment>
+                    )
+                )}
                 <RS.Form inline>
                     <RS.FormGroup className="search--main-group">
                         <RS.Input type="search" name="search" placeholder="Search" aria-label="Search" />
