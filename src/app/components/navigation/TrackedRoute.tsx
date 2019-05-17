@@ -3,6 +3,8 @@ import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
 import ReactGA, {FieldsObject} from "react-ga";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
+import {connect} from "react-redux";
+import {AppState} from "../../state/reducers";
 
 ReactGA.initialize("UA-137475074-1");
 ReactGA.set({ anonymizeIp: true });
@@ -12,14 +14,14 @@ const trackPage = (page: string, options?: FieldsObject) => {
     ReactGA.pageview(page);
 };
 
+const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
+
 interface UserFilterProps {
-    onlyFor: (user: LoggedInUser) => boolean;
     user: LoggedInUser | null;
+    onlyFor?: (user: LoggedInUser) => boolean;
 }
 
-type MaybeUserFilterProps = UserFilterProps | {};
-
-type TrackedRouteProps = RouteProps & {trackingOptions?: FieldsObject} & MaybeUserFilterProps;
+type TrackedRouteProps = RouteProps & {trackingOptions?: FieldsObject} & UserFilterProps;
 type TrackedRouteComponentProps = RouteComponentProps & {
     component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
     trackingOptions?: FieldsObject;
@@ -32,10 +34,10 @@ const WrapperComponent = function({component: Component, trackingOptions, ...pro
     return <Component {...props} />;
 };
 
-export const TrackedRoute = function({component, trackingOptions, ...rest}: TrackedRouteProps) {
+const TrackedRouteComponent = function({component, trackingOptions, ...rest}: TrackedRouteProps) {
     if (component) {
-        if ((rest as UserFilterProps).onlyFor !== undefined) {
-            const {onlyFor, user, ...rest$} = rest as TrackedRouteProps & UserFilterProps;
+        if (rest.onlyFor !== undefined) {
+            const {onlyFor, user, ...rest$} = rest;
             return <Route {...rest$} render={props => {
                 const propsWithUser = {user, ...props};
                 return <ShowLoading until={user}>
@@ -54,3 +56,4 @@ export const TrackedRoute = function({component, trackingOptions, ...rest}: Trac
         throw new Error("TrackedRoute only works on components, got: " + JSON.stringify(rest));
     }
 };
+export const TrackedRoute = connect(mapStateToProps)(TrackedRouteComponent);
