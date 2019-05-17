@@ -5,6 +5,7 @@ import {NavigationBar} from "./NavigationBar";
 import {Footer} from "./Footer";
 import {Homepage} from "../pages/Homepage";
 import {Question} from "../pages/Question";
+import {Concept} from "../pages/Concept";
 import {LogIn} from "../pages/LogIn";
 import {Registration} from "../pages/Registration";
 import {LogOutHandler} from "../handlers/LogOutHandler";
@@ -15,6 +16,7 @@ import {MyAssignments} from "../pages/MyAssignments";
 import {Gameboard} from "../pages/Gameboard";
 import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
+import {ComingSoon} from "../pages/ComingSoon";
 import {PageNotFound} from "../pages/PageNotFound";
 import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
@@ -59,8 +61,10 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                             <TrackedRoute path="/verifyemail" component={EmailAlterHandler}/>
                             <TrackedRoute path="/resetpassword" component={ResetPasswordHandler}/>
                             <TrackedRoute path="/questions/:questionId" component={Question} />
+                            <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                             <TrackedRoute exact path="/topics" component={AllTopics} />
                             <TrackedRoute path="/topics/:topicName" component={Topic} />
+                            <TrackedRoute path="/page/coming_soon" component={ComingSoon} />
                             <TrackedRoute component={PageNotFound} />
                         </Switch>
                     </div>

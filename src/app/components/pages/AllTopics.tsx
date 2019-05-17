@@ -1,46 +1,47 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {ALL_TOPICS} from "../../services/constants";
-import {TopicLinkDTO} from "../../../IsaacAppTypes";
-import {Badge} from "reactstrap";
+import {Badge, Col, Container, Row} from "reactstrap";
+import "../../services/tags";
+import * as Tags from "../../services/tags";
+import {Tag} from "../../services/tags";
 
 export const AllTopics = () => {
-    const renderTopicLink = (topicName: string, topicProperties: TopicLinkDTO) => {
-        const examBoardTags = topicProperties.onlyFor &&
-            <>{topicProperties.onlyFor.map((examBoard, index) => <Badge color="dark" key={index}>{examBoard}</Badge>)}</>;
-        const comingSoonBadge = topicProperties.comingSoon && <Badge color="light">Coming Soon</Badge>;
-        const className = topicProperties.comingSoon ? "disabled" : "";
+
+    const renderTopic = (topic: Tag) => {
         return <React.Fragment>
-            <Link to={topicProperties.destination} className={className}>
-                {topicName}{" "}{examBoardTags}{" "}{comingSoonBadge}
-            </Link>
-        </React.Fragment>
+            <Link to={topic.comingSoon ? "/page/coming_soon" : `/topics/${topic.id}`}>{topic.title}</Link>
+            {" "}
+            {topic.onlyFor && <>{topic.onlyFor.map((examBoard) => <Badge color="primary" key={examBoard} pill>{examBoard}</Badge>)}</>}
+            {" "}
+            {topic.comingSoon && <Badge color="light">Coming Soon</Badge>}
+        </React.Fragment>;
     };
 
-    return <React.Fragment>
-        <h1>All topics</h1>
+    return <Container>
+        {/* Breadcrumbs */}
 
-        <hr />
+        <h1 className="h-title">All topics</h1>
 
-        <div className="row">
-            {Object.keys(ALL_TOPICS).map((categoryHeading, index) => {
-                const category = ALL_TOPICS[categoryHeading];
-                return <div key={index} className="col">
-                    <h2>{categoryHeading}</h2>
-                    {Object.keys(category).map((subCategoryHeading, index) => {
-                        const subCategory = category[subCategoryHeading];
-                        return <React.Fragment key={index}>
-                            <h3>{subCategoryHeading}</h3>
-                            <ul>{Object.keys(subCategory).map((topicName, index) => {
-                                const topicLink = subCategory[topicName];
-                                return <li className="list-unstyled" key={index}>
-                                    {renderTopicLink(topicName, topicLink)}
-                                </li>
-                            })}</ul>
+        {/* Search topics TODO MT */}
+
+        <Row className="my-4">
+            {Tags.allCategoryTags.map((category) => {
+                const categoryDescendentIds = Tags.getDescendents(category.id).map(t => t.id);
+                const subcategoryTags = Tags.getAllSubcategoryTags(categoryDescendentIds);
+                return <Col key={category.id} md={6}>
+                    <h2>{category.title}</h2>
+                    {subcategoryTags.map((subcategory) => {
+                        const subcategoryDescendentIds = Tags.getDescendents(subcategory.id).map(t => t.id);
+                        const topicTags = Tags.getAllTopicTags(subcategoryDescendentIds);
+                        return <React.Fragment key={subcategory.id}>
+                            <h3>{subcategory.title}</h3>
+                            <ul className="list-unstyled">
+                                {topicTags.map((topic) => <li key={topic.id}>{renderTopic(topic)}</li>)}
+                            </ul>
                         </React.Fragment>
                     })}
-                </div>
+                </Col>
             })}
-        </div>
-    </React.Fragment>
+        </Row>
+    </Container>;
 };

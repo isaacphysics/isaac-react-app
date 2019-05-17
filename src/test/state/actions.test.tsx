@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import {registerQuestion, requestConstantsUnits, requestCurrentUser} from "../../app/state/actions";
 import {endpoint} from "../../app/services/api";
 import {errorResponses, questionDTOs, registeredUserDTOs, unitsList} from "../test-factory";
-import {ACTION_TYPES} from "../../app/services/constants";
+import {ACTION_TYPE} from "../../app/services/constants";
 
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
@@ -21,8 +21,8 @@ describe("requestCurrentUser action", () => {
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS, user: dameShirley}
+            {type: ACTION_TYPE.USER_UPDATE_REQUEST},
+            {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: dameShirley}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -34,8 +34,8 @@ describe("requestCurrentUser action", () => {
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPES.USER_UPDATE_FAILURE}
+            {type: ACTION_TYPE.USER_UPDATE_REQUEST},
+            {type: ACTION_TYPE.USER_UPDATE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -46,8 +46,8 @@ describe("requestCurrentUser action", () => {
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPES.USER_UPDATE_FAILURE}
+            {type: ACTION_TYPE.USER_UPDATE_REQUEST},
+            {type: ACTION_TYPE.USER_UPDATE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -58,8 +58,8 @@ describe("requestCurrentUser action", () => {
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPES.USER_UPDATE_FAILURE}
+            {type: ACTION_TYPE.USER_UPDATE_REQUEST},
+            {type: ACTION_TYPE.USER_UPDATE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -69,7 +69,7 @@ describe("requestCurrentUser action", () => {
 describe("registerQuestion action", () => {
     it("dispatches a question registration action", () => {
         const {manVsHorse} = questionDTOs;
-        const expectedActions = [{type: ACTION_TYPES.QUESTION_REGISTRATION, question: manVsHorse}];
+        const expectedActions = [{type: ACTION_TYPE.QUESTION_REGISTRATION, question: manVsHorse}];
         const store = mockStore();
         store.dispatch(registerQuestion(manVsHorse) as any);
         expect(store.getActions()).toEqual(expectedActions);
@@ -86,8 +86,8 @@ describe("requestConstantsUnits action", () => {
         const store = mockStore();
         await store.dispatch(requestConstantsUnits() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST},
-            {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList}
+            {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST},
+            {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -105,8 +105,8 @@ describe("requestConstantsUnits action", () => {
         const store = mockStore();
         await store.dispatch(requestConstantsUnits() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST},
-            {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_FAILURE}
+            {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST},
+            {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -117,8 +117,8 @@ describe("requestConstantsUnits action", () => {
         const store = mockStore();
         await store.dispatch(requestConstantsUnits() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST},
-            {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_FAILURE}
+            {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST},
+            {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);

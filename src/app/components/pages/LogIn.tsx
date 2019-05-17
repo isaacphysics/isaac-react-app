@@ -55,7 +55,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
 
     return <Container id="login-page" className="my-4">
         <Row>
-            <Col size={12} md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
+            <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
                 <Card>
                     <CardBody>
                         <Form name="login" onSubmit={validateAndLogIn} noValidate>
@@ -108,7 +108,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                             </Row>
 
                             <Row className="mb-4">
-                                <Col size={12} sm={6}>
+                                <Col sm={6}>
                                     <Button
                                         id="log-in"
                                         tag="input" value="Log in"
@@ -116,7 +116,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                                         onClick={attemptLogIn}
                                     />
                                 </Col>
-                                <Col size={12} sm={6}>
+                                <Col sm={6}>
                                     <Button tag={Link} to="/register" color="primary" className="mb-2" outline block>
                                         Sign up
                                     </Button>

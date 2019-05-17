@@ -1,5 +1,5 @@
-import axios, {AxiosPromise, AxiosResponse} from "axios";
-import {API_PATH, TOPICS} from "./constants";
+import axios, {AxiosPromise} from "axios";
+import {API_PATH, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {RegisteredUserDTO} from "../../IsaacApiTypes";
 
@@ -39,7 +39,7 @@ export const api = {
         logout: (): AxiosPromise => {
             return endpoint.post(`/auth/logout`);
         },
-        login: (provider: ApiTypes.AuthenticationProvider, params: {email: string, password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        login: (provider: ApiTypes.AuthenticationProvider, params: {email: string; password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/auth/${provider}/authenticate`, params);
         }
     },
@@ -56,11 +56,16 @@ export const api = {
             return endpoint.post(`/questions/${id}/answer`, answer);
         }
     },
-    // topics: {
-    //     get: (topicName: string): AxiosPromise<TopicDTO> => {
-    //         return endpoint.get(`/topics/${topicName}`);
-    //     }
-    // },
+    concepts: {
+        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
+            return endpoint.get(`/pages/concepts/${id}`);
+        },
+    },
+    topics: {
+        get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
+            return endpoint.get(`/pages/topics/${topicName}`);
+        }
+    },
     gameboards: {
         get: (gameboardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${gameboardId}`);
