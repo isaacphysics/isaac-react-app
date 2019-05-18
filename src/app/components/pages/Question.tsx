@@ -8,6 +8,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
+import {BreadcrumbTrail} from "../content/BreadcrumbTrail";
 
 const stateToProps = (state: AppState, {match: {params: {questionId}}, location: {search}}: any) => {
     return {
@@ -45,7 +46,7 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
                 {/*High contrast option*/}
                 <Row>
                     <Col>
-                        {/* Breadcrumb */}
+                        <BreadcrumbTrail currentPageTitle={doc.title} />
                         <h1 className="h-title">{doc.title}</h1>
                     </Col>
                 </Row>

@@ -3,7 +3,7 @@ import {withRouter} from "react-router-dom";
 
 interface PageNotFoundProps {readonly location: {readonly pathname: string}}
 
-const PageNotFoundComponent = ({location: {pathname}}: PageNotFoundProps): JSX.Element => {
+const PageNotFoundComponent = ({location: {pathname}}: PageNotFoundProps) => {
     return <React.Fragment>
         <div>
             <h2>Page Not Found</h2>
