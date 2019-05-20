@@ -114,6 +114,7 @@ export const error = (error: LoginErrorState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_FAILURE:
             return action.errorMessage;
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
         default:
             return null;
     }

@@ -22,6 +22,8 @@ export const MARKDOWN_RENDERER = new Remarkable({
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
 
+    ROUTER_PAGE_CHANGE = "ROUTER_PAGE_CHANGE",
+
     USER_UPDATE_REQUEST = "USER_UPDATE_REQUEST",
     USER_UPDATE_FAILURE = "USER_UPDATE_FAILURE",
     USER_LOG_IN_REQUEST = "USER_LOG_IN_REQUEST",
@@ -148,6 +150,6 @@ export const TAG_HIERARCHY = [TAG_LEVEL.category, TAG_LEVEL.subcategory, TAG_LEV
 export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
-    GENERIC="page",
-    FRAGMENT="isaacPageFragment",
+    GENERIC = "page",
+    FRAGMENT = "isaacPageFragment",
 }

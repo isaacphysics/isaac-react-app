@@ -4,7 +4,10 @@ import {Action, ValidatedChoice} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
-import history from "../services/history";
+import {history} from "../services/history";
+
+// Page change
+export const changePage = (path: string): Action => ({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});
 
 // User Authentication
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {

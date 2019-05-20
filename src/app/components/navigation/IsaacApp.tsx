@@ -18,65 +18,58 @@ import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
 import {PageNotFound} from "../pages/PageNotFound";
 import {requestCurrentUser} from "../../state/actions";
-import {AppState} from "../../state/reducers";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import history from "../../services/history"
+import {history} from "../../services/history"
 import {TrackedRoute} from "./TrackedRoute";
-import {Redirect} from "react-router";
 import {Generic} from "../pages/Generic";
 
-const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
+const mapStateToProps = null;
 const mapDispatchToProps = {requestCurrentUser};
 
 interface IsaacAppProps {
-    user: RegisteredUserDTO | null;
     requestCurrentUser: () => void;
 }
 const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
-    useEffect(() => {
-        requestCurrentUser();
-    }, []); // run only once on mount
 
-    return (
-        <Router history={history}>
-            <React.Fragment>
-                <NavigationBar />
-                <main role="main" className="flex-fill py-4">
-                    <div className={"container"}>
-                        <Switch>
-                            <TrackedRoute path="/pages/coming_soon" component={ComingSoon} />
+    useEffect(() => {requestCurrentUser()}, []); // run only once on mount
 
-                            <TrackedRoute exact path="/(home)?" component={Homepage} />
-                            <TrackedRoute path="/events" component={ComingSoon}/>
-                            <TrackedRoute path="/gameboards" component={Gameboard}/>
-                            <TrackedRoute path="/assignments" component={MyAssignments} />
+    return <Router history={history}>
+        <React.Fragment>
+            <NavigationBar />
+            <main role="main" className="flex-fill py-4">
+                <div className={"container"}>
+                    <Switch>
+                        <TrackedRoute path="/pages/coming_soon" component={ComingSoon} />
 
-                            <TrackedRoute path="/login" component={LogIn} />
-                            <TrackedRoute path="/logout" component={LogOutHandler} />
-                            <TrackedRoute path="/register" component={Registration} />
-                            <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
-                            <TrackedRoute path="/account" component={MyAccount} />
+                        <TrackedRoute exact path="/(home)?" component={Homepage} />
+                        <TrackedRoute path="/events" component={ComingSoon}/>
+                        <TrackedRoute path="/gameboards" component={Gameboard}/>
+                        <TrackedRoute path="/assignments" component={MyAssignments} />
 
-                            <TrackedRoute path="/questions/:questionId" component={Question} />
-                            <TrackedRoute path="/concepts/:conceptId" component={Concept} />
-                            <TrackedRoute path="/pages/:pageId" component={Generic} />
-                            <TrackedRoute exact path="/topics" component={AllTopics} />
-                            <TrackedRoute path="/topics/:topicName" component={Topic} />
+                        <TrackedRoute path="/login" component={LogIn} />
+                        <TrackedRoute path="/logout" component={LogOutHandler} />
+                        <TrackedRoute path="/register" component={Registration} />
+                        <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
+                        <TrackedRoute path="/account" component={MyAccount} />
 
-                            <TrackedRoute path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}}/>
-                            <TrackedRoute path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}}/>
-                            <TrackedRoute path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}}/>
-                            <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}}/>
-                            <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}}/>
+                        <TrackedRoute path="/questions/:questionId" component={Question} />
+                        <TrackedRoute path="/concepts/:conceptId" component={Concept} />
+                        <TrackedRoute path="/pages/:pageId" component={Generic} />
+                        <TrackedRoute exact path="/topics" component={AllTopics} />
+                        <TrackedRoute path="/topics/:topicName" component={Topic} />
 
-                            <TrackedRoute component={PageNotFound} />
-                        </Switch>
-                    </div>
-                </main>
-                <Footer />
-            </React.Fragment>
-        </Router>
-    );
+                        <TrackedRoute path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}}/>
+                        <TrackedRoute path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}}/>
+                        <TrackedRoute path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}}/>
+                        <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}}/>
+                        <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}}/>
+
+                        <TrackedRoute component={PageNotFound} />
+                    </Switch>
+                </div>
+            </main>
+            <Footer />
+        </React.Fragment>
+    </Router>;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(IsaacApp);
