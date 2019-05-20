@@ -1,34 +1,34 @@
 import React, {useEffect} from "react";
-import {withRouter} from "react-router-dom";
-import {connect} from "react-redux";
 import {Col, Container, Row} from "reactstrap";
+import {AppState} from "../../state/reducers";
 import {fetchDoc} from "../../state/actions";
+import {ContentDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {AppState} from "../../state/reducers";
-import {ContentDTO} from "../../../IsaacApiTypes";
+import {connect} from "react-redux";
 import {DOCUMENT_TYPE} from "../../services/constants";
+import {BreadcrumbTrail} from "../content/BreadcrumbTrail";
+import {withRouter} from "react-router-dom";
 
-const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
+const stateToProps = (state: AppState, {match: {params: {pageId}}}: any) => {
     return {
         doc: state ? state.doc : null,
-        urlConceptId: conceptId,
+        urlPageId: pageId,
     };
 };
 const dispatchToProps = {fetchDoc};
 
-interface ConceptPageProps {
+interface GenericPageComponentProps {
     doc: ContentDTO | null;
-    urlConceptId: string;
-    fetchDoc: (documentType: DOCUMENT_TYPE, conceptId: string) => void;
+    pageIdOverride?: string;
+    urlPageId: string;
+    fetchDoc: (documentType: DOCUMENT_TYPE, pageId: string) => void;
 }
 
-const ConceptPageComponent = (props: ConceptPageProps) => {
-    const {doc, urlConceptId, fetchDoc} = props;
-
+export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}: GenericPageComponentProps) => {
     useEffect(
-        () => {fetchDoc(DOCUMENT_TYPE.CONCEPT, urlConceptId);},
-        [urlConceptId]
+        () => {fetchDoc(DOCUMENT_TYPE.GENERIC, pageIdOverride || urlPageId);},
+        []
     );
 
     return <ShowLoading until={doc}>
@@ -36,19 +36,14 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
             <Container>
                 <Row>
                     <Col>
-                        {/* Breadcrumb */}
+                        <BreadcrumbTrail currentPageTitle={doc.title} />
                         <h1 className="h-title">{doc.title}</h1>
                     </Col>
                 </Row>
+                {/* TODO add printing and sharing links */}
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4">
                         <IsaacContent doc={doc} />
-
-                        {/* Superseded notice */}
-
-                        <p>{doc.attribution}</p>
-
-                        {/*FooterPods related-content="questionPage.relatedContent"*/}
                     </Col>
                 </Row>
             </Container>
@@ -56,4 +51,4 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
     </ShowLoading>;
 };
 
-export const Concept = withRouter(connect(stateToProps, dispatchToProps)(ConceptPageComponent));
+export const Generic = withRouter(connect(stateToProps, dispatchToProps)(GenericPageComponent));

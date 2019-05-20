@@ -1,0 +1,40 @@
+// ISAAC
+
+
+
+// NOMENSA tabs.scss
+
+// nested for specificity
+.nav-tabs {
+  border-width: 0;
+  justify-content: center;
+
+  .nav-item {
+    border-right: 1px solid $black;
+    height: 100%;
+
+
+    &:last-child {
+      border-width: 0;
+    }
+
+    .nav-link {
+      background: none;
+      border-radius: 0;
+      border-width: 0;
+      color: $black;
+      font-family: $secondary-font;
+      font-size: 1.25rem;
+      cursor: pointer;
+      text-decoration: underline;
+
+      &.active {
+        font-family: $secondary-font-semi-bold;
+        background-color: $black;
+        color: $white;
+        text-decoration: none;
+        cursor: default;
+      }
+    }
+  }
+}

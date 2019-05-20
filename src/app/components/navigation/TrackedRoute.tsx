@@ -21,7 +21,7 @@ interface UserFilterProps {
     onlyFor?: (user: LoggedInUser) => boolean;
 }
 
-type TrackedRouteProps = RouteProps & {trackingOptions?: FieldsObject} & UserFilterProps;
+type TrackedRouteProps = RouteProps & {trackingOptions?: FieldsObject; componentProps?: FieldsObject} & UserFilterProps;
 type TrackedRouteComponentProps = RouteComponentProps & {
     component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
     trackingOptions?: FieldsObject;
@@ -34,7 +34,7 @@ const WrapperComponent = function({component: Component, trackingOptions, ...pro
     return <Component {...props} />;
 };
 
-const TrackedRouteComponent = function({component, trackingOptions, ...rest}: TrackedRouteProps) {
+const TrackedRouteComponent = function({component, trackingOptions, componentProps, ...rest}: TrackedRouteProps) {
     if (component) {
         if (rest.onlyFor !== undefined) {
             const {onlyFor, user, ...rest$} = rest;
@@ -49,7 +49,7 @@ const TrackedRouteComponent = function({component, trackingOptions, ...rest}: Tr
             }}/>;
         } else {
             return <Route {...rest} render={props => {
-                return <WrapperComponent component={component} trackingOptions={trackingOptions} {...props} />;
+                return <WrapperComponent component={component} trackingOptions={trackingOptions} {...props} {...componentProps} />;
             }}/>;
         }
     } else {

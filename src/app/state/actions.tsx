@@ -94,24 +94,22 @@ export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Acti
     }
 };
 
-
-// Concepts
-export const fetchConcept = (conceptId: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: DOCUMENT_TYPE.CONCEPT, documentId: conceptId});
-    const response = await api.concepts.get(conceptId);
+// Doc Fetch
+export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
+    let apiEndpoint;
+    switch (documentType) {
+        case DOCUMENT_TYPE.CONCEPT: apiEndpoint = api.concepts; break;
+        case DOCUMENT_TYPE.QUESTION: apiEndpoint = api.questions; break;
+        case DOCUMENT_TYPE.FRAGMENT: apiEndpoint = api.fragments; break;
+        case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
+    }
+    const response = await apiEndpoint.get(pageId);
     dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
     // TODO MT handle response failure
 };
-
 
 // Questions
-export const fetchQuestion = (questionId: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: DOCUMENT_TYPE.QUESTION, documentId: questionId});
-    const response = await api.questions.get(questionId);
-    dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
-    // TODO MT handle response failure
-};
-
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question});
 };
