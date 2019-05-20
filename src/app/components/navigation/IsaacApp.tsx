@@ -45,21 +45,30 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                     <div className={"container"}>
                         <Switch>
                             <TrackedRoute path="/pages/coming_soon" component={ComingSoon} />
+
                             <TrackedRoute exact path="/(home)?" component={Homepage} />
+                            <TrackedRoute path="/events" component={ComingSoon}/>
+                            <TrackedRoute path="/gameboards" component={Gameboard}/>
+                            <TrackedRoute path="/assignments" component={MyAssignments} />
+
                             <TrackedRoute path="/login" component={LogIn} />
                             <TrackedRoute path="/logout" component={LogOutHandler} />
                             <TrackedRoute path="/register" component={Registration} />
                             <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                             <TrackedRoute path="/account" component={MyAccount} />
-                            <TrackedRoute path="/assignments" component={MyAssignments} />
-                            <TrackedRoute path="/events" component={ComingSoon}/>
-                            <TrackedRoute path="/gameboards" component={Gameboard}/>
+
                             <TrackedRoute path="/questions/:questionId" component={Question} />
                             <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                             <TrackedRoute path="/pages/:pageId" component={Generic} />
                             <TrackedRoute exact path="/topics" component={AllTopics} />
                             <TrackedRoute path="/topics/:topicName" component={Topic} />
-                            <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us_index"}}/>
+
+                            <TrackedRoute path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}}/>
+                            <TrackedRoute path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}}/>
+                            <TrackedRoute path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}}/>
+                            <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}}/>
+                            <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}}/>
+
                             <TrackedRoute component={PageNotFound} />
                         </Switch>
                     </div>
