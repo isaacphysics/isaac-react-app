@@ -7,6 +7,7 @@ import * as RS from "reactstrap";
 import {SearchButton} from "../content/SearchButton";
 import {RouteComponentProps, withRouter} from "react-router";
 import {History} from "history";
+import {pushSearchToHistory} from "../../services/search";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
@@ -26,10 +27,7 @@ const NavigationBarComponent = ({user, history}: NavigationBarProps) => {
 
     function doSearch(e: Event) {
         e.preventDefault();
-        history.push({
-            pathname: "/search",
-            search: searchText ? `?query=${searchText}&types=isaacQuestionPage,isaacConceptPage` : ''
-        });
+        pushSearchToHistory(history, searchText, true, true);
     }
 
     return <React.Fragment>

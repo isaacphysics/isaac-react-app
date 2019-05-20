@@ -11,6 +11,7 @@ import {ContentSummaryDTO, ResultsWrapper, Role} from "../../../IsaacApiTypes";
 import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
 import {DOCUMENT_TYPE} from "../../services/constants";
+import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -30,17 +31,6 @@ interface SearchPageProps {
     fetchSearch: (query: string, types: string) => void;
 }
 
-function calculateTypes(problems: boolean, concepts: boolean) {
-    const typesArray = [];
-    if (problems) {
-        typesArray.push(DOCUMENT_TYPE.QUESTION);
-    }
-    if (concepts) {
-        typesArray.push(DOCUMENT_TYPE.CONCEPT);
-    }
-    return typesArray.join(",");
-}
-
 const SearchPageComponent = (props: SearchPageProps) => {
     const {searchResults, userRole, location, history, fetchSearch} = props;
 
@@ -49,7 +39,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
     const queryParsed = searchParsed.query || "";
     const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
 
-    const filterParsed = (searchParsed.types || "");
+    const filterParsed = (searchParsed.types || (DOCUMENT_TYPE.QUESTION + "," + DOCUMENT_TYPE.CONCEPT));
     const filters = (filterParsed instanceof Array ? filterParsed[0] : filterParsed).split(",");
 
     const problems = filters.includes(DOCUMENT_TYPE.QUESTION);
@@ -64,7 +54,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
             setSearchText(query);
             setSearchFilterProblems(problems);
             setSearchFilterConcepts(concepts);
-            fetchSearch(query, calculateTypes(problems, concepts));
+            fetchSearch(query, calculateSearchTypes(problems, concepts));
         },
         [query, problems, concepts]
     );
@@ -74,9 +64,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
             e.preventDefault();
         }
         if (searchText != query || searchFilterProblems != problems || searchFilterConcepts != concepts) {
-            history.push({
-                search: `?query=${searchText}&types=${calculateTypes(searchFilterProblems, searchFilterConcepts)}`
-            });
+            pushSearchToHistory(history, searchText, searchFilterProblems, searchFilterConcepts);
         }
     }
 

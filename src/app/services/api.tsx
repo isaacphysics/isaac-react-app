@@ -65,7 +65,7 @@ export const api = {
     },
     search: {
         get: (query: string, types: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
-            return endpoint.get(`/search/` + query,
+            return endpoint.get(`/search/` + encodeURIComponent(query),
                 {params: {types}});
         }
     }
