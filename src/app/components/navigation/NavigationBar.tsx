@@ -163,11 +163,11 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                                 </RS.UncontrolledDropdown>
                                 {user && user.loggedIn && user.role == "ADMIN" &&
                                     <RS.UncontrolledDropdown nav inNavbar>
-                                        <RS.DropdownToggle nav caret>
+                                        <RS.DropdownToggle nav caret className="py-3 pl-3 pr-6">
                                             Admin
                                         </RS.DropdownToggle>
                                         <RS.DropdownMenu>
-                                            <RS.DropdownItem><Link to="/admin">Admin Tools</Link></RS.DropdownItem>
+                                            <RS.DropdownItem className="px-3 pt-3"><Link to="/admin">Admin Tools</Link></RS.DropdownItem>
                                         </RS.DropdownMenu>
                                     </RS.UncontrolledDropdown>
                                 }
