@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import {Card, CardBody, CardTitle, Col, Nav, NavItem, NavLink, Row, TabContent, TabPane} from "reactstrap";
+import {Link} from "react-router-dom";
+import {Button, Card, CardBody, CardTitle, Col, Nav, NavItem, NavLink, Row, TabContent, TabPane} from "reactstrap";
 
 export const IsaacTabs = () => {
     const [activeTab, setActiveTab] = useState(1);
@@ -29,18 +30,29 @@ export const IsaacTabs = () => {
                     <Col md={{size: 6, offset: 6}}>
                         <Card>
                             <CardBody>
-                                <CardTitle tag="h2">
-                                    Benefits for{" "}<span className="text-secondary">teachers</span>
+                                <CardTitle tag="h3">
+                                    Benefits for teachers
                                 </CardTitle>
+                                <strong>Isaac Computer Science allows you to:</strong>
                                 <ul>
-                                    <li>Easy to set homework</li>
-                                    <li>Easy to check homework</li>
-                                    <li>See progress</li>
-                                    <li>Managing different classes</li>
-                                    <li>Increase in pass rate</li>
-                                    <li>Syllabus information</li>
-                                    <li>Teachers Events</li>
+                                    <li>Select and set self-marking homework questions</li>
+                                    <li>Save time on marking</li>
+                                    <li>Pinpoint weak areas to work on with your students</li>
+                                    <li>Manage students’ progress in your personal markbook</li>
                                 </ul>
+
+                                <strong>Isaac Computer Science provides:</strong>
+                                <ul>
+                                    <li>Complete coverage of AQA and OCR specifications</li>
+                                    <li>High-quality materials written by experienced teachers</li>
+                                </ul>
+
+                                <p>
+                                    Everything on Isaac Computer Science is free, funded by the DfE.
+                                </p>
+                                <div className="text-center">
+                                    <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
+                                </div>
                             </CardBody>
                         </Card>
                     </Col>
@@ -51,18 +63,23 @@ export const IsaacTabs = () => {
                     <Col md={6}>
                         <Card>
                             <CardBody>
-                                <CardTitle tag="h2">
-                                    Benefits for{" "}<span className="text-secondary">students</span>
+                                <CardTitle tag="h3">
+                                    Benefits for students
                                 </CardTitle>
+                                <strong>Isaac Computer Science allows you to:</strong>
                                 <ul>
-                                    <li>Easy to set homework</li>
-                                    <li>Easy to check homework</li>
-                                    <li>See progress</li>
-                                    <li>Managing different classes</li>
-                                    <li>Increase in pass rate</li>
-                                    <li>Syllabus information</li>
-                                    <li>Student Events</li>
+                                    <li>Study and revise at your own pace</li>
+                                    <li>Track your progress as you answer questions</li>
+                                    <li>Work towards achieving better exam results</li>
+                                    <li>Access high-quality materials written by experienced teachers</li>
+                                    <li>Learn relevant content tailored to your A level exam board</li>
                                 </ul>
+                                <p>
+                                    Everything on Isaac Computer Science is free, funded by the DfE.
+                                </p>
+                                <div className="text-center">
+                                    <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
+                                </div>
                             </CardBody>
                         </Card>
                     </Col>

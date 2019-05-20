@@ -22,6 +22,8 @@ import {AppState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import history from "../../services/history"
 import {TrackedRoute} from "./TrackedRoute";
+import {Redirect} from "react-router";
+import {Generic} from "../pages/Generic";
 
 const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
 const mapDispatchToProps = {requestCurrentUser};
@@ -42,19 +44,22 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                 <main role="main" className="flex-fill py-4">
                     <div className={"container"}>
                         <Switch>
-                            <TrackedRoute exact path="/" component={Homepage} />
+                            <TrackedRoute path="/pages/coming_soon" component={ComingSoon} />
+                            <TrackedRoute exact path="/(home)?" component={Homepage} />
                             <TrackedRoute path="/login" component={LogIn} />
                             <TrackedRoute path="/logout" component={LogOutHandler} />
                             <TrackedRoute path="/register" component={Registration} />
                             <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                             <TrackedRoute path="/account" component={MyAccount} />
                             <TrackedRoute path="/assignments" component={MyAssignments} />
+                            <TrackedRoute path="/events" component={ComingSoon}/>
                             <TrackedRoute path="/gameboards" component={Gameboard}/>
                             <TrackedRoute path="/questions/:questionId" component={Question} />
                             <TrackedRoute path="/concepts/:conceptId" component={Concept} />
+                            <TrackedRoute path="/pages/:pageId" component={Generic} />
                             <TrackedRoute exact path="/topics" component={AllTopics} />
                             <TrackedRoute path="/topics/:topicName" component={Topic} />
-                            <TrackedRoute path="/pages/coming_soon" component={ComingSoon} />
+                            <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us_index"}}/>
                             <TrackedRoute component={PageNotFound} />
                         </Switch>
                     </div>

@@ -14,7 +14,10 @@ if (document.location.hostname === "localhost") {
 }
 export const API_PATH: string = apiPath;
 
-export const MARKDOWN_RENDERER: Remarkable = new Remarkable();
+export const MARKDOWN_RENDERER = new Remarkable({
+    linkify: true,
+    html: true,
+});
 
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
@@ -142,4 +145,9 @@ export enum TAG_LEVEL {
 
 export const TAG_HIERARCHY = [TAG_LEVEL.category, TAG_LEVEL.subcategory, TAG_LEVEL.topic];
 
-export enum DOCUMENT_TYPE {CONCEPT = "isaacConceptPage", QUESTION = "isaacQuestionPage"}
+export enum DOCUMENT_TYPE {
+    CONCEPT = "isaacConceptPage",
+    QUESTION = "isaacQuestionPage",
+    GENERIC="page",
+    FRAGMENT="isaacPageFragment",
+}
