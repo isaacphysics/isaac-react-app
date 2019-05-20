@@ -105,13 +105,13 @@ const SearchPageComponent = (props: SearchPageProps) => {
                     </Form>
                 </Col>
             </Row>
-            {query !== "" && <Row>
+            <Row>
                 <Col className="py-4">
                     <RS.Card>
                         <RS.CardHeader className="search-header">
                             <Col md={5} xs={12}>
                                 <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {filteredSearchResults ? <RS.Badge color="primary">{filteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" />}
+                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? filteredSearchResults ? <RS.Badge color="primary">{filteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
                                 </h3>
                             </Col>
                             <Col md={7} xs={12}>
@@ -122,16 +122,16 @@ const SearchPageComponent = (props: SearchPageProps) => {
                                 </Form>
                             </Col>
                         </RS.CardHeader>
-                        <RS.CardBody>
+                        {query != "" && <RS.CardBody>
                             <ShowLoading until={filteredSearchResults}>
                                 {filteredSearchResults && filteredSearchResults.length > 0 ?
                                     <LinkToContentSummaryList items={filteredSearchResults}/>
                                     : <em>No results found</em>}
                             </ShowLoading>
-                        </RS.CardBody>
+                        </RS.CardBody>}
                     </RS.Card>
                 </Col>
-            </Row>}
+            </Row>
         </Container>
     );
 };
