@@ -43,6 +43,16 @@ export const api = {
             return endpoint.get(`/pages/concepts/${id}`);
         },
     },
+    pages: {
+        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
+            return endpoint.get(`/pages/${id}`);
+        },
+    },
+    fragments: {
+        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
+            return endpoint.get(`/pages/fragments/${id}`);
+        },
+    },
     topics: {
         get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
             return endpoint.get(`/pages/topics/${topicName}`);

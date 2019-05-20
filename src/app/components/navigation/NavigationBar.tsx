@@ -16,10 +16,8 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
 
     const DropdownItemComingSoon = ({children, className}: {children: string; className: string}) => (
         <RS.DropdownItem className={`${className}`} aria-disabled="true">
-            <Link to="/pages/coming_soon">
-                {children}
-                <RS.Badge color="secondary" className="ml-2 mr-1">Coming Soon</RS.Badge>
-            </Link>
+            <Link to="/pages/coming_soon">{children}</Link>
+            <RS.Badge color="secondary" className="ml-2 mr-1">Coming Soon</RS.Badge>
         </RS.DropdownItem>
     );
 
@@ -59,7 +57,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
 
         <div id="main-nav-container" className="mx-0 px-0">
             <RS.Row className="mx-0 px-0">
-                <RS.Col md={{size: 10, offset: 1}} className="p-0">
+                <RS.Col md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="p-0">
                     <RS.Navbar className="main-nav p-0" color="light" light expand="md">
                         <RS.NavbarToggler onClick={() => setMenuOpen(!menuOpen)}>MENU</RS.NavbarToggler>
                         <RS.Collapse isOpen={menuOpen} navbar>
@@ -69,10 +67,10 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                                     <RS.DropdownToggle nav caret className="py-3 pl-3 pr-6">
                                         About Us
                                     </RS.DropdownToggle>
-                                    <RS.DropdownMenu left className="p-0 pb-3 pl-3 m-0">
-                                        <DropdownItemComingSoon className="px-3 pt-3">
-                                            What We Do
-                                        </DropdownItemComingSoon>
+                                    <RS.DropdownMenu className="p-0 pb-3 pl-3 m-0">
+                                        <RS.DropdownItem className="px-3 pt-3">
+                                            <Link to="/about">What We Do</Link>
+                                        </RS.DropdownItem>
                                         {/*<DropdownItemComingSoon className="px-3 pt-3">*/}
                                         {/*    News*/}
                                         {/*</DropdownItemComingSoon>*/}
@@ -92,7 +90,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                                     <RS.DropdownToggle nav caret className="py-3 pl-3 pr-6">
                                         For Students
                                     </RS.DropdownToggle>
-                                    <RS.DropdownMenu left className="p-0 pb-3 pl-3 m-0">
+                                    <RS.DropdownMenu className="p-0 pb-3 pl-3 m-0">
                                         <DropdownItemComingSoon className="px-3 pt-3">
                                             My Gameboards
                                         </DropdownItemComingSoon>
@@ -112,7 +110,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                                     <RS.DropdownToggle nav caret className="py-3 pl-3 pr-6">
                                         For Teachers
                                     </RS.DropdownToggle>
-                                    <RS.DropdownMenu left caret className="p-0 pb-3 pl-3 m-0">
+                                    <RS.DropdownMenu caret className="p-0 pb-3 pl-3 m-0">
                                         <DropdownItemComingSoon className="px-3 pt-3">
                                             Set Assignments
                                         </DropdownItemComingSoon>
@@ -132,7 +130,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                                     <RS.DropdownToggle nav caret className="py-3 pl-3 pr-6">
                                         Topics
                                     </RS.DropdownToggle>
-                                    <RS.DropdownMenu left className="p-0 pb-3 pl-3 m-0">
+                                    <RS.DropdownMenu className="p-0 pb-3 pl-3 m-0">
                                         <RS.DropdownItem className="px-3 pt-3">
                                             <Link to="/topics">All Topics</Link>
                                         </RS.DropdownItem>
@@ -149,7 +147,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                                     <RS.DropdownToggle nav caret className="py-3 pl-3 pr-6">
                                         Help and Support
                                     </RS.DropdownToggle>
-                                    <RS.DropdownMenu left className="p-0 pb-3 pl-3 m-0">
+                                    <RS.DropdownMenu className="p-0 pb-3 pl-3 m-0">
                                         <DropdownItemComingSoon className="px-3 pt-3">
                                             Teacher Support
                                         </DropdownItemComingSoon>
