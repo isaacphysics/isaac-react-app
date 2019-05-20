@@ -32,7 +32,10 @@ import {string} from "prop-types";
 
 
 
-const stateToProps = (state: AppState) => ({user: state ? state.user : null});
+const stateToProps = (state: AppState) => ({
+    user: state ? state.user : null,
+    errorMessage: state ? state.error : null
+});
 
 const dispatchToProps = {
     submitMessage
@@ -45,8 +48,6 @@ interface ContactPageProps {
 }
 
 const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPageProps) => {
-    const updateDetails = () => console.log("Account updated"); // TODO BH account update action
-
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -74,24 +75,23 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
         <h2>We'd love to hear from you</h2>
         <div>
             <Row>
-                <Col size={12} md={3}>
-                    <h3>Frequently Asked Question?</h3>
-                        <p>You might like to check our FAQs pages to see if they can help you: </p>
+                <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}}>
                     <h3>Upcoming events</h3>
-                        <p>If you'd like to find out more about our upcoming events visit our</p>
+                    <p>If you'd like to find out more about our upcoming events visit our <a href="/events">Events Page</a></p>
                     <h3>Problems with the site?</h3>
-                        <p>We always want to improve so please report any issues to</p>
-                    <h3>Call us</h3>
-                        <p>Give us a call on</p>
+                    <p>We always want to improve so please report any issues to <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></p>
                     <h3>Follow us</h3>
-                        <p>Follow us on Twitter</p>
+                    <p>Follow us on:</p>
+                    <a href="https://twitter.com/IsaacCompSci">Twitter</a><br/>
+                    <a href="https://www.facebook.com/IsaacComputerScience/">Facebook</a><br/>
+                    <a href="https://www.instagram.com/isaaccompsci/">Instagram</a><br/>
+                    <a href="https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ">YouTube</a>
                 </Col>
-                <Col size={12} md={9}>
+                <Col size={12} md={{size: 9, order: 2}} xs={{order: 1}}>
                     <Card>
-                        {messageSent ?
+                        {messageSent && !errorMessage ?
                             <Row>
                                 <Col className="text-center">
-                                    <Alert color="$secondary" isOpen={errorMessage}>{errorMessage}</Alert>
                                     <h3>
                                         Thank you for your message.
                                     </h3>
@@ -104,17 +104,9 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
                             }}>
                                 <CardBody>
                                     <h3>Send us a Message</h3>
-                                    <p>Thank you for using isaacphysics.org. If you have any comments or questions about
-                                        our
-                                        resources or any of our past or upcoming events, we would be happy to hear from
-                                        you.
-                                        We would also welcome any constructive feedback you have about the content and
-                                        layout
-                                        we present here. If you have registered with Isaac Physics and are a current
-                                        teacher
-                                        please do contact us to tell us. We look forward to hearing from you. <br/><br/>To
-                                        contact us
-                                        please fill out the form below:</p>
+                                    <p>Please get in touch with the Isaac Computer Science team if you have comments about our resources or events, questions about the site, ideas, or other feedback. We would love to hear from you! <br/><br/>
+                                        To contact us, please fill out this form:
+                                    </p>
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup>
@@ -167,9 +159,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
                                 </CardBody>
                                 <CardFooter>
                                     <Row>
-                                        <Alert color="$secondary">
-                                            {errorMessage}
-                                        </Alert>
+                                        <Alert color="danger" isOpen={errorMessage}>{errorMessage}</Alert>
                                     </Row>
                                     <Row>
                                         <Col size={12} md={6}>
