@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardDeck, CardImg, CardText, CardTitle, Col, Row} from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
+import {IsaacTabs} from "../content/IsaacTabs";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
@@ -49,49 +50,10 @@ export const HomepageComponent = ({user}: HomePageProps) => {
 
         {!user && <hr />}
 
-        {!user &&
-            <section id="why-sign-up">
-                <h1 className="text-center">Why sign up?</h1>
-                <Row>
-                    <Col md={6}>
-                        <Card>
-                            <CardBody>
-                                <CardTitle tag="h2">
-                                    Benefits for{" "}<span className="text-secondary">teachers</span>
-                                </CardTitle>
-                                <ul>
-                                    <li>Easy to set homework</li>
-                                    <li>Easy to check homework</li>
-                                    <li>See progress</li>
-                                    <li>Managing different classes</li>
-                                    <li>Increase in pass rate</li>
-                                    <li>Syllabus information</li>
-                                    <li>Teachers Events</li>
-                                </ul>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    <Col md={6}>
-                        <Card>
-                            <CardBody>
-                                <CardTitle tag="h2">
-                                    Benefits for{" "}<span className="text-secondary">students</span>
-                                </CardTitle>
-                                <ul>
-                                    <li>Easy to set homework</li>
-                                    <li>Easy to check homework</li>
-                                    <li>See progress</li>
-                                    <li>Managing different classes</li>
-                                    <li>Increase in pass rate</li>
-                                    <li>Syllabus information</li>
-                                    <li>Student Events</li>
-                                </ul>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-            </section>
-        }
+        {!user && <section id="why-sign-up">
+            <h2 className="text-center mt-4 mb-4">Why sign up?</h2>
+            <IsaacTabs/>
+        </section>}
 
         <section id="headline-content" className="px-5 py-4">
             <h3>Featured-question</h3>

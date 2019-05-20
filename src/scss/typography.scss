@@ -2,29 +2,32 @@
 
 p {
   &.p-small {
-    font-size: 0.8125em;
+    font-size: .8125em;
     line-height: 1.69;
   }
 }
 
 a {
-  color: $gray-940;
+  color: $gray-194;
   text-decoration: underline;
 
-  &:hover{
-    color: $gray-940;
+  &:hover {
+    color: $gray-194;
     text-decoration: none;
   }
 
   &.a-alt {
     color: $purple;
+
   }
 }
 
 .btn {
-  &.btn-sm{
+  &.btn-sm {
     &.a-alt {
       color: $purple;
+      font-family: $secondary-font-medium;
+      text-decoration: underline;
     }
   }
 }
@@ -32,15 +35,47 @@ a {
 blockquote {
 
   &.blockquote {
-    padding: 0.5rem 1rem;
-    border-left: 0.25rem solid $gray-200;
+    border-left: .25rem solid $gray-107;
+    padding: .5rem 1rem;
+
   }
 }
+
 small {
   line-height: 1.69;
+  //border-top: 1px solid $black;
+}
+
+hr {
+  display: block;
+  border-bottom: 1px solid $black;
+  position:relative;
+
+  &::before {
+    @include pseudo-element;
+    border-bottom: 5px solid $black;
+    bottom: -3px;
+    left: 0;
+    max-width: 158px;
+    right: 0;
+    width: 32%;
+
+    @include respond-above(sm) {
+      max-width: 380px;
+    }
+  }
+
+  &.text-center {
+    &::before {
+      margin: auto;
+    }
+  }
 }
 
 // ISAAC Typography
 .MathJax {
-  font-weight: 600 !important;
+  //span {
+  //  font-size: 100% !important;
+  //  font-weight: 500 !important;
+  //}
 }

@@ -54,7 +54,7 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                             <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                             <TrackedRoute exact path="/topics" component={AllTopics} />
                             <TrackedRoute path="/topics/:topicName" component={Topic} />
-                            <TrackedRoute path="/page/coming_soon" component={ComingSoon} />
+                            <TrackedRoute path="/pages/coming_soon" component={ComingSoon} />
                             <TrackedRoute component={PageNotFound} />
                         </Switch>
                     </div>
