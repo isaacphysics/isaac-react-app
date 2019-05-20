@@ -22,6 +22,10 @@ export type Action =
     | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS; units: string[]}
 
+    | {type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_REQUEST}
+    | {type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS; segueVersion: string}
+
     | {type: ACTION_TYPE.DOCUMENT_REQUEST; documentType: DOCUMENT_TYPE; documentId: string}
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE}
@@ -40,7 +44,17 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
 
     | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
-    | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]};
+    | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
+
+    | {type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST}
+    | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS; liveVersion: string}
+    | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.CONTENT_VERSION_SET_REQUEST; version: string}
+    | {type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS; newVersion: string}
+    | {type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE}
+
+    ;
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;

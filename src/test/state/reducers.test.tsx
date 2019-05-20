@@ -1,7 +1,8 @@
 import {constants, questions, rootReducer, user} from "../../app/state/reducers";
-import {Action} from "../../IsaacAppTypes";
+import {Action, LoggedInUser} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, unitsList} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
+import {act} from "react-dom/test-utils";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
@@ -16,6 +17,7 @@ describe("root reducer", () => {
 
     it("resets to the initial state on log out regardless of previous state", () => {
         const actualInitialState = rootReducer(undefined, ignoredTestAction);
+        actualInitialState.user = {loggedIn: false};
         const previousStates = [
             {'questions': [{id: 'a_toboggan'}]},
             {'questions': null},
@@ -35,13 +37,14 @@ describe("root reducer", () => {
 describe("user reducer", () => {
     const {profWheeler, dameShirley} = registeredUserDTOs;
 
+    const previousStates: (LoggedInUser | null)[] = [null, {loggedIn: false}, {...dameShirley, loggedIn: true}, {...profWheeler, loggedIn: true}];
+
     it("returns null as an initial value", () => {
         const actualState = user(undefined, ignoredTestAction);
         expect(actualState).toBe(null);
     });
 
     it("returns the previous state by default", () => {
-        const previousStates = [null, dameShirley, profWheeler];
         previousStates.map((previousState) => {
             const actualNextState = user(previousState, ignoredTestAction);
             expect(actualNextState).toEqual(previousState);
@@ -50,10 +53,9 @@ describe("user reducer", () => {
 
     it("should always add a user on login response success", () => {
         const addProfWheelerAction: Action = {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: profWheeler};
-        const previousStates = [null, dameShirley, profWheeler];
         previousStates.map((previousState) => {
             const actualNextState = user(previousState, addProfWheelerAction);
-            expect(actualNextState).toEqual(profWheeler);
+            expect(actualNextState).toEqual({...profWheeler, loggedIn: true});
         })
     })
 });

@@ -78,6 +78,22 @@ export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, ge
     }
 };
 
+export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    // Don't request this again if it has already been fetched successfully
+    const state = getState();
+    if (state && state.constants && state.constants.segueVersion) {
+        return;
+    }
+
+    dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_REQUEST});
+    try {
+        const version = await api.constants.getSegueVersion();
+        dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS, ...version.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE});
+    }
+};
+
 
 // Concepts
 export const fetchConcept = (conceptId: string) => async (dispatch: Dispatch<Action>) => {
@@ -147,4 +163,29 @@ export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_REQUEST});
     const assignmentsResponse = await api.assignments.getMyAssignments();
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
+};
+
+// Content version
+export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST});
+    try {
+        const version = await api.contentVersion.getLiveVersion();
+        dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS, ...version.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_FAILURE});
+    }
+};
+
+export const setContentVersion = (version: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_REQUEST, version});
+    try {
+        const result = await api.contentVersion.setLiveVersion(version);
+        if (result.status == 200) {
+            dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS, newVersion: version});
+        } else {
+            dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE});
+        }
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE});
+    }
 };

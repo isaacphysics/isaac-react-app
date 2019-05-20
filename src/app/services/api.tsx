@@ -61,6 +61,17 @@ export const api = {
     constants: {
         getUnits: (): AxiosPromise<string[]> => {
             return endpoint.get(`/content/units`)
+        },
+        getSegueVersion: (): AxiosPromise<{segueVersion: string}> => {
+            return endpoint.get(`/info/segue_version`)
+        }
+    },
+    contentVersion: {
+        getLiveVersion: (): AxiosPromise<{liveVersion: string}> => {
+            return endpoint.get(`/info/content_versions/live_version`);
+        },
+        setLiveVersion(version: string): AxiosPromise {
+            return endpoint.post(`/admin/live_version/${version}`);
         }
     }
 };
