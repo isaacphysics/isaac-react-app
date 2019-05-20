@@ -23,10 +23,12 @@ describe("userConsistencyCheckerMiddleware", () => {
         fakeStore = {dispatch: fakeDispatch, getState: fakeGetState};
         fakeNext = jest.fn();
         jest.useFakeTimers();
+
+        // @ts-ignore
+        setUserId.mockImplementation(() => true);
     });
 
     it("sets the current user after a successful login and starts consistency checking", async () => {
-
         userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(actionLogin);
 
         expect(fakeNext).toBeCalledWith(actionLogin);
@@ -44,7 +46,7 @@ describe("userConsistencyCheckerMiddleware", () => {
         expect(fakeNext).toBeCalledWith(actionLogin);
         expect(fakeNext).toBeCalledWith(actionLogout);
         expect(setUserId).toBeCalledWith(USER_ID1);
-        expect(setUserId).toBeCalledWith(null);
+        expect(setUserId).toBeCalledWith(undefined);
 
         jest.runAllTimers();
 
@@ -76,10 +78,24 @@ describe("userConsistencyCheckerMiddleware", () => {
         userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(actionError);
 
         expect(fakeNext).toBeCalledWith(actionError);
-        expect(setUserId).toBeCalledWith(null);
+        expect(setUserId).toBeCalledWith(undefined);
 
         jest.runAllTimers();
 
         expect(fakeDispatch).not.toBeCalled();
+    });
+
+    it("if setting the current user fails, does not start consistency checking", async () => {
+        // @ts-ignore
+        setUserId.mockImplementation(() => false);
+
+        userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(actionLogin);
+
+        expect(fakeNext).toBeCalledWith(actionLogin);
+        expect(setUserId).toBeCalledWith(USER_ID1);
+
+        jest.runAllTimers();
+
+        expect(fakeDispatch).not.toHaveBeenCalledWith(actionCheck);
     });
 });
