@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {
@@ -23,42 +23,49 @@ import {
     Table,
     FormFeedback
 } from "reactstrap";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
-import {updateCurrentUser} from "../../state/actions";
+import {updateCurrentUser, getUserAuthsettings, resetPassword} from "../../state/actions";
 import classnames from 'classnames';
 import {ValidationUser} from "../../../IsaacAppTypes";
 
-
-
 const stateToProps = (state: AppState) => ({
     user: state ? state.user : null,
-    errorMessage: state ? state.error : null
+    errorMessage: state ? state.error : null,
+    authSettings: state ? state.authSettings : null
 });
 
 const dispatchToProps = {
-    updateCurrentUser
+    updateCurrentUser,
+    getUserAuthsettings,
+    resetPassword
 };
 
 interface AccountPageProps {
     user: RegisteredUserDTO | null
     updateCurrentUser: (
-        params: {registeredUser: ValidationUser; passwordCurrent: string},
+        params: { registeredUser: ValidationUser; passwordCurrent: string },
         currentUser: RegisteredUserDTO
     ) => void
-    errorMessage: string | null
-}
+    errorMessage: string | null,
+    getUserAuthsettings: () => void
+    authSettings: UserAuthenticationSettingsDTO | null
+    resetPassword: (params: {email: string}) => void;
+};
 
-const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPageProps) => {
+
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage, getUserAuthsettings, authSettings, resetPassword}: AccountPageProps) => {
     const updateDetails = () => console.log("Account updated");
 
     const emailPreferences = {"NEWS_AND_UPDATES": true, "ASSIGNMENTS": true, "EVENTS": true};
 
-    const myUser = Object.assign({}, user, {password: ""});
+    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
     const [isValidEmail, setValidEmail] = useState(true);
     const [isValidDob, setValidDob] = useState(true);
     const [isValidPassword, setValidPassword] = useState(true);
     const [currentPassword, setCurrentPassword] = useState("");
+    const [passwordResetRequest, setPasswordResetRequest] = useState(false);
+    const [activeTab, setTab] = useState(0);
 
     let today = new Date();
     let thirteenYearsAgo = Date.UTC(today.getFullYear() - 13, today.getMonth(), today.getDate())/1000;
@@ -66,11 +73,13 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
 
     const validateAndSetEmail = (event: any) => {
         setValidEmail((event.target.value.length > 0 && event.target.value.includes("@")));
+        console.log(isValidEmail);
     };
 
     const validateAndSetDob = (event: any) => {
         setValidDob((myUser.dateOfBirth != undefined) &&
-        ((new Date(String(event.target.value)).getTime()/1000) <= thirteenYearsAgo))
+        ((new Date(String(event.target.value)).getTime()/1000) <= thirteenYearsAgo));
+        console.log(isValidDob);
     };
 
     const validateAndSetPassword = (event: any) => {
@@ -78,15 +87,27 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
             (event.target.value == (document.getElementById("password") as HTMLInputElement).value) &&
                 ((document.getElementById("password") as HTMLInputElement).value != undefined) &&
                 ((document.getElementById("password") as HTMLInputElement).value.length > 5)
-        )
+        );
+        console.log(isValidPassword);
     };
+
+    const resetPasswordIfValidEmail = () => {
+        if (user && user.email) {
+            resetPassword({email: user.email});
+            setPasswordResetRequest(!passwordResetRequest);
+        }
+    };
+
+    useEffect(() => {
+        setMyUser(Object.assign({}, user, {password: ""}));
+        const thisAuthSettings = getUserAuthsettings();
+        const userAuth = authSettings;
+    }, [user]);
 
     {/• TODO handle #... in with react-router for tab url navigation? •/}
 
-    const [activeTab, setTab] = useState(0);
-
     return <div id="account-page">
-        <h1>My Account</h1>
+        <h1 className="h-title">My Account</h1>
         {user &&
             <div>
                 <Card>
@@ -119,7 +140,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                         </NavItem>
                     </Nav>
                     <TabContent activeTab={activeTab}>
-                        <TabPane tabId="0">
+                        <TabPane tabId={0}>
                             <CardBody>
                                 <Form name="userDetails" onSubmit={updateDetails}>
                                     <Row>
@@ -128,7 +149,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                                                 <Label htmlFor="first-name-input">First Name</Label>
                                                 <Input id="first-name-input" type="text" name="givenName"
                                                        defaultValue={myUser.givenName}
-                                                       onBlur={(e: any) => {myUser.givenName = e.target.value}}
+                                                       onChange={(e: any) => {setMyUser(Object.assign(myUser, {givenName: e.target.value}))}}
                                                        required/>
                                             </FormGroup>
                                         </Col>
@@ -137,7 +158,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                                                 <Label htmlFor="last-name-input">Last Name</Label>
                                                 <Input id="last-name-input" type="text" name="last-name"
                                                        defaultValue={myUser.familyName}
-                                                       onBlur={(e: any) => {myUser.familyName = e.target.value}}
+                                                       onChange={(e: any) => {setMyUser(Object.assign(myUser, {familyName: e.target.value}))}}
                                                        required/>
                                             </FormGroup>
                                         </Col>
@@ -148,9 +169,9 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                                                 <Label htmlFor="email-input">Email</Label>
                                                 <Input invalid={!isValidEmail} id="email-input" type="email"
                                                        name="email" defaultValue={myUser.email}
-                                                       onBlur={(e: any) => {
+                                                       onChange={(e: any) => {
                                                            validateAndSetEmail(e);
-                                                           (isValidEmail) ? myUser.email = e.target.value : null
+                                                           (isValidEmail) ? setMyUser(Object.assign(myUser, {email: e.target.value})) : null
                                                        }}
                                                        aria-describedby="emailValidationMessage" required/>
                                                     <FormFeedback id="emailValidationMessage">
@@ -167,9 +188,9 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                                                     type="date"
                                                     name="date-of-birth"
                                                     defaultValue={myUser.dateOfBirth}
-                                                    onBlur={(e: any) => {
+                                                    onChange={(e: any) => {
                                                         validateAndSetDob;
-                                                        (isValidDob) ? myUser.dateOfBirth = e.target.value : null
+                                                        (isValidDob) ? setMyUser(Object.assign(myUser, {dateOfBirth: e.target.value})) : null
                                                     }}
                                                     aria-describedby ="ageValidationMessage"
                                                 />
@@ -189,7 +210,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                                                                      name="gender" label="Male"
                                                                      defaultChecked={myUser.gender == 'MALE'}
                                                                      onClick={
-                                                                         (e: any) => {myUser.gender = 'MALE'}
+                                                                         (e: any) => {setMyUser(Object.assign(myUser, {gender: 'MALE'}))}
                                                                      } required/>
                                                     </Col>
                                                     <Col size={6} lg={2}>
@@ -197,7 +218,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                                                                      name="gender" label="Female"
                                                                      defaultChecked={myUser.gender == 'FEMALE'}
                                                                      onClick={
-                                                                         (e: any) => {myUser.gender = 'FEMALE'}
+                                                                         (e: any) => {setMyUser(Object.assign(myUser, {gender: 'FEMALE'}))}
                                                                      } required/>
                                                     </Col>
                                                     <Col size={6} lg={2}>
@@ -205,7 +226,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                                                                      name="gender" label="Other"
                                                                      defaultChecked={myUser.gender == 'OTHER'}
                                                                      onClick={
-                                                                         (e: any) => {myUser.gender = 'OTHER'}
+                                                                         (e: any) => {setMyUser(Object.assign(myUser, {gender: 'OTHER'}))}
                                                                      } required/>
                                                     </Col>
                                                 </Row>
@@ -231,46 +252,62 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                                 </Form>
                             </CardBody>
                         </TabPane>
-                        <TabPane tabId="1">
+                        <TabPane tabId={1}>
                                 <CardBody>
                                     <Form name="userPassword" onSubmit={updateDetails}>
-                                        <Row>
-                                            <FormGroup>
-                                                <Label htmlFor="password-input">Current Password</Label>
-                                                <Input id="password-current" type="password" name="password"
-                                                       onBlur={(e: any) => setCurrentPassword(e.target.value)}
-                                                       required/>
-                                            </FormGroup>
-                                        </Row>
-                                        <Row>
-                                            <FormGroup>
-                                                <Label htmlFor="password-input">New Password</Label>
-                                                <Input id="password" type="password" name="password" required/>
-                                            </FormGroup>
-                                        </Row>
-                                        <Row>
-                                            <FormGroup>
-                                                <Label htmlFor="password-confirm">Re-enter New Password</Label>
-                                                <Input invalid={!isValidPassword} id="password-confirm"
-                                                       type="password" name="password"
-                                                       onBlur={(e: any) => {
-                                                           validateAndSetPassword(e);
-                                                           (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ?
-                                                           myUser.password = e.target.value :
-                                                           null;
-                                                       }} aria-describedby="passwordValidationMessage" required/>
-                                                <FormFeedback id="passwordValidationMessage">
-                                                    {(!isValidPassword) ?
-                                                    "Password must be at least 6 characters long" :
-                                                    null}
-                                                </FormFeedback>
-                                            </FormGroup>
-                                        </Row>
+                                        {authSettings && authSettings.hasSegueAccount ?
+                                            <div>
+                                                <Row>
+                                                    <FormGroup>
+                                                        <Label htmlFor="password-input">Current Password</Label>
+                                                        <Input id="password-current" type="password" name="password"
+                                                               onChange={(e: any) => setCurrentPassword(e.target.value)}
+                                                               required/>
+                                                    </FormGroup>
+                                                </Row>
+                                                <Row>
+                                                    <FormGroup>
+                                                        <Label htmlFor="password-input">New Password</Label>
+                                                        <Input id="password" type="password" name="password" required/>
+                                                    </FormGroup>
+                                                </Row>
+                                                <Row>
+                                                    <FormGroup>
+                                                        <Label htmlFor="password-confirm">Re-enter New Password</Label>
+                                                        <Input invalid={!isValidPassword} id="password-confirm"
+                                                               type="password" name="password"
+                                                               onChange={(e: any) => {
+                                                                   validateAndSetPassword(e);
+                                                                   (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ?
+                                                                       setMyUser(Object.assign(myUser, {password: e.target.value})) :
+                                                                       null;
+                                                               }} aria-describedby="passwordValidationMessage" required/>
+                                                        <FormFeedback id="passwordValidationMessage">
+                                                            {(!isValidPassword) ?
+                                                                "Password must be at least 6 characters long" :
+                                                                null}
+                                                        </FormFeedback>
+                                                    </FormGroup>
+                                                </Row>
+                                            </div> :
+                                            !passwordResetRequest ?
+                                                <div>
+                                                    <p>You do not currently have a password set for this account; you sign in using</p>
+                                                    <Button color="link" onClick={resetPasswordIfValidEmail}>
+                                                        Click here to add a password
+                                                    </Button>
+                                                </div>:
+                                                <p>
+                                                    <strong className="d-block">Your password reset request is being processed.</strong>
+                                                    <strong className="d-block">Please check your inbox.</strong>
+                                                </p>
+
+                                        }
                                     </Form>
                                 </CardBody>
                         </TabPane>
                         {/*TODO move default and defined email pref to redux*/}
-                        <TabPane tabId="2">
+                        <TabPane tabId={2}>
                                 <CardBody>
                                     <Form name="emailPreferences" onSubmit={updateDetails}>
                                         Tell us which emails you would like to receive. These settings can be changed at any time.
@@ -312,8 +349,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage}: AccountPa
                                 <h3 role="alert" className="text-danger text-center">{errorMessage}</h3>
                                 <Button color="secondary" onClick={() => {
                                         (isValidEmail && isValidDob && isValidPassword) ?
-                                        updateCurrentUser({registeredUser: myUser, passwordCurrent: currentPassword}, user) :
-                                        null}}
+                                            updateCurrentUser({registeredUser: myUser, passwordCurrent: currentPassword}, user) :
+                                        console.log("nope")}}
                                     block >
                                     Save
                                 </Button>

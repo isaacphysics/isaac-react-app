@@ -21,6 +21,16 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
+export const getUserAuthsettings = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST});
+    try {
+        const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
+        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS, authSettings: authenticationSettings.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_FAILURE, errorMessage: e.response.data.errorMessage});
+    }
+};
+
 
 export const requestUserPreferences = () => async (dispatch: Dispatch<Action>) => {
 
@@ -31,12 +41,28 @@ export const updateCurrentUser = (params: {registeredUser: ValidationUser; passw
         let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
         // TODO handle the alert ourselves
         if (!!emailChange) {
-            setUserDetails(params);
+            // setUserDetails(params);
+            try {
+                const currentUser = await api.users.updateCurrent(params);
+                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
+                history.push('/');
+                history.go(0);
+            } catch (e) {
+                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
+            }
         } else {
             params.registeredUser.email = currentUser.email;
         }
     } else {
-        setUserDetails(params);
+        // setUserDetails(params);
+        try {
+            const currentUser = await api.users.updateCurrent(params);
+            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
+            history.push('/');
+            history.go(0);
+        } catch (e) {
+            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
+        }
     }
 };
 

@@ -1,6 +1,6 @@
 import {combineReducers} from "redux";
 import {Action, AppQuestionDTO, isValidatedChoice} from "../../IsaacAppTypes";
-import {AssignmentDTO, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import {AssignmentDTO, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO, RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE} from "../services/constants";
 
 type UserState = RegisteredUserDTO | null;
@@ -117,14 +117,25 @@ export const error = (error: LoginErrorState = null, action: Action) => {
         case ACTION_TYPE.EMAIL_AUTHENTICATION_FAILURE:
         case ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_FAILURE:
         case ACTION_TYPE.USER_PASSWORD_RESET_FAILURE:
+        case ACTION_TYPE.USER_AUTH_SETTINGS_FAILURE:
             return action.errorMessage;
         default:
             return null;
     }
 };
 
+type authSettingsState = UserAuthenticationSettingsDTO | null;
+export const authSettings = (authSettings: authSettingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS:
+            return action.authSettings;
+        default:
+            return null;
+    }
+};
+
 // TODO decide on how to delete error state
-const appReducer = combineReducers({user, constants, doc, questions, currentTopic, currentGameboard, assignments, error});
+const appReducer = combineReducers({user, constants, doc, questions, currentTopic, currentGameboard, assignments, error, authSettings});
 export type AppState = undefined | {
     user: UserState;
     constants: ConstantsState;
@@ -134,6 +145,7 @@ export type AppState = undefined | {
     currentGameboard: CurrentGameboardState;
     assignments: AssignmentsState;
     error: LoginErrorState;
+    authSettings: authSettingsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

@@ -40,6 +40,9 @@ export const api = {
         },
         login: (provider: ApiTypes.AuthenticationProvider, params: {email: string; password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/auth/${provider}/authenticate`, params);
+        },
+        getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
+            return endpoint.get(`/auth/user_authentication_settings`)
         }
     },
     email: {

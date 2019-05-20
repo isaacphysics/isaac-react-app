@@ -10,6 +10,9 @@ export type Action =
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS; authSettings: ApiTypes.UserAuthenticationSettingsDTO}
+    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_FAILURE; errorMessage: string}
 
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
