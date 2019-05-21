@@ -41,7 +41,8 @@ export const IsaacTabs = () => {
                                     <li>Manage students’ progress in your personal markbook</li>
                                 </ul>
 
-                                <strong>Isaac Computer Science provides:</strong>
+                                <strong>Isaac Computer Science aims to provide:</strong>
+                                {/* TODO, once true, replace with "Isaac Computer Science provides:" */}
                                 <ul>
                                     <li>Complete coverage of AQA and OCR specifications</li>
                                     <li>High-quality materials written by experienced teachers</li>

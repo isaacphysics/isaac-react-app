@@ -43,12 +43,15 @@ $secondary-font-medium: 'exo_2medium', sans-serif;
 // ISAAC
 $body-bg: rgba(#ececec, 0.4);
 
+// Node module imports
 @import "~bootstrap/scss/bootstrap";
 @import "~katex/dist/katex.min.css";
 
+// Utility
 @import "./_preload";
 @import "./_mixins";
 
+// Atoms
 @import "./logo";
 @import "./fonts";
 @import "./typography";
@@ -57,19 +60,23 @@ $body-bg: rgba(#ececec, 0.4);
 @import "./modals";
 @import "./questions";
 @import "./forms";
+@import "./elements";
 @import "./breadcrumbs";
 @import "./list-group-topic";
 @import "./figures";
 @import "./tabs";
 
+// Navigation
 @import "./navigation-bar";
 @import "./header";
-@import "./homepage";
 @import "./footer";
 
+// Pages
+@import "./homepage";
 @import "./login";
 @import "./registration";
 @import "./topic";
+@import "./search";
 @import "./inequality-modal";
 
 a.disabled {

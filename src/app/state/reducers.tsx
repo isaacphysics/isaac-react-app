@@ -5,7 +5,14 @@ import {
     isValidatedChoice,
     LoggedInUser
 } from "../../IsaacAppTypes";
-import {AssignmentDTO, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO} from "../../IsaacApiTypes";
+import {
+    AssignmentDTO,
+    ContentDTO,
+    ContentSummaryDTO,
+    GameboardDTO,
+    IsaacTopicSummaryPageDTO,
+    ResultsWrapper
+} from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
 
 type UserState = LoggedInUser | null;
@@ -36,6 +43,8 @@ export const constants = (constants: ConstantsState = null, action: Action): Con
 type DocState = ContentDTO | null;
 export const doc = (doc: DocState = null, action: Action) => {
     switch (action.type) {
+        case ACTION_TYPE.DOCUMENT_REQUEST:
+            return null;
         case ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS:
             return {...action.doc};
         default:
@@ -92,6 +101,8 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
 type AssignmentsState = AssignmentDTO[] | null;
 export const assignments = (assignments: AssignmentsState = null, action: Action) => {
     switch (action.type) {
+        case ACTION_TYPE.ASSIGNMENTS_REQUEST:
+            return null;
         case ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS:
             return action.assignments;
         default:
@@ -102,6 +113,8 @@ export const assignments = (assignments: AssignmentsState = null, action: Action
 type CurrentGameboardState = GameboardDTO | null;
 export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action) => {
     switch (action.type) {
+        case ACTION_TYPE.GAMEBOARD_REQUEST:
+            return null;
         case ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;
         default:
@@ -112,6 +125,8 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
 type CurrentTopicState = IsaacTopicSummaryPageDTO | null;
 export const currentTopic = (currentTopic: CurrentTopicState = null, action: Action) => {
     switch (action.type) {
+        case ACTION_TYPE.TOPIC_REQUEST:
+            return null;
         case ACTION_TYPE.TOPIC_RESPONSE_SUCCESS:
             return action.topic;
         default:
@@ -119,13 +134,29 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
     }
 };
 
-type LoginErrorState = string | null;
-export const error = (error: LoginErrorState = null, action: Action) => {
+type ErrorState = {type: "loginError"; loginError: string} | {type: "consistencyError"} | null;
+export const error = (error: ErrorState = null, action: Action): ErrorState => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_FAILURE:
-            return action.errorMessage;
-        default:
+            return {type: "loginError", loginError: action.errorMessage};
+        case ACTION_TYPE.USER_CONSISTENCY_ERROR:
+            return {type: "consistencyError"};
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
             return null;
+        default:
+            return error;
+    }
+};
+
+type SearchState = {searchResults: ResultsWrapper<ContentSummaryDTO> | null} | null;
+export const search = (search: SearchState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.SEARCH_REQUEST:
+            return {...search, searchResults: null};
+        case ACTION_TYPE.SEARCH_RESPONSE_SUCCESS:
+            return {...search, searchResults: action.searchResults};
+        default:
+            return search;
     }
 };
 
@@ -153,8 +184,9 @@ const appReducer = combineReducers({
     currentTopic,
     currentGameboard,
     assignments,
+    contentVersion,
+    search,
     error,
-    contentVersion
 });
 
 export type AppState = undefined | {
@@ -165,12 +197,13 @@ export type AppState = undefined | {
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
     assignments: AssignmentsState;
-    error: LoginErrorState;
     contentVersion: ContentVersionState;
+    search: SearchState;
+    error: ErrorState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {
-    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS) {
+    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         state = undefined;
     }
     return appReducer(state, action);

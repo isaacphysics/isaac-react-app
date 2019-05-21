@@ -1,6 +1,6 @@
 import React, {FormEvent, useEffect, useState} from "react";
 import {connect} from "react-redux";
-import seedrandom from "seedrandom";
+import seed from "math-random-seed";
 import {requestConstantsUnits, setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
@@ -29,11 +29,11 @@ interface IsaacNumericQuestionProps {
 }
 
 function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
-    const seed = userId + "|" + questionId;
-    const rand = seedrandom(seed);
+    const seedValue = userId + "|" + questionId;
+    const random = seed(seedValue);
 
     function randInt(size: number): number {
-        return Math.floor(rand.double() * size);
+        return Math.floor(random() * size);
     }
 
     /* eslint-disable @typescript-eslint/no-explicit-any */

@@ -4,7 +4,9 @@ import {Action, ValidatedChoice} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
-import history from "../services/history";
+import {history} from "../services/history";
+import {store} from "./store";
+
 
 // User Authentication
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
@@ -94,7 +96,8 @@ export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Acti
     }
 };
 
-// Doc Fetch
+
+// Document Fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
     let apiEndpoint;
@@ -108,6 +111,7 @@ export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (
     dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
     // TODO MT handle response failure
 };
+
 
 // Questions
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
@@ -163,6 +167,7 @@ export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
 };
 
+
 // Content version
 export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST});
@@ -186,4 +191,32 @@ export const setContentVersion = (version: string) => async (dispatch: Dispatch<
     } catch (e) {
         dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE});
     }
+};
+
+
+// Search
+export const fetchSearch = (query: string, types: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query, types});
+    if (query === "") {
+        return;
+    }
+    const searchResponse = await api.search.get(query, types);
+    dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
+};
+
+
+// SERVICE TRIGGERED ACTIONS
+// Page change
+export const changePage = (path: string) => {
+    store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});
+};
+
+export const handleServerError = () => {
+    store.dispatch({type: ACTION_TYPE.API_SERVER_ERROR});
+    history.push("/error");
+};
+
+export const handleApiGoneAway = () => {
+    store.dispatch({type: ACTION_TYPE.API_GONE_AWAY});
+    history.push("/error_stale");
 };

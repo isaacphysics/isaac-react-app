@@ -1,8 +1,7 @@
-import {constants, questions, rootReducer, user} from "../../app/state/reducers";
+import {constants, questions, rootReducer, search, user} from "../../app/state/reducers";
 import {Action, LoggedInUser} from "../../IsaacAppTypes";
-import {questionDTOs, registeredUserDTOs, unitsList} from "../test-factory";
+import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
-import {act} from "react-dom/test-utils";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
@@ -120,12 +119,36 @@ describe("constants reducer", () => {
         });
     });
 
-    it("should always add the list of units on login response success", () => {
+    it("should always add the list of units on units response success", () => {
         const unitsAction: Action = {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList};
         const previousStates = [null, {units: ["foo"]}];
         previousStates.map((previousState) => {
             const actualNextState = constants(previousState, unitsAction);
             expect(actualNextState).toEqual({units: unitsList});
+        })
+    })
+});
+
+describe("search reducer", () => {
+    it("returns null as an initial value", () => {
+        const actualState = constants(undefined, ignoredTestAction);
+        expect(actualState).toBe(null);
+    });
+
+    it("returns the previous state by default", () => {
+        const previousStates = [null, {searchResults: searchResultsList}];
+        previousStates.map((previousState) => {
+            const actualNextState = search(previousState, ignoredTestAction);
+            expect(actualNextState).toEqual(previousState);
+        });
+    });
+
+    it("should replace the list of search results on ", () => {
+        const unitsAction: Action = {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResultsList};
+        const previousStates = [null, {searchResults: {totalResults: 0, results: []}}];
+        previousStates.map((previousState) => {
+            const actualNextState = search(previousState, unitsAction);
+            expect(actualNextState).toEqual({searchResults: searchResultsList});
         })
     })
 });
