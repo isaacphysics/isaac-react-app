@@ -16,7 +16,7 @@ endpoint.interceptors.response.use((response) => {
     }
     return response;
 }, (error) => {
-    if (error.response.status >= 500 && !error.response.data.bypassGenericSiteErrorPage) {
+    if (error.response && error.response.status >= 500 && !error.response.data.bypassGenericSiteErrorPage) {
         if (error.response.status == 502) {
             // A '502 Bad Gateway' response means that the API no longer exists:
             handleApiGoneAway();
