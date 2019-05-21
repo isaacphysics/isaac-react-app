@@ -47,7 +47,7 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicDetails}: TopicPage
                     }
                     {relatedConcepts && <LinkToContentSummaryList items={relatedConcepts} className="my-4" />}
                     {relatedQuestions && <LinkToContentSummaryList items={relatedQuestions} className="my-4" />}
-                    <Button tag={Link} to="/page/coming_soon" color="secondary" block>More coming soon&hellip;</Button>
+                    <Button tag={Link} to="/coming_soon" color="secondary" block>More coming soon&hellip;</Button>
                 </Col>
             </Row>
         </Container>}

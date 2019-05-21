@@ -10,7 +10,7 @@ const trackPage = (page: string, options?: FieldsObject) => {
     ReactGA.pageview(page);
 };
 
-type TrackedRouteProps = RouteProps & {trackingOptions?: FieldsObject};
+type TrackedRouteProps = RouteProps & {trackingOptions?: FieldsObject; componentProps?: FieldsObject};
 type TrackedRouteComponentProps = RouteComponentProps & {
     component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
     trackingOptions?: FieldsObject;
@@ -23,10 +23,10 @@ const WrapperComponent = function({component: Component, trackingOptions, ...pro
     return <Component {...props} />;
 };
 
-export const TrackedRoute = function({component, trackingOptions, ...rest}: TrackedRouteProps) {
+export const TrackedRoute = function({component, trackingOptions, componentProps, ...rest}: TrackedRouteProps) {
     if (component) {
         return <Route {...rest} render={props => {
-            return <WrapperComponent component={component} trackingOptions={trackingOptions} {...props} />;
+            return <WrapperComponent component={component} trackingOptions={trackingOptions} {...props} {...componentProps} />;
         }} />;
     } else {
         throw new Error("TrackedRoute only works on components, got: " + JSON.stringify(rest));

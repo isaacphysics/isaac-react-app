@@ -1,10 +1,10 @@
-import {applyMiddleware, createStore} from "redux";
+import {applyMiddleware, createStore, Middleware} from "redux";
 import thunk from "redux-thunk";
 import {createLogger} from "redux-logger";
 import {rootReducer} from "./reducers";
 
-export const storeFactory = (initialState: object = {doc: null, questions: []}) => {
-    const middleware: any[] = [thunk];
+const storeFactory = (initialState: object) => {
+    const middleware: Middleware[] = [thunk];
     if (process.env.NODE_ENV !== 'production') {
         middleware.push(createLogger())
     }
@@ -13,3 +13,5 @@ export const storeFactory = (initialState: object = {doc: null, questions: []}) 
         initialState
     );
 };
+
+export const store = storeFactory({});

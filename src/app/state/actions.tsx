@@ -4,7 +4,9 @@ import {Action, ValidatedChoice} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
-import history from "../services/history";
+import {history} from "../services/history";
+import {store} from "./store";
+
 
 // User Authentication
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
@@ -79,23 +81,23 @@ export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, ge
 };
 
 
-// Concepts
-export const fetchConcept = (conceptId: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: DOCUMENT_TYPE.CONCEPT, documentId: conceptId});
-    const response = await api.concepts.get(conceptId);
+// Document Fetch
+export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
+    let apiEndpoint;
+    switch (documentType) {
+        case DOCUMENT_TYPE.CONCEPT: apiEndpoint = api.concepts; break;
+        case DOCUMENT_TYPE.QUESTION: apiEndpoint = api.questions; break;
+        case DOCUMENT_TYPE.FRAGMENT: apiEndpoint = api.fragments; break;
+        case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
+    }
+    const response = await apiEndpoint.get(pageId);
     dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
     // TODO MT handle response failure
 };
 
 
 // Questions
-export const fetchQuestion = (questionId: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: DOCUMENT_TYPE.QUESTION, documentId: questionId});
-    const response = await api.questions.get(questionId);
-    dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
-    // TODO MT handle response failure
-};
-
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question});
 };
@@ -157,4 +159,21 @@ export const fetchSearch = (query: string, types: string) => async (dispatch: Di
     }
     const searchResponse = await api.search.get(query, types);
     dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
+};
+
+
+// SERVICE TRIGGERED ACTIONS
+// Page change
+export const changePage = (path: string) => {
+    store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});
+};
+
+export const handleServerError = () => {
+    store.dispatch({type: ACTION_TYPE.API_SERVER_ERROR});
+    history.push("/error");
+};
+
+export const handleApiGoneAway = () => {
+    store.dispatch({type: ACTION_TYPE.API_GONE_AWAY});
+    history.push("/error_stale");
 };
