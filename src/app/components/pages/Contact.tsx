@@ -26,7 +26,7 @@ import {
 } from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
-import {submitMessage} from "../../state/actions"
+import {submitMessage} from "../../state/actions";
 import classnames from 'classnames';
 import {string} from "prop-types";
 
@@ -49,15 +49,32 @@ interface ContactPageProps {
 
 const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPageProps) => {
 
+    const queryString = require('query-string');
+    const urlParams = queryString.parse(location.search);
+
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
-    const [subject, setSubject] = useState("");
+    const [subject, setSubject] = useState(urlParams.subject);
     const [message, setMessage] = useState("");
     const [messageSendAttempt, setMessageSendAttempt] = useState(false);
     const [messageSent, setMessageSent] = useState(false);
 
     const isValidEmail = email.length > 0 && email.includes("@");
+
+    useEffect(() => {
+        if (urlParams.preset == "teacherRequest") {
+            if (user && user.role != "TEACHER") {
+                setSubject("Teacher Account Request");
+                setMessage("Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n" + user.givenName + " " + user.familyName);
+            }
+        } else if (urlParams.preset == 'accountDeletion') {
+            if (user) {
+                setSubject("Account Deletion Request");
+                setMessage("Hello,\n\nPlease could you delete my Isaac account.\n\nThanks, \n\n" + user.givenName + " " + user.familyName);
+            }
+        }
+    }, [user]);
 
     const sendForm = () => {
         submitMessage(
@@ -72,7 +89,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
 
     return <div id="account-page">
         <h1>Contact Us</h1>
-        <h2>We'd love to hear from you</h2>
+        <h2 className="h-title mb-4">We'd love to hear from you</h2>
         <div>
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}}>
@@ -113,7 +130,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
                                                 <Label htmlFor="first-name-input" className="form-required">First Name</Label>
                                                 <Input id="first-name-input" type="text" name="first-name"
                                                        defaultValue={user ? user.givenName : ""}
-                                                       onBlur={(e: any) => setFirstName(e.target.value)} required/>
+                                                       onChange={(e: any) => setFirstName(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                         <Col size={12} md={6}>
@@ -121,7 +138,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
                                                 <Label htmlFor="last-name-input" className="form-required">Last Name</Label>
                                                 <Input id="last-name-input" type="text" name="last-name"
                                                        defaultValue={user ? user.familyName : ""}
-                                                       onBlur={(e: any) => setLastName(e.target.value)} required/>
+                                                       onChange={(e: any) => setLastName(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -132,7 +149,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
                                                 <Input invalid={messageSendAttempt && !isValidEmail} id="email-input"
                                                        type="email" name="email"
                                                        defaultValue={user ? user.email : ""}
-                                                       onBlur={(e: any) => setEmail(e.target.value)}
+                                                       onChange={(e: any) => setEmail(e.target.value)}
                                                        aria-describedby="emailValidationMessage" required/>
                                                 <FormFeedback id="emailValidationMessage">
                                                     {!isValidEmail && "Please enter a valid email address"}
@@ -142,8 +159,8 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
                                         <Col size={12} md={6}>
                                             <FormGroup>
                                                 <Label htmlFor="subject-input" className="form-required">Message Subject</Label>
-                                                <Input id="subject-input" type="text" name="subject"
-                                                       onBlur={(e: any) => setSubject(e.target.value)} required/>
+                                                <Input id="subject-input" type="text" name="subject" defaultValue={subject}
+                                                       onChange={(e: any) => setSubject(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -151,16 +168,16 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
                                         <Col>
                                             <FormGroup>
                                                 <Label htmlFor="message-input" className="form-required">Message</Label>
-                                                <Input id="message-input" type="textarea" rows="7" name="message"
-                                                       onBlur={(e: any) => setMessage(e.target.value)} required/>
+                                                <Input id="message-input" type="textarea" name="message" rows={7} value={message}
+                                                       onChange={(e: any) => setMessage(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                     </Row>
                                 </CardBody>
                                 <CardFooter>
-                                    <Row>
-                                        <Alert color="danger" isOpen={errorMessage}>{errorMessage}</Alert>
-                                    </Row>
+                                    <div>
+                                        <Alert color="danger" isOpen={errorMessage}>{errorMessage} You can contact us at <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></Alert>
+                                    </div>
                                     <Row>
                                         <Col size={12} md={6}>
                                             <span className="form-required color=$secondary">Required field</span>
