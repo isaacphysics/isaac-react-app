@@ -1,0 +1,7 @@
+// NOMENSA header.scss
+.headerBar {
+  padding-right: 4em;
+  @include respond-above(sm) {
+    padding-right: auto;
+  }
+}

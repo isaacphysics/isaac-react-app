@@ -2,32 +2,32 @@ import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {Col, Container, Row} from "reactstrap";
-import {fetchConcept} from "../../state/actions";
+import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
+import {DOCUMENT_TYPE} from "../../services/constants";
 
-// TODO definitely scope for removing duplication between retrieving concept, question and general documents
 const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
     return {
         doc: state ? state.doc : null,
         urlConceptId: conceptId,
     };
 };
-const dispatchToProps = {fetchConcept};
+const dispatchToProps = {fetchDoc};
 
 interface ConceptPageProps {
     doc: ContentDTO | null;
     urlConceptId: string;
-    fetchConcept: (conceptId: string) => void;
+    fetchDoc: (documentType: DOCUMENT_TYPE, conceptId: string) => void;
 }
 
 const ConceptPageComponent = (props: ConceptPageProps) => {
-    const {doc, urlConceptId, fetchConcept} = props;
+    const {doc, urlConceptId, fetchDoc} = props;
 
     useEffect(
-        () => {fetchConcept(urlConceptId);},
+        () => {fetchDoc(DOCUMENT_TYPE.CONCEPT, urlConceptId);},
         [urlConceptId]
     );
 

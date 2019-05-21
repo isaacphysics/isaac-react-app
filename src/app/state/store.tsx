@@ -1,4 +1,4 @@
-import {applyMiddleware, createStore, compose} from "redux";
+import {applyMiddleware, compose, createStore, Middleware} from "redux";
 import thunk from "redux-thunk";
 import {createLogger} from "redux-logger";
 import {rootReducer} from "./reducers";
@@ -7,8 +7,8 @@ import {userConsistencyCheckerMiddleware} from "./userConsistencyChecker";
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export const storeFactory = (initialState: object = {doc: null, questions: []}) => {
-    const middleware: any[] = [userConsistencyCheckerMiddleware, thunk];
+const storeFactory = (initialState: object) => {
+    const middleware: Middleware[] = [userConsistencyCheckerMiddleware, thunk];
     if (process.env.NODE_ENV !== 'production') {
         middleware.push(createLogger())
     }
@@ -22,3 +22,5 @@ export const storeFactory = (initialState: object = {doc: null, questions: []}) 
         initialState
     );
 };
+
+export const store = storeFactory({});

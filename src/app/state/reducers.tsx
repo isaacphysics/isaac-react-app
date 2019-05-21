@@ -32,6 +32,8 @@ export const constants = (constants: ConstantsState = null, action: Action) => {
 type DocState = ContentDTO | null;
 export const doc = (doc: DocState = null, action: Action) => {
     switch (action.type) {
+        case ACTION_TYPE.DOCUMENT_REQUEST:
+            return null;
         case ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS:
             return {...action.doc};
         default:
@@ -88,6 +90,8 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
 type AssignmentsState = AssignmentDTO[] | null;
 export const assignments = (assignments: AssignmentsState = null, action: Action) => {
     switch (action.type) {
+        case ACTION_TYPE.ASSIGNMENTS_REQUEST:
+            return null;
         case ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS:
             return action.assignments;
         default:
@@ -98,6 +102,8 @@ export const assignments = (assignments: AssignmentsState = null, action: Action
 type CurrentGameboardState = GameboardDTO | null;
 export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action) => {
     switch (action.type) {
+        case ACTION_TYPE.GAMEBOARD_REQUEST:
+            return null;
         case ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;
         default:
@@ -108,6 +114,8 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
 type CurrentTopicState = IsaacTopicSummaryPageDTO | null;
 export const currentTopic = (currentTopic: CurrentTopicState = null, action: Action) => {
     switch (action.type) {
+        case ACTION_TYPE.TOPIC_REQUEST:
+            return null;
         case ACTION_TYPE.TOPIC_RESPONSE_SUCCESS:
             return action.topic;
         default:
@@ -122,8 +130,10 @@ export const error = (error: ErrorState = null, action: Action): ErrorState => {
             return {type: "loginError", loginError: action.errorMessage};
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:
             return {type: "consistencyError"};
-        default:
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
             return null;
+        default:
+            return error;
     }
 };
 

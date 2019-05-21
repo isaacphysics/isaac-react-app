@@ -16,59 +16,71 @@ import {Gameboard} from "../pages/Gameboard";
 import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
-import {PageNotFound} from "../pages/PageNotFound";
+import {NotFound} from "../pages/NotFound";
 import {requestCurrentUser} from "../../state/actions";
-import {AppState} from "../../state/reducers";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import history from "../../services/history"
+import {history} from "../../services/history"
 import {TrackedRoute} from "./TrackedRoute";
+import {Generic} from "../pages/Generic";
+import {ServerError} from "../pages/ServerError";
+import {SessionExpired} from "../pages/SessionExpired";
 import {ConsistencyErrorModal} from "./ConsistencyErrorModal";
+import {AppState} from "../../state/reducers";
 
 const mapStateToProps = (state: AppState) => ({
-    user: state ? state.user : null,
     consistencyError: state && state.error && state.error.type == "consistencyError" || false
 });
 const mapDispatchToProps = {requestCurrentUser};
 
 interface IsaacAppProps {
-    user: RegisteredUserDTO | null;
     consistencyError: boolean;
     requestCurrentUser: () => void;
 }
-const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
-    useEffect(() => {
-        requestCurrentUser();
-    }, []); // run only once on mount
 
-    return (
-        <Router history={history}>
-            <React.Fragment>
-                <NavigationBar />
-                <main role="main" className="flex-fill py-4">
-                    <div className={"container"}>
-                        <Switch>
-                            <TrackedRoute exact path="/" component={Homepage} />
-                            <TrackedRoute path="/login" component={LogIn} />
-                            <TrackedRoute path="/logout" component={LogOutHandler} />
-                            <TrackedRoute path="/register" component={Registration} />
-                            <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
-                            <TrackedRoute path="/account" component={MyAccount} />
-                            <TrackedRoute path="/assignments" component={MyAssignments} />
-                            <TrackedRoute path="/gameboards" component={Gameboard}/>
-                            <TrackedRoute path="/questions/:questionId" component={Question} />
-                            <TrackedRoute path="/concepts/:conceptId" component={Concept} />
-                            <TrackedRoute exact path="/topics" component={AllTopics} />
-                            <TrackedRoute path="/topics/:topicName" component={Topic} />
-                            <TrackedRoute path="/page/coming_soon" component={ComingSoon} />
-                            <TrackedRoute component={PageNotFound} />
-                        </Switch>
-                    </div>
-                </main>
-                <Footer />
-                <ConsistencyErrorModal consistencyError={consistencyError} />
-            </React.Fragment>
-        </Router>
-    );
+const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
+
+    useEffect(() => {requestCurrentUser();}, []); // run only once on mount
+
+    return <Router history={history}>
+        <React.Fragment>
+            <NavigationBar />
+            <main role="main" className="flex-fill py-4">
+                <div className={"container"}>
+                    <Switch>
+                        <TrackedRoute exact path="/(home)?" component={Homepage} />
+
+                        <TrackedRoute path="/login" component={LogIn} />
+                        <TrackedRoute path="/logout" component={LogOutHandler} />
+                        <TrackedRoute path="/register" component={Registration} />
+                        <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
+                        <TrackedRoute path="/account" component={MyAccount} />
+
+                        <TrackedRoute path="/events" component={ComingSoon}/>
+                        <TrackedRoute path="/gameboards" component={Gameboard}/>
+                        <TrackedRoute path="/assignments" component={MyAssignments} />
+
+                        <TrackedRoute path="/questions/:questionId" component={Question} />
+                        <TrackedRoute path="/concepts/:conceptId" component={Concept} />
+                        <TrackedRoute path="/pages/:pageId" component={Generic} />
+                        <TrackedRoute exact path="/topics" component={AllTopics} />
+                        <TrackedRoute path="/topics/:topicName" component={Topic} />
+
+                        <TrackedRoute path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}}/>
+                        <TrackedRoute path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}}/>
+                        <TrackedRoute path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}}/>
+                        <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}}/>
+                        <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}}/>
+                        <TrackedRoute path="/coming_soon" component={ComingSoon} />
+
+                        <TrackedRoute path="/error" component={ServerError} />
+                        <TrackedRoute path="/error_stale" component={SessionExpired} />
+                        <TrackedRoute component={NotFound} />
+                    </Switch>
+                </div>
+            </main>
+            <Footer />
+            <ConsistencyErrorModal consistencyError={consistencyError} />
+        </React.Fragment>
+    </Router>;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(IsaacApp);

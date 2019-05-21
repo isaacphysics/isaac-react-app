@@ -122,7 +122,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                                 </Col>
                             </Row>
 
-                            <hr /> {/* TODO try replacing with divider when delivered by Nomensa */}
+                            <hr className="text-center" />
 
                             <Row className="my-4">
                                 <Col className="text-center">

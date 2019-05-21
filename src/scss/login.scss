@@ -1,3 +1,4 @@
+// ISAAC
 #login-page {
   .login-google {
     display: inline-block;
@@ -18,6 +19,51 @@
       &:hover {
         background-image: url(/assets/google-login-sprite-dark-pressed@2x.png);
         background-size: 191px 46px;
+      }
+    }
+  }
+}
+
+
+// NOMENSA login.scss
+a,
+button {
+  &.btn.btn-link.login-b {
+    color: $black;
+    font-family: $primary-font;
+    font-weight: 400;
+    text-decoration: underline;
+
+    &::before {
+      @include pseudo-element();
+      background-image: url('/assets/avatar.svg');
+      background-repeat: no-repeat;
+      background-size: contain;
+      height: 24px;
+      width: 24px;
+
+      @include respond-above(sm) {
+        display: none;
+      }
+    }
+
+    span {
+      border: 0;
+      clip: rect(0, 0, 0, 0);
+      display: block;
+      height: 1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+
+
+      @include respond-above(sm) {
+        clip: initial;
+        height: initial;
+        position: relative;
+        width: initial;
       }
     }
   }
