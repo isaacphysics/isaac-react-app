@@ -40,18 +40,17 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
             <main role="main" className="flex-fill py-4">
                 <div className={"container"}>
                     <Switch>
-                        <TrackedRoute path="/pages/coming_soon" component={ComingSoon} />
-
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
-                        <TrackedRoute path="/events" component={ComingSoon}/>
-                        <TrackedRoute path="/gameboards" component={Gameboard}/>
-                        <TrackedRoute path="/assignments" component={MyAssignments} />
 
                         <TrackedRoute path="/login" component={LogIn} />
                         <TrackedRoute path="/logout" component={LogOutHandler} />
                         <TrackedRoute path="/register" component={Registration} />
                         <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                         <TrackedRoute path="/account" component={MyAccount} />
+
+                        <TrackedRoute path="/events" component={ComingSoon}/>
+                        <TrackedRoute path="/gameboards" component={Gameboard}/>
+                        <TrackedRoute path="/assignments" component={MyAssignments} />
 
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
@@ -64,6 +63,7 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                         <TrackedRoute path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}}/>
                         <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}}/>
                         <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}}/>
+                        <TrackedRoute path="/coming_soon" component={ComingSoon} />
 
                         <TrackedRoute path="/error" component={ServerError} />
                         <TrackedRoute path="/error_stale" component={SessionExpired} />

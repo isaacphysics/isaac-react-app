@@ -16,7 +16,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
 
     const DropdownItemComingSoon = ({children, className}: {children: string; className: string}) => (
         <RS.DropdownItem className={`${className}`} aria-disabled="true">
-            <Link to="/pages/coming_soon">{children}</Link>
+            <Link to="/coming_soon">{children}</Link>
             <RS.Badge color="secondary" className="ml-2 mr-1">Coming Soon</RS.Badge>
         </RS.DropdownItem>
     );

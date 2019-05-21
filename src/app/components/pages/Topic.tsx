@@ -75,7 +75,7 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicDetails}: TopicPage
                     {relatedQuestions && <ListGroup  className="my-4">
                         {relatedQuestions.map(renderLink)}
                     </ListGroup>}
-                    <Button tag={Link} to="/page/coming_soon" color="secondary" block>More coming soon&hellip;</Button>
+                    <Button tag={Link} to="/coming_soon" color="secondary" block>More coming soon&hellip;</Button>
                 </Col>
             </Row>
         </Container>}
