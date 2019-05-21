@@ -6,6 +6,9 @@ export type Action =
 
     | {type: ACTION_TYPE.ROUTER_PAGE_CHANGE; path: string}
 
+    | {type: ACTION_TYPE.API_SERVER_ERROR}
+    | {type: ACTION_TYPE.API_GONE_AWAY}
+
     | {type: ACTION_TYPE.USER_UPDATE_REQUEST}
     | {type: ACTION_TYPE.USER_UPDATE_FAILURE}
 

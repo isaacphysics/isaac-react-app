@@ -16,11 +16,13 @@ import {Gameboard} from "../pages/Gameboard";
 import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
-import {PageNotFound} from "../pages/PageNotFound";
+import {NotFound} from "../pages/NotFound";
 import {requestCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
 import {TrackedRoute} from "./TrackedRoute";
 import {Generic} from "../pages/Generic";
+import {ServerError} from "../pages/ServerError";
+import {SessionExpired} from "../pages/SessionExpired";
 
 const mapStateToProps = null;
 const mapDispatchToProps = {requestCurrentUser};
@@ -63,7 +65,9 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                         <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}}/>
                         <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}}/>
 
-                        <TrackedRoute component={PageNotFound} />
+                        <TrackedRoute path="/error" component={ServerError} />
+                        <TrackedRoute path="/error_stale" component={SessionExpired} />
+                        <TrackedRoute component={NotFound} />
                     </Switch>
                 </div>
             </main>

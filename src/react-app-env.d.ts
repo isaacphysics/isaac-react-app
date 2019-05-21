@@ -63,9 +63,10 @@ declare module '*.module.sass' {
   export default classes;
 }
 
-declare module "react-router-dom" // TODO MT react router types for 5.0.0 will be available eventually
-declare module "bootstrap" // TODO MT types for 4.3.1 will be available at some point
-declare module "reactstrap" // TODO MT types for 8.0.0 waiting for a pull request review
+// TODO check if correctly versioned types have been added
+declare module "react-router-dom";
+declare module "bootstrap";
+declare module "reactstrap";
 declare module "math-random-seed";
 
 declare var MathJax: any;

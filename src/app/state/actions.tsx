@@ -5,9 +5,8 @@ import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiType
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
+import {store} from "./store";
 
-// Page change
-export const changePage = (path: string): Action => ({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});
 
 // User Authentication
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
@@ -81,7 +80,8 @@ export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, ge
     }
 };
 
-// Doc Fetch
+
+// Document Fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
     let apiEndpoint;
@@ -95,6 +95,7 @@ export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (
     dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
     // TODO MT handle response failure
 };
+
 
 // Questions
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
@@ -148,4 +149,21 @@ export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_REQUEST});
     const assignmentsResponse = await api.assignments.getMyAssignments();
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
+};
+
+
+// SERVICE TRIGGERED ACTIONS
+// Page change
+export const changePage = (path: string) => {
+    store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});
+};
+
+export const handleServerError = () => {
+    store.dispatch({type: ACTION_TYPE.API_SERVER_ERROR});
+    history.push("/error");
+};
+
+export const handleApiGoneAway = () => {
+    store.dispatch({type: ACTION_TYPE.API_GONE_AWAY});
+    history.push("/error_stale");
 };
