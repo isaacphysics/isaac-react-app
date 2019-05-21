@@ -1,18 +1,25 @@
-import React, {useState} from "react";
+import React, {ChangeEvent, useState} from "react";
 import {Link} from "react-router-dom";
-import {connect} from "react-redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import * as RS from "reactstrap";
+import {RouteComponentProps, withRouter} from "react-router";
+import {History} from "history";
+import {pushSearchToHistory} from "../../services/search";
+import {connect} from "react-redux";
 import {SearchButton} from "../content/SearchButton";
 
-const stateToProps = (state: AppState) => (state && {user: state.user});
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
 
 interface NavigationBarProps {
     user: RegisteredUserDTO | null;
+    history: History;
 }
-const NavigationBarComponent = ({user}: NavigationBarProps) => {
+
+const NavigationBarComponent = ({user, history}: NavigationBarProps) => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const [searchText, setSearchText] = useState("");
 
     const DropdownItemComingSoon = ({children, className}: {children: string; className: string}) => (
         <RS.DropdownItem className={`${className}`} aria-disabled="true">
@@ -21,6 +28,11 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
         </RS.DropdownItem>
     );
 
+    function doSearch(e: Event) {
+        e.preventDefault();
+        pushSearchToHistory(history, searchText, true, true);
+    }
+
     return <React.Fragment>
         <RS.Navbar light color="primary" expand="sm">
             <RS.NavbarBrand tag={Link} to="/" className="header-logo">
@@ -28,28 +40,32 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
             </RS.NavbarBrand>
 
             <RS.Nav className="ml-auto" navbar>
-                {!user && <React.Fragment>
-                    <RS.NavItem>
-                        <RS.NavLink tag={Link} to="/login">LOGIN</RS.NavLink>
-                    </RS.NavItem>
-                    <RS.NavItem>
-                        <RS.NavLink tag={Link} to="/register">SIGN UP</RS.NavLink>
-                    </RS.NavItem>
-                </React.Fragment>}
-
-                {user && <React.Fragment>
-                    <RS.NavItem>
-                        <RS.NavLink tag={Link} to="/account">MY ACCOUNT</RS.NavLink>
-                    </RS.NavItem>
-                    <RS.NavItem>
-                        <RS.NavLink tag={Link} to="/logout">LOG OUT</RS.NavLink>
-                    </RS.NavItem>
-                </React.Fragment>}
-
-                <RS.Form inline>
+                {!user &&
+                    <React.Fragment>
+                        <RS.NavItem>
+                            <RS.NavLink tag={Link} to="/login">LOGIN</RS.NavLink>
+                        </RS.NavItem>
+                        <RS.NavItem>
+                            <RS.NavLink tag={Link} to="/register">SIGN UP</RS.NavLink>
+                        </RS.NavItem>
+                    </React.Fragment>
+                }
+                {user &&
+                    <React.Fragment>
+                        <RS.NavItem>
+                            <RS.NavLink tag={Link} to="/account">MY ACCOUNT</RS.NavLink>
+                        </RS.NavItem>
+                        <RS.NavItem>
+                            <RS.NavLink tag={Link} to="/logout">LOG OUT</RS.NavLink>
+                        </RS.NavItem>
+                    </React.Fragment>
+                }
+                <RS.Form inline action="/form" onSubmit={doSearch}>
                     <RS.FormGroup className="search--main-group">
-                        <RS.Input type="search" name="search" placeholder="Search" aria-label="Search" />
+                        <RS.Input type="search" name="query" placeholder="Search" aria-label="Search" value={searchText}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)} />
                         <SearchButton />
+                        <input type="hidden" name="types" value="isaacQuestionPage,isaacConceptPage" />
                     </RS.FormGroup>
                 </RS.Form>
             </RS.Nav>
@@ -168,4 +184,4 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
     </React.Fragment>;
 };
 
-export const NavigationBar = connect(stateToProps)(NavigationBarComponent);
+export const NavigationBar = withRouter(connect(stateToProps)(NavigationBarComponent));

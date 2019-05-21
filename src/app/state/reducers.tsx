@@ -3,9 +3,11 @@ import {Action, AppQuestionDTO, isValidatedChoice} from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
     ContentDTO,
+    ContentSummaryDTO,
     GameboardDTO,
     IsaacTopicSummaryPageDTO,
-    RegisteredUserDTO
+    RegisteredUserDTO,
+    ResultsWrapper
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE} from "../services/constants";
 
@@ -137,6 +139,21 @@ export const error = (error: ErrorState = null, action: Action): ErrorState => {
     }
 };
 
+type SearchState = {
+    searchResults: ResultsWrapper<ContentSummaryDTO> | null;
+} | null;
+
+export const search = (search: SearchState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.SEARCH_REQUEST:
+            return {...search, searchResults: null};
+        case ACTION_TYPE.SEARCH_RESPONSE_SUCCESS:
+            return {...search, searchResults: action.searchResults};
+        default:
+            return search;
+    }
+};
+
 const appReducer = combineReducers({
     user,
     constants,
@@ -145,7 +162,8 @@ const appReducer = combineReducers({
     currentTopic,
     currentGameboard,
     assignments,
-    error
+    error,
+    search
 });
 
 export type AppState = undefined | {
@@ -156,6 +174,7 @@ export type AppState = undefined | {
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
     assignments: AssignmentsState;
+    search: SearchState;
     error: ErrorState;
 }
 

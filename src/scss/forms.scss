@@ -105,6 +105,15 @@ label.label-radio > div {
   padding-left: 1em;
 }
 
+// Position correctly at all sizes
+.form-inline .form-check-input {
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 0;
+  margin-right: 0.25rem;
+  margin-left: 0;
+}
+
 // Override Nomensa's padding which does not compile properly
 input[type="search"] {
   padding-top: initial;

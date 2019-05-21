@@ -151,6 +151,16 @@ export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
 };
 
+// Search
+export const fetchSearch = (query: string, types: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query, types});
+    if (query === "") {
+        return;
+    }
+    const searchResponse = await api.search.get(query, types);
+    dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
+};
+
 
 // SERVICE TRIGGERED ACTIONS
 // Page change

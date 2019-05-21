@@ -1,9 +1,9 @@
 import MockAdapter from 'axios-mock-adapter';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import {registerQuestion, requestConstantsUnits, requestCurrentUser} from "../../app/state/actions";
+import {fetchSearch, registerQuestion, requestConstantsUnits, requestCurrentUser} from "../../app/state/actions";
 import {endpoint} from "../../app/services/api";
-import {errorResponses, questionDTOs, registeredUserDTOs, unitsList} from "../test-factory";
+import {errorResponses, questionDTOs, registeredUserDTOs, searchResultsList, unitsList} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
 
 const middleware = [thunk];
@@ -122,5 +122,33 @@ describe("requestConstantsUnits action", () => {
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
+    });
+});
+
+describe("fetchSearch action", () => {
+    afterEach(() => {
+        axiosMock.reset();
+    });
+
+    it("dispatches SEARCH_RESPONSE_SUCCESS after a successful request", async () => {
+        axiosMock.onGet(`/search/foo`, {params: {types: "bar"}}).replyOnce(200, searchResultsList);
+        const store = mockStore();
+        await store.dispatch(fetchSearch("foo", "bar") as any);
+        const expectedActions = [
+            {type: ACTION_TYPE.SEARCH_REQUEST, query: "foo", types: "bar"},
+            {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResultsList}
+        ];
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(axiosMock.history.get.length).toBe(1);
+    });
+
+    it("doesn't call the API if the query is blank", async () => {
+        const store = mockStore();
+        await store.dispatch(fetchSearch("", "types") as any);
+        const expectedActions = [
+            {type: ACTION_TYPE.SEARCH_REQUEST, query: "", types: "types"}
+        ];
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(axiosMock.history.get.length).toBe(0);
     });
 });

@@ -93,7 +93,13 @@ export const api = {
     },
     constants: {
         getUnits: (): AxiosPromise<string[]> => {
-            return endpoint.get(`/content/units`)
+            return endpoint.get(`/content/units`);
+        }
+    },
+    search: {
+        get: (query: string, types: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+            return endpoint.get(`/search/` + encodeURIComponent(query),
+                {params: {types}});
         }
     }
 };

@@ -1,4 +1,4 @@
-import {QuestionDTO, RegisteredUserDTO} from "../IsaacApiTypes";
+import {ContentSummaryDTO, QuestionDTO, RegisteredUserDTO, ResultsWrapper} from "../IsaacApiTypes";
 
 export const errorResponses: {[key: string]: object} = {
     mustBeLoggedIn401: {
@@ -38,3 +38,15 @@ export const unitsList: string[] = [
     "m",
     "s"
 ];
+
+export const searchResultsList: ResultsWrapper<ContentSummaryDTO> = {
+    totalResults: 1,
+    results: [
+        {
+            id: "result1",
+            title: "Result 1"
+        }
+    ]
+};
+
+

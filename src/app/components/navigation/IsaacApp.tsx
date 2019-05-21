@@ -25,6 +25,7 @@ import {ServerError} from "../pages/ServerError";
 import {SessionExpired} from "../pages/SessionExpired";
 import {ConsistencyErrorModal} from "./ConsistencyErrorModal";
 import {AppState} from "../../state/reducers";
+import {Search} from "../pages/Search";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false
@@ -58,6 +59,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/gameboards" component={Gameboard}/>
                         <TrackedRoute path="/assignments" component={MyAssignments} />
 
+                        <TrackedRoute path="/search" component={Search} />
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute path="/pages/:pageId" component={Generic} />
