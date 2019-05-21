@@ -42,7 +42,7 @@ const TrackedRouteComponent = function({component, trackingOptions, componentPro
                 const propsWithUser = {user, ...props};
                 return <ShowLoading until={user}>
                     {user && onlyFor(user) ?
-                        <WrapperComponent component={component} trackingOptions={trackingOptions} {...propsWithUser} />
+                        <WrapperComponent component={component} trackingOptions={trackingOptions} {...propsWithUser} {...componentProps} />
                         : <Redirect to="/login"/>
                     }
                 </ShowLoading>;
