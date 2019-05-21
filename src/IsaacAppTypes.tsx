@@ -45,7 +45,10 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
 
     | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
-    | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]};
+    | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
+
+    | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string}
+    | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>};
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;

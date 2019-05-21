@@ -23,6 +23,7 @@ import {TrackedRoute} from "./TrackedRoute";
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
 import {SessionExpired} from "../pages/SessionExpired";
+import {Search} from "../pages/Search";
 
 const mapStateToProps = null;
 const mapDispatchToProps = {requestCurrentUser};
@@ -52,6 +53,7 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                         <TrackedRoute path="/gameboards" component={Gameboard}/>
                         <TrackedRoute path="/assignments" component={MyAssignments} />
 
+                        <TrackedRoute path="/search" component={Search} />
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute path="/pages/:pageId" component={Generic} />
