@@ -23,17 +23,23 @@ import {TrackedRoute} from "./TrackedRoute";
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
 import {SessionExpired} from "../pages/SessionExpired";
+import {ConsistencyErrorModal} from "./ConsistencyErrorModal";
+import {AppState} from "../../state/reducers";
 import {Search} from "../pages/Search";
 
-const mapStateToProps = null;
+const mapStateToProps = (state: AppState) => ({
+    consistencyError: state && state.error && state.error.type == "consistencyError" || false
+});
 const mapDispatchToProps = {requestCurrentUser};
 
 interface IsaacAppProps {
+    consistencyError: boolean;
     requestCurrentUser: () => void;
 }
-const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
 
-    useEffect(() => {requestCurrentUser()}, []); // run only once on mount
+const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
+
+    useEffect(() => {requestCurrentUser();}, []); // run only once on mount
 
     return <Router history={history}>
         <React.Fragment>
@@ -74,6 +80,7 @@ const IsaacApp = ({requestCurrentUser}: IsaacAppProps) => {
                 </div>
             </main>
             <Footer />
+            <ConsistencyErrorModal consistencyError={consistencyError} />
         </React.Fragment>
     </Router>;
 };

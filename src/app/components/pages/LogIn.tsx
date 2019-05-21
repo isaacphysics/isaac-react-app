@@ -7,7 +7,7 @@ import {logInUser, resetPassword} from "../../state/actions";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 
-const stateToProps = (state: AppState) => ({errorMessage: state ? state.error : null});
+const stateToProps = (state: AppState) => ({errorMessage: state && state.error && state.error.type == "loginError" && state.error.loginError || null});
 
 const dispatchToProps = {
     handleProviderLoginRedirect,
