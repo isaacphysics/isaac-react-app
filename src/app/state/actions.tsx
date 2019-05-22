@@ -1,12 +1,38 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {Action, ValidatedChoice} from "../../IsaacAppTypes";
+import {Action, Toast, ValidatedChoice} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {store} from "./store";
 
+// Toasts
+
+const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.TOASTS_REMOVE, toastId});
+};
+
+export const hideToast = (toastId: string) => (dispatch: any) => {
+    dispatch({type: ACTION_TYPE.TOASTS_HIDE, toastId});
+    setTimeout(() => {
+        dispatch(removeToast(toastId));
+    }, 1000);
+};
+
+let nextToastId = 0;
+export const showToast = (toast: Toast) => (dispatch: any) => {
+    const toastId = toast.id = "toast" + nextToastId++;
+    if (toast.timeout) {
+        setTimeout(() => {
+            dispatch(hideToast(toastId));
+        }, toast.timeout);
+    }
+    if (toast.closable === undefined) toast.closable = true;
+    toast.showing = true;
+    dispatch({type: ACTION_TYPE.TOASTS_SHOW, toast});
+    return toastId;
+};
 
 // User Authentication
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
@@ -62,20 +88,31 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     // TODO MT handle error case
 };
 
-export const requestEmailVerification = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+export const requestEmailVerification = () => async (dispatch: any, getState: () => AppState) => {
     const state = getState();
     const user: RegisteredUserDTO | null = state && state.user && state.user.loggedIn && state.user || null;
+    let error = "";
     if (user && user.email) {
         dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST});
         const response = await api.users.requestEmailVerification({email: user.email});
         if (response.status == 200) {
             dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS});
-        } else {
-            dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE});
+            dispatch(showToast({
+                color: "success", title: "Email verification request succeeded.",
+                body: "Please follow the verification link given in the email sent to your address.",
+                timeout: 10000
+            }));
+            return;
         }
+        error = response.data || "Error sending request";
     } else {
-        dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE});
+        error = "You are not logged in";
     }
+
+    dispatch(showToast({color: "failure", title: "Email verification request failed.",
+        body: "Sending an email to your address failed with error message: " + error
+    }));
+    dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE});
 };
 
 
@@ -219,6 +256,8 @@ export const fetchSearch = (query: string, types: string) => async (dispatch: Di
     const searchResponse = await api.search.get(query, types);
     dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
 };
+
+
 
 
 // SERVICE TRIGGERED ACTIONS

@@ -65,7 +65,12 @@ export type Action =
     | {type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string}
-    | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>};
+    | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
+
+    | {type: ACTION_TYPE.TOASTS_SHOW; toast: Toast}
+    | {type: ACTION_TYPE.TOASTS_HIDE; toastId: string}
+    | {type: ACTION_TYPE.TOASTS_REMOVE; toastId: string}
+;
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
@@ -83,3 +88,15 @@ export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<Api
 }
 
 export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {loggedIn: false};
+
+export interface Toast {
+    color: string;
+    title: string;
+    body: string;
+    timeout?: number;
+    closable?: boolean;
+
+    // For internal use
+    id?: string;
+    showing?: boolean;
+}

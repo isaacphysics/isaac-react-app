@@ -17,11 +17,11 @@ import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
 import {NotFound} from "../pages/NotFound";
-import {requestCurrentUser} from "../../state/actions";
+import {requestCurrentUser, showToast} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {Admin} from "../pages/Admin";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {LoggedInUser, Toast} from "../../../IsaacAppTypes";
 import {history} from "../../services/history"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
@@ -30,6 +30,7 @@ import {ConsistencyErrorModal} from "./ConsistencyErrorModal";
 import {Search} from "../pages/Search";
 import {CookieBanner} from "./CookieBanner";
 import {EmailVerificationBanner} from "./EmailVerificationBanner";
+import {Toasts} from "./Toasts";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false
@@ -48,6 +49,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
     return <Router history={history}>
         <React.Fragment>
             <NavigationBar />
+            <Toasts />
             <CookieBanner />
             <EmailVerificationBanner />
             <main role="main" className="flex-fill py-4">

@@ -44,7 +44,7 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
                 <RS.Col xs={12} sm={10} md={7}>
                     <small>Your email address is not verified -
                         please find our email in your inbox and follow the verification link. To request a new
-                        verification email <Link onClick={clickVerify}>click here</Link>. To change
+                        verification email <Link onClick={clickVerify} to="/account">click here</Link>. To change
                         your email address, go to <Link to="/account">Account Settings</Link>.
                     </small>
                 </RS.Col>
