@@ -117,7 +117,10 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                                     />
                                 </Col>
                                 <Col size={12} sm={6}>
-                                    <Button tag={Link} to="/register" color="primary" className="mb-2" outline block>
+                                    <Button tag={Link} to={{
+                                        pathname: '/register',
+                                        search: "?email=" + email
+                                    }} color="primary" className="mb-2" outline block>
                                         Sign up
                                     </Button>
                                 </Col>

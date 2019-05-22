@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {
@@ -42,19 +42,22 @@ interface RegistrationPageProps {
 
 const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  RegistrationPageProps) => {
     const register = (event: React.FormEvent<HTMLFontElement>) => {
+        setMyUser(Object.assign(myUser, {firstlogin: true}))
         event.preventDefault();
-        console.log("Registration attempt")
+        console.log("Registration attempt");
+        console.log(myUser);
+        updateCurrentUser({registeredUser: myUser, passwordCurrent: ""}, myUser)
     }; // TODO MT registration action
 
-    const emailPreferences = {"NEWS_AND_UPDATES": true, "ASSIGNMENTS": true, "EVENTS": true};
+    const queryString = require('query-string');
+    const urlParams = queryString.parse(location.search);
 
-    const tempUser = {};
-    const myUser1 = Object.assign(tempUser, user);
-    const myUser = Object.assign(myUser1, {password: ""});
+    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
     const [isValidEmail, setValidEmail] = useState(true);
     const [isValidDob, setValidDob] = useState(true);
     const [isValidPassword, setValidPassword] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
+    const [signUpAttempted, setSignUpAttempted] = useState(false);
 
     let today = new Date();
     let thirteen_years_ago = Date.UTC(today.getFullYear() - 13, today.getMonth(), today.getDate())/1000;
@@ -77,6 +80,11 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
         )
     };
 
+    const attemptSignUp = () => {
+        setSignUpAttempted(true);
+    };
+
+
     return <div id="registration-page">
         <h1>Register</h1>
         <Card>
@@ -84,13 +92,13 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                 <CardTitle tag="h2">
                     <small className="text-muted">Sign up to {" "} <Link to="/">Isaac</Link></small>
                 </CardTitle>
-                <Form name="register" onSubmit={register} noValidate>
+                <Form name="register" onSubmit={register}>
                     <Row>
                         <Col size={12} md={6}>
                             <FormGroup>
                                 <Label htmlFor="first-name-input">First Name</Label>
                                 <Input id="first-name-input" type="text" name="givenName"
-                                       onBlur={(e: any) => {myUser.givenName = e.target.value}}
+                                       onBlur={(e: any) => {setMyUser(Object.assign(myUser, {givenName: e.target.value}))}}
                                        required/>
                             </FormGroup>
                         </Col>
@@ -98,7 +106,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                             <FormGroup>
                                 <Label htmlFor="last-name-input">Last Name</Label>
                                 <Input id="last-name-input" type="text" name="familyName"
-                                       onBlur={(e: any) => {myUser.familyName = e.target.value}}
+                                       onBlur={(e: any) => {setMyUser(Object.assign(myUser, {familyName: e.target.value}))}}
                                        required/>
                             </FormGroup>
                         </Col>
@@ -113,11 +121,11 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                         <Col size={12} md={6}>
                             <FormGroup>
                                 <Label htmlFor="password-confirm">Re-enter New Password</Label>
-                                <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password" onBlur={(e: any) => {
+                                <Input invalid={!isValidPassword && signUpAttempted} id="password-confirm" type="password" name="password" onBlur={(e: any) => {
                                     validateAndSetPassword(e);
-                                    (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ? setCurrentPassword(e.target.value) : null}
+                                    (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ? Object.assign(myUser, {password: e.target.value}) : null}
                                 } aria-describedby="invalidPassword" required/>
-                                <FormFeedback id="invalidPassword">{(!isValidPassword) ? "Passwords must match and be at least 6 characters long" : null}</FormFeedback>
+                                <FormFeedback id="invalidPassword">{(!isValidPassword && signUpAttempted) ? "Passwords must match and be at least 6 characters long" : null}</FormFeedback>
                             </FormGroup>
                         </Col>
                     </Row>
@@ -126,14 +134,14 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                             <FormGroup>
                                 <Label htmlFor="email-input">Email</Label>
                                 <Input invalid={!isValidEmail} id="email-input" type="email"
-                                       name="email" defaultValue={"user email from login screen"}
+                                       name="email" defaultValue={urlParams.email ? urlParams.email : null}
                                        onBlur={(e: any) => {
                                            validateAndSetEmail(e);
-                                           (isValidEmail) ? myUser.email = e.target.value : null
+                                           (isValidEmail) ? setMyUser(Object.assign(myUser, {email: e.target.value})) : null
                                        }}
                                        aria-describedby="emailValidationMessage" required/>
                                 <FormFeedback id="emailValidationMessage">
-                                    {(!isValidEmail) ? "Enter a valid email address" : null}
+                                    {(!isValidEmail && signUpAttempted) ? "Enter a valid email address" : null}
                                 </FormFeedback>
                             </FormGroup>
                         </Col>
@@ -150,7 +158,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                                             defaultValue={myUser.dateOfBirth}
                                             onBlur={(e: any) => {
                                                 validateAndSetDob;
-                                                (isValidDob) ? myUser.dateOfBirth = e.target.value : null
+                                                (isValidDob) ? setMyUser(Object.assign(myUser, {dateOfBirth: e.target.value})) : null
                                             }}
                                             aria-describedby ="ageValidationMessage"
                                         />
@@ -173,7 +181,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                     </Row>
                     <Row>
                         <Col size={12} md={{size: 6, offset: 3}}>
-                            <Button color="secondary" block>Register Now</Button>
+                            <Button color="secondary" type="submit" onClick={(isValidPassword && isValidEmail && isValidDob) ? attemptSignUp : null} block>Register Now</Button>
                         </Col>
                     </Row>
                 </Form>
