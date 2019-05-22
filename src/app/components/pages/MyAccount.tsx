@@ -109,7 +109,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, getUserAut
                         <NavItem>
                             <NavLink
                                 className={classnames({ active: activeTab === 0 })}
-                                onClick={() => setTab(0)}
+                                onClick={() => setTab(0)} tabIndex={0}
                             >
                                 Profile
                             </NavLink>
@@ -117,7 +117,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, getUserAut
                         <NavItem>
                             <NavLink
                                 className={classnames({ active: activeTab === 1 })}
-                                onClick={() => setTab(1)}
+                                onClick={() => setTab(1)} tabIndex={0}
                             >
                                 <span className="d-none d-lg-block d-md-block">Change Password</span>
                                 <span className="d-block d-md-none">Password</span>
@@ -126,7 +126,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, getUserAut
                         <NavItem>
                             <NavLink
                                 className={classnames({ active: activeTab === 2 })}
-                                onClick={() => setTab(2)}
+                                onClick={() => setTab(2)} tabIndex={0}
                             >
                                 <span className="d-none d-lg-block d-md-block">Email Preferences</span>
                                 <span className="d-block d-md-none">Email</span>
