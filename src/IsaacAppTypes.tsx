@@ -13,6 +13,9 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS; authSettings: ApiTypes.UserAuthenticationSettingsDTO}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
+    | {type: ACTION_TYPE.USER_PREFERENCES_SUCCESS; userPreferences: UserPreferencesDTO}
+    | {type: ACTION_TYPE.USER_PREFERENCES_FAILURE; errorMessage: string}
 
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
@@ -63,6 +66,12 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
     currentAttempt?: ApiTypes.ChoiceDTO;
     canSubmit?: boolean;
+}
+
+export interface UserPreferencesDTO {
+    BETA_FEATURE?: string;
+    EMAIL_PREFERENCE?: {NEWS_AND_UPDATES: boolean, ASSIGNMENTS: boolean, EVENTS: boolean};
+    SUBJECT_INTEREST?: string;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {

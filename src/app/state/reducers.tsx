@@ -1,5 +1,5 @@
 import {combineReducers} from "redux";
-import {Action, AppQuestionDTO, isValidatedChoice} from "../../IsaacAppTypes";
+import {Action, AppQuestionDTO, isValidatedChoice, UserPreferencesDTO} from "../../IsaacAppTypes";
 import {AssignmentDTO, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO, RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE} from "../services/constants";
 
@@ -118,24 +118,35 @@ export const error = (error: LoginErrorState = null, action: Action) => {
         case ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_FAILURE:
         case ACTION_TYPE.USER_PASSWORD_RESET_FAILURE:
         case ACTION_TYPE.USER_AUTH_SETTINGS_FAILURE:
+        case ACTION_TYPE.USER_PREFERENCES_FAILURE:
             return action.errorMessage;
         default:
             return null;
     }
 };
 
-type authSettingsState = UserAuthenticationSettingsDTO | null;
-export const authSettings = (authSettings: authSettingsState = null, action: Action) => {
+type AuthSettingsState = UserAuthenticationSettingsDTO | null;
+export const authSettings = (authSettings: AuthSettingsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS:
             return action.authSettings;
         default:
-            return null;
+            return authSettings;
+    }
+};
+
+type UserPreferencesState = UserPreferencesDTO | null;
+export const userPreferences = (userPreferences: UserPreferencesState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_PREFERENCES_SUCCESS:
+            return action.userPreferences;
+        default:
+            return userPreferences;
     }
 };
 
 // TODO decide on how to delete error state
-const appReducer = combineReducers({user, constants, doc, questions, currentTopic, currentGameboard, assignments, error, authSettings});
+const appReducer = combineReducers({user, constants, doc, questions, currentTopic, currentGameboard, assignments, error, authSettings, userPreferences});
 export type AppState = undefined | {
     user: UserState;
     constants: ConstantsState;
@@ -145,7 +156,8 @@ export type AppState = undefined | {
     currentGameboard: CurrentGameboardState;
     assignments: AssignmentsState;
     error: LoginErrorState;
-    authSettings: authSettingsState;
+    authSettings: AuthSettingsState;
+    userPreferences: UserPreferencesState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

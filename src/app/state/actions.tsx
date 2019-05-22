@@ -1,6 +1,6 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {Action, ValidatedChoice, ValidationUser} from "../../IsaacAppTypes";
+import {Action, ValidatedChoice, ValidationUser, UserPreferencesDTO} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
@@ -15,6 +15,10 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_UPDATE_REQUEST});
     try {
         const currentUser = await api.users.getCurrent();
+        const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
+        const userPreferenceSettings = await api.users.getPreferences();
+        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS, authSettings: authenticationSettings.data});
+        dispatch({type: ACTION_TYPE.USER_PREFERENCES_SUCCESS, userPreferences: userPreferenceSettings.data});
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: currentUser.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_UPDATE_FAILURE});
@@ -32,11 +36,17 @@ export const getUserAuthsettings = () => async (dispatch: Dispatch<Action>) => {
 };
 
 
-export const requestUserPreferences = () => async (dispatch: Dispatch<Action>) => {
-
+export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
+    try {
+        const userPreferenceSettings = await api.users.getPreferences();
+        dispatch({type: ACTION_TYPE.USER_PREFERENCES_SUCCESS, userPreferences: userPreferenceSettings.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_PREFERENCES_FAILURE, errorMessage: e.response.data.errorMessage});
+    }
 };
 
-export const updateCurrentUser = (params: {registeredUser: ValidationUser; passwordCurrent: string}, currentUser: RegisteredUserDTO) => async (dispatch: Dispatch<Action>) => {
+export const updateCurrentUser = (params: {registeredUser: ValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}, currentUser: RegisteredUserDTO) => async (dispatch: Dispatch<Action>) => {
     if (currentUser.email !== params.registeredUser.email) {
         let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
         // TODO handle the alert ourselves

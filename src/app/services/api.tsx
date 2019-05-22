@@ -1,6 +1,7 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
+import * as AppTypes from "../../IsaacAppTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -12,7 +13,7 @@ export const api = {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
         },
-        getPreferences: (): AxiosPromise<ApiTypes.userPreferences> => {
+        getPreferences: (): AxiosPromise<AppTypes.UserPreferencesDTO> => {
             return endpoint.get(`users/user_preferences`)
         },
         passwordReset: (params: {email: string}): AxiosPromise => {
