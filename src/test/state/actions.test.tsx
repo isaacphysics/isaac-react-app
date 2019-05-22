@@ -1,10 +1,18 @@
 import MockAdapter from 'axios-mock-adapter';
 import configureMockStore from 'redux-mock-store';
+
 import thunk from 'redux-thunk';
-import {fetchSearch, registerQuestion, requestConstantsUnits, requestCurrentUser} from "../../app/state/actions";
+import {
+    fetchSearch,
+    registerQuestion,
+    requestConstantsUnits,
+    requestCurrentUser, requestEmailVerification,
+    showToast
+} from "../../app/state/actions";
 import {endpoint} from "../../app/services/api";
 import {errorResponses, questionDTOs, registeredUserDTOs, searchResultsList, unitsList} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
+import {Action} from "../../IsaacAppTypes";
 
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
@@ -151,4 +159,106 @@ describe("fetchSearch action", () => {
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(0);
     });
+});
+
+describe("toasts actions", () => {
+    beforeEach(() => {
+        jest.useFakeTimers();
+        jest.clearAllTimers();
+    });
+
+    const someTimedToast = {
+        color: "success",
+        title: "Title",
+        body: "Body",
+        timeout: 1000
+    };
+
+    const someUnTimedToast = {
+        color: "success",
+        title: "Title",
+        body: "Body"
+    };
+
+    it("registers an action to hide and remove the toast if a timeout is set", async () => {
+        const store = mockStore();
+        const toastId: string = await store.dispatch(showToast(someTimedToast) as any);
+        const expectedActions: Action[] = [
+            {type: ACTION_TYPE.TOASTS_SHOW, toast: someTimedToast}
+        ];
+        expect(store.getActions()).toEqual(expectedActions);
+
+        jest.runOnlyPendingTimers();
+        expectedActions.push(
+            {type: ACTION_TYPE.TOASTS_HIDE, toastId: toastId}
+        );
+        expect(store.getActions()).toEqual(expectedActions);
+
+        jest.runOnlyPendingTimers();
+        expectedActions.push(
+            {type: ACTION_TYPE.TOASTS_REMOVE, toastId}
+        );
+        expect(store.getActions()).toEqual(expectedActions);
+
+        jest.runOnlyPendingTimers();
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it("does not register any actions related to the toast if a timeout is not set", async () => {
+        const store = mockStore();
+        const toastId: string = await store.dispatch(showToast(someUnTimedToast) as any);
+        const expectedActions: Action[] = [
+            {type: ACTION_TYPE.TOASTS_SHOW, toast: someUnTimedToast}
+        ];
+        expect(store.getActions()).toEqual(expectedActions);
+
+        jest.runOnlyPendingTimers();
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+});
+
+describe("requestEmailVerification action", () => {
+    afterEach(() => {
+        axiosMock.reset();
+    });
+
+    const {profWheeler} = registeredUserDTOs;
+
+    it("dispatches failure and a failure toast if not logged in", async () => {
+        const store = mockStore();
+        await store.dispatch(requestEmailVerification() as any);
+        const expectedActions = [
+            {type: ACTION_TYPE.TOASTS_SHOW},
+            {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE}
+        ];
+        expect(store.getActions()).toMatchObject(expectedActions);
+        expect(axiosMock.history.get.length).toBe(0);
+    });
+
+    it("success dispatches request, success, and a toast if logged in", async () => {
+        axiosMock.onPost(`/users/verifyemail`).replyOnce(200);
+        const store = mockStore({user: {...profWheeler, loggedIn: true}});
+        await store.dispatch(requestEmailVerification() as any);
+        const expectedActions = [
+            {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST},
+            {type: ACTION_TYPE.TOASTS_SHOW},
+            {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS}
+        ];
+        expect(store.getActions()).toMatchObject(expectedActions);
+        expect(axiosMock.history.post.length).toBe(1);
+    });
+
+    it("failure dispatches request, failure, and a toast if logged in", async () => {
+        axiosMock.onPost(`/users/verifyemail`).replyOnce(500, {bypassGenericSiteErrorPage: true});
+        const store = mockStore({user: {...profWheeler, loggedIn: true}});
+        await store.dispatch(requestEmailVerification() as any);
+        const expectedActions = [
+            {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST},
+            {type: ACTION_TYPE.TOASTS_SHOW},
+            {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE}
+        ];
+        expect(store.getActions()).toMatchObject(expectedActions);
+        expect(axiosMock.history.post.length).toBe(1);
+    });
+
 });

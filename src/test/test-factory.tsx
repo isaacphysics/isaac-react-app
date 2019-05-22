@@ -20,7 +20,8 @@ export const registeredUserDTOs: {[key: string]: RegisteredUserDTO} = {
         givenName: "David",
         familyName: "Wheeler",
         gender: "MALE",
-        id: 2
+        id: 2,
+        email: "dw@example.com"
     }
 };
 

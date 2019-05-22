@@ -94,19 +94,23 @@ export const requestEmailVerification = () => async (dispatch: any, getState: ()
     let error = "";
     if (user && user.email) {
         dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST});
-        const response = await api.users.requestEmailVerification({email: user.email});
-        if (response.status == 200) {
-            dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS});
-            dispatch(showToast({
-                color: "success", title: "Email verification request succeeded.",
-                body: "Please follow the verification link given in the email sent to your address.",
-                timeout: 10000
-            }));
-            return;
+        try {
+            const response = await api.users.requestEmailVerification({email: user.email});
+            if (response.status == 200) {
+                dispatch(showToast({
+                    color: "success", title: "Email verification request succeeded.",
+                    body: "Please follow the verification link given in the email sent to your address.",
+                    timeout: 10000
+                }));
+                dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS});
+                return;
+            }
+            error = response.data || "Error sending request";
+        } catch (e) {
+            error = e.message || "Error sending request";
         }
-        error = response.data || "Error sending request";
     } else {
-        error = "You are not logged in";
+        error = "You are not logged in or don't have an e-mail address to verify.";
     }
 
     dispatch(showToast({color: "failure", title: "Email verification request failed.",
