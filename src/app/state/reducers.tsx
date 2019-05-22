@@ -1,31 +1,40 @@
 import {combineReducers} from "redux";
-import {Action, AppQuestionDTO, isValidatedChoice} from "../../IsaacAppTypes";
+import {
+    Action,
+    AppQuestionDTO,
+    isValidatedChoice,
+    LoggedInUser
+} from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
     ContentDTO,
     ContentSummaryDTO,
     GameboardDTO,
     IsaacTopicSummaryPageDTO,
-    RegisteredUserDTO,
     ResultsWrapper
 } from "../../IsaacApiTypes";
-import {ACTION_TYPE} from "../services/constants";
+import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
 
-type UserState = RegisteredUserDTO | null;
-export const user = (user: UserState = null, action: Action) => {
+type UserState = LoggedInUser | null;
+export const user = (user: UserState = null, action: Action): UserState => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
-            return {...action.user};
+            return {loggedIn: true, ...action.user};
+        case ACTION_TYPE.USER_UPDATE_FAILURE:
+        case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
+            return {loggedIn: false};
         default:
             return user;
     }
 };
 
-type ConstantsState = {units: string[]} | null;
-export const constants = (constants: ConstantsState = null, action: Action) => {
+type ConstantsState = {units?: string[]; segueVersion?: string} | null;
+export const constants = (constants: ConstantsState = null, action: Action): ConstantsState => {
     switch (action.type) {
         case ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS:
             return {...constants, units: action.units};
+        case ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS:
+            return {...constants, segueVersion: action.segueVersion};
         default:
             return constants;
     }
@@ -139,10 +148,7 @@ export const error = (error: ErrorState = null, action: Action): ErrorState => {
     }
 };
 
-type SearchState = {
-    searchResults: ResultsWrapper<ContentSummaryDTO> | null;
-} | null;
-
+type SearchState = {searchResults: ResultsWrapper<ContentSummaryDTO> | null} | null;
 export const search = (search: SearchState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.SEARCH_REQUEST:
@@ -154,6 +160,22 @@ export const search = (search: SearchState = null, action: Action) => {
     }
 };
 
+export type ContentVersionState = {liveVersion?: string; updateState?: ContentVersionUpdatingStatus; updatingVersion?: string} | null;
+export const contentVersion = (contentVersion: ContentVersionState = null, action: Action): ContentVersionState => {
+    switch (action.type) {
+        case ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS:
+            return {...contentVersion, liveVersion: action.liveVersion};
+        case ACTION_TYPE.CONTENT_VERSION_SET_REQUEST:
+            return {...contentVersion, updateState: ContentVersionUpdatingStatus.UPDATING, updatingVersion: action.version};
+        case ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS:
+            return {...contentVersion, updateState: ContentVersionUpdatingStatus.SUCCESS, liveVersion: action.newVersion};
+        case ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE:
+            return {...contentVersion, updateState: ContentVersionUpdatingStatus.FAILURE};
+        default:
+            return contentVersion;
+    }
+};
+
 const appReducer = combineReducers({
     user,
     constants,
@@ -162,8 +184,9 @@ const appReducer = combineReducers({
     currentTopic,
     currentGameboard,
     assignments,
+    contentVersion,
+    search,
     error,
-    search
 });
 
 export type AppState = undefined | {
@@ -174,6 +197,7 @@ export type AppState = undefined | {
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
     assignments: AssignmentsState;
+    contentVersion: ContentVersionState;
     search: SearchState;
     error: ErrorState;
 }

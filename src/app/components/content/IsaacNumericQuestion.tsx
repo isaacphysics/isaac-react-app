@@ -11,7 +11,7 @@ import {Hints} from "./Hints";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
-    const userId = state && state.user && state.user.id || undefined;
+    const userId = state && state.user && state.user.loggedIn && state.user.id || undefined;
     const units = state && state.constants && state.constants.units || undefined;
     const props = {userId, units};
     return question ? {currentAttempt: question.currentAttempt, ...props} : {...props};

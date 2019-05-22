@@ -1,7 +1,6 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {history} from "./history";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 
 export const endpoint = axios.create({
@@ -31,6 +30,12 @@ endpoint.interceptors.response.use((response) => {
 
 
 export const api = {
+    search: {
+        get: (query: string, types: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+            return endpoint.get(`/search/` + encodeURIComponent(query),
+                {params: {types}});
+        }
+    },
     users: {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
@@ -91,15 +96,20 @@ export const api = {
             return endpoint.get(`/assignments`);
         }
     },
-    constants: {
-        getUnits: (): AxiosPromise<string[]> => {
-            return endpoint.get(`/content/units`);
+    contentVersion: {
+        getLiveVersion: (): AxiosPromise<{ liveVersion: string }> => {
+            return endpoint.get(`/info/content_versions/live_version`);
+        },
+        setLiveVersion(version: string): AxiosPromise {
+            return endpoint.post(`/admin/live_version/${version}`);
         }
     },
-    search: {
-        get: (query: string, types: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
-            return endpoint.get(`/search/` + encodeURIComponent(query),
-                {params: {types}});
+    constants: {
+        getUnits: (): AxiosPromise<string[]> => {
+            return endpoint.get(`/content/units`)
+        },
+        getSegueVersion: (): AxiosPromise<{segueVersion: string}> => {
+            return endpoint.get(`/info/segue_version`)
         }
-    }
+    },
 };
