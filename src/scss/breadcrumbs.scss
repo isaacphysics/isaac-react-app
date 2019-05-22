@@ -1,0 +1,33 @@
+// ISAAC
+.breadcrumb {
+  background: none;
+}
+
+// NOMENSA breadcrumbs.scss
+.breadcrumb {
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+
+  .breadcrumb-item {
+    font-family: $secondary-font-medium;
+
+    &.active {
+      color: $gray-blue;
+    }
+  }
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  background-image: url('/assets/chevron_right.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  content: '';
+  height: 14px;
+  left: 20px;
+  margin-bottom: -2px;
+  margin-left: 2px;
+  margin-right: 10px;
+  margin-top: 0;
+  width: 9px;
+}

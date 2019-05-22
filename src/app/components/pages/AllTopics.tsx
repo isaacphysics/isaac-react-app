@@ -9,7 +9,7 @@ export const AllTopics = () => {
 
     const renderTopic = (topic: Tag) => {
         return <React.Fragment>
-            <Link to={topic.comingSoon ? "/page/coming_soon" : `/topics/${topic.id}`}>{topic.title}</Link>
+            <Link to={topic.comingSoon ? "/coming_soon" : `/topics/${topic.id}`}>{topic.title}</Link>
             {" "}
             {topic.onlyFor && <>{topic.onlyFor.map((examBoard) => <Badge color="primary" key={examBoard} pill>{examBoard}</Badge>)}</>}
             {" "}

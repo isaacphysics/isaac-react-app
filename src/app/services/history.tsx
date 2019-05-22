@@ -1,3 +1,8 @@
-import { createBrowserHistory } from "history";
+import {createBrowserHistory} from "history";
+import {changePage} from "../state/actions";
 
-export default createBrowserHistory();
+export const history = createBrowserHistory();
+
+history.listen((location) => {
+    changePage(location.pathname);
+});

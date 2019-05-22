@@ -1,64 +1,83 @@
-// NOMENSA style.scss extract
-// Bootstrap
-@import url("https://fonts.googleapis.com/css?family=Exo+2");
-
 // NOMENSA variables.scss
 //Colours
 $primary: #ffb53f;
 $secondary: #ff3369;
-$gray-180: #d2d2d2;
-$gray-200: #ececec;
-$gray-390: #656665;
-$gray-420: #949494;
-$gray-580: #636C73;
-$gray-630: #a3a3a3;
-$gray-940: #0f0f0f;
+
+//Greys
+$gray-103: #f8f8f8;
+$gray-107: #ececec;
+$gray-110: #e7e7e7;
+$gray-118: #d2d2d2;
+$gray-136: #a3a3a3;
+$gray-142: #949494;
+$gray-160: #666;
+$gray-194: #0f0f0f;
+
+$gray-blue: #636c73;
+
+// Shadows
+$shadow-3: rgba(0, 0, 0, .3);
+$shadow-25: rgba(0, 0, 0, .25);
+$shadow-08: rgba(0, 0, 0, .08);
+
+// Colour Overrides
 $purple: #944cbe;
 $cyan: #0f8294;
 $green: #208838;
+
 //Custom Colours
-$reddish: #d7335f;
+$reddish: #d7335f; // Used as an active colour on secondary buttons
+
 // Button sizing
-$input-btn-padding-y-lg: 0.5rem;
+$input-btn-padding-y-lg: .5rem;
 $input-btn-padding-x-lg: 3rem;
-$border-radius-lg: 0.25rem;
+$border-radius-lg: .25rem;
+
 // fonts
-$secondary-font: "Exo 2", sans-serif;
+$primary-font: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+$secondary-font: 'exo_2regular', sans-serif;
+$secondary-font-bold: 'exo_2bold', sans-serif;
+$secondary-font-semi-bold: 'exo_2semi_bold', sans-serif;
+$secondary-font-medium: 'exo_2medium', sans-serif;
 
 // ISAAC
-$hot_pink: #ff3369;
-$mustard_yellow: #ffb53f;
-$mustard_light: #ffb62f;
-
 $body-bg: rgba(#ececec, 0.4);
-$spacer: 1rem;
 
-$theme-colors: (
-  "primary": $mustard_yellow,
-  "secondary": $hot_pink
-);
-
+// Node module imports
 @import "~bootstrap/scss/bootstrap";
 @import "~katex/dist/katex.min.css";
 
-@import "./_preload.scss";
-@import "./_mixins.scss";
+// Utility
+@import "./_preload";
+@import "./_mixins";
 
+// Atoms
+@import "./logo";
+@import "./fonts";
 @import "./typography";
 @import "./headings";
 @import "./button";
 @import "./modals";
 @import "./questions";
 @import "./forms";
+@import "./elements";
+@import "./breadcrumbs";
+@import "./list-group-topic";
+@import "./figures";
+@import "./tabs";
 
+// Navigation
 @import "./navigation-bar";
-@import "./homepage";
+@import "./header";
 @import "./footer";
 
+// Pages
+@import "./homepage";
 @import "./login";
 @import "./registration";
 @import "./topic";
-@import "./inequality-modal.scss";
+@import "./search";
+@import "./inequality-modal";
 
 a.disabled {
     color: $gray-600;
@@ -71,15 +90,35 @@ a.disabled {
 
 // NOMENSA global.scss
 body {
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
     color: $black;
-    line-height: 1.63;
+    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    line-height: 1.625;
 }
 
-.pattern-01 {
-    > .container {
-        background-image: url("/assets/pattern01.svg");
-        background-repeat: no-repeat;
-        background-position: left 338px;
+.content-body {
+    background-color: $gray-107;
+
+    &.pattern-01 {
+        > .container {
+            @include respond-above(md) {
+                background-image: url('/assets/pattern01.svg');
+                background-position: left 338px;
+                background-repeat: no-repeat;
+            }
+        }
+    }
+    &.pattern-02 {
+        > .container {
+            @include respond-above(md) {
+                background-image: url('/assets/pattern01.svg'), url('/assets/pattern01.svg');
+                background-position: 150% 250px, -76% 800px;
+                background-repeat: no-repeat;
+            }
+        }
     }
 }
+
+//.list-group-item {
+//    border-width: 0;
+//    width: 100%;
+//}
