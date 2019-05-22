@@ -2,10 +2,10 @@
 
 @import "./_mixins";
 
-.cookie-banner {
+.banner {
   background: #fff;
 }
-.cookie-banner-button {
+.banner-button {
   @include respond-below(sm) {
     width: 100%;
   }

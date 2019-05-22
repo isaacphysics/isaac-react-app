@@ -16,7 +16,7 @@ export const CookieBanner = () => {
         Cookies.set(COOKIE_COOKIE, "1", {expires: 720 /* days*/})
     }
 
-    return show ? <RS.Container className="cookie-banner">
+    return show ? <RS.Container className="banner">
         <RS.Row style={{alignItems: "center"}}>
             <RS.Col xs={12} sm={2} md={1}>
                 <h3 className="text-center" role="presentation">ℹ️<span className="d-inline-block d-sm-none">&nbsp;Cookies</span></h3>
@@ -28,7 +28,7 @@ export const CookieBanner = () => {
                 Do you agree to participate in this research?</small>
             </RS.Col>
             <RS.Col xs={12} md={4}>
-                <RS.Button color="primary" className="d-block d-md-inline-block cookie-banner-button" onClick={clickDismiss}>I Agree</RS.Button>
+                <RS.Button color="primary" className="d-block d-md-inline-block banner-button" onClick={clickDismiss}>I Agree</RS.Button>
             </RS.Col>
         </RS.Row>
     </RS.Container> : null;

@@ -42,6 +42,9 @@ export const api = {
         },
         passwordReset: (params: {email: string}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword`, params);
+        },
+        requestEmailVerification(params: {email: string}): AxiosPromise {
+            return endpoint.post(`/users/verifyemail`, params);
         }
     },
     authentication: {

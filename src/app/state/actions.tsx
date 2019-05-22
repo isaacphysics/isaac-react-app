@@ -1,7 +1,7 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
 import {Action, ValidatedChoice} from "../../IsaacAppTypes";
-import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
@@ -60,6 +60,22 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
     // TODO MT trigger user consistency check
     // TODO MT handle error case
+};
+
+export const requestEmailVerification = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    const user: RegisteredUserDTO | null = state && state.user && state.user.loggedIn && state.user || null;
+    if (user && user.email) {
+        dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST});
+        const response = await api.users.requestEmailVerification({email: user.email});
+        if (response.status == 200) {
+            dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS});
+        } else {
+            dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE});
+        }
+    } else {
+        dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE});
+    }
 };
 
 

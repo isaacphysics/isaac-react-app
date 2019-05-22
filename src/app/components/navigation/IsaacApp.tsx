@@ -29,6 +29,7 @@ import {SessionExpired} from "../pages/SessionExpired";
 import {ConsistencyErrorModal} from "./ConsistencyErrorModal";
 import {Search} from "../pages/Search";
 import {CookieBanner} from "./CookieBanner";
+import {EmailVerificationBanner} from "./EmailVerificationBanner";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false
@@ -48,6 +49,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
         <React.Fragment>
             <NavigationBar />
             <CookieBanner />
+            <EmailVerificationBanner />
             <main role="main" className="flex-fill py-4">
                 <div className={"container"}>
                     <Switch>
