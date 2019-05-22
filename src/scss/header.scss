@@ -1,3 +1,19 @@
+// ISAAC
+
+@import "./_mixins";
+
+.cookie-banner {
+  background: #fff;
+}
+.cookie-banner-button {
+  @include respond-below(sm) {
+    width: 100%;
+  }
+  @include respond-below(lg) {
+    min-width: 150px;
+  }
+}
+
 // NOMENSA header.scss
 .headerBar {
   padding-right: 4em;
