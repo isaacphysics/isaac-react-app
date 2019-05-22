@@ -127,7 +127,7 @@ const NavigationBarComponent = ({user, history}: NavigationBarProps) => {
                                     <RS.DropdownToggle nav caret className="py-3 pl-3 pr-6">
                                         For Teachers
                                     </RS.DropdownToggle>
-                                    <RS.DropdownMenu caret className="p-0 pb-3 pl-3 m-0">
+                                    <RS.DropdownMenu className="p-0 pb-3 pl-3 m-0">
                                         <DropdownItemComingSoon className="px-3 pt-3">
                                             Set Assignments
                                         </DropdownItemComingSoon>
