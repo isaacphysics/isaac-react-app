@@ -5,18 +5,25 @@
 }
 
 // NOMENSA navigation.scss
+// REMEMBER TO REPLACE ALL "./assets/" WITH "/assets/"
 nav {
   &.main-nav {
     background-color: $white !important;
+    position: initial;
+
+    @include respond-above(sm) {
+      position: relative;
+    }
 
     .navbar-toggler {
       border-width: 0;
       color: $black;
-      font-family: $secondary-font-semi-bold;
+      font-family: $secondary-font-medium;
+      padding: 0.8rem 0 0.8rem 0.1rem;
       position: absolute;
-      right: 0;
+      right: 9%;
       text-transform: uppercase;
-      top: -45px;
+      top: 15px;
 
       &:hover {
         text-decoration: underline;
@@ -60,23 +67,25 @@ nav {
           @include respond-above(md) {
             padding-right: 30px;
           }
-
           &::after {
-            background-image: url('/assets/chevron-sprite.svg');
-            background-position: 1rem -.6rem;
-            background-repeat: no-repeat;
-            border: 0;
-            border-left: 1px solid $gray-200;
-            padding: 1.3rem 1.5rem;
-            position: absolute;
-            right: 0;
-
-            @include respond-above(md) {
-              border: 0;
-              padding: 1.3rem 1.1rem;
-            }
+            display: none;
           }
+          // Commented out but leaving in for now
+          // &::after {
+          //   background-image: url('/assets/chevron-sprite.svg');
+          //   background-position: 1rem -.6rem;
+          //   background-repeat: no-repeat;
+          //   border: 0;
+          //   border-left: 1px solid $gray-200;
+          //   padding: 1.3rem 1.5rem;
+          //   position: absolute;
+          //   right: 0;
 
+          //   @include respond-above(md) {
+          //     border: 0;
+          //     padding: 1.3rem 1.1rem;
+          //   }
+          // }
         }
 
         &.show {
@@ -110,7 +119,7 @@ nav {
 
             .dropdown-item {
               background-color: $gray-103;
-              border-bottom: 0;
+              border-bottom: 1px solid $shadow-08;
               font-family: $secondary-font-semi-bold;
               font-size: 1.25rem;
               text-decoration: none;
@@ -125,6 +134,7 @@ nav {
 
               @include respond-above(sm) {
                 background-color: $white;
+                border-width: 0;
                 font-family: $secondary-font-medium;
                 font-size: 1rem;
                 text-decoration: underline;
@@ -136,13 +146,13 @@ nav {
             }
 
             .dropdown-divider {
-              margin: .5rem 0 0;
-              padding: .2rem 0;
+              border-top: 0;
+              margin: 0 0.5rem 0;
+              padding: 0.2rem 0;
 
               + .dropdown-item {
-                border-top: 0;
-                padding-bottom: .8rem !important;
-                padding-top: .3rem !important;
+                padding-bottom: 0.8rem !important;
+                padding-top: 0.3rem !important;
               }
             }
           }
@@ -150,4 +160,8 @@ nav {
       }
     }
   }
+}
+
+.main-menu-container {
+  position: initial;
 }

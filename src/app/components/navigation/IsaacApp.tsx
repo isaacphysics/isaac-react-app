@@ -45,7 +45,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
         <React.Fragment>
             <NavigationBar />
             <main role="main" className="flex-fill py-4">
-                <div className={"container"}>
+                <div className="container">
                     <Switch>
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
 

@@ -17,31 +17,33 @@ export const AllTopics = () => {
         </React.Fragment>;
     };
 
-    return <Container>
-        {/* Breadcrumbs */}
+    return <div className="pattern-02">
+        <Container>
+            {/* Breadcrumbs */}
 
-        <h1 className="h-title">All topics</h1>
+            <h1 className="h-title">All topics</h1>
 
-        {/* Search topics TODO MT */}
+            {/* Search topics TODO MT */}
 
-        <Row className="my-4">
-            {Tags.allCategoryTags.map((category) => {
-                const categoryDescendentIds = Tags.getDescendents(category.id).map(t => t.id);
-                const subcategoryTags = Tags.getAllSubcategoryTags(categoryDescendentIds);
-                return <Col key={category.id} md={6}>
-                    <h2>{category.title}</h2>
-                    {subcategoryTags.map((subcategory) => {
-                        const subcategoryDescendentIds = Tags.getDescendents(subcategory.id).map(t => t.id);
-                        const topicTags = Tags.getAllTopicTags(subcategoryDescendentIds);
-                        return <React.Fragment key={subcategory.id}>
-                            <h3>{subcategory.title}</h3>
-                            <ul className="list-unstyled">
-                                {topicTags.map((topic) => <li key={topic.id}>{renderTopic(topic)}</li>)}
-                            </ul>
-                        </React.Fragment>
-                    })}
-                </Col>
-            })}
-        </Row>
-    </Container>;
+            <Row className="my-4">
+                {Tags.allCategoryTags.map((category) => {
+                    const categoryDescendentIds = Tags.getDescendents(category.id).map(t => t.id);
+                    const subcategoryTags = Tags.getAllSubcategoryTags(categoryDescendentIds);
+                    return <Col key={category.id} md={6}>
+                        <h2>{category.title}</h2>
+                        {subcategoryTags.map((subcategory) => {
+                            const subcategoryDescendentIds = Tags.getDescendents(subcategory.id).map(t => t.id);
+                            const topicTags = Tags.getAllTopicTags(subcategoryDescendentIds);
+                            return <React.Fragment key={subcategory.id}>
+                                <h3>{subcategory.title}</h3>
+                                <ul className="list-unstyled">
+                                    {topicTags.map((topic) => <li key={topic.id}>{renderTopic(topic)}</li>)}
+                                </ul>
+                            </React.Fragment>
+                        })}
+                    </Col>
+                })}
+            </Row>
+        </Container>
+    </div>;
 };

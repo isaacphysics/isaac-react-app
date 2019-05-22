@@ -1,14 +1,19 @@
 // NOMENSA button.scss
 
 .btn {
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   font-family: $secondary-font-bold;
   font-size: 1.125rem;
-  letter-spacing: .5px;
+  letter-spacing: 0.5px;
   min-width: 180px;
 
   &:hover {
     text-decoration: underline;
+  }
+
+  &.disabled,
+  &:disabled {
+    text-decoration: none;
   }
 
   &.btn-secondary,
@@ -33,12 +38,11 @@
     &.focus,
     &:focus,
     &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 .2rem $shadow-3;
+      box-shadow: 0 0 0 0.2rem $shadow-3;
     }
 
     &.disabled,
     &:disabled {
-      border-color: $gray-136;
       color: $gray-136;
     }
 
@@ -47,6 +51,7 @@
       line-height: 1.5;
     }
   }
+
   //Button Secondary
   &.btn-secondary:not(:disabled):not(.disabled):active {
     background-color: $reddish;
@@ -54,6 +59,7 @@
     color: $black;
     text-decoration: underline;
   }
+
   //Button - Primary Outline
   &.btn-outline-primary {
     border-color: $black;
@@ -72,7 +78,7 @@
     &.focus,
     &:focus,
     &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 .2rem $shadow-3;
+      box-shadow: 0 0 0 0.2rem $shadow-3;
     }
 
     &.disabled,
@@ -81,6 +87,7 @@
       color: $gray-136;
     }
   }
+
   //Button - Secondary Outline
   &.btn-outline-secondary {
     background-color: $black;
@@ -96,7 +103,7 @@
     &.focus,
     &:focus,
     &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 .2rem $shadow-3;
+      box-shadow: 0 0 0 0.2rem $shadow-3;
     }
 
     &.disabled,
@@ -107,11 +114,11 @@
   }
 }
 
+
 // ISAAC
 a.btn {
   text-decoration: none;
 }
-
 .btn {
   &.btn-link {
     font-size: initial;
