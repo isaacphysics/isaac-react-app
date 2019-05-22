@@ -16,7 +16,7 @@ import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
 const stateToProps = (state: AppState) => {
     return {
         searchResults: state && state.search && state.search.searchResults || null,
-        userRole: state && state.user && state.user.role || null
+        userRole: state && state.user && state.user.loggedIn && state.user.role || null
     };
 };
 const dispatchToProps = {fetchSearch};

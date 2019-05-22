@@ -1,19 +1,20 @@
 import React, {ChangeEvent, useState} from "react";
 import {Link} from "react-router-dom";
+import {connect} from "react-redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import * as RS from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router";
 import {History} from "history";
 import {pushSearchToHistory} from "../../services/search";
-import {connect} from "react-redux";
 import {SearchButton} from "../content/SearchButton";
+import {LoggedInUser} from "../../../IsaacAppTypes";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
 
 interface NavigationBarProps {
-    user: RegisteredUserDTO | null;
+    user: LoggedInUser | null;
     history: History;
 }
 
@@ -40,26 +41,27 @@ const NavigationBarComponent = ({user, history}: NavigationBarProps) => {
             </RS.NavbarBrand>
 
             <RS.Nav className="ml-auto" navbar>
-                {!user &&
-                    <React.Fragment>
-                        <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/login">LOGIN</RS.NavLink>
-                        </RS.NavItem>
-                        <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/register">SIGN UP</RS.NavLink>
-                        </RS.NavItem>
-                    </React.Fragment>
-                }
-                {user &&
-                    <React.Fragment>
-                        <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/account">MY ACCOUNT</RS.NavLink>
-                        </RS.NavItem>
-                        <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/logout">LOG OUT</RS.NavLink>
-                        </RS.NavItem>
-                    </React.Fragment>
-                }
+                {user && ( !user.loggedIn ?
+                    (
+                        <React.Fragment>
+                            <RS.NavItem>
+                                <RS.NavLink tag={Link} to="/login">LOGIN</RS.NavLink>
+                            </RS.NavItem>
+                            <RS.NavItem>
+                                <RS.NavLink tag={Link} to="/register">SIGN UP</RS.NavLink>
+                            </RS.NavItem>
+                        </React.Fragment>
+                    ) : (
+                        <React.Fragment>
+                            <RS.NavItem>
+                                <RS.NavLink tag={Link} to="/account">MY ACCOUNT</RS.NavLink>
+                            </RS.NavItem>
+                            <RS.NavItem>
+                                <RS.NavLink tag={Link} to="/logout">LOG OUT</RS.NavLink>
+                            </RS.NavItem>
+                        </React.Fragment>
+                    )
+                )}
                 <RS.Form inline action="/form" onSubmit={doSearch}>
                     <RS.FormGroup className="search--main-group">
                         <RS.Input type="search" name="query" placeholder="Search" aria-label="Search" value={searchText}
@@ -121,7 +123,6 @@ const NavigationBarComponent = ({user, history}: NavigationBarProps) => {
                                         </DropdownItemComingSoon>
                                     </RS.DropdownMenu>
                                 </RS.UncontrolledDropdown>
-
                                 <RS.UncontrolledDropdown nav inNavbar>
                                     <RS.DropdownToggle nav caret className="py-3 pl-3 pr-6">
                                         For Teachers
@@ -175,6 +176,16 @@ const NavigationBarComponent = ({user, history}: NavigationBarProps) => {
                                         </DropdownItemComingSoon>
                                     </RS.DropdownMenu>
                                 </RS.UncontrolledDropdown>
+                                {user && user.loggedIn && user.role == "ADMIN" &&
+                                    <RS.UncontrolledDropdown nav inNavbar>
+                                        <RS.DropdownToggle nav caret className="py-3 pl-3 pr-6">
+                                            Admin
+                                        </RS.DropdownToggle>
+                                        <RS.DropdownMenu>
+                                            <RS.DropdownItem className="px-3 pt-3"><Link to="/admin">Admin Tools</Link></RS.DropdownItem>
+                                        </RS.DropdownMenu>
+                                    </RS.UncontrolledDropdown>
+                                }
                             </RS.Nav>
                         </RS.Collapse>
                     </RS.Navbar>
