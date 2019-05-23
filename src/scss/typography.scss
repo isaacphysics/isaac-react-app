@@ -1,8 +1,11 @@
-// NOMENSA typography
-
+// ISAAC temp hopefully
+small {
+  border: 0 !important;
+}
+// NOMENSA typography.scss
 p {
   &.p-small {
-    font-size: .8125em;
+    font-size: 0.8125em;
     line-height: 1.69;
   }
 }
@@ -18,7 +21,6 @@ a {
 
   &.a-alt {
     color: $purple;
-
   }
 }
 
@@ -33,23 +35,21 @@ a {
 }
 
 blockquote {
-
   &.blockquote {
-    border-left: .25rem solid $gray-107;
-    padding: .5rem 1rem;
-
+    border-left: 0.25rem solid $gray-107;
+    padding: 0.5rem 1rem;
   }
 }
 
 small {
   line-height: 1.69;
-  //border-top: 1px solid $black;
+  border-top: 1px solid $black;
 }
 
 hr {
   display: block;
   border-bottom: 1px solid $black;
-  position:relative;
+  position: relative;
 
   &::before {
     @include pseudo-element;
@@ -70,12 +70,4 @@ hr {
       margin: auto;
     }
   }
-}
-
-// ISAAC Typography
-.MathJax {
-  //span {
-  //  font-size: 100% !important;
-  //  font-weight: 500 !important;
-  //}
 }

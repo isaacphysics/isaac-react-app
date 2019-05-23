@@ -1,10 +1,18 @@
 // NOMENSA logo.scss
 .header-logo {
+  float: left;
+
+  @include respond-above(sm) {
+    float: none;
+  }
+
   img {
     width: 104px;
+    height: 46px;
 
     @include respond-above(sm) {
       width: 130px;
+      height: 58px;
     }
   }
 }
