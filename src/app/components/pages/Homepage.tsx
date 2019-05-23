@@ -14,7 +14,7 @@ interface HomePageProps {
 }
 export const HomepageComponent = ({user}: HomePageProps) => {
     return <div id="homepage">
-        <section id="call-to-action">
+        <section id="call-to-action" className="mt-4 mb-5">
             <Row>
                 <Col lg={6}>
                     <Row>
@@ -40,13 +40,13 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     </Row>
                     <Row>
                         <Col sm={6} className="pt-3">
-                            <Button tag={Link} to={user ? "/topics" : "/register"} color="secondary" block>
-                                {user ? "Find a topic" : "Sign up"}
+                            <Button tag={Link} to={user && user.loggedIn ? "/topics" : "/register"} color="secondary" block>
+                                {user && user.loggedIn ? "Find a topic" : "Sign up"}
                             </Button>
                         </Col>
                         <Col sm={6} className="pt-3">
-                            <Button tag={Link} to={user ? "/events" : "/login"} color="primary" outline block>
-                                {user ? "Find an event" : "Log in"}
+                            <Button tag={Link} to={user && user.loggedIn ? "/events" : "/login"} color="primary" outline block>
+                                {user && user.loggedIn ? "Find an event" : "Log in"}
                             </Button>
                         </Col>
                     </Row>
@@ -57,53 +57,114 @@ export const HomepageComponent = ({user}: HomePageProps) => {
             </Row>
         </section>
 
-        {!user && <hr />}
+        {!(user && user.loggedIn) && <hr />}
 
-        {!user && <section id="why-sign-up">
-            <h2 className="text-center mt-4 mb-4">Why sign up?</h2>
-            <IsaacTabs/>
+        {!(user && user.loggedIn) && <section id="why-sign-up" className="mb-5">
+            <h2 className="text-center mb-4">Why sign up?</h2>
+            <IsaacTabs tabNavLinkClass="px-3 py-1">
+                {{
+                    Teacher: <Row>
+                        <Col md={{size: 6, offset: 6}}>
+                            <Card>
+                                <CardBody>
+                                    <CardTitle tag="h3">
+                                        Benefits for teachers
+                                    </CardTitle>
+                                    <strong>Isaac Computer Science allows you to:</strong>
+                                    <ul>
+                                        <li>Select and set self-marking homework questions</li>
+                                        <li>Save time on marking</li>
+                                        <li>Pinpoint weak areas to work on with your students</li>
+                                        <li>Manage students’ progress in your personal markbook</li>
+                                    </ul>
+
+                                    <strong>Isaac Computer Science aims to provide:</strong>
+                                    <ul>
+                                        <li>Complete coverage of AQA and OCR specifications</li>
+                                        <li>High-quality materials written by experienced teachers</li>
+                                    </ul>
+
+                                    <p>
+                                        Everything on Isaac Computer Science is free, funded by the DfE.
+                                    </p>
+                                    <div className="text-center">
+                                        <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>,
+                    Student: <Row>
+                        <Col md={6}>
+                            <Card>
+                                <CardBody>
+                                    <CardTitle tag="h3">
+                                        Benefits for students
+                                    </CardTitle>
+                                    <strong>Isaac Computer Science allows you to:</strong>
+                                    <ul>
+                                        <li>Study and revise at your own pace</li>
+                                        <li>Track your progress as you answer questions</li>
+                                        <li>Work towards achieving better exam results</li>
+                                        <li>Access high-quality materials written by experienced teachers</li>
+                                        <li>Learn relevant content tailored to your A level exam board</li>
+                                    </ul>
+                                    <p>
+                                        Everything on Isaac Computer Science is free, funded by the DfE.
+                                    </p>
+                                    <div className="text-center">
+                                        <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>,
+                }}
+            </IsaacTabs>
         </section>}
 
-        <section id="headline-content" className="px-5 py-4">
-            <h3>Featured-question</h3>
-            <Row className="p-1">
-                <Col md={6}>
-                    <p className="font-weight-bold">
-                        Trace the pseudocode and enter the output that will be produced when the program is run
-                    </p>
-                    <pre className="text-monospace">
-                        {
-                            "SUBROUTINE increase_num()\n" +
-                            "    num2 ← 2\n" +
-                            "    num1 ← num2 + 5\n" +
-                            "    num2 ← 13\n" +
-                            "ENDSUBROUTINE\n\n" +
-                            "num1 ← 4\n" +
-                            "num2 ← 10\n\n" +
-                            "increase_num()\n\n" +
-                            "num3 ← 4\n\n" +
-                            "OUTPUT num1 + num2 + num3"
-                        }
-                    </pre>
-                </Col>
-                <Col md={6}>
-                    <div className="text-center">
-                        <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration" />
-                    </div>
-                </Col>
-            </Row>
+        <section id="headline-content" className="px-5 py-5">
+            <IsaacTabs tabNavLinkClass="px-3 py-1">
+                {{
+                    "Featured Question": <Row className="p-1">
+                        <Col md={6}>
+                            <p className="font-weight-bold">
+                                Trace the pseudocode and enter the output that will be produced when the program is run
+                            </p>
+                            <pre className="text-monospace">
+                                {
+                                    "SUBROUTINE increase_num()\n" +
+                                    "    num2 ← 2\n" +
+                                    "    num1 ← num2 + 5\n" +
+                                    "    num2 ← 13\n" +
+                                    "ENDSUBROUTINE\n\n" +
+                                    "num1 ← 4\n" +
+                                    "num2 ← 10\n\n" +
+                                    "increase_num()\n\n" +
+                                    "num3 ← 4\n\n" +
+                                    "OUTPUT num1 + num2 + num3"
+                                }
+                            </pre>
+                        </Col>
+                        <Col md={6}>
+                            <div className="text-center">
+                                <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
+                            </div>
+                        </Col>
+                    </Row>
+                }}
+            </IsaacTabs>
         </section>
 
-        <section id="events">
+        <section id="events" className="pb-5">
             <Row>
                 <Col>
-                    <h1 className="text-center">Your face-to-face events</h1>
-                    <hr />
+                    <h1 className="h-title text-center my-4">Your face-to-face events</h1>
                 </Col>
             </Row>
             <Row>
                 <Col md={{size: 6, offset: 3}}>
-                    <p className="text-center">
+                    <p className="text-center mb-5">
                         {"We offer free face-to-face events for students and teachers. Visit our "}
                         <Link to="/events">events page</Link>
                         {" to see what’s happening in your area, and sign up today!"}
@@ -181,7 +242,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
             </Row>
         </section>
 
-        {!user && <section id="sign-up-card" className="px-5">
+        {!(user && user.loggedIn) && <section id="sign-up-card" className="px-5 mb-5">
             <Row>
                 <Col lg={7} className="text-center text-lg-right">
                     <h3 className="align-content-center">
