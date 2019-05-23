@@ -1,44 +1,41 @@
 // NOMENSA headings.scss
-h1,
-h2,
-h3,
-h4 {
-  font-family: $secondary-font;
-}
-
 h1 {
+  font-family: $secondary-font-bold;
   font-size: 2.75rem;
   font-weight: 700;
   line-height: 1.14;
-}
 
-h1.h-m {
-  font-size: 2.625rem;
-  font-weight: 700;
-  line-height: 1.26;
-}
+  &.h-m {
+    font-size: 2.625rem;
+    font-weight: 700;
+    line-height: 1.26;
+  }
 
-h1.h-s {
-  font-size: 2.375rem;
-  font-weight: 700;
-  line-height: 1.26;
+  &.h-s {
+    font-size: 2.375rem;
+    font-weight: 700;
+    line-height: 1.26;
+  }
 }
 
 h2 {
+  font-family: $secondary-font-semi-bold;
   font-size: 2.125rem;
   font-weight: 600;
 }
 
 h3 {
+  font-family: $secondary-font-medium;
   font-size: 1.625rem;
-  line-height: 1.54;
   font-weight: 500;
+  line-height: 1.54;
 }
 
 h4 {
+  font-family: $secondary-font-semi-bold;
   font-size: 1.25rem;
-  line-height: 1.6;
   font-weight: 600;
+  line-height: 1.6;
 }
 
 .h-question {
@@ -49,40 +46,41 @@ h4 {
   > span {
     display: inline-block;
     font-size: 2.375rem;
-    line-height: 1.26;
     font-weight: 700;
+    line-height: 1.26;
   }
 }
 
 .h-title {
   font-size: 2.125rem;
   line-height: 1.47;
-  position: relative;
   padding-bottom: 1.25rem;
+  position: relative;
 
-  &:after {
+  &::after {
     @include pseudo-element;
+    border-bottom: 1px solid $black;
+    bottom: -2px;
     left: 0;
     right: 0;
-    bottom: -2px;
-    border-bottom: 1px solid $black;
   }
 
-  &:before {
+  &::before {
     @include pseudo-element;
-    left: 0;
-    right: 0;
-    bottom: -4px;
     border-bottom: 5px solid $black;
-    width: 32%;
+    bottom: -4px;
+    left: 0;
     max-width: 158px;
+    right: 0;
+    width: 32%;
+
     @include respond-above(sm) {
       max-width: 380px;
     }
   }
 
   &.text-center {
-    &:before {
+    &::before {
       margin: auto;
     }
   }

@@ -5,6 +5,11 @@ import {RegisteredUserDTO} from "./IsaacApiTypes";
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
 
+    | {type: ACTION_TYPE.ROUTER_PAGE_CHANGE; path: string}
+
+    | {type: ACTION_TYPE.API_SERVER_ERROR}
+    | {type: ACTION_TYPE.API_GONE_AWAY}
+
     | {type: ACTION_TYPE.USER_UPDATE_REQUEST}
     | {type: ACTION_TYPE.USER_UPDATE_FAILURE}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE}
@@ -34,6 +39,8 @@ export type Action =
     | {type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
     | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
+    | {type: ACTION_TYPE.USER_CONSISTENCY_CHECK}
+    | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
     | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST}
     | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_SUCCESS}
     | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_FAILURE; errorMessage: string}
@@ -41,6 +48,10 @@ export type Action =
     | {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST}
     | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS; units: string[]}
+
+    | {type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_REQUEST}
+    | {type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS; segueVersion: string}
 
     | {type: ACTION_TYPE.DOCUMENT_REQUEST; documentType: DOCUMENT_TYPE; documentId: string}
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
@@ -60,7 +71,18 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
 
     | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
-    | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]};
+    | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
+
+    | {type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST}
+    | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS; liveVersion: string}
+    | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.CONTENT_VERSION_SET_REQUEST; version: string}
+    | {type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS; newVersion: string}
+    | {type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string}
+    | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>};
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
@@ -86,3 +108,5 @@ export interface ValidationUser extends RegisteredUserDTO {
 export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>): choice is ValidatedChoice<ApiTypes.ChoiceDTO> {
     return choice.hasOwnProperty("frontEndValidation");
 }
+
+export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {loggedIn: false};

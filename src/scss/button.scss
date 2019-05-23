@@ -1,11 +1,11 @@
 // NOMENSA button.scss
 
 .btn {
-  min-width: 180px;
-  border-radius: 0.25rem;
+  border-radius: .25rem;
+  font-family: $secondary-font-bold;
   font-size: 1.125rem;
-  font-family: $secondary-font;
-  font-weight: 700;
+  letter-spacing: .5px;
+  min-width: 180px;
 
   &:hover {
     text-decoration: underline;
@@ -26,20 +26,20 @@
     }
 
     &:not(:disabled):not(.disabled):active {
-      background-color: $gray-180;
-      border-color: $gray-180;
+      background-color: $gray-118;
+      border-color: $gray-118;
     }
 
     &.focus,
     &:focus,
     &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 0 .2rem $shadow-3;
     }
 
     &.disabled,
     &:disabled {
-      border-color: $gray-630;
-      color: $gray-630;
+      border-color: $gray-136;
+      color: $gray-136;
     }
 
     &.btn-sm {
@@ -56,57 +56,56 @@
   }
   //Button - Primary Outline
   &.btn-outline-primary {
-    color: $black;
     border-color: $black;
     border-width: 2px;
+    color: $black;
 
     &:hover {
       background-color: transparent;
     }
 
     &:not(:disabled):not(.disabled):active {
-      background-color: $gray-180;
-      border-color: $gray-180;
+      background-color: $gray-118;
+      border-color: $gray-118;
     }
 
     &.focus,
     &:focus,
     &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 0 .2rem $shadow-3;
     }
 
     &.disabled,
     &:disabled {
-      border-color: $gray-630;
-      color: $gray-630;
+      border-color: $gray-136;
+      color: $gray-136;
     }
   }
   //Button - Secondary Outline
   &.btn-outline-secondary {
-    color: $white;
     background-color: $black;
     border-color: $white;
     border-width: 2px;
+    color: $white;
 
     &:not(:disabled):not(.disabled):active {
-      background-color: $gray-180;
-      border-color: $gray-180;
+      background-color: $gray-118;
+      border-color: $gray-118;
     }
 
     &.focus,
     &:focus,
     &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 0 .2rem $shadow-3;
     }
 
     &.disabled,
     &:disabled {
-      border-color: $gray-390;
-      color: $gray-390;
+      border-color: $gray-160;
+      color: $gray-160;
     }
   }
 }
-
 
 // ISAAC
 a.btn {

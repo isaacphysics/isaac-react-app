@@ -2,96 +2,67 @@ import React from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardDeck, CardImg, CardText, CardTitle, Col, Row} from "reactstrap";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
+import {LoggedInUser} from "../../../IsaacAppTypes";
+import {IsaacTabs} from "../content/IsaacTabs";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
 
 interface HomePageProps {
-    user: RegisteredUserDTO | null;
+    user: LoggedInUser | null;
 }
 export const HomepageComponent = ({user}: HomePageProps) => {
     return <div id="homepage">
         <section id="call-to-action">
             <Row>
-                <Col md={6}>
+                <Col lg={6}>
                     <Row>
                         <Col>
-                            <h1>{
-                                user ? `Welcome ${user.givenName}!` : "A-level Computer Science Learning"
+                            <h1 className="pb-3">{
+                                user && user.loggedIn ? `Welcome ${user.givenName}!` : "A-level Computer Science Learning"
                             }</h1>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla feugiat lorem nisl, sed
-                                convallis dui lobortis volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing
-                                elit. Nulla feugiat lorem nisl, sed convallis dui lobortis volutpat.
+                                Isaac Computer Science is a free online learning platform, funded by the Department for Education:
                             </p>
+                            <ul>
+                                <li>Use it in the classroom</li>
+                                <li>Use it for homework</li>
+                                <li>Use it for revision</li>
+                            </ul>
+                            <p>{
+                                "Isaac Computer Science will provide full coverage of every A level " +
+                                "Computer Science topic, and a vast bank of self-marking questions — " +
+                                "all mapped to the AQA and OCR specifications, and all created by our team of " +
+                                "experienced teachers."
+                            }</p>
                         </Col>
                     </Row>
                     <Row>
-                        <Col size={6}>
+                        <Col sm={6} className="pt-3">
                             <Button tag={Link} to={user ? "/topics" : "/register"} color="secondary" block>
                                 {user ? "Find a topic" : "Sign up"}
                             </Button>
                         </Col>
-                        <Col size={6}>
+                        <Col sm={6} className="pt-3">
                             <Button tag={Link} to={user ? "/events" : "/login"} color="primary" outline block>
                                 {user ? "Find an event" : "Log in"}
                             </Button>
                         </Col>
                     </Row>
                 </Col>
-                <Col md={6}>
-                    <img src="/assets/ics_hero.svg" className="img-fluid" alt="Students illustration"/>
+                <Col lg={6} className="align-self-center text-center">
+                    <img src="/assets/ics_hero.svg" className="img-fluid mt-5 mt-lg-3" alt="Students illustration"/>
                 </Col>
             </Row>
         </section>
 
         {!user && <hr />}
 
-        {!user &&
-            <section id="why-sign-up">
-                <h1 className="text-center">Why sign up?</h1>
-                <Row>
-                    <Col md={6}>
-                        <Card>
-                            <CardBody>
-                                <CardTitle tag="h2">
-                                    Benefits for{" "}<span className="text-secondary">teachers</span>
-                                </CardTitle>
-                                <ul>
-                                    <li>Easy to set homework</li>
-                                    <li>Easy to check homework</li>
-                                    <li>See progress</li>
-                                    <li>Managing different classes</li>
-                                    <li>Increase in pass rate</li>
-                                    <li>Syllabus information</li>
-                                    <li>Teachers Events</li>
-                                </ul>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    <Col md={6}>
-                        <Card>
-                            <CardBody>
-                                <CardTitle tag="h2">
-                                    Benefits for{" "}<span className="text-secondary">students</span>
-                                </CardTitle>
-                                <ul>
-                                    <li>Easy to set homework</li>
-                                    <li>Easy to check homework</li>
-                                    <li>See progress</li>
-                                    <li>Managing different classes</li>
-                                    <li>Increase in pass rate</li>
-                                    <li>Syllabus information</li>
-                                    <li>Student Events</li>
-                                </ul>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-            </section>
-        }
+        {!user && <section id="why-sign-up">
+            <h2 className="text-center mt-4 mb-4">Why sign up?</h2>
+            <IsaacTabs/>
+        </section>}
 
         <section id="headline-content" className="px-5 py-4">
             <h3>Featured-question</h3>
@@ -126,16 +97,16 @@ export const HomepageComponent = ({user}: HomePageProps) => {
         <section id="events">
             <Row>
                 <Col>
-                    <h1 className="text-center">We run events</h1>
+                    <h1 className="text-center">Your face-to-face events</h1>
                     <hr />
                 </Col>
             </Row>
             <Row>
                 <Col md={{size: 6, offset: 3}}>
                     <p className="text-center">
-                        We have a number of events throughout the year. Below you can see a snapshot of some of the
-                        events we run. On our events page you will see more, and see how you can sign up for more
-                        information or sign up to events themselves.
+                        {"We offer free face-to-face events for students and teachers. Visit our "}
+                        <Link to="/events">events page</Link>
+                        {" to see what’s happening in your area, and sign up today!"}
                     </p>
                 </Col>
             </Row>
@@ -209,6 +180,21 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                 </Col>
             </Row>
         </section>
+
+        {!user && <section id="sign-up-card" className="px-5">
+            <Row>
+                <Col lg={7} className="text-center text-lg-right">
+                    <h3 className="align-content-center">
+                        Sign up to track your progress
+                    </h3>
+                </Col>
+                <Col lg={3} className="text-center">
+                    <Button color="secondary" tag={Link} to="/register" size="lg" className="align-content-center">
+                        Sign Up
+                    </Button>
+                </Col>
+            </Row>
+        </section>}
     </div>
 };
 

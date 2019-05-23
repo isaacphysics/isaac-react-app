@@ -1,27 +1,25 @@
-import React, {Dispatch, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
-import {withRouter} from 'react-router-dom';
 import {verifyPasswordReset, handlePasswordReset} from "../../state/actions";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {Button, Col, FormFeedback, Input, Label, Row, Card, CardBody, Form, FormGroup, CardFooter} from "reactstrap";
-import {AppState} from "../../state/reducers";
+import {AppState, ErrorState} from "../../state/reducers";
+
 const stateToProps = (state: AppState) => ({
-    user: state ? state.user : null,
     errorMessage: state ? state.error : null
 });
+
 const dispatchToProps = {
     handleResetPassword: handlePasswordReset,
     verifyPasswordReset: verifyPasswordReset
 };
 
 interface PasswordResetHandlerProps {
-    user: RegisteredUserDTO | null,
-    handleResetPassword: (params: {token: string | null, password: string | null}) => void,
-    verifyPasswordReset: (token: string | null) => void,
-    errorMessage: string | null
+    handleResetPassword: (params: {token: string | null; password: string | null}) => void;
+    verifyPasswordReset: (token: string | null) => void;
+    errorMessage: ErrorState;
 }
 
-const ResetPasswordHandlerComponent = ({user, handleResetPassword, verifyPasswordReset, errorMessage}: PasswordResetHandlerProps) => {
+const ResetPasswordHandlerComponent = ({handleResetPassword, verifyPasswordReset, errorMessage}: PasswordResetHandlerProps) => {
     const resetToken = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
 
     const [isValidPassword, setValidPassword] = useState(true);
@@ -36,7 +34,6 @@ const ResetPasswordHandlerComponent = ({user, handleResetPassword, verifyPasswor
     };
 
     useEffect(() => {
-        console.log("useeffect in reset password");
         setTimeout(function(){verifyPasswordReset(resetToken)},10);
     }, []);
 
@@ -66,7 +63,7 @@ const ResetPasswordHandlerComponent = ({user, handleResetPassword, verifyPasswor
                 </CardBody>
                 <CardFooter>
                     <h4 role="alert" className="text-danger text-center mb-0">
-                        {errorMessage}
+                        {errorMessage && errorMessage.type === "generalError" && errorMessage.generalError}
                     </h4>
                     <Button color="secondary" className="mb-2" block onClick={(e: any) => (isValidPassword && !errorMessage) ? handleResetPassword({token: resetToken, password: currentPassword}) : null}>Change Password</Button>
                 </CardFooter>

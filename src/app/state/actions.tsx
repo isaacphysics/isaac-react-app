@@ -4,7 +4,9 @@ import {Action, ValidatedChoice, ValidationUser, UserPreferencesDTO} from "../..
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
-import history from "../services/history";
+import {history} from "../services/history";
+import {store} from "./store";
+
 
 
 
@@ -181,24 +183,40 @@ export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, ge
     }
 };
 
+export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    // Don't request this again if it has already been fetched successfully
+    const state = getState();
+    if (state && state.constants && state.constants.segueVersion) {
+        return;
+    }
 
-// Concepts
-export const fetchConcept = (conceptId: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: DOCUMENT_TYPE.CONCEPT, documentId: conceptId});
-    const response = await api.concepts.get(conceptId);
+    dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_REQUEST});
+    try {
+        const version = await api.constants.getSegueVersion();
+        dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS, ...version.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE});
+    }
+};
+
+
+// Document Fetch
+export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
+    let apiEndpoint;
+    switch (documentType) {
+        case DOCUMENT_TYPE.CONCEPT: apiEndpoint = api.concepts; break;
+        case DOCUMENT_TYPE.QUESTION: apiEndpoint = api.questions; break;
+        case DOCUMENT_TYPE.FRAGMENT: apiEndpoint = api.fragments; break;
+        case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
+    }
+    const response = await apiEndpoint.get(pageId);
     dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
     // TODO MT handle response failure
 };
 
 
 // Questions
-export const fetchQuestion = (questionId: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: DOCUMENT_TYPE.QUESTION, documentId: questionId});
-    const response = await api.questions.get(questionId);
-    dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
-    // TODO MT handle response failure
-};
-
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question});
 };
@@ -250,4 +268,58 @@ export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_REQUEST});
     const assignmentsResponse = await api.assignments.getMyAssignments();
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
+};
+
+
+// Content version
+export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST});
+    try {
+        const version = await api.contentVersion.getLiveVersion();
+        dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS, ...version.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_FAILURE});
+    }
+};
+
+export const setContentVersion = (version: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_REQUEST, version});
+    try {
+        const result = await api.contentVersion.setLiveVersion(version);
+        if (result.status == 200) {
+            dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS, newVersion: version});
+        } else {
+            dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE});
+        }
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE});
+    }
+};
+
+
+// Search
+export const fetchSearch = (query: string, types: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query, types});
+    if (query === "") {
+        return;
+    }
+    const searchResponse = await api.search.get(query, types);
+    dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
+};
+
+
+// SERVICE TRIGGERED ACTIONS
+// Page change
+export const changePage = (path: string) => {
+    store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});
+};
+
+export const handleServerError = () => {
+    store.dispatch({type: ACTION_TYPE.API_SERVER_ERROR});
+    history.push("/error");
+};
+
+export const handleApiGoneAway = () => {
+    store.dispatch({type: ACTION_TYPE.API_GONE_AWAY});
+    history.push("/error_stale");
 };

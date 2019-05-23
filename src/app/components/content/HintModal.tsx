@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import {Button, Modal, ModalBody, ModalHeader} from "reactstrap";
 import {IsaacContent} from "./IsaacContent";
 import {ContentDTO} from "../../../IsaacApiTypes";
 
@@ -15,7 +15,7 @@ export const HintModal = (props: HintModalProps) => {
 
     const toggle = () => setIsOpen(!isOpen);
 
-    const close = <button className="close" onClick={toggle}>Close</button>;
+    const closeButton = <button className="close" onClick={toggle}>Close</button>;
 
     return <div>
         <Button color="link" size="sm" className="a-alt" onClick={toggle}>
@@ -23,7 +23,7 @@ export const HintModal = (props: HintModalProps) => {
         </Button>
 
         <Modal isOpen={isOpen} toggle={toggle} {...restOfProps}>
-            <ModalHeader close={close}>
+            <ModalHeader close={closeButton}>
                 {title}
             </ModalHeader>
             <ModalBody>

@@ -1,25 +1,21 @@
-import React, {Dispatch, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {connect} from "react-redux";
-import {withRouter} from 'react-router-dom';
 import {handleEmailAlter} from "../../state/actions";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {Button, Col} from "reactstrap";
-import {AppState} from "../../state/reducers";
-import history from "../../services/history";
+import {AppState, ErrorState} from "../../state/reducers";
+import {history} from "../../services/history";
 
 const stateToProps = (state: AppState) => ({
-    user: state ? state.user : null,
     errorMessage: state ? state.error : null
 });
-const dispatchToProps = {handleEmailAlter: handleEmailAlter};
+const dispatchToProps = {handleEmailAlter};
 
 interface EmailAlterHandlerProps {
-    user: RegisteredUserDTO | null,
-    handleEmailAlter: (params: {userId: string | null, token: string | null}) => void,
-    errorMessage: string | null
+    handleEmailAlter: (params: {userId: string | null; token: string | null}) => void;
+    errorMessage: ErrorState;
 }
 
-const EmailAlterHandlerComponent = ({user, handleEmailAlter, errorMessage}: EmailAlterHandlerProps) => {
+const EmailAlterHandlerComponent = ({handleEmailAlter, errorMessage}: EmailAlterHandlerProps) => {
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('userid');
     const token = urlParams.get('token');
@@ -29,7 +25,7 @@ const EmailAlterHandlerComponent = ({user, handleEmailAlter, errorMessage}: Emai
     }, []);
 
     return <div id="email-verification">
-        {!errorMessage &&
+        {(!errorMessage || errorMessage.type !== "generalError") &&
             <div>
                 <h3>Email address verified</h3>
                 <Col>
@@ -37,10 +33,10 @@ const EmailAlterHandlerComponent = ({user, handleEmailAlter, errorMessage}: Emai
                 </Col>
             </div>
         }
-        {errorMessage &&
+        {errorMessage && errorMessage.type === "generalError" &&
             <div>
-                <h3>Couldn't verify email address</h3>
-                <p>{errorMessage}</p>
+                <h3>{"Couldn't verify email address"}</h3>
+                <p>{errorMessage.generalError}</p>
             </div>
         }
     </div>;

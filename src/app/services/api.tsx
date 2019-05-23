@@ -2,13 +2,41 @@ import axios, {AxiosPromise} from "axios";
 import {API_PATH, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
+import {handleApiGoneAway, handleServerError} from "../state/actions";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
     withCredentials: true,
 });
 
+endpoint.interceptors.response.use((response) => {
+    if (response.status >= 500) {
+        // eslint-disable-next-line no-console
+        console.warn("Uncaught error from API:", response);
+    }
+    return response;
+}, (error) => {
+    if (error.response && error.response.status >= 500 && !error.response.data.bypassGenericSiteErrorPage) {
+        if (error.response.status == 502) {
+            // A '502 Bad Gateway' response means that the API no longer exists:
+            handleApiGoneAway();
+        } else {
+            handleServerError();
+        }
+        // eslint-disable-next-line no-console
+        console.warn("Error from API:", error);
+    }
+    return Promise.reject(error);
+});
+
+
 export const api = {
+    search: {
+        get: (query: string, types: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+            return endpoint.get(`/search/` + encodeURIComponent(query),
+                {params: {types}});
+        }
+    },
     users: {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
@@ -64,6 +92,16 @@ export const api = {
             return endpoint.get(`/pages/concepts/${id}`);
         },
     },
+    pages: {
+        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
+            return endpoint.get(`/pages/${id}`);
+        },
+    },
+    fragments: {
+        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
+            return endpoint.get(`/pages/fragments/${id}`);
+        },
+    },
     topics: {
         get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
             return endpoint.get(`/pages/topics/${topicName}`);
@@ -79,9 +117,20 @@ export const api = {
             return endpoint.get(`/assignments`);
         }
     },
+    contentVersion: {
+        getLiveVersion: (): AxiosPromise<{ liveVersion: string }> => {
+            return endpoint.get(`/info/content_versions/live_version`);
+        },
+        setLiveVersion(version: string): AxiosPromise {
+            return endpoint.post(`/admin/live_version/${version}`);
+        }
+    },
     constants: {
         getUnits: (): AxiosPromise<string[]> => {
             return endpoint.get(`/content/units`)
+        },
+        getSegueVersion: (): AxiosPromise<{segueVersion: string}> => {
+            return endpoint.get(`/info/segue_version`)
         }
-    }
+    },
 };
