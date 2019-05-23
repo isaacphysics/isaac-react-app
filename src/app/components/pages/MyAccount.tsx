@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {TabContent, TabPane, Nav, NavItem, NavLink, Button, Card, CardBody, CardTitle, CardText, CardFooter, Col, CustomInput, Form, FormGroup, Input, Row, Label, Table} from "reactstrap";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import classnames from 'classnames';
+import {LoggedInUser} from "../../../IsaacAppTypes";
 
 
 
@@ -12,7 +12,7 @@ const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 
 const dispatchToProps = null;
 
-interface AccountPageProps {user: RegisteredUserDTO | null}
+interface AccountPageProps {user: LoggedInUser | null}
 
 const AccountPageComponent = ({user}: AccountPageProps) => {
     const updateDetails = () => console.log("Account updated"); // TODO BH account update action
@@ -23,7 +23,7 @@ const AccountPageComponent = ({user}: AccountPageProps) => {
 
     return <div id="account-page">
         <h1>My Account</h1>
-        {user &&
+        {user && user.loggedIn &&
             <div>
                 <Card>
                     <Nav tabs>

@@ -37,7 +37,9 @@ export const IsaacContent = (props: IsaacContentProps) => {
                 // case "accordion": selectedComponent = <IsaacAccordion {...props} />; break; // TODO
                 // case "horizontal": selectedComponent = <IsaacHorizontal {...props} />; break; // TODO
                 default: selectedComponent =
-                    <IsaacContentValueOrChildren encoding={encoding} value={value} children={children} />;
+                    <IsaacContentValueOrChildren encoding={encoding} value={value}>
+                        {children}
+                    </IsaacContentValueOrChildren>;
             }
     }
     return selectedComponent;
