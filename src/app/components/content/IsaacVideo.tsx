@@ -17,7 +17,7 @@ export const IsaacVideo = (props: IsaacVideoProps) => {
 
     return <div className="content-value">
         { src ?
-            <iframe title={altText} width="614" height="390" src={rewrite(src)} frameBorder="0" allowFullScreen/>
+            <iframe className="mw-100" title={altText} width="614" height="390" src={rewrite(src)} frameBorder="0" allowFullScreen/>
             : altText
         }
     </div>;
