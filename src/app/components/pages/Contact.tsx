@@ -71,7 +71,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
         } else if (urlParams.preset == 'accountDeletion') {
             if (user) {
                 setSubject("Account Deletion Request");
-                setMessage("Hello,\n\nPlease could you delete my Isaac account.\n\nThanks, \n\n" + user.givenName + " " + user.familyName);
+                setMessage("Hello,\n\nPlease could you delete my Isaac Computer Science account.\n\nThanks, \n\n" + user.givenName + " " + user.familyName);
             }
         }
     }, [user]);
@@ -96,7 +96,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
                     <h3>Upcoming events</h3>
                     <p>If you'd like to find out more about our upcoming events visit our <a href="/events">Events Page</a></p>
                     <h3>Problems with the site?</h3>
-                    <p>We always want to improve so please report any issues to <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></p>
+                    <p>We always want to improve so please report any issues to <a className="small" href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></p>
                     <h3>Follow us</h3>
                     <p>Follow us on:</p>
                     <a href="https://twitter.com/IsaacCompSci">Twitter</a><br/>

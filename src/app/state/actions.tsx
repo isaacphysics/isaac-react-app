@@ -2,7 +2,7 @@ import {api} from "../services/api";
 import {Dispatch} from "react";
 import {Action, ValidatedChoice} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
+import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID, API_REQUEST_FAILURE_MESSAGE} from "../services/constants";
 import {AppState} from "./reducers";
 import history from "../services/history";
 
@@ -32,7 +32,7 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
         history.push('/');
         history.go(0);
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : "There may be an error connecting to the Isaac platform."})
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
     }
 };
 
@@ -84,7 +84,7 @@ export const submitMessage = (extra: any, params: {firstName: string; lastName: 
         const response = await api.contactForm.send(extra, params);
         dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_SUCCESS})
     } catch(e) {
-        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : "There may be an error connecting to the Isaac platform."})
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
     }
 };
 

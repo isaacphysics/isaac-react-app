@@ -14,6 +14,8 @@ if (document.location.hostname === "localhost") {
 }
 export const API_PATH: string = apiPath;
 
+export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
+
 export const MARKDOWN_RENDERER: Remarkable = new Remarkable();
 
 export enum ACTION_TYPE {
