@@ -23,7 +23,7 @@ const MainSearchComponent = ({history}: MainSearchProps) => {
     }
 
     return <Navbar className='search' expand='md'>
-        <NavbarToggler onClick={() => setShowSearchBox(!showSearchBox)} className={showSearchBox && 'open'} />
+        <NavbarToggler onClick={() => setShowSearchBox(!showSearchBox)} className={showSearchBox ? 'open' : ''} />
         <Collapse navbar isOpen={showSearchBox}>
             <Nav className='ml-auto' navbar>
                 <NavItem>

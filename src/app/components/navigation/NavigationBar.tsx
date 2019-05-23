@@ -76,7 +76,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="py-3 pl-3 pr-6">
                         For Teachers
                     </DropdownToggle>
-                    <DropdownMenu caret className="p-0 pb-3 pl-3 m-0">
+                    <DropdownMenu className="p-0 pb-3 pl-3 m-0">
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             Set Assignments
                         </DropdownItemComingSoon>
