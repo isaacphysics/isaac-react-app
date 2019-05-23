@@ -16,10 +16,14 @@ interface NavigationBarProps {
 const NavigationBarComponent = ({user}: NavigationBarProps) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
-    const DropdownItemComingSoon = ({children, className}: {children: string; className: string}) => (
+    const DropdownItemComingSoon = ({children, className}: {children: React.ReactNode; className: string}) => (
         <DropdownItem className={`${className}`} aria-disabled="true">
-            <Link to="/coming_soon">{children}</Link>
-            <Badge color="secondary" className="ml-2 mr-1">Coming Soon</Badge>
+            <Row className="w-100">
+                <Col size={12}>
+                    <Link to="/coming_soon" className="mr-2">{children}</Link>
+                    <Badge color="secondary" className="ml-auto mr-1">Coming Soon</Badge>
+                </Col>
+            </Row>
         </DropdownItem>
     );
 
@@ -27,7 +31,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
         <NavbarToggler onClick={() => setMenuOpen(!menuOpen)}>Menu</NavbarToggler>
 
         <Collapse isOpen={menuOpen} navbar>
-            <Nav navbar className="justify-content-between">
+            <Nav navbar className="justify-content-between px-lg-5 mx-lg-5">
 
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret className="py-3 pl-3 pr-6">
@@ -40,23 +44,26 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
                         {/*    News*/}
                         {/*</DropdownItemComingSoon>*/}
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
-                            Get Involved
-                        </DropdownItemComingSoon>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
-                            Isaac Physics
-                        </DropdownItemComingSoon>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
-                            Events
-                        </DropdownItemComingSoon>
+                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
+                        {/*    Get Involved*/}
+                        {/*</DropdownItemComingSoon>*/}
+                        <DropdownItem className="pl-4 py-3 p-md-3">
+                            <Link to="/events">Events</Link>
+                        </DropdownItem>
+                        {/*<DropdownItem className="pl-4 py-3 p-md-3">*/}
+                        {/*    Isaac Physics*/}
+                        {/*</DropdownItem>*/}
                     </DropdownMenu>
                 </UncontrolledDropdown>
 
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret className="py-3 pl-3 pr-6">
-                        For Students
+                        <text><span className="d-md-none d-lg-inline">{"For "}</span> Students</text>
                     </DropdownToggle>
                     <DropdownMenu className="p-0 pb-3 pl-3 m-0">
+                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
+                        {/*    For Students*/}
+                        {/*</DropdownItemComingSoon>*/}
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             My Gameboards
                         </DropdownItemComingSoon>
@@ -74,9 +81,12 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
 
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret className="py-3 pl-3 pr-6">
-                        For Teachers
+                        <text><span className="d-md-none d-lg-inline">{"For "}</span> Teachers</text>
                     </DropdownToggle>
                     <DropdownMenu className="p-0 pb-3 pl-3 m-0">
+                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
+                        {/*    <p>For Teachers</p>*/}
+                        {/*</DropdownItemComingSoon>*/}
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             Set Assignments
                         </DropdownItemComingSoon>
@@ -111,17 +121,17 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
 
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret className="py-3 pl-3 pr-6">
-                        Help and Support
+                        <text><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</text>
                     </DropdownToggle>
                     <DropdownMenu className="p-0 pb-3 pl-3 m-0">
+                        <DropdownItem className="pl-4 py-3 p-md-3">
+                            <Link to={"/contact"}>Contact Us</Link>
+                        </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             Teacher Support
                         </DropdownItemComingSoon>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             Student Support
-                        </DropdownItemComingSoon>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
-                            Contact Us
                         </DropdownItemComingSoon>
                     </DropdownMenu>
                 </UncontrolledDropdown>
