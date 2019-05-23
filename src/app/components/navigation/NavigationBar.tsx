@@ -30,11 +30,11 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
     return <Navbar className="main-nav p-0" color="light" light expand="md" >
         <NavbarToggler onClick={() => setMenuOpen(!menuOpen)}>Menu</NavbarToggler>
 
-        <Collapse isOpen={menuOpen} navbar>
-            <Nav navbar className="justify-content-between px-lg-5 mx-lg-5">
+        <Collapse isOpen={menuOpen} navbar className="px-0 mx-0 px-xl-5 mx-xl-5">
+            <Nav navbar className="justify-content-between">
 
                 <UncontrolledDropdown nav inNavbar>
-                    <DropdownToggle nav caret className="py-3 pl-3 pr-6">
+                    <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         About Us
                     </DropdownToggle>
                     <DropdownMenu className="p-0 pb-3 pl-3 m-0">
@@ -57,8 +57,8 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                 </UncontrolledDropdown>
 
                 <UncontrolledDropdown nav inNavbar>
-                    <DropdownToggle nav caret className="py-3 pl-3 pr-6">
-                        <text><span className="d-md-none d-lg-inline">{"For "}</span> Students</text>
+                    <DropdownToggle nav caret className="p-3 ml-3 mr-3">
+                        <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Students</p>
                     </DropdownToggle>
                     <DropdownMenu className="p-0 pb-3 pl-3 m-0">
                         {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
@@ -80,8 +80,8 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                 </UncontrolledDropdown>
 
                 <UncontrolledDropdown nav inNavbar>
-                    <DropdownToggle nav caret className="py-3 pl-3 pr-6">
-                        <text><span className="d-md-none d-lg-inline">{"For "}</span> Teachers</text>
+                    <DropdownToggle nav caret className="p-3 ml-3 mr-3">
+                        <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Teachers</p>
                     </DropdownToggle>
                     <DropdownMenu className="p-0 pb-3 pl-3 m-0">
                         {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
@@ -103,7 +103,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                 </UncontrolledDropdown>
 
                 <UncontrolledDropdown nav inNavbar>
-                    <DropdownToggle nav caret className="py-3 pl-3 pr-6">
+                    <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         Topics
                     </DropdownToggle>
                     <DropdownMenu className="p-0 pb-3 pl-3 m-0">
@@ -120,8 +120,8 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                 </UncontrolledDropdown>
 
                 <UncontrolledDropdown nav inNavbar>
-                    <DropdownToggle nav caret className="py-3 pl-3 pr-6">
-                        <text><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</text>
+                    <DropdownToggle nav caret className="p-3 ml-3 mr-3">
+                        <p className="m-0"><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</p>
                     </DropdownToggle>
                     <DropdownMenu className="p-0 pb-3 pl-3 m-0">
                         <DropdownItem className="pl-4 py-3 p-md-3">
@@ -138,7 +138,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
 
                 {user && user.loggedIn && user.role == "ADMIN" &&
                     <UncontrolledDropdown nav inNavbar>
-                        <DropdownToggle nav caret className="py-3 pl-3 pr-6">
+                        <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                             Admin
                         </DropdownToggle>
                         <DropdownMenu className="p-0 pl-md-3 m-0">
