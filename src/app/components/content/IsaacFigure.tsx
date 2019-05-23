@@ -11,17 +11,17 @@ interface IsaacFigureProps {
 export const IsaacFigure = ({doc}: IsaacFigureProps) => {
     const path = doc.src && apiHelper.determineImageUrl(doc.src);
 
-    return <div>
+    return <div className="figure_panel">
         <figure>
             <div className="text-center">
                 {!doc.clickUrl && <img src={path} alt={doc.altText} />}
                 {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} /></a>}
             </div>
+            <div className="text-center figure-caption">
+                <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
+                    {doc.children}
+                </IsaacContentValueOrChildren>
+            </div>
         </figure>
-        <div className="text-center caption">
-            <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
-                {doc.children}
-            </IsaacContentValueOrChildren>
-        </div>
     </div>;
 };
