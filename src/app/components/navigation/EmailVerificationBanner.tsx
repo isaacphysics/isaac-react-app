@@ -58,7 +58,7 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
                         address failed. This means you won&apos;t receive emails from Isaac, and may prevent you
                         regaining access to your account. <br/>To start receiving emails again, change your email
                         address in your <Link to="/account">Account Settings</Link>. If you believe this is in
-                        error, please <a href="mailto:webmaster@isaacphysics.org">email us</a>.
+                        error, please <a href="mailto:webmaster@isaaccomputerscience.org">email us</a>.
                     </small>
                 </RS.Col>
             }
