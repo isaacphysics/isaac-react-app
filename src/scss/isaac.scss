@@ -85,6 +85,8 @@ a.disabled {
     cursor: default;
 }
 
+// Double class to give this more specifity
+.katex.katex { font-size: 1.1em; }
 
 // NOMENSA global.scss
 // REMEMBER TO REPLACE "./assets" WITH "/assets"
