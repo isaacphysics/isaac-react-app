@@ -180,6 +180,11 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                         </Col>
                     </Row>
                     <Row>
+                        <h4 role="alert" className="text-danger text-center">
+                            {errorMessage}
+                        </h4>
+                    </Row>
+                    <Row>
                         <Col size={12} md={{size: 6, offset: 3}}>
                             <Button color="secondary" type="submit" onClick={(isValidPassword && isValidEmail && isValidDob) ? attemptSignUp : null} block>Register Now</Button>
                         </Col>
