@@ -23,11 +23,10 @@ import {
 } from "reactstrap";
 import {RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
-import {updateCurrentUser, getUserAuthsettings, resetPassword, getUserPreferences} from "../../state/actions";
+import {updateCurrentUser, resetPassword} from "../../state/actions";
 import {LoggedInUser, ValidationUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState) => ({
-    user: state ? state.user : null,
     errorMessage: state ? state.error : null,
     authSettings: state ? state.authSettings : null,
     userPreferences: state ? state.userPreferences : null
@@ -35,28 +34,23 @@ const stateToProps = (state: AppState) => ({
 
 const dispatchToProps = {
     updateCurrentUser,
-    getUserAuthsettings,
     resetPassword,
-    getUserPreferences
 };
 
 interface AccountPageProps {
-    user: LoggedInUser | null;
+    user: LoggedInUser;
     updateCurrentUser: (
         params: { registeredUser: ValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
         currentUser: RegisteredUserDTO
     ) => void;
     errorMessage: ErrorState;
-    getUserAuthsettings: () => void;
     authSettings: UserAuthenticationSettingsDTO | null;
-    getUserPreferences: () => void;
     userPreferences: UserPreferencesDTO | null;
     resetPassword: (params: {email: string}) => void;
 }
 
 
 const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettings, resetPassword, userPreferences}: AccountPageProps) => {
-    const updateDetails = () => console.log("Account updated");
 
     const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
     const [myUserPreferences, setMyUserPreferences] = useState(Object.assign({}, userPreferences));
@@ -77,8 +71,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
     };
 
     const validateAndSetDob = (event: any) => {
-        setValidDob(
-            myUser.loggedIn && !!myUser.dateOfBirth &&
+        setValidDob(myUser.loggedIn && !!myUser.dateOfBirth &&
             ((new Date(String(event.target.value)).getTime()/1000) <= thirteenYearsAgo)
         );
     };
@@ -92,7 +85,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
     };
 
     const resetPasswordIfValidEmail = () => {
-        if (user && user.loggedIn && user.email) {
+        if (user.loggedIn && user.email) {
             resetPassword({email: user.email});
             setPasswordResetRequest(!passwordResetRequest);
         }
@@ -102,7 +95,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
 
     return <div id="account-page">
         <h1 className="h-title mb-4">My Account</h1>
-        {user && user.loggedIn &&
+        {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <div>
                 <Card>
                     <Nav tabs className="my-4">
@@ -136,14 +129,14 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId={0}>
                             <CardBody>
-                                <Form name="userDetails" onSubmit={updateDetails}>
+                                <Form name="userDetails">
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup>
                                                 <Label htmlFor="first-name-input">First Name</Label>
                                                 <Input
                                                     id="first-name-input" type="text" name="givenName"
-                                                    defaultValue={myUser.loggedIn && myUser.givenName}
+                                                    defaultValue={myUser.givenName}
                                                     onChange={(e: any) => {setMyUser(Object.assign(myUser, {givenName: e.target.value}))}}
                                                     required
                                                 />
@@ -154,7 +147,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                                                 <Label htmlFor="last-name-input">Last Name</Label>
                                                 <Input
                                                     id="last-name-input" type="text" name="last-name"
-                                                    defaultValue={myUser.loggedIn && myUser.familyName}
+                                                    defaultValue={myUser.familyName}
                                                     onChange={(e: any) => {setMyUser(Object.assign(myUser, {familyName: e.target.value}))}}
                                                     required
                                                 />
@@ -167,7 +160,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                                                 <Label htmlFor="email-input">Email</Label>
                                                 <Input
                                                     invalid={!isValidEmail} id="email-input" type="email"
-                                                    name="email" defaultValue={myUser.loggedIn && myUser.email}
+                                                    name="email" defaultValue={myUser.email}
                                                     onChange={(e: any) => {
                                                         validateAndSetEmail(e);
                                                         (isValidEmail) ? setMyUser(Object.assign(myUser, {email: e.target.value})) : null
@@ -187,7 +180,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                                                     id="dob-input"
                                                     type="date"
                                                     name="date-of-birth"
-                                                    defaultValue={myUser.loggedIn && myUser.dateOfBirth}
+                                                    defaultValue={myUser.dateOfBirth}
                                                     onChange={(event: any) => {
                                                         validateAndSetDob(event);
                                                     }}
@@ -208,7 +201,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                                                         <CustomInput
                                                             id="gender-male" type="radio"
                                                             name="gender" label="Male"
-                                                            defaultChecked={!!(myUser.loggedIn && myUser.gender == 'MALE')}
+                                                            defaultChecked={!!(myUser.gender == 'MALE')}
                                                             onChange={
                                                                 (e: any) => {setMyUser(Object.assign(myUser, {gender: 'MALE'}))}
                                                             } required/>
@@ -217,7 +210,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                                                         <CustomInput
                                                             id="gender-female" type="radio"
                                                             name="gender" label="Female"
-                                                            defaultChecked={!!(myUser.loggedIn && myUser.gender == 'FEMALE')}
+                                                            defaultChecked={!!(myUser.gender == 'FEMALE')}
                                                             onChange={
                                                                 (e: any) => {setMyUser(Object.assign(myUser, {gender: 'FEMALE'}))}
                                                             } required/>
@@ -226,7 +219,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                                                         <CustomInput
                                                             id="gender-other" type="radio"
                                                             name="gender" label="Other"
-                                                            defaultChecked={!!(myUser.loggedIn && myUser.gender == 'OTHER')}
+                                                            defaultChecked={!!(myUser.gender == 'OTHER')}
                                                             onChange={
                                                                 (e: any) => {setMyUser(Object.assign(myUser, {gender: 'OTHER'}))}
                                                             } required/>
@@ -239,7 +232,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                                                 <Label htmlFor="school-input">School</Label>
                                                 <Input
                                                     id="school-input" type="text" name="school"
-                                                    defaultValue={myUser.loggedIn && myUser.schoolId} required
+                                                    defaultValue={myUser.schoolId} required
                                                 />
                                                 {/* TODO lookup school */}
                                             </FormGroup>
@@ -258,7 +251,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                         </TabPane>
                         <TabPane tabId={1}>
                             <CardBody>
-                                <Form name="userPassword" onSubmit={updateDetails}>
+                                <Form name="userPassword">
                                     {authSettings && authSettings.hasSegueAccount ?
                                         <div>
                                             <Col>
@@ -323,7 +316,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                         </TabPane>
                         <TabPane tabId={2}>
                             <CardBody>
-                                <Form name="emailPreferences" onSubmit={updateDetails}>
+                                <Form name="emailPreferences">
                                     Tell us which emails you would like to receive. These settings can be changed at any time.
                                     <FormGroup>
                                         <Table>

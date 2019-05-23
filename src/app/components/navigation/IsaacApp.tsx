@@ -54,7 +54,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         {/* Application Pages */}
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
                         <TrackedRoute path="/search" component={Search} />
-                        <TrackedRoute path="/account" component={MyAccount} />
+                        <TrackedRoute onlyFor={(user: LoggedInUser) => user.loggedIn} path="/account" component={MyAccount} />
                         <TrackedRoute path="/events" component={ComingSoon}/>
                         <TrackedRoute path="/gameboards" component={Gameboard}/>
                         <TrackedRoute path="/assignments" component={MyAssignments} />
