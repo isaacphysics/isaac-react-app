@@ -4,6 +4,7 @@ import {Badge, Col, Container, Row} from "reactstrap";
 import "../../services/tags";
 import * as Tags from "../../services/tags";
 import {Tag} from "../../services/tags";
+import {BreadcrumbTrail} from "../content/BreadcrumbTrail";
 
 export const AllTopics = () => {
 
@@ -13,13 +14,13 @@ export const AllTopics = () => {
             {" "}
             {topic.onlyFor && <>{topic.onlyFor.map((examBoard) => <Badge color="primary" key={examBoard} pill>{examBoard}</Badge>)}</>}
             {" "}
-            {topic.comingSoon && <Badge color="light">Coming Soon</Badge>}
+            {topic.comingSoon ? <Badge color="dark">Coming Soon</Badge> : <Badge color="secondary">New</Badge>}
         </React.Fragment>;
     };
 
     return <div className="pattern-02">
         <Container>
-            {/* Breadcrumbs */}
+            <BreadcrumbTrail currentPageTitle="All topics"/>
 
             <h1 className="h-title">All topics</h1>
 
