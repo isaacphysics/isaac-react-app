@@ -90,9 +90,15 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     canSubmit?: boolean;
 }
 
+export interface UserEmailPreferences {
+    NEWS_AND_UPDATES: boolean;
+    ASSIGNMENTS: boolean;
+    EVENTS: boolean;
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: string;
-    EMAIL_PREFERENCE?: {NEWS_AND_UPDATES: boolean, ASSIGNMENTS: boolean, EVENTS: boolean};
+    EMAIL_PREFERENCE?: UserEmailPreferences;
     SUBJECT_INTEREST?: string;
 }
 
