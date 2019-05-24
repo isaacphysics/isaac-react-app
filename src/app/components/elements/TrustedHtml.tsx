@@ -206,11 +206,26 @@ export function katexify(html: string) {
     return output;
 }
 
+// RegEx replacements to match Latex inspired Isaac Physics functionality
+function bootstrapify(html: string) {
+    // TODO does not work if class was added by content team
+    // TODO need to center table in parent element if possible
+    const regexRules = {
+        '<table class="table table-bordered w-auto text-center" ': /<table\s*?/g,
+    };
+
+    let bootstrappedHtml = html;
+    Object.entries(regexRules).forEach(([replacement, rule]) =>
+        bootstrappedHtml = bootstrappedHtml.replace(rule, replacement)
+    );
+    return bootstrappedHtml;
+}
+
 export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
-    html = katexify(html);
+    html = bootstrapify(katexify(html));
     if (span) {
         return <span dangerouslySetInnerHTML={{__html: html}} />;
     } else {
-        return <div dangerouslySetInnerHTML={{__html: html}}/>;
+        return <div dangerouslySetInnerHTML={{__html: html}} />;
     }
 };
