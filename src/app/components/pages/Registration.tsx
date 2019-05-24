@@ -42,12 +42,10 @@ interface RegistrationPageProps {
 
 const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  RegistrationPageProps) => {
     const register = (event: React.FormEvent<HTMLFontElement>) => {
-        setMyUser(Object.assign(myUser, {firstlogin: true}))
+        setMyUser(Object.assign(myUser, {firstLogin: true}));
         event.preventDefault();
-        console.log("Registration attempt");
-        console.log(myUser);
         updateCurrentUser({registeredUser: myUser, passwordCurrent: ""}, myUser)
-    }; // TODO MT registration action
+    };
 
     const queryString = require('query-string');
     const urlParams = queryString.parse(location.search);
@@ -84,6 +82,10 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
         setSignUpAttempted(true);
     };
 
+    useEffect(() => {
+        urlParams.email ? setMyUser(Object.assign(myUser, {email: urlParams.email})) : null;
+    }, []);
+
 
     return <div id="registration-page">
         <h1>Register</h1>
@@ -98,7 +100,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                             <FormGroup>
                                 <Label htmlFor="first-name-input">First Name</Label>
                                 <Input id="first-name-input" type="text" name="givenName"
-                                       onBlur={(e: any) => {setMyUser(Object.assign(myUser, {givenName: e.target.value}))}}
+                                       onChange={(e: any) => {setMyUser(Object.assign(myUser, {givenName: e.target.value}))}}
                                        required/>
                             </FormGroup>
                         </Col>
@@ -106,7 +108,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                             <FormGroup>
                                 <Label htmlFor="last-name-input">Last Name</Label>
                                 <Input id="last-name-input" type="text" name="familyName"
-                                       onBlur={(e: any) => {setMyUser(Object.assign(myUser, {familyName: e.target.value}))}}
+                                       onChange={(e: any) => {setMyUser(Object.assign(myUser, {familyName: e.target.value}))}}
                                        required/>
                             </FormGroup>
                         </Col>
@@ -121,7 +123,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                         <Col size={12} md={6}>
                             <FormGroup>
                                 <Label htmlFor="password-confirm">Re-enter New Password</Label>
-                                <Input invalid={!isValidPassword && signUpAttempted} id="password-confirm" type="password" name="password" onBlur={(e: any) => {
+                                <Input invalid={!isValidPassword && signUpAttempted} id="password-confirm" type="password" name="password" onChange={(e: any) => {
                                     validateAndSetPassword(e);
                                     (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ? Object.assign(myUser, {password: e.target.value}) : null}
                                 } aria-describedby="invalidPassword" required/>
@@ -135,7 +137,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                                 <Label htmlFor="email-input">Email</Label>
                                 <Input invalid={!isValidEmail} id="email-input" type="email"
                                        name="email" defaultValue={urlParams.email ? urlParams.email : null}
-                                       onBlur={(e: any) => {
+                                       onChange={(e: any) => {
                                            validateAndSetEmail(e);
                                            (isValidEmail) ? setMyUser(Object.assign(myUser, {email: e.target.value})) : null
                                        }}
@@ -180,7 +182,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                         </Col>
                     </Row>
                     <Row>
-                        <h4 role="alert" className="text-danger text-center">
+                        <h4 role="alert" className="text-danger text-center mb-0">
                             {errorMessage}
                         </h4>
                     </Row>

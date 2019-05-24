@@ -29,14 +29,19 @@ export const requestUserPreferences = () => async (dispatch: Dispatch<Action>) =
 };
 
 export const updateCurrentUser = (params: {registeredUser: validationUser; passwordCurrent: string}, currentUser: RegisteredUserDTO) => async (dispatch: Dispatch<Action>) => {
+    console.log(params.registeredUser);
+    console.log(params.registeredUser.firstLogin);
     if (currentUser.email !== params.registeredUser.email) {
         let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
         if (!!emailChange) {
             try {
                 const changedUser = await api.users.updateCurrent(params);
                 dispatch({type: ACTION_TYPES.USER_DETAILS_UPDATE_SUCCESS});
-                history.push('/');
-                history.go(0);
+                if (params.registeredUser.firstLogin == true) {
+                    history.push('/account');
+                } else {
+                    history.push('/');
+                }
             } catch (e) {
                 dispatch({type: ACTION_TYPES.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
             }
@@ -48,8 +53,11 @@ export const updateCurrentUser = (params: {registeredUser: validationUser; passw
         try {
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPES.USER_DETAILS_UPDATE_SUCCESS});
-            history.push('/');
-            history.go(0);
+            if (params.registeredUser.firstLogin == true) {
+                history.push('/account');
+            } else {
+                history.push('/');
+            }
         } catch (e) {
             dispatch({type: ACTION_TYPES.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
         }
