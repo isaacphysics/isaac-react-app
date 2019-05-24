@@ -5,7 +5,7 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {ChoiceDTO, IsaacStringMatchQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
 import {Input} from "reactstrap";
-import {Hints} from "./Hints";
+import {IsaacHints} from "./IsaacHints";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -45,7 +45,7 @@ const IsaacStringMatchQuestionComponent = (props: IsaacStringMatchQuestionProps)
                 value={currentAttemptValue || ""}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     setCurrentAttempt(questionId, choiceDTOfromEvent(event))}/>
-            {doc.hints && <Hints hints={doc.hints}/>}
+            {doc.hints && <IsaacHints hints={doc.hints}/>}
         </div>
     );
 };

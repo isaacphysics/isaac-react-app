@@ -36,6 +36,7 @@ interface IsaacQuestionTabsProps {
     deregisterQuestion: (questionId: string) => void;
     attemptQuestion: (questionId: string, attempt: ApiTypes.ChoiceDTO) => void;
 }
+
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
     const {doc, currentAttempt, validationResponse, questionIndex, canSubmit, registerQuestion, deregisterQuestion, attemptQuestion} = props;
 

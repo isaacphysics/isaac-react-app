@@ -14,8 +14,18 @@
   font-weight: 600;
 }
 
+.unit-dropdown button {
+  min-width: auto;
+}
+
 .question-component {
   margin-bottom: 2rem;
+}
+
+.numeric-question .unit-selection {
+  button.btn {
+    min-width: auto !important;
+  }
 }
 
 // NOMENSA question.scss

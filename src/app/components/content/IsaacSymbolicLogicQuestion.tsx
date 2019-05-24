@@ -6,7 +6,7 @@ import {AppState} from "../../state/reducers";
 import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiTypes";
 import { InequalityModal } from "./InequalityModal";
 import katex from "katex";
-import {Hints} from "./Hints";
+import {IsaacHints} from "./IsaacHints";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -55,7 +55,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 onEditorStateChange={(state: any) => { setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(state), pythonExpression: state.result.python }) }}
                 availableSymbols={doc.availableSymbols}
             />}
-            {doc.hints && <Hints hints={doc.hints}/>}
+            {doc.hints && <IsaacHints hints={doc.hints}/>}
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {Col, Container, Row} from "reactstrap";
-import {BreadcrumbTrail} from "../content/BreadcrumbTrail";
+import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
 export const ComingSoon = () => <Container>
     <BreadcrumbTrail currentPageTitle="Coming Soon" />

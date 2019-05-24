@@ -4,7 +4,7 @@ import {Badge, Col, Container, Row} from "reactstrap";
 import "../../services/tags";
 import * as Tags from "../../services/tags";
 import {Tag} from "../../services/tags";
-import {BreadcrumbTrail} from "../content/BreadcrumbTrail";
+import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
 export const AllTopics = () => {
 

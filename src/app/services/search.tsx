@@ -15,7 +15,7 @@ export function calculateSearchTypes(problems: boolean, concepts: boolean) {
 
 export const pushSearchToHistory = function(history: History, searchText: string, problems: boolean, concepts: boolean) {
     history.push({
-        pathname: "search",
+        pathname: "/search",
         search: `?query=${encodeURIComponent(searchText)}&types=${calculateSearchTypes(problems, concepts)}`,
     });
 };

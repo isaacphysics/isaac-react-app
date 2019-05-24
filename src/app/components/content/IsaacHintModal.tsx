@@ -9,7 +9,7 @@ interface HintModalProps {
     body: ContentDTO;
     scrollable: boolean;
 }
-export const HintModal = (props: HintModalProps) => {
+export const IsaacHintModal = (props: HintModalProps) => {
     const {label, title, body, ...restOfProps} = props;
     const [isOpen, setIsOpen] = useState(false);
 

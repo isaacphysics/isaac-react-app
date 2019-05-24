@@ -1,6 +1,6 @@
 import katex from "katex";
 
-import {katexify} from '../../app/components/content/TrustedHtml';
+import {katexify} from '../../app/components/elements/TrustedHtml';
 
 jest.mock("katex");
 

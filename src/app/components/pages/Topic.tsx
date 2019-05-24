@@ -9,7 +9,7 @@ import {Button, Col, Container, Row, FormGroup, Label, Input} from "reactstrap";
 import {IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
-import {BreadcrumbTrail} from "../content/BreadcrumbTrail";
+import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
 const stateToProps = (state: AppState, {match: {params: {topicName}}}: any) => ({
     topicName: topicName,
