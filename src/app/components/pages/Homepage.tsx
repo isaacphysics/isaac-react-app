@@ -64,7 +64,10 @@ export const HomepageComponent = ({user}: HomePageProps) => {
             <Tabs tabTitleClass="px-3 py-1" tabContentClass="pt-5">
                 {{
                     Teacher: <Row>
-                        <Col md={{size: 6, offset: 6}}>
+                        <Col md={6} className="align-self-center text-center">
+                            <img src="/assets/NCCE_SW_015.jpg" className="img-fluid mt-5 mt-lg-3" alt="Students illustration"/>
+                        </Col>
+                        <Col md={6}>
                             <Card>
                                 <CardBody>
                                     <CardTitle tag="h3">
@@ -118,6 +121,9 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                                 </CardBody>
                             </Card>
                         </Col>
+                        <Col md={6} className="align-self-center text-center">
+                            <img src="/assets/NCCE_SW_019.jpg" className="img-fluid mt-5 mt-lg-3" alt="Students illustration"/>
+                        </Col>
                     </Row>,
                 }}
             </Tabs>
@@ -129,27 +135,36 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     "Featured Question": <Row className="p-1">
                         <Col md={6}>
                             <p className="font-weight-bold">
-                                Trace the pseudocode and enter the output that will be produced when the program is run
+                                Trace the code and select the subroutine identifier missing on line 6 and the parameters
+                                missing on line 9. The program should register the user and then display the user details.
                             </p>
                             <pre className="text-monospace">
                                 {
-                                    "SUBROUTINE increase_num()\n" +
-                                    "    num2 ← 2\n" +
-                                    "    num1 ← num2 + 5\n" +
-                                    "    num2 ← 13\n" +
-                                    "ENDSUBROUTINE\n\n" +
-                                    "num1 ← 4\n" +
-                                    "num2 ← 10\n\n" +
-                                    "increase_num()\n\n" +
-                                    "num3 ← 4\n\n" +
-                                    "OUTPUT num1 + num2 + num3"
+                                    "1  SUBROUTINE register_user()\n" +
+                                    "2     user_name ← USERINPUT\n" +
+                                    "3     user_age ← USERINPUT\n" +
+                                    "4     user_email ← USERINPUT\n" +
+                                    "5\n" +
+                                    "6     __________(user_email, user_name, user_age)\n" +
+                                    "7  ENDSUBROUTINE\n" +
+                                    "8\n" +
+                                    "9  SUBROUTINE display_user_details(__________)\n" +
+                                    '10    OUTPUT "Name: " + name\n' +
+                                    '11    OUTPUT "Age: " + age\n' +
+                                    '12    OUTPUT "Email: " + email\n' +
+                                    "13 ENDSUBROUTINE\n" +
+                                    "14\n" +
+                                    '15 register_user()  ""'
                                 }
                             </pre>
                         </Col>
-                        <Col md={6}>
+                        <Col md={6} className="align-self-center">
                             <div className="text-center">
                                 <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
                             </div>
+                            <h4 className="text-center pt-3">
+                                <Link to="/questions/prog_sub_03_aqa">ANSWER</Link>
+                            </h4>
                         </Col>
                     </Row>
                 }}
