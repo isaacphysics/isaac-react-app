@@ -2,7 +2,7 @@ import React, {ChangeEvent, useEffect, useState} from "react"
 import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {fetchTopicDetails} from "../../state/actions";
+import {fetchTopic} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {Button, Col, Container, Row, FormGroup, Label, Input} from "reactstrap";
@@ -15,16 +15,16 @@ const stateToProps = (state: AppState, {match: {params: {topicName}}}: any) => (
     topicName: topicName,
     topicPage: state ? state.currentTopic : null
 });
-const actionsToProps = {fetchTopicDetails};
+const actionsToProps = {fetchTopic};
 
 interface TopicPageProps {
     topicName: TAG_ID;
     topicPage: IsaacTopicSummaryPageDTO | null;
-    fetchTopicDetails: (topicName: TAG_ID) => void;
+    fetchTopic: (documentType: DOCUMENT_TYPE, topicId: TAG_ID) => void;
 }
-const TopicPageComponent = ({topicName, topicPage, fetchTopicDetails}: TopicPageProps) => {
+const TopicPageComponent = ({topicName, topicPage, fetchTopic}: TopicPageProps) => {
     useEffect(
-        () => {fetchTopicDetails(topicName);},
+        () => {fetchTopic(DOCUMENT_TYPE.TOPIC_SUMMARY, topicName);},
         [topicName]
     );
     const [examBoardFilter, setExamBoardFilter] = useState(EXAM_BOARD.AQA);

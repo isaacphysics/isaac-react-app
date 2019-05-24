@@ -97,7 +97,7 @@ export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Acti
 };
 
 
-// Document Fetch
+// Document/ Topic Fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
     let apiEndpoint;
@@ -107,11 +107,25 @@ export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (
         case DOCUMENT_TYPE.FRAGMENT: apiEndpoint = api.fragments; break;
         case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
     }
-    const response = await apiEndpoint.get(pageId);
-    dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
-    // TODO MT handle response failure
+    try {
+        const response = await apiEndpoint.get(pageId);
+        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE});
+        history.push(`/not_found/${pageId}`);
+    }
 };
 
+export const fetchTopic = (documentType: DOCUMENT_TYPE, pageId: TAG_ID) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
+    try {
+        const response = await api.topics.get(pageId);
+        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE});
+        history.push(`/not_found/${pageId}`);
+    }
+};
 
 // Questions
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
@@ -132,20 +146,6 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
 export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|ValidatedChoice<ChoiceDTO>) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
 };
-
-
-// Topic
-export const fetchTopicDetails = (topicName: TAG_ID) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.TOPIC_REQUEST, topicName});
-    try {
-        // could check local storage first
-        const topicDetailResponse = await api.topics.get(topicName);
-        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS, topic: topicDetailResponse.data});
-    } catch (e) {
-        //dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}); // TODO MT handle response failure
-    }
-};
-
 
 // Current Gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>) => {

@@ -62,6 +62,7 @@ export enum ACTION_TYPE {
 
     TOPIC_REQUEST = "TOPIC_REQUEST",
     TOPIC_RESPONSE_SUCCESS = "TOPIC_RESPONSE_SUCCESS",
+    TOPIC_RESPONSE_FAILURE = "TOPIC_RESPONSE_FAILURE",
 
     GAMEBOARD_REQUEST = "GAMEBOARD_REQUEST",
     GAMEBOARD_RESPONSE_SUCCESS = "GAMEBOARD_RESPONSE_SUCCESS",
@@ -171,6 +172,7 @@ export enum DOCUMENT_TYPE {
     QUESTION = "isaacQuestionPage",
     GENERIC = "page",
     FRAGMENT = "isaacPageFragment",
+    TOPIC_SUMMARY = "isaacTopicSummary"
 }
 
 export enum ContentVersionUpdatingStatus {

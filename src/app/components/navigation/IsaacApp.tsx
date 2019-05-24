@@ -54,21 +54,21 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
                         <TrackedRoute path="/search" component={Search} />
                         <TrackedRoute path="/events" component={ComingSoon}/>
-                        {/*<TrackedRoute path="/gameboards" component={Gameboard}/>*/}
-                        {/*<TrackedRoute path="/assignments" component={MyAssignments} />*/}
+                        <TrackedRoute path="/gameboards" component={Gameboard}/>
+                        <TrackedRoute path="/assignments" component={MyAssignments} />
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute path="/pages/:pageId" component={Generic} />
                         <TrackedRoute exact path="/topics" component={AllTopics} />
                         <TrackedRoute path="/topics/:topicName" component={Topic} />
-                        {/*<TrackedRoute onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} path="/admin" component={Admin} />*/}
+                        <TrackedRoute onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} path="/admin" component={Admin} />
 
                         {/* Authentication */}
-                        {/*<TrackedRoute path="/login" component={LogIn} />*/}
-                        {/*<TrackedRoute path="/logout" component={LogOutHandler} />*/}
-                        {/*<TrackedRoute path="/register" component={Registration} />*/}
-                        {/*<TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />*/}
-                        {/*<TrackedRoute path="/account" component={MyAccount} />*/}
+                        <TrackedRoute path="/login" component={LogIn} />
+                        <TrackedRoute path="/logout" component={LogOutHandler} />
+                        <TrackedRoute path="/register" component={Registration} />
+                        <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
+                        <TrackedRoute path="/account" component={MyAccount} />
 
                         {/* Static pages */}
                         <TrackedRoute path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}}/>
