@@ -1,35 +1,31 @@
-import React, {useState} from "react";
-import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
+import React, {ReactElement} from "react";
+import {Tabs} from "../elements/Tabs";
+import {ContentDTO} from "../../../IsaacApiTypes";
+import {IsaacContent} from "./IsaacContent";
 
 interface IsaacTabsProps {
-    tabNavLinkClass?: string;
-    children: {};
+    doc: {
+        children: {
+            title?: string;
+            children?: ContentDTO[];
+        }[];
+    };
 }
 
-export const IsaacTabs = ({tabNavLinkClass = "", children}: IsaacTabsProps) => {
-    const [activeTab, setActiveTab] = useState(1);
-    const tabs = children;
+export const IsaacTabs = (props: any) => {
+    const {doc: {children}} = props as IsaacTabsProps;
+    const tabTitlesToContent: {[title: string]: ReactElement} = {};
 
-    return <React.Fragment>
-        <Nav tabs>
-            {Object.keys(tabs).map((tabTitle, mapIndex) => {
-                const tabIndex = mapIndex + 1;
-                const classes = activeTab === tabIndex ? `${tabNavLinkClass} active` : tabNavLinkClass;
-                return <NavItem key={tabTitle} className="px-3">
-                    <NavLink className={classes} onClick={() => setActiveTab(tabIndex)}>
-                        {tabTitle}
-                    </NavLink>
-                </NavItem>;
-            })}
-        </Nav>
+    children.forEach((child, index) => {
+        const tabTitle = child.title || `Tab ${index + 1}`
+        tabTitlesToContent[tabTitle] = <React.Fragment>
+            {child.children && child.children.map((tabContentChild, index) => (
+                <IsaacContent key={index} doc={tabContentChild} />
+            ))}
+        </React.Fragment>;
+    });
 
-        <TabContent activeTab={activeTab} className="pt-5">
-            {Object.entries(tabs).map(([tabTitle, tabBody], mapIndex) => {
-                const tabIndex = mapIndex + 1;
-                return <TabPane key={tabTitle} tabId={tabIndex}>
-                    {tabBody}
-                </TabPane>;
-            })}
-        </TabContent>
-    </React.Fragment>;
+    return <Tabs className="isaac-tab" tabContentClass="pt-4">
+        {tabTitlesToContent}
+    </Tabs>;
 };

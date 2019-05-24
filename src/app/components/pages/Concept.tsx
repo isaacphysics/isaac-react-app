@@ -8,6 +8,7 @@ import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE} from "../../services/constants";
+import {BreadcrumbTrail} from "../content/BreadcrumbTrail";
 
 const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
     return {
@@ -36,7 +37,7 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
             <Container>
                 <Row>
                     <Col>
-                        {/* Breadcrumb */}
+                        <BreadcrumbTrail currentPageTitle={doc.title} />
                         <h1 className="h-title">{doc.title}</h1>
                     </Col>
                 </Row>

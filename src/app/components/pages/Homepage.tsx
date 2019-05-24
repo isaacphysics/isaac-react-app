@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardDeck, CardImg, CardText, CardTitle, Col, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
-import {IsaacTabs} from "../content/IsaacTabs";
+import {Tabs} from "../elements/Tabs";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
@@ -61,7 +61,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
 
         {!(user && user.loggedIn) && <section id="why-sign-up" className="mb-5">
             <h2 className="text-center mb-4">Why sign up?</h2>
-            <IsaacTabs tabNavLinkClass="px-3 py-1">
+            <Tabs tabTitleClass="px-3 py-1" tabContentClass="pt-5">
                 {{
                     Teacher: <Row>
                         <Col md={{size: 6, offset: 6}}>
@@ -120,11 +120,11 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         </Col>
                     </Row>,
                 }}
-            </IsaacTabs>
+            </Tabs>
         </section>}
 
         <section id="headline-content" className="px-5 py-5">
-            <IsaacTabs tabNavLinkClass="px-3 py-1">
+            <Tabs tabTitleClass="px-3 py-1" tabContentClass="pt-5">
                 {{
                     "Featured Question": <Row className="p-1">
                         <Col md={6}>
@@ -153,7 +153,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         </Col>
                     </Row>
                 }}
-            </IsaacTabs>
+            </Tabs>
         </section>
 
         <section id="events" className="pb-5">
