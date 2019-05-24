@@ -40,12 +40,12 @@ const IsaacStringMatchQuestionComponent = (props: IsaacStringMatchQuestionProps)
             </h4>
             <Input type={doc.multiLineEntry ? "textarea" : "text"} placeholder="Type your answer here."
                 maxLength={doc.multiLineEntry ? 250 : 75}
-                spellCheck={false}
+                spellCheck={false} className="mb-4"
                 rows={doc.multiLineEntry ? 3 : undefined}
                 value={currentAttemptValue || ""}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     setCurrentAttempt(questionId, choiceDTOfromEvent(event))}/>
-            {doc.hints && <IsaacHints hints={doc.hints}/>}
+            <IsaacHints hints={doc.hints}/>
         </div>
     );
 };

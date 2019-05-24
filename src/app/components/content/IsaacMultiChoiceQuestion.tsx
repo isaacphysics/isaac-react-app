@@ -5,6 +5,7 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {ChoiceDTO, IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacHints} from "./IsaacHints";
+import {Input, Label} from "reactstrap";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -34,18 +35,19 @@ const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps)
 
             <ul>{doc.choices && doc.choices.map((choice) =>
                 <li key={choice.value} className="list-unstyled">
-                    <label className="label-radio">
-                        <input
+                    <Label className="label-radio">
+                        <Input
+                            color="secondary"
                             type="radio"
                             checked={currentAttemptValue == choice.value}
                             onChange={() => setCurrentAttempt(questionId, choice)}
                         />
                         <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} />
-                    </label>
+                    </Label>
                 </li>)
             }</ul>
 
-            {doc.hints && <IsaacHints hints={doc.hints}/>}
+            <IsaacHints hints={doc.hints}/>
         </div>
     );
 };

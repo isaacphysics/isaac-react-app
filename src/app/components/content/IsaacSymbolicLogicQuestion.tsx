@@ -55,7 +55,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 onEditorStateChange={(state: any) => { setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(state), pythonExpression: state.result.python }) }}
                 availableSymbols={doc.availableSymbols}
             />}
-            {doc.hints && <IsaacHints hints={doc.hints}/>}
+            <IsaacHints hints={doc.hints} />
         </div>
     );
 };

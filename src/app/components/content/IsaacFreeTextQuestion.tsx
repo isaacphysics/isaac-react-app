@@ -89,7 +89,7 @@ const IsaacFreeTextQuestionComponent = (props: IsaacFreeTextQuestionProps) => {
                     {doc.children}
                 </IsaacContentValueOrChildren>
             </h4>
-            <FormGroup>
+            <FormGroup className="mb-4">
                 <Input type="textarea"
                     placeholder="Type your answer here."
                     spellCheck={true}
@@ -99,7 +99,7 @@ const IsaacFreeTextQuestionComponent = (props: IsaacFreeTextQuestionProps) => {
                         setCurrentAttempt(questionId, validatedChoiceDTOfromEvent(event))}/>
             </FormGroup>
             <FreeTextValidation {...validation} />
-            {doc.hints && <IsaacHints hints={doc.hints}/>}
+            <IsaacHints hints={doc.hints}/>
         </div>
     );
 };
