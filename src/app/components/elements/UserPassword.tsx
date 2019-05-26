@@ -61,11 +61,13 @@ export const UserPassword = ({myUser, setMyUser, isValidPassword, validateAndSet
                 !passwordResetRequest ?
                     <div className="text-center">
                         {authSettings && authSettings.linkedAccounts &&
-                        <p>You do not currently have a password set for this account; you
-                            sign in
-                            using {(authSettings.linkedAccounts).map((linked, index) => (
-                                <span key={index} className="text-capitalize">{linked.toLowerCase()}</span>
-                            ))}.</p>
+                        <p>
+                            You do not currently have a password set for this account; you
+                            sign in using
+                            {(authSettings.linkedAccounts).map((linked, index) => {
+                                return <span key={index} className="text-capitalize">{linked.toLowerCase()}</span>;
+                            })}.
+                        </p>
                         }
                         <Button className="btn-secondary" onClick={resetPasswordIfValidEmail}>
                             Click here to add a password
@@ -78,4 +80,4 @@ export const UserPassword = ({myUser, setMyUser, isValidPassword, validateAndSet
             }
         </Form>
     </CardBody>
-}
+};

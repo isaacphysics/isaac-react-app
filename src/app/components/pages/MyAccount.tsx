@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -42,26 +42,33 @@ const dispatchToProps = {
 
 interface AccountPageProps {
     user: LoggedInUser;
+    errorMessage: ErrorState;
+    authSettings: UserAuthenticationSettingsDTO | null;
+    userPreferences: UserPreferencesDTO | null;
     updateCurrentUser: (
         params: { registeredUser: ValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
         currentUser: RegisteredUserDTO
     ) => void;
-    errorMessage: ErrorState;
-    authSettings: UserAuthenticationSettingsDTO | null;
-    userPreferences: UserPreferencesDTO | null;
     resetPassword: (params: {email: string}) => void;
 }
 
 
 const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettings, resetPassword, userPreferences}: AccountPageProps) => {
 
-    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
-    const [myUserPreferences, setMyUserPreferences] = useState(Object.assign({}, userPreferences));
-    const [emailPreferences, setEmailPreferences] = useState(Object.assign({}, userPreferences ? userPreferences.EMAIL_PREFERENCE : null));
+    const [myUser, setMyUser] = useState(
+        Object.assign({}, user, {password: ""})
+    );
+    const [myUserPreferences, setMyUserPreferences] = useState(
+        Object.assign({}, userPreferences)
+    );
+    const [emailPreferences, setEmailPreferences] = useState(
+        Object.assign({}, userPreferences ? userPreferences.EMAIL_PREFERENCE : null)
+    );
 
     const [isValidEmail, setValidEmail] = useState(true);
     const [isValidDob, setValidDob] = useState(true);
     const [isValidPassword, setValidPassword] = useState(true);
+
     const [currentPassword, setCurrentPassword] = useState("");
     const [passwordResetRequest, setPasswordResetRequest] = useState(false);
     const [activeTab, setTab] = useState(0);
@@ -129,20 +136,30 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                             </NavLink>
                         </NavItem>
                     </Nav>
+
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId={0}>
-                            <UserDetails myUser={myUser} setMyUser={setMyUser} isValidDob={isValidDob} isValidEmail={isValidEmail} validateAndSetDob={validateAndSetDob} validateAndSetEmail={validateAndSetEmail}/>
+                            <UserDetails
+                                myUser={myUser} setMyUser={setMyUser}
+                                isValidDob={isValidDob} isValidEmail={isValidEmail}
+                                validateAndSetDob={validateAndSetDob} validateAndSetEmail={validateAndSetEmail}
+                            />
                         </TabPane>
                         <TabPane tabId={1}>
-                            <UserPassword myUser={myUser} authSettings={authSettings} isValidPassword={isValidPassword}
-                                          passwordResetRequest={passwordResetRequest} resetPasswordIfValidEmail={resetPasswordIfValidEmail}
-                                          setCurrentPassword={setCurrentPassword} setMyUser={setMyUser}
-                                          validateAndSetPassword={validateAndSetPassword}/>
+                            <UserPassword
+                                myUser={myUser} authSettings={authSettings} isValidPassword={isValidPassword}
+                                passwordResetRequest={passwordResetRequest} resetPasswordIfValidEmail={resetPasswordIfValidEmail}
+                                setCurrentPassword={setCurrentPassword} setMyUser={setMyUser}
+                                validateAndSetPassword={validateAndSetPassword}
+                            />
                         </TabPane>
                         <TabPane tabId={2}>
-                            <UserEmailPreference emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}/>
+                            <UserEmailPreference
+                                emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
+                            />
                         </TabPane>
                     </TabContent>
+
                     <CardFooter>
                         <Row>
                             <Col size={12} md={{size: 6, offset: 3}}>
@@ -150,12 +167,16 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                                     {errorMessage && errorMessage.type === "generalError" && errorMessage.generalError}
                                 </h3>
                                 <Button
-                                    color="secondary" onClick={() => {
+                                    color="secondary" block
+                                    onClick={() => {
                                         Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
-                                        (isValidEmail && isValidDob && isValidPassword) ?
-                                            updateCurrentUser({registeredUser: myUser, userPreferences: myUserPreferences, passwordCurrent: currentPassword}, user) :
-                                            null}}
-                                    block >
+                                        isValidEmail && isValidDob && isValidPassword &&
+                                            updateCurrentUser({
+                                                registeredUser: myUser,
+                                                userPreferences: myUserPreferences,
+                                                passwordCurrent: currentPassword
+                                            }, user);
+                                    }}>
                                     Save
                                 </Button>
                             </Col>

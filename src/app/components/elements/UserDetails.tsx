@@ -15,7 +15,7 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
     return <CardBody>
         <Form name="userDetails">
             <Row>
-                <Col size={12} md={6}>
+                <Col md={6}>
                     <FormGroup>
                         <Label htmlFor="first-name-input">First Name</Label>
                         <Input
@@ -28,7 +28,7 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                         />
                     </FormGroup>
                 </Col>
-                <Col size={12} md={6}>
+                <Col md={6}>
                     <FormGroup>
                         <Label htmlFor="last-name-input">Last Name</Label>
                         <Input
@@ -43,7 +43,7 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                 </Col>
             </Row>
             <Row>
-                <Col size={12} md={6}>
+                <Col md={6}>
                     <FormGroup>
                         <Label htmlFor="email-input">Email</Label>
                         <Input
@@ -60,7 +60,7 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                         </FormFeedback>
                     </FormGroup>
                 </Col>
-                <Col size={12} md={6}>
+                <Col md={6}>
                     <FormGroup>
                         <Label htmlFor="dob-input">Date of Birth</Label>
                         <Input
@@ -81,7 +81,7 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                 </Col>
             </Row>
             <Row>
-                <Col size={12} md={6}>
+                <Col md={6}>
                     <FormGroup>
                         <Label htmlFor="dob-input">Gender</Label>
                         <Row>
@@ -121,7 +121,7 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                         </Row>
                     </FormGroup>
                 </Col>
-                <Col size={12} md={6}>
+                <Col md={6}>
                     <FormGroup>
                         <Label htmlFor="school-input">School</Label>
                         <Input
@@ -132,14 +132,14 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                     </FormGroup>
                 </Col>
             </Row>
-            <Row>
-                <Col size={12} md={6}>
-                    <FormGroup>
-                        <Label htmlFor="linked-accounts">Linked Accounts</Label>
-                        <Row>Placeholder</Row> {/* TODO add linked account control */}
-                    </FormGroup>
-                </Col>
-            </Row>
+            {/*<Row>*/}
+            {/*    <Col md={6}>*/}
+            {/*        <FormGroup>*/}
+            {/*            <Label htmlFor="linked-accounts">Linked Accounts</Label>*/}
+            {/*            <Row>Placeholder</Row> /!* TODO add linked account control *!/*/}
+            {/*        </FormGroup>*/}
+            {/*    </Col>*/}
+            {/*</Row>*/}
         </Form>
     </CardBody>
-}
+};
