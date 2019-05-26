@@ -4,7 +4,7 @@ input {
   &.form-control {
     @include placeholder($gray-500);
     border: solid 1px $black;
-    padding: 1.438em 1.2em;
+    padding: 0 1.2em;
   }
 }
 
@@ -14,8 +14,8 @@ select {
     height: 48px;
     padding: 0 1.2em;
 
-    &[name="selectMulti"] {
-      padding: 1rem 1.2rem 2rem;
+    &[name='selectMulti'] {
+      padding: 1rem 1.2rem 1.5rem;
     }
   }
 }
@@ -23,7 +23,7 @@ select {
 textarea {
   &.form-control {
     border: solid 1px $black;
-    padding: .7rem 1.2rem 0;
+    padding: 0.7rem 1.2rem 0;
 
     &.answer {
       height: 48px;
@@ -31,17 +31,22 @@ textarea {
   }
 }
 
-[type="search"] {
+[type='search'] {
   @include placeholder($black);
   border: 0;
   border-radius: ($border-radius * 10);
   height: 2.6rem;
-  max-width: 220px;
   padding: initial 40px initial 1rem;
 
-  &.form-control:focus {
-    border-color: $gray-160;
-    box-shadow: 0 0 0 .2rem $shadow-25;
+  @include respond-above(sm) {
+    max-width: 220px;
+  }
+
+  &.form-control {
+    &:focus {
+      border-color: $gray-160;
+      box-shadow: 0 0 0 0.2rem $shadow-25;
+    }
   }
 
   &.search--filter-input {
@@ -66,7 +71,7 @@ button {
     }
 
     &:focus {
-      box-shadow: 0 0 0 .2rem $shadow-25;
+      box-shadow: 0 0 0 0.2rem $shadow-25;
     }
 
     svg {
@@ -87,15 +92,13 @@ button {
 
     input {
       &.form-control {
-        padding: 1rem;
+        border-width: 0;
+        padding: 0 1rem;
       }
     }
   }
 }
 
-.search--main-group {
-  display: inline-block;
-}
 
 
 // ISAAC
@@ -115,10 +118,10 @@ label.label-radio > div {
 }
 
 // Override Nomensa's padding which does not compile properly
-input[type="search"] {
-  padding-top: initial;
-  padding-right: 40px;
-  padding-bottom: initial;
-  padding-left: 1rem;
-}
+//input[type="search"] {
+//  padding-top: initial;
+//  padding-right: 40px;
+//  padding-bottom: initial;
+//  padding-left: 1rem;
+//}
 

@@ -6,8 +6,8 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {IsaacNumericQuestionDTO, QuantityDTO} from "../../../IsaacApiTypes";
 import {Input, Row, Col, Label, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from "reactstrap";
-import {TrustedHtml} from "./TrustedHtml";
-import {Hints} from "./Hints";
+import {TrustedHtml} from "../elements/TrustedHtml";
+import {IsaacHints} from "./IsaacHints";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
@@ -129,14 +129,14 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
     let [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div>
+        <div className="numeric-question">
             <h4>
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
             </h4>
             <Row>
-                <Col sm={3}>
+                <Col sm={6}>
                     <Label>
                         Value
                         <br />
@@ -144,11 +144,11 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
                             onChange={updateValue}
                         />
                     </Label>
-                    <br />
-                    <small>Please answer to an appropriate number of significant figures.</small>
+                    {/*<br />*/}
+                    {/*<small>Please answer to an appropriate number of significant figures.</small>*/}
                 </Col>
                 {doc.requireUnits &&
-                <Col sm={3}>
+                <Col sm={3} className="unit-selection">
                     <Label>
                         Units
                         <br/>
@@ -167,12 +167,12 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
                             </DropdownMenu>
                         </Dropdown>
                     </Label>
-                    <br />
-                    <small>Please choose an appropriate unit of measurement.</small>
+                    {/*<br />*/}
+                    {/*<small>Please choose an appropriate unit of measurement.</small>*/}
                 </Col>
                 }
             </Row>
-            {doc.hints && <Hints hints={doc.hints}/>}
+            <IsaacHints hints={doc.hints}/>
         </div>
     );
 };

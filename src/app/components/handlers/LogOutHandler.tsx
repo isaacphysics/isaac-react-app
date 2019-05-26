@@ -15,7 +15,7 @@ interface LogOutHandlerProps {
 const LogOutHandlerComponent = ({user, logOutUser}: LogOutHandlerProps) => {
     useEffect(() => {logOutUser()});
     return <React.Fragment>
-        {user && user.loggedIn ? <div>Logging out...</div> : <Redirect to="/" />}
+        {user && user.loggedIn ? <h2>Logging out...</h2> : <Redirect to="/" />}
     </React.Fragment>
 };
 

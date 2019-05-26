@@ -7,7 +7,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {connect} from "react-redux";
 import {DOCUMENT_TYPE} from "../../services/constants";
-import {BreadcrumbTrail} from "../content/BreadcrumbTrail";
+import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {withRouter} from "react-router-dom";
 
 const stateToProps = (state: AppState, {match: {params: {pageId}}}: any) => {
@@ -27,8 +27,8 @@ interface GenericPageComponentProps {
 
 export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}: GenericPageComponentProps) => {
     useEffect(
-        () => {fetchDoc(DOCUMENT_TYPE.GENERIC, pageIdOverride || urlPageId);},
-        []
+        () => {fetchDoc(DOCUMENT_TYPE.GENERIC, pageIdOverride || urlPageId)},
+        [pageIdOverride, urlPageId]
     );
 
     return <ShowLoading until={doc}>

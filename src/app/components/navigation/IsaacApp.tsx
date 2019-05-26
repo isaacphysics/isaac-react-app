@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import {Router, Switch} from "react-router-dom";
-import {NavigationBar} from "./NavigationBar";
 import {Footer} from "./Footer";
 import {Homepage} from "../pages/Homepage";
 import {Question} from "../pages/Question";
@@ -30,6 +29,7 @@ import {SessionExpired} from "../pages/SessionExpired";
 import {ConsistencyErrorModal} from "./ConsistencyErrorModal";
 import {Search} from "../pages/Search";
 import {NotFound} from "../pages/NotFound";
+import {Header} from "./Header";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -47,23 +47,23 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
 
     return <Router history={history}>
         <React.Fragment>
-            <NavigationBar />
-            <main role="main" className="flex-fill py-4">
-                <div className={"container"}>
+            <Header />
+            <main role="main" className="flex-fill content-body">
+                <div className="container">
                     <Switch>
                         {/* Application Pages */}
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
                         <TrackedRoute path="/search" component={Search} />
-                        <TrackedRoute onlyFor={(user: LoggedInUser) => user.loggedIn} path="/account" component={MyAccount} />
+                        <TrackedRoute path="/account" onlyFor={(user: LoggedInUser) => user.loggedIn} component={MyAccount} />
                         <TrackedRoute path="/events" component={ComingSoon}/>
-                        <TrackedRoute path="/gameboards" component={Gameboard}/>
-                        <TrackedRoute path="/assignments" component={MyAssignments} />
+                        {/*<TrackedRoute path="/gameboards" component={Gameboard}/>*/}
+                        {/*<TrackedRoute path="/assignments" component={MyAssignments} />*/}
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute path="/pages/:pageId" component={Generic} />
                         <TrackedRoute exact path="/topics" component={AllTopics} />
                         <TrackedRoute path="/topics/:topicName" component={Topic} />
-                        <TrackedRoute onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} path="/admin" component={Admin} />
+                        <TrackedRoute path="/admin" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Admin} />
 
                         {/* Authentication */}
                         <TrackedRoute path="/login" component={LogIn} />
