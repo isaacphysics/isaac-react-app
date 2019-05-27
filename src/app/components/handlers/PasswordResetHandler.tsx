@@ -3,9 +3,11 @@ import {connect} from "react-redux";
 import {verifyPasswordReset, handlePasswordReset} from "../../state/actions";
 import {Button, Col, FormFeedback, Input, Label, Row, Card, CardBody, Form, FormGroup, CardFooter} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
+import queryString from "query-string";
 
-const stateToProps = (state: AppState) => ({
-    errorMessage: state ? state.error : null
+const stateToProps = (state: AppState, {match: {params: {token}}}: any) => ({
+    errorMessage: state ? state.error : null,
+    urlToken: token
 });
 
 const dispatchToProps = {
@@ -14,13 +16,14 @@ const dispatchToProps = {
 };
 
 interface PasswordResetHandlerProps {
+    urlToken: string;
     handleResetPassword: (params: {token: string | null; password: string | null}) => void;
     verifyPasswordReset: (token: string | null) => void;
     errorMessage: ErrorState;
 }
 
-const ResetPasswordHandlerComponent = ({handleResetPassword, verifyPasswordReset, errorMessage}: PasswordResetHandlerProps) => {
-    const resetToken = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPasswordReset, errorMessage}: PasswordResetHandlerProps) => {
+    console.log(urlToken);
 
     const [isValidPassword, setValidPassword] = useState(true);
     const [currentPassword, setCurrentPassword] = useState("");
@@ -34,7 +37,7 @@ const ResetPasswordHandlerComponent = ({handleResetPassword, verifyPasswordReset
     };
 
     useEffect(() => {
-        setTimeout(function(){verifyPasswordReset(resetToken)},10);
+        setTimeout(function(){verifyPasswordReset(urlToken)},10);
     }, []);
 
     return <div id="email-verification">
@@ -65,7 +68,7 @@ const ResetPasswordHandlerComponent = ({handleResetPassword, verifyPasswordReset
                     <h4 role="alert" className="text-danger text-center mb-0">
                         {errorMessage && errorMessage.type === "generalError" && errorMessage.generalError}
                     </h4>
-                    <Button color="secondary" className="mb-2" block onClick={(e: any) => (isValidPassword && !errorMessage) ? handleResetPassword({token: resetToken, password: currentPassword}) : null}>Change Password</Button>
+                    <Button color="secondary" className="mb-2" block onClick={(e: any) => (isValidPassword && !errorMessage) ? handleResetPassword({token: urlToken, password: currentPassword}) : null}>Change Password</Button>
                 </CardFooter>
             </Card>
         </div>

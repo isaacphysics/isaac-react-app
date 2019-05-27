@@ -70,7 +70,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/logout" component={LogOutHandler} />
                         <TrackedRoute path="/register" component={Registration} />
                         <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
-                        <TrackedRoute path="/resetpassword" component={ResetPasswordHandler}/>
+                        <TrackedRoute path="/resetpassword/:token" component={ResetPasswordHandler}/>
                         <TrackedRoute path="/verifyemail" component={EmailAlterHandler}/>
 
                         {/* Static pages */}
