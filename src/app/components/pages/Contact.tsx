@@ -25,7 +25,7 @@ import {
     FormFeedback
 } from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {AppState} from "../../state/reducers";
+import {AppState, ErrorState} from "../../state/reducers";
 import {submitMessage} from "../../state/actions";
 import classnames from 'classnames';
 import {string} from "prop-types";
@@ -45,7 +45,7 @@ const dispatchToProps = {
 interface ContactPageProps {
     user: LoggedInUser | null
     submitMessage: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string}) => void;
-    errorMessage: string | null;
+    errorMessage: ErrorState | null;
 }
 
 const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPageProps) => {
