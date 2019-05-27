@@ -11,9 +11,9 @@ export const ComingSoon = () => <Container>
     <Row>
         <Col>
             <p className="my-4">
-                {"Some aspects of this site are still under development: the Isaac Computer Science team is working" +
+                {"Some aspects of this site are still under development: the Isaac Computer Science team is working " +
                 "hard behind the scenes to add new site content and features. We would love to "}
-                <Link to="/contact">hear your feedback</Link>
+                <Link to="/contact?subject=Beta%20Feedback">hear your feedback</Link>
                 {", so please get in touch."}
             </p>
         </Col>
@@ -32,7 +32,7 @@ export const ComingSoon = () => <Container>
                     <ul>
                         <li>Parsons problems</li>
                         <li>Natural language</li>
-                        <li>Boolean equation editor</li>
+                        <li>Boolean logic equation editor</li>
                     </ul>
                 </div>
                 <div className="mb-3">
