@@ -32,7 +32,7 @@ import {validateDob, validateEmail} from "../../services/validation";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state ? state.error : null,
-    authSettings: state ? state.authSettings : null,
+    userAuthSettings: state ? state.userAuthSettings : null,
     userPreferences: state ? state.userPreferences : null
 });
 
@@ -44,7 +44,7 @@ const dispatchToProps = {
 interface AccountPageProps {
     user: LoggedInUser;
     errorMessage: ErrorState;
-    authSettings: UserAuthenticationSettingsDTO | null;
+    userAuthSettings: UserAuthenticationSettingsDTO | null;
     userPreferences: UserPreferencesDTO | null;
     updateCurrentUser: (
         params: { registeredUser: ValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
@@ -52,8 +52,7 @@ interface AccountPageProps {
     ) => void;
 }
 
-
-const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettings, userPreferences}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences}: AccountPageProps) => {
 
     const [myUser, setMyUser] = useState(
         Object.assign({}, user, {password: ""})
@@ -131,7 +130,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                         </TabPane>
                         <TabPane tabId={1}>
                             <UserPassword
-                                currentUserEmail={user && user.email && user.email} authSettings={authSettings}
+                                currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}
                                 myUser={myUser} setMyUser={setMyUser}
                                 setCurrentPassword={setCurrentPassword}
                                 isNewPasswordConfirmed={isNewPasswordConfirmed} setIsNewPasswordConfirmed={setIsNewPasswordConfirmed}

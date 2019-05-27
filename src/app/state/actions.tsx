@@ -1,54 +1,23 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {Action, ValidatedChoice, ValidationUser, UserPreferencesDTO} from "../../IsaacAppTypes";
+import {Action, UserPreferencesDTO, ValidatedChoice, ValidationUser} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {store} from "./store";
-
-
-
-
-
+import {ThunkAction} from "redux-thunk";
 
 // User Authentication
-export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_UPDATE_REQUEST});
-    try {
-        // Request the user
-        const currentUser = await api.users.getCurrent();
-
-        // Now with that information request auth settings and preferences in parallel
-        Promise.all([
-            api.authentication.getCurrentUserAuthSettings().then(
-                (authenticationSettings) =>
-                    dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS, authSettings: authenticationSettings.data})
-            ),
-            api.users.getPreferences().then(
-                (userPreferenceSettings) =>
-                    dispatch({type: ACTION_TYPE.USER_PREFERENCES_SUCCESS, userPreferences: userPreferenceSettings.data})
-            )
-        ]).then(
-            () => dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: currentUser.data})
-        ).catch(
-            () => dispatch({type: ACTION_TYPE.USER_UPDATE_FAILURE})
-        );
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_UPDATE_FAILURE});
-    }
-};
-
-export const getUserAuthsettings = () => async (dispatch: Dispatch<Action>) => {
+export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST});
     try {
         const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
-        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS, authSettings: authenticationSettings.data});
+        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS, userAuthSettings: authenticationSettings.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_FAILURE, errorMessage: e.response.data.errorMessage});
     }
 };
-
 
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
@@ -57,6 +26,22 @@ export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
         dispatch({type: ACTION_TYPE.USER_PREFERENCES_SUCCESS, userPreferences: userPreferenceSettings.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_PREFERENCES_FAILURE, errorMessage: e.response.data.errorMessage});
+    }
+};
+
+export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_UPDATE_REQUEST});
+    try {
+        // Request the user
+        const currentUser = await api.users.getCurrent();
+        // Now with that information request auth settings and preferences asynchronously
+        await Promise.all([
+            dispatch(getUserAuthSettings() as any),
+            dispatch(getUserPreferences() as any)
+        ]);
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: currentUser.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_UPDATE_FAILURE});
     }
 };
 

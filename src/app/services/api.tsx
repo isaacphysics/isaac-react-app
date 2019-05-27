@@ -54,7 +54,7 @@ export const api = {
             return endpoint.get(`/users/current_user`);
         },
         getPreferences: (): AxiosPromise<AppTypes.UserPreferencesDTO> => {
-            return endpoint.get(`users/user_preferences`)
+            return endpoint.get(`/users/user_preferences`)
         },
         passwordReset: (params: {email: string}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword`, params);
@@ -62,7 +62,7 @@ export const api = {
         verifyPasswordReset: (token: string | null): AxiosPromise => {
             return endpoint.get(`/users/resetpassword/${token}`)
         },
-        handlePasswordReset: (params: {token: string | null, password: string | null}): AxiosPromise => {
+        handlePasswordReset: (params: {token: string | null; password: string | null}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
         },
         updateCurrent: (params: {registeredUser: ApiTypes.RegisteredUserDTO; passwordCurrent: string}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
@@ -87,7 +87,7 @@ export const api = {
         }
     },
     email: {
-        verify: (params: {userId: string | null, token: string | null}): AxiosPromise => {
+        verify: (params: {userId: string | null; token: string | null}): AxiosPromise => {
             return endpoint.get(`/users/verifyemail/${params.userId}/${params.token}`);
         }
     },

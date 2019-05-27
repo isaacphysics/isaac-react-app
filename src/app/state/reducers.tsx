@@ -30,13 +30,13 @@ export const user = (user: UserState = null, action: Action): UserState => {
     }
 };
 
-type AuthSettingsState = UserAuthenticationSettingsDTO | null;
-export const authSettings = (authSettings: AuthSettingsState = null, action: Action) => {
+type UserAuthSettingsState = UserAuthenticationSettingsDTO | null;
+export const userAuthSettings = (userAuthSettings: UserAuthSettingsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS:
-            return action.authSettings;
+            return action.userAuthSettings;
         default:
-            return authSettings;
+            return userAuthSettings;
     }
 };
 
@@ -208,7 +208,7 @@ export const contentVersion = (contentVersion: ContentVersionState = null, actio
 
 const appReducer = combineReducers({
     user,
-    authSettings,
+    userAuthSettings,
     userPreferences,
     constants,
     doc,
@@ -223,16 +223,16 @@ const appReducer = combineReducers({
 
 export type AppState = undefined | {
     user: UserState;
-    constants: ConstantsState;
+    userAuthSettings: UserAuthSettingsState;
+    userPreferences: UserPreferencesState;
     doc: DocState;
     questions: QuestionsState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
     assignments: AssignmentsState;
-    authSettings: AuthSettingsState;
-    userPreferences: UserPreferencesState;
     contentVersion: ContentVersionState;
     search: SearchState;
+    constants: ConstantsState;
     error: ErrorState;
 }
 

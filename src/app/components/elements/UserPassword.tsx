@@ -12,11 +12,11 @@ interface UserPasswordProps {
     setMyUser: (e: any) => void;
     isNewPasswordConfirmed: boolean;
     setIsNewPasswordConfirmed: (isValid: boolean) => void;
-    authSettings: UserAuthenticationSettingsDTO | null;
+    userAuthSettings: UserAuthenticationSettingsDTO | null;
 }
 
 export const UserPassword = (
-    {currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, setIsNewPasswordConfirmed, authSettings}: UserPasswordProps) => {
+    {currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, setIsNewPasswordConfirmed, userAuthSettings}: UserPasswordProps) => {
     const [newPassword, setNewPassword] = useState("");
     const [isNewPasswordValid, setIsNewPasswordValid] = useState(false);
 
@@ -34,8 +34,8 @@ export const UserPassword = (
     };
 
     return <CardBody>
-        {authSettings && authSettings.hasSegueAccount ?
-            <div>
+        {userAuthSettings && userAuthSettings.hasSegueAccount ?
+            <Row>
                 <Col>
                     <Row>
                         <FormGroup>
@@ -91,14 +91,14 @@ export const UserPassword = (
                         </FormGroup>
                     </Row>
                 </Col>
-            </div> :
-            !passwordResetRequested ?
-                <div className="text-center">
-                    {authSettings && authSettings.linkedAccounts &&
+            </Row>
+            : !passwordResetRequested ?
+                <Row className="text-center">
+                    {userAuthSettings && userAuthSettings.linkedAccounts &&
                     <p>
                         You do not currently have a password set for this account; you
                         sign in using
-                        {(authSettings.linkedAccounts).map((linked, index) => {
+                        {(userAuthSettings.linkedAccounts).map((linked, index) => {
                             return <span key={index} className="text-capitalize">{linked.toLowerCase()}</span>;
                         })}.
                     </p>
@@ -106,7 +106,8 @@ export const UserPassword = (
                     <Button className="btn-secondary" onClick={resetPasswordIfValidEmail}>
                         Click here to add a password
                     </Button>
-                </div> :
+                </Row>
+                :
                 <p>
                     <strong className="d-block">Your password reset request is being processed.</strong>
                     <strong className="d-block">Please check your inbox.</strong>
