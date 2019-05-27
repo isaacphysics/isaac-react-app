@@ -1,120 +1,155 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
-import * as RS from "reactstrap";
-import {SearchButton} from "../content/SearchButton";
+import {Badge, Col, Collapse, DropdownItem, DropdownToggle, DropdownMenu, Row, Nav, Navbar, NavbarToggler, UncontrolledDropdown} from "reactstrap";
+import {RouteComponentProps, withRouter} from "react-router";
+import {LoggedInUser} from "../../../IsaacAppTypes";
 
-const stateToProps = (state: AppState) => (state && {user: state.user});
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
 
 interface NavigationBarProps {
-    user: RegisteredUserDTO | null;
+    user: LoggedInUser | null;
 }
+
 const NavigationBarComponent = ({user}: NavigationBarProps) => {
-    const DropdownItemComingSoon = (props: {children: string}) => {
-        return <RS.DropdownItem className="disabled" aria-disabled="true">
-            {props.children} <RS.Badge color="light">Coming Soon</RS.Badge>
-        </RS.DropdownItem>
-    };
+    const [menuOpen, setMenuOpen] = useState(false);
 
-    return <React.Fragment>
-        <RS.Navbar light color="primary" expand="sm">
-            <RS.NavbarBrand tag={Link} to="/">
-                <img src="/assets/logo_black.png" height={60} alt="Isaac Computer Science"/>
-            </RS.NavbarBrand>
-            <RS.Nav className="ml-auto" navbar>
-                {!user &&
-                    <React.Fragment>
-                        <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/login">LOGIN</RS.NavLink>
-                        </RS.NavItem>
-                        <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/register">SIGN UP</RS.NavLink>
-                        </RS.NavItem>
-                    </React.Fragment>
-                }
-                {user &&
-                    <React.Fragment>
-                        <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/account">MY ACCOUNT</RS.NavLink>
-                        </RS.NavItem>
-                        <RS.NavItem>
-                            <RS.NavLink tag={Link} to="/logout">LOG OUT</RS.NavLink>
-                        </RS.NavItem>
-                    </React.Fragment>
-                }
-                <RS.Form inline>
-                    <RS.FormGroup className="search--main-group">
-                        <RS.Input type="search" name="search" placeholder="Search" aria-label="Search" />
-                        <SearchButton />
-                    </RS.FormGroup>
-                </RS.Form>
-            </RS.Nav>
-        </RS.Navbar>
-        <RS.Navbar light color="white" expand="sm">
-            <RS.Nav className="mx-auto" navbar>
-                <RS.UncontrolledDropdown nav inNavbar>
-                    <RS.DropdownToggle nav caret>
+    const DropdownItemComingSoon = ({children, className}: {children: React.ReactNode; className: string}) => (
+        <DropdownItem className={`${className}`} aria-disabled="true">
+            <Row className="w-100">
+                <Col size={12}>
+                    <Link to="/coming_soon" className="mr-2">{children}</Link>
+                    <Badge color="secondary" className="ml-auto mr-1">Coming Soon</Badge>
+                </Col>
+            </Row>
+        </DropdownItem>
+    );
+
+    return <Navbar className="main-nav p-0" color="light" light expand="md" >
+        <NavbarToggler onClick={() => setMenuOpen(!menuOpen)}>Menu</NavbarToggler>
+
+        <Collapse isOpen={menuOpen} navbar className="px-0 mx-0 px-xl-5 mx-xl-5">
+            <Nav navbar className="justify-content-between">
+
+                <UncontrolledDropdown nav inNavbar>
+                    <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         About Us
-                    </RS.DropdownToggle>
-                    <RS.DropdownMenu>
-                        <DropdownItemComingSoon>What We Do</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>News</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>Get Involved</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>Isaac Physics</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>Events</DropdownItemComingSoon>
-                    </RS.DropdownMenu>
-                </RS.UncontrolledDropdown>
+                    </DropdownToggle>
+                    <DropdownMenu className="p-0 pb-3 pl-3 m-0">
+                        <DropdownItem className="pl-4 py-3 p-md-3">
+                            <Link to="/about">What We Do</Link>
+                        </DropdownItem>
+                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
+                        {/*    News*/}
+                        {/*</DropdownItemComingSoon>*/}
+                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
+                        {/*    Get Involved*/}
+                        {/*</DropdownItemComingSoon>*/}
+                        <DropdownItem className="pl-4 py-3 p-md-3">
+                            <Link to="/events">Events</Link>
+                        </DropdownItem>
+                        {/*<DropdownItem className="pl-4 py-3 p-md-3">*/}
+                        {/*    Isaac Physics*/}
+                        {/*</DropdownItem>*/}
+                    </DropdownMenu>
+                </UncontrolledDropdown>
 
-                <RS.UncontrolledDropdown nav inNavbar>
-                    <RS.DropdownToggle nav caret>
-                        For Students
-                    </RS.DropdownToggle>
-                    <RS.DropdownMenu>
-                        <DropdownItemComingSoon>My Gameboards</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>My Assignments</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>My Progress</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>Problem Solving</DropdownItemComingSoon>
-                    </RS.DropdownMenu>
-                </RS.UncontrolledDropdown>
+                <UncontrolledDropdown nav inNavbar>
+                    <DropdownToggle nav caret className="p-3 ml-3 mr-3">
+                        <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Students</p>
+                    </DropdownToggle>
+                    <DropdownMenu className="p-0 pb-3 pl-3 m-0">
+                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
+                        {/*    For Students*/}
+                        {/*</DropdownItemComingSoon>*/}
+                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                            My Gameboards
+                        </DropdownItemComingSoon>
+                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                            My Assignments
+                        </DropdownItemComingSoon>
+                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                            My Progress
+                        </DropdownItemComingSoon>
+                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                            Problem Solving
+                        </DropdownItemComingSoon>
+                    </DropdownMenu>
+                </UncontrolledDropdown>
 
-                <RS.UncontrolledDropdown nav inNavbar>
-                    <RS.DropdownToggle nav caret>
-                        For Teachers
-                    </RS.DropdownToggle>
-                    <RS.DropdownMenu>
-                        <DropdownItemComingSoon>Set Assignments</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>Assignment Progress</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>Manage Groups</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>My Progress</DropdownItemComingSoon>
-                    </RS.DropdownMenu>
-                </RS.UncontrolledDropdown>
+                <UncontrolledDropdown nav inNavbar>
+                    <DropdownToggle nav caret className="p-3 ml-3 mr-3">
+                        <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Teachers</p>
+                    </DropdownToggle>
+                    <DropdownMenu className="p-0 pb-3 pl-3 m-0">
+                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
+                        {/*    <p>For Teachers</p>*/}
+                        {/*</DropdownItemComingSoon>*/}
+                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                            Set Assignments
+                        </DropdownItemComingSoon>
+                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                            Assignment Progress
+                        </DropdownItemComingSoon>
+                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                            Manage Groups
+                        </DropdownItemComingSoon>
+                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                            My Progress
+                        </DropdownItemComingSoon>
+                    </DropdownMenu>
+                </UncontrolledDropdown>
 
-                <RS.UncontrolledDropdown nav inNavbar>
-                    <RS.DropdownToggle nav caret>
+                <UncontrolledDropdown nav inNavbar>
+                    <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         Topics
-                    </RS.DropdownToggle>
-                    <RS.DropdownMenu>
-                        <RS.DropdownItem><Link to="/topics">All Topics</Link></RS.DropdownItem>
-                        <DropdownItemComingSoon>Syllabus View</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>Suggested Teaching</DropdownItemComingSoon>
-                    </RS.DropdownMenu>
-                </RS.UncontrolledDropdown>
+                    </DropdownToggle>
+                    <DropdownMenu className="p-0 pb-3 pl-3 m-0">
+                        <DropdownItem className="pl-4 py-3 p-md-3">
+                            <Link to="/topics">All Topics</Link>
+                        </DropdownItem>
+                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                            Syllabus View
+                        </DropdownItemComingSoon>
+                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                            Suggested Teaching
+                        </DropdownItemComingSoon>
+                    </DropdownMenu>
+                </UncontrolledDropdown>
+                <UncontrolledDropdown nav inNavbar>
+                    <DropdownToggle nav caret className="p-3 ml-3 mr-3">
+                        <p className="m-0"><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</p>
+                    </DropdownToggle>
+                    <DropdownMenu className="p-0 pb-3 pl-3 m-0">
+                        <DropdownItem className="pl-4 py-3 p-md-3">
+                            <Link to={"/contact"}>Contact Us</Link>
+                        </DropdownItem>
+                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                            Teacher Support
+                        </DropdownItemComingSoon>
+                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                            Student Support
+                        </DropdownItemComingSoon>
+                    </DropdownMenu>
+                </UncontrolledDropdown>
 
-                <RS.UncontrolledDropdown nav inNavbar>
-                    <RS.DropdownToggle nav caret>
-                        Help and Support
-                    </RS.DropdownToggle>
-                    <RS.DropdownMenu>
-                        <DropdownItemComingSoon>Teacher Support</DropdownItemComingSoon>
-                        <DropdownItemComingSoon>Student Support</DropdownItemComingSoon>
-                        <RS.DropdownItem><Link to="/contact">Contact Us</Link></RS.DropdownItem>
-                    </RS.DropdownMenu>
-                </RS.UncontrolledDropdown>
-            </RS.Nav>
-        </RS.Navbar>
-    </React.Fragment>;
+                {user && user.loggedIn && user.role == "ADMIN" &&
+                    <UncontrolledDropdown nav inNavbar>
+                        <DropdownToggle nav caret className="p-3 ml-3 mr-3">
+                            Admin
+                        </DropdownToggle>
+                        <DropdownMenu className="p-0 pl-md-3 m-0">
+                            <DropdownItem className="pl-4 py-3 p-md-3">
+                                <Link to="/admin">Admin Tools</Link>
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </UncontrolledDropdown>
+                }
+            </Nav>
+        </Collapse>
+    </Navbar>;
 };
 
-export const NavigationBar = connect(stateToProps)(NavigationBarComponent);
+export const NavigationBar = withRouter(connect(stateToProps)(NavigationBarComponent));

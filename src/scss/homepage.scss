@@ -3,10 +3,24 @@
 
   section#why-sign-up {
     h1 {padding-bottom: 2rem;}
+    .card {
+      box-shadow: 0 2px 30px 0 $shadow-25;
+    }
+    img {
+      //border: 1px solid $gray-107;
+      box-shadow: 0 2px 30px 0 $shadow-25;
+    }
   }
 
   section#headline-content {
-    background-color: $mustard_light;
+    background-color: $primary;
+    background-image: url(/assets/pattern01.svg);
+    background-repeat: repeat-x;
+    background-size: 100%;
+    pre {
+      background-color: rgba(white, 0.1);
+      box-shadow: 0 2px 30px 0 $shadow-08;
+    }
   }
 
   section#events {
@@ -15,5 +29,9 @@
       width: 151px !important;
       margin: 1rem;
     }
+  }
+
+  section#sign-up-card {
+    border: black 1px solid;
   }
 }

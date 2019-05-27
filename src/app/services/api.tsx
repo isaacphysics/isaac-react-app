@@ -1,19 +1,72 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
+import * as AppTypes from "../../IsaacAppTypes";
+import {handleApiGoneAway, handleServerError} from "../state/actions";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
     withCredentials: true,
 });
 
+endpoint.interceptors.response.use((response) => {
+    if (response.status >= 500) {
+        // eslint-disable-next-line no-console
+        console.warn("Uncaught error from API:", response);
+    }
+    return response;
+}, (error) => {
+    if (error.response && error.response.status >= 500 && !error.response.data.bypassGenericSiteErrorPage) {
+        if (error.response.status == 502) {
+            // A '502 Bad Gateway' response means that the API no longer exists:
+            handleApiGoneAway();
+        } else {
+            handleServerError();
+        }
+        // eslint-disable-next-line no-console
+        console.warn("Error from API:", error);
+    }
+    return Promise.reject(error);
+});
+
+
+export const apiHelper = {
+    determineImageUrl: (path: string) => {
+        // Check if the image source is a fully qualified link (suggesting it is external to the Isaac site),
+        // or else an asset link served by the APP, not the API.
+        if ((path.indexOf("http") > -1) || (path.indexOf("/assets/") > -1)) {
+            return path;
+        } else {
+            return API_PATH + "/images/" + path;
+        }
+    }
+};
+
 export const api = {
+    search: {
+        get: (query: string, types: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+            return endpoint.get(`/search/` + encodeURIComponent(query),
+                {params: {types}});
+        }
+    },
     users: {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
         },
+        getPreferences: (): AxiosPromise<AppTypes.UserPreferencesDTO> => {
+            return endpoint.get(`/users/user_preferences`)
+        },
         passwordReset: (params: {email: string}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword`, params);
+        },
+        verifyPasswordReset: (token: string | null): AxiosPromise => {
+            return endpoint.get(`/users/resetpassword/${token}`)
+        },
+        handlePasswordReset: (params: {token: string | null; password: string | null}): AxiosPromise => {
+            return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
+        },
+        updateCurrent: (params: {registeredUser: ApiTypes.RegisteredUserDTO; passwordCurrent: string}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+            return endpoint.post(`/users`, params);
         }
     },
     authentication: {
@@ -28,6 +81,14 @@ export const api = {
         },
         login: (provider: ApiTypes.AuthenticationProvider, params: {email: string; password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/auth/${provider}/authenticate`, params);
+        },
+        getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
+            return endpoint.get(`/auth/user_authentication_settings`)
+        }
+    },
+    email: {
+        verify: (params: {userId: string | null; token: string | null}): AxiosPromise => {
+            return endpoint.get(`/users/verifyemail/${params.userId}/${params.token}`);
         }
     },
     questions: {
@@ -41,6 +102,16 @@ export const api = {
     concepts: {
         get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
             return endpoint.get(`/pages/concepts/${id}`);
+        },
+    },
+    pages: {
+        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
+            return endpoint.get(`/pages/${id}`);
+        },
+    },
+    fragments: {
+        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
+            return endpoint.get(`/pages/fragments/${id}`);
         },
     },
     topics: {
@@ -58,9 +129,20 @@ export const api = {
             return endpoint.get(`/assignments`);
         }
     },
+    contentVersion: {
+        getLiveVersion: (): AxiosPromise<{ liveVersion: string }> => {
+            return endpoint.get(`/info/content_versions/live_version`);
+        },
+        setLiveVersion(version: string): AxiosPromise {
+            return endpoint.post(`/admin/live_version/${version}`);
+        }
+    },
     constants: {
         getUnits: (): AxiosPromise<string[]> => {
             return endpoint.get(`/content/units`)
+        },
+        getSegueVersion: (): AxiosPromise<{segueVersion: string}> => {
+            return endpoint.get(`/info/segue_version`)
         }
     },
     contactForm: {

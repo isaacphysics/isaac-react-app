@@ -36,6 +36,7 @@ interface IsaacQuestionTabsProps {
     deregisterQuestion: (questionId: string) => void;
     attemptQuestion: (questionId: string, attempt: ApiTypes.ChoiceDTO) => void;
 }
+
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
     const {doc, currentAttempt, validationResponse, questionIndex, canSubmit, registerQuestion, deregisterQuestion, attemptQuestion} = props;
 
@@ -65,28 +66,33 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         <div className="question-component p-md-5">
             <QuestionComponent questionId={doc.id as string} doc={doc} />
 
-            {validationResponse && !canSubmit && (validationResponse.correct ?
-                <h1>Correct!</h1> :
-                <h1>Incorrect</h1>)
-            }
-
-            {validationResponse && validationResponse.explanation && !canSubmit &&
-                <IsaacContent doc={validationResponse.explanation} />
-            }
+            {validationResponse && !canSubmit && <div className="validation-response-panel">
+                <div className="mt-2">
+                    {validationResponse.correct ?
+                        <h1>Correct!</h1> :
+                        <h1>Incorrect</h1>
+                    }
+                </div>
+                <div>
+                    {validationResponse.explanation &&
+                        <IsaacContent doc={validationResponse.explanation} />
+                    }
+                </div>
+            </div>}
 
             <Row>
-                <Col sm="12" md={{ size: 6, offset: 3 }}>
-                    <Button color="secondary" disabled={!canSubmit} block onClick={submitCurrentAttempt}>
+                <Col className="text-center pt-3 pb-2">
+                    <Button color="secondary" disabled={!canSubmit} onClick={submitCurrentAttempt}>
                         Check my answer
                     </Button>
                 </Col>
             </Row>
 
             <Row>
-                <Col sm="12" md={{size: 4, offset: 4}} >
-                    <p className="text-center pt-2">
+                <Col sm="12" md={{size: 8, offset: 2}} >
+                    {doc.hints && <p className="text-center pt-2">
                         <small>Don&apos;t forget to use the hints above if you need help.</small>
-                    </p>
+                    </p>}
                 </Col>
             </Row>
         </div>

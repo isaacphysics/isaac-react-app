@@ -7,7 +7,7 @@ import {logInUser, resetPassword} from "../../state/actions";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 
-const stateToProps = (state: AppState) => ({errorMessage: state ? state.error : null});
+const stateToProps = (state: AppState) => ({errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null});
 
 const dispatchToProps = {
     handleProviderLoginRedirect,
@@ -110,6 +110,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                             <Row className="mb-4">
                                 <Col sm={6}>
                                     <Button
+                                        id="log-in"
                                         tag="input" value="Log in"
                                         color="secondary" type="submit" className="mb-2" block
                                         onClick={attemptLogIn}
@@ -122,7 +123,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                                 </Col>
                             </Row>
 
-                            <hr /> {/* TODO try replacing with divider when delivered by Nomensa */}
+                            <hr className="text-center" />
 
                             <Row className="my-4">
                                 <Col className="text-center">
