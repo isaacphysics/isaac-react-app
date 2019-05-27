@@ -4,24 +4,25 @@ import {handleEmailAlter} from "../../state/actions";
 import {Button, Col} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
 import {history} from "../../services/history";
+import queryString from "query-string";
 
-const stateToProps = (state: AppState) => ({
-    errorMessage: state ? state.error : null
+const stateToProps = (state: AppState, {location: {search}}: any) => ({
+    errorMessage: state ? state.error : null,
+    queryParams: queryString.parse(search)
 });
 const dispatchToProps = {handleEmailAlter};
 
 interface EmailAlterHandlerProps {
+    queryParams: {userId?: string; token?: string};
     handleEmailAlter: (params: {userId: string | null; token: string | null}) => void;
     errorMessage: ErrorState;
 }
 
-const EmailAlterHandlerComponent = ({handleEmailAlter, errorMessage}: EmailAlterHandlerProps) => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('userid');
-    const token = urlParams.get('token');
-
+const EmailAlterHandlerComponent = ({queryParams: {userId, token}, handleEmailAlter, errorMessage}: EmailAlterHandlerProps) => {
     useEffect(() => {
-        setTimeout(function(){handleEmailAlter({userId: userId, token: token})},0);
+        if (userId && token) {
+            handleEmailAlter({userId, token});
+        }
     }, []);
 
     return <div id="email-verification">
@@ -29,7 +30,9 @@ const EmailAlterHandlerComponent = ({handleEmailAlter, errorMessage}: EmailAlter
             <div>
                 <h3>Email address verified</h3>
                 <Col>
-                    <Button color="primary" onClick={() => {history.push('/account'); history.go(0);}} block >Go to My Account</Button>
+                    <Button color="primary" onClick={() => {history.push('/account');}} block >
+                        Go to My Account
+                    </Button>
                 </Col>
             </div>
         }
