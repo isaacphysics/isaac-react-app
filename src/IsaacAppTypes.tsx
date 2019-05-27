@@ -1,5 +1,6 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "./app/services/constants";
+import {RegisteredUserDTO} from "./IsaacApiTypes";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -11,12 +12,28 @@ export type Action =
 
     | {type: ACTION_TYPE.USER_UPDATE_REQUEST}
     | {type: ACTION_TYPE.USER_UPDATE_FAILURE}
+    | {type: ACTION_TYPE.USER_DETAILS_UPDATE}
+    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS}
+    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
+    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
+    | {type: ACTION_TYPE.USER_PREFERENCES_SUCCESS; userPreferences: UserPreferencesDTO}
+    | {type: ACTION_TYPE.USER_PREFERENCES_FAILURE; errorMessage: string}
+
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
     | {type: ACTION_TYPE.USER_LOG_IN_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST}
+    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST}
+    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_SUCCESS}
+    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST_SUCCESS}
+    | {type: ACTION_TYPE.USER_PASSWORD_RESET}
+    | {type: ACTION_TYPE.USER_PASSWORD_RESET_SUCCESS}
+    | {type: ACTION_TYPE.USER_PASSWORD_RESET_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
@@ -24,6 +41,9 @@ export type Action =
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_CHECK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
+    | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST}
+    | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_SUCCESS}
+    | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST}
     | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
@@ -70,6 +90,18 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     canSubmit?: boolean;
 }
 
+export interface UserEmailPreferences {
+    NEWS_AND_UPDATES: boolean;
+    ASSIGNMENTS: boolean;
+    EVENTS: boolean;
+}
+
+export interface UserPreferencesDTO {
+    BETA_FEATURE?: string;
+    EMAIL_PREFERENCE?: UserEmailPreferences;
+    SUBJECT_INTEREST?: string;
+}
+
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
     frontEndValidation: boolean;
     choice: C;
@@ -80,3 +112,7 @@ export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<Api
 }
 
 export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {loggedIn: false};
+
+export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
+    password: string | null;
+}

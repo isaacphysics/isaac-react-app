@@ -3,7 +3,15 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import {fetchSearch, registerQuestion, requestConstantsUnits, requestCurrentUser} from "../../app/state/actions";
 import {endpoint} from "../../app/services/api";
-import {errorResponses, questionDTOs, registeredUserDTOs, searchResultsList, unitsList} from "../test-factory";
+import {
+    errorResponses,
+    questionDTOs,
+    registeredUserDTOs,
+    searchResultsList,
+    unitsList,
+    userAuthenticationSettings,
+    userPreferencesSettings
+} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
 
 const middleware = [thunk];
@@ -17,15 +25,34 @@ describe("requestCurrentUser action", () => {
 
     it("dispatches USER_LOG_IN_RESPONSE_SUCCESS after a successful request", async () => {
         const {dameShirley} = registeredUserDTOs;
+        const userAuthSettings = userAuthenticationSettings[dameShirley.id as number];
+        const userPreferences = userPreferencesSettings[dameShirley.id as number];
+
         axiosMock.onGet(`/users/current_user`).replyOnce(200, dameShirley);
+        axiosMock.onGet(`/auth/user_authentication_settings`).replyOnce(200, userAuthSettings);
+        axiosMock.onGet(`/users/user_preferences`).replyOnce(200, userPreferences);
+
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
-        const expectedActions = [
-            {type: ACTION_TYPE.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: dameShirley}
+        const expectedFirstActions = [{type: ACTION_TYPE.USER_UPDATE_REQUEST}];
+        const expectedAsyncActions = [
+            {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST},
+            {type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS, userAuthSettings},
+            {type: ACTION_TYPE.USER_PREFERENCES_REQUEST},
+            {type: ACTION_TYPE.USER_PREFERENCES_SUCCESS, userPreferences}
         ];
-        expect(store.getActions()).toEqual(expectedActions);
-        expect(axiosMock.history.get.length).toBe(1);
+        const expectedFinalActions = [{type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: dameShirley}];
+
+        const actualActions = store.getActions();
+        expect(actualActions.length)
+            .toEqual(expectedFirstActions.length + expectedAsyncActions.length + expectedFinalActions.length);
+        expect(actualActions.slice(0, expectedFirstActions.length)).toEqual(expectedFirstActions);
+        expectedAsyncActions.forEach(expectedAsyncAction => {
+            expect(actualActions.slice(expectedFirstActions.length, -expectedFinalActions.length))
+                .toContainEqual(expectedAsyncAction);
+        });
+        expect(actualActions.slice(-expectedFinalActions.length)).toEqual(expectedFinalActions);
+        expect(axiosMock.history.get.length).toBe(3);
     });
 
     it("dispatches USER_UPDATE_FAILURE on a 401 response", async () => {

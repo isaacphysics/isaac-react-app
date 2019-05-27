@@ -1,6 +1,7 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
+import * as AppTypes from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 
 export const endpoint = axios.create({
@@ -52,8 +53,20 @@ export const api = {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
         },
+        getPreferences: (): AxiosPromise<AppTypes.UserPreferencesDTO> => {
+            return endpoint.get(`/users/user_preferences`)
+        },
         passwordReset: (params: {email: string}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword`, params);
+        },
+        verifyPasswordReset: (token: string | null): AxiosPromise => {
+            return endpoint.get(`/users/resetpassword/${token}`)
+        },
+        handlePasswordReset: (params: {token: string | null; password: string | null}): AxiosPromise => {
+            return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
+        },
+        updateCurrent: (params: {registeredUser: ApiTypes.RegisteredUserDTO; passwordCurrent: string}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+            return endpoint.post(`/users`, params);
         }
     },
     authentication: {
@@ -68,6 +81,14 @@ export const api = {
         },
         login: (provider: ApiTypes.AuthenticationProvider, params: {email: string; password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/auth/${provider}/authenticate`, params);
+        },
+        getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
+            return endpoint.get(`/auth/user_authentication_settings`)
+        }
+    },
+    email: {
+        verify: (params: {userId: string | null; token: string | null}): AxiosPromise => {
+            return endpoint.get(`/users/verifyemail/${params.userId}/${params.token}`);
         }
     },
     questions: {
