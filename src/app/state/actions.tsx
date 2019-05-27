@@ -1,6 +1,13 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {Action, LoggedInUser, UserPreferencesDTO, ValidatedChoice, ValidationUser} from "../../IsaacAppTypes";
+import {
+    Action,
+    LoggedInUser,
+    LoggedInValidationUser,
+    UserPreferencesDTO,
+    ValidatedChoice,
+    ValidationUser
+} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
@@ -45,8 +52,8 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const updateCurrentUser = (params: {registeredUser: ValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}, currentUser: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
-    if (currentUser.loggedIn && currentUser.email !== params.registeredUser.email) {
+export const updateCurrentUser = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}, currentUser: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
+    if (currentUser.loggedIn && params.registeredUser.loggedIn && currentUser.email !== params.registeredUser.email) {
         let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
         // TODO handle the alert ourselves
         if (emailChange) {
@@ -54,7 +61,7 @@ export const updateCurrentUser = (params: {registeredUser: ValidationUser; userP
             try {
                 const changedUser = await api.users.updateCurrent(params);
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
-                if (params.registeredUser.firstLogin == true) {
+                if (params.registeredUser.loggedIn && params.registeredUser.firstLogin == true) {
                     history.push('/account');
                 } else {
                     history.push('/');
@@ -70,7 +77,7 @@ export const updateCurrentUser = (params: {registeredUser: ValidationUser; userP
         try {
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
-            if (params.registeredUser.firstLogin == true) {
+            if (params.registeredUser.loggedIn && params.registeredUser.firstLogin == true) {
                 history.push('/account');
             } else {
                 history.push('/');
@@ -81,7 +88,7 @@ export const updateCurrentUser = (params: {registeredUser: ValidationUser; userP
     }
 };
 
-export const setUserDetails = (params: {registeredUser: ValidationUser; passwordCurrent: string}) => async (dispatch: Dispatch<Action>) => {
+export const setUserDetails = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE});
     try {
         const currentUser = await api.users.updateCurrent(params);

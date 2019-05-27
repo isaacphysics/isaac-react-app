@@ -24,7 +24,7 @@ import {
 import {RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
 import {updateCurrentUser, resetPassword} from "../../state/actions";
-import {LoggedInUser, ValidationUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {LoggedInUser, ValidationUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
@@ -47,8 +47,8 @@ interface AccountPageProps {
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     userPreferences: UserPreferencesDTO | null;
     updateCurrentUser: (
-        params: { registeredUser: ValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
-        currentUser: RegisteredUserDTO
+        params: { registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
+        currentUser: LoggedInUser
     ) => void;
 }
 

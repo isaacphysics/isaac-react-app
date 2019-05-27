@@ -15,13 +15,12 @@ import {
     Label,
     FormFeedback
 } from "reactstrap";
-import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
-import {AppState} from "../../state/reducers";
+import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser, ValidationUser} from "../../../IsaacAppTypes";
+import {AppState, ErrorState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import * as ApiTypes from "../../../IsaacApiTypes";
 
 const stateToProps = (state: AppState) => ({
-    user: state ? state.user : null,
     errorMessage: state ? state.error : null
 });
 const dispatchToProps = {
@@ -33,12 +32,12 @@ interface validationUser extends ApiTypes.RegisteredUserDTO {
 }
 
 interface RegistrationPageProps {
-    user: LoggedInUser | null
+    user: LoggedInUser
     updateCurrentUser: (
         params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string},
-        currentUser: LoggedInUser | null
+        currentUser: LoggedInUser
     ) => void
-    errorMessage: string | null
+    errorMessage: ErrorState | null
 }
 
 const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  RegistrationPageProps) => {
