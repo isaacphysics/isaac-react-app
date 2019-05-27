@@ -23,7 +23,6 @@ interface PasswordResetHandlerProps {
 }
 
 const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPasswordReset, errorMessage}: PasswordResetHandlerProps) => {
-    console.log(urlToken);
 
     const [isValidPassword, setValidPassword] = useState(true);
     const [currentPassword, setCurrentPassword] = useState("");
