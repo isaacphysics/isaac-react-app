@@ -35,8 +35,8 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
         )
     };
 
-    useEffect(() => {
-        setTimeout(function(){verifyPasswordReset(urlToken)},10);
+    useEffect(
+        () => {verifyPasswordReset(urlToken)
     }, []);
 
     return <div id="email-verification">
