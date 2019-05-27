@@ -107,12 +107,12 @@ export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
     choice: C;
 }
 
-export interface ValidationUser extends RegisteredUserDTO {
-    password: string | null;
-}
-
 export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>): choice is ValidatedChoice<ApiTypes.ChoiceDTO> {
     return choice.hasOwnProperty("frontEndValidation");
 }
 
 export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {loggedIn: false};
+
+export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
+    password: string | null;
+}

@@ -16,12 +16,24 @@ import {store} from "./store";
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_UPDATE_REQUEST});
     try {
+        // Request the user
         const currentUser = await api.users.getCurrent();
-        const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
-        const userPreferenceSettings = await api.users.getPreferences();
-        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS, authSettings: authenticationSettings.data});
-        dispatch({type: ACTION_TYPE.USER_PREFERENCES_SUCCESS, userPreferences: userPreferenceSettings.data});
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: currentUser.data});
+
+        // Now with that information request auth settings and preferences in parallel
+        Promise.all([
+            api.authentication.getCurrentUserAuthSettings().then(
+                (authenticationSettings) =>
+                    dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS, authSettings: authenticationSettings.data})
+            ),
+            api.users.getPreferences().then(
+                (userPreferenceSettings) =>
+                    dispatch({type: ACTION_TYPE.USER_PREFERENCES_SUCCESS, userPreferences: userPreferenceSettings.data})
+            )
+        ]).then(
+            () => dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: currentUser.data})
+        ).catch(
+            () => dispatch({type: ACTION_TYPE.USER_UPDATE_FAILURE})
+        );
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_UPDATE_FAILURE});
     }
@@ -52,13 +64,12 @@ export const updateCurrentUser = (params: {registeredUser: ValidationUser; userP
     if (currentUser.email !== params.registeredUser.email) {
         let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
         // TODO handle the alert ourselves
-        if (!!emailChange) {
+        if (emailChange) {
             // setUserDetails(params);
             try {
                 const currentUser = await api.users.updateCurrent(params);
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
                 history.push('/');
-                history.go(0);
             } catch (e) {
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
             }
@@ -71,7 +82,6 @@ export const updateCurrentUser = (params: {registeredUser: ValidationUser; userP
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
             history.push('/');
-            history.go(0);
         } catch (e) {
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
         }
@@ -84,7 +94,6 @@ export const setUserDetails = (params: {registeredUser: ValidationUser; password
         const currentUser = await api.users.updateCurrent(params);
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
         history.push('/');
-        history.go(0);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
     }
@@ -103,7 +112,6 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
         const response = await api.authentication.login(provider, params);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
         history.push('/');
-        history.go(0);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_FAILURE, errorMessage: e.response.data.errorMessage})
     }
@@ -131,7 +139,6 @@ export const handlePasswordReset = (params: {token: string | null, password: str
         const response = await api.users.handlePasswordReset(params);
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_SUCCESS});
         history.push('/');
-        history.go(0);
     } catch(e) {
         dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_FAILURE, errorMessage: e.response.data.errorMessage});
     }

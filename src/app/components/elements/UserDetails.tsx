@@ -1,17 +1,18 @@
-import {CardBody, Col, CustomInput, Form, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import React, {useState} from "react";
+import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import React from "react";
 import {ValidationUser} from "../../../IsaacAppTypes";
+import {validateDob, validateEmail} from "../../services/validation";
 
 interface UserDetailsProps {
     myUser: ValidationUser;
-    isValidEmail: boolean;
-    isValidDob: boolean;
-    setMyUser: (e: any) => void;
-    validateEmail: (e: any) => void;
-    validateDob: (e: any) => void;
+    setMyUser: (user: any) => void;
+    isEmailValid: boolean;
+    setIsEmailValid: (isEmailValid: boolean) => void;
+    isDobValid: boolean;
+    setIsDobValid: (isDobValid: boolean) => void;
 }
 
-export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, validateEmail, validateDob}: UserDetailsProps) => {
+export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, isDobValid, setIsDobValid}: UserDetailsProps) => {
     return <CardBody>
         <Row>
             <Col md={6}>
@@ -20,7 +21,7 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                     <Input
                         id="first-name-input" type="text" name="givenName"
                         defaultValue={myUser.givenName}
-                        onChange={(e: any) => {
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             setMyUser(Object.assign(myUser, {givenName: e.target.value}))
                         }}
                         required
@@ -33,7 +34,7 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                     <Input
                         id="last-name-input" type="text" name="last-name"
                         defaultValue={myUser.familyName}
-                        onChange={(e: any) => {
+                        onChange={(e:  React.ChangeEvent<HTMLInputElement>) => {
                             setMyUser(Object.assign(myUser, {familyName: e.target.value}))
                         }}
                         required
@@ -46,16 +47,17 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                 <FormGroup>
                     <Label htmlFor="email-input">Email</Label>
                     <Input
-                        invalid={!isValidEmail} id="email-input" type="email"
+                        invalid={!isEmailValid} id="email-input" type="email"
                         name="email" defaultValue={myUser.email}
-                        onChange={(e: any) => {
-                            validateEmail(e);
-                            (isValidEmail) ? setMyUser(Object.assign(myUser, {email: e.target.value})) : null
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            const email = event.target.value;
+                            setIsEmailValid(validateEmail(email));
+                            setMyUser(Object.assign(myUser, {email}))
                         }}
                         aria-describedby="emailValidationMessage" required
                     />
                     <FormFeedback id="emailValidationMessage">
-                        {(!isValidEmail) ? "Enter a valid email address" : null}
+                        {(!isEmailValid) ? "Enter a valid email address" : null}
                     </FormFeedback>
                 </FormGroup>
             </Col>
@@ -63,19 +65,21 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                 <FormGroup>
                     <Label htmlFor="dob-input">Date of Birth</Label>
                     <Input
-                        invalid={!isValidDob}
+                        invalid={!isDobValid}
                         id="dob-input"
                         type="date"
                         name="date-of-birth"
                         defaultValue={myUser.dateOfBirth}
-                        onChange={(event: any) => {
-                            validateDob(event);
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            const dateOfBirth = event.target.value;
+                            setIsDobValid(validateDob(dateOfBirth));
+                            setMyUser(Object.assign(myUser, {dateOfBirth: new Date(dateOfBirth)}))
                         }}
                         aria-describedby="ageValidationMessage"
                     />
-                    <FormFeedback id="ageValidationMessage">
-                        {(!isValidDob) ? "You must be over 13 years old" : null}
-                    </FormFeedback>
+                    {!isDobValid && <FormFeedback id="ageValidationMessage">
+                        You must be over 13 years old
+                    </FormFeedback>}
                 </FormGroup>
             </Col>
         </Row>
@@ -88,9 +92,9 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                             <CustomInput
                                 id="gender-male" type="radio"
                                 name="gender" label="Male"
-                                defaultChecked={!!(myUser.gender == 'MALE')}
+                                defaultChecked={myUser.gender === 'MALE'}
                                 onChange={
-                                    (e: any) => {
+                                    (e: React.ChangeEvent<HTMLInputElement>) => {
                                         setMyUser(Object.assign(myUser, {gender: 'MALE'}))
                                     }
                                 } required/>
@@ -99,9 +103,9 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                             <CustomInput
                                 id="gender-female" type="radio"
                                 name="gender" label="Female"
-                                defaultChecked={!!(myUser.gender == 'FEMALE')}
+                                defaultChecked={myUser.gender === 'FEMALE'}
                                 onChange={
-                                    (e: any) => {
+                                    (e: React.ChangeEvent<HTMLInputElement>) => {
                                         setMyUser(Object.assign(myUser, {gender: 'FEMALE'}))
                                     }
                                 } required/>
@@ -110,9 +114,9 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                             <CustomInput
                                 id="gender-other" type="radio"
                                 name="gender" label="Other"
-                                defaultChecked={!!(myUser.gender == 'OTHER')}
+                                defaultChecked={myUser.gender === 'OTHER'}
                                 onChange={
-                                    (e: any) => {
+                                    (e: React.ChangeEvent<HTMLInputElement>) => {
                                         setMyUser(Object.assign(myUser, {gender: 'OTHER'}))
                                     }
                                 } required/>
@@ -125,7 +129,7 @@ export const UserDetails = ({myUser, isValidEmail, isValidDob, setMyUser, valida
                     <Label htmlFor="school-input">School</Label>
                     <Input
                         id="school-input" type="text" name="school"
-                        defaultValue={myUser.schoolId} required
+                        defaultValue={myUser.schoolId}
                     />
                     {/* TODO lookup school */}
                 </FormGroup>
