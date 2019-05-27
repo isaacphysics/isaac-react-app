@@ -1,0 +1,10 @@
+#account-page {
+  .card {
+    box-shadow: 0 2px 30px 0 $shadow-08;
+    border: none;
+  }
+  .card-footer {
+    background-color: white;
+    border-color: $gray-118;
+  }
+}
