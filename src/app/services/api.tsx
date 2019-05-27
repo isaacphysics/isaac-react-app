@@ -1,20 +1,60 @@
-import axios, {AxiosPromise, AxiosResponse} from "axios";
-import {API_PATH, TOPICS} from "./constants";
+import axios, {AxiosPromise} from "axios";
+import {API_PATH, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {RegisteredUserDTO} from "../../IsaacApiTypes";
+import * as AppTypes from "../../IsaacAppTypes";
+import {handleApiGoneAway, handleServerError} from "../state/actions";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
     withCredentials: true,
 });
 
+endpoint.interceptors.response.use((response) => {
+    if (response.status >= 500) {
+        // eslint-disable-next-line no-console
+        console.warn("Uncaught error from API:", response);
+    }
+    return response;
+}, (error) => {
+    if (error.response && error.response.status >= 500 && !error.response.data.bypassGenericSiteErrorPage) {
+        if (error.response.status == 502) {
+            // A '502 Bad Gateway' response means that the API no longer exists:
+            handleApiGoneAway();
+        } else {
+            handleServerError();
+        }
+        // eslint-disable-next-line no-console
+        console.warn("Error from API:", error);
+    }
+    return Promise.reject(error);
+});
+
+
+export const apiHelper = {
+    determineImageUrl: (path: string) => {
+        // Check if the image source is a fully qualified link (suggesting it is external to the Isaac site),
+        // or else an asset link served by the APP, not the API.
+        if ((path.indexOf("http") > -1) || (path.indexOf("/assets/") > -1)) {
+            return path;
+        } else {
+            return API_PATH + "/images/" + path;
+        }
+    }
+};
+
 export const api = {
+    search: {
+        get: (query: string, types: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+            return endpoint.get(`/search/` + encodeURIComponent(query),
+                {params: {types}});
+        }
+    },
     users: {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
         },
-        getPreferences: (): AxiosPromise<ApiTypes.userPreferences> => {
-            return endpoint.get(`users/user_preferences`)
+        getPreferences: (): AxiosPromise<AppTypes.UserPreferencesDTO> => {
+            return endpoint.get(`/users/user_preferences`)
         },
         passwordReset: (params: {email: string}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword`, params);
@@ -22,10 +62,10 @@ export const api = {
         verifyPasswordReset: (token: string | null): AxiosPromise => {
             return endpoint.get(`/users/resetpassword/${token}`)
         },
-        handlePasswordReset: (params: {token: string | null, password: string | null}): AxiosPromise => {
+        handlePasswordReset: (params: {token: string | null; password: string | null}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
         },
-        updateCurrent: (params: {registeredUser: RegisteredUserDTO; passwordCurrent: string}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        updateCurrent: (params: {registeredUser: ApiTypes.RegisteredUserDTO; passwordCurrent: string}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/users`, params);
         }
     },
@@ -39,12 +79,15 @@ export const api = {
         logout: (): AxiosPromise => {
             return endpoint.post(`/auth/logout`);
         },
-        login: (provider: ApiTypes.AuthenticationProvider, params: {email: string, password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        login: (provider: ApiTypes.AuthenticationProvider, params: {email: string; password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/auth/${provider}/authenticate`, params);
+        },
+        getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
+            return endpoint.get(`/auth/user_authentication_settings`)
         }
     },
     email: {
-        verifyEmail: (params: {userId: string | null, token: string | null}): AxiosPromise => {
+        verify: (params: {userId: string | null; token: string | null}): AxiosPromise => {
             return endpoint.get(`/users/verifyemail/${params.userId}/${params.token}`);
         }
     },
@@ -56,11 +99,26 @@ export const api = {
             return endpoint.post(`/questions/${id}/answer`, answer);
         }
     },
-    // topics: {
-    //     get: (topicName: string): AxiosPromise<TopicDTO> => {
-    //         return endpoint.get(`/topics/${topicName}`);
-    //     }
-    // },
+    concepts: {
+        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
+            return endpoint.get(`/pages/concepts/${id}`);
+        },
+    },
+    pages: {
+        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
+            return endpoint.get(`/pages/${id}`);
+        },
+    },
+    fragments: {
+        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
+            return endpoint.get(`/pages/fragments/${id}`);
+        },
+    },
+    topics: {
+        get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
+            return endpoint.get(`/pages/topics/${topicName}`);
+        }
+    },
     gameboards: {
         get: (gameboardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${gameboardId}`);
@@ -71,9 +129,20 @@ export const api = {
             return endpoint.get(`/assignments`);
         }
     },
+    contentVersion: {
+        getLiveVersion: (): AxiosPromise<{ liveVersion: string }> => {
+            return endpoint.get(`/info/content_versions/live_version`);
+        },
+        setLiveVersion(version: string): AxiosPromise {
+            return endpoint.post(`/admin/live_version/${version}`);
+        }
+    },
     constants: {
         getUnits: (): AxiosPromise<string[]> => {
             return endpoint.get(`/content/units`)
+        },
+        getSegueVersion: (): AxiosPromise<{segueVersion: string}> => {
+            return endpoint.get(`/info/segue_version`)
         }
-    }
+    },
 };

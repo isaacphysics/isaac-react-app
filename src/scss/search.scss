@@ -1,0 +1,91 @@
+// ISAAC
+// Search page
+
+#search-page {
+  .search-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-filters {
+    justify-content: flex-end;
+    flex-grow: 1;
+  }
+
+  .search-filters label {
+    margin-left: 0.5rem;
+  }
+}
+
+
+// NOMENSA search.scss
+// REMEMBER TO REPLACE ./assets/ WITH /assets/
+nav.search {
+  min-width: 200px;
+  padding: 0;
+  position: static;
+  top: 0;
+  width: 100%;
+
+  @include respond-above(sm) {
+    align-items: center;
+    height: 100%;
+  }
+
+  &::before {
+    @include pseudo-element;
+    height: 1px;
+    width: 100%;
+  }
+
+  .navbar-toggler {
+    border-width: 0;
+    position: absolute;
+
+    @include respond-below(xs) {
+      right: 19%;
+      top: 19px;
+    }
+    @include respond-above(xs) {
+      right: 90px;
+      top: 19px;
+    }
+
+    .navbar-toggler-icon {
+      background-image: url('/assets/search-icon.svg');
+    }
+
+    &.open {
+      .navbar-toggler-icon {
+        background-image: url('/assets/cross.svg');
+      }
+    }
+  }
+
+  .search--main-group {
+    width: 100%;
+
+    @include respond-above(sm) {
+      margin: auto;
+    }
+  }
+
+  .navbar-nav {
+    padding-top: 0.5rem;
+
+    @include respond-above(sm) {
+      padding-top: 0;
+    }
+
+    > .nav-item {
+      border-top: 1px solid $white;
+      padding-top: 0.6rem;
+
+      @include respond-above(sm) {
+        border-width: 0;
+        padding: 0;
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ import {logInUser, resetPassword} from "../../state/actions";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 
-const stateToProps = (state: AppState) => ({errorMessage: state ? state.error : null});
+const stateToProps = (state: AppState) => ({errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null});
 
 const dispatchToProps = {
     handleProviderLoginRedirect,
@@ -55,7 +55,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
 
     return <Container id="login-page" className="my-4">
         <Row>
-            <Col size={12} md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
+            <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
                 <Card>
                     <CardBody>
                         <Form name="login" onSubmit={validateAndLogIn} noValidate>
@@ -108,7 +108,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                             </Row>
 
                             <Row className="mb-4">
-                                <Col size={12} sm={6}>
+                                <Col sm={6}>
                                     <Button
                                         id="log-in"
                                         tag="input" value="Log in"
@@ -126,7 +126,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                                 </Col>
                             </Row>
 
-                            <hr /> {/* TODO try replacing with divider when delivered by Nomensa */}
+                            <hr className="text-center" />
 
                             <Row className="my-4">
                                 <Col className="text-center">

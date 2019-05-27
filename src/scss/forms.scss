@@ -4,18 +4,18 @@ input {
   &.form-control {
     @include placeholder($gray-500);
     border: solid 1px $black;
-    padding: 1.438em 2em;
+    padding: 0 1.2em;
   }
 }
 
 select {
   &.form-control {
     border: solid 1px $black;
-    padding: 0 2em;
     height: 48px;
+    padding: 0 1.2em;
 
-    &[name="selectMulti"] {
-      padding: 1rem 1rem 2rem;
+    &[name='selectMulti'] {
+      padding: 1rem 1.2rem 1.5rem;
     }
   }
 }
@@ -23,7 +23,7 @@ select {
 textarea {
   &.form-control {
     border: solid 1px $black;
-    padding: 0.7rem 2rem;
+    padding: 0.7rem 1.2rem 0;
 
     &.answer {
       height: 48px;
@@ -31,56 +31,75 @@ textarea {
   }
 }
 
-input[type="search"] {
+[type='search'] {
   @include placeholder($black);
-  max-width: 220px;
-  height: 2.5rem;
-  border: none;
-  border-radius: ($border-radius * 5);
+  border: 0;
+  border-radius: ($border-radius * 10);
+  height: 2.6rem;
   padding: initial 40px initial 1rem;
 
-  &.form-control:focus {
-    border-color: $gray-390;
-    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25);
+  @include respond-above(sm) {
+    max-width: 220px;
+  }
+
+  &.form-control {
+    &:focus {
+      border-color: $gray-160;
+      box-shadow: 0 0 0 0.2rem $shadow-25;
+    }
   }
 
   &.search--filter-input {
-    box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
+    border-width: 0;
+    box-shadow: 0 2px 30px 0 $shadow-08;
+    max-width: 300px;
+    width: 100%;
   }
 }
 
-button.search-main {
-  min-width: initial;
-  width: 36px;
-  height: 36px;
-  position: absolute;
-  top: 1px;
-  right: 3px;
-
-  &:hover {
-    background-color: transparent;
-  }
-
-  &:focus {
-    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25);
-  }
-
-  svg {
+button {
+  &.search-main {
+    height: 36px;
+    min-width: initial;
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    right: 4px;
+    top: 2px;
+    width: 36px;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem $shadow-25;
+    }
+
+    svg {
+      bottom: 0;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
   }
 }
 
-.search--main-group {
+.search--main-group,
+.search--filter-group {
   &.form-group {
-    display: inline-block;
-    position: relative;
     margin: 0;
+    position: relative;
+
+    input {
+      &.form-control {
+        border-width: 0;
+        padding: 0 1rem;
+      }
+    }
   }
 }
+
+
 
 // ISAAC
 
@@ -89,11 +108,20 @@ label.label-radio > div {
   padding-left: 1em;
 }
 
-// Override Nomensa's padding which does not compile properly
-input[type="search"] {
-  padding-top: initial;
-  padding-right: 40px;
-  padding-bottom: initial;
-  padding-left: 1rem;
+// Position correctly at all sizes
+.form-inline .form-check-input {
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 0;
+  margin-right: 0.25rem;
+  margin-left: 0;
 }
+
+// Override Nomensa's padding which does not compile properly
+//input[type="search"] {
+//  padding-top: initial;
+//  padding-right: 40px;
+//  padding-bottom: initial;
+//  padding-left: 1rem;
+//}
 

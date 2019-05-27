@@ -2,8 +2,11 @@ import React from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
 import {IsaacVideo} from "./IsaacVideo";
+import {IsaacImage} from "./IsaacImage";
+import {IsaacFigure} from "./IsaacFigure";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
+import {IsaacTabs} from "./IsaacTabs";
 
 interface IsaacContentProps {
     doc: ContentDTO;
@@ -13,8 +16,8 @@ export const IsaacContent = (props: IsaacContentProps) => {
 
     let selectedComponent;
     switch (type) {
-        // case "figure": selectedComponent = <IsaacFigure {...props} />; break; // TODO
-        // case "image": selectedComponent = <IsaacImage {...props} />; break; // TODO
+        case "figure": selectedComponent = <IsaacFigure {...props} />; break;
+        case "image": selectedComponent = <IsaacImage {...props} />; break;
         case "video": selectedComponent = <IsaacVideo {...props} />; break;
         // case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break; // TODO
         case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break;
@@ -31,11 +34,13 @@ export const IsaacContent = (props: IsaacContentProps) => {
             selectedComponent = <IsaacQuestionTabs {...props} />; break;
         default:
             switch (layout) {
-                // case "tabs": selectedComponent = <IsaacTabs {...props} />; break; // TODO
+                case "tabs": selectedComponent = <IsaacTabs {...props} />; break;
                 // case "accordion": selectedComponent = <IsaacAccordion {...props} />; break; // TODO
                 // case "horizontal": selectedComponent = <IsaacHorizontal {...props} />; break; // TODO
                 default: selectedComponent =
-                    <IsaacContentValueOrChildren encoding={encoding} value={value} children={children} />;
+                    <IsaacContentValueOrChildren encoding={encoding} value={value}>
+                        {children}
+                    </IsaacContentValueOrChildren>;
             }
     }
     return selectedComponent;

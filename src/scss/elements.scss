@@ -1,0 +1,220 @@
+// ISAAC
+.content-summary-link span {
+  background: none;
+  border: 0;
+  font-family: $secondary-font;
+  font-weight: 900;
+}
+
+.content-summary-link a {
+  text-decoration: none;
+}
+
+
+// NOMENSA login.scss
+button.btn.btn-link.login-b,
+.login a {
+  color: $black;
+  font-family: $primary-font;
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  &:hover {
+    @include respond-above(sm) {
+      text-decoration: underline;
+    }
+  }
+}
+
+.login {
+  display: inline-block;
+
+  a {
+    display: block;
+  }
+}
+
+// NOMENSA signup.scss
+.signup {
+  display: none;
+
+  @include respond-above(sm) {
+    display: inline-block;
+  }
+
+  a {
+    font-size: 0.875rem;
+    text-decoration: none;
+    text-transform: uppercase;
+
+    &:hover {
+      @include respond-above(sm) {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// ISAAC after final Nomensa delivery we can reduce duplication
+.login a {
+  color: $black;
+  font-family: $primary-font;
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  &:hover {
+    @include respond-above(sm) {
+      text-decoration: underline;
+    }
+  }
+
+  &::before {
+    @include pseudo-element();
+    background-image: url('/assets/avatar-login.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 24px;
+    width: 24px;
+
+    @include respond-above(sm) {
+      display: none;
+    }
+  }
+
+  span {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    display: block;
+    height: 1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+
+
+    @include respond-above(sm) {
+      clip: initial;
+      height: initial;
+      position: relative;
+      width: initial;
+    }
+  }
+
+}
+
+.my-account a {
+  color: $black;
+  font-family: $primary-font;
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  &:hover {
+    @include respond-above(sm) {
+      text-decoration: underline;
+    }
+  }
+
+  &::before {
+    @include pseudo-element();
+    background-image: url('/assets/avatar.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 24px;
+    width: 24px;
+
+    @include respond-above(sm) {
+      display: none;
+    }
+  }
+
+  span {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    display: block;
+    height: 1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+
+
+    @include respond-above(sm) {
+      clip: initial;
+      height: initial;
+      position: relative;
+      width: initial;
+    }
+  }
+
+}
+
+.logout {
+  display: none;
+
+  @include respond-above(sm) {
+    display: inline-block;
+  }
+
+  a {
+    font-size: 0.875rem;
+    text-decoration: none;
+    text-transform: uppercase;
+
+    &:hover {
+      @include respond-above(sm) {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// OLD NOMENSA TO ALTER INTO ISAAC
+//a, button {
+//  &.btn.btn-link.login-b {
+//    color: $black;
+//    font-family: $primary-font;
+//    font-weight: 400;
+//    text-decoration: underline;
+//
+//    &::before {
+//      @include pseudo-element();
+//      background-image: url('/assets/avatar.svg');
+//      background-repeat: no-repeat;
+//      background-size: contain;
+//      height: 24px;
+//      width: 24px;
+//
+//      @include respond-above(sm) {
+//        display: none;
+//      }
+//    }
+//
+//    span {
+//      border: 0;
+//      clip: rect(0, 0, 0, 0);
+//      display: block;
+//      height: 1px;
+//      overflow: hidden;
+//      padding: 0;
+//      position: absolute;
+//      white-space: nowrap;
+//      width: 1px;
+//
+//
+//      @include respond-above(sm) {
+//        clip: initial;
+//        height: initial;
+//        position: relative;
+//        width: initial;
+//      }
+//    }
+//  }
+//}

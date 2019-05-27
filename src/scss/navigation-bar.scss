@@ -1,8 +1,163 @@
+// ISAAC
+
+// NOMENSA navigation.scss
+// REMEMBER TO REPLACE ALL "./assets/" WITH "/assets/"
 nav {
-  .nav-item {
-    .nav-link {
-      padding-left: 1rem !important;
-      padding-right: 1rem !important;
+  &.main-nav {
+    background-color: $white !important;
+    position: initial;
+
+    @include respond-above(sm) {
+      position: relative;
+    }
+
+    .navbar-toggler {
+      border-width: 0;
+      color: $black;
+      font-family: $secondary-font-medium;
+      padding: 0.8rem 0 0.8rem 0.1rem;
+      position: absolute;
+      right: 9%;
+      text-transform: uppercase;
+      top: 15px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .navbar-nav {
+      width: 100%;
+
+      .nav-link {
+        border-bottom: 1px solid $gray-118;
+        color: $gray-194;
+        font-family: $secondary-font-semi-bold;
+        font-size: 1.25rem;
+        font-weight: 500;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+
+        @include respond-above(sm) {
+          border-width: 0;
+          font-family: $secondary-font-medium;
+          font-size: 1rem;
+          text-decoration: underline;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+
+      .dropdown {
+        .dropdown-toggle {
+          align-items: center;
+          display: flex;
+          padding-right: 70px;
+          position: relative;
+
+          @include respond-above(md) {
+            padding-right: 30px;
+          }
+          &::after {
+            display: none;
+          }
+          // Commented out but leaving in for now
+          // &::after {
+          //   background-image: url('/assets/chevron-sprite.svg');
+          //   background-position: 1rem -.6rem;
+          //   background-repeat: no-repeat;
+          //   border: 0;
+          //   border-left: 1px solid $gray-200;
+          //   padding: 1.3rem 1.5rem;
+          //   position: absolute;
+          //   right: 0;
+
+          //   @include respond-above(md) {
+          //     border: 0;
+          //     padding: 1.3rem 1.1rem;
+          //   }
+          // }
+        }
+
+        &.show {
+          .dropdown-toggle {
+            &::after {
+              background-position: 1rem 1rem;
+              top: 10px;
+            }
+          }
+
+          .dropdown-menu {
+            background-color: $gray-103;
+            border: 0;
+            border-radius: 0;
+            padding-left: 1rem;
+
+            @include respond-above(sm) {
+              background-color: $white;
+              box-shadow: 0 2px 30px 0 $shadow-08;
+              top: 5rem;
+
+              &::before {
+                @include pseudo-element;
+                border-color: transparent transparent $white;
+                border-style: solid;
+                border-width: 0 10px 10px;
+                left: 1rem;
+                top: -10px;
+              }
+            }
+
+            .dropdown-item {
+              background-color: $gray-103;
+              border-bottom: 1px solid $shadow-08;
+              font-family: $secondary-font-semi-bold;
+              font-size: 1.25rem;
+              text-decoration: none;
+
+              &:hover {
+                text-decoration: underline;
+              }
+
+              &:active {
+                color: $gray-194;
+              }
+
+              @include respond-above(sm) {
+                background-color: $white;
+                border-width: 0;
+                font-family: $secondary-font-medium;
+                font-size: 1rem;
+                text-decoration: underline;
+
+                &:hover {
+                  text-decoration: none;
+                }
+              }
+            }
+
+            .dropdown-divider {
+              border-top: 0;
+              margin: 0 0.5rem 0;
+              padding: 0.2rem 0;
+
+              + .dropdown-item {
+                padding-bottom: 0.8rem !important;
+                padding-top: 0.3rem !important;
+              }
+            }
+          }
+        }
+      }
     }
   }
+}
+
+.main-menu-container {
+  position: initial;
 }

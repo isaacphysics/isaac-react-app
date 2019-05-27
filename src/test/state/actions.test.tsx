@@ -1,10 +1,18 @@
 import MockAdapter from 'axios-mock-adapter';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import {registerQuestion, requestConstantsUnits, requestCurrentUser} from "../../app/state/actions";
+import {fetchSearch, registerQuestion, requestConstantsUnits, requestCurrentUser} from "../../app/state/actions";
 import {endpoint} from "../../app/services/api";
-import {errorResponses, questionDTOs, registeredUserDTOs, unitsList} from "../test-factory";
-import {ACTION_TYPES} from "../../app/services/constants";
+import {
+    errorResponses,
+    questionDTOs,
+    registeredUserDTOs,
+    searchResultsList,
+    unitsList,
+    userAuthenticationSettings,
+    userPreferencesSettings
+} from "../test-factory";
+import {ACTION_TYPE} from "../../app/services/constants";
 
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
@@ -17,15 +25,34 @@ describe("requestCurrentUser action", () => {
 
     it("dispatches USER_LOG_IN_RESPONSE_SUCCESS after a successful request", async () => {
         const {dameShirley} = registeredUserDTOs;
+        const userAuthSettings = userAuthenticationSettings[dameShirley.id as number];
+        const userPreferences = userPreferencesSettings[dameShirley.id as number];
+
         axiosMock.onGet(`/users/current_user`).replyOnce(200, dameShirley);
+        axiosMock.onGet(`/auth/user_authentication_settings`).replyOnce(200, userAuthSettings);
+        axiosMock.onGet(`/users/user_preferences`).replyOnce(200, userPreferences);
+
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
-        const expectedActions = [
-            {type: ACTION_TYPES.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPES.USER_LOG_IN_RESPONSE_SUCCESS, user: dameShirley}
+        const expectedFirstActions = [{type: ACTION_TYPE.USER_UPDATE_REQUEST}];
+        const expectedAsyncActions = [
+            {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST},
+            {type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS, userAuthSettings},
+            {type: ACTION_TYPE.USER_PREFERENCES_REQUEST},
+            {type: ACTION_TYPE.USER_PREFERENCES_SUCCESS, userPreferences}
         ];
-        expect(store.getActions()).toEqual(expectedActions);
-        expect(axiosMock.history.get.length).toBe(1);
+        const expectedFinalActions = [{type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: dameShirley}];
+
+        const actualActions = store.getActions();
+        expect(actualActions.length)
+            .toEqual(expectedFirstActions.length + expectedAsyncActions.length + expectedFinalActions.length);
+        expect(actualActions.slice(0, expectedFirstActions.length)).toEqual(expectedFirstActions);
+        expectedAsyncActions.forEach(expectedAsyncAction => {
+            expect(actualActions.slice(expectedFirstActions.length, -expectedFinalActions.length))
+                .toContainEqual(expectedAsyncAction);
+        });
+        expect(actualActions.slice(-expectedFinalActions.length)).toEqual(expectedFinalActions);
+        expect(axiosMock.history.get.length).toBe(3);
     });
 
     it("dispatches USER_UPDATE_FAILURE on a 401 response", async () => {
@@ -34,8 +61,8 @@ describe("requestCurrentUser action", () => {
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPES.USER_UPDATE_FAILURE}
+            {type: ACTION_TYPE.USER_UPDATE_REQUEST},
+            {type: ACTION_TYPE.USER_UPDATE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -46,8 +73,8 @@ describe("requestCurrentUser action", () => {
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPES.USER_UPDATE_FAILURE}
+            {type: ACTION_TYPE.USER_UPDATE_REQUEST},
+            {type: ACTION_TYPE.USER_UPDATE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -58,8 +85,8 @@ describe("requestCurrentUser action", () => {
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPES.USER_UPDATE_FAILURE}
+            {type: ACTION_TYPE.USER_UPDATE_REQUEST},
+            {type: ACTION_TYPE.USER_UPDATE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -69,7 +96,7 @@ describe("requestCurrentUser action", () => {
 describe("registerQuestion action", () => {
     it("dispatches a question registration action", () => {
         const {manVsHorse} = questionDTOs;
-        const expectedActions = [{type: ACTION_TYPES.QUESTION_REGISTRATION, question: manVsHorse}];
+        const expectedActions = [{type: ACTION_TYPE.QUESTION_REGISTRATION, question: manVsHorse}];
         const store = mockStore();
         store.dispatch(registerQuestion(manVsHorse) as any);
         expect(store.getActions()).toEqual(expectedActions);
@@ -86,8 +113,8 @@ describe("requestConstantsUnits action", () => {
         const store = mockStore();
         await store.dispatch(requestConstantsUnits() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST},
-            {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList}
+            {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST},
+            {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -105,8 +132,8 @@ describe("requestConstantsUnits action", () => {
         const store = mockStore();
         await store.dispatch(requestConstantsUnits() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST},
-            {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_FAILURE}
+            {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST},
+            {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -117,10 +144,38 @@ describe("requestConstantsUnits action", () => {
         const store = mockStore();
         await store.dispatch(requestConstantsUnits() as any);
         const expectedActions = [
-            {type: ACTION_TYPES.CONSTANTS_UNITS_REQUEST},
-            {type: ACTION_TYPES.CONSTANTS_UNITS_RESPONSE_FAILURE}
+            {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST},
+            {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
+    });
+});
+
+describe("fetchSearch action", () => {
+    afterEach(() => {
+        axiosMock.reset();
+    });
+
+    it("dispatches SEARCH_RESPONSE_SUCCESS after a successful request", async () => {
+        axiosMock.onGet(`/search/foo`, {params: {types: "bar"}}).replyOnce(200, searchResultsList);
+        const store = mockStore();
+        await store.dispatch(fetchSearch("foo", "bar") as any);
+        const expectedActions = [
+            {type: ACTION_TYPE.SEARCH_REQUEST, query: "foo", types: "bar"},
+            {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResultsList}
+        ];
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(axiosMock.history.get.length).toBe(1);
+    });
+
+    it("doesn't call the API if the query is blank", async () => {
+        const store = mockStore();
+        await store.dispatch(fetchSearch("", "types") as any);
+        const expectedActions = [
+            {type: ACTION_TYPE.SEARCH_REQUEST, query: "", types: "types"}
+        ];
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(axiosMock.history.get.length).toBe(0);
     });
 });

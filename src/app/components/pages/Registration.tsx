@@ -15,9 +15,10 @@ import {
     Label,
     FormFeedback
 } from "reactstrap";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
+import * as ApiTypes from "../../../IsaacApiTypes";
 
 const stateToProps = (state: AppState) => ({
     user: state ? state.user : null,
@@ -27,15 +28,15 @@ const dispatchToProps = {
     updateCurrentUser
 };
 
-interface validationUser extends RegisteredUserDTO {
+interface validationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null
 }
 
 interface RegistrationPageProps {
-    user: RegisteredUserDTO | null
+    user: LoggedInUser | null
     updateCurrentUser: (
-        params: {registeredUser: validationUser; passwordCurrent: string},
-        currentUser: RegisteredUserDTO
+        params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string},
+        currentUser: LoggedInUser | null
     ) => void
     errorMessage: string | null
 }
@@ -44,7 +45,13 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
     const register = (event: React.FormEvent<HTMLFontElement>) => {
         setMyUser(Object.assign(myUser, {firstLogin: true}));
         event.preventDefault();
-        updateCurrentUser({registeredUser: myUser, passwordCurrent: ""}, myUser)
+        updateCurrentUser({registeredUser: myUser, userPreferences: {EMAIL_PREFERENCE: emailPreferences}, passwordCurrent: ""}, user)
+    };
+
+    const emailPreferences = {
+            NEWS_AND_UPDATES: true,
+            ASSIGNMENTS: true,
+            EVENTS: true
     };
 
     const queryString = require('query-string');
@@ -66,7 +73,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
     };
 
     const validateAndSetDob = (event: any) => {
-        setValidDob((myUser.dateOfBirth != undefined) &&
+        setValidDob((myUser.loggedIn && myUser.dateOfBirth != undefined) &&
             ((new Date(String(event.target.value)).getTime()/1000) <= thirteen_years_ago))
     };
 
@@ -96,7 +103,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                 </CardTitle>
                 <Form name="register" onSubmit={register}>
                     <Row>
-                        <Col size={12} md={6}>
+                        <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="first-name-input">First Name</Label>
                                 <Input id="first-name-input" type="text" name="givenName"
@@ -104,7 +111,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                                        required/>
                             </FormGroup>
                         </Col>
-                        <Col size={12} md={6}>
+                        <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="last-name-input">Last Name</Label>
                                 <Input id="last-name-input" type="text" name="familyName"
@@ -114,13 +121,13 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                         </Col>
                     </Row>
                     <Row>
-                        <Col size={12} md={6}>
+                        <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="password-input">New Password</Label>
                                 <Input id="password" type="password" name="password" required/>
                             </FormGroup>
                         </Col>
-                        <Col size={12} md={6}>
+                        <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="password-confirm">Re-enter New Password</Label>
                                 <Input invalid={!isValidPassword && signUpAttempted} id="password-confirm" type="password" name="password" onChange={(e: any) => {
@@ -132,7 +139,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                         </Col>
                     </Row>
                     <Row>
-                        <Col size={12} md={6}>
+                        <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="email-input">Email</Label>
                                 <Input invalid={!isValidEmail} id="email-input" type="email"
@@ -147,7 +154,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                                 </FormFeedback>
                             </FormGroup>
                         </Col>
-                        <Col size={12} md={6}>
+                        <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="dob-input">Date of Birth</Label>
                                 <Row>
@@ -157,7 +164,6 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                                             id="dob-input"
                                             type="date"
                                             name="date-of-birth"
-                                            defaultValue={myUser.dateOfBirth}
                                             onBlur={(e: any) => {
                                                 validateAndSetDob;
                                                 (isValidDob) ? setMyUser(Object.assign(myUser, {dateOfBirth: e.target.value})) : null

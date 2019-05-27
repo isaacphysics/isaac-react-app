@@ -2,145 +2,192 @@ import React from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardDeck, CardImg, CardText, CardTitle, Col, Row} from "reactstrap";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
+import {LoggedInUser} from "../../../IsaacAppTypes";
+import {Tabs} from "../elements/Tabs";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
 
 interface HomePageProps {
-    user: RegisteredUserDTO | null;
+    user: LoggedInUser | null;
 }
 export const HomepageComponent = ({user}: HomePageProps) => {
     return <div id="homepage">
-        <section id="call-to-action">
+        <section id="call-to-action" className="mt-4 mb-5">
             <Row>
-                <Col size={12} md={6}>
+                <Col lg={6}>
                     <Row>
                         <Col>
-                            <h1>{
-                                user ? `Welcome ${user.givenName}!` : "A-level Computer Science Learning"
+                            <h1 className="pb-3">{
+                                user && user.loggedIn ? `Welcome ${user.givenName}!` : "A-level Computer Science Learning"
                             }</h1>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla feugiat lorem nisl, sed
-                                convallis dui lobortis volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing
-                                elit. Nulla feugiat lorem nisl, sed convallis dui lobortis volutpat.
+                                Isaac Computer Science is a free online learning platform, funded by the Department for Education:
                             </p>
+                            <ul>
+                                <li>Use it in the classroom</li>
+                                <li>Use it for homework</li>
+                                <li>Use it for revision</li>
+                            </ul>
+                            <p>{
+                                "Isaac Computer Science will provide full coverage of every A level " +
+                                "Computer Science topic, and a vast bank of self-marking questions — " +
+                                "all mapped to the AQA and OCR specifications, and all created by our team of " +
+                                "experienced teachers."
+                            }</p>
                         </Col>
                     </Row>
                     <Row>
-                        <Col size={6}>
-                            <Button tag={Link} to={user ? "/topics" : "/register"} color="secondary" block>
-                                {user ? "Find a topic" : "Sign up"}
+                        <Col sm={6} className="pt-3">
+                            <Button tag={Link} to={user && user.loggedIn ? "/topics" : "/register"} color="secondary" block>
+                                {user && user.loggedIn ? "Find a topic" : "Sign up"}
                             </Button>
                         </Col>
-                        <Col size={6}>
-                            <Button tag={Link} to={user ? "/events" : "/login"} color="primary" outline block>
-                                {user ? "Find an event" : "Log in"}
+                        <Col sm={6} className="pt-3">
+                            <Button tag={Link} to={user && user.loggedIn ? "/events" : "/login"} color="primary" outline block>
+                                {user && user.loggedIn ? "Find an event" : "Log in"}
                             </Button>
                         </Col>
                     </Row>
                 </Col>
-                <Col size={12} md={6}>
-                    <img src="/assets/ics_hero.svg" className="img-fluid" alt="Students illustration"/>
+                <Col lg={6} className="align-self-center text-center">
+                    <img src="/assets/ics_hero.svg" className="img-fluid mt-5 mt-lg-3" alt="Students illustration"/>
                 </Col>
             </Row>
         </section>
 
-        {!user && <hr />}
+        {!(user && user.loggedIn) && <hr />}
 
-        {!user &&
-            <section id="why-sign-up">
-                <h1 className="text-center">Why sign up?</h1>
-                <Row>
-                    <Col size={12} md={6}>
-                        <Card>
-                            <CardBody>
-                                <CardTitle tag="h2">
-                                    Benefits for{" "}<span className="text-secondary">teachers</span>
-                                </CardTitle>
-                                <ul>
-                                    <li>Easy to set homework</li>
-                                    <li>Easy to check homework</li>
-                                    <li>See progress</li>
-                                    <li>Managing different classes</li>
-                                    <li>Increase in pass rate</li>
-                                    <li>Syllabus information</li>
-                                    <li>Teachers Events</li>
-                                </ul>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    <Col size={12} md={6}>
-                        <Card>
-                            <CardBody>
-                                <CardTitle tag="h2">
-                                    Benefits for{" "}<span className="text-secondary">students</span>
-                                </CardTitle>
-                                <ul>
-                                    <li>Easy to set homework</li>
-                                    <li>Easy to check homework</li>
-                                    <li>See progress</li>
-                                    <li>Managing different classes</li>
-                                    <li>Increase in pass rate</li>
-                                    <li>Syllabus information</li>
-                                    <li>Student Events</li>
-                                </ul>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-            </section>
-        }
+        {!(user && user.loggedIn) && <section id="why-sign-up" className="mb-5">
+            <h2 className="text-center mb-4">Why sign up?</h2>
+            <Tabs tabTitleClass="px-3 py-1" tabContentClass="pt-5">
+                {{
+                    Teacher: <Row>
+                        <Col md={6} className="align-self-center text-center">
+                            <img src="/assets/NCCE_SW_015.jpg" className="img-fluid mt-5 mt-lg-3" alt="Students illustration"/>
+                        </Col>
+                        <Col md={6}>
+                            <Card>
+                                <CardBody>
+                                    <CardTitle tag="h3">
+                                        Benefits for teachers
+                                    </CardTitle>
+                                    <strong>Isaac Computer Science allows you to:</strong>
+                                    <ul>
+                                        <li>Select and set self-marking homework questions</li>
+                                        <li>Save time on marking</li>
+                                        <li>Pinpoint weak areas to work on with your students</li>
+                                        <li>Manage students’ progress in your personal markbook</li>
+                                    </ul>
 
-        <section id="headline-content" className="px-5 py-4">
-            <h3>Featured-question</h3>
-            <Row className="p-1">
-                <Col size={12} md={6}>
-                    <p className="font-weight-bold">
-                        Trace the pseudocode and enter the output that will be produced when the program is run
-                    </p>
-                    <pre className="text-monospace">
-                        {
-                            "SUBROUTINE increase_num()\n" +
-                            "    num2 ← 2\n" +
-                            "    num1 ← num2 + 5\n" +
-                            "    num2 ← 13\n" +
-                            "ENDSUBROUTINE\n\n" +
-                            "num1 ← 4\n" +
-                            "num2 ← 10\n\n" +
-                            "increase_num()\n\n" +
-                            "num3 ← 4\n\n" +
-                            "OUTPUT num1 + num2 + num3"
-                        }
-                    </pre>
-                </Col>
-                <Col size={12} md={6}>
-                    <div className="text-center">
-                        <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration" />
-                    </div>
-                </Col>
-            </Row>
+                                    <strong>Isaac Computer Science aims to provide:</strong>
+                                    <ul>
+                                        <li>Complete coverage of AQA and OCR specifications</li>
+                                        <li>High-quality materials written by experienced teachers</li>
+                                    </ul>
+
+                                    <p>
+                                        Everything on Isaac Computer Science is free, funded by the DfE.
+                                    </p>
+                                    <div className="text-center">
+                                        <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>,
+                    Student: <Row>
+                        <Col md={6}>
+                            <Card>
+                                <CardBody>
+                                    <CardTitle tag="h3">
+                                        Benefits for students
+                                    </CardTitle>
+                                    <strong>Isaac Computer Science allows you to:</strong>
+                                    <ul>
+                                        <li>Study and revise at your own pace</li>
+                                        <li>Track your progress as you answer questions</li>
+                                        <li>Work towards achieving better exam results</li>
+                                        <li>Access high-quality materials written by experienced teachers</li>
+                                        <li>Learn relevant content tailored to your A level exam board</li>
+                                    </ul>
+                                    <p>
+                                        Everything on Isaac Computer Science is free, funded by the DfE.
+                                    </p>
+                                    <div className="text-center">
+                                        <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                        <Col md={6} className="align-self-center text-center">
+                            <img src="/assets/NCCE_SW_019.jpg" className="img-fluid mt-5 mt-lg-3" alt="Students illustration"/>
+                        </Col>
+                    </Row>,
+                }}
+            </Tabs>
+        </section>}
+
+        <section id="headline-content" className="px-5 py-5">
+            <Tabs tabTitleClass="px-3 py-1" tabContentClass="pt-5">
+                {{
+                    "Featured Question": <Row className="p-1">
+                        <Col md={6}>
+                            <p className="font-weight-bold">
+                                Trace the code and select the subroutine identifier missing on line 6 and the parameters
+                                missing on line 9. The program should register the user and then display the user details.
+                            </p>
+                            <pre className="text-monospace">
+                                {
+                                    "1  SUBROUTINE register_user()\n" +
+                                    "2     user_name ← USERINPUT\n" +
+                                    "3     user_age ← USERINPUT\n" +
+                                    "4     user_email ← USERINPUT\n" +
+                                    "5\n" +
+                                    "6     __________(user_email, user_name, user_age)\n" +
+                                    "7  ENDSUBROUTINE\n" +
+                                    "8\n" +
+                                    "9  SUBROUTINE display_user_details(__________)\n" +
+                                    '10    OUTPUT "Name: " + name\n' +
+                                    '11    OUTPUT "Age: " + age\n' +
+                                    '12    OUTPUT "Email: " + email\n' +
+                                    "13 ENDSUBROUTINE\n" +
+                                    "14\n" +
+                                    '15 register_user()  ""'
+                                }
+                            </pre>
+                        </Col>
+                        <Col md={6} className="align-self-center">
+                            <div className="text-center">
+                                <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
+                            </div>
+                            <h4 className="text-center pt-3">
+                                <Link to="/questions/prog_sub_03_aqa">ANSWER</Link>
+                            </h4>
+                        </Col>
+                    </Row>
+                }}
+            </Tabs>
         </section>
 
-        <section id="events">
+        <section id="events" className="pb-5">
             <Row>
-                <Col size={12}>
-                    <h1 className="text-center">We run events</h1>
-                    <hr />
+                <Col>
+                    <h1 className="h-title text-center my-4">Your face-to-face events</h1>
                 </Col>
             </Row>
             <Row>
-                <Col size={12} md={{size: 6, offset: 3}}>
-                    <p className="text-center">
-                        We have a number of events throughout the year. Below you can see a snapshot of some of the
-                        events we run. On our events page you will see more, and see how you can sign up for more
-                        information or sign up to events themselves.
+                <Col md={{size: 6, offset: 3}}>
+                    <p className="text-center mb-5">
+                        {"We offer free face-to-face events for students and teachers. Visit our "}
+                        <Link to="/events">events page</Link>
+                        {" to see what’s happening in your area, and sign up today!"}
                     </p>
                 </Col>
             </Row>
             <Row>
-                <Col size={12}>
+                <Col>
                     <CardDeck>
                         <Card>
                             <div className="text-center">
@@ -209,6 +256,21 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                 </Col>
             </Row>
         </section>
+
+        {!(user && user.loggedIn) && <section id="sign-up-card" className="px-5 mb-5">
+            <Row>
+                <Col lg={7} className="text-center text-lg-right">
+                    <h3 className="align-content-center">
+                        Sign up to track your progress
+                    </h3>
+                </Col>
+                <Col lg={3} className="text-center">
+                    <Button color="secondary" tag={Link} to="/register" size="lg" className="align-content-center">
+                        Sign Up
+                    </Button>
+                </Col>
+            </Row>
+        </section>}
     </div>
 };
 
