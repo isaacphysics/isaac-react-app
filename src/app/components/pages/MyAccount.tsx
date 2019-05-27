@@ -65,9 +65,9 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
         Object.assign({}, userPreferences ? userPreferences.EMAIL_PREFERENCE : null)
     );
 
-    const [isValidEmail, setValidEmail] = useState(true);
-    const [isValidDob, setValidDob] = useState(true);
-    const [isValidPassword, setValidPassword] = useState(true);
+    const [isEmailValid, setIsEmailValid] = useState(true);
+    const [isDobValid, setIsDobValid] = useState(true);
+    const [isPasswordValid, setIsPasswordValid] = useState(true);
 
     const [currentPassword, setCurrentPassword] = useState("");
     const [passwordResetRequest, setPasswordResetRequest] = useState(false);
@@ -76,18 +76,18 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
     let today = new Date();
     let thirteenYearsAgo = Date.UTC(today.getFullYear() - 13, today.getMonth(), today.getDate())/1000;
 
-    const validateAndSetEmail = (event: any) => {
-        setValidEmail((event.target.value.length > 0 && event.target.value.includes("@")));
+    const validateEmail = (event: any) => {
+        setIsEmailValid((event.target.value.length > 0 && event.target.value.includes("@")));
     };
 
-    const validateAndSetDob = (event: any) => {
-        setValidDob(myUser.loggedIn && !!myUser.dateOfBirth &&
+    const validateDob = (event: any) => {
+        setIsDobValid(myUser.loggedIn && !!myUser.dateOfBirth &&
             ((new Date(String(event.target.value)).getTime()/1000) <= thirteenYearsAgo)
         );
     };
 
-    const validateAndSetPassword = (event: any) => {
-        setValidPassword(
+    const validatePassword = (event: any) => {
+        setIsPasswordValid(
             (event.target.value == (document.getElementById("password") as HTMLInputElement).value) &&
                 ((document.getElementById("password") as HTMLInputElement).value != undefined) &&
                 ((document.getElementById("password") as HTMLInputElement).value.length > 5)
@@ -95,7 +95,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
     };
 
     const resetPasswordIfValidEmail = () => {
-        if (user.loggedIn && user.email) {
+        if (user.loggedIn && user.email && isEmailValid) {
             resetPassword({email: user.email});
             setPasswordResetRequest(!passwordResetRequest);
         }
@@ -103,54 +103,53 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
 
     {/• TODO handle #... in with react-router for tab url navigation? •/}
 
-    return <div id="account-page">
+    return <div id="account-page" className="mt-4 mb-5">
         <h1 className="h-title mb-4">My Account</h1>
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
-            <div>
-                <Card>
-                    <Nav tabs className="my-4">
-                        <NavItem>
-                            <NavLink
-                                className={classnames({ active: activeTab === 0 })}
-                                onClick={() => setTab(0)} tabIndex={0}
-                            >
-                                Profile
-                            </NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink
-                                className={classnames({ active: activeTab === 1 })}
-                                onClick={() => setTab(1)} tabIndex={0}
-                            >
-                                <span className="d-none d-lg-block d-md-block">Change Password</span>
-                                <span className="d-block d-md-none">Password</span>
-                            </NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink
-                                className={classnames({ active: activeTab === 2 })}
-                                onClick={() => setTab(2)} tabIndex={0}
-                            >
-                                <span className="d-none d-lg-block d-md-block">Email Preferences</span>
-                                <span className="d-block d-md-none">Email</span>
-                            </NavLink>
-                        </NavItem>
-                    </Nav>
-
+            <Card>
+                <Nav tabs className="my-4">
+                    <NavItem>
+                        <NavLink
+                            className={"mx-2 " + classnames({ active: activeTab === 0 })}
+                            onClick={() => setTab(0)} tabIndex={0}
+                        >
+                            Profile
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink
+                            className={"mx-2 " + classnames({ active: activeTab === 1 })}
+                            onClick={() => setTab(1)} tabIndex={0}
+                        >
+                            <span className="d-none d-lg-block d-md-block">Change Password</span>
+                            <span className="d-block d-md-none">Password</span>
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink
+                            className={"mx-2 " + classnames({ active: activeTab === 2 })}
+                            onClick={() => setTab(2)} tabIndex={0}
+                        >
+                            <span className="d-none d-lg-block d-md-block">Email Preferences</span>
+                            <span className="d-block d-md-none">Email</span>
+                        </NavLink>
+                    </NavItem>
+                </Nav>
+                <Form name="my-account">
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId={0}>
                             <UserDetails
                                 myUser={myUser} setMyUser={setMyUser}
-                                isValidDob={isValidDob} isValidEmail={isValidEmail}
-                                validateAndSetDob={validateAndSetDob} validateAndSetEmail={validateAndSetEmail}
+                                isValidDob={isDobValid} isValidEmail={isEmailValid}
+                                validateDob={validateDob} validateEmail={validateEmail}
                             />
                         </TabPane>
                         <TabPane tabId={1}>
                             <UserPassword
-                                myUser={myUser} authSettings={authSettings} isValidPassword={isValidPassword}
+                                myUser={myUser} authSettings={authSettings} isValidPassword={isPasswordValid}
                                 passwordResetRequest={passwordResetRequest} resetPasswordIfValidEmail={resetPasswordIfValidEmail}
                                 setCurrentPassword={setCurrentPassword} setMyUser={setMyUser}
-                                validateAndSetPassword={validateAndSetPassword}
+                                validatePassword={validatePassword}
                             />
                         </TabPane>
                         <TabPane tabId={2}>
@@ -160,30 +159,33 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, authSettin
                         </TabPane>
                     </TabContent>
 
-                    <CardFooter>
+                    <CardFooter className="py-4">
                         <Row>
                             <Col size={12} md={{size: 6, offset: 3}}>
-                                <h3 role="alert" className="text-danger text-center">
-                                    {errorMessage && errorMessage.type === "generalError" && errorMessage.generalError}
-                                </h3>
-                                <Button
-                                    color="secondary" block
+                                {errorMessage && errorMessage.type === "generalError" &&
+                                    <h3 role="alert" className="text-danger text-center">
+                                        {errorMessage.generalError}
+                                    </h3>
+                                }
+                                <Input
+                                    type="submit"
+                                    value="Save"
+                                    className="btn btn-block btn-secondary border-0"
                                     onClick={() => {
                                         Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
-                                        isValidEmail && isValidDob && isValidPassword &&
+                                        isEmailValid && isDobValid && isPasswordValid &&
                                             updateCurrentUser({
                                                 registeredUser: myUser,
                                                 userPreferences: myUserPreferences,
                                                 passwordCurrent: currentPassword
                                             }, user);
-                                    }}>
-                                    Save
-                                </Button>
+                                    }}
+                                />
                             </Col>
                         </Row>
                     </CardFooter>
-                </Card>
-            </div>
+                </Form>
+            </Card>
         }
     </div>;
 };
