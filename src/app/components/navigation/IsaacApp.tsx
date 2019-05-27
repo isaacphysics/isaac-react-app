@@ -80,6 +80,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}}/>
                         <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}}/>
                         <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}}/>
+                        <TrackedRoute path="/contact" component={Contact}/>
                         <TrackedRoute path="/coming_soon" component={ComingSoon} />
 
                         {/* Error pages */}
