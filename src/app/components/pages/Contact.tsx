@@ -29,6 +29,7 @@ import {AppState} from "../../state/reducers";
 import {submitMessage} from "../../state/actions";
 import classnames from 'classnames';
 import {string} from "prop-types";
+import {LoggedInUser} from "../../../IsaacAppTypes";
 
 
 
@@ -42,7 +43,7 @@ const dispatchToProps = {
 };
 
 interface ContactPageProps {
-    user: RegisteredUserDTO | null
+    user: LoggedInUser | null
     submitMessage: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string}) => void;
     errorMessage: string | null;
 }
@@ -64,12 +65,12 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
 
     useEffect(() => {
         if (urlParams.preset == "teacherRequest") {
-            if (user && user.role != "TEACHER") {
+            if (user && user.loggedIn && user.role != "TEACHER") {
                 setSubject("Teacher Account Request");
                 setMessage("Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n" + user.givenName + " " + user.familyName);
             }
         } else if (urlParams.preset == 'accountDeletion') {
-            if (user) {
+            if (user && user.loggedIn) {
                 setSubject("Account Deletion Request");
                 setMessage("Hello,\n\nPlease could you delete my Isaac Computer Science account.\n\nThanks, \n\n" + user.givenName + " " + user.familyName);
             }
@@ -129,7 +130,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
                                             <FormGroup>
                                                 <Label htmlFor="first-name-input" className="form-required">First Name</Label>
                                                 <Input id="first-name-input" type="text" name="first-name"
-                                                       defaultValue={user ? user.givenName : ""}
+                                                       defaultValue={user && user.loggedIn ? user.givenName : ""}
                                                        onChange={(e: any) => setFirstName(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
@@ -137,7 +138,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
                                             <FormGroup>
                                                 <Label htmlFor="last-name-input" className="form-required">Last Name</Label>
                                                 <Input id="last-name-input" type="text" name="last-name"
-                                                       defaultValue={user ? user.familyName : ""}
+                                                       defaultValue={user && user.loggedIn ? user.familyName : ""}
                                                        onChange={(e: any) => setLastName(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
@@ -148,7 +149,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
                                                 <Label htmlFor="email-input" className="form-required">Your Email Address</Label>
                                                 <Input invalid={messageSendAttempt && !isValidEmail} id="email-input"
                                                        type="email" name="email"
-                                                       defaultValue={user ? user.email : ""}
+                                                       defaultValue={user && user.loggedIn ? user.email : ""}
                                                        onChange={(e: any) => setEmail(e.target.value)}
                                                        aria-describedby="emailValidationMessage" required/>
                                                 <FormFeedback id="emailValidationMessage">
