@@ -51,19 +51,22 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
             <main role="main" className="flex-fill content-body">
                 <div className="container">
                     <Switch>
-                        {/* Application Pages */}
+                        {/* Application pages */}
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
                         <TrackedRoute path="/search" component={Search} />
                         <TrackedRoute path="/account" onlyFor={(user: LoggedInUser) => user.loggedIn} component={MyAccount} />
                         <TrackedRoute path="/events" component={ComingSoon}/>
-                        {/*<TrackedRoute path="/gameboards" component={Gameboard}/>*/}
-                        {/*<TrackedRoute path="/assignments" component={MyAssignments} />*/}
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute path="/pages/:pageId" component={Generic} />
                         <TrackedRoute exact path="/topics" component={AllTopics} />
                         <TrackedRoute path="/topics/:topicName" component={Topic} />
+
                         <TrackedRoute path="/admin" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Admin} />
+
+                        {/* June release application pages */}
+                        <TrackedRoute path="/gameboards" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Gameboard}/>
+                        <TrackedRoute path="/assignments" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={MyAssignments} />
 
                         {/* Authentication */}
                         <TrackedRoute path="/login" component={LogIn} />
