@@ -21,7 +21,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
             <Row className="w-100">
                 <Col size={12}>
                     <Link to="/coming_soon" className="mr-2">{children}</Link>
-                    <Badge color="secondary" className="ml-auto mr-1">Coming Soon</Badge>
+                    <Badge  color="light" className="border-secondary border bg-white ml-auto mr-1">Coming Soon</Badge>
                 </Col>
             </Row>
         </DropdownItem>
