@@ -30,6 +30,7 @@ const Macros: {[key: string]: MathJaxMacro} = {
     "and": ["{#1} \\wedge {#2}", 2],
     "or": ["{#1} \\lor {#2}", 2],
     "not": ["\\lnot{#1}", 1],
+    "bracketnot": ["\\lnot{(#1)}", 1],
     "xor": ["{#1} \\veebar {#2}", 2],
     "equivalent": "\\equiv"
 };
