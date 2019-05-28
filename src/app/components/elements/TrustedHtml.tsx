@@ -2,6 +2,9 @@ import React from "react";
 import katex from "katex";
 import '../../services/mhchem';
 import he from "he";
+import {UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {AppState} from "../../state/reducers";
+import {connect} from "react-redux";
 
 type MathJaxMacro = string|[string, number];
 
@@ -165,7 +168,7 @@ function munge(latex: string) {
         .replace(/\\newline/g, "\\\\");
 }
 
-export function katexify(html: string) {
+export function katexify(html: string, userPreferences: UserPreferencesDTO | null) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -221,11 +224,25 @@ function bootstrapify(html: string) {
     return bootstrappedHtml;
 }
 
-export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
-    html = bootstrapify(katexify(html));
+
+
+const stateToProps = (state: AppState) => ({
+    userPreferences: state ? state.userPreferences : null
+});
+
+interface TrustedHtmlProps {
+    html: string;
+    span?: boolean;
+    userPreferences: UserPreferencesDTO | null
+}
+
+let TrustedHtmlComponent = ({html, span, userPreferences}: TrustedHtmlProps) => {
+    html = bootstrapify(katexify(html, userPreferences));
     if (span) {
         return <span dangerouslySetInnerHTML={{__html: html}} />;
     } else {
         return <div dangerouslySetInnerHTML={{__html: html}} />;
     }
 };
+
+export const TrustedHtml = connect(stateToProps)(TrustedHtmlComponent);

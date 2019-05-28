@@ -1,5 +1,5 @@
 import * as ApiTypes from "./IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "./app/services/constants";
+import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "./app/services/constants";
 import {RegisteredUserDTO} from "./IsaacApiTypes";
 
 export type Action =
@@ -99,7 +99,7 @@ export interface UserEmailPreferences {
 export interface UserPreferencesDTO {
     BETA_FEATURE?: string;
     EMAIL_PREFERENCE?: UserEmailPreferences;
-    SUBJECT_INTEREST?: string;
+    EXAM_BOARD?: {AQA: boolean; OCR: boolean};
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
