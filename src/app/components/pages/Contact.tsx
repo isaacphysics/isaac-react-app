@@ -30,13 +30,33 @@ import {submitMessage} from "../../state/actions";
 import classnames from 'classnames';
 import {string} from "prop-types";
 import {LoggedInUser} from "../../../IsaacAppTypes";
+import {validateEmail} from "../../services/validation";
 
 
+const queryString = require('query-string');
+const urlParams = queryString.parse(location.search);
 
-const stateToProps = (state: AppState) => ({
-    user: state ? state.user : null,
-    errorMessage: state ? state.error : null
-});
+const stateToProps = (state: AppState) => {
+    let presetSubject = "";
+    let presetMessage = "";
+    if (urlParams && urlParams.preset == "teacherRequest") {
+        if (state && state.user && state.user.loggedIn && state.user.role != "TEACHER") {
+            presetSubject = "Teacher Account Request";
+            presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n" + state.user.givenName + " " + state.user.familyName;
+        }
+    } else if (urlParams && urlParams.preset == 'accountDeletion') {
+        if (state && state.user && state.user.loggedIn) {
+            presetSubject = "Account Deletion Request";
+            presetMessage = "Hello,\n\nPlease could you delete my Isaac Computer Science account.\n\nThanks, \n\n" + state.user.givenName + " " + state.user.familyName;
+        }
+    }
+    return {
+        user: state ? state.user : null,
+        errorMessage: state ? state.error : null,
+        presetSubject: presetSubject,
+        presetMessage: presetMessage
+    }
+};
 
 const dispatchToProps = {
     submitMessage
@@ -46,36 +66,22 @@ interface ContactPageProps {
     user: LoggedInUser | null
     submitMessage: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string}) => void;
     errorMessage: ErrorState | null;
+    presetSubject: string;
+    presetMessage: string;
 }
 
-const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPageProps) => {
+const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject, presetMessage}: ContactPageProps) => {
 
-    const queryString = require('query-string');
-    const urlParams = queryString.parse(location.search);
-
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [subject, setSubject] = useState(urlParams.subject);
-    const [message, setMessage] = useState("");
+    const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName ? user.givenName : "");
+    const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName ? user.familyName : "");
+    const [email, setEmail] = useState(user && user.loggedIn && user.email ? user.email : "");
+    const [subject, setSubject] = useState(presetSubject || urlParams.subject || "");
+    const [message, setMessage] = useState(presetMessage || "");
     const [messageSendAttempt, setMessageSendAttempt] = useState(false);
     const [messageSent, setMessageSent] = useState(false);
 
-    const isValidEmail = email.length > 0 && email.includes("@");
+    const isValidEmail = validateEmail(email);
 
-    useEffect(() => {
-        if (urlParams.preset == "teacherRequest") {
-            if (user && user.loggedIn && user.role != "TEACHER") {
-                setSubject("Teacher Account Request");
-                setMessage("Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n" + user.givenName + " " + user.familyName);
-            }
-        } else if (urlParams.preset == 'accountDeletion') {
-            if (user && user.loggedIn) {
-                setSubject("Account Deletion Request");
-                setMessage("Hello,\n\nPlease could you delete my Isaac Computer Science account.\n\nThanks, \n\n" + user.givenName + " " + user.familyName);
-            }
-        }
-    }, [user]);
 
     const sendForm = () => {
         submitMessage(
@@ -88,9 +94,10 @@ const ContactPageComponent = ({user, submitMessage, errorMessage}: ContactPagePr
                 message: message})
     }
 
-    return <div id="account-page">
+    return <div id="contact-page">
         <h1>Contact Us</h1>
         <h2 className="h-title mb-4">We'd love to hear from you</h2>
+        {presetMessage}
         <div>
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}}>
