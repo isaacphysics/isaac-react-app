@@ -9,12 +9,21 @@ import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 export const AllTopics = () => {
 
     const renderTopic = (topic: Tag) => {
+        const TextTag = topic.comingSoon ? "span" : "strong";
         return <React.Fragment>
-            <Link to={topic.comingSoon ? "/coming_soon" : `/topics/${topic.id}`}>{topic.title}</Link>
+            <Link
+                to={topic.comingSoon ? "/coming_soon" : `/topics/${topic.id}`}
+                className={topic.comingSoon ? "text-muted" : ""}
+            >
+                <TextTag>
+                    {topic.title}
+                </TextTag>
+            </Link>
             {" "}
-            {topic.onlyFor && <>{topic.onlyFor.map((examBoard) => <Badge color="primary" key={examBoard} pill>{examBoard}</Badge>)}</>}
-            {" "}
-            {topic.comingSoon ? <Badge color="dark">Coming Soon</Badge> : <Badge color="secondary">New</Badge>}
+            {topic.comingSoon ?
+                <Badge color="light" className="border-primary border bg-white">Coming Soon</Badge> :
+                <Badge color="secondary">New</Badge>
+            }
         </React.Fragment>;
     };
 

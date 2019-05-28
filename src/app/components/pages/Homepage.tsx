@@ -20,15 +20,15 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     <Row>
                         <Col>
                             <h1 className="pb-3">{
-                                user && user.loggedIn ? `Welcome ${user.givenName}!` : "A-level Computer Science Learning"
+                                user && user.loggedIn ? `Welcome ${user.givenName}!` : "A level Computer Science learning"
                             }</h1>
                             <p>
                                 Isaac Computer Science is a free online learning platform, funded by the Department for Education:
                             </p>
                             <ul>
-                                <li>Use it in the classroom</li>
-                                <li>Use it for homework</li>
-                                <li>Use it for revision</li>
+                                <li>Use it in the <strong>classroom</strong></li>
+                                <li>Use it for <strong>homework</strong></li>
+                                <li>Use it for <strong>revision</strong></li>
                             </ul>
                             <p>{
                                 "Isaac Computer Science will provide full coverage of every A level " +
@@ -163,7 +163,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                                 <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
                             </div>
                             <h4 className="text-center pt-3">
-                                <Link to="/questions/prog_sub_03_aqa">ANSWER</Link>
+                                <Link to="/questions/prog_sub_03_aqa">HINTS / ANSWER</Link>
                             </h4>
                         </Col>
                     </Row>

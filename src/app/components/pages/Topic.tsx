@@ -2,29 +2,29 @@ import React, {ChangeEvent, useEffect, useState} from "react"
 import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {fetchTopicDetails} from "../../state/actions";
+import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {Button, Col, Container, Row, FormGroup, Label, Input} from "reactstrap";
+import {Button, Col, Container, Row, Label, Input} from "reactstrap";
 import {IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
-const stateToProps = (state: AppState, {match: {params: {topicName}}}: any) => ({
+const stateToProps = (state: AppState, {match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => ({
     topicName: topicName,
     topicPage: state ? state.currentTopic : null
 });
-const actionsToProps = {fetchTopicDetails};
+const actionsToProps = {fetchTopicSummary};
 
 interface TopicPageProps {
     topicName: TAG_ID;
     topicPage: IsaacTopicSummaryPageDTO | null;
-    fetchTopicDetails: (topicName: TAG_ID) => void;
+    fetchTopicSummary: (topicId: TAG_ID) => void;
 }
-const TopicPageComponent = ({topicName, topicPage, fetchTopicDetails}: TopicPageProps) => {
+const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary}: TopicPageProps) => {
     useEffect(
-        () => {fetchTopicDetails(topicName);},
+        () => {fetchTopicSummary(topicName)},
         [topicName]
     );
     const [examBoardFilter, setExamBoardFilter] = useState(EXAM_BOARD.AQA);
@@ -32,12 +32,12 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicDetails}: TopicPage
         AQA: "examboard_aqa",
         OCR: "examboard_ocr",
     };
-    const examBoardFilteredContent = topicPage && topicPage.relatedContent &&
-        topicPage.relatedContent.filter(content => content.tags && content.tags.includes(examBoardTagMap[examBoardFilter]));
-    const relatedConcepts = examBoardFilteredContent &&
-        examBoardFilteredContent.filter(content => content.type === DOCUMENT_TYPE.CONCEPT);
-    const relatedQuestions = examBoardFilteredContent &&
-        examBoardFilteredContent.filter(content => content.type === DOCUMENT_TYPE.QUESTION);
+    const examBoardFilteredContent = topicPage && topicPage.relatedContent && topicPage.relatedContent
+        .filter(content => content.tags && content.tags.includes(examBoardTagMap[examBoardFilter]));
+    const relatedConcepts = examBoardFilteredContent && examBoardFilteredContent
+        .filter(content => content.type === DOCUMENT_TYPE.CONCEPT);
+    const relatedQuestions = examBoardFilteredContent && examBoardFilteredContent
+        .filter(content => content.type === DOCUMENT_TYPE.QUESTION);
 
     return <ShowLoading until={topicPage}>
         {topicPage && <Container id="topic-page">

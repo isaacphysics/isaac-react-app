@@ -1,9 +1,10 @@
 import React from "react";
-import {Button} from "reactstrap";
+import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
 export const SessionExpired = () => {
     return <React.Fragment>
         <div>
+            <BreadcrumbTrail currentPageTitle="Session expired error" />
             <h1 className="h-title">Session Expired</h1>
 
             <h3 className="my-4"><small>{"We're sorry, but your session has expired!"}</small></h3>

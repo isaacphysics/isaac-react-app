@@ -4,9 +4,9 @@ import {Col, Container, Row} from "reactstrap";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
 export const ComingSoon = () => <Container>
-    <BreadcrumbTrail currentPageTitle="Coming Soon" />
+    <BreadcrumbTrail currentPageTitle="Coming soon" />
 
-    <h1 className="h-title">Coming Soon</h1>
+    <h1 className="h-title">Coming soon</h1>
 
     <Row>
         <Col>
