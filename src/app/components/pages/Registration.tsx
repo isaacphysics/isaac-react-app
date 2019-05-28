@@ -19,7 +19,7 @@ import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../..
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
-import {validateDob, validateEmail} from "../../services/validation";
+import {validateDob, validateEmail, validatePassword} from "../../services/validation";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null,
@@ -43,10 +43,16 @@ interface RegistrationPageProps {
 
 const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
     const register = (event: React.FormEvent<HTMLFontElement>) => {
-        isValidPassword && Object.assign(myUser, {password: (document.getElementById("password-confirm") as HTMLInputElement).value});
-        setMyUser(Object.assign(myUser, {firstLogin: true}));
         event.preventDefault();
-        updateCurrentUser({registeredUser: myUser, userPreferences: {EMAIL_PREFERENCE: emailPreferences}, passwordCurrent: ""}, {loggedIn: false})
+        if (isValidPassword && isValidEmail && isDobValid) {
+            isValidPassword && Object.assign(myUser, {password: (document.getElementById("password-confirm") as HTMLInputElement).value});
+            setMyUser(Object.assign(myUser, {firstLogin: true}));
+            updateCurrentUser({
+                registeredUser: myUser,
+                userPreferences: {EMAIL_PREFERENCE: emailPreferences},
+                passwordCurrent: ""
+            }, (Object.assign(myUser, {loggedIn: true})))
+        }
     };
 
     const emailPreferences = {
@@ -68,8 +74,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     const validateAndSetPassword = (password: string) => {
         setValidPassword(
             (password == (document.getElementById("password") as HTMLInputElement).value) &&
-            (password != undefined) &&
-            (password.length > 5)
+            validatePassword(password)
         )
     };
 
@@ -118,10 +123,10 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="password-confirm">Re-enter New Password</Label>
-                                <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password" onChange={(e: any) => {
+                                <Input invalid={!isValidPassword && signUpAttempted} id="password-confirm" type="password" name="password" onChange={(e: any) => {
                                     validateAndSetPassword(e.target.value)}
                                 } aria-describedby="invalidPassword" required/>
-                                <FormFeedback id="invalidPassword">{(!isValidPassword) ? "Passwords must match and be at least 6 characters long" : null}</FormFeedback>
+                                <FormFeedback id="invalidPassword">{(!isValidPassword && signUpAttempted) ? "Passwords must match and be at least 6 characters long" : null}</FormFeedback>
                             </FormGroup>
                         </Col>
                     </Row>
@@ -182,7 +187,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     </Row>
                     <Row>
                         <Col size={12} md={{size: 6, offset: 3}}>
-                            <Button color="secondary" type="submit" onClick={(isValidPassword && isValidEmail && isDobValid) ? attemptSignUp : null} block>Register Now</Button>
+                            <Button color="secondary" type="submit" onClick={attemptSignUp} block>Register Now</Button>
                         </Col>
                     </Row>
                 </Form>
