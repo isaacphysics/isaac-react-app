@@ -20,8 +20,9 @@ import {AppState, ErrorState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import * as ApiTypes from "../../../IsaacApiTypes";
 
-const stateToProps = (state: AppState) => ({
-    errorMessage: state ? state.error : null
+const stateToProps = (state: AppState, {match: {params: {email}}}: any) => ({
+    errorMessage: state ? state.error : null,
+    userEmail: email
 });
 const dispatchToProps = {
     updateCurrentUser
@@ -32,6 +33,7 @@ interface validationUser extends ApiTypes.RegisteredUserDTO {
 }
 
 interface RegistrationPageProps {
+    userEmail: string | null
     user: LoggedInUser
     updateCurrentUser: (
         params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string},
@@ -40,21 +42,20 @@ interface RegistrationPageProps {
     errorMessage: ErrorState | null
 }
 
-const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  RegistrationPageProps) => {
+const RegistrationPageComponent = ({userEmail, user, updateCurrentUser, errorMessage}:  RegistrationPageProps) => {
     const register = (event: React.FormEvent<HTMLFontElement>) => {
         setMyUser(Object.assign(myUser, {firstLogin: true}));
         event.preventDefault();
         updateCurrentUser({registeredUser: myUser, userPreferences: {EMAIL_PREFERENCE: emailPreferences}, passwordCurrent: ""}, user)
     };
 
+    console.log(userEmail);
+
     const emailPreferences = {
             NEWS_AND_UPDATES: true,
             ASSIGNMENTS: true,
             EVENTS: true
     };
-
-    const queryString = require('query-string');
-    const urlParams = queryString.parse(location.search);
 
     const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
     const [isValidEmail, setValidEmail] = useState(true);
@@ -89,7 +90,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
     };
 
     useEffect(() => {
-        urlParams.email ? setMyUser(Object.assign(myUser, {email: urlParams.email})) : null;
+        userEmail ? setMyUser(Object.assign(myUser, {email: userEmail})) : null;
     }, []);
 
 
@@ -142,7 +143,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage}:  Reg
                             <FormGroup>
                                 <Label htmlFor="email-input">Email</Label>
                                 <Input invalid={!isValidEmail} id="email-input" type="email"
-                                       name="email" defaultValue={urlParams.email ? urlParams.email : null}
+                                       name="email" defaultValue={userEmail ? userEmail : null}
                                        onChange={(e: any) => {
                                            validateAndSetEmail(e);
                                            (isValidEmail) ? setMyUser(Object.assign(myUser, {email: e.target.value})) : null

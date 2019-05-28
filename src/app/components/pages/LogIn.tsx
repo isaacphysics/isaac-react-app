@@ -7,7 +7,9 @@ import {logInUser, resetPassword} from "../../state/actions";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 
-const stateToProps = (state: AppState) => ({errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null});
+const stateToProps = (state: AppState) => ({
+    errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null
+});
 
 const dispatchToProps = {
     handleProviderLoginRedirect,
@@ -119,7 +121,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                                 <Col size={12} sm={6}>
                                     <Button tag={Link} to={{
                                         pathname: '/register',
-                                        search: "?email=" + email
+                                        state: { email: email }
                                     }} color="primary" className="mb-2" outline block>
                                         Sign up
                                     </Button>
