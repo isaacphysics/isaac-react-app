@@ -56,4 +56,5 @@ const TrackedRouteComponent = function({component, trackingOptions, componentPro
         throw new Error("TrackedRoute only works on components, got: " + JSON.stringify(rest));
     }
 };
+
 export const TrackedRoute = connect(mapStateToProps)(TrackedRouteComponent);
