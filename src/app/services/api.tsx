@@ -145,4 +145,12 @@ export const api = {
             return endpoint.get(`/info/segue_version`)
         }
     },
+    schools: {
+        search: (query: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+            return endpoint.get(`/schools/?query=${encodeURIComponent(query)}`);
+        },
+        getByUrn: (urn: string): AxiosPromise<Array<any>> => {
+            return endpoint.get(`/schools/?urn=${encodeURIComponent(urn)}`);
+        }
+    },
 };
