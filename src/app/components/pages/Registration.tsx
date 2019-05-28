@@ -15,41 +15,39 @@ import {
     Label,
     FormFeedback
 } from "reactstrap";
-import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser, ValidationUser} from "../../../IsaacAppTypes";
-import {AppState, ErrorState} from "../../state/reducers";
+import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
+import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
-import * as ApiTypes from "../../../IsaacApiTypes";
+import {history} from "../../services/history"
+import {validateDob, validateEmail} from "../../services/validation";
 
-const stateToProps = (state: AppState, {match: {params: {email}}}: any) => ({
-    errorMessage: state ? state.error : null,
-    userEmail: email
+const stateToProps = (state: AppState) => ({
+    errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null,
+    userEmail: history.location && history.location.state && history.location.state.email,
+    userPassword: history.location && history.location.state && history.location.state.password
 });
 const dispatchToProps = {
     updateCurrentUser
 };
 
-interface validationUser extends ApiTypes.RegisteredUserDTO {
-    password: string | null
-}
-
 interface RegistrationPageProps {
-    userEmail: string | null
     user: LoggedInUser
     updateCurrentUser: (
         params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string},
         currentUser: LoggedInUser
     ) => void
-    errorMessage: ErrorState | null
+    errorMessage: string | null
+    userEmail?: string
+    userPassword?: string
 }
 
-const RegistrationPageComponent = ({userEmail, user, updateCurrentUser, errorMessage}:  RegistrationPageProps) => {
+const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
     const register = (event: React.FormEvent<HTMLFontElement>) => {
+        isValidPassword && Object.assign(myUser, {password: (document.getElementById("password-confirm") as HTMLInputElement).value});
         setMyUser(Object.assign(myUser, {firstLogin: true}));
         event.preventDefault();
-        updateCurrentUser({registeredUser: myUser, userPreferences: {EMAIL_PREFERENCE: emailPreferences}, passwordCurrent: ""}, user)
+        updateCurrentUser({registeredUser: myUser, userPreferences: {EMAIL_PREFERENCE: emailPreferences}, passwordCurrent: ""}, {loggedIn: false})
     };
-
-    console.log(userEmail);
 
     const emailPreferences = {
             NEWS_AND_UPDATES: true,
@@ -59,7 +57,7 @@ const RegistrationPageComponent = ({userEmail, user, updateCurrentUser, errorMes
 
     const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
     const [isValidEmail, setValidEmail] = useState(true);
-    const [isValidDob, setValidDob] = useState(true);
+    const [isDobValid, setIsDobValid] = useState(true);
     const [isValidPassword, setValidPassword] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
     const [signUpAttempted, setSignUpAttempted] = useState(false);
@@ -67,21 +65,11 @@ const RegistrationPageComponent = ({userEmail, user, updateCurrentUser, errorMes
     let today = new Date();
     let thirteen_years_ago = Date.UTC(today.getFullYear() - 13, today.getMonth(), today.getDate())/1000;
 
-
-    const validateAndSetEmail = (event: any) => {
-        setValidEmail((event.target.value.length > 0 && event.target.value.includes("@")));
-    };
-
-    const validateAndSetDob = (event: any) => {
-        setValidDob((myUser.loggedIn && myUser.dateOfBirth != undefined) &&
-            ((new Date(String(event.target.value)).getTime()/1000) <= thirteen_years_ago))
-    };
-
-    const validateAndSetPassword = (event: any) => {
+    const validateAndSetPassword = (password: string) => {
         setValidPassword(
-            (event.target.value == (document.getElementById("password") as HTMLInputElement).value) &&
-            ((document.getElementById("password") as HTMLInputElement).value != undefined) &&
-            ((document.getElementById("password") as HTMLInputElement).value.length > 5)
+            (password == (document.getElementById("password") as HTMLInputElement).value) &&
+            (password != undefined) &&
+            (password.length > 5)
         )
     };
 
@@ -91,7 +79,7 @@ const RegistrationPageComponent = ({userEmail, user, updateCurrentUser, errorMes
 
     useEffect(() => {
         userEmail ? setMyUser(Object.assign(myUser, {email: userEmail})) : null;
-    }, []);
+    }, [errorMessage]);
 
 
     return <div id="registration-page">
@@ -124,17 +112,16 @@ const RegistrationPageComponent = ({userEmail, user, updateCurrentUser, errorMes
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="password-input">New Password</Label>
-                                <Input id="password" type="password" name="password" required/>
+                                <Input id="password" type="password" name="password" defaultValue={userPassword ? userPassword : null} required/>
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="password-confirm">Re-enter New Password</Label>
-                                <Input invalid={!isValidPassword && signUpAttempted} id="password-confirm" type="password" name="password" onChange={(e: any) => {
-                                    validateAndSetPassword(e);
-                                    (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ? Object.assign(myUser, {password: e.target.value}) : null}
+                                <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password" onChange={(e: any) => {
+                                    validateAndSetPassword(e.target.value)}
                                 } aria-describedby="invalidPassword" required/>
-                                <FormFeedback id="invalidPassword">{(!isValidPassword && signUpAttempted) ? "Passwords must match and be at least 6 characters long" : null}</FormFeedback>
+                                <FormFeedback id="invalidPassword">{(!isValidPassword) ? "Passwords must match and be at least 6 characters long" : null}</FormFeedback>
                             </FormGroup>
                         </Col>
                     </Row>
@@ -142,10 +129,10 @@ const RegistrationPageComponent = ({userEmail, user, updateCurrentUser, errorMes
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="email-input">Email</Label>
-                                <Input invalid={!isValidEmail} id="email-input" type="email"
+                                <Input invalid={!isValidEmail && signUpAttempted} id="email-input" type="email"
                                        name="email" defaultValue={userEmail ? userEmail : null}
                                        onChange={(e: any) => {
-                                           validateAndSetEmail(e);
+                                           setValidEmail(validateEmail(e.target.value));
                                            (isValidEmail) ? setMyUser(Object.assign(myUser, {email: e.target.value})) : null
                                        }}
                                        aria-describedby="emailValidationMessage" required/>
@@ -160,19 +147,20 @@ const RegistrationPageComponent = ({userEmail, user, updateCurrentUser, errorMes
                                 <Row>
                                     <Col size={12} lg={6}>
                                         <Input
-                                            invalid={!isValidDob}
+                                            invalid={!isDobValid}
                                             id="dob-input"
                                             type="date"
                                             name="date-of-birth"
-                                            onBlur={(e: any) => {
-                                                validateAndSetDob;
-                                                (isValidDob) ? setMyUser(Object.assign(myUser, {dateOfBirth: e.target.value})) : null
+                                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                const dateOfBirth = event.target.value;
+                                                setIsDobValid(validateDob(dateOfBirth));
+                                                setMyUser(Object.assign(myUser, {dateOfBirth: new Date(dateOfBirth)}))
                                             }}
-                                            aria-describedby ="ageValidationMessage"
+                                            aria-describedby="ageValidationMessage"
                                         />
-                                        <FormFeedback id="ageValidationMessage">
-                                            {(!isValidDob) ? "You must be over 13 years old" : null}
-                                        </FormFeedback>
+                                        {!isDobValid && <FormFeedback id="ageValidationMessage">
+                                            You must be over 13 years old
+                                        </FormFeedback>}
                                     </Col>
                                     <Col size={12} lg={5}>
                                         <CustomInput
@@ -194,7 +182,7 @@ const RegistrationPageComponent = ({userEmail, user, updateCurrentUser, errorMes
                     </Row>
                     <Row>
                         <Col size={12} md={{size: 6, offset: 3}}>
-                            <Button color="secondary" type="submit" onClick={(isValidPassword && isValidEmail && isValidDob) ? attemptSignUp : null} block>Register Now</Button>
+                            <Button color="secondary" type="submit" onClick={(isValidPassword && isValidEmail && isDobValid) ? attemptSignUp : null} block>Register Now</Button>
                         </Col>
                     </Row>
                 </Form>

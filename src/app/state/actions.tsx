@@ -86,6 +86,7 @@ export const updateCurrentUser = (params: {registeredUser: LoggedInValidationUse
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
         }
     }
+    dispatch(requestCurrentUser() as any)
 };
 
 export const setUserDetails = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}) => async (dispatch: Dispatch<Action>) => {
@@ -115,6 +116,7 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_FAILURE, errorMessage: e.response.data.errorMessage})
     }
+    dispatch(requestCurrentUser() as any)
 };
 
 export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {

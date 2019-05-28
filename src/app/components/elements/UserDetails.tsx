@@ -97,7 +97,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                                     (e: React.ChangeEvent<HTMLInputElement>) => {
                                         setMyUser(Object.assign(myUser, {gender: 'MALE'}))
                                     }
-                                } required/>
+                                }/>
                         </Col>
                         <Col size={6} lg={2}>
                             <CustomInput
@@ -108,7 +108,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                                     (e: React.ChangeEvent<HTMLInputElement>) => {
                                         setMyUser(Object.assign(myUser, {gender: 'FEMALE'}))
                                     }
-                                } required/>
+                                }/>
                         </Col>
                         <Col size={6} lg={2}>
                             <CustomInput
@@ -119,7 +119,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                                     (e: React.ChangeEvent<HTMLInputElement>) => {
                                         setMyUser(Object.assign(myUser, {gender: 'OTHER'}))
                                     }
-                                } required/>
+                                }/>
                         </Col>
                     </Row>
                 </FormGroup>
