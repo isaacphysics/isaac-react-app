@@ -1,5 +1,4 @@
 import React from "react";
-import {Button} from "reactstrap";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
 export const SessionExpired = () => {

@@ -2,9 +2,9 @@ import React from "react";
 import {withRouter} from "react-router-dom";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
-interface PageNotFoundProps {readonly location: {readonly pathname: string}}
+interface PageNotFoundProps {location: {pathname: string; state?: {overridePathname?: string}}}
 
-const PageNotFoundComponent = ({location: {pathname}}: PageNotFoundProps) => {
+const PageNotFoundComponent = ({location: {pathname, state}}: PageNotFoundProps) => {
     return <React.Fragment>
         <div>
             <BreadcrumbTrail currentPageTitle="Unknown page" />
@@ -13,7 +13,7 @@ const PageNotFoundComponent = ({location: {pathname}}: PageNotFoundProps) => {
                 <small>
                     {"We're sorry, page not found: "}
                     <code>
-                        {pathname}
+                        {(state && state.overridePathname) || pathname}
                     </code>
                 </small>
             </h3>

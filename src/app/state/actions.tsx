@@ -6,7 +6,12 @@ import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {store} from "./store";
-import {ThunkAction} from "redux-thunk";
+
+function redirectToPageNotFound() {
+    const failedPath = history.location.pathname;
+    history.push({pathname:`/404${failedPath}`, state:{overridePathname: failedPath}})
+}
+
 
 // User Authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
@@ -144,7 +149,6 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     const response = await api.authentication.checkProviderCallback(provider, parameters);
     dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
-    // TODO MT trigger user consistency check
     // TODO MT handle error case
 };
 
@@ -192,7 +196,7 @@ export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Acti
 };
 
 
-// Document/ Topic Fetch
+// Document & Topic Fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
     let apiEndpoint;
@@ -207,18 +211,18 @@ export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (
         dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE});
-        history.push(`/not_found/${pageId}`);
+        redirectToPageNotFound();
     }
 };
 
-export const fetchTopic = (documentType: DOCUMENT_TYPE, pageId: TAG_ID) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
+export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.TOPIC_REQUEST, topicName});
     try {
-        const response = await api.topics.get(pageId);
-        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
+        const response = await api.topics.get(topicName);
+        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS, topic: response.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE});
-        history.push(`/not_found/${pageId}`);
+        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE});
+        redirectToPageNotFound();
     }
 };
 

@@ -189,8 +189,7 @@ export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
     GENERIC = "page",
-    FRAGMENT = "isaacPageFragment",
-    TOPIC_SUMMARY = "isaacTopicSummary"
+    FRAGMENT = "isaacPageFragment"
 }
 
 export enum ContentVersionUpdatingStatus {
