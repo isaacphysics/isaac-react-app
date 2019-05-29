@@ -193,7 +193,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                     <br />
                     <Input
                         id="school-other-input" type="text" name="school-other" placeholder="Other (Use this space if you cannot find your school in the list above"
-                        defaultValue={myUser.schoolOther}
+                        defaultValue={myUser.schoolOther} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMyUser(Object.assign(myUser, { schoolOther: e.target.value }))}
                     />
                 </FormGroup>
             </Col>
