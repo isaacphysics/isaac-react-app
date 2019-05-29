@@ -22,6 +22,7 @@ import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
 import {validateDob, validateEmail, validatePassword} from "../../services/validation";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {EXAM_BOARD} from "../../services/constants";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null,
@@ -52,10 +53,15 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
             setMyUser(Object.assign(myUser, {firstLogin: true}));
             updateCurrentUser({
                 registeredUser: Object.assign(myUser, {loggedIn: false}),
-                userPreferences: {EMAIL_PREFERENCE: emailPreferences},
+                userPreferences: {EMAIL_PREFERENCE: emailPreferences, EXAM_BOARD: examPreferences},
                 passwordCurrent: ""
             }, (Object.assign(myUser, {loggedIn: true})))
         }
+    };
+
+    const examPreferences = {
+        [EXAM_BOARD.OCR]: false,
+        [EXAM_BOARD.AQA]: false
     };
 
     const emailPreferences = {

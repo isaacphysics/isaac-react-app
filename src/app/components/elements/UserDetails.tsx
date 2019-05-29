@@ -1,9 +1,12 @@
 import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import React from "react";
-import {ValidationUser} from "../../../IsaacAppTypes";
+import React, {ChangeEvent} from "react";
+import {UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
 import {validateDob, validateEmail} from "../../services/validation";
+import {EXAM_BOARD} from "../../services/constants";
 
 interface UserDetailsProps {
+    examPreferences: UserExamPreferences | null
+    setExamPreferences: (e: any) => void;
     myUser: ValidationUser;
     setMyUser: (user: any) => void;
     isEmailValid: boolean;
@@ -12,12 +15,12 @@ interface UserDetailsProps {
     setIsDobValid: (isDobValid: boolean) => void;
 }
 
-export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, isDobValid, setIsDobValid}: UserDetailsProps) => {
+export const UserDetails = ({examPreferences, setExamPreferences, myUser, setMyUser, isEmailValid, setIsEmailValid, isDobValid, setIsDobValid}: UserDetailsProps) => {
     return <CardBody>
         <Row>
             <Col md={6}>
                 <FormGroup>
-                    <Label htmlFor="first-name-input">First Name</Label>
+                    <Label htmlFor="first-name-input" className="form-required">First Name</Label>
                     <Input
                         id="first-name-input" type="text" name="givenName"
                         defaultValue={myUser.givenName}
@@ -30,7 +33,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
             </Col>
             <Col md={6}>
                 <FormGroup>
-                    <Label htmlFor="last-name-input">Last Name</Label>
+                    <Label htmlFor="last-name-input" className="form-required">Last Name</Label>
                     <Input
                         id="last-name-input" type="text" name="last-name"
                         defaultValue={myUser.familyName}
@@ -45,7 +48,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
         <Row>
             <Col md={6}>
                 <FormGroup>
-                    <Label htmlFor="email-input">Email</Label>
+                    <Label htmlFor="email-input" className="form-required">Email</Label>
                     <Input
                         invalid={!isEmailValid} id="email-input" type="email"
                         name="email" defaultValue={myUser.email}
@@ -132,6 +135,25 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         defaultValue={myUser.schoolId}
                     />
                     {/* TODO lookup school */}
+                </FormGroup>
+            </Col>
+        </Row>
+        <Row>
+            <Col md={{size: 12, offset: 4}}>
+                <FormGroup>
+                    <Label className="d-inline-block pr-2" for="examBoardSelect">Exam Board</Label>
+                    <Input
+                        className="w-auto d-inline-block pl-1 pr-0"
+                        type="select"
+                        name="select"
+                        id="examBoardSelect"
+                        value={examPreferences && examPreferences[EXAM_BOARD.OCR] && [EXAM_BOARD.OCR] || examPreferences && examPreferences[EXAM_BOARD.AQA] && [EXAM_BOARD.AQA]}
+                        onChange={(event: ChangeEvent<HTMLInputElement>) => setExamPreferences(event.target.value == EXAM_BOARD.AQA ? {[EXAM_BOARD.AQA]: true, [EXAM_BOARD.OCR]: false} : {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true})}
+                    >
+                        <option></option>
+                        <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
+                        <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
+                    </Input>
                 </FormGroup>
             </Col>
         </Row>

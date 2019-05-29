@@ -101,10 +101,15 @@ export interface UserEmailPreferences {
     EVENTS: boolean;
 }
 
+export interface UserExamPreferences {
+    [EXAM_BOARD.AQA]: boolean;
+    [EXAM_BOARD.OCR]: boolean;
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: string;
     EMAIL_PREFERENCE?: UserEmailPreferences;
-    EXAM_BOARD?: {[EXAM_BOARD.AQA]: boolean; [EXAM_BOARD.OCR]: boolean};
+    EXAM_BOARD?: UserExamPreferences;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
