@@ -44,11 +44,12 @@ interface RegistrationPageProps {
 const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
     const register = (event: React.FormEvent<HTMLFontElement>) => {
         event.preventDefault();
+        attemptSignUp();
         if (isValidPassword && isValidEmail && isDobValid) {
             isValidPassword && Object.assign(myUser, {password: (document.getElementById("password-confirm") as HTMLInputElement).value});
             setMyUser(Object.assign(myUser, {firstLogin: true}));
             updateCurrentUser({
-                registeredUser: myUser,
+                registeredUser: Object.assign(myUser, {loggedIn: false}),
                 userPreferences: {EMAIL_PREFERENCE: emailPreferences},
                 passwordCurrent: ""
             }, (Object.assign(myUser, {loggedIn: true})))
@@ -187,7 +188,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     </Row>
                     <Row>
                         <Col size={12} md={{size: 6, offset: 3}}>
-                            <Button color="secondary" type="submit" onClick={attemptSignUp} block>Register Now</Button>
+                            <Input type="submit" value="Register Now" className="btn btn-block btn-secondary border-0"/>
                         </Col>
                     </Row>
                 </Form>

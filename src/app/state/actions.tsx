@@ -57,15 +57,10 @@ export const updateCurrentUser = (params: {registeredUser: LoggedInValidationUse
         let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
         // TODO handle the alert ourselves
         if (emailChange) {
-            // setUserDetails(params);
             try {
                 const changedUser = await api.users.updateCurrent(params);
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
-                if (params.registeredUser.loggedIn && params.registeredUser.firstLogin == true) {
-                    history.push('/account');
-                } else {
-                    history.push('/');
-                }
+                history.push('/');
             } catch (e) {
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
             }
@@ -73,12 +68,14 @@ export const updateCurrentUser = (params: {registeredUser: LoggedInValidationUse
             params.registeredUser.email = currentUser.email;
         }
     } else {
-        // setUserDetails(params);
+        const initialLogin = params.registeredUser.loggedIn && params.registeredUser.firstLogin || false;
         try {
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
-            if (params.registeredUser.loggedIn && params.registeredUser.firstLogin == true) {
+            if (initialLogin) {
+                await dispatch(requestCurrentUser() as any);
                 history.push('/account');
+                return
             } else {
                 history.push('/');
             }
