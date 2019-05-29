@@ -130,12 +130,12 @@
 
 
 // ISAAC
-//a.btn {
-//  text-decoration: none;
-//}
-//.btn {
-//  &.btn-link {
-//    font-size: initial;
-//    font-weight: initial;
-//  }
-//}
+a.btn {
+  text-decoration: none;
+}
+.btn {
+  &.btn-link {
+    font-size: initial;
+    font-weight: initial;
+  }
+}
