@@ -88,8 +88,8 @@ export const api = {
         }
     },
     email: {
-        verify: (params: {userId: string | null; token: string | null}): AxiosPromise => {
-            return endpoint.get(`/users/verifyemail/${params.userId}/${params.token}`);
+        verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
+            return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
         }
     },
     questions: {

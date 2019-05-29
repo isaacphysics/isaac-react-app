@@ -13,15 +13,15 @@ const stateToProps = (state: AppState, {location: {search}}: any) => ({
 const dispatchToProps = {handleEmailAlter};
 
 interface EmailAlterHandlerProps {
-    queryParams: {userId?: string; token?: string};
-    handleEmailAlter: (params: {userId: string | null; token: string | null}) => void;
+    queryParams: {userid?: string; token?: string};
+    handleEmailAlter: (params: {userid: string | null; token: string | null}) => void;
     errorMessage: ErrorState;
 }
 
-const EmailAlterHandlerComponent = ({queryParams: {userId, token}, handleEmailAlter, errorMessage}: EmailAlterHandlerProps) => {
+const EmailAlterHandlerComponent = ({queryParams: {userid, token}, handleEmailAlter, errorMessage}: EmailAlterHandlerProps) => {
     useEffect(() => {
-        if (userId && token) {
-            handleEmailAlter({userId, token});
+        if (userid && token) {
+            handleEmailAlter({userid, token});
         }
     }, []);
 
@@ -31,7 +31,7 @@ const EmailAlterHandlerComponent = ({queryParams: {userId, token}, handleEmailAl
                 <h3>Email address verified</h3>
                 <Col>
                     <Button color="primary" onClick={() => {history.push('/account');}} block >
-                        Go to My Account
+                        Log In To My Account
                     </Button>
                 </Col>
             </div>
