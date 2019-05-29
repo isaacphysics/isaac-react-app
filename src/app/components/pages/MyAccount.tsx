@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -10,7 +10,6 @@ import {
     NavItem,
     NavLink,
     Card,
-    CardBody,
     CardFooter,
     Col,
     Form,
@@ -24,11 +23,12 @@ import {
 import {RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
 import {updateCurrentUser, resetPassword} from "../../state/actions";
-import {LoggedInUser, ValidationUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
 import {validateDob, validateEmail} from "../../services/validation";
+import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state ? state.error : null,
@@ -47,12 +47,17 @@ interface AccountPageProps {
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     userPreferences: UserPreferencesDTO | null;
     updateCurrentUser: (
-        params: { registeredUser: ValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
-        currentUser: RegisteredUserDTO
+        params: { registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
+        currentUser: LoggedInUser
     ) => void;
 }
 
 const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences}: AccountPageProps) => {
+
+    // Catch the (unlikely?) case where a user does not have email preferences in the database.
+    if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
+        userPreferences.EMAIL_PREFERENCE = { NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true };
+    }
 
     const [myUser, setMyUser] = useState(
         Object.assign({}, user, {password: ""})
@@ -61,14 +66,14 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         Object.assign({}, userPreferences)
     );
     const [emailPreferences, setEmailPreferences] = useState(
-        Object.assign({}, userPreferences ? userPreferences.EMAIL_PREFERENCE : null)
+        Object.assign({}, userPreferences ? userPreferences.EMAIL_PREFERENCE : { NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true })
     );
 
     const [isEmailValid, setIsEmailValid] = useState(
         !!user.loggedIn && !!user.email && validateEmail(user.email)
     );
     const [isDobValid, setIsDobValid] = useState(
-        !!user.loggedIn && !!user.dateOfBirth && validateDob(user.dateOfBirth.toString())
+        true
     );
     const [currentPassword, setCurrentPassword] = useState("");
     const [isNewPasswordConfirmed, setIsNewPasswordConfirmed] = useState(false);
@@ -77,7 +82,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
     {/• TODO handle #... in with react-router for tab url navigation? •/}
 
-    return <div id="account-page" className="mt-4 mb-5">
+    return <div id="account-page" className="mb-5">
+        <BreadcrumbTrail currentPageTitle="My account" />
         <h1 className="h-title mb-4">My Account</h1>
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
@@ -112,7 +118,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 <Form name="my-account" onSubmit={(event: React.FormEvent<HTMLInputElement>) => {
                     event.preventDefault();
                     Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
-                    if (isEmailValid && isDobValid && (!myUser.password || isNewPasswordConfirmed)) {
+                    if (isEmailValid && (isDobValid || myUser.dateOfBirth == undefined) && (!myUser.password || isNewPasswordConfirmed)) {
                         updateCurrentUser({
                             registeredUser: myUser,
                             userPreferences: myUserPreferences,

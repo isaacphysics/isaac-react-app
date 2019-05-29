@@ -1,12 +1,16 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {Action, UserPreferencesDTO, ValidatedChoice, ValidationUser} from "../../IsaacAppTypes";
-import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {store} from "./store";
-import {ThunkAction} from "redux-thunk";
+import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID, API_REQUEST_FAILURE_MESSAGE} from "../services/constants";
+import {Action, UserPreferencesDTO, ValidatedChoice, LoggedInUser, LoggedInValidationUser,} from "../../IsaacAppTypes";
+import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+
+function redirectToPageNotFound() {
+    const failedPath = history.location.pathname;
+    history.push({pathname:`/404${failedPath}`, state:{overridePathname: failedPath}})
+}
 
 // User Authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
@@ -45,14 +49,13 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const updateCurrentUser = (params: {registeredUser: ValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}, currentUser: RegisteredUserDTO) => async (dispatch: Dispatch<Action>) => {
-    if (currentUser.email !== params.registeredUser.email) {
+export const updateCurrentUser = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}, currentUser: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
+    if (currentUser.loggedIn && params.registeredUser.loggedIn && currentUser.email !== params.registeredUser.email) {
         let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
         // TODO handle the alert ourselves
         if (emailChange) {
-            // setUserDetails(params);
             try {
-                const currentUser = await api.users.updateCurrent(params);
+                const changedUser = await api.users.updateCurrent(params);
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
                 history.push('/');
             } catch (e) {
@@ -62,18 +65,25 @@ export const updateCurrentUser = (params: {registeredUser: ValidationUser; userP
             params.registeredUser.email = currentUser.email;
         }
     } else {
-        // setUserDetails(params);
+        const initialLogin = params.registeredUser.loggedIn && params.registeredUser.firstLogin || false;
         try {
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
-            history.push('/');
+            if (initialLogin) {
+                await dispatch(requestCurrentUser() as any);
+                history.push('/account');
+                return
+            } else {
+                history.push('/');
+            }
         } catch (e) {
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
         }
     }
+    dispatch(requestCurrentUser() as any)
 };
 
-export const setUserDetails = (params: {registeredUser: ValidationUser; passwordCurrent: string}) => async (dispatch: Dispatch<Action>) => {
+export const setUserDetails = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE});
     try {
         const currentUser = await api.users.updateCurrent(params);
@@ -98,8 +108,9 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
         history.push('/');
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_FAILURE, errorMessage: e.response.data.errorMessage})
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
     }
+    dispatch(requestCurrentUser() as any)
 };
 
 export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {
@@ -144,7 +155,6 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     const response = await api.authentication.checkProviderCallback(provider, parameters);
     dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
-    // TODO MT trigger user consistency check
     // TODO MT handle error case
 };
 
@@ -174,6 +184,15 @@ export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, ge
         dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE});
     }
 };
+export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND});
+    try {
+        const response = await api.contactForm.send(extra, params);
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_SUCCESS})
+    } catch(e) {
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
+    }
+};
 
 export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     // Don't request this again if it has already been fetched successfully
@@ -181,7 +200,6 @@ export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Acti
     if (state && state.constants && state.constants.segueVersion) {
         return;
     }
-
     dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_REQUEST});
     try {
         const version = await api.constants.getSegueVersion();
@@ -192,7 +210,7 @@ export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Acti
 };
 
 
-// Document Fetch
+// Document & Topic Fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
     let apiEndpoint;
@@ -202,11 +220,25 @@ export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (
         case DOCUMENT_TYPE.FRAGMENT: apiEndpoint = api.fragments; break;
         case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
     }
-    const response = await apiEndpoint.get(pageId);
-    dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
-    // TODO MT handle response failure
+    try {
+        const response = await apiEndpoint.get(pageId);
+        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE});
+        redirectToPageNotFound();
+    }
 };
 
+export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.TOPIC_REQUEST, topicName});
+    try {
+        const response = await api.topics.get(topicName);
+        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS, topic: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE});
+        redirectToPageNotFound();
+    }
+};
 
 // Questions
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
@@ -227,20 +259,6 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
 export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|ValidatedChoice<ChoiceDTO>) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
 };
-
-
-// Topic
-export const fetchTopicDetails = (topicName: TAG_ID) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.TOPIC_REQUEST, topicName});
-    try {
-        // could check local storage first
-        const topicDetailResponse = await api.topics.get(topicName);
-        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS, topic: topicDetailResponse.data});
-    } catch (e) {
-        //dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}); // TODO MT handle response failure
-    }
-};
-
 
 // Current Gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>) => {

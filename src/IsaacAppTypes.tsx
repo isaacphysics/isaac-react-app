@@ -1,6 +1,5 @@
 import * as ApiTypes from "./IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "./app/services/constants";
-import {RegisteredUserDTO} from "./IsaacApiTypes";
+import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "./app/services/constants";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -66,9 +65,14 @@ export type Action =
 
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
+    | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
+
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND}
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND_SUCCESS}
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
     | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
@@ -83,6 +87,7 @@ export type Action =
 
     | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string}
     | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>};
+
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
@@ -99,7 +104,7 @@ export interface UserEmailPreferences {
 export interface UserPreferencesDTO {
     BETA_FEATURE?: string;
     EMAIL_PREFERENCE?: UserEmailPreferences;
-    SUBJECT_INTEREST?: string;
+    EXAM_BOARD?: {[EXAM_BOARD.AQA]: boolean; [EXAM_BOARD.OCR]: boolean};
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
@@ -124,3 +129,5 @@ export interface School {
     closed: boolean;
     dataSource: string;
 }
+
+export type LoggedInValidationUser = ValidationUser & {loggedIn: true}  | {loggedIn: false};

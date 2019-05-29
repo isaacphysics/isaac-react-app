@@ -6,8 +6,11 @@ import {handleProviderLoginRedirect} from "../../state/actions";
 import {logInUser, resetPassword} from "../../state/actions";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
+import {history} from "../../services/history";
 
-const stateToProps = (state: AppState) => ({errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null});
+const stateToProps = (state: AppState) => ({
+    errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null
+});
 
 const dispatchToProps = {
     handleProviderLoginRedirect,
@@ -37,6 +40,11 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
             logInUser("SEGUE", {email: email, password: password});
         }
     };
+
+    const signUp = (event: React.FormEvent<HTMLFontElement>) => {
+        event.preventDefault();
+        history.push("/register", {email: email, password: password});
+    }
 
     const resetPasswordIfValidEmail = () => {
         if (isValidEmail) {
@@ -117,8 +125,8 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                                     />
                                 </Col>
                                 <Col sm={6}>
-                                    <Button tag={Link} to="/register" color="primary" className="mb-2" outline block>
-                                        Sign up
+                                    <Button id="sign-up" color="primary" className="mb-2" onClick={(e: any) => signUp(e)} outline block>
+                                        Sign Up
                                     </Button>
                                 </Col>
                             </Row>
