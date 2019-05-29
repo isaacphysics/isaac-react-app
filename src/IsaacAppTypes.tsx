@@ -99,7 +99,7 @@ export interface UserEmailPreferences {
 export interface UserPreferencesDTO {
     BETA_FEATURE?: string;
     EMAIL_PREFERENCE?: UserEmailPreferences;
-    EXAM_BOARD?: {AQA: boolean; OCR: boolean};
+    EXAM_BOARD?: {[EXAM_BOARD.AQA]: boolean; [EXAM_BOARD.OCR]: boolean};
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {

@@ -258,7 +258,7 @@ const stateToProps = (state: AppState) => ({
 interface TrustedHtmlProps {
     html: string;
     span?: boolean;
-    userPreferences: UserPreferencesDTO | null
+    userPreferences: UserPreferencesDTO | null;
 }
 
 let TrustedHtmlComponent = ({html, span, userPreferences}: TrustedHtmlProps) => {
