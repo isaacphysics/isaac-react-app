@@ -48,7 +48,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         event.preventDefault();
         attemptSignUp();
         if (isValidPassword && isValidEmail && isDobValid) {
-            isValidPassword && Object.assign(myUser, {password: (document.getElementById("password-confirm") as HTMLInputElement).value});
+            isValidPassword && Object.assign(myUser, {password: currentPassword});
             setMyUser(Object.assign(myUser, {firstLogin: true}));
             updateCurrentUser({
                 registeredUser: Object.assign(myUser, {loggedIn: false}),
@@ -72,6 +72,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     const [signUpAttempted, setSignUpAttempted] = useState(false);
 
     const validateAndSetPassword = (password: string) => {
+        setCurrentPassword(password);
         setValidPassword(
             (password == (document.getElementById("password") as HTMLInputElement).value) &&
             validatePassword(password)
