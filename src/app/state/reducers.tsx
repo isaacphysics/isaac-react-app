@@ -1,19 +1,13 @@
 import {combineReducers} from "redux";
-import {
-    Action,
-    AppQuestionDTO,
-    isValidatedChoice,
-    LoggedInUser,
-    UserPreferencesDTO
-} from "../../IsaacAppTypes";
+import {Action, AppQuestionDTO, isValidatedChoice, LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
     ContentDTO,
     ContentSummaryDTO,
     GameboardDTO,
     IsaacTopicSummaryPageDTO,
-    UserAuthenticationSettingsDTO,
-    ResultsWrapper
+    ResultsWrapper,
+    UserAuthenticationSettingsDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
 
@@ -69,7 +63,10 @@ export const doc = (doc: DocState = null, action: Action) => {
         case ACTION_TYPE.DOCUMENT_REQUEST:
             return null;
         case ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS:
+        case ACTION_TYPE.DOCUMENT_CACHE_SUCCESS:
             return {...action.doc};
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
+            return null;
         default:
             return doc;
     }
@@ -145,12 +142,13 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
     }
 };
 
-type CurrentTopicState = IsaacTopicSummaryPageDTO | null;
+export type CurrentTopicState = IsaacTopicSummaryPageDTO | null;
 export const currentTopic = (currentTopic: CurrentTopicState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.TOPIC_REQUEST:
             return null;
         case ACTION_TYPE.TOPIC_RESPONSE_SUCCESS:
+        case ACTION_TYPE.TOPIC_CACHE_SUCCESS:
             return action.topic;
         default:
             return currentTopic;

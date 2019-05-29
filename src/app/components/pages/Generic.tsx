@@ -36,7 +36,7 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
             <Container>
                 <Row>
                     <Col>
-                        <BreadcrumbTrail currentPageTitle={doc.title} />
+                        <BreadcrumbTrail currentPageTitle={doc.title as string} />
                         <h1 className="h-title">{doc.title}</h1>
                     </Col>
                 </Row>

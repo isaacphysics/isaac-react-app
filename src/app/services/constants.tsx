@@ -68,6 +68,7 @@ export enum ACTION_TYPE {
     CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE = "CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE",
 
     DOCUMENT_REQUEST = "DOCUMENT_REQUEST",
+    DOCUMENT_CACHE_SUCCESS = "DOCUMENT_CACHE_SUCCESS",
     DOCUMENT_RESPONSE_SUCCESS = "DOCUMENT_RESPONSE_SUCCESS",
     DOCUMENT_RESPONSE_FAILURE = "DOCUMENT_RESPONSE_FAILURE",
 
@@ -79,6 +80,7 @@ export enum ACTION_TYPE {
     QUESTION_SET_CURRENT_ATTEMPT = "QUESTION_SET_CURRENT_ATTEMPT",
 
     TOPIC_REQUEST = "TOPIC_REQUEST",
+    TOPIC_CACHE_SUCCESS = "TOPIC_CACHE_SUCCESS",
     TOPIC_RESPONSE_SUCCESS = "TOPIC_RESPONSE_SUCCESS",
     TOPIC_RESPONSE_FAILURE = "TOPIC_RESPONSE_FAILURE",
 
@@ -104,6 +106,11 @@ export enum EXAM_BOARD {
     AQA = "AQA",
     OCR = "OCR"
 }
+
+export const examBoardTagMap: {[examBoard: string]: string} = {
+    [EXAM_BOARD.AQA]: "examboard_aqa",
+    [EXAM_BOARD.OCR]: "examboard_ocr",
+};
 
 export enum TAG_ID {
     // Categories
@@ -189,8 +196,16 @@ export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
     GENERIC = "page",
-    FRAGMENT = "isaacPageFragment"
+    FRAGMENT = "isaacPageFragment",
 }
+
+export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
+    [DOCUMENT_TYPE.FRAGMENT]: "pages/fragments",
+    [DOCUMENT_TYPE.GENERIC]: "pages",
+    [DOCUMENT_TYPE.CONCEPT]: "concepts",
+    [DOCUMENT_TYPE.QUESTION]: "questions"
+};
+
 
 export enum ContentVersionUpdatingStatus {
     UPDATING = "UPDATING",

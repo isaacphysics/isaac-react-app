@@ -6,10 +6,11 @@ import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {Button, Col, Container, Row, Label, Input} from "reactstrap";
-import {IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
+import {ContentSummaryDTO, IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
+import {EXAM_BOARD, TAG_ID} from "../../services/constants";
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {filterAndSeparateRelatedContent} from "../../services/topics";
 
 const stateToProps = (state: AppState, {match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => ({
     topicName: topicName,
@@ -28,22 +29,21 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary}: TopicPage
         [topicName]
     );
     const [examBoardFilter, setExamBoardFilter] = useState(EXAM_BOARD.AQA);
-    const examBoardTagMap = {
-        AQA: "examboard_aqa",
-        OCR: "examboard_ocr",
-    };
-    const examBoardFilteredContent = topicPage && topicPage.relatedContent && topicPage.relatedContent
-        .filter(content => content.tags && content.tags.includes(examBoardTagMap[examBoardFilter]));
-    const relatedConcepts = examBoardFilteredContent && examBoardFilteredContent
-        .filter(content => content.type === DOCUMENT_TYPE.CONCEPT);
-    const relatedQuestions = examBoardFilteredContent && examBoardFilteredContent
-        .filter(content => content.type === DOCUMENT_TYPE.QUESTION);
+
+    let [relatedConcepts, relatedQuestions]: [ContentSummaryDTO[] | null, ContentSummaryDTO[] | null] = [null, null];
+    if (topicPage && topicPage.relatedContent) {
+        [relatedConcepts, relatedQuestions] = topicPage && topicPage.relatedContent &&
+            filterAndSeparateRelatedContent(topicPage.relatedContent, examBoardFilter);
+    }
 
     return <ShowLoading until={topicPage}>
         {topicPage && <Container id="topic-page">
             <Row>
                 <Col>
-                    <BreadcrumbTrail currentPageTitle={topicPage.title} />
+                    <BreadcrumbTrail
+                        intermediateCrumbs={[{title: "All topics", to: "/topics"}]}
+                        currentPageTitle={topicPage.title as string}
+                    />
                     <h1 className="h-title">{topicPage.title}</h1>
                 </Col>
             </Row>

@@ -6,6 +6,7 @@ import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
 import {history, redirectToPageNotFound} from "../services/history";
 import {store} from "./store";
+import {documentCache, topicCache} from "../services/cache";
 
 
 // User Authentication
@@ -194,30 +195,42 @@ export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Acti
 // Document & Topic Fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
-    let apiEndpoint;
-    switch (documentType) {
-        case DOCUMENT_TYPE.CONCEPT: apiEndpoint = api.concepts; break;
-        case DOCUMENT_TYPE.QUESTION: apiEndpoint = api.questions; break;
-        case DOCUMENT_TYPE.FRAGMENT: apiEndpoint = api.fragments; break;
-        case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
-    }
-    try {
-        const response = await apiEndpoint.get(pageId);
-        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE});
-        redirectToPageNotFound();
+    const cachedDocument = documentCache[documentType][pageId];
+    if (cachedDocument) {
+        dispatch({type: ACTION_TYPE.DOCUMENT_CACHE_SUCCESS, doc: cachedDocument});
+    } else {
+        let apiEndpoint;
+        switch (documentType) {
+            case DOCUMENT_TYPE.CONCEPT: apiEndpoint = api.concepts; break;
+            case DOCUMENT_TYPE.QUESTION: apiEndpoint = api.questions; break;
+            case DOCUMENT_TYPE.FRAGMENT: apiEndpoint = api.fragments; break;
+            case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
+        }
+        try {
+            const response = await apiEndpoint.get(pageId);
+            dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
+            documentCache[documentType][pageId] = response.data;
+        } catch (e) {
+            dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE});
+            redirectToPageNotFound();
+        }
     }
 };
 
 export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.TOPIC_REQUEST, topicName});
-    try {
-        const response = await api.topics.get(topicName);
-        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS, topic: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE});
-        redirectToPageNotFound();
+    const cachedTopic = topicCache[topicName];
+    if (cachedTopic) {
+        dispatch({type: ACTION_TYPE.TOPIC_CACHE_SUCCESS, topic: cachedTopic});
+    } else {
+        try {
+            const response = await api.topics.get(topicName);
+            dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS, topic: response.data});
+            topicCache[topicName] = response.data;
+        } catch (e) {
+            dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE});
+            redirectToPageNotFound();
+        }
     }
 };
 

@@ -1,6 +1,5 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "./app/services/constants";
-import {RegisteredUserDTO} from "./IsaacApiTypes";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -21,7 +20,6 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_FAILURE; errorMessage: string}
-
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
@@ -54,6 +52,7 @@ export type Action =
     | {type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS; segueVersion: string}
 
     | {type: ACTION_TYPE.DOCUMENT_REQUEST; documentType: DOCUMENT_TYPE; documentId: string}
+    | {type: ACTION_TYPE.DOCUMENT_CACHE_SUCCESS; doc: ApiTypes.ContentDTO}
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE}
 
@@ -65,6 +64,7 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>}
 
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
+    | {type: ACTION_TYPE.TOPIC_CACHE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
 
@@ -117,3 +117,16 @@ export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {logg
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;
 }
+
+
+export interface LinkInfo {
+    title: string;
+    to: string;
+}
+
+export interface PageNavigation {
+    breadcrumbHistory: LinkInfo[];
+    backToTopic?: LinkInfo;
+    nextTopicContent?: LinkInfo;
+}
+
