@@ -35,7 +35,7 @@ const dispatchToProps = {
 interface RegistrationPageProps {
     user: LoggedInUser
     updateCurrentUser: (
-        params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string},
+        params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null},
         currentUser: LoggedInUser
     ) => void
     errorMessage: string | null
@@ -53,7 +53,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
             updateCurrentUser({
                 registeredUser: Object.assign(myUser, {loggedIn: false}),
                 userPreferences: {EMAIL_PREFERENCE: emailPreferences},
-                passwordCurrent: ""
+                passwordCurrent: null
             }, (Object.assign(myUser, {loggedIn: true})))
         }
     };

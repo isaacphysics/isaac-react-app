@@ -49,7 +49,7 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const updateCurrentUser = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}, currentUser: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
+export const updateCurrentUser = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null}, currentUser: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
     if (currentUser.loggedIn && params.registeredUser.loggedIn && currentUser.email !== params.registeredUser.email) {
         let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
         // TODO handle the alert ourselves
@@ -83,7 +83,7 @@ export const updateCurrentUser = (params: {registeredUser: LoggedInValidationUse
     dispatch(requestCurrentUser() as any)
 };
 
-export const setUserDetails = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}) => async (dispatch: Dispatch<Action>) => {
+export const setUserDetails = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE});
     try {
         const currentUser = await api.users.updateCurrent(params);
