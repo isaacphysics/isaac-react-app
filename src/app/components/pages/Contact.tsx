@@ -102,6 +102,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                 </Col>
                             </Row>:
                             <Form name="contact" onSubmit={(e: any) => {
+                                setMessageSendAttempt(true);
                                 e.preventDefault();
                                 sendForm();
                                 setMessageSent(true)
@@ -172,12 +173,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                             </span>
                                         </Col>
                                         <Col size={12} md={6} className="text-right">
-                                            <Button color="secondary" type="submit" onClick={() => {
-                                                setFirstName(() => (document.getElementById("first-name-input") as HTMLInputElement).value);
-                                                setLastName(() => (document.getElementById("last-name-input") as HTMLInputElement).value);
-                                                setEmail(() => (document.getElementById("email-input") as HTMLInputElement).value);
-                                                setMessageSendAttempt(true);
-                                            }} block>Submit</Button>
+                                            <Input type="submit" value="Submit" className="btn btn-block btn-secondary border-0" block/>
                                         </Col>
                                     </Row>
                                 </CardFooter>
