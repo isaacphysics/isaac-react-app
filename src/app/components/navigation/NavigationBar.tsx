@@ -14,7 +14,7 @@ interface NavigationBarProps {
 }
 
 const NavigationBarComponent = ({user}: NavigationBarProps) => {
-    const [menuOpen, setMenuOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(window.innerWidth>=768);
 
     const DropdownItemComingSoon = ({children, className}: {children: React.ReactNode; className: string}) => (
         <DropdownItem className={`${className}`} aria-disabled="true">
@@ -37,7 +37,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         About Us
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={() => setMenuOpen((window.screen.width < 768) ? !menuOpen : true)}>
+                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={() => setMenuOpen((window.innerWidth < 768) ? !menuOpen : true)}>
                         <DropdownItem className="pl-4 py-3 p-md-3">
                             <Link to="/about">What We Do</Link>
                         </DropdownItem>
@@ -60,7 +60,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Students</p>
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={() => setMenuOpen((window.screen.width < 768) ? !menuOpen : true)}>
+                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={() => setMenuOpen((window.innerWidth < 768) ? !menuOpen : true)}>
                         {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
                         {/*    For Students*/}
                         {/*</DropdownItemComingSoon>*/}
@@ -83,7 +83,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Teachers</p>
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={() => setMenuOpen((window.screen.width < 768) ? !menuOpen : true)}>
+                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={() => setMenuOpen((window.innerWidth < 768) ? !menuOpen : true)}>
                         {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
                         {/*    <p>For Teachers</p>*/}
                         {/*</DropdownItemComingSoon>*/}
@@ -106,7 +106,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         Topics
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={() => setMenuOpen((window.screen.width < 768) ? !menuOpen : true)}>
+                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={() => setMenuOpen((window.innerWidth < 768) ? !menuOpen : true)}>
                         <DropdownItem className="pl-4 py-3 p-md-3">
                             <Link to="/topics">All Topics</Link>
                         </DropdownItem>
@@ -123,7 +123,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0"><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</p>
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={() => setMenuOpen((window.screen.width < 768) ? !menuOpen : true)}>
+                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={() => setMenuOpen((window.innerWidth < 768) ? !menuOpen : true)}>
                         <DropdownItem className="pl-4 py-3 p-md-3">
                             <Link to={"/contact"}>Contact Us</Link>
                         </DropdownItem>
@@ -141,7 +141,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                             Admin
                         </DropdownToggle>
-                        <DropdownMenu className="p-0 pl-md-3 m-0" onClick={() => setMenuOpen((window.screen.width < 768) ? !menuOpen : true)}>
+                        <DropdownMenu className="p-0 pl-md-3 m-0" onClick={() => setMenuOpen((window.innerWidth < 768) ? !menuOpen : true)}>
                             <DropdownItem className="pl-4 py-3 p-md-3">
                                 <Link to="/admin">Admin Tools</Link>
                             </DropdownItem>
