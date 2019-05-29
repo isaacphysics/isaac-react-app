@@ -14,7 +14,7 @@ interface UserDetailsProps {
 }
 
 export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, isDobValid, setIsDobValid}: UserDetailsProps) => {
-    let [schoolQueryText, setSchoolQueryText] = useState();
+    let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
     let [schoolSearchResults, setSchoolSearchResults] = useState<Array<School>>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
@@ -44,7 +44,8 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
     }
 
     function setUserSchool(school: any) {
-        setMyUser(Object.assign(myUser, {schoolId: school.urn}))
+        setMyUser(Object.assign(myUser, {schoolId: school.urn}));
+        setSchoolQueryText(null);
         setSelectedSchoolObject(school);
         setSchoolSearchResults([]);
     }
@@ -179,7 +180,11 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                     <Label htmlFor="school-input">School</Label>
                     <Input
                         id="school-input" type="text" name="school" placeholder="UK School"
-                        defaultValue={selectedSchoolObject && selectedSchoolObject.name}
+                        value={
+                            schoolQueryText !== null ?
+                                schoolQueryText :
+                                ((selectedSchoolObject && selectedSchoolObject.name) || "")
+                        }
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setSchoolQueryText(e.target.value)}
                     />
                     {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results">
@@ -190,7 +195,6 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         id="school-other-input" type="text" name="school-other" placeholder="Other (Use this space if you cannot find your school in the list above"
                         defaultValue={myUser.schoolOther}
                     />
-                    {/* TODO lookup school */}
                 </FormGroup>
             </Col>
         </Row>
