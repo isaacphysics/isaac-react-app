@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useMemo} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {
@@ -65,6 +65,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     };
 
     const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
+    const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword ? userPassword : "");
     const [isValidEmail, setValidEmail] = useState(true);
     const [isDobValid, setIsDobValid] = useState(true);
     const [isValidPassword, setValidPassword] = useState(false);
@@ -74,7 +75,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     const validateAndSetPassword = (password: string) => {
         setCurrentPassword(password);
         setValidPassword(
-            (password == (document.getElementById("password") as HTMLInputElement).value) &&
+            (password == unverifiedPassword) &&
             validatePassword(password)
         )
     };
@@ -83,7 +84,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         setSignUpAttempted(true);
     };
 
-    useEffect(() => {
+    useMemo(() => {
         userEmail ? setMyUser(Object.assign(myUser, {email: userEmail})) : null;
     }, [errorMessage]);
 
@@ -118,7 +119,8 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="password-input">Password</Label>
-                                <Input id="password" type="password" name="password" defaultValue={userPassword ? userPassword : null} required/>
+                                <Input id="password" type="password" name="password" defaultValue={userPassword ? userPassword : null} onChange={(e: any) => {
+                                    setUnverifiedPassword(e.target.value)}}required/>
                             </FormGroup>
                         </Col>
                         <Col md={6}>
