@@ -71,6 +71,10 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
 
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND}
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND_SUCCESS}
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND_FAILURE; errorMessage: string}
+
     | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
     | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
 
@@ -84,6 +88,7 @@ export type Action =
 
     | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string}
     | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>};
+
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;

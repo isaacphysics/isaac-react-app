@@ -145,4 +145,9 @@ export const api = {
             return endpoint.get(`/info/segue_version`)
         }
     },
+    contactForm: {
+        send: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
+            return endpoint.post(`/contact/`, params, {});
+        }
+    }
 };

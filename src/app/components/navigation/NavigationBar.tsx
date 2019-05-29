@@ -118,7 +118,6 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         </DropdownItemComingSoon>
                     </DropdownMenu>
                 </UncontrolledDropdown>
-
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0"><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</p>
