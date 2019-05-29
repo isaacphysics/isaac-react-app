@@ -4,13 +4,8 @@ import {Action, UserPreferencesDTO, ValidatedChoice, ValidationUser} from "../..
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
-import {history} from "../services/history";
+import {history, redirectToPageNotFound} from "../services/history";
 import {store} from "./store";
-
-function redirectToPageNotFound() {
-    const failedPath = history.location.pathname;
-    history.push({pathname:`/404${failedPath}`, state:{overridePathname: failedPath}})
-}
 
 
 // User Authentication
