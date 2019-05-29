@@ -55,6 +55,11 @@ interface AccountPageProps {
 
 const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences}: AccountPageProps) => {
 
+    // Catch the (unlikely?) case where a user does not have email preferences in the database.
+    if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
+        userPreferences.EMAIL_PREFERENCE = { NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true };
+    }
+
     const [myUser, setMyUser] = useState(
         Object.assign({}, user, {password: ""})
     );
@@ -62,7 +67,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         userPreferences && userPreferences.EXAM_BOARD && Object.assign({}, userPreferences) || Object.assign({}, userPreferences, {EXAM_BOARD: {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true}})
     );
     const [emailPreferences, setEmailPreferences] = useState(
-        Object.assign({}, userPreferences ? userPreferences.EMAIL_PREFERENCE : null)
+        Object.assign({}, userPreferences ? userPreferences.EMAIL_PREFERENCE : { NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true })
     );
     const [examPreferences, setExamPreferences] = useState(
         Object.assign({}, userPreferences && userPreferences.EXAM_BOARD ? userPreferences.EXAM_BOARD : {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true})
