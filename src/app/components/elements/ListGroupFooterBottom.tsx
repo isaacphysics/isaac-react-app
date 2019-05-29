@@ -6,8 +6,8 @@ export const ListGroupFooterBottom = () => (
         <ListGroup className='d-flex flex-wrap flex-row'>
             <ListGroupItem className='footer-bottom-info border-0 px-0 py-0 pb-1 bg-transparent'>
                 <p>
-                All materials on this site are licensed under the Creative Commons
-                License, unless stated otherwise.
+                    All materials on this site are licensed under the Creative Commons
+                    License, unless stated otherwise.
                 </p>
             </ListGroupItem>
 
