@@ -15,9 +15,8 @@ interface UserDetailsProps {
 
 export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, isDobValid, setIsDobValid}: UserDetailsProps) => {
     let [schoolQueryText, setSchoolQueryText] = useState();
-    let [schoolSearchResults, setSchoolSearchResults] = useState();
-    let [selectedSchoolObject, setSelectedSchoolObject] = useState();
-    let schoolSearchInput = useRef<HTMLInputElement>();
+    let [schoolSearchResults, setSchoolSearchResults] = useState<Array<School>>();
+    let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
     function searchSchool(e?: Event) {
         if (e) {
@@ -47,11 +46,6 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
     function setUserSchool(school: any) {
         setMyUser(Object.assign(myUser, {schoolId: school.urn}))
         setSelectedSchoolObject(school);
-        if (schoolSearchInput && schoolSearchInput.current) {
-            schoolSearchInput.current.value = school.name;
-            console.log(schoolSearchInput);
-        }
-        
         setSchoolSearchResults([]);
     }
 
@@ -186,7 +180,6 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                     <Input
                         id="school-input" type="text" name="school" placeholder="UK School"
                         defaultValue={selectedSchoolObject && selectedSchoolObject.name}
-                        ref={schoolSearchInput}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setSchoolQueryText(e.target.value)}
                     />
                     {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results">

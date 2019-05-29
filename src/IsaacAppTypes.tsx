@@ -122,4 +122,5 @@ export interface School {
     name: string;
     postcode: string;
     closed: boolean;
+    dataSource: string;
 }
