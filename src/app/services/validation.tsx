@@ -7,7 +7,7 @@ export const validateEmail = (email: string) => {
 export const validateDob = (dateOfBirth: string) => {
     const today = new Date();
     const thirteenYearsAgo = Date.UTC(today.getFullYear() - 13, today.getMonth(), today.getDate())/1000;
-    return (new Date(String(dateOfBirth)).getTime() / 1000) <= thirteenYearsAgo;
+    return (dateOfBirth == undefined || (new Date(String(dateOfBirth)).getTime() / 1000) <= thirteenYearsAgo);
 };
 
 export const MINIMUM_PASSWORD_LENGTH = 6;

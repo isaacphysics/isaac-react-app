@@ -1,6 +1,5 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "./app/services/constants";
-import {RegisteredUserDTO} from "./IsaacApiTypes";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -122,3 +121,5 @@ export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {logg
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;
 }
+
+export type LoggedInValidationUser = ValidationUser & {loggedIn: true}  | {loggedIn: false};

@@ -1,17 +1,16 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID, API_REQUEST_FAILURE_MESSAGE} from "../services/constants";
-import {Action, UserPreferencesDTO, ValidatedChoice, ValidationUser} from "../../IsaacAppTypes";
-import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {store} from "./store";
+import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID, API_REQUEST_FAILURE_MESSAGE} from "../services/constants";
+import {Action, UserPreferencesDTO, ValidatedChoice, LoggedInUser, LoggedInValidationUser,} from "../../IsaacAppTypes";
+import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 
 function redirectToPageNotFound() {
     const failedPath = history.location.pathname;
     history.push({pathname:`/404${failedPath}`, state:{overridePathname: failedPath}})
 }
-
 
 // User Authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
@@ -50,14 +49,13 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const updateCurrentUser = (params: {registeredUser: ValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}, currentUser: RegisteredUserDTO) => async (dispatch: Dispatch<Action>) => {
-    if (currentUser.email !== params.registeredUser.email) {
+export const updateCurrentUser = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}, currentUser: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
+    if (currentUser.loggedIn && params.registeredUser.loggedIn && currentUser.email !== params.registeredUser.email) {
         let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
         // TODO handle the alert ourselves
         if (emailChange) {
-            // setUserDetails(params);
             try {
-                const currentUser = await api.users.updateCurrent(params);
+                const changedUser = await api.users.updateCurrent(params);
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
                 history.push('/');
             } catch (e) {
@@ -67,18 +65,25 @@ export const updateCurrentUser = (params: {registeredUser: ValidationUser; userP
             params.registeredUser.email = currentUser.email;
         }
     } else {
-        // setUserDetails(params);
+        const initialLogin = params.registeredUser.loggedIn && params.registeredUser.firstLogin || false;
         try {
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
-            history.push('/');
+            if (initialLogin) {
+                await dispatch(requestCurrentUser() as any);
+                history.push('/account');
+                return
+            } else {
+                history.push('/');
+            }
         } catch (e) {
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
         }
     }
+    dispatch(requestCurrentUser() as any)
 };
 
-export const setUserDetails = (params: {registeredUser: ValidationUser; passwordCurrent: string}) => async (dispatch: Dispatch<Action>) => {
+export const setUserDetails = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE});
     try {
         const currentUser = await api.users.updateCurrent(params);
@@ -105,6 +110,7 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
     }
+    dispatch(requestCurrentUser() as any)
 };
 
 export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {

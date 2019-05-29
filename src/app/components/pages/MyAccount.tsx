@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -10,7 +10,6 @@ import {
     NavItem,
     NavLink,
     Card,
-    CardBody,
     CardFooter,
     Col,
     Form,
@@ -24,7 +23,7 @@ import {
 import {RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
 import {updateCurrentUser, resetPassword} from "../../state/actions";
-import {LoggedInUser, ValidationUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
@@ -48,8 +47,8 @@ interface AccountPageProps {
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     userPreferences: UserPreferencesDTO | null;
     updateCurrentUser: (
-        params: { registeredUser: ValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
-        currentUser: RegisteredUserDTO
+        params: { registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
+        currentUser: LoggedInUser
     ) => void;
 }
 
@@ -69,7 +68,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         !!user.loggedIn && !!user.email && validateEmail(user.email)
     );
     const [isDobValid, setIsDobValid] = useState(
-        !!user.loggedIn && !!user.dateOfBirth && validateDob(user.dateOfBirth.toString())
+        true
     );
     const [currentPassword, setCurrentPassword] = useState("");
     const [isNewPasswordConfirmed, setIsNewPasswordConfirmed] = useState(false);
@@ -114,7 +113,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 <Form name="my-account" onSubmit={(event: React.FormEvent<HTMLInputElement>) => {
                     event.preventDefault();
                     Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
-                    if (isEmailValid && isDobValid && (!myUser.password || isNewPasswordConfirmed)) {
+                    if (isEmailValid && (isDobValid || myUser.dateOfBirth == undefined) && (!myUser.password || isNewPasswordConfirmed)) {
                         updateCurrentUser({
                             registeredUser: myUser,
                             userPreferences: myUserPreferences,
