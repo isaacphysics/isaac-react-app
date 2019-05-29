@@ -14,10 +14,13 @@ if (document.location.hostname === "localhost") {
 }
 export const API_PATH: string = apiPath;
 
+export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
+
 export const MARKDOWN_RENDERER = new Remarkable({
     linkify: true,
     html: true,
 });
+
 
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
@@ -80,9 +83,14 @@ export enum ACTION_TYPE {
 
     TOPIC_REQUEST = "TOPIC_REQUEST",
     TOPIC_RESPONSE_SUCCESS = "TOPIC_RESPONSE_SUCCESS",
+    TOPIC_RESPONSE_FAILURE = "TOPIC_RESPONSE_FAILURE",
 
     GAMEBOARD_REQUEST = "GAMEBOARD_REQUEST",
     GAMEBOARD_RESPONSE_SUCCESS = "GAMEBOARD_RESPONSE_SUCCESS",
+
+    CONTACT_FORM_SEND = "CONTACT_FORM_SEND",
+    CONTACT_FORM_SEND_SUCCESS = "CONTACT_FORM_SEND_SUCCESS",
+    CONTACT_FORM_SEND_FAILURE = "CONTACT_FORM_SEND_FAILURE",
 
     ASSIGNMENTS_REQUEST = "ASSIGNMENTS_REQUEST",
     ASSIGNMENTS_RESPONSE_SUCCESS = "ASSIGNMENTS_RESPONSE_SUCCESS",
@@ -188,7 +196,7 @@ export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
     GENERIC = "page",
-    FRAGMENT = "isaacPageFragment",
+    FRAGMENT = "isaacPageFragment"
 }
 
 export enum ContentVersionUpdatingStatus {

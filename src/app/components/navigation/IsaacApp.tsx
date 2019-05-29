@@ -5,6 +5,7 @@ import {Footer} from "./Footer";
 import {Homepage} from "../pages/Homepage";
 import {Question} from "../pages/Question";
 import {Concept} from "../pages/Concept";
+import {Contact} from "../pages/Contact";
 import {LogIn} from "../pages/LogIn";
 import {Registration} from "../pages/Registration";
 import {LogOutHandler} from "../handlers/LogOutHandler";
@@ -51,19 +52,22 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
             <main role="main" className="flex-fill content-body">
                 <div className="container">
                     <Switch>
-                        {/* Application Pages */}
+                        {/* Application pages */}
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
                         <TrackedRoute path="/search" component={Search} />
                         <TrackedRoute path="/account" onlyFor={(user: LoggedInUser) => user.loggedIn} component={MyAccount} />
                         <TrackedRoute path="/events" component={ComingSoon}/>
-                        {/*<TrackedRoute path="/gameboards" component={Gameboard}/>*/}
-                        {/*<TrackedRoute path="/assignments" component={MyAssignments} />*/}
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute path="/pages/:pageId" component={Generic} />
                         <TrackedRoute exact path="/topics" component={AllTopics} />
                         <TrackedRoute path="/topics/:topicName" component={Topic} />
+
                         <TrackedRoute path="/admin" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Admin} />
+
+                        {/* June release application pages */}
+                        <TrackedRoute path="/gameboards" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Gameboard} />
+                        <TrackedRoute path="/assignments" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={MyAssignments} />
 
                         {/* Authentication */}
                         <TrackedRoute path="/login" component={LogIn} />
@@ -74,11 +78,12 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/verifyemail" component={EmailAlterHandler}/>
 
                         {/* Static pages */}
-                        <TrackedRoute path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}}/>
-                        <TrackedRoute path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}}/>
-                        <TrackedRoute path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}}/>
-                        <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}}/>
-                        <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}}/>
+                        <TrackedRoute path="/contact" component={Contact}/>
+                        <TrackedRoute path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}} />
+                        <TrackedRoute path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}} />
+                        <TrackedRoute path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}} />
+                        <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}} />
+                        <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
                         <TrackedRoute path="/coming_soon" component={ComingSoon} />
 
                         {/* Error pages */}

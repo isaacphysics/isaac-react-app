@@ -133,6 +133,14 @@ body {
     }
 }
 
+.form-required {
+  &:after {
+    content: '*';
+    padding-left: 6px;
+    font-weight: 600;
+    color: $secondary;
+  }
+}
 //.list-group-item {
 //    border-width: 0;
 //    width: 100%;
@@ -144,4 +152,4 @@ body {
 
 p small {
     border: 0;
-}
+};

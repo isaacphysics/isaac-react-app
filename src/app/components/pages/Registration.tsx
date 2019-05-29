@@ -13,13 +13,15 @@ import {
     Input,
     Row,
     Label,
-    FormFeedback
+    FormFeedback,
+    Container
 } from "reactstrap";
 import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
 import {validateDob, validateEmail, validatePassword} from "../../services/validation";
+import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null,

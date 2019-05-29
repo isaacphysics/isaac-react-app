@@ -27,7 +27,8 @@ import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../..
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
-import {validateEmail} from "../../services/validation";
+import {validateDob, validateEmail} from "../../services/validation";
+import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state ? state.error : null,
@@ -76,7 +77,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
     {/• TODO handle #... in with react-router for tab url navigation? •/}
 
-    return <div id="account-page" className="mt-4 mb-5">
+    return <div id="account-page" className="mb-5">
+        <BreadcrumbTrail currentPageTitle="My account" />
         <h1 className="h-title mb-4">My Account</h1>
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
