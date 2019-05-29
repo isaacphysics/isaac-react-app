@@ -20,8 +20,8 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
         <DropdownItem className={`${className}`} aria-disabled="true">
             <Row className="w-100">
                 <Col size={12}>
-                    <Link to="/coming_soon" className="mr-2">{children}</Link>
-                    <Badge color="secondary" className="ml-auto mr-1">Coming Soon</Badge>
+                    <Link to="/coming_soon" className="mr-2 text-muted">{children}</Link>
+                    <Badge  color="light" className="border-secondary border bg-white ml-auto mr-1">Coming Soon</Badge>
                 </Col>
             </Row>
         </DropdownItem>
@@ -133,6 +133,9 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             Student Support
                         </DropdownItemComingSoon>
+                        <DropdownItem className="pl-4 py-3 p-md-3">
+                            <Link to={"/contact"}>Contact Us</Link>
+                        </DropdownItem>
                     </DropdownMenu>
                 </UncontrolledDropdown>
 
