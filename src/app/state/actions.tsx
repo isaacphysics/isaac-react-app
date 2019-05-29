@@ -5,15 +5,13 @@ import {
     LoggedInUser,
     LoggedInValidationUser,
     UserPreferencesDTO,
-    ValidatedChoice,
-    ValidationUser
+    ValidatedChoice
 } from "../../IsaacAppTypes";
-import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, ChoiceDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {store} from "./store";
-import {ThunkAction} from "redux-thunk";
 
 // User Authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {

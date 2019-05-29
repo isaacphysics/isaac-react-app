@@ -69,9 +69,6 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     const [currentPassword, setCurrentPassword] = useState("");
     const [signUpAttempted, setSignUpAttempted] = useState(false);
 
-    let today = new Date();
-    let thirteen_years_ago = Date.UTC(today.getFullYear() - 13, today.getMonth(), today.getDate())/1000;
-
     const validateAndSetPassword = (password: string) => {
         setValidPassword(
             (password == (document.getElementById("password") as HTMLInputElement).value) &&
@@ -117,13 +114,13 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-input">New Password</Label>
+                                <Label htmlFor="password-input">Password</Label>
                                 <Input id="password" type="password" name="password" defaultValue={userPassword ? userPassword : null} required/>
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-confirm">Re-enter New Password</Label>
+                                <Label htmlFor="password-confirm">Re-enter Password</Label>
                                 <Input invalid={!isValidPassword && signUpAttempted} id="password-confirm" type="password" name="password" onChange={(e: any) => {
                                     validateAndSetPassword(e.target.value)}
                                 } aria-describedby="invalidPassword" required/>
@@ -151,7 +148,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                             <FormGroup>
                                 <Label htmlFor="dob-input">Date of Birth</Label>
                                 <Row>
-                                    <Col size={12} lg={6}>
+                                    <Col lg={6}>
                                         <Input
                                             invalid={!isDobValid}
                                             id="dob-input"
@@ -168,7 +165,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                             You must be over 13 years old
                                         </FormFeedback>}
                                     </Col>
-                                    <Col size={12} lg={5}>
+                                    <Col lg={5}>
                                         <CustomInput
                                             id="age-confirmation-input"
                                             type="checkbox"
@@ -187,7 +184,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         </h4>
                     </Row>
                     <Row>
-                        <Col size={12} md={{size: 6, offset: 3}}>
+                        <Col md={{size: 6, offset: 3}}>
                             <Input type="submit" value="Register Now" className="btn btn-block btn-secondary border-0"/>
                         </Col>
                     </Row>

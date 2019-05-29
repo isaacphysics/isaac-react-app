@@ -110,7 +110,7 @@ export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<Api
     return choice.hasOwnProperty("frontEndValidation");
 }
 
-export type LoggedInUser = ApiTypes.RegisteredUserDTO & {loggedIn: true}  | {loggedIn: false};
+export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {loggedIn: false};
 
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;

@@ -10,7 +10,6 @@ import {
     NavItem,
     NavLink,
     Card,
-    CardBody,
     CardFooter,
     Col,
     Form,
@@ -23,12 +22,12 @@ import {
 } from "reactstrap";
 import {RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
-import {updateCurrentUser, resetPassword, requestCurrentUser} from "../../state/actions";
-import {LoggedInUser, ValidationUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
+import {updateCurrentUser, resetPassword} from "../../state/actions";
+import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
-import {validateDob, validateEmail} from "../../services/validation";
+import {validateEmail} from "../../services/validation";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state ? state.error : null,
