@@ -116,3 +116,10 @@ export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {logg
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;
 }
+
+export interface School {
+    urn: string;
+    name: string;
+    postcode: string;
+    closed: boolean;
+}

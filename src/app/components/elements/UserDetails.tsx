@@ -1,6 +1,6 @@
 import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import React, {ChangeEvent,  MutableRefObject, useState, useEffect, useRef} from "react";
-import {ValidationUser} from "../../../IsaacAppTypes";
+import {ValidationUser, School} from "../../../IsaacAppTypes";
 import {validateDob, validateEmail} from "../../services/validation";
 import {api} from "../../services/api";
 
@@ -17,7 +17,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
     let [schoolQueryText, setSchoolQueryText] = useState();
     let [schoolSearchResults, setSchoolSearchResults] = useState();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState();
-    let schoolSearchInput = useRef();
+    let schoolSearchInput = useRef<HTMLInputElement>();
 
     function searchSchool(e?: Event) {
         if (e) {
@@ -49,7 +49,9 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
         setSelectedSchoolObject(school);
         if (schoolSearchInput && schoolSearchInput.current) {
             schoolSearchInput.current.value = school.name;
+            console.log(schoolSearchInput);
         }
+        
         setSchoolSearchResults([]);
     }
 
