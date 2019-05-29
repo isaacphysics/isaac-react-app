@@ -1,5 +1,5 @@
 // NOMENSA fonts.scss
-// REMEMBER TO REPLACE "./assets/" with "/"
+// REMEMBER TO REPLACE "./assets/fonts" with "/fonts"
 @font-face {
   font-family: 'exo_2black_italic';
   font-style: normal;
@@ -407,4 +407,18 @@
   url('/fonts/exo2-thin-webfont.woff') format('woff'),
   url('/fonts/exo2-thin-webfont.ttf') format('truetype'),
   url('/fonts/exo2-thin-webfont.svg#exo_2thin') format('svg');
+}
+
+@font-face {
+  font-family: 'arconrounded-regular';
+  font-weight: normal;
+  font-style: normal;
+  src: url('/fonts/arcon-rounded-regular-webfont.eot');
+  src: url('/fonts/arcon-rounded-regular-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/fonts/arcon-rounded-regular-webfont.woff2') format('woff2'),
+  url('/fonts/arcon-rounded-regular-webfont.woff') format('woff'),
+  url('/fonts/arcon-rounded-regular-webfont.ttf') format('truetype'),
+  url('/fonts/arcon-rounded-regular-webfont.svg#arconrounded-regular')
+  format('svg');
 }

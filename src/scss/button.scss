@@ -4,7 +4,12 @@
   font-family: $secondary-font-bold;
   font-size: 1.125rem;
   letter-spacing: 0.5px;
-  min-width: 180px;
+  min-width: 136px;
+  padding: 0.5rem 2.1rem;
+
+  @include respond-above(sm) {
+    min-width: 180px;
+  }
 
   &:hover {
     text-decoration: underline;
@@ -111,16 +116,26 @@
       color: $gray-160;
     }
   }
+  &.btn-xl {
+    width: 100%;
+    white-space: nowrap;
+
+    @include respond-above(md) {
+      padding-right: 5rem;
+      padding-left: 5rem;
+      width: auto;
+    }
+  }
 }
 
 
 // ISAAC
-a.btn {
-  text-decoration: none;
-}
-.btn {
-  &.btn-link {
-    font-size: initial;
-    font-weight: initial;
-  }
-}
+//a.btn {
+//  text-decoration: none;
+//}
+//.btn {
+//  &.btn-link {
+//    font-size: initial;
+//    font-weight: initial;
+//  }
+//}

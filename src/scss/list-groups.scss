@@ -1,0 +1,112 @@
+// NOMENSA list-group-lists.scss AND list-group-topics.scss
+// REPLACE ./assets WITH /assets
+.link-list {
+  a {
+    font-family: $secondary-font-medium;
+  }
+  .eventList & {
+    background-color: transparent;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    @include respond-above(xs) {
+      flex-wrap: wrap;
+      overflow-x: initial;
+    }
+
+    .list-group-item {
+      background-color: transparent;
+      flex: 1 0 87%;
+      padding: 0;
+
+      @include respond-above(xs) {
+        flex: 1;
+      }
+    }
+  }
+}
+
+.eventList {
+  > * {
+    background-color: transparent;
+  }
+
+  > a {
+    display: block;
+    font-family: $primary-font;
+    font-size: 1.125rem;
+    font-weight: bold;
+    padding: 0 1rem;
+  }
+}
+
+.link-list-list {
+  list-style-position: outside;
+  margin-left: 1rem;
+
+  li {
+    display: list-item;
+    line-height: 2;
+  }
+}
+
+// NOMENSA list-group-topic.scss
+.link-list {
+  a {
+    font-family: $secondary-font-medium;
+  }
+}
+
+.list-group-links {
+  background-color: $white;
+  border: 1px solid $gray-107;
+
+  li {
+    border-bottom: 1px solid $gray-107;
+
+    &.list-group-category {
+      a {
+        color: $purple;
+      }
+    }
+
+    a {
+      display: flex;
+      font-size: 1.25rem;
+      text-decoration: none;
+      padding-right: 50px;
+      position: relative;
+
+      > span:first-of-type {
+        display: inline-block;
+        border-right: 1px solid $gray-107;
+        margin-right: 1rem;
+        padding-right: 1rem;
+      }
+
+      &:after {
+        @include pseudo-element;
+        background-image: url('/assets/chevron_right.svg');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position-y: center;
+        height: 100%;
+        right: 20px;
+        top: 0;
+        bottom: 0;
+        width: 9px;
+      }
+    }
+
+    &:last-of-type {
+      border-width: 0;
+    }
+  }
+}

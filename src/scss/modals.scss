@@ -49,16 +49,3 @@
     }
   }
 }
-
-.question-hints {
-  border-top: 1px solid $gray-107;
-
-  &.list-group {
-    flex-direction: row;
-
-    .list-group-item {
-      border-color: $white;
-      width: auto;
-    }
-  }
-}
