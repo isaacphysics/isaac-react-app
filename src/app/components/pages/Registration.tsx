@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {
@@ -71,6 +71,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     const [isValidPassword, setValidPassword] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
     const [signUpAttempted, setSignUpAttempted] = useState(false);
+    const [tempDob, setTempDob] = useState("");
 
     const validateAndSetPassword = (password: string) => {
         setCurrentPassword(password);
@@ -155,23 +156,22 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                 <Row>
                                     <Col lg={6}>
                                         <Input
-                                            invalid={!isDobValid}
+                                            invalid={!isDobValid && signUpAttempted}
                                             id="dob-input"
                                             type="date"
                                             name="date-of-birth"
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                setTempDob(event.target.value);
                                                 const dateOfBirth = event.target.value;
                                                 setIsDobValid(validateDob(dateOfBirth));
-                                                setMyUser(Object.assign(myUser, {dateOfBirth: new Date(dateOfBirth)}))
+                                                setMyUser(Object.assign(myUser, {dateOfBirth: new Date(dateOfBirth)}));
                                             }}
                                             aria-describedby="ageValidationMessage"
                                         />
-                                        {!isDobValid && <FormFeedback id="ageValidationMessage">
-                                            You must be over 13 years old
-                                        </FormFeedback>}
                                     </Col>
                                     <Col lg={5}>
                                         <CustomInput
+                                            disabled={tempDob != ""}
                                             id="age-confirmation-input"
                                             type="checkbox"
                                             name="age-confirmation"
@@ -184,9 +184,11 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         </Col>
                     </Row>
                     <Row>
-                        <h4 role="alert" className="text-danger text-center mb-0">
-                            {errorMessage}
-                        </h4>
+                        <Col>
+                            <h4 role="alert" className="text-danger text-left mb-0">
+                                {(!isDobValid && signUpAttempted) ? "You must be over 13 years old" : errorMessage}
+                            </h4>
+                        </Col>
                     </Row>
                     <Row>
                         <Col md={{size: 6, offset: 3}}>
