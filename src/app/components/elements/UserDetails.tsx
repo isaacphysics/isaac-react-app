@@ -1,7 +1,8 @@
 import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import React from "react";
-import {ValidationUser} from "../../../IsaacAppTypes";
+import React, {ChangeEvent,  MutableRefObject, useState, useEffect, useRef} from "react";
+import {ValidationUser, School} from "../../../IsaacAppTypes";
 import {validateDob, validateEmail} from "../../services/validation";
+import {api} from "../../services/api";
 
 interface UserDetailsProps {
     myUser: ValidationUser;
@@ -13,6 +14,56 @@ interface UserDetailsProps {
 }
 
 export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, isDobValid, setIsDobValid}: UserDetailsProps) => {
+    let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
+    let [schoolSearchResults, setSchoolSearchResults] = useState<Array<School>>();
+    let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
+
+    function searchSchool(e?: Event) {
+        if (e) {
+            e.preventDefault();
+        }
+        if (schoolQueryText) {
+            api.schools.search(schoolQueryText).then(({data}) => {
+                setSchoolSearchResults(data);
+            }).catch((response) => {
+                console.error("Error searching for schools. ", response);
+            });
+        } else {
+            setSchoolSearchResults([]);
+        }
+    }
+
+    function fetchSchool(urn: string) {
+        if (urn != "") {
+            api.schools.getByUrn(urn).then(({data}) => {
+                setSelectedSchoolObject(data[0]);
+            });
+        } else {
+            setSelectedSchoolObject(null);
+        }
+    }
+
+    function setUserSchool(school: any) {
+        setMyUser(Object.assign(myUser, {schoolId: school.urn}));
+        setSchoolQueryText(null);
+        setSelectedSchoolObject(school);
+        setSchoolSearchResults([]);
+    }
+
+    const timer: MutableRefObject<number | undefined> = useRef();
+    useEffect(() => {
+        timer.current = window.setTimeout(() => {
+            searchSchool();
+        }, 800);
+        return () => {
+            clearTimeout(timer.current);
+        }
+    }, [schoolQueryText]);
+
+    useEffect(() => {
+        fetchSchool(myUser.schoolId || "");
+    }, [myUser]);
+
     return <CardBody>
         <Row>
             <Col md={6}>
@@ -128,10 +179,21 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                 <FormGroup>
                     <Label htmlFor="school-input">School</Label>
                     <Input
-                        id="school-input" type="text" name="school"
-                        defaultValue={myUser.schoolId}
+                        id="school-input" type="text" name="school" placeholder="UK School"
+                        value={
+                            schoolQueryText !== null ?
+                                schoolQueryText :
+                                ((selectedSchoolObject && selectedSchoolObject.name) || "")
+                        }
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setSchoolQueryText(e.target.value)}
                     />
-                    {/* TODO lookup school */}
+                    {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results">
+                        {schoolSearchResults.map((item: any) => <li key={item.urn} onClick={() => { setUserSchool(item) }}>{item.name}</li>)}
+                    </ul>}
+                    <Input
+                        id="school-other-input" type="text" name="school-other" placeholder="Other School" className="mt-2"
+                        defaultValue={myUser.schoolOther} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMyUser(Object.assign(myUser, { schoolOther: e.target.value }))}
+                    />
                 </FormGroup>
             </Col>
         </Row>

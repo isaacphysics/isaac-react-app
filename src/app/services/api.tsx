@@ -146,6 +146,14 @@ export const api = {
             return endpoint.get(`/info/segue_version`)
         }
     },
+    schools: {
+        search: (query: string): AxiosPromise<Array<AppTypes.School>> => {
+            return endpoint.get(`/schools/?query=${encodeURIComponent(query)}`);
+        },
+        getByUrn: (urn: string): AxiosPromise<Array<AppTypes.School>> => {
+            return endpoint.get(`/schools/?urn=${encodeURIComponent(urn)}`);
+        }
+    },
     contactForm: {
         send: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
             return endpoint.post(`/contact/`, params, {});

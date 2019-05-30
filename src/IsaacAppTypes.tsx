@@ -122,4 +122,12 @@ export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;
 }
 
+export interface School {
+    urn: string;
+    name: string;
+    postcode: string;
+    closed: boolean;
+    dataSource: string;
+}
+
 export type LoggedInValidationUser = ValidationUser & {loggedIn: true}  | {loggedIn: false};
