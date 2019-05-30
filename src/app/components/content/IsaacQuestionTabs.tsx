@@ -80,13 +80,13 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
                 </div>
             </div>}
 
-            <Row>
+            {((validationResponse && !validationResponse.correct) || canSubmit) && <Row>
                 <Col className="text-center pt-3 pb-2">
                     <Button color="secondary" disabled={!canSubmit} onClick={submitCurrentAttempt}>
                         Check my answer
                     </Button>
                 </Col>
-            </Row>
+            </Row>}
 
             <Row>
                 <Col sm="12" md={{size: 8, offset: 2}} >
