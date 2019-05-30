@@ -4,7 +4,6 @@ import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardDeck, CardImg, CardText, CardTitle, Col, Container, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
-import {Tabs} from "../elements/Tabs";
 import {WhySignUpTabs} from "../elements/WhySignUpTabs";
 import {FeaturedContentTabs} from "../elements/FeaturedContentTabs";
 
@@ -16,50 +15,52 @@ interface HomePageProps {
 }
 export const HomepageComponent = ({user}: HomePageProps) => {
     return <div id="homepage">
-        <section id="call-to-action" className="mt-4 mb-5">
-            <Row>
-                <Col lg={6}>
-                    <Row>
-                        <Col>
-                            <h1 className="pb-3">{
-                                user && user.loggedIn ? `Welcome ${user.givenName}!` : "A level Computer Science learning"
-                            }</h1>
-                            <p>
-                                Isaac Computer Science is a free online learning platform, funded by the Department for Education:
-                            </p>
-                            <ul>
-                                <li>Use it in the <strong>classroom</strong></li>
-                                <li>Use it for <strong>homework</strong></li>
-                                <li>Use it for <strong>revision</strong></li>
-                            </ul>
-                            <p>{
-                                "Isaac Computer Science will provide full coverage of every A level " +
-                                "Computer Science topic, and a vast bank of self-marking questions — " +
-                                "all mapped to the AQA and OCR specifications, and all created by our team of " +
-                                "experienced teachers."
-                            }</p>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col sm={6} className="pt-3">
-                            <Button tag={Link} to={user && user.loggedIn ? "/topics" : "/register"} color="secondary" block>
-                                {user && user.loggedIn ? "Find a topic" : "Sign up"}
-                            </Button>
-                        </Col>
-                        <Col sm={6} className="pt-3">
-                            <Button tag={Link} to={user && user.loggedIn ? "/events" : "/login"} color="primary" outline block>
-                                {user && user.loggedIn ? "Find an event" : "Log in"}
-                            </Button>
-                        </Col>
-                    </Row>
-                </Col>
-                <Col lg={6} className="align-self-center text-center">
-                    <img src="/assets/ics_hero.svg" className="img-fluid mt-5 mt-lg-3" alt="Students illustration"/>
-                </Col>
-            </Row>
+        <section id="call-to-action" className="homepageHero">
+            <Container>
+                <Row>
+                    <Col lg="5" className="py-5">
+                        <Row>
+                            <Col>
+                                <h1>{
+                                    user && user.loggedIn ? `Welcome ${user.givenName}!` : "A level Computer Science learning"
+                                }</h1>
+                                <p>
+                                    Isaac Computer Science is a free online learning platform, funded by the Department for Education:
+                                </p>
+                                <ul>
+                                    <li>Use it in the <strong>classroom</strong></li>
+                                    <li>Use it for <strong>homework</strong></li>
+                                    <li>Use it for <strong>revision</strong></li>
+                                </ul>
+                                <p>{
+                                    "Isaac Computer Science will provide full coverage of every A level " +
+                                    "Computer Science topic, and a vast bank of self-marking questions — " +
+                                    "all mapped to the AQA and OCR specifications, and all created by our team of " +
+                                    "experienced teachers."
+                                }</p>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col size={6} className="pt-3 text-center">
+                                <Button size="lg" tag={Link} to={user && user.loggedIn ? "/topics" : "/register"} color="secondary" block>
+                                    {user && user.loggedIn ? "Find a topic" : "Sign up"}
+                                </Button>
+                            </Col>
+                            <Col size={6} className="pt-3 text-center">
+                                <Button size="lg" tag={Link} to={user && user.loggedIn ? "/events" : "/login"} color="primary" outline block>
+                                    {user && user.loggedIn ? "Find an event" : "Log in"}
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col lg="7" className="p-sm-5 align-self-center text-center">
+                        <img src="/assets/ics_hero.svg" className="img-fluid" alt="Students illustration"/>
+                    </Col>
+                </Row>
+            </Container>
         </section>
 
-        {!(user && user.loggedIn) && <hr />}
+        {!(user && user.loggedIn) && <Container><hr /></Container>}
 
         {!(user && user.loggedIn) && <section id="why-sign-up" className="row sign-up-tabs">
             <Container>
