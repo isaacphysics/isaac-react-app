@@ -96,7 +96,18 @@ a.disabled {
 // NOMENSA global.scss
 // REMEMBER TO REPLACE "./assets" WITH "/assets"
 // REMOVE THE &s FROM THE .patterns
-// COMMENT OUT list-group-item stuff...
+// ALTER PATTERN 2
+//
+//         .bg-light-grey {
+//            > div {
+//                background: rgba(#f7f7f7, 0.9);
+//                position: relative;
+//                z-index: 1;
+//            }
+//        }
+//
+
+
 body {
     color: $black;
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
@@ -149,10 +160,9 @@ body {
             }
         }
 
-        .bg-light-grey {
-            background: $gray-107;
+         .bg-light-grey {
             > div {
-                background: $gray-107;
+                background: rgba(#f7f7f7, 0.9);
                 position: relative;
                 z-index: 1;
             }
