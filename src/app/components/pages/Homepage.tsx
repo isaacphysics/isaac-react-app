@@ -1,10 +1,11 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {Button, Card, CardBody, CardDeck, CardImg, CardText, CardTitle, Col, Row} from "reactstrap";
+import {Button, Card, CardBody, CardDeck, CardImg, CardText, CardTitle, Col, Container, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {Tabs} from "../elements/Tabs";
+import {WhySignUpTabs} from "../elements/WhySignUpTabs";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
@@ -59,74 +60,13 @@ export const HomepageComponent = ({user}: HomePageProps) => {
 
         {!(user && user.loggedIn) && <hr />}
 
-        {!(user && user.loggedIn) && <section id="why-sign-up" className="mb-5">
-            <h2 className="text-center mb-4">Why sign up?</h2>
-            <Tabs tabTitleClass="px-3 py-1" tabContentClass="pt-5">
-                {{
-                    Teacher: <Row>
-                        <Col md={6} className="align-self-center text-center">
-                            <img src="/assets/NCCE_SW_015.jpg" className="img-fluid mt-5 mt-lg-3" alt="Students illustration"/>
-                        </Col>
-                        <Col md={6}>
-                            <Card>
-                                <CardBody>
-                                    <CardTitle tag="h3">
-                                        Benefits for teachers
-                                    </CardTitle>
-                                    <strong>Isaac Computer Science allows you to:</strong>
-                                    <ul>
-                                        <li>Select and set self-marking homework questions</li>
-                                        <li>Save time on marking</li>
-                                        <li>Pinpoint weak areas to work on with your students</li>
-                                        <li>Manage students’ progress in your personal markbook</li>
-                                    </ul>
-
-                                    <strong>Isaac Computer Science aims to provide:</strong>
-                                    <ul>
-                                        <li>Complete coverage of AQA and OCR specifications</li>
-                                        <li>High-quality materials written by experienced teachers</li>
-                                    </ul>
-
-                                    <p>
-                                        Everything on Isaac Computer Science is free, funded by the DfE.
-                                    </p>
-                                    <div className="text-center">
-                                        <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    </Row>,
-                    Student: <Row>
-                        <Col md={6}>
-                            <Card>
-                                <CardBody>
-                                    <CardTitle tag="h3">
-                                        Benefits for students
-                                    </CardTitle>
-                                    <strong>Isaac Computer Science allows you to:</strong>
-                                    <ul>
-                                        <li>Study and revise at your own pace</li>
-                                        <li>Track your progress as you answer questions</li>
-                                        <li>Work towards achieving better exam results</li>
-                                        <li>Access high-quality materials written by experienced teachers</li>
-                                        <li>Learn relevant content tailored to your A level exam board</li>
-                                    </ul>
-                                    <p>
-                                        Everything on Isaac Computer Science is free, funded by the DfE.
-                                    </p>
-                                    <div className="text-center">
-                                        <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        </Col>
-                        <Col md={6} className="align-self-center text-center">
-                            <img src="/assets/NCCE_SW_019.jpg" className="img-fluid mt-5 mt-lg-3" alt="Students illustration"/>
-                        </Col>
-                    </Row>,
-                }}
-            </Tabs>
+        {!(user && user.loggedIn) && <section id="why-sign-up" className="row sign-up-tabs">
+            <Container>
+                <Col className="py-5 pattern-04">
+                    <h2 className="text-center mb-3">Why sign up?</h2>
+                    <WhySignUpTabs />
+                </Col>
+            </Container>
         </section>}
 
         <section id="headline-content" className="px-5 py-5">
