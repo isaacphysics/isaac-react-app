@@ -185,7 +185,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                         />
                                     </Col>
                                     <Col lg={5}>
-                                        <Label htmlfor="age-confirmation-input" label="I am at least 13 years old" className="form-required">I am at least 13 years old</Label>
+                                        <Label htmlFor="age-confirmation-input" label="I am at least 13 years old" className="form-required">I am at least 13 years old</Label>
                                     </Col>
                                 </Row>
                             </FormGroup>
