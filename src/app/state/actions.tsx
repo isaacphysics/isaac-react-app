@@ -158,7 +158,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     // TODO MT handle error case
 };
 
-export const handleEmailAlter = (params: ({userId: string | null; token: string | null})) => async (dispatch: Dispatch<Action>) => {
+export const handleEmailAlter = (params: ({userid: string | null; token: string | null})) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST});
         const response = await api.email.verify(params);
