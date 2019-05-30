@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
-    Button,
-    CustomInput,
+    Container,
     TabContent,
     TabPane,
     Nav,
@@ -13,12 +12,8 @@ import {
     CardFooter,
     Col,
     Form,
-    FormGroup,
     Input,
     Row,
-    Label,
-    FormFeedback,
-    Table
 } from "reactstrap";
 import {RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
@@ -82,7 +77,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
     {/• TODO handle #... in with react-router for tab url navigation? •/}
 
-    return <div id="account-page" className="mb-5">
+    return <Container id="account-page" className="mb-5">
         <BreadcrumbTrail currentPageTitle="My account" />
         <h1 className="h-title mb-4">My Account</h1>
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
@@ -164,7 +159,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 </Form>
             </Card>
         }
-    </div>;
+    </Container>;
 };
 
 export const MyAccount = connect(stateToProps, dispatchToProps)(AccountPageComponent);
