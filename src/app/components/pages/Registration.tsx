@@ -89,7 +89,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     }, [errorMessage]);
 
 
-    return <div id="registration-page">
+    return <Container id="registration-page">
         <h1>Register</h1>
         <Card>
             <CardBody>
@@ -196,7 +196,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                 </Form>
             </CardBody>
         </Card>
-    </div>;
+    </Container>;
 };
 
 export const Registration = connect(stateToProps, dispatchToProps)(RegistrationPageComponent);
