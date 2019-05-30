@@ -1,15 +1,93 @@
-import React from 'react';
+import React, {useState, useMemo} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {Button, Card, CardBody, CardTitle, Col, CustomInput, Form, FormGroup, Input, Row, Label} from "reactstrap";
+import {
+    Button,
+    Card,
+    CardBody,
+    CardTitle,
+    Col,
+    CustomInput,
+    Form,
+    FormGroup,
+    Input,
+    Row,
+    Label,
+    FormFeedback,
+    Container
+} from "reactstrap";
+import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
+import {AppState} from "../../state/reducers";
+import {updateCurrentUser} from "../../state/actions";
+import {history} from "../../services/history"
+import {validateDob, validateEmail, validatePassword} from "../../services/validation";
+import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
-const stateToProps = null;
-const dispatchToProps = null;
+const stateToProps = (state: AppState) => ({
+    errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null,
+    userEmail: history.location && history.location.state && history.location.state.email,
+    userPassword: history.location && history.location.state && history.location.state.password
+});
+const dispatchToProps = {
+    updateCurrentUser
+};
 
-interface LogInPageProps {
+interface RegistrationPageProps {
+    user: LoggedInUser
+    updateCurrentUser: (
+        params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null},
+        currentUser: LoggedInUser
+    ) => void
+    errorMessage: string | null
+    userEmail?: string
+    userPassword?: string
 }
-const RegistrationPageComponent = (props: LogInPageProps) => {
-    const register = () => console.log("Registration attempt"); // TODO MT registration action
+
+const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
+    const register = (event: React.FormEvent<HTMLFontElement>) => {
+        event.preventDefault();
+        attemptSignUp();
+        if (isValidPassword && isValidEmail && isDobValid) {
+            isValidPassword && Object.assign(myUser, {password: currentPassword});
+            setMyUser(Object.assign(myUser, {firstLogin: true}));
+            updateCurrentUser({
+                registeredUser: Object.assign(myUser, {loggedIn: false}),
+                userPreferences: {EMAIL_PREFERENCE: emailPreferences},
+                passwordCurrent: null
+            }, (Object.assign(myUser, {loggedIn: true})))
+        }
+    };
+
+    const emailPreferences = {
+            NEWS_AND_UPDATES: true,
+            ASSIGNMENTS: true,
+            EVENTS: true
+    };
+
+    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
+    const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword ? userPassword : "");
+    const [isValidEmail, setValidEmail] = useState(true);
+    const [isDobValid, setIsDobValid] = useState(true);
+    const [isValidPassword, setValidPassword] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [signUpAttempted, setSignUpAttempted] = useState(false);
+
+    const validateAndSetPassword = (password: string) => {
+        setCurrentPassword(password);
+        setValidPassword(
+            (password == unverifiedPassword) &&
+            validatePassword(password)
+        )
+    };
+
+    const attemptSignUp = () => {
+        setSignUpAttempted(true);
+    };
+
+    useMemo(() => {
+        userEmail ? setMyUser(Object.assign(myUser, {email: userEmail})) : null;
+    }, [errorMessage]);
+
 
     return <div id="registration-page">
         <h1>Register</h1>
@@ -23,13 +101,17 @@ const RegistrationPageComponent = (props: LogInPageProps) => {
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="first-name-input">First Name</Label>
-                                <Input id="first-name-input" type="text" name="first-name" required />
+                                <Input id="first-name-input" type="text" name="givenName"
+                                       onChange={(e: any) => {setMyUser(Object.assign(myUser, {givenName: e.target.value}))}}
+                                       required/>
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="last-name-input">Last Name</Label>
-                                <Input id="last-name-input" type="text" name="last-name" required />
+                                <Input id="last-name-input" type="text" name="familyName"
+                                       onChange={(e: any) => {setMyUser(Object.assign(myUser, {familyName: e.target.value}))}}
+                                       required/>
                             </FormGroup>
                         </Col>
                     </Row>
@@ -37,13 +119,17 @@ const RegistrationPageComponent = (props: LogInPageProps) => {
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="password-input">Password</Label>
-                                <Input id="password-input" type="password" name="password" required />
+                                <Input id="password" type="password" name="password" defaultValue={userPassword ? userPassword : null} onChange={(e: any) => {
+                                    setUnverifiedPassword(e.target.value)}}required/>
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-input">Confirm Password</Label>
-                                <Input id="password-input" type="password" name="password" required />
+                                <Label htmlFor="password-confirm">Re-enter Password</Label>
+                                <Input invalid={!isValidPassword && signUpAttempted} id="password-confirm" type="password" name="password" onChange={(e: any) => {
+                                    validateAndSetPassword(e.target.value)}
+                                } aria-describedby="invalidPassword" required/>
+                                <FormFeedback id="invalidPassword">{(!isValidPassword && signUpAttempted) ? "Passwords must match and be at least 6 characters long" : null}</FormFeedback>
                             </FormGroup>
                         </Col>
                     </Row>
@@ -51,22 +137,40 @@ const RegistrationPageComponent = (props: LogInPageProps) => {
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="email-input">Email</Label>
-                                <Input id="email-input" type="email" name="email" required />
+                                <Input invalid={!isValidEmail && signUpAttempted} id="email-input" type="email"
+                                       name="email" defaultValue={userEmail ? userEmail : null}
+                                       onChange={(e: any) => {
+                                           setValidEmail(validateEmail(e.target.value));
+                                           (isValidEmail) ? setMyUser(Object.assign(myUser, {email: e.target.value})) : null
+                                       }}
+                                       aria-describedby="emailValidationMessage" required/>
+                                <FormFeedback id="emailValidationMessage">
+                                    {(!isValidEmail && signUpAttempted) ? "Enter a valid email address" : null}
+                                </FormFeedback>
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="dob-input">Date of Birth</Label>
                                 <Row>
-                                    <Col lg={5}>
+                                    <Col lg={6}>
                                         <Input
+                                            invalid={!isDobValid}
                                             id="dob-input"
                                             type="date"
                                             name="date-of-birth"
-                                            placeholder="date placeholder"
+                                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                const dateOfBirth = event.target.value;
+                                                setIsDobValid(validateDob(dateOfBirth));
+                                                setMyUser(Object.assign(myUser, {dateOfBirth: new Date(dateOfBirth)}))
+                                            }}
+                                            aria-describedby="ageValidationMessage"
                                         />
+                                        {!isDobValid && <FormFeedback id="ageValidationMessage">
+                                            You must be over 13 years old
+                                        </FormFeedback>}
                                     </Col>
-                                    <Col lg={7}>
+                                    <Col lg={5}>
                                         <CustomInput
                                             id="age-confirmation-input"
                                             type="checkbox"
@@ -80,8 +184,13 @@ const RegistrationPageComponent = (props: LogInPageProps) => {
                         </Col>
                     </Row>
                     <Row>
+                        <h4 role="alert" className="text-danger text-center mb-0">
+                            {errorMessage}
+                        </h4>
+                    </Row>
+                    <Row>
                         <Col md={{size: 6, offset: 3}}>
-                            <Button color="secondary" block>Register Now</Button>
+                            <Input type="submit" value="Register Now" className="btn btn-block btn-secondary border-0"/>
                         </Col>
                     </Row>
                 </Form>

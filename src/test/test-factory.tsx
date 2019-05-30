@@ -1,4 +1,11 @@
-import {ContentSummaryDTO, QuestionDTO, RegisteredUserDTO, ResultsWrapper} from "../IsaacApiTypes";
+import {
+    ContentSummaryDTO,
+    QuestionDTO,
+    RegisteredUserDTO,
+    ResultsWrapper,
+    UserAuthenticationSettingsDTO
+} from "../IsaacApiTypes";
+import {UserPreferencesDTO} from "../IsaacAppTypes";
 
 export const errorResponses: {[key: string]: object} = {
     mustBeLoggedIn401: {
@@ -23,6 +30,21 @@ export const registeredUserDTOs: {[key: string]: RegisteredUserDTO} = {
         id: 2
     }
 };
+
+export const userAuthenticationSettings: {[id: number]: UserAuthenticationSettingsDTO} = {
+    1: {
+        hasSegueAccount: true,
+        id: 1,
+        linkedAccounts: ["GOOGLE"]
+    }
+};
+
+export const userPreferencesSettings: {[id: number]: UserPreferencesDTO} = {
+    1: {
+        EMAIL_PREFERENCE: {EVENTS: false, NEWS_AND_UPDATES: true, ASSIGNMENTS: true}
+    }
+};
+
 
 export const questionDTOs: {[key: string]: QuestionDTO} = {
     aToboggan: {

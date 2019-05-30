@@ -8,7 +8,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {BreadcrumbTrail} from "../content/BreadcrumbTrail";
+import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {DOCUMENT_TYPE} from "../../services/constants";
 
 const stateToProps = (state: AppState, {match: {params: {questionId}}, location: {search}}: any) => {
