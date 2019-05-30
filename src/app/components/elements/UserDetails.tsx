@@ -190,9 +190,8 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                     {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results">
                         {schoolSearchResults.map((item: any) => <li key={item.urn} onClick={() => { setUserSchool(item) }}>{item.name}</li>)}
                     </ul>}
-                    <br />
                     <Input
-                        id="school-other-input" type="text" name="school-other" placeholder="Other (Use this space if you cannot find your school in the list above"
+                        id="school-other-input" type="text" name="school-other" placeholder="Other School" className="mt-2"
                         defaultValue={myUser.schoolOther} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMyUser(Object.assign(myUser, { schoolOther: e.target.value }))}
                     />
                 </FormGroup>
