@@ -6,6 +6,36 @@ import {Link} from "react-router-dom";
 export const WhySignUpTabs = () => (
     <Tabs tabTitleClass="px-3 py-1" tabContentClass="pt-5">
         {{
+            Student: <Row className="signtab-row">
+                <Col className="signtab-image">
+                    <img src="/assets/NCCE_SW_019.jpg" alt="Students illustration"/>
+                </Col>
+                <Col className="signtab-info ml-auto">
+                    <Card className="card-list py-3 px-4">
+                        <CardBody className="d-flex flex-column">
+                            <CardTitle tag="h3" className="mb-auto">
+                                Benefits for students
+                            </CardTitle>
+                            <CardText className="mb-auto">
+                                <strong>Isaac Computer Science allows you to:</strong>
+                                <ul>
+                                    <li>Study and revise at your own pace</li>
+                                    <li>Track your progress as you answer questions</li>
+                                    <li>Work towards achieving better exam results</li>
+                                    <li>Access high-quality materials written by experienced teachers</li>
+                                    <li>Learn relevant content tailored to your A level exam board</li>
+                                </ul>
+                                <p>
+                                    Everything on Isaac Computer Science is free, funded by the DfE.
+                                </p>
+                            </CardText>
+                            <CardText className="mb-auto text-center">
+                                <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
+                            </CardText>
+                        </CardBody>
+                    </Card>
+                </Col>
+            </Row>,
             Teacher: <Row className="signtab-row">
                 <Col className="signtab-image">
                     <img src="/assets/NCCE_SW_015.jpg" alt="Teachers instructing"/>
@@ -36,51 +66,6 @@ export const WhySignUpTabs = () => (
                                 </p>
                             </CardText>
                             <CardText className="text-center">
-                                <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
-                            </CardText>
-                        </CardBody>
-                    </Card>
-                </Col>
-            </Row>,
-            /*
-                  <Card className="card-list py-3 px-4">
-                    <CardBody className="d-flex flex-column">
-                      <CardTitle tag="h3" className="mb-auto">
-                        {this.props.cardTitle}
-                      </CardTitle>
-                      <CardText className="mb-auto">
-                        <ListGroupList />
-                      </CardText>
-                      <CardText>
-                        <SimpleButton text="Sign Up" />
-                      </CardText>
-                    </CardBody>
-                  </Card>
-             */
-            Student: <Row className="signtab-row">
-                <Col className="signtab-image">
-                    <img src="/assets/NCCE_SW_019.jpg" alt="Students illustration"/>
-                </Col>
-                <Col className="signtab-info ml-auto">
-                    <Card className="card-list py-3 px-4">
-                        <CardBody className="d-flex flex-column">
-                            <CardTitle tag="h3" className="mb-auto">
-                                Benefits for students
-                            </CardTitle>
-                            <CardText className="mb-auto">
-                                <strong>Isaac Computer Science allows you to:</strong>
-                                <ul>
-                                    <li>Study and revise at your own pace</li>
-                                    <li>Track your progress as you answer questions</li>
-                                    <li>Work towards achieving better exam results</li>
-                                    <li>Access high-quality materials written by experienced teachers</li>
-                                    <li>Learn relevant content tailored to your A level exam board</li>
-                                </ul>
-                                <p>
-                                    Everything on Isaac Computer Science is free, funded by the DfE.
-                                </p>
-                            </CardText>
-                            <CardText className="mb-auto text-center">
                                 <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
                             </CardText>
                         </CardBody>
