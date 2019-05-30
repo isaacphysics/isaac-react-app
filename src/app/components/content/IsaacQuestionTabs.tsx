@@ -57,9 +57,9 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
     }
 
     return <React.Fragment>
-        <h2 className="h-question d-flex pb-3">
+        {/* <h2 className="h-question d-flex pb-3">
             <span className="mr-3">{questionIndex !== undefined ? `Q${questionIndex + 1}` : "Question"}</span>
-        </h2>
+        </h2> */}
 
         {/* Difficulty bar */}
 
