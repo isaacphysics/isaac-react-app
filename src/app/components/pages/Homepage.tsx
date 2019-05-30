@@ -6,6 +6,7 @@ import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {WhySignUpTabs} from "../elements/WhySignUpTabs";
 import {FeaturedContentTabs} from "../elements/FeaturedContentTabs";
+import {EventsCarousel} from "../elements/EventsCarousel";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
@@ -79,90 +80,18 @@ export const HomepageComponent = ({user}: HomePageProps) => {
             </Container>
         </section>
 
-        <section id="events" className="pb-5">
-            <Row>
-                <Col>
-                    <h1 className="h-title text-center my-4">Your face-to-face events</h1>
-                </Col>
-            </Row>
-            <Row>
-                <Col md={{size: 6, offset: 3}}>
-                    <p className="text-center mb-5">
+        <section id="events">
+            <Container className="py-5">
+                <div className="eventList pt-5 pattern-03">
+                    <h2 className="h-title text-center my-4">Your face-to-face events</h2>
+                    <p className="pt-4 pb-2 event-description text-center col-md-8 offset-md-2">
                         {"We offer free face-to-face events for students and teachers. Visit our "}
                         <Link to="/events">events page</Link>
                         {" to see what’s happening in your area, and sign up today!"}
                     </p>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <CardDeck>
-                        <Card>
-                            <div className="text-center">
-                                <CardImg top src="/assets/event-1.png" alt="Teacher event illustration" />
-                            </div>
-                            <CardBody>
-                                <CardTitle className="font-weight-bold">Teacher Workshop</CardTitle>
-                                <CardText>Embedding isaaccomputerscience in your teaching</CardText>
-                                <CardText>
-                                    <span className="d-block">
-                                        <span className="font-weight-bold">When:</span> {" "} Wed 27 Mar 2019
-                                    </span>
-                                    <span className="d-block">
-                                        12:00 PM — 4:00 PM
-                                    </span>
-                                    <span className="d-block">
-                                        <span className="font-weight-bold">Location:</span> {" "} NUSTEM, Northumbria
-                                    </span>
-                                </CardText>
-                                <CardText><Link to="event/event1">View Details</Link></CardText>
-                            </CardBody>
-                        </Card>
-                        <Card>
-                            <div className="text-center">
-                                <CardImg top src="/assets/event-2.png" alt="CPD event illustration" />
-                            </div>
-                            <CardBody>
-                                <CardTitle className="font-weight-bold">Virtual teacher CPD</CardTitle>
-                                <CardText>Introduction to teaching with isaaccomputerscience.org</CardText>
-                                <CardText>
-                                    <span className="d-block">
-                                        <span className="font-weight-bold">When:</span> {" "} Wed 3 Apr 2019
-                                    </span>
-                                    <span className="d-block">
-                                        12:00 PM — 13:00 PM
-                                    </span>
-                                    <span className="d-block">
-                                        <span className="font-weight-bold">Location:</span> {" "} Online
-                                    </span>
-                                </CardText>
-                                <CardText><Link to="event/event1">View Details</Link></CardText>
-                            </CardBody>
-                        </Card>
-                        <Card>
-                            <div className="text-center">
-                                <CardImg top src="/assets/event-3.png" alt="Teacher event illustration" />
-                            </div>
-                            <CardBody>
-                                <CardTitle className="font-weight-bold">Student Workshop</CardTitle>
-                                <CardText>Problem Solving with Vectors</CardText>
-                                <CardText>
-                                    <span className="d-block">
-                                        <span className="font-weight-bold">When:</span> {" "} Wed 27 Mar 2019
-                                    </span>
-                                    <span className="d-block">
-                                        5:30 PM — 7:30 PM
-                                    </span>
-                                    <span className="d-block">
-                                        <span className="font-weight-bold">Location:</span> {" "} Abbey College, Cambridge
-                                    </span>
-                                </CardText>
-                                <CardText><Link to="event/event1">View Details</Link></CardText>
-                            </CardBody>
-                        </Card>
-                    </CardDeck>
-                </Col>
-            </Row>
+                    <EventsCarousel />
+                </div>
+            </Container>
         </section>
 
         {!(user && user.loggedIn) && <section id="sign-up-card" className="px-5 mb-5">

@@ -8,7 +8,7 @@ export const FeaturedContentTabs = () => (
         <Tabs tabTitleClass="mb-3 mb-md-5">
             {{
                 "Featured Question": <Row className="feattab-row">
-                    <Col sm="6" md="5" className="feattab-info pl-md-4 pb-5">
+                    <Col md="6" className="feattab-info pl-md-4 pb-5">
                         <h2 className="h-question-mark mb-4">
                             <span>?</span>
                             Trace the code and select the subroutine identifier missing on line 6 and the parameters
@@ -35,8 +35,7 @@ export const FeaturedContentTabs = () => (
                         </pre>
                     </Col>
                     <Col
-                        sm={{size: 4, offset: 1}}
-                        md={{size: 5, offset: 2}}
+                        md={{size: 5, offset: 1}}
                         className="feattab-image mt-md-5 text-center"
                     >
                         <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
