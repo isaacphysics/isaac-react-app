@@ -6,6 +6,7 @@ import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {Tabs} from "../elements/Tabs";
 import {WhySignUpTabs} from "../elements/WhySignUpTabs";
+import {FeaturedContentTabs} from "../elements/FeaturedContentTabs";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
@@ -69,46 +70,12 @@ export const HomepageComponent = ({user}: HomePageProps) => {
             </Container>
         </section>}
 
-        <section id="headline-content" className="px-5 py-5">
-            <Tabs tabTitleClass="px-3 py-1" tabContentClass="pt-5">
-                {{
-                    "Featured Question": <Row className="p-1">
-                        <Col md={6}>
-                            <p className="font-weight-bold">
-                                Trace the code and select the subroutine identifier missing on line 6 and the parameters
-                                missing on line 9. The program should register the user and then display the user details.
-                            </p>
-                            <pre className="text-monospace">
-                                {
-                                    "1  SUBROUTINE register_user()\n" +
-                                    "2     user_name ← USERINPUT\n" +
-                                    "3     user_age ← USERINPUT\n" +
-                                    "4     user_email ← USERINPUT\n" +
-                                    "5\n" +
-                                    "6     __________(user_email, user_name, user_age)\n" +
-                                    "7  ENDSUBROUTINE\n" +
-                                    "8\n" +
-                                    "9  SUBROUTINE display_user_details(__________)\n" +
-                                    '10    OUTPUT "Name: " + name\n' +
-                                    '11    OUTPUT "Age: " + age\n' +
-                                    '12    OUTPUT "Email: " + email\n' +
-                                    "13 ENDSUBROUTINE\n" +
-                                    "14\n" +
-                                    '15 register_user()  ""'
-                                }
-                            </pre>
-                        </Col>
-                        <Col md={6} className="align-self-center">
-                            <div className="text-center">
-                                <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
-                            </div>
-                            <h4 className="text-center pt-3">
-                                <Link to="/questions/prog_sub_03_aqa">HINTS / ANSWER</Link>
-                            </h4>
-                        </Col>
-                    </Row>
-                }}
-            </Tabs>
+        <section id="headline-content" className="row bg-primary pattern-05">
+            <Container>
+                <Col className="py-5">
+                    <FeaturedContentTabs />
+                </Col>
+            </Container>
         </section>
 
         <section id="events" className="pb-5">
