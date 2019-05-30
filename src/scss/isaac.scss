@@ -8,6 +8,7 @@ $gray-103: #f8f8f8;
 $gray-107: #ececec;
 $gray-110: #e7e7e7;
 $gray-118: #d2d2d2;
+$gray-120: #c9cad1;
 $gray-136: #a3a3a3;
 $gray-142: #949494;
 $gray-160: #666;
@@ -16,12 +17,12 @@ $gray-194: #0f0f0f;
 $gray-blue: #636c73;
 
 // Shadows
-$shadow-3: rgba(0, 0, 0, .3);
-$shadow-25: rgba(0, 0, 0, .25);
-$shadow-08: rgba(0, 0, 0, .08);
+$shadow-3: rgba(0, 0, 0, 0.3);
+$shadow-25: rgba(0, 0, 0, 0.25);
+$shadow-08: rgba(0, 0, 0, 0.08);
 
 // Colour Overrides
-$purple: #944cbe;
+$purple: #9148bc;
 $cyan: #0f8294;
 $green: #208838;
 
@@ -29,9 +30,9 @@ $green: #208838;
 $reddish: #d7335f; // Used as an active colour on secondary buttons
 
 // Button sizing
-$input-btn-padding-y-lg: .5rem;
+$input-btn-padding-y-lg: 0.5rem;
 $input-btn-padding-x-lg: 3rem;
-$border-radius-lg: .25rem;
+$border-radius-lg: 0.25rem;
 
 // fonts
 $primary-font: Arial, 'Helvetica Neue', Helvetica, sans-serif;
@@ -39,9 +40,10 @@ $secondary-font: 'exo_2regular', sans-serif;
 $secondary-font-bold: 'exo_2bold', sans-serif;
 $secondary-font-semi-bold: 'exo_2semi_bold', sans-serif;
 $secondary-font-medium: 'exo_2medium', sans-serif;
+$tertiary-font: 'arconrounded-regular', sans-serif;
 
 // ISAAC
-$body-bg: rgba(#ececec, 0.4);
+//$body-bg: rgba(#ececec, 0.4);
 
 // Node module imports
 @import "~bootstrap/scss/bootstrap";
@@ -62,9 +64,11 @@ $body-bg: rgba(#ececec, 0.4);
 @import "./forms";
 @import "./elements";
 @import "./breadcrumbs";
-@import "./list-group-topic";
-@import "./figures";
+@import "./media";
 @import "./tabs";
+@import "./cards";
+@import "./list-groups";
+@import "./inequality-modal";
 
 // Navigation
 @import "./navigation-bar";
@@ -72,12 +76,13 @@ $body-bg: rgba(#ececec, 0.4);
 @import "./footer";
 
 // Pages
+@import "./pages";
 @import "./homepage";
 @import "./login";
 @import "./registration";
+@import "./my-account";
 @import "./topic";
 @import "./search";
-@import "./inequality-modal";
 
 a.disabled {
     color: $gray-600;
@@ -85,7 +90,24 @@ a.disabled {
     cursor: default;
 }
 
+// Double class to give this more specifity
+.katex.katex { font-size: 1.1em; }
+
 // NOMENSA global.scss
+// REMEMBER TO REPLACE "./assets" WITH "/assets"
+// REMOVE THE &s FROM THE .patterns
+// ALTER PATTERN 2
+//
+//         .bg-light-grey {
+//            > div {
+//                background: rgba(#f7f7f7, 0.9);
+//                position: relative;
+//                z-index: 1;
+//            }
+//        }
+//
+
+
 body {
     color: $black;
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
@@ -93,29 +115,90 @@ body {
 }
 
 .content-body {
-    background-color: $gray-107;
+    background-color: rgba($gray-107, 0.4);
 
-    &.pattern-01 {
+    .pattern-01 {
         > .container {
+            background-image: url('/assets/pattern01.svg');
+            background-position: left 292px;
+            background-repeat: no-repeat;
+
             @include respond-above(md) {
-                background-image: url('/assets/pattern01.svg');
                 background-position: left 338px;
-                background-repeat: no-repeat;
             }
         }
     }
-    &.pattern-02 {
-        > .container {
-            @include respond-above(md) {
-                background-image: url('/assets/pattern01.svg'), url('/assets/pattern01.svg');
-                background-position: 150% 250px, -76% 800px;
-                background-repeat: no-repeat;
+
+    .pattern-02 {
+        position: relative;
+
+        &:after,
+        &:before {
+            @include pseudo-element;
+            background-image: url('/assets/pattern01.svg');
+            background-position: 0 0;
+            background-repeat: no-repeat;
+            display: none;
+            width: 600px;
+            height: 600px;
+            z-index: 0;
+        }
+
+        &:after {
+            @include respond-above(sm) {
+                display: block;
+                right: -9%;
+                top: 250px;
+            }
+        }
+
+        &:before {
+            @include respond-above(sm) {
+                display: block;
+                left: -9%;
+                top: 800px;
+            }
+        }
+
+         .bg-light-grey {
+            > div {
+                background: rgba(#f7f7f7, 0.9);
+                position: relative;
+                z-index: 1;
             }
         }
     }
 }
 
-//.list-group-item {
-//    border-width: 0;
-//    width: 100%;
-//}
+.pattern-03 {
+    background-image: url('/assets/pattern03.svg');
+    background-position: left top;
+    background-repeat: no-repeat;
+}
+
+.pattern-04 {
+    background-image: url('/assets/pattern04.svg');
+    background-position: center 164px;
+    background-repeat: repeat-x;
+
+    @include respond-above(md) {
+        background-image: url('/assets/pattern04a.svg');
+        background-position: right 187px;
+        background-repeat: no-repeat;
+    }
+}
+
+.pattern-05 {
+    background-image: url('/assets/pattern05.svg');
+    background-position: left top;
+    background-repeat: repeat-x;
+}
+
+.list-group-item {
+    border-width: 0;
+    width: 100%;
+}
+
+p small {
+    border: 0;
+}

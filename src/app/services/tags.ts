@@ -7,7 +7,6 @@ interface BaseTag {
     title: string;
     parent?: TAG_ID;
     comingSoon?: boolean;
-    onlyFor?: EXAM_BOARD[];
 }
 export interface Tag extends BaseTag {
     type: TAG_LEVEL;
@@ -32,14 +31,14 @@ const baseTags: BaseTag[] = [
 
     // GCSE to A-Level transition topics
     {id: TAG_ID.gcseBooleanLogic, title: "Boolean logic", parent: TAG_ID.gcseToALevel, comingSoon: true},
-    {id: TAG_ID.gcseProgrammingConcepts, title: "Programming concepts", parent: TAG_ID.gcseToALevel},
-    {id: TAG_ID.gcseNetworking, title: "Networking", parent: TAG_ID.gcseToALevel, onlyFor: [EXAM_BOARD.OCR], comingSoon: true},
+    {id: TAG_ID.gcseProgrammingConcepts, title: "Programming concepts", parent: TAG_ID.gcseToALevel, comingSoon: true},
+    {id: TAG_ID.gcseNetworking, title: "Networking", parent: TAG_ID.gcseToALevel, comingSoon: true},
     {id: TAG_ID.gcseDataRepresentation, title: "Data Representation", parent: TAG_ID.gcseToALevel, comingSoon: true},
     {id: TAG_ID.gcseSystems, title: "Systems", parent: TAG_ID.gcseToALevel, comingSoon: true},
     // Data structures and algorithms topics
     {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: true},
     {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: true},
-    {id: TAG_ID.modelsOfComputation, title: "Models of computation", parent: TAG_ID.dataStructuresAndAlgorithms, onlyFor: [EXAM_BOARD.OCR], comingSoon: true},
+    {id: TAG_ID.modelsOfComputation, title: "Models of computation", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: true},
     {id: TAG_ID.planningAndDebugging, title: "Planning and debugging", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: true},
     {id: TAG_ID.dataStructuresTheory, title: "Data structures (theory)", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: true},
     // Computer networks topics
@@ -52,7 +51,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems},
     {id: TAG_ID.architecture, title: "Architecture", parent: TAG_ID.computerSystems, comingSoon: true},
     {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems, comingSoon: true},
-    {id: TAG_ID.operatingSystemsAndSoftware, title: "Operating systems and software", parent: TAG_ID.computerSystems},
+    {id: TAG_ID.operatingSystemsAndSoftware, title: "Operating systems and software", parent: TAG_ID.computerSystems, comingSoon: true},
     {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems, comingSoon: true},
     {id: TAG_ID.programmingLanguages, title: "Programming languages", parent: TAG_ID.computerSystems, comingSoon: true},
     // Data and information topics
@@ -74,9 +73,9 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.oopConcepts, title: "OOP concepts", parent: TAG_ID.objectOrientedProgramming, comingSoon: true},
     {id: TAG_ID.classDiagrams, title: "Class diagrams", parent: TAG_ID.objectOrientedProgramming, comingSoon: true},
     // Procedural programming topics
-    {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.proceduralProgramming},
+    {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.proceduralProgramming, comingSoon: true},
     {id: TAG_ID.subroutines, title: "Subroutines", parent: TAG_ID.proceduralProgramming},
-    {id: TAG_ID.files, title: "Files", parent: TAG_ID.proceduralProgramming, onlyFor: [EXAM_BOARD.OCR]},
+    {id: TAG_ID.files, title: "Files", parent: TAG_ID.proceduralProgramming},
     {id: TAG_ID.structureAndRobustness, title: "Structure & robustness", parent: TAG_ID.proceduralProgramming, comingSoon: true},
     {id: TAG_ID.dataStructuresImplementation, title: "Data structures (implementation)", parent: TAG_ID.proceduralProgramming, comingSoon: true},
     {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.proceduralProgramming, comingSoon: true},

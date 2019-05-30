@@ -1,7 +1,9 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
+import * as AppTypes from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
+import {LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -29,6 +31,18 @@ endpoint.interceptors.response.use((response) => {
 });
 
 
+export const apiHelper = {
+    determineImageUrl: (path: string) => {
+        // Check if the image source is a fully qualified link (suggesting it is external to the Isaac site),
+        // or else an asset link served by the APP, not the API.
+        if ((path.indexOf("http") > -1) || (path.indexOf("/assets/") > -1)) {
+            return path;
+        } else {
+            return API_PATH + "/images/" + path;
+        }
+    }
+};
+
 export const api = {
     search: {
         get: (query: string, types: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
@@ -40,11 +54,23 @@ export const api = {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
         },
+        getPreferences: (): AxiosPromise<AppTypes.UserPreferencesDTO> => {
+            return endpoint.get(`/users/user_preferences`)
+        },
         passwordReset: (params: {email: string}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword`, params);
         },
         requestEmailVerification(params: {email: string}): AxiosPromise {
             return endpoint.post(`/users/verifyemail`, params);
+        },
+        verifyPasswordReset: (token: string | null): AxiosPromise => {
+            return endpoint.get(`/users/resetpassword/${token}`)
+        },
+        handlePasswordReset: (params: {token: string | null; password: string | null}): AxiosPromise => {
+            return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
+        },
+        updateCurrent: (params: {registeredUser: LoggedInUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+            return endpoint.post(`/users`, params);
         }
     },
     authentication: {
@@ -59,6 +85,14 @@ export const api = {
         },
         login: (provider: ApiTypes.AuthenticationProvider, params: {email: string; password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/auth/${provider}/authenticate`, params);
+        },
+        getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
+            return endpoint.get(`/auth/user_authentication_settings`)
+        }
+    },
+    email: {
+        verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
+            return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
         }
     },
     questions: {
@@ -115,4 +149,9 @@ export const api = {
             return endpoint.get(`/info/segue_version`)
         }
     },
+    contactForm: {
+        send: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
+            return endpoint.post(`/contact/`, params, {});
+        }
+    }
 };

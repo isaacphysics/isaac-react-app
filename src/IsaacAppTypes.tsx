@@ -1,5 +1,5 @@
 import * as ApiTypes from "./IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "./app/services/constants";
+import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "./app/services/constants";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -11,12 +11,28 @@ export type Action =
 
     | {type: ACTION_TYPE.USER_UPDATE_REQUEST}
     | {type: ACTION_TYPE.USER_UPDATE_FAILURE}
+    | {type: ACTION_TYPE.USER_DETAILS_UPDATE}
+    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS}
+    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
+    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
+    | {type: ACTION_TYPE.USER_PREFERENCES_SUCCESS; userPreferences: UserPreferencesDTO}
+    | {type: ACTION_TYPE.USER_PREFERENCES_FAILURE; errorMessage: string}
+
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
     | {type: ACTION_TYPE.USER_LOG_IN_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST}
+    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST}
+    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_SUCCESS}
+    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST_SUCCESS}
+    | {type: ACTION_TYPE.USER_PASSWORD_RESET}
+    | {type: ACTION_TYPE.USER_PASSWORD_RESET_SUCCESS}
+    | {type: ACTION_TYPE.USER_PASSWORD_RESET_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
@@ -24,9 +40,14 @@ export type Action =
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_CHECK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
+
     | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST}
     | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST}
+    | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_SUCCESS}
+    | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST}
     | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
@@ -49,9 +70,14 @@ export type Action =
 
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
+    | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
+
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND}
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND_SUCCESS}
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
     | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
@@ -72,10 +98,23 @@ export type Action =
     | {type: ACTION_TYPE.TOASTS_REMOVE; toastId: string}
 ;
 
+
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
     currentAttempt?: ApiTypes.ChoiceDTO;
     canSubmit?: boolean;
+}
+
+export interface UserEmailPreferences {
+    NEWS_AND_UPDATES: boolean;
+    ASSIGNMENTS: boolean;
+    EVENTS: boolean;
+}
+
+export interface UserPreferencesDTO {
+    BETA_FEATURE?: string;
+    EMAIL_PREFERENCE?: UserEmailPreferences;
+    EXAM_BOARD?: {[EXAM_BOARD.AQA]: boolean; [EXAM_BOARD.OCR]: boolean};
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
@@ -88,6 +127,12 @@ export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<Api
 }
 
 export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {loggedIn: false};
+
+export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
+    password: string | null;
+}
+
+export type LoggedInValidationUser = ValidationUser & {loggedIn: true}  | {loggedIn: false};
 
 export interface Toast {
     color: string;

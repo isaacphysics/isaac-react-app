@@ -1,14 +1,29 @@
-// NOMENSA typography
+// ISAAC temp hopefully
+small {
+  border: 0 !important;
+}
 
+pre {
+  background: white;
+  padding: 1rem;
+  font-weight: 600;
+  border: solid 1px #00000021;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+}
+
+// NOMENSA typography.scss
+// REPLACE ./assets WITH /assets
 p {
   &.p-small {
-    font-size: .8125em;
+    font-size: 0.8125em;
     line-height: 1.69;
   }
 }
 
 a {
   color: $gray-194;
+  display: inline-block;
   text-decoration: underline;
 
   &:hover {
@@ -18,7 +33,34 @@ a {
 
   &.a-alt {
     color: $purple;
+  }
 
+  &.lrg-text {
+    font-size: 1.125rem;
+  }
+
+  &.x-lrg-text {
+    font-size: 1.25rem;
+
+    @include respond-above(sm) {
+      font-size: 1.625rem;
+    }
+  }
+
+  &.next-link {
+    padding-right: 1.2rem;
+    background-image: url('/assets/chevron_right.svg');
+    background-repeat: no-repeat;
+    background-position: center right;
+    clear: right;
+    text-decoration: none;
+  }
+  &.previous-link {
+    padding-left: 1.2rem;
+    background-image: url('/assets/chevron_left.svg');
+    background-repeat: no-repeat;
+    background-position: center left;
+    text-decoration: none;
   }
 }
 
@@ -33,23 +75,21 @@ a {
 }
 
 blockquote {
-
   &.blockquote {
-    border-left: .25rem solid $gray-107;
-    padding: .5rem 1rem;
-
+    border-left: 0.25rem solid $gray-107;
+    padding: 0.5rem 1rem;
   }
 }
 
 small {
   line-height: 1.69;
-  //border-top: 1px solid $black;
+  border-top: 1px solid $black;
 }
 
 hr {
   display: block;
   border-bottom: 1px solid $black;
-  position:relative;
+  position: relative;
 
   &::before {
     @include pseudo-element;
@@ -70,12 +110,4 @@ hr {
       margin: auto;
     }
   }
-}
-
-// ISAAC Typography
-.MathJax {
-  //span {
-  //  font-size: 100% !important;
-  //  font-weight: 500 !important;
-  //}
 }

@@ -6,7 +6,7 @@ import {AppState} from "../../state/reducers";
 import {ChoiceDTO, IsaacFreeTextQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
 import {Alert, FormGroup, Input} from "reactstrap";
 import {ValidatedChoice} from "../../../IsaacAppTypes";
-import {Hints} from "./Hints";
+import {IsaacHints} from "./IsaacHints";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -83,13 +83,13 @@ const IsaacFreeTextQuestionComponent = (props: IsaacFreeTextQuestionProps) => {
     const validation = validate(currentAttemptValue);
 
     return (
-        <div>
-            <h4>
+        <div className="freetext-question">
+            <div className="question-content">
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
-            </h4>
-            <FormGroup>
+            </div>
+            <FormGroup className="mb-4">
                 <Input type="textarea"
                     placeholder="Type your answer here."
                     spellCheck={true}
@@ -99,7 +99,7 @@ const IsaacFreeTextQuestionComponent = (props: IsaacFreeTextQuestionProps) => {
                         setCurrentAttempt(questionId, validatedChoiceDTOfromEvent(event))}/>
             </FormGroup>
             <FreeTextValidation {...validation} />
-            {doc.hints && <Hints hints={doc.hints}/>}
+            <IsaacHints hints={doc.hints}/>
         </div>
     );
 };

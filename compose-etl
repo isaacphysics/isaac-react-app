@@ -30,7 +30,7 @@ ETL_NAME=cs-etl-$API_VERSION
 cat << EOF | docker-compose -p dc-cs-etl -f - $@
 version: '2'
 services:
-  etl:
+  cs-etl:
     container_name: $ETL_NAME
     image: docker.isaacscience.org/isaac-api:$API_VERSION
     volumes:

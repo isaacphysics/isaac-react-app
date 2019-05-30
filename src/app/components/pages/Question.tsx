@@ -8,8 +8,9 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {BreadcrumbTrail} from "../content/BreadcrumbTrail";
+import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {DOCUMENT_TYPE} from "../../services/constants";
+import {RelatedContent} from "../elements/RelatedContent";
 
 const stateToProps = (state: AppState, {match: {params: {questionId}}, location: {search}}: any) => {
     return {
@@ -63,7 +64,9 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
                             <Button color="secondary" onClick={goBackToBoard}>Back to board</Button>
                         }
 
-                        {/*FooterPods related-content="questionPage.relatedContent"*/}
+                        {doc.relatedContent &&
+                            <RelatedContent content={doc.relatedContent} />
+                        }
                     </Col>
                 </Row>
             </Container>

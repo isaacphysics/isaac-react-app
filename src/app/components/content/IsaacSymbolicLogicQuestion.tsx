@@ -6,7 +6,7 @@ import {AppState} from "../../state/reducers";
 import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiTypes";
 import { InequalityModal } from "./InequalityModal";
 import katex from "katex";
-import {Hints} from "./Hints";
+import {IsaacHints} from "./IsaacHints";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -24,6 +24,7 @@ interface IsaacSymbolicLogicQuestionProps {
 const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
 
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     let currentAttemptValue: any | undefined;
@@ -41,21 +42,27 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
         setModalVisible(false);
     };
 
+    const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
+
     return (
-        <div>
-            <h4>
+        <div className="symboliclogic-question">
+            <div className="question-content">
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
-            </h4>
+            </div>
             {/* TODO Accessibility */}
-            <div className="eqn-editor-preview" onClick={() => setModalVisible(true)} dangerouslySetInnerHTML={{ __html: katex.renderToString((currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex) ? currentAttemptValue.result.tex : '') }} />
+            <div className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} onClick={() => setModalVisible(true)} dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to answer' }} />
             {modalVisible && <InequalityModal
                 close={closeModal}
-                onEditorStateChange={(state: any) => { setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(state), pythonExpression: state.result.python }) }}
+                onEditorStateChange={(state: any) => {
+                    setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
+                    setInitialEditorSymbols(state.symbols);
+                }}
                 availableSymbols={doc.availableSymbols}
+                initialEditorSymbols={initialEditorSymbols}
             />}
-            {doc.hints && <Hints hints={doc.hints}/>}
+            <IsaacHints hints={doc.hints} />
         </div>
     );
 };

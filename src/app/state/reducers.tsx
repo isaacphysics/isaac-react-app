@@ -1,11 +1,19 @@
 import {combineReducers} from "redux";
-import {Action, AppQuestionDTO, isValidatedChoice, LoggedInUser, Toast} from "../../IsaacAppTypes";
+import {
+    Action,
+    AppQuestionDTO,
+    isValidatedChoice,
+    LoggedInUser,
+    UserPreferencesDTO,
+    Toast
+} from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
     ContentDTO,
     ContentSummaryDTO,
     GameboardDTO,
     IsaacTopicSummaryPageDTO,
+    UserAuthenticationSettingsDTO,
     ResultsWrapper
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
@@ -22,6 +30,27 @@ export const user = (user: UserState = null, action: Action): UserState => {
             return user;
     }
 };
+
+type UserAuthSettingsState = UserAuthenticationSettingsDTO | null;
+export const userAuthSettings = (userAuthSettings: UserAuthSettingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS:
+            return action.userAuthSettings;
+        default:
+            return userAuthSettings;
+    }
+};
+
+type UserPreferencesState = UserPreferencesDTO | null;
+export const userPreferences = (userPreferences: UserPreferencesState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_PREFERENCES_SUCCESS:
+            return action.userPreferences;
+        default:
+            return userPreferences;
+    }
+};
+
 
 type ConstantsState = {units?: string[]; segueVersion?: string} | null;
 export const constants = (constants: ConstantsState = null, action: Action): ConstantsState => {
@@ -129,11 +158,17 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
     }
 };
 
-type ErrorState = {type: "loginError"; loginError: string} | {type: "consistencyError"} | null;
+export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | null;
 export const error = (error: ErrorState = null, action: Action): ErrorState => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_FAILURE:
-            return {type: "loginError", loginError: action.errorMessage};
+        case ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE:
+        case ACTION_TYPE.EMAIL_AUTHENTICATION_FAILURE:
+        case ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_FAILURE:
+        case ACTION_TYPE.USER_PASSWORD_RESET_FAILURE:
+        case ACTION_TYPE.USER_AUTH_SETTINGS_FAILURE:
+        case ACTION_TYPE.USER_PREFERENCES_FAILURE:
+            return {type: "generalError", generalError: action.errorMessage};
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:
             return {type: "consistencyError"};
         case ACTION_TYPE.ROUTER_PAGE_CHANGE:
@@ -190,6 +225,8 @@ export const toasts = (toasts: ToastsState = null, action: Action): ToastsState 
 
 const appReducer = combineReducers({
     user,
+    userAuthSettings,
+    userPreferences,
     constants,
     doc,
     questions,
@@ -204,7 +241,8 @@ const appReducer = combineReducers({
 
 export type AppState = undefined | {
     user: UserState;
-    constants: ConstantsState;
+    userAuthSettings: UserAuthSettingsState;
+    userPreferences: UserPreferencesState;
     doc: DocState;
     questions: QuestionsState;
     currentTopic: CurrentTopicState;
@@ -212,6 +250,7 @@ export type AppState = undefined | {
     assignments: AssignmentsState;
     contentVersion: ContentVersionState;
     search: SearchState;
+    constants: ConstantsState;
     error: ErrorState;
     toasts: ToastsState;
 }

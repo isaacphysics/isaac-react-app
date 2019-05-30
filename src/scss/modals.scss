@@ -40,24 +40,12 @@
     @include respond-below(sm) {
       button {
         font-family: $secondary-font-medium;
-        margin: 0 .25rem 1rem;
+        margin: 0 0.25rem 1rem;
 
         + button {
           margin: 0 0 1rem;
         }
       }
-    }
-  }
-}
-
-.question-hints {
-  border-top: 1px solid $gray-107;
-
-  &.list-group {
-    flex-direction: row;
-
-    .list-group-item {
-      border-color: $white;
     }
   }
 }

@@ -8,6 +8,8 @@ import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE} from "../../services/constants";
+import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {RelatedContent} from "../elements/RelatedContent";
 
 const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
     return {
@@ -32,11 +34,11 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
     );
 
     return <ShowLoading until={doc}>
-        {doc && <div className="pattern-01">
+        {doc && <div>
             <Container>
                 <Row>
                     <Col>
-                        {/* Breadcrumb */}
+                        <BreadcrumbTrail currentPageTitle={doc.title} />
                         <h1 className="h-title">{doc.title}</h1>
                     </Col>
                 </Row>
@@ -48,7 +50,9 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
 
                         <p>{doc.attribution}</p>
 
-                        {/*FooterPods related-content="questionPage.relatedContent"*/}
+                        {doc.relatedContent &&
+                            <RelatedContent content={doc.relatedContent} />
+                        }
                     </Col>
                 </Row>
             </Container>

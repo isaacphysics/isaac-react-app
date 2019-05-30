@@ -1,32 +1,50 @@
 // ISAAC
-
+.isaac-tab {
+  border: solid 1px $gray-103;
+  box-shadow: 0 2px 30px 0 $shadow-08;
+  padding: 1.5rem 1.5rem 0.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 3rem;
+}
 
 
 // NOMENSA tabs.scss
-
 // nested for specificity
 .nav-tabs {
   border-width: 0;
   justify-content: center;
+  flex-wrap: nowrap;
+
+  .sign-up-tabs & {
+    margin-bottom: 2rem;
+
+    @include respond-above(md) {
+      margin-bottom: 6rem;
+    }
+  }
 
   .nav-item {
-    border-right: 1px solid $black;
+    border-left: 1px solid $black;
     height: 100%;
+    line-height: 1.5;
+    align-self: center !important;
 
-
-    &:last-child {
+    &:first-child {
       border-width: 0;
     }
 
     .nav-link {
-      background: none;
+      background-color: transparent;
       border-radius: 0;
       border-width: 0;
       color: $black;
       font-family: $secondary-font;
-      font-size: 1.25rem;
+      font-size: 1rem;
       cursor: pointer;
       text-decoration: underline;
+      @include respond-above(sm) {
+        font-size: 1.25rem;
+      }
 
       &.active {
         font-family: $secondary-font-semi-bold;
@@ -35,6 +53,57 @@
         text-decoration: none;
         cursor: default;
       }
+    }
+  }
+}
+
+.question-hints {
+  border-top: 1px solid $gray-107;
+
+  &.list-group {
+    flex-direction: row;
+
+    .list-group-item {
+      background-color: transparent;
+      border-color: $white;
+      width: auto;
+    }
+  }
+
+  .feattab-image & {
+    border-width: 0;
+
+    @include respond-above(sm) {
+      margin-top: 6rem;
+    }
+    .btn-link {
+      color: $black;
+    }
+  }
+}
+
+.feattab-image {
+  padding: 7rem 0;
+  position: relative;
+  @include respond-above(sm) {
+    padding: 0;
+  }
+
+  img {
+    @include respond-below(sm) {
+      position: absolute;
+      bottom: -79px;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+    }
+  }
+
+  .question-hints {
+    position: absolute;
+    top: 0;
+    @include respond-above(sm) {
+      position: relative;
     }
   }
 }

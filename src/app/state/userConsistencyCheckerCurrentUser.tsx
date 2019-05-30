@@ -1,17 +1,14 @@
-import store from "store";
+import {save, load, remove} from "../services/localStorage";
 
-const UserStore = store.namespace("user");
-const USER_ID = "USER_ID";
+const USER_ID = "currentUserId";
 
 export const getUserId = function(): any {
-    return UserStore.get(USER_ID);
+    return load(USER_ID);
 };
 
 export const setUserId = function(id: any): boolean {
-    try {
-        UserStore.set(USER_ID, id);
-        return getUserId() == id;
-    } catch (e) {
-        return false;
+    if (id === undefined) {
+        return remove(USER_ID);
     }
+    return save(USER_ID, id);
 };
