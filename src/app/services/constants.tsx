@@ -199,6 +199,13 @@ export enum DOCUMENT_TYPE {
     FRAGMENT = "isaacPageFragment"
 }
 
+export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
+    [DOCUMENT_TYPE.FRAGMENT]: "pages/fragments",
+    [DOCUMENT_TYPE.GENERIC]: "pages",
+    [DOCUMENT_TYPE.CONCEPT]: "concepts",
+    [DOCUMENT_TYPE.QUESTION]: "questions"
+};
+
 export enum ContentVersionUpdatingStatus {
     UPDATING = "UPDATING",
     SUCCESS = "SUCCESS",

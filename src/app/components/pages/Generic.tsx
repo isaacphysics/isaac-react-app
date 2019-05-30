@@ -9,6 +9,7 @@ import {connect} from "react-redux";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {withRouter} from "react-router-dom";
+import {RelatedContent} from "../elements/RelatedContent";
 
 const stateToProps = (state: AppState, {match: {params: {pageId}}}: any) => {
     return {
@@ -32,7 +33,7 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
     );
 
     return <ShowLoading until={doc}>
-        {doc && <div className="pattern-01">
+        {doc && <div>
             <Container>
                 <Row>
                     <Col>
@@ -46,6 +47,10 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
                         <IsaacContent doc={doc} />
                     </Col>
                 </Row>
+
+                {doc.relatedContent &&
+                    <RelatedContent content={doc.relatedContent} />
+                }
             </Container>
         </div>}
     </ShowLoading>;
