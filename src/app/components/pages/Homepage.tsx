@@ -90,23 +90,23 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         {" to see what’s happening in your area, and sign up today!"}
                     </p>
                     <EventsCarousel />
+                    <a href="/events">See all Events</a>
                 </div>
             </Container>
         </section>
 
-        {!(user && user.loggedIn) && <section id="sign-up-card" className="px-5 mb-5">
-            <Row>
-                <Col lg={7} className="text-center text-lg-right">
-                    <h3 className="align-content-center">
+
+        {!(user && user.loggedIn) && <section className="row">
+            <Container>
+                <Col className="py-4 px-5 mb-5 d-flex align-items-center flex-column flex-md-row border border-dark">
+                    <h3 className="text-center text-md-left mr-md-4 mr-lg-0 mb-3 mb-md-0">
                         Sign up to track your progress
                     </h3>
-                </Col>
-                <Col lg={3} className="text-center">
-                    <Button color="secondary" tag={Link} to="/register" size="lg" className="align-content-center">
+                    <Button size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-xl">
                         Sign Up
                     </Button>
                 </Col>
-            </Row>
+            </Container>
         </section>}
     </div>
 };
