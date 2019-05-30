@@ -21,11 +21,33 @@
 
 .question-component {
   margin-bottom: 2rem;
+
+  .question-content {
+    font-family: $secondary-font-semi-bold;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.6;
+  }
 }
 
 .numeric-question .unit-selection {
   button.btn {
     min-width: auto !important;
+  }
+}
+
+.quick-question {
+  button {
+      box-shadow: none !important; // How horrible...
+
+      &.active {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+  }
+  .alert {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 }
 

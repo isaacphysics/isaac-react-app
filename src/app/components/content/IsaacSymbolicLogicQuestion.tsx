@@ -42,12 +42,12 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     };
 
     return (
-        <div>
-            <h4>
+        <div className="symboliclogic-question">
+            <div className="question-content">
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
-            </h4>
+            </div>
             {/* TODO Accessibility */}
             <div className="eqn-editor-preview" onClick={() => setModalVisible(true)} dangerouslySetInnerHTML={{ __html: katex.renderToString((currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex) ? currentAttemptValue.result.tex : '') }} />
             {modalVisible && <InequalityModal
