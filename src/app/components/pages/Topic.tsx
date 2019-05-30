@@ -1,19 +1,21 @@
-import React, {ChangeEvent, useEffect, useState} from "react"
+import React, {ChangeEvent, useEffect, useMemo, useState} from "react"
 import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {Button, Col, Container, Row, Label, Input} from "reactstrap";
+import {Button, Col, Container, Input, Label, Row} from "reactstrap";
 import {IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {UserPreferencesDTO} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState, {match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => ({
     topicName: topicName,
-    topicPage: state ? state.currentTopic : null
+    topicPage: state ? state.currentTopic : null,
+    userPreferences: state ? state.userPreferences : null
 });
 const actionsToProps = {fetchTopicSummary};
 
@@ -21,13 +23,14 @@ interface TopicPageProps {
     topicName: TAG_ID;
     topicPage: IsaacTopicSummaryPageDTO | null;
     fetchTopicSummary: (topicId: TAG_ID) => void;
+    userPreferences: UserPreferencesDTO | null;
 }
-const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary}: TopicPageProps) => {
+const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPreferences}: TopicPageProps) => {
     useEffect(
         () => {fetchTopicSummary(topicName)},
         [topicName]
     );
-    const [examBoardFilter, setExamBoardFilter] = useState(EXAM_BOARD.AQA);
+    const [examBoardFilter, setExamBoardFilter] = useState(userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA ? EXAM_BOARD.AQA : EXAM_BOARD.OCR);
     const examBoardTagMap = {
         AQA: "examboard_aqa",
         OCR: "examboard_ocr",
@@ -38,6 +41,10 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary}: TopicPage
         .filter(content => content.type === DOCUMENT_TYPE.CONCEPT);
     const relatedQuestions = examBoardFilteredContent && examBoardFilteredContent
         .filter(content => content.type === DOCUMENT_TYPE.QUESTION);
+
+    useMemo(() => {
+        setExamBoardFilter(userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA ? EXAM_BOARD.AQA : EXAM_BOARD.OCR);
+    }, [userPreferences]);
 
     return <ShowLoading until={topicPage}>
         {topicPage && <Container id="topic-page">
@@ -60,10 +67,10 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary}: TopicPage
                             name="select"
                             id="examBoardSelect"
                             value={examBoardFilter}
-                            onChange={(event: ChangeEvent<HTMLInputElement>) => setExamBoardFilter(event.target.value as EXAM_BOARD)}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => setExamBoardFilter((event.target.value == EXAM_BOARD.AQA ? EXAM_BOARD.AQA : EXAM_BOARD.OCR) as EXAM_BOARD)}
                         >
-                            <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                             <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
+                            <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                         </Input>
                     </div>
                     {relatedConcepts && <LinkToContentSummaryList items={relatedConcepts} className="my-4" />}
