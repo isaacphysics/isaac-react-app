@@ -30,6 +30,7 @@
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position-y: center;
+                border-radius: 6px;
             }
 
             &.centre {
@@ -42,6 +43,7 @@
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position-y: center;
+                border-radius: 6px;
             }
 
             &.trash {
@@ -77,6 +79,7 @@
             &.empty {
                 padding: 0;
                 width: 0;
+                border: 0;
             }
         }
 
