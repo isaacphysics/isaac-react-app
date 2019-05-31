@@ -93,7 +93,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     </p>
                     <EventsCarousel />
                     <a href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer">
-                        See all Events (Eventbrite)
+                        See all Events on Eventbrite
                     </a>
                 </div>
             </Container>
