@@ -21,11 +21,46 @@
 
 .question-component {
   margin-bottom: 2rem;
+
+  .question-content {
+    font-family: $secondary-font;
+    font-size: 1.25rem;
+    font-weight: 100;
+    line-height: 1.6;
+  }
 }
 
 .numeric-question .unit-selection {
   button.btn {
     min-width: auto !important;
+  }
+}
+
+.symboliclogic-question {
+  .eqn-editor-preview {
+    border: solid 1px $black;
+    padding: 0.3em 0.6em;
+    font-size: 1.5rem;
+    cursor: default;
+
+    &.empty {
+      color: $gray-500;
+    }
+  }
+}
+
+.quick-question {
+  button {
+      box-shadow: none !important; // How horrible...
+
+      &.active {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+  }
+  .alert {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 }
 

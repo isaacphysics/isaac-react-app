@@ -6,10 +6,11 @@ interface TabsProps {
     tabTitleClass?: string;
     tabContentClass?: string;
     children: {};
+    defaultActiveTab?: number;
 }
 
-export const Tabs = ({className = "", tabTitleClass = "", tabContentClass = "", children}: TabsProps) => {
-    const [activeTab, setActiveTab] = useState(1);
+export const Tabs = ({className = "", tabTitleClass = "", tabContentClass = "", children, defaultActiveTab}: TabsProps) => {
+    const [activeTab, setActiveTab] = useState(defaultActiveTab || 1);
     const tabs = children;
 
     return <div className={className}>

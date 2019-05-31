@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom"
+import {Container} from "reactstrap"
 import {loadGameboard} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO} from "../../../IsaacApiTypes";
@@ -10,14 +11,14 @@ const stateFromProps = (state: AppState, currentProps: object) => (state && {gam
 const dispatchFromProps = {loadGameboard};
 
 interface GameboardPageProps {
-    location: {hash: string},
-    gameboard: GameboardDTO | null,
-    loadGameboard: (gameboardId: string | null) => void
+    location: {hash: string};
+    gameboard: GameboardDTO | null;
+    loadGameboard: (gameboardId: string | null) => void;
 }
 const GameboardPageComponent = ({location: {hash}, gameboard, loadGameboard}: GameboardPageProps) => {
     useEffect(() => {loadGameboard(hash || null);}, [hash]);
 
-    return <React.Fragment>
+    return <Container>
         <ShowLoading until={gameboard}>
             <h2>{gameboard && gameboard.title || "Filter Generated Gameboard"}</h2>
             <hr />
@@ -30,7 +31,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, loadGameboard}: Ga
                 </div>
             )}
         </ShowLoading>
-    </React.Fragment>;
+    </Container>;
 };
 
 export const Gameboard = withRouter(connect(stateFromProps, dispatchFromProps)(GameboardPageComponent));

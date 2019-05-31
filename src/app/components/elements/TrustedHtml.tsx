@@ -2,11 +2,15 @@ import React from "react";
 import katex from "katex";
 import '../../services/mhchem';
 import he from "he";
+import {UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {AppState} from "../../state/reducers";
+import {connect} from "react-redux";
 
 type MathJaxMacro = string|[string, number];
 
-const Macros: {[key: string]: MathJaxMacro} = {
+const BaseMacros: {[key: string]: MathJaxMacro} = {
     // See http://docs.mathjax.org/en/latest/tex.html#defining-tex-macros
+    // Mathematics:
     "quantity": ["{#1}\\,{\\rm{#2}}", 2],
     "valuedef": ["{#1}={\\quantity{#2}{#3}}", 3],
     "vtr": ["{\\underline{\\boldsymbol{#1}}}", 1],
@@ -21,32 +25,51 @@ const Macros: {[key: string]: MathJaxMacro} = {
     "units": ["\\rm{#1}", 1],
     // Chemistry:
     "standardstate": ["\\mathbin{\u29B5}", 0],
-    // Boolean Algebra:
+};
+const BooleanLogicMathsMacros: {[key: string]: MathJaxMacro} = {
     "true": "\\boldsymbol{\\rm{T}}",
     "false": "\\boldsymbol{\\rm{F}}",
     "and": ["{#1} \\wedge {#2}", 2],
     "or": ["{#1} \\lor {#2}", 2],
     "not": ["\\lnot{#1}", 1],
+    "bracketnot": ["\\lnot{(#1)}", 1],
     "xor": ["{#1} \\veebar {#2}", 2],
     "equivalent": "\\equiv"
 };
+const BooleanLogicEngineeringMacros: {[key: string]: MathJaxMacro} = {
+    "and" : ["{#1} \\cdot {#2}", 2],
+    "or" : ["{#1} + {#2}", 2],
+    "not" : ["\\overline{#1}", 1],
+    "bracketnot" : ["\\overline{#1}", 1], // Don't do anything different to "not" for engineering syntax!
+    "xor" : ["{#1} \\oplus {#2}", 2],
+    "true" : "1",
+    "false" : "0",
+    "equivalent" : "=",
+};
 
-const KatexMacros = Object.keys(Macros).reduce((acc, key) => {
-    const name = "\\" + key;
-    let value: MathJaxMacro = Macros[key];
-    if (typeof value != 'string') {
-        value = value[0];
-    }
-    // @ts-ignore
-    acc[name] = value;
-    return acc;
-}, {});
+function mathjaxToKatex(macros: {[key: string]: MathJaxMacro}) {
+    return Object.keys(macros).reduce((acc, key) => {
+        const name = "\\" + key;
+        let value: MathJaxMacro = macros[key];
+        if (typeof value != 'string') {
+            value = value[0];
+        }
+        // @ts-ignore
+        acc[name] = value;
+        return acc;
+    }, {});
+}
+
+// Create MathJax versions for each of the two syntaxes, then create KaTeX versions of those:
+const MacrosWithMathsBoolean = Object.assign({}, BaseMacros, BooleanLogicMathsMacros);
+const MacrosWithEngineeringBoolean = Object.assign({}, BaseMacros, BooleanLogicEngineeringMacros);
+const KatexMacrosWithMathsBool = mathjaxToKatex(MacrosWithMathsBoolean);
+const KatexMacrosWithEngineeringBool = mathjaxToKatex(MacrosWithEngineeringBoolean);
 
 const KatexOptions = {
     throwOnError: false,
     strict: false,
     colorIsTextColor: true,
-    macros: KatexMacros // NB: Katex can modify this, so check if definitions are spilling over between nodes
 };
 
 function patternQuote(s: string) {
@@ -165,7 +188,7 @@ function munge(latex: string) {
         .replace(/\\newline/g, "\\\\");
 }
 
-export function katexify(html: string) {
+export function katexify(html: string, userPreferences: UserPreferencesDTO | null) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -188,7 +211,12 @@ export function katexify(html: string) {
                 const latex = html.substring(index + (search.olen || 0), match.index + match[0].length - (search.clen || 0));
                 const latexUnEntitied = he.decode(latex);
                 const latexMunged = munge(latexUnEntitied);
-                output += katex.renderToString(latexMunged, {...KatexOptions, displayMode: search.mode == "display"});
+                let macrosToUse = KatexMacrosWithMathsBool;
+                if (userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA) {
+                    macrosToUse = KatexMacrosWithEngineeringBool;
+                }
+                output += katex.renderToString(latexMunged,
+                    {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse});
                 index = match.index + match[0].length;
             } else {
                 // Unmatched start, so output the start and continue searching from after it.
@@ -211,7 +239,7 @@ function bootstrapify(html: string) {
     // TODO does not work if class was added by content team
     // TODO need to center table in parent element if possible
     const regexRules = {
-        '<table class="table table-bordered w-auto text-center" ': /<table\s*?/g,
+        '<table class="table table-bordered w-auto text-center bg-white" ': /<table\s*?/g,
     };
 
     let bootstrappedHtml = html;
@@ -221,11 +249,25 @@ function bootstrapify(html: string) {
     return bootstrappedHtml;
 }
 
-export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
-    html = bootstrapify(katexify(html));
+
+
+const stateToProps = (state: AppState) => ({
+    userPreferences: state ? state.userPreferences : null
+});
+
+interface TrustedHtmlProps {
+    html: string;
+    span?: boolean;
+    userPreferences: UserPreferencesDTO | null;
+}
+
+let TrustedHtmlComponent = ({html, span, userPreferences}: TrustedHtmlProps) => {
+    html = bootstrapify(katexify(html, userPreferences));
     if (span) {
         return <span dangerouslySetInnerHTML={{__html: html}} />;
     } else {
         return <div dangerouslySetInnerHTML={{__html: html}} />;
     }
 };
+
+export const TrustedHtml = connect(stateToProps)(TrustedHtmlComponent);

@@ -32,12 +32,12 @@ const IsaacStringMatchQuestionComponent = (props: IsaacStringMatchQuestionProps)
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const currentAttemptValue = currentAttempt && currentAttempt.value;
     return (
-        <div>
-            <h4>
+        <div className="stringmatch-question">
+            <div className="question-content">
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
-            </h4>
+            </div>
             <Input type={doc.multiLineEntry ? "textarea" : "text"} placeholder="Type your answer here."
                 maxLength={doc.multiLineEntry ? 250 : 75}
                 spellCheck={false} className="mb-4"

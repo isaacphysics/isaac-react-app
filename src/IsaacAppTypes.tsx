@@ -1,5 +1,5 @@
 import * as ApiTypes from "./IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "./app/services/constants";
+import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "./app/services/constants";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -39,6 +39,11 @@ export type Action =
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_CHECK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
+
+    | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST}
+    | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST}
     | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_SUCCESS}
     | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_FAILURE; errorMessage: string}
@@ -71,6 +76,10 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
 
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND}
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND_SUCCESS}
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND_FAILURE; errorMessage: string}
+
     | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
     | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
 
@@ -83,7 +92,13 @@ export type Action =
     | {type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string}
-    | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>};
+    | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
+
+    | {type: ACTION_TYPE.TOASTS_SHOW; toast: Toast}
+    | {type: ACTION_TYPE.TOASTS_HIDE; toastId: string}
+    | {type: ACTION_TYPE.TOASTS_REMOVE; toastId: string}
+;
+
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
@@ -97,10 +112,15 @@ export interface UserEmailPreferences {
     EVENTS: boolean;
 }
 
+export interface UserExamPreferences {
+    [EXAM_BOARD.AQA]: boolean;
+    [EXAM_BOARD.OCR]: boolean;
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: string;
     EMAIL_PREFERENCE?: UserEmailPreferences;
-    SUBJECT_INTEREST?: string;
+    EXAM_BOARD?: UserExamPreferences;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
@@ -118,7 +138,6 @@ export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;
 }
 
-
 export interface LinkInfo {
     title: string;
     to: string;
@@ -130,3 +149,24 @@ export interface PageNavigation {
     nextTopicContent?: LinkInfo;
 }
 
+export interface School {
+    urn: string;
+    name: string;
+    postcode: string;
+    closed: boolean;
+    dataSource: string;
+}
+
+export type LoggedInValidationUser = ValidationUser & {loggedIn: true}  | {loggedIn: false};
+
+export interface Toast {
+    color: string;
+    title: string;
+    body: string;
+    timeout?: number;
+    closable?: boolean;
+
+    // For internal use
+    id?: string;
+    showing?: boolean;
+}

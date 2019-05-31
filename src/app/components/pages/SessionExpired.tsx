@@ -1,8 +1,9 @@
 import React from "react";
+import {Container} from "reactstrap";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
 export const SessionExpired = () => {
-    return <React.Fragment>
+    return <Container>
         <div>
             <BreadcrumbTrail currentPageTitle="Session expired error" />
             <h1 className="h-title">Session Expired</h1>
@@ -36,5 +37,5 @@ export const SessionExpired = () => {
                 </small>
             </h3>
         </div>
-    </React.Fragment>;
+    </Container>;
 };

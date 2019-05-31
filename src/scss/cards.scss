@@ -1,0 +1,115 @@
+// NOMENSA cards.scss
+// REPLACE ./assets with /assets
+.card-event {
+  background-color: $white;
+  border-radius: 0;
+  border-width: 0;
+  box-shadow: 0 2px 13px 0 $shadow-08;
+  width: 100%;
+
+  @include respond-above(sm) {
+    box-shadow: 0 2px 30px 0 $shadow-08;
+  }
+
+  .card-image {
+    img {
+      display: block;
+      height: 150px;
+      width: 150px;
+    }
+  }
+
+  .card-title {
+    font-family: $secondary-font-semi-bold;
+    font-size: 1.25rem;
+  }
+
+  .card-body {
+    .card-text {
+      > a {
+        font-size: 1.125rem;
+        font-weight: bold;
+      }
+      &.card-text01 {
+        flex: 1 0 56px;
+      }
+      &.card-date-time {
+        flex: 1 0 138px;
+      }
+    }
+  }
+}
+
+.sign-up-tabs {
+  .tab-pane {
+    .signtab-image {
+      display: none;
+
+      @include respond-above(md) {
+        display: block;
+        position: relative;
+        z-index: 2;
+      }
+
+      img {
+        max-width: 380px;
+        width: 100%;
+      }
+    }
+
+    .card {
+      border-radius: 0;
+      box-shadow: 0 2px 30px 0 $shadow-08;
+      max-width: 380px;
+      margin: 0 auto;
+      position: relative;
+      transform-style: preserve-3d;
+      z-index: 1;
+
+      @include respond-above(md) {
+        &:before {
+          @include pseudo-element;
+          border: solid 3px #000000;
+          height: 315px;
+          left: -337px;
+          top: -29px;
+          transform: translateZ(-1px);
+          width: 380px;
+          z-index: 0;
+        }
+
+        &:after {
+          @include pseudo-element;
+          background-color: #000000;
+          border-radius: 50%;
+          left: -1px;
+          height: 24px;
+          top: 273px;
+          width: 24px;
+        }
+      }
+      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+        &:before {
+          @include pseudo-element;
+          background-image: url('/assets/box-line.svg');
+          background-repeat: no-repeat;
+          border-width: 0;
+          height: 318px;
+          left: -438px;
+          top: -31px;
+          width: 500px;
+        }
+      }
+    }
+  }
+}
+
+.simple-card {
+  box-shadow: 0 2px 30px 0 $shadow-08;
+  background-color: $white;
+  clear: both;
+
+  p:last-of-type {
+    margin-bottom: 0;
+  }
+}

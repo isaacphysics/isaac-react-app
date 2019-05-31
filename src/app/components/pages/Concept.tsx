@@ -12,6 +12,7 @@ import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {determineNextTopicContentLink, determineTopicHistory, idIsPresent} from "../../services/topics";
 import {PageNavigation} from "../../../IsaacAppTypes";
 import history, {History} from "history";
+import {RelatedContent} from "../elements/RelatedContent";
 
 const stateToProps = (state: AppState, {history, match: {params: {conceptId}}}: any) => {
     // TODO All of navigation should be moved into a service once it gets more complicated
@@ -51,7 +52,7 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
     );
 
     return <ShowLoading until={doc}>
-        {doc && <div className="pattern-01">
+        {doc && <div>
             <Container>
                 <Row>
                     <Col>
@@ -86,7 +87,9 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
                             </div>
                         }
 
-                        {/*FooterPods related-content="questionPage.relatedContent"*/}
+                        {doc.relatedContent &&
+                            <RelatedContent content={doc.relatedContent} />
+                        }
                     </Col>
                 </Row>
             </Container>

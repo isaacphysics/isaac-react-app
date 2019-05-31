@@ -130,17 +130,17 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
 
     return (
         <div className="numeric-question">
-            <h4>
+            <div className="question-content">
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
-            </h4>
+            </div>
             <Row>
-                <Col sm={6}>
-                    <Label>
+                <Col sm={4}>
+                    <Label className="w-100">
                         Value
                         <br />
-                        <Input type="text" placeholder="Type your answer here." value={currentAttemptValue || ""}
+                        <Input type="text" value={currentAttemptValue || ""}
                             onChange={updateValue}
                         />
                     </Label>

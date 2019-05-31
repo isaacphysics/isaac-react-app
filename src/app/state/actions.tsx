@@ -1,13 +1,38 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {Action, UserPreferencesDTO, ValidatedChoice, ValidationUser} from "../../IsaacAppTypes";
-import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {AppState} from "./reducers";
 import {history, redirectToPageNotFound} from "../services/history";
 import {store} from "./store";
 import {documentCache, topicCache} from "../services/cache";
+import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID, API_REQUEST_FAILURE_MESSAGE} from "../services/constants";
+import {Action, UserPreferencesDTO, ValidatedChoice, Toast, LoggedInUser, LoggedInValidationUser,} from "../../IsaacAppTypes";
+import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 
+// Toasts
+const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.TOASTS_REMOVE, toastId});
+};
+
+export const hideToast = (toastId: string) => (dispatch: any) => {
+    dispatch({type: ACTION_TYPE.TOASTS_HIDE, toastId});
+    setTimeout(() => {
+        dispatch(removeToast(toastId));
+    }, 1000);
+};
+
+let nextToastId = 0;
+export const showToast = (toast: Toast) => (dispatch: any) => {
+    const toastId = toast.id = "toast" + nextToastId++;
+    if (toast.timeout) {
+        setTimeout(() => {
+            dispatch(hideToast(toastId));
+        }, toast.timeout);
+    }
+    if (toast.closable === undefined) toast.closable = true;
+    toast.showing = true;
+    dispatch({type: ACTION_TYPE.TOASTS_SHOW, toast});
+    return toastId;
+};
 
 // User Authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
@@ -46,14 +71,13 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const updateCurrentUser = (params: {registeredUser: ValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}, currentUser: RegisteredUserDTO) => async (dispatch: Dispatch<Action>) => {
-    if (currentUser.email !== params.registeredUser.email) {
+export const updateCurrentUser = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null}, currentUser: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
+    if (currentUser.loggedIn && params.registeredUser.loggedIn && currentUser.email !== params.registeredUser.email) {
         let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
         // TODO handle the alert ourselves
         if (emailChange) {
-            // setUserDetails(params);
             try {
-                const currentUser = await api.users.updateCurrent(params);
+                const changedUser = await api.users.updateCurrent(params);
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
                 history.push('/');
             } catch (e) {
@@ -63,26 +87,22 @@ export const updateCurrentUser = (params: {registeredUser: ValidationUser; userP
             params.registeredUser.email = currentUser.email;
         }
     } else {
-        // setUserDetails(params);
+        const initialLogin = params.registeredUser.loggedIn && params.registeredUser.firstLogin || false;
         try {
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
-            history.push('/');
+            if (initialLogin) {
+                await dispatch(requestCurrentUser() as any);
+                history.push('/account');
+                return
+            } else {
+                history.push('/');
+            }
         } catch (e) {
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
         }
     }
-};
-
-export const setUserDetails = (params: {registeredUser: ValidationUser; passwordCurrent: string}) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE});
-    try {
-        const currentUser = await api.users.updateCurrent(params);
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
-        history.push('/');
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
-    }
+    dispatch(requestCurrentUser() as any)
 };
 
 export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
@@ -99,8 +119,9 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
         history.push('/');
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_FAILURE, errorMessage: e.response.data.errorMessage})
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
     }
+    dispatch(requestCurrentUser() as any)
 };
 
 export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {
@@ -148,7 +169,38 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     // TODO MT handle error case
 };
 
-export const handleEmailAlter = (params: ({userId: string | null; token: string | null})) => async (dispatch: Dispatch<Action>) => {
+export const requestEmailVerification = () => async (dispatch: any, getState: () => AppState) => {
+    const state = getState();
+    const user: RegisteredUserDTO | null = state && state.user && state.user.loggedIn && state.user || null;
+    let error = "";
+    if (user && user.email) {
+        dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST});
+        try {
+            const response = await api.users.requestEmailVerification({email: user.email});
+            if (response.status == 200) {
+                dispatch(showToast({
+                    color: "success", title: "Email verification request succeeded.",
+                    body: "Please follow the verification link given in the email sent to your address.",
+                    timeout: 10000
+                }));
+                dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS});
+                return;
+            }
+            error = response.data || "Error sending request";
+        } catch (e) {
+            error = e.message || "Error sending request";
+        }
+    } else {
+        error = "You are not logged in or don't have an e-mail address to verify.";
+    }
+
+    dispatch(showToast({color: "failure", title: "Email verification request failed.",
+        body: "Sending an email to your address failed with error message: " + error
+    }));
+    dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE});
+};
+
+export const handleEmailAlter = (params: ({userid: string | null; token: string | null})) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST});
         const response = await api.email.verify(params);
@@ -174,6 +226,15 @@ export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, ge
         dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE});
     }
 };
+export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND});
+    try {
+        const response = await api.contactForm.send(extra, params);
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_SUCCESS})
+    } catch(e) {
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
+    }
+};
 
 export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     // Don't request this again if it has already been fetched successfully
@@ -181,7 +242,6 @@ export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Acti
     if (state && state.constants && state.constants.segueVersion) {
         return;
     }
-
     dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_REQUEST});
     try {
         const version = await api.constants.getSegueVersion();
@@ -310,6 +370,8 @@ export const fetchSearch = (query: string, types: string) => async (dispatch: Di
     const searchResponse = await api.search.get(query, types);
     dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
 };
+
+
 
 
 // SERVICE TRIGGERED ACTIONS

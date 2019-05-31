@@ -1,5 +1,32 @@
 // ISAAC
 
+@import "./_mixins";
+
+.banner {
+  background: rgba($gray-blue, 0.1);
+  box-shadow: 0 2px 30px 0 $shadow-08;
+  z-index: 1;
+  border-top: solid 1px rgba($gray-blue, 0.6);
+  border-bottom: solid 1px rgba($gray-blue, 0.6);
+}
+.banner-button {
+  @include respond-below(sm) {
+    width: 100%;
+  }
+  @include respond-below(lg) {
+    min-width: 150px;
+  }
+  //border-color: $purple !important;
+  //color: $purple !important;
+}
+
+.toasts-container {
+  position: fixed;
+  top: 100px;
+  right: 30px;
+  z-index: 10000;
+}
+
 header {
   box-shadow: 0 2px 30px 0 $shadow-08;
 }
@@ -29,6 +56,30 @@ header {
 
     @include respond-above(sm) {
       padding-right: auto;
+    }
+
+    #beta-banner {
+      position: absolute;
+      top: 0.5rem;
+      left: 6.5rem;
+      transform: rotate(15deg);
+      background: theme-color("secondary");
+      color: white;
+      font-weight: bold;
+      font-size: 0.9rem;
+      padding: 0 0.5rem;
+      border-radius: 4px;
+      border: 0.1rem solid white;
+      box-shadow: 0px 0px 10px darken(theme-color("primary"), 15%);
+
+      @keyframes swing {
+        0%, 100% { transform: rotate(15deg); }
+        50% { transform: rotate(5deg); }
+      }
+
+      &:hover {
+        animation: swing 1s infinite ease-in-out;
+      }
     }
   }
 

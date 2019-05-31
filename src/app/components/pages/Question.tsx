@@ -13,6 +13,7 @@ import {DOCUMENT_TYPE, EXAM_BOARD} from "../../services/constants";
 import {determineNextTopicContentLink, determineTopicHistory, idIsPresent} from "../../services/topics";
 import {PageNavigation} from "../../../IsaacAppTypes";
 import {History} from "history";
+import {RelatedContent} from "../elements/RelatedContent";
 
 const stateToProps = (state: AppState, {history, match: {params: {questionId}}, location: {search}}: any) => {
     const navigation: PageNavigation = {
@@ -96,7 +97,9 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
                             </Button>
                         </div>}
 
-                        {/*FooterPods related-content="questionPage.relatedContent"*/}
+                        {doc.relatedContent &&
+                            <RelatedContent content={doc.relatedContent} />
+                        }
                     </Col>
                 </Row>
             </Container>

@@ -13,6 +13,7 @@ pre {
 }
 
 // NOMENSA typography.scss
+// REPLACE ./assets WITH /assets
 p {
   &.p-small {
     font-size: 0.8125em;
@@ -22,6 +23,7 @@ p {
 
 a {
   color: $gray-194;
+  display: inline-block;
   text-decoration: underline;
 
   &:hover {
@@ -31,6 +33,34 @@ a {
 
   &.a-alt {
     color: $purple;
+  }
+
+  &.lrg-text {
+    font-size: 1.125rem;
+  }
+
+  &.x-lrg-text {
+    font-size: 1.25rem;
+
+    @include respond-above(sm) {
+      font-size: 1.625rem;
+    }
+  }
+
+  &.next-link {
+    padding-right: 1.2rem;
+    background-image: url('/assets/chevron_right.svg');
+    background-repeat: no-repeat;
+    background-position: center right;
+    clear: right;
+    text-decoration: none;
+  }
+  &.previous-link {
+    padding-left: 1.2rem;
+    background-image: url('/assets/chevron_left.svg');
+    background-repeat: no-repeat;
+    background-position: center left;
+    text-decoration: none;
   }
 }
 
