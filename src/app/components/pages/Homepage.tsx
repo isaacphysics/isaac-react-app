@@ -7,7 +7,6 @@ import {LoggedInUser} from "../../../IsaacAppTypes";
 import {WhySignUpTabs} from "../elements/WhySignUpTabs";
 import {FeaturedContentTabs} from "../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../elements/EventsCarousel";
-import {history} from "../../services/history";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
@@ -107,7 +106,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     <h3 className="text-center text-md-left mr-md-4 mr-lg-0 mb-3 mb-md-0">
                         Sign up to track your progress
                     </h3>
-                    <Button size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-xl" onClick={(e: any) => history.push("/register")}>
+                    <Button tag={Link} size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-xl" to={"/register"}>
                         Sign Up
                     </Button>
                 </Col>
