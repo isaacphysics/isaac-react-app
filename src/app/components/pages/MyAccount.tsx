@@ -31,6 +31,7 @@ import {UserEmailPreference} from "../elements/UserEmailPreferences";
 import {validateDob, validateEmail} from "../../services/validation";
 import {Link} from "react-router-dom";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {isNotMobile} from "../../services/device";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state ? state.error : null,
@@ -41,6 +42,7 @@ const stateToProps = (state: AppState) => ({
 const dispatchToProps = {
     updateCurrentUser,
     resetPassword,
+    isNotMobile,
 };
 
 interface AccountPageProps {
@@ -82,7 +84,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     return <div id="account-page" className="mb-5">
         <BreadcrumbTrail currentPageTitle="My account" />
         <h1 className="h-title mb-4">My Account</h1>
-        <h3 hidden={(window.innerWidth > 768)}>Set up your Isaac Computer Science account, or <Link to="/logout">Log out</Link></h3>
+        <h3 hidden={(isNotMobile())}>Set up your Isaac Computer Science account, or <Link to="/logout">Log out</Link></h3>
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
                 <Nav tabs className="my-4">
