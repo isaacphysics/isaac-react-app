@@ -15,6 +15,7 @@ interface InequalityModalProps {
     onEditorStateChange: (state: any) => void;
     initialEditorSymbols: any;
     syntax?: string;
+    visible: boolean;
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
     state: {
@@ -95,9 +96,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             }]
         };
         sketch.onNewEditorState = (s: any) => {
-            this.setState({ editorState: s });
-            this.props.onEditorStateChange(s);
-            console.log("New editor state: ", s);
+            if (this.props.visible) {
+                this.setState({ editorState: s });
+                this.props.onEditorStateChange(s);
+                console.log("New editor state: ", s);
+            }
         };
         sketch.onCloseMenus = () => { this.setState({ menuOpen: false }) }; // TODO Maybe nice to have
         sketch.isUserPrivileged = () => true; // TODO Integrate with currentUser object

@@ -83,6 +83,7 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
                                 availableSymbols={[]}
                                 initialEditorSymbols={initialEditorSymbols}
                                 syntax={editorSyntax}
+                                visible={modalVisible}
                             />}
                         </div>
                     </Col>

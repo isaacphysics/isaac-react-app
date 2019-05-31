@@ -61,6 +61,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 }}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols}
+                visible={modalVisible}
             />}
             <IsaacHints hints={doc.hints} />
         </div>
