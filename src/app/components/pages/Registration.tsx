@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
-import {updateCurrentUser} from "../../state/actions";
+import {logInUser, updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
 import {validateDob, validateEmail, validatePassword} from "../../services/validation";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
@@ -44,17 +44,16 @@ interface RegistrationPageProps {
     userPassword?: string
 }
 
-const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
+const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
+
+    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
     const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword ? userPassword : "");
     const [isValidEmail, setValidEmail] = useState(true);
     const [isDobValid, setIsDobValid] = useState(true);
     const [isValidPassword, setValidPassword] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
     const [signUpAttempted, setSignUpAttempted] = useState(false);
-
-    useMemo(() => {
-        userEmail ? setMyUser(Object.assign(myUser, {email: userEmail})) : null;
-    }, [errorMessage]);
+    const [tempDob, setTempDob] = useState("");
 
     const attemptSignUp = () => {
         setSignUpAttempted(true);
@@ -93,19 +92,24 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         )
     };
 
+    useMemo(() => {
+        userEmail ? setMyUser(Object.assign(myUser, {email: userEmail})) : null;
+    }, [errorMessage]);
+
     return <Container id="registration-page">
-        <h1>Register</h1>
+        <BreadcrumbTrail currentPageTitle="Registration" />
+        <h1 className="h-title mb-4">Registration</h1>
         <Card>
             <CardBody>
                 <CardTitle tag="h2">
-                    <small className="text-muted">Sign up to {" "} <Link to="/">Isaac</Link></small>
+                    <small className="text-muted">Sign up to {" "} <Link to="/">Isaac <span className="d-none d-md-inline">Computer Science</span></Link></small>
                 </CardTitle>
                 <Form name="register" onSubmit={register}>
                     <Row>
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="first-name-input" className="form-required">First Name</Label>
-                                <Input id="first-name-input" type="text" name="givenName"
+                                <Input id="first-name-input" type="text" name="givenName" maxLength={255}
                                        onChange={(e: any) => {setMyUser(Object.assign(myUser, {givenName: e.target.value}))}}
                                        required/>
                             </FormGroup>
@@ -113,7 +117,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="last-name-input" className="form-required">Last Name</Label>
-                                <Input id="last-name-input" type="text" name="familyName"
+                                <Input id="last-name-input" type="text" name="familyName" maxLength={255}
                                        onChange={(e: any) => {setMyUser(Object.assign(myUser, {familyName: e.target.value}))}}
                                        required/>
                             </FormGroup>
@@ -159,23 +163,22 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                 <Row>
                                     <Col lg={6}>
                                         <Input
-                                            invalid={!isDobValid}
+                                            invalid={!isDobValid && signUpAttempted}
                                             id="dob-input"
                                             type="date"
                                             name="date-of-birth"
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                setTempDob(event.target.value);
                                                 const dateOfBirth = event.target.value;
                                                 setIsDobValid(validateDob(dateOfBirth));
-                                                setMyUser(Object.assign(myUser, {dateOfBirth: new Date(dateOfBirth)}))
+                                                setMyUser(Object.assign(myUser, {dateOfBirth: new Date(dateOfBirth)}));
                                             }}
                                             aria-describedby="ageValidationMessage"
                                         />
-                                        {!isDobValid && <FormFeedback id="ageValidationMessage">
-                                            You must be over 13 years old
-                                        </FormFeedback>}
                                     </Col>
                                     <Col lg={1}>
                                         <CustomInput
+                                            disabled={tempDob != ""}
                                             id="age-confirmation-input"
                                             type="checkbox"
                                             name="age-confirmation"
@@ -191,15 +194,10 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     </Row>
                     <Row>
                         <Col>
-                            <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
-                                Required field
-                            </span>
+                            <h4 role="alert" className="text-danger text-left">
+                                {(!isDobValid && signUpAttempted) ? "You must be over 13 years old to create an account." : errorMessage}
+                            </h4>
                         </Col>
-                    </Row>
-                    <Row>
-                        <h4 role="alert" className="text-danger text-center mb-0">
-                            {errorMessage}
-                        </h4>
                     </Row>
                     <Row>
                         <Col md={{size: 6, offset: 3}}>

@@ -73,7 +73,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                 <FormGroup>
                     <Label htmlFor="first-name-input" className="form-required">First Name</Label>
                     <Input
-                        id="first-name-input" type="text" name="givenName"
+                        id="first-name-input" type="text" name="givenName" maxLength={255}
                         defaultValue={myUser.givenName}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             setMyUser(Object.assign(myUser, {givenName: e.target.value}))
@@ -86,7 +86,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                 <FormGroup>
                     <Label htmlFor="last-name-input" className="form-required">Last Name</Label>
                     <Input
-                        id="last-name-input" type="text" name="last-name"
+                        id="last-name-input" type="text" name="last-name" maxLength={255}
                         defaultValue={myUser.familyName}
                         onChange={(e:  React.ChangeEvent<HTMLInputElement>) => {
                             setMyUser(Object.assign(myUser, {familyName: e.target.value}))
@@ -219,15 +219,15 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         value={
                             schoolQueryText !== null ?
                                 schoolQueryText :
-                                ((selectedSchoolObject && selectedSchoolObject.name) || "")
+                                (selectedSchoolObject && (selectedSchoolObject.name + ", " + selectedSchoolObject.postcode) || "")
                         }
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setSchoolQueryText(e.target.value)}
                     />
                     {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results">
-                        {schoolSearchResults.map((item: any) => <li key={item.urn} onClick={() => { setUserSchool(item) }}>{item.name}</li>)}
+                        {schoolSearchResults.map((item: any) => <li key={item.urn} onClick={() => { setUserSchool(item) }}>{item.name + ", " + item.postcode}</li>)}
                     </ul>}
                     <Input
-                        id="school-other-input" type="text" name="school-other" placeholder="Other School" className="mt-2"
+                        id="school-other-input" type="text" name="school-other" placeholder="Other School" className="mt-2" maxLength={255}
                         defaultValue={myUser.schoolOther} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMyUser(Object.assign(myUser, { schoolOther: e.target.value }))}
                     />
                 </FormGroup>
