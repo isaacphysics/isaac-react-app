@@ -102,7 +102,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         <Card>
             <CardBody>
                 <CardTitle tag="h2">
-                    <small className="text-muted">Sign up to {" "} <Link to="/">Isaac</Link></small>
+                    <small className="text-muted">Sign up to {" "} <Link to="/">Isaac <span className="d-none d-md-inline">Computer Science</span></Link></small>
                 </CardTitle>
                 <Form name="register" onSubmit={register}>
                     <Row>
