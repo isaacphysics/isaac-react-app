@@ -1,6 +1,6 @@
 import React from "react";
 import {Tabs} from "./Tabs";
-import {Col, Row} from "reactstrap";
+import {Col, Row, ListGroup, ListGroupItem} from "reactstrap";
 import {Link} from "react-router-dom";
 
 export const FeaturedContentTabs = () => (
@@ -33,15 +33,17 @@ export const FeaturedContentTabs = () => (
                                 '15 register_user()'
                             }
                         </pre>
+                        <ListGroup className="ml-4 ml-md-0 mb-1 p-3">
+                            <h4 className="text-center pt-3">
+                                <Link to="/questions/prog_sub_03_aqa">HINTS / ANSWER</Link>
+                            </h4>
+                        </ListGroup>
                     </Col>
                     <Col
                         md={{size: 5, offset: 1}}
                         className="feattab-image mt-md-5 text-center"
                     >
                         <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
-                        <h4 className="text-center pt-3">
-                            <Link to="/questions/prog_sub_03_aqa">HINTS / ANSWER</Link>
-                        </h4>
                     </Col>
                 </Row>
             }}

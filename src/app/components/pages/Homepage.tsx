@@ -87,7 +87,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     <p className="pt-4 pb-2 event-description text-center col-md-8 offset-md-2">
                         {"We offer free face-to-face events for students and teachers. Visit our "}
                         <a href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer">
-                            events page (Eventbrite)
+                            events page
                         </a>
                         {" to see what’s happening in your area, and sign up today!"}
                     </p>
