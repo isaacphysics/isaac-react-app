@@ -11,7 +11,7 @@ export const ContentSummaryListGroupItem = ({item}: {item: ContentSummaryDTO}) =
         case (DOCUMENT_TYPE.QUESTION):
             itemClasses += "text-info";
             linkDestination = `/questions/${item.id}`;
-            icon = "❓";
+            icon = "Q "//<span className="h-question-mark"><span>?</span></span>//"❓";
             break;
         case (DOCUMENT_TYPE.CONCEPT):
         default:

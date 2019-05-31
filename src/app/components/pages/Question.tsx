@@ -81,11 +81,11 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
                         <p>{doc.attribution}</p>
 
                         {navigation.backToTopic && <div className="float-left">
-                            <Link to={navigation.backToTopic.to} className="a-alt d-block lrg-text font-weight-bold">
-                                {navigation.backToTopic.title}
+                            <Link to={navigation.backToTopic.to} className="text-decoration-none">
+                                Topic:
                             </Link>
-                            <Link to={navigation.backToTopic.to} className="mb-5 previous-link">
-                                Back to topic
+                            <Link to={navigation.backToTopic.to} className="a-alt d-block lrg-text text-dark font-weight-bold mb-5">
+                                {navigation.backToTopic.title}
                             </Link>
                         </div>}
                         {navigation.nextTopicContent && <React.Fragment>
