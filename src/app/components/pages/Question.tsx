@@ -14,6 +14,7 @@ import {determineNextTopicContentLink, determineTopicHistory, idIsPresent} from 
 import {PageNavigation} from "../../../IsaacAppTypes";
 import {History} from "history";
 import {RelatedContent} from "../elements/RelatedContent";
+import {determineExamBoardFrom} from "../../services/examBoard";
 
 const stateToProps = (state: AppState, {history, match: {params: {questionId}}, location: {search}}: any) => {
     const navigation: PageNavigation = {
@@ -22,8 +23,8 @@ const stateToProps = (state: AppState, {history, match: {params: {questionId}}, 
     if (state && state.currentTopic && idIsPresent(questionId, state.currentTopic.relatedContent)) {
         navigation.breadcrumbHistory = determineTopicHistory(state.currentTopic);
         navigation.backToTopic = navigation.breadcrumbHistory && navigation.breadcrumbHistory.slice(-1)[0];
-        navigation.nextTopicContent = determineNextTopicContentLink(state.currentTopic, questionId, EXAM_BOARD.AQA);
-        // TODO switch nextTopicContent on default exam board
+        navigation.nextTopicContent =
+            determineNextTopicContentLink(state.currentTopic, questionId, determineExamBoardFrom(state.userPreferences));
         // TODO move navigation to also use query params
     }
     return {

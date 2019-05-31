@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useEffect, useMemo, useState} from "react"
 import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {AppState} from "../../state/reducers";
+import {AppState, user} from "../../state/reducers";
 import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
@@ -12,6 +12,7 @@ import {filterAndSeparateRelatedContent} from "../../services/topics";
 import {Button, Col, Container, Input, Label, Row} from "reactstrap";
 import {DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
 import {UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {determineExamBoardFrom} from "../../services/examBoard";
 
 const stateToProps = (state: AppState, {match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => ({
     topicName: topicName,
@@ -32,25 +33,16 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
         [topicName]
     );
 
-    const [examBoardFilter, setExamBoardFilter] = useState(
-        userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA ?
-            EXAM_BOARD.AQA :
-            EXAM_BOARD.OCR
-    );
+    const [examBoardFilter, setExamBoardFilter] = useState(determineExamBoardFrom(userPreferences));
+    useMemo(() => {
+        setExamBoardFilter(determineExamBoardFrom(userPreferences));
+    }, [userPreferences]);
 
     let [relatedConcepts, relatedQuestions]: [ContentSummaryDTO[] | null, ContentSummaryDTO[] | null] = [null, null];
     if (topicPage && topicPage.relatedContent) {
         [relatedConcepts, relatedQuestions] = topicPage && topicPage.relatedContent &&
             filterAndSeparateRelatedContent(topicPage.relatedContent, examBoardFilter);
     }
-
-    useMemo(() => {
-        setExamBoardFilter(
-            userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA ?
-                EXAM_BOARD.AQA :
-                EXAM_BOARD.OCR
-        );
-    }, [userPreferences]);
 
     return <ShowLoading until={topicPage}>
         {topicPage && <Container id="topic-page">
@@ -68,23 +60,6 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }
-
-                    <div className="text-center mb-4">
-                        <Label className="d-inline-block pr-2" for="examBoardSelect">Exam Board</Label>
-                        <Input
-                            className="w-auto d-inline-block pl-1 pr-0"
-                            type="select"
-                            name="select"
-                            id="examBoardSelect"
-                            value={examBoardFilter}
-                            onChange={(event: ChangeEvent<HTMLInputElement>) => setExamBoardFilter(
-                                (event.target.value == EXAM_BOARD.AQA ? EXAM_BOARD.AQA : EXAM_BOARD.OCR)
-                            )}
-                        >
-                            <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
-                            <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
-                        </Input>
-                    </div>
 
                     {relatedConcepts && <LinkToContentSummaryList items={relatedConcepts} className="my-4" />}
                     {relatedQuestions && <LinkToContentSummaryList items={relatedQuestions} className="my-4" />}
