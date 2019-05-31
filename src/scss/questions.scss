@@ -49,6 +49,12 @@
   }
 }
 
+.inequality-results {
+  pre {
+    white-space: pre-wrap;
+  }
+}
+
 .quick-question {
   button {
       box-shadow: none !important; // How horrible...
