@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
-import {updateCurrentUser} from "../../state/actions";
+import {logInUser, updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
 import {validateDob, validateEmail, validatePassword} from "../../services/validation";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
@@ -185,7 +185,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     </Row>
                     <Row>
                         <Col>
-                            <h4 role="alert" className="text-danger text-left mb-0">
+                            <h4 role="alert" className="text-danger text-left">
                                 {(!isDobValid && signUpAttempted) ? "You must be over 13 years old to create an account." : errorMessage}
                             </h4>
                         </Col>
