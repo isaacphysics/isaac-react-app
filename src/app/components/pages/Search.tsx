@@ -90,8 +90,6 @@ const SearchPageComponent = (props: SearchPageProps) => {
         return keepElement || isStaffUser;
     };
 
-    console.log(searchFilterProblems);
-
     const filteredSearchResults = searchResults && searchResults.results && searchResults.results.filter(filterResult);
 
     return (
