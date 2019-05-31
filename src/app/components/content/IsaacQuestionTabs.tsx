@@ -88,13 +88,13 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
                 </Col>
             </Row>}
 
-            <Row>
+            {((!validationResponse) || (validationResponse && !validationResponse.correct) || canSubmit) && <Row>
                 <Col sm="12" md={{size: 8, offset: 2}} >
                     {doc.hints && <p className="text-center pt-2">
                         <small>Don&apos;t forget to use the hints above if you need help.</small>
                     </p>}
                 </Col>
-            </Row>
+            </Row>}
         </div>
     </React.Fragment>;
 };
