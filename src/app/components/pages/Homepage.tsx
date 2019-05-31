@@ -48,8 +48,8 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                                 </Button>
                             </Col>
                             <Col size={6} className="pt-3 text-center">
-                                <Button size="lg" tag={Link} to={user && user.loggedIn ? "/events" : "/login"} color="primary" outline block>
-                                    {user && user.loggedIn ? "Find an event" : "Log in"}
+                                <Button size="lg" tag={Link} to={user && user.loggedIn ? "/search" : "/login"} color="primary" outline block>
+                                    {user && user.loggedIn ? "Search the site" : "Log in"}
                                 </Button>
                             </Col>
                         </Row>
@@ -86,11 +86,15 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     <h2 className="h-title text-center my-4">Your face-to-face events</h2>
                     <p className="pt-4 pb-2 event-description text-center col-md-8 offset-md-2">
                         {"We offer free face-to-face events for students and teachers. Visit our "}
-                        <Link to="/events">events page</Link>
+                        <a href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer">
+                            events page
+                        </a>
                         {" to see what’s happening in your area, and sign up today!"}
                     </p>
                     <EventsCarousel />
-                    <a href="/events">See all Events</a>
+                    <a href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer">
+                        See all Events (Eventbrite)
+                    </a>
                 </div>
             </Container>
         </section>

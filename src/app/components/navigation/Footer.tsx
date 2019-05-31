@@ -3,6 +3,13 @@ import {Container, Col, Row} from "reactstrap";
 import {ListGroupFooter} from "../elements/ListGroupFooter";
 import {ListGroupSocial} from "../elements/ListGroupSocial";
 import {ListGroupFooterBottom} from "../elements/ListGroupFooterBottom";
+import {Link} from "react-router-dom";
+
+const ExternalLink = ({href, children}: {href: string; children: any}) => (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="d-inline">
+        {children}
+    </a>
+);
 
 export const Footer = () => (
     <footer>
@@ -11,15 +18,21 @@ export const Footer = () => (
                 <Row className="pt-5 px-3 px-sm-0 pb-3 pb-md-5">
                     <Col className="footer-links logo-col">
                         <div className="d-flex flex-row">
-                            <img
-                                src="/assets/logo-inverse.svg"
-                                className="footerLogo"
-                                alt="Isaac Computer Science logo"
-                            />
+                            <Link to="/">
+                                <img
+                                    src="/assets/logo-inverse.svg"
+                                    className="footerLogo"
+                                    alt="Isaac Computer Science logo"
+                                />
+                            </Link>
                         </div>
-                        <div className="d-flex flex-row logo-text">
-                            A Department for Education project at the University of
-                            Cambridge.
+                        <div className=" logo-text">
+                            <p>
+                                A <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">Department for Education</ExternalLink> project,
+                                part of the <ExternalLink href="https://teachcomputing.org/">National Centre for Computing Education</ExternalLink> and created by
+                                the <ExternalLink href="https://www.cam.ac.uk/">University of Cambridge</ExternalLink> and
+                                the <ExternalLink href="https://www.raspberrypi.org/">Raspberry Pi Foundation</ExternalLink>.
+                            </p>
                         </div>
                     </Col>
                     <Col md="6" lg="6" className="mt-4 mt-md-0">

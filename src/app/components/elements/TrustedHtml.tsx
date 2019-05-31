@@ -239,7 +239,7 @@ function bootstrapify(html: string) {
     // TODO does not work if class was added by content team
     // TODO need to center table in parent element if possible
     const regexRules = {
-        '<table class="table table-bordered w-auto text-center bg-white" ': /<table\s*?/g,
+        '<table class="table table-bordered w-100 text-center bg-white" ': /<table\s*?/g,
     };
 
     let bootstrappedHtml = html;

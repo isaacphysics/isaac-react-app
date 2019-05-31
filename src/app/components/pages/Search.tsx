@@ -103,7 +103,12 @@ const SearchPageComponent = (props: SearchPageProps) => {
             <Row>
                 <Col>
                     <Form inline onSubmit={doSearch}>
-                        <Label>Search: &nbsp; <Input type="text" value={searchText} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)} /></Label>
+                        <Input
+                            className='search--filter-input mt-4'
+                            type="search" value={searchText}
+                            placeholder="Search"
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+                        />
                     </Form>
                 </Col>
             </Row>

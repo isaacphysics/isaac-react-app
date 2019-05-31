@@ -1,5 +1,6 @@
 import React from "react";
-import {ListGroup, ListGroupItem, Link} from "reactstrap";
+import {Link} from "react-router-dom";
+import {ListGroup, ListGroupItem} from "reactstrap";
 
 export const ListGroupFooter = () => (
     <div className="footer-links">
@@ -8,36 +9,28 @@ export const ListGroupFooter = () => (
             <ListGroup className="w-50 mb-3 link-list">
 
                 <ListGroupItem className="border-0 px-0 py-0 pb-1 bg-transparent">
-                    <a className="footerLink" href="https://google.com">About Us</a>
+                    <Link className="footerLink" to="/about">About Us</Link>
                 </ListGroupItem>
                 <ListGroupItem className="border-0 px-0 py-0 pb-1 bg-transparent align-items-stretch">
-                    <a className="footerLink" href="https://google.com">Contact us</a>
+                    <Link className="footerLink" to="/contact">Contact us</Link>
                 </ListGroupItem>
 
                 <ListGroupItem className="border-0 px-0 py-0 pb-1 bg-transparent">
-                    <a className="footerLink" href="https://google.com">
-                        Privacy Policy
-                    </a>
+                    <Link className="footerLink" to="/privacy">Privacy Policy</Link>
                 </ListGroupItem>
 
             </ListGroup>
             <ListGroup className="w-50 mb-3 link-list">
 
                 <ListGroupItem className="border-0 px-0 py-0 pb-1 bg-transparent align-items-stretch">
-                    <a className="footerLink" href="https://google.com">
-                        Terms of Use
-                    </a>
+                    <Link className="footerLink" to="/terms">Terms of Use</Link>
                 </ListGroupItem>
 
                 <ListGroupItem className="border-0 px-0 py-0 pb-1 bg-transparent">
-                    <a className="footerLink" href="https://google.com">
-                        Why Computer Science?
-                    </a>
+                    <Link className="footerLink" to="/cookies">Cookie Policy</Link>
                 </ListGroupItem>
                 <ListGroupItem className="border-0 px-0 py-0 pb-1 bg-transparent align-items-stretch">
-                    <a className="footerLink" href="https://google.com">
-                        Publications
-                    </a>
+                    <Link className="footerLink" href="/cyberessentials">Cyber Essentials</Link>
                 </ListGroupItem>
             </ListGroup>
         </div>

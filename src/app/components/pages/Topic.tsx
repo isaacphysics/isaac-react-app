@@ -1,19 +1,23 @@
-import React, {ChangeEvent, useEffect, useState} from "react"
+import React, {ChangeEvent, useEffect, useMemo, useState} from "react"
 import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {AppState} from "../../state/reducers";
+import {AppState, user} from "../../state/reducers";
 import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {Button, Col, Container, Row, Label, Input} from "reactstrap";
-import {IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
+import {ContentSummaryDTO, IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {filterAndSeparateRelatedContent} from "../../services/topics";
+import {Button, Col, Container, Input, Label, Row} from "reactstrap";
+import {DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
+import {UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {determineExamBoardFrom} from "../../services/examBoard";
 
 const stateToProps = (state: AppState, {match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => ({
     topicName: topicName,
-    topicPage: state ? state.currentTopic : null
+    topicPage: state ? state.currentTopic : null,
+    userPreferences: state ? state.userPreferences : null
 });
 const actionsToProps = {fetchTopicSummary};
 
@@ -21,29 +25,33 @@ interface TopicPageProps {
     topicName: TAG_ID;
     topicPage: IsaacTopicSummaryPageDTO | null;
     fetchTopicSummary: (topicId: TAG_ID) => void;
+    userPreferences: UserPreferencesDTO | null;
 }
-const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary}: TopicPageProps) => {
+const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPreferences}: TopicPageProps) => {
     useEffect(
         () => {fetchTopicSummary(topicName)},
         [topicName]
     );
-    const [examBoardFilter, setExamBoardFilter] = useState(EXAM_BOARD.AQA);
-    const examBoardTagMap = {
-        AQA: "examboard_aqa",
-        OCR: "examboard_ocr",
-    };
-    const examBoardFilteredContent = topicPage && topicPage.relatedContent && topicPage.relatedContent
-        .filter(content => content.tags && content.tags.includes(examBoardTagMap[examBoardFilter]));
-    const relatedConcepts = examBoardFilteredContent && examBoardFilteredContent
-        .filter(content => content.type === DOCUMENT_TYPE.CONCEPT);
-    const relatedQuestions = examBoardFilteredContent && examBoardFilteredContent
-        .filter(content => content.type === DOCUMENT_TYPE.QUESTION);
+
+    const [examBoardFilter, setExamBoardFilter] = useState(determineExamBoardFrom(userPreferences));
+    useMemo(() => {
+        setExamBoardFilter(determineExamBoardFrom(userPreferences));
+    }, [userPreferences]);
+
+    let [relatedConcepts, relatedQuestions]: [ContentSummaryDTO[] | null, ContentSummaryDTO[] | null] = [null, null];
+    if (topicPage && topicPage.relatedContent) {
+        [relatedConcepts, relatedQuestions] = topicPage && topicPage.relatedContent &&
+            filterAndSeparateRelatedContent(topicPage.relatedContent, examBoardFilter);
+    }
 
     return <ShowLoading until={topicPage}>
         {topicPage && <Container id="topic-page">
             <Row>
                 <Col>
-                    <BreadcrumbTrail currentPageTitle={topicPage.title} />
+                    <BreadcrumbTrail
+                        intermediateCrumbs={[{title: "All topics", to: "/topics"}]}
+                        currentPageTitle={topicPage.title as string}
+                    />
                     <h1 className="h-title">{topicPage.title}</h1>
                 </Col>
             </Row>
@@ -52,20 +60,6 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary}: TopicPage
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }
-                    <div className="text-center mb-4">
-                        <Label className="d-inline-block pr-2" for="examBoardSelect">Exam Board</Label>
-                        <Input
-                            className="w-auto d-inline-block pl-1 pr-0"
-                            type="select"
-                            name="select"
-                            id="examBoardSelect"
-                            value={examBoardFilter}
-                            onChange={(event: ChangeEvent<HTMLInputElement>) => setExamBoardFilter(event.target.value as EXAM_BOARD)}
-                        >
-                            <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
-                            <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
-                        </Input>
-                    </div>
 
                     {relatedConcepts && <LinkToContentSummaryList items={relatedConcepts} className="my-4" />}
                     {relatedQuestions && <LinkToContentSummaryList items={relatedQuestions} className="my-4" />}

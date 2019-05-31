@@ -22,6 +22,7 @@ import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
 import {validateDob, validateEmail, validatePassword} from "../../services/validation";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {EXAM_BOARD} from "../../services/constants";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null,
@@ -43,7 +44,22 @@ interface RegistrationPageProps {
     userPassword?: string
 }
 
-const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
+const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
+    const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword ? userPassword : "");
+    const [isValidEmail, setValidEmail] = useState(true);
+    const [isDobValid, setIsDobValid] = useState(true);
+    const [isValidPassword, setValidPassword] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [signUpAttempted, setSignUpAttempted] = useState(false);
+
+    useMemo(() => {
+        userEmail ? setMyUser(Object.assign(myUser, {email: userEmail})) : null;
+    }, [errorMessage]);
+
+    const attemptSignUp = () => {
+        setSignUpAttempted(true);
+    };
+
     const register = (event: React.FormEvent<HTMLFontElement>) => {
         event.preventDefault();
         attemptSignUp();
@@ -52,25 +68,22 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
             setMyUser(Object.assign(myUser, {firstLogin: true}));
             updateCurrentUser({
                 registeredUser: Object.assign(myUser, {loggedIn: false}),
-                userPreferences: {EMAIL_PREFERENCE: emailPreferences},
+                userPreferences: {EMAIL_PREFERENCE: emailPreferences, EXAM_BOARD: examPreferences},
                 passwordCurrent: null
             }, (Object.assign(myUser, {loggedIn: true})))
         }
     };
 
-    const emailPreferences = {
-            NEWS_AND_UPDATES: true,
-            ASSIGNMENTS: true,
-            EVENTS: true
+    const examPreferences = {
+        [EXAM_BOARD.OCR]: false,
+        [EXAM_BOARD.AQA]: false
     };
 
-    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
-    const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword ? userPassword : "");
-    const [isValidEmail, setValidEmail] = useState(true);
-    const [isDobValid, setIsDobValid] = useState(true);
-    const [isValidPassword, setValidPassword] = useState(false);
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [signUpAttempted, setSignUpAttempted] = useState(false);
+    const emailPreferences = {
+        NEWS_AND_UPDATES: true,
+        ASSIGNMENTS: true,
+        EVENTS: true
+    };
 
     const validateAndSetPassword = (password: string) => {
         setCurrentPassword(password);
@@ -79,15 +92,6 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
             validatePassword(password)
         )
     };
-
-    const attemptSignUp = () => {
-        setSignUpAttempted(true);
-    };
-
-    useMemo(() => {
-        userEmail ? setMyUser(Object.assign(myUser, {email: userEmail})) : null;
-    }, [errorMessage]);
-
 
     return <Container id="registration-page">
         <h1>Register</h1>
@@ -100,7 +104,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="first-name-input">First Name</Label>
+                                <Label htmlFor="first-name-input" className="form-required">First Name</Label>
                                 <Input id="first-name-input" type="text" name="givenName"
                                        onChange={(e: any) => {setMyUser(Object.assign(myUser, {givenName: e.target.value}))}}
                                        required/>
@@ -108,7 +112,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="last-name-input">Last Name</Label>
+                                <Label htmlFor="last-name-input" className="form-required">Last Name</Label>
                                 <Input id="last-name-input" type="text" name="familyName"
                                        onChange={(e: any) => {setMyUser(Object.assign(myUser, {familyName: e.target.value}))}}
                                        required/>
@@ -118,14 +122,14 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-input">Password</Label>
+                                <Label htmlFor="password-input" className="form-required">Password</Label>
                                 <Input id="password" type="password" name="password" defaultValue={userPassword ? userPassword : null} onChange={(e: any) => {
                                     setUnverifiedPassword(e.target.value)}}required/>
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-confirm">Re-enter Password</Label>
+                                <Label htmlFor="password-confirm" className="form-required">Re-enter Password</Label>
                                 <Input invalid={!isValidPassword && signUpAttempted} id="password-confirm" type="password" name="password" onChange={(e: any) => {
                                     validateAndSetPassword(e.target.value)}
                                 } aria-describedby="invalidPassword" required/>
@@ -136,7 +140,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="email-input">Email</Label>
+                                <Label htmlFor="email-input" className="form-required">Email</Label>
                                 <Input invalid={!isValidEmail && signUpAttempted} id="email-input" type="email"
                                        name="email" defaultValue={userEmail ? userEmail : null}
                                        onChange={(e: any) => {
@@ -170,17 +174,26 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                             You must be over 13 years old
                                         </FormFeedback>}
                                     </Col>
-                                    <Col lg={5}>
+                                    <Col lg={1}>
                                         <CustomInput
                                             id="age-confirmation-input"
                                             type="checkbox"
                                             name="age-confirmation"
-                                            label="I am at least 13 years old"
                                             required
                                         />
                                     </Col>
+                                    <Col lg={5}>
+                                        <Label htmlFor="age-confirmation-input" label="I am at least 13 years old" className="form-required">I am at least 13 years old</Label>
+                                    </Col>
                                 </Row>
                             </FormGroup>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
+                                Required field
+                            </span>
                         </Col>
                     </Row>
                     <Row>
