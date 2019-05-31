@@ -97,7 +97,8 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     }, [errorMessage]);
 
     return <Container id="registration-page">
-        <h1>Register</h1>
+        <BreadcrumbTrail currentPageTitle="Registration" />
+        <h1 className="h-title mb-4">Registration</h1>
         <Card>
             <CardBody>
                 <CardTitle tag="h2">
