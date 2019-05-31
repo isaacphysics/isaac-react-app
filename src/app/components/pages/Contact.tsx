@@ -62,17 +62,12 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
         setMessage(presetMessage);
     }, [user, presetSubject, presetMessage]);
 
-    useMemo(() => {
-        setSubject(presetSubject);
-        setMessage(presetMessage);
-    }, [user, presetSubject, presetMessage]);
-
     useEffect(() => {
         Promise.resolve(requestCurrentUser()).then(() => {
             setFirstName(user && user.loggedIn && user.givenName || "");
             setLastName(user && user.loggedIn && user.familyName || "");
             setEmail(user && user.loggedIn && user.email || "")});
-    }, [user]);
+    }, []);
 
     const isValidEmail = validateEmail(email);
 
