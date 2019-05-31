@@ -4,13 +4,39 @@ import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {store} from "./store";
 import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID, API_REQUEST_FAILURE_MESSAGE} from "../services/constants";
-import {Action, UserPreferencesDTO, ValidatedChoice, LoggedInUser, LoggedInValidationUser,} from "../../IsaacAppTypes";
+import {Action, UserPreferencesDTO, ValidatedChoice, Toast, LoggedInUser, LoggedInValidationUser,} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 
 function redirectToPageNotFound() {
     const failedPath = history.location.pathname;
     history.push({pathname:`/404${failedPath}`, state:{overridePathname: failedPath}})
 }
+
+// Toasts
+const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.TOASTS_REMOVE, toastId});
+};
+
+export const hideToast = (toastId: string) => (dispatch: any) => {
+    dispatch({type: ACTION_TYPE.TOASTS_HIDE, toastId});
+    setTimeout(() => {
+        dispatch(removeToast(toastId));
+    }, 1000);
+};
+
+let nextToastId = 0;
+export const showToast = (toast: Toast) => (dispatch: any) => {
+    const toastId = toast.id = "toast" + nextToastId++;
+    if (toast.timeout) {
+        setTimeout(() => {
+            dispatch(hideToast(toastId));
+        }, toast.timeout);
+    }
+    if (toast.closable === undefined) toast.closable = true;
+    toast.showing = true;
+    dispatch({type: ACTION_TYPE.TOASTS_SHOW, toast});
+    return toastId;
+};
 
 // User Authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
@@ -156,6 +182,37 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     const response = await api.authentication.checkProviderCallback(provider, parameters);
     dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
     // TODO MT handle error case
+};
+
+export const requestEmailVerification = () => async (dispatch: any, getState: () => AppState) => {
+    const state = getState();
+    const user: RegisteredUserDTO | null = state && state.user && state.user.loggedIn && state.user || null;
+    let error = "";
+    if (user && user.email) {
+        dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST});
+        try {
+            const response = await api.users.requestEmailVerification({email: user.email});
+            if (response.status == 200) {
+                dispatch(showToast({
+                    color: "success", title: "Email verification request succeeded.",
+                    body: "Please follow the verification link given in the email sent to your address.",
+                    timeout: 10000
+                }));
+                dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS});
+                return;
+            }
+            error = response.data || "Error sending request";
+        } catch (e) {
+            error = e.message || "Error sending request";
+        }
+    } else {
+        error = "You are not logged in or don't have an e-mail address to verify.";
+    }
+
+    dispatch(showToast({color: "failure", title: "Email verification request failed.",
+        body: "Sending an email to your address failed with error message: " + error
+    }));
+    dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE});
 };
 
 export const handleEmailAlter = (params: ({userid: string | null; token: string | null})) => async (dispatch: Dispatch<Action>) => {
@@ -316,6 +373,8 @@ export const fetchSearch = (query: string, types: string) => async (dispatch: Di
     const searchResponse = await api.search.get(query, types);
     dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
 };
+
+
 
 
 // SERVICE TRIGGERED ACTIONS

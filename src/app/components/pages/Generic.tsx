@@ -27,9 +27,10 @@ interface GenericPageComponentProps {
 }
 
 export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}: GenericPageComponentProps) => {
+    const pageId = pageIdOverride || urlPageId;
     useEffect(
-        () => {fetchDoc(DOCUMENT_TYPE.GENERIC, pageIdOverride || urlPageId)},
-        [pageIdOverride, urlPageId]
+        () => {fetchDoc(DOCUMENT_TYPE.GENERIC, pageId);},
+        [pageId]
     );
 
     return <ShowLoading until={doc}>

@@ -17,19 +17,22 @@ import {Gameboard} from "../pages/Gameboard";
 import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
-import {requestCurrentUser} from "../../state/actions";
+import {NotFound} from "../pages/NotFound";
+import {requestCurrentUser, showToast} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 import {Admin} from "../pages/Admin";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {LoggedInUser, Toast} from "../../../IsaacAppTypes";
 import {history} from "../../services/history"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
 import {SessionExpired} from "../pages/SessionExpired";
 import {ConsistencyErrorModal} from "./ConsistencyErrorModal";
 import {Search} from "../pages/Search";
-import {NotFound} from "../pages/NotFound";
+import {CookieBanner} from "./CookieBanner";
+import {EmailVerificationBanner} from "./EmailVerificationBanner";
+import {Toasts} from "./Toasts";
 import {Header} from "./Header";
 
 const mapStateToProps = (state: AppState) => ({
@@ -49,6 +52,9 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
     return <Router history={history}>
         <React.Fragment>
             <Header />
+            <Toasts />
+            <CookieBanner />
+            <EmailVerificationBanner />
             <main role="main" className="flex-fill content-body">
                 <Switch>
                     {/* Application pages */}
