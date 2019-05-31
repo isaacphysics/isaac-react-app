@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
+    Alert,
     Container,
     TabContent,
     TabPane,
@@ -26,11 +27,13 @@ import {validateDob, validateEmail} from "../../services/validation";
 import {Link} from "react-router-dom";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EXAM_BOARD} from "../../services/constants";
+import {history} from "../../services/history"
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state ? state.error : null,
     userAuthSettings: state ? state.userAuthSettings : null,
-    userPreferences: state ? state.userPreferences : null
+    userPreferences: state ? state.userPreferences : null,
+    firstLogin: history.location && history.location.state && history.location.state.firstLogin
 });
 
 const dispatchToProps = {
@@ -47,9 +50,10 @@ interface AccountPageProps {
         params: { registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
         currentUser: LoggedInUser
     ) => void;
+    firstLogin: boolean;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin}: AccountPageProps) => {
 
     // Catch the (unlikely?) case where a user does not have email preferences in the database.
     if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
@@ -89,6 +93,11 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 Update your Isaac Computer Science account, or <Link to="/logout" className="text-secondary">Log out</Link>
             </small>
         </h3>
+        {firstLogin &&
+            <Alert color="success">
+                Registration successful
+            </Alert>
+        }
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
                 <Nav tabs className="my-4">

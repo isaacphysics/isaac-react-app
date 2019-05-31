@@ -93,7 +93,7 @@ export const updateCurrentUser = (params: {registeredUser: LoggedInValidationUse
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
             if (initialLogin) {
                 await dispatch(requestCurrentUser() as any);
-                history.push('/account');
+                history.push('/account', {firstLogin: initialLogin});
                 return
             } else {
                 history.push('/');
