@@ -11,7 +11,7 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {DOCUMENT_TYPE} from "../../services/constants";
 
-import { InequalityModal } from "../content/InequalityModal";
+import { InequalityModal } from "../elements/InequalityModal";
 import katex from "katex";
 
 
