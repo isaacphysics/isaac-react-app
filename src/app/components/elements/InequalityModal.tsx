@@ -219,7 +219,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                     <ul>
                         {/* <li className={this.state.activeMenu == "numbers" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("1\\ 2") }} onClick={() => this.onMenuTabClick("numbers")} /> */}
                         <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A\\ b") }} onClick={() => this.onMenuTabClick("letters")} />
-                        <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("\\wedge\\ \\lnot") }} onClick={() => this.onMenuTabClick("functions")} />
+                        <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString(this.props.syntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }} onClick={() => this.onMenuTabClick("functions")} />
                     </ul>
                 </div>
             </nav>
