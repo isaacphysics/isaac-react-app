@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {withRouter} from "react-router-dom";
+import {withRouter, Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {Button, Col, Container, Row} from "reactstrap";
 import queryString from "query-string";
@@ -80,23 +80,22 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
 
                         <p>{doc.attribution}</p>
 
-                        {/*{queryParams && queryParams.board &&*/}
-                        {/*    <Button color="secondary" onClick={goBackToBoard}>Back to board</Button>*/}
-                        {/*}*/}
-                        {navigation.backToTopic && <div className="text-center mb-4">
-                            <Button color="secondary" onClick={() => {
-                                navigation.backToTopic && history.push(navigation.backToTopic.to)
-                            }}>
+                        {navigation.backToTopic && <div className="float-left">
+                            <Link to={navigation.backToTopic.to} className="a-alt d-block lrg-text font-weight-bold">
+                                {navigation.backToTopic.title}
+                            </Link>
+                            <Link to={navigation.backToTopic.to} className="mb-5 previous-link">
                                 Back to topic
-                            </Button>
+                            </Link>
                         </div>}
-                        {navigation.nextTopicContent && <div className="float-right mb-4">
-                            <Button color="secondary" onClick={() => {
-                                navigation.nextTopicContent && history.push(navigation.nextTopicContent.to)
-                            }}>
+                        {navigation.nextTopicContent && <React.Fragment>
+                            <Link to={navigation.nextTopicContent.to} className="a-alt lrg-text float-right font-weight-bold">
                                 {navigation.nextTopicContent.title}
-                            </Button>
-                        </div>}
+                            </Link>
+                            <Link to={navigation.nextTopicContent.to} className="mb-5 next-link float-right">
+                                Next
+                            </Link>
+                        </React.Fragment>}
 
                         {doc.relatedContent &&
                             <RelatedContent content={doc.relatedContent} />
