@@ -6,7 +6,8 @@ import {ListGroupFooterBottom} from "../elements/ListGroupFooterBottom";
 import {Link} from "react-router-dom";
 
 const ExternalLink = ({href, children}: {href: string; children: any}) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="d-inline">
+    // eslint-disable-next-line react/jsx-no-target-blank
+    <a href={href} target="_blank" rel="noopener" className="d-inline font-weight-bold">
         {children}
     </a>
 );
@@ -46,7 +47,7 @@ export const Footer = () => (
         </div>
         <div className="footerBottom">
             <Container>
-                <Row className="pt-5 px-3 px-sm-0 pb-3 pb-md-5">
+                <Row className="pt-3 px-3 px-sm-0 pb-3">
                     <ListGroupFooterBottom />
                 </Row>
             </Container>
