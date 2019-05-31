@@ -1,6 +1,12 @@
 import React from "react";
 import {ListGroup, ListGroupItem, Link} from "reactstrap";
 
+const ExternalLink = ({href, children}: {href: string; children: any}) => (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+        {children}
+    </a>
+);
+
 export const ListGroupFooterBottom = () => (
     <div className='footer-links footer-bottom'>
         <ListGroup className='d-flex flex-wrap flex-row'>
@@ -12,10 +18,15 @@ export const ListGroupFooterBottom = () => (
             </ListGroupItem>
 
             <ListGroupItem className='footer-bottom-logos border-0 px-0 py-0 pb-1 bg-transparent d-flex justify-content-between'>
-                <img src="/assets/isaac-logo.svg" alt='Issac link' className='logo-mr' height="57px" width="121px"/>
-                <img src="/assets/raspberrypi-logo.svg" alt='Raspberry Pi link' className='logo-mr' height="57px" width="37px"/>
-                <img src="/assets/stem-logo.svg" alt='Stem link' className='logo-mr' height="57px" width="82px"/>
-                <img src="/assets/bcs-logo.svg" alt='BCS link' className='logo-mr' height="57px" width="46px"/>
+                <ExternalLink href="https://isaacphysics.org/">
+                    <img src="/assets/logos/isaacphysics.png" alt='Issac link' className='logo-mr' height="57px" />
+                </ExternalLink>
+                <ExternalLink href="https://www.raspberrypi.org/">
+                    <img src="/assets/logos/raspberry-pi.png" alt='Raspberry Pi link' className='logo-mr' height="57px" />
+                </ExternalLink>
+                <ExternalLink href="https://teachcomputing.org/">
+                    <img src="/assets/logos/ncce.png" alt='NCCE link' className='logo-mr' height="57px" />
+                </ExternalLink>
             </ListGroupItem>
         </ListGroup>
     </div>
