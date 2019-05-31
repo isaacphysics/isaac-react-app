@@ -130,9 +130,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 </Nav>
                 <Form name="my-account" onSubmit={(event: React.FormEvent<HTMLInputElement>) => {
                     event.preventDefault();
-                    console.log(emailPreferences);
                     Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
-                    console.log(examPreferences);
                     Object.assign(myUserPreferences.EXAM_BOARD, examPreferences);
                     if (isEmailValid && (isDobValid || myUser.dateOfBirth == undefined) && (!myUser.password || isNewPasswordConfirmed)) {
                         updateCurrentUser({
