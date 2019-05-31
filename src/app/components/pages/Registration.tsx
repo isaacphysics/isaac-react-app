@@ -46,6 +46,15 @@ interface RegistrationPageProps {
 
 const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
 
+    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
+    const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword ? userPassword : "");
+    const [isValidEmail, setValidEmail] = useState(true);
+    const [isDobValid, setIsDobValid] = useState(true);
+    const [isValidPassword, setValidPassword] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [signUpAttempted, setSignUpAttempted] = useState(false);
+    const [tempDob, setTempDob] = useState("");
+
     const attemptSignUp = () => {
         setSignUpAttempted(true);
     };
@@ -68,16 +77,6 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         [EXAM_BOARD.OCR]: false,
         [EXAM_BOARD.AQA]: false
     };
-
-
-    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
-    const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword ? userPassword : "");
-    const [isValidEmail, setValidEmail] = useState(true);
-    const [isDobValid, setIsDobValid] = useState(true);
-    const [isValidPassword, setValidPassword] = useState(false);
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [signUpAttempted, setSignUpAttempted] = useState(false);
-    const [tempDob, setTempDob] = useState("");
 
     const emailPreferences = {
         NEWS_AND_UPDATES: true,
