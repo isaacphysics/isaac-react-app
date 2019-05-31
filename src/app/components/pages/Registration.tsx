@@ -186,7 +186,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <Row>
                         <Col>
                             <h4 role="alert" className="text-danger text-left mb-0">
-                                {(!isDobValid && signUpAttempted) ? "You must be over 13 years old" : errorMessage}
+                                {(!isDobValid && signUpAttempted) ? "You must be over 13 years old to create an account." : errorMessage}
                             </h4>
                         </Col>
                     </Row>
