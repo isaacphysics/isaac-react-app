@@ -8,6 +8,12 @@ export function redirectToPageNotFound() {
     history.push({pathname:`/404${failedPath}`, state:{overridePathname: failedPath}})
 }
 
+let previousPathname = window.location.pathname;
+
 history.listen((location) => {
-    changePage(location.pathname);
+    const nextPathname = location.pathname;
+    if (previousPathname != nextPathname) {
+        changePage(location.pathname);
+        previousPathname = nextPathname;
+    }
 });
