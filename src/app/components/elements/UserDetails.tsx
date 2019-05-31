@@ -1,8 +1,8 @@
 import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import {UserExamPreferences, ValidationUser, School} from "../../../IsaacAppTypes";
+import {School, UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
 import {validateDob, validateEmail} from "../../services/validation";
 import {EXAM_BOARD} from "../../services/constants";
-import React, {ChangeEvent,  MutableRefObject, useState, useEffect, useRef} from "react";
+import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {api} from "../../services/api";
 
 interface UserDetailsProps {
@@ -191,8 +191,18 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         type="select"
                         name="select"
                         id="examBoardSelect"
-                        value={examPreferences && examPreferences[EXAM_BOARD.OCR] && [EXAM_BOARD.OCR] || examPreferences && examPreferences[EXAM_BOARD.AQA] && [EXAM_BOARD.AQA]}
-                        onChange={(event: ChangeEvent<HTMLInputElement>) => setExamPreferences(event.target.value == EXAM_BOARD.AQA ? {[EXAM_BOARD.AQA]: true, [EXAM_BOARD.OCR]: false} : {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true})}
+                        value={
+                            (examPreferences && examPreferences[EXAM_BOARD.OCR] && EXAM_BOARD.OCR) ||
+                            // (examPreferences && examPreferences[EXAM_BOARD.AQA] && [EXAM_BOARD.AQA]) ||
+                            EXAM_BOARD.AQA
+                        }
+                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                            setExamPreferences(
+                                event.target.value == EXAM_BOARD.AQA ?
+                                    {[EXAM_BOARD.AQA]: true, [EXAM_BOARD.OCR]: false} :
+                                    {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true}
+                            )
+                        }
                     >
                         <option></option>
                         <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
