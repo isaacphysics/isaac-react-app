@@ -46,15 +46,14 @@ interface RegistrationPageProps {
 
 const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
 
-    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: "", dateOfBirth: null}));
+    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
     const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword ? userPassword : "");
     const [isValidEmail, setValidEmail] = useState(true);
-    const [isDobValid, setIsDobValid] = useState(false);
+    const [isDobValid, setIsDobValid] = useState(true);
     const [isValidPassword, setValidPassword] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
     const [signUpAttempted, setSignUpAttempted] = useState(false);
     const [tempDob, setTempDob] = useState("");
-    const [dobCheckboxChecked, setDobCheckboxChecked] = useState(false);
 
     const attemptSignUp = () => {
         setSignUpAttempted(true);
@@ -169,7 +168,6 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                             type="date"
                                             name="date-of-birth"
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                setDobCheckboxChecked(false);
                                                 setTempDob(event.target.value);
                                                 const dateOfBirth = event.target.value;
                                                 setIsDobValid(validateDob(dateOfBirth));
@@ -181,8 +179,6 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                     <Col lg={1}>
                                         <CustomInput
                                             disabled={tempDob != ""}
-                                            checked={isDobValid || dobCheckboxChecked}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDobCheckboxChecked(!dobCheckboxChecked)}
                                             id="age-confirmation-input"
                                             type="checkbox"
                                             name="age-confirmation"
