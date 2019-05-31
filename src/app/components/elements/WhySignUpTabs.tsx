@@ -30,7 +30,7 @@ export const WhySignUpTabs = () => (
                                 </p>
                             </CardText>
                             <CardText className="mb-auto text-center">
-                                <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
+                                <Button tag={Link} to="/register" color="secondary">Sign Up</Button>
                             </CardText>
                         </CardBody>
                     </Card>
@@ -66,7 +66,7 @@ export const WhySignUpTabs = () => (
                                 </p>
                             </CardText>
                             <CardText className="text-center">
-                                <Button tag={Link} to="/regiser" color="secondary">Sign Up</Button>
+                                <Button tag={Link} to="/register" color="secondary">Sign Up</Button>
                             </CardText>
                         </CardBody>
                     </Card>

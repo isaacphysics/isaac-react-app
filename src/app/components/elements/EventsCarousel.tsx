@@ -31,7 +31,7 @@ export const EventsCarousel = () => {
                         </span>
                     </CardText>
                     <CardText>
-                        <a href="https://www.eventbrite.com/e/teacher-cpd-the-engine-shed-bristol-tickets-60919500867" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.eventbrite.com/e/discovery-cambridge-university-tickets-60573636377" target="_blank" rel="noopener noreferrer">
                             View Details
                             <span className='sr-only'> of the event: Teacher Workshop</span>
                         </a>
@@ -64,7 +64,7 @@ export const EventsCarousel = () => {
                         </span>
                     </CardText>
                     <CardText>
-                        <a href="https://www.eventbrite.com/e/discovery-cambridge-university-tickets-60573636377" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.eventbrite.com/e/teacher-cpd-the-engine-shed-bristol-tickets-60919500867" target="_blank" rel="noopener noreferrer">
                             View Details
                             <span className='sr-only'> of the event: Teacher CPD in Bristol</span>
                         </a>

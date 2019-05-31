@@ -2,7 +2,7 @@ import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from 
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
-import {Col, Container, Form, Input, Label, Row} from "reactstrap";
+import {Col, Container, CustomInput, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {fetchSearch} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -90,6 +90,8 @@ const SearchPageComponent = (props: SearchPageProps) => {
         return keepElement || isStaffUser;
     };
 
+    console.log(searchFilterProblems);
+
     const filteredSearchResults = searchResults && searchResults.results && searchResults.results.filter(filterResult);
 
     return (
@@ -124,8 +126,8 @@ const SearchPageComponent = (props: SearchPageProps) => {
                             <Col md={7} xs={12}>
                                 <Form inline className="search-filters">
                                     <Label className="d-none d-sm-inline-block">Filter</Label>
-                                    <Label><Input type="checkbox" checked={searchFilterProblems} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterProblems(e.target.checked)} />Search problems</Label>
-                                    <Label><Input type="checkbox" checked={searchFilterConcepts} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterConcepts(e.target.checked)} />Search concepts</Label>
+                                    <Label><CustomInput id="problem-search" type="checkbox" defaultChecked={searchFilterProblems} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterProblems(e.target.checked)} />Search problems</Label>
+                                    <Label><CustomInput id="concept-search" type="checkbox" defaultChecked={searchFilterConcepts} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterConcepts(e.target.checked)} />Search concepts</Label>
                                 </Form>
                             </Col>
                         </RS.CardHeader>

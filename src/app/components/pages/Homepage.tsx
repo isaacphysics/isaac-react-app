@@ -106,7 +106,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     <h3 className="text-center text-md-left mr-md-4 mr-lg-0 mb-3 mb-md-0">
                         Sign up to track your progress
                     </h3>
-                    <Button size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-xl">
+                    <Button tag={Link} size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-xl" to={"/register"}>
                         Sign Up
                     </Button>
                 </Col>
