@@ -105,7 +105,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="first-name-input" className="form-required">First Name</Label>
-                                <Input id="first-name-input" type="text" name="givenName"
+                                <Input id="first-name-input" type="text" name="givenName" maxLength={255}
                                        onChange={(e: any) => {setMyUser(Object.assign(myUser, {givenName: e.target.value}))}}
                                        required/>
                             </FormGroup>
@@ -113,7 +113,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="last-name-input" className="form-required">Last Name</Label>
-                                <Input id="last-name-input" type="text" name="familyName"
+                                <Input id="last-name-input" type="text" name="familyName" maxLength={255}
                                        onChange={(e: any) => {setMyUser(Object.assign(myUser, {familyName: e.target.value}))}}
                                        required/>
                             </FormGroup>
