@@ -6,7 +6,7 @@ import React from "react";
 
 export const ContentSummaryListGroupItem = ({item}: {item: ContentSummaryDTO}) => {
     let linkDestination, icon;
-    let itemClasses = "content-summary-link p-0 ";
+    let itemClasses = "p-3 pb-1 bg-transparent content-summary-link p-0 ";
     switch (item.type) {
         case (DOCUMENT_TYPE.QUESTION):
             itemClasses += "text-info";
@@ -21,11 +21,8 @@ export const ContentSummaryListGroupItem = ({item}: {item: ContentSummaryDTO}) =
     }
     return <ListGroupItem className={itemClasses} key={linkDestination}>
         <Link to={linkDestination}>
-            <ListGroup tag="div" className="list-group-horizontal">
-                <ListGroupItem tag="span">{icon}</ListGroupItem>
-                <ListGroupItem tag="span" className="w-100">{item.title}</ListGroupItem>
-                <ListGroupItem tag="span" className="float-right">&gt;</ListGroupItem>
-            </ListGroup>
+            <span>{icon}</span>
+            <span>{item.title}</span>
         </Link>
     </ListGroupItem>;
 };
@@ -39,7 +36,7 @@ export const LinkToContentSummaryList = ({items, ...rest}: {items: ContentSummar
     flush?: boolean;
     className?: string;
     cssModule?: any;}) => {
-    return <ListGroup {...rest}>
+    return <ListGroup {...rest} className="mb-3 link-list list-group-links">
         {items.map(linkToContent)}
     </ListGroup>;
 };

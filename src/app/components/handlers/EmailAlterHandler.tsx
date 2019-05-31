@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import {handleEmailAlter, requestCurrentUser} from "../../state/actions";
-import {Button, Col} from "reactstrap";
+import {Button, Col, Container} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
 import {history} from "../../services/history";
 import queryString from "query-string";
@@ -26,7 +26,7 @@ const EmailAlterHandlerComponent = ({queryParams: {userid, token}, handleEmailAl
         }
     }, []);
 
-    return <div id="email-verification">
+    return <Container id="email-verification">
         {(!errorMessage || errorMessage.type !== "generalError") &&
             <div>
                 <h3>Email address verified</h3>
@@ -45,7 +45,7 @@ const EmailAlterHandlerComponent = ({queryParams: {userid, token}, handleEmailAl
                 <p>{errorMessage.generalError}</p>
             </div>
         }
-    </div>;
+    </Container>;
 };
 
 export const EmailAlterHandler = connect(stateToProps, dispatchToProps)(EmailAlterHandlerComponent);
