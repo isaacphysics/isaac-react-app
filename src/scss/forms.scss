@@ -108,6 +108,15 @@ label.label-radio > div {
   padding-left: 1em;
 }
 
+.form-required {
+  &:after {
+    content: '*';
+    padding-left: 6px;
+    font-weight: 600;
+    color: $secondary;
+  }
+}
+
 // Position correctly at all sizes
 .form-inline .form-check-input {
   position: relative;
