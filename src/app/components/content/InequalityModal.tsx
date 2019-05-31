@@ -240,6 +240,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                  onMouseEnter={() => { this.setState({ trashActive: true }) }}
                  onMouseLeave={() => { this.setState({ trashActive: false }) }} // This is a bit ridiculous but hey...
             >Trash</div>
+            <div className="beta-badge">beta</div>
             { menu }
         </div>;
     }
