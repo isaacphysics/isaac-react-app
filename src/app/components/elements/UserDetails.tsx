@@ -219,12 +219,12 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         value={
                             schoolQueryText !== null ?
                                 schoolQueryText :
-                                ((selectedSchoolObject && selectedSchoolObject.name) || "")
+                                (selectedSchoolObject && (selectedSchoolObject.name + ", " + selectedSchoolObject.postcode) || "")
                         }
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setSchoolQueryText(e.target.value)}
                     />
                     {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results">
-                        {schoolSearchResults.map((item: any) => <li key={item.urn} onClick={() => { setUserSchool(item) }}>{item.name}</li>)}
+                        {schoolSearchResults.map((item: any) => <li key={item.urn} onClick={() => { setUserSchool(item) }}>{item.name + ", " + item.postcode}</li>)}
                     </ul>}
                     <Input
                         id="school-other-input" type="text" name="school-other" placeholder="Other School" className="mt-2" maxLength={255}
