@@ -143,7 +143,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                 <FormGroup>
                     <Label htmlFor="dob-input">Gender</Label>
                     <Row>
-                        <Col size={6} lg={2}>
+                        <Col size={6} lg={4}>
                             <CustomInput
                                 id="gender-female" type="radio"
                                 name="gender" label="Female"
@@ -155,7 +155,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                                 }/>
                         </Col>
 
-                        <Col size={6} lg={2}>
+                        <Col size={6} lg={4}>
                             <CustomInput
                                 id="gender-male" type="radio"
                                 name="gender" label="Male"
@@ -168,7 +168,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         </Col>
 
 
-                        <Col size={6} lg={2}>
+                        <Col size={6} lg={4}>
                             <CustomInput
                                 id="gender-other" type="radio"
                                 name="gender" label="Other"
