@@ -36,6 +36,7 @@ import {Toasts} from "./Toasts";
 import {Header} from "./Header";
 import {Route} from "react-router";
 import {ScrollManager} from "../handlers/ScrollManager";
+import { Equality } from '../pages/Equality';
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -93,6 +94,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}} />
                         <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
                         <TrackedRoute path="/coming_soon" component={ComingSoon} />
+                        <TrackedRoute path="/equality" component={Equality} />
 
                         {/* Error pages */}
                         <TrackedRoute path="/error" component={ServerError} />
