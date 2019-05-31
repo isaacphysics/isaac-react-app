@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
-    Button,
-    CustomInput,
+    Alert,
+    Container,
     TabContent,
     TabPane,
     Nav,
@@ -13,12 +13,8 @@ import {
     CardFooter,
     Col,
     Form,
-    FormGroup,
     Input,
     Row,
-    Label,
-    FormFeedback,
-    Table
 } from "reactstrap";
 import {RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
@@ -28,12 +24,16 @@ import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
 import {validateDob, validateEmail} from "../../services/validation";
+import {Link} from "react-router-dom";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {EXAM_BOARD} from "../../services/constants";
+import {history} from "../../services/history"
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state ? state.error : null,
     userAuthSettings: state ? state.userAuthSettings : null,
-    userPreferences: state ? state.userPreferences : null
+    userPreferences: state ? state.userPreferences : null,
+    firstLogin: history.location && history.location.state && history.location.state.firstLogin
 });
 
 const dispatchToProps = {
@@ -50,9 +50,10 @@ interface AccountPageProps {
         params: { registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
         currentUser: LoggedInUser
     ) => void;
+    firstLogin: boolean;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin}: AccountPageProps) => {
 
     // Catch the (unlikely?) case where a user does not have email preferences in the database.
     if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
@@ -63,12 +64,14 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         Object.assign({}, user, {password: ""})
     );
     const [myUserPreferences, setMyUserPreferences] = useState(
-        Object.assign({}, userPreferences)
+        userPreferences && userPreferences.EXAM_BOARD && Object.assign({}, userPreferences) || Object.assign({}, userPreferences, {EXAM_BOARD: {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true}})
     );
     const [emailPreferences, setEmailPreferences] = useState(
         Object.assign({}, userPreferences ? userPreferences.EMAIL_PREFERENCE : { NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true })
     );
-
+    const [examPreferences, setExamPreferences] = useState(
+        Object.assign({}, userPreferences && userPreferences.EXAM_BOARD ? userPreferences.EXAM_BOARD : {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true})
+    );
     const [isEmailValid, setIsEmailValid] = useState(
         !!user.loggedIn && !!user.email && validateEmail(user.email)
     );
@@ -82,9 +85,19 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
     {/• TODO handle #... in with react-router for tab url navigation? •/}
 
-    return <div id="account-page" className="mb-5">
+    return <Container id="account-page" className="mb-5">
         <BreadcrumbTrail currentPageTitle="My account" />
         <h1 className="h-title mb-4">My Account</h1>
+        <h3 className="d-md-none text-center text-muted m-3">
+            <small>
+                Update your Isaac Computer Science account, or <Link to="/logout" className="text-secondary">Log out</Link>
+            </small>
+        </h3>
+        {firstLogin &&
+            <Alert color="success">
+                Registration successful
+            </Alert>
+        }
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
                 <Nav tabs className="my-4">
@@ -117,7 +130,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 </Nav>
                 <Form name="my-account" onSubmit={(event: React.FormEvent<HTMLInputElement>) => {
                     event.preventDefault();
+                    console.log(emailPreferences);
                     Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
+                    console.log(examPreferences);
+                    Object.assign(myUserPreferences.EXAM_BOARD, examPreferences);
                     if (isEmailValid && (isDobValid || myUser.dateOfBirth == undefined) && (!myUser.password || isNewPasswordConfirmed)) {
                         updateCurrentUser({
                             registeredUser: myUser,
@@ -129,7 +145,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId={0}>
                             <UserDetails
-                                myUser={myUser} setMyUser={setMyUser}
+                                myUser={myUser} setMyUser={setMyUser} examPreferences={examPreferences} setExamPreferences={setExamPreferences}
                                 isDobValid={isDobValid} setIsDobValid={setIsDobValid}
                                 isEmailValid={isEmailValid} setIsEmailValid={setIsEmailValid}
                             />
@@ -138,7 +154,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             <UserPassword
                                 currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}
                                 myUser={myUser} setMyUser={setMyUser}
-                                setCurrentPassword={setCurrentPassword}
+                                setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
                                 isNewPasswordConfirmed={isNewPasswordConfirmed} setIsNewPasswordConfirmed={setIsNewPasswordConfirmed}
                             />
                         </TabPane>
@@ -150,6 +166,13 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     </TabContent>
 
                     <CardFooter className="py-4">
+                        <Row>
+                            <Col>
+                                <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
+                                    Required field
+                                </span>
+                            </Col>
+                        </Row>
                         <Row>
                             <Col size={12} md={{size: 6, offset: 3}}>
                                 {errorMessage && errorMessage.type === "generalError" &&
@@ -164,7 +187,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 </Form>
             </Card>
         }
-    </div>;
+    </Container>;
 };
 
 export const MyAccount = connect(stateToProps, dispatchToProps)(AccountPageComponent);

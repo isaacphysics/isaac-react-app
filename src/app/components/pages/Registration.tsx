@@ -22,6 +22,7 @@ import {logInUser, updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
 import {validateDob, validateEmail, validatePassword} from "../../services/validation";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {EXAM_BOARD} from "../../services/constants";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null,
@@ -44,6 +45,11 @@ interface RegistrationPageProps {
 }
 
 const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
+
+    const attemptSignUp = () => {
+        setSignUpAttempted(true);
+    };
+
     const register = (event: React.FormEvent<HTMLFontElement>) => {
         event.preventDefault();
         attemptSignUp();
@@ -52,17 +58,17 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
             setMyUser(Object.assign(myUser, {firstLogin: true}));
             updateCurrentUser({
                 registeredUser: Object.assign(myUser, {loggedIn: false}),
-                userPreferences: {EMAIL_PREFERENCE: emailPreferences},
+                userPreferences: {EMAIL_PREFERENCE: emailPreferences, EXAM_BOARD: examPreferences},
                 passwordCurrent: null
             }, (Object.assign(myUser, {loggedIn: true})))
         }
     };
 
-    const emailPreferences = {
-            NEWS_AND_UPDATES: true,
-            ASSIGNMENTS: true,
-            EVENTS: true
+    const examPreferences = {
+        [EXAM_BOARD.OCR]: false,
+        [EXAM_BOARD.AQA]: false
     };
+
 
     const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
     const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword ? userPassword : "");
@@ -73,6 +79,12 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     const [signUpAttempted, setSignUpAttempted] = useState(false);
     const [tempDob, setTempDob] = useState("");
 
+    const emailPreferences = {
+        NEWS_AND_UPDATES: true,
+        ASSIGNMENTS: true,
+        EVENTS: true
+    };
+
     const validateAndSetPassword = (password: string) => {
         setCurrentPassword(password);
         setValidPassword(
@@ -81,16 +93,11 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         )
     };
 
-    const attemptSignUp = () => {
-        setSignUpAttempted(true);
-    };
-
     useMemo(() => {
         userEmail ? setMyUser(Object.assign(myUser, {email: userEmail})) : null;
     }, [errorMessage]);
 
-
-    return <div id="registration-page">
+    return <Container id="registration-page">
         <h1>Register</h1>
         <Card>
             <CardBody>
@@ -101,7 +108,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="first-name-input">First Name</Label>
+                                <Label htmlFor="first-name-input" className="form-required">First Name</Label>
                                 <Input id="first-name-input" type="text" name="givenName"
                                        onChange={(e: any) => {setMyUser(Object.assign(myUser, {givenName: e.target.value}))}}
                                        required/>
@@ -109,7 +116,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="last-name-input">Last Name</Label>
+                                <Label htmlFor="last-name-input" className="form-required">Last Name</Label>
                                 <Input id="last-name-input" type="text" name="familyName"
                                        onChange={(e: any) => {setMyUser(Object.assign(myUser, {familyName: e.target.value}))}}
                                        required/>
@@ -119,14 +126,14 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-input">Password</Label>
+                                <Label htmlFor="password-input" className="form-required">Password</Label>
                                 <Input id="password" type="password" name="password" defaultValue={userPassword ? userPassword : null} onChange={(e: any) => {
                                     setUnverifiedPassword(e.target.value)}}required/>
                             </FormGroup>
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-confirm">Re-enter Password</Label>
+                                <Label htmlFor="password-confirm" className="form-required">Re-enter Password</Label>
                                 <Input invalid={!isValidPassword && signUpAttempted} id="password-confirm" type="password" name="password" onChange={(e: any) => {
                                     validateAndSetPassword(e.target.value)}
                                 } aria-describedby="invalidPassword" required/>
@@ -137,7 +144,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="email-input">Email</Label>
+                                <Label htmlFor="email-input" className="form-required">Email</Label>
                                 <Input invalid={!isValidEmail && signUpAttempted} id="email-input" type="email"
                                        name="email" defaultValue={userEmail ? userEmail : null}
                                        onChange={(e: any) => {
@@ -169,15 +176,17 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                             aria-describedby="ageValidationMessage"
                                         />
                                     </Col>
-                                    <Col lg={5}>
+                                    <Col lg={1}>
                                         <CustomInput
                                             disabled={tempDob != ""}
                                             id="age-confirmation-input"
                                             type="checkbox"
                                             name="age-confirmation"
-                                            label="I am at least 13 years old"
                                             required
                                         />
+                                    </Col>
+                                    <Col lg={5}>
+                                        <Label htmlFor="age-confirmation-input" label="I am at least 13 years old" className="form-required">I am at least 13 years old</Label>
                                     </Col>
                                 </Row>
                             </FormGroup>
@@ -198,7 +207,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                 </Form>
             </CardBody>
         </Card>
-    </div>;
+    </Container>;
 };
 
 export const Registration = connect(stateToProps, dispatchToProps)(RegistrationPageComponent);

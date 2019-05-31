@@ -1,4 +1,4 @@
-import {constants, questions, rootReducer, search, user} from "../../app/state/reducers";
+import {constants, questions, rootReducer, search, toasts, user} from "../../app/state/reducers";
 import {Action, LoggedInUser} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
@@ -151,4 +151,54 @@ describe("search reducer", () => {
             expect(actualNextState).toEqual({searchResults: searchResultsList});
         })
     })
+});
+
+describe("toasts reducer", () => {
+    const sampleToast = {
+        title: "Title",
+        body: "Body",
+        color: "success",
+        id: "toastA"
+    };
+    const moreToast = {
+        title: "Title",
+        body: "Body",
+        color: "info",
+        id: "toastB"
+    };
+    const previousStates = [null, [], [sampleToast]];
+
+    it("returns null as an initial value", () => {
+        const actualState = toasts(undefined, ignoredTestAction);
+        expect(actualState).toBe(null);
+    });
+
+    it("returns the previous state by default", () => {
+        previousStates.map((previousState) => {
+            const actualNextState = toasts(previousState, ignoredTestAction);
+            expect(actualNextState).toEqual(previousState);
+        });
+    });
+
+    it("can add to the list of toasts", () => {
+        const toastsShowAction: Action = {type: ACTION_TYPE.TOASTS_SHOW, toast: moreToast};
+        previousStates.map((previousState) => {
+            const actualNextState = toasts(previousState, toastsShowAction);
+            expect(actualNextState).toEqual([...(previousState || []), moreToast]);
+        })
+    });
+
+    it("can mark existing toasts as hidden", () => {
+        const toastsShowAction: Action = {type: ACTION_TYPE.TOASTS_HIDE, toastId: moreToast.id};
+        const previousState = [sampleToast, moreToast];
+        const actualNextState = toasts(previousState, toastsShowAction);
+        expect(actualNextState).toEqual([sampleToast, {...moreToast, showing: false}]);
+    });
+
+    it("can remove existing toasts", () => {
+        const toastsShowAction: Action = {type: ACTION_TYPE.TOASTS_REMOVE, toastId: moreToast.id};
+        const previousState = [sampleToast, moreToast];
+        const actualNextState = toasts(previousState, toastsShowAction);
+        expect(actualNextState).toEqual([sampleToast]);
+    });
 });

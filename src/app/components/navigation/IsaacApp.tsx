@@ -17,20 +17,25 @@ import {Gameboard} from "../pages/Gameboard";
 import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
-import {requestCurrentUser} from "../../state/actions";
+import {NotFound} from "../pages/NotFound";
+import {requestCurrentUser, showToast} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 import {Admin} from "../pages/Admin";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {LoggedInUser, Toast} from "../../../IsaacAppTypes";
 import {history} from "../../services/history"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
 import {SessionExpired} from "../pages/SessionExpired";
 import {ConsistencyErrorModal} from "./ConsistencyErrorModal";
 import {Search} from "../pages/Search";
-import {NotFound} from "../pages/NotFound";
+import {CookieBanner} from "./CookieBanner";
+import {EmailVerificationBanner} from "./EmailVerificationBanner";
+import {Toasts} from "./Toasts";
 import {Header} from "./Header";
+import {Route} from "react-router";
+import {ScrollManager} from "../handlers/ScrollManager";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -47,16 +52,18 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
     useEffect(() => {requestCurrentUser();}, []); // run only once on mount
 
     return <Router history={history}>
-        <React.Fragment>
-            <Header />
-            <main role="main" className="flex-fill content-body">
-                <div className="container">
+        <ScrollManager>
+            <React.Fragment>
+                <Header />
+                <Toasts />
+                <CookieBanner />
+                <EmailVerificationBanner />
+                <main role="main" className="flex-fill content-body">
                     <Switch>
                         {/* Application pages */}
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
                         <TrackedRoute path="/search" component={Search} />
                         <TrackedRoute path="/account" onlyFor={(user: LoggedInUser) => user.loggedIn} component={MyAccount} />
-                        <TrackedRoute path="/events" component={ComingSoon}/>
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute path="/pages/:pageId" component={Generic} />
@@ -66,6 +73,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/admin" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Admin} />
 
                         {/* June release application pages */}
+                        <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events";return null;}}/>
                         <TrackedRoute path="/gameboards" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Gameboard} />
                         <TrackedRoute path="/assignments" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={MyAssignments} />
 
@@ -91,11 +99,11 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/error_stale" component={SessionExpired} />
                         <TrackedRoute component={NotFound} />
                     </Switch>
-                </div>
-            </main>
-            <Footer />
-            <ConsistencyErrorModal consistencyError={consistencyError} />
-        </React.Fragment>
+                </main>
+                <Footer />
+                <ConsistencyErrorModal consistencyError={consistencyError} />
+            </React.Fragment>
+        </ScrollManager>
     </Router>;
 };
 

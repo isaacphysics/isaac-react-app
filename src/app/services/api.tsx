@@ -60,6 +60,9 @@ export const api = {
         passwordReset: (params: {email: string}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword`, params);
         },
+        requestEmailVerification(params: {email: string}): AxiosPromise {
+            return endpoint.post(`/users/verifyemail`, params);
+        },
         verifyPasswordReset: (token: string | null): AxiosPromise => {
             return endpoint.get(`/users/resetpassword/${token}`)
         },
@@ -144,6 +147,14 @@ export const api = {
         },
         getSegueVersion: (): AxiosPromise<{segueVersion: string}> => {
             return endpoint.get(`/info/segue_version`)
+        }
+    },
+    schools: {
+        search: (query: string): AxiosPromise<Array<AppTypes.School>> => {
+            return endpoint.get(`/schools/?query=${encodeURIComponent(query)}`);
+        },
+        getByUrn: (urn: string): AxiosPromise<Array<AppTypes.School>> => {
+            return endpoint.get(`/schools/?urn=${encodeURIComponent(urn)}`);
         }
     },
     contactForm: {

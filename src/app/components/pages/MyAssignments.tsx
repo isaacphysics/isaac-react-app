@@ -5,18 +5,19 @@ import {loadMyAssignments} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
+import {Container} from "reactstrap";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments};
 
 interface MyAssignmentsPageProps {
-    assignments: AssignmentDTO[] | null,
-    loadMyAssignments: () => void
+    assignments: AssignmentDTO[] | null;
+    loadMyAssignments: () => void;
 }
 const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignmentsPageProps) => {
     useEffect(() => {loadMyAssignments();}, []);
 
-    return <React.Fragment>
+    return <Container>
         <h1>My Assignments</h1>
         <hr />
         <ShowLoading until={assignments}>
@@ -38,7 +39,7 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignme
                 </div>
             )}
         </ShowLoading>
-    </React.Fragment>;
+    </Container>;
 };
 
 export const MyAssignments = connect(stateToProps, dispatchToProps)(MyAssignmentsPageComponent);

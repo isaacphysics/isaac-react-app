@@ -4,7 +4,8 @@ import {
     AppQuestionDTO,
     isValidatedChoice,
     LoggedInUser,
-    UserPreferencesDTO
+    UserPreferencesDTO,
+    Toast
 } from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
@@ -12,8 +13,8 @@ import {
     ContentSummaryDTO,
     GameboardDTO,
     IsaacTopicSummaryPageDTO,
-    UserAuthenticationSettingsDTO,
-    ResultsWrapper
+    ResultsWrapper,
+    UserAuthenticationSettingsDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
 
@@ -69,7 +70,10 @@ export const doc = (doc: DocState = null, action: Action) => {
         case ACTION_TYPE.DOCUMENT_REQUEST:
             return null;
         case ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS:
+        case ACTION_TYPE.DOCUMENT_CACHE_SUCCESS:
             return {...action.doc};
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
+            return null;
         default:
             return doc;
     }
@@ -145,12 +149,13 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
     }
 };
 
-type CurrentTopicState = IsaacTopicSummaryPageDTO | null;
+export type CurrentTopicState = IsaacTopicSummaryPageDTO | null;
 export const currentTopic = (currentTopic: CurrentTopicState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.TOPIC_REQUEST:
             return null;
         case ACTION_TYPE.TOPIC_RESPONSE_SUCCESS:
+        case ACTION_TYPE.TOPIC_CACHE_SUCCESS:
             return action.topic;
         default:
             return currentTopic;
@@ -205,6 +210,22 @@ export const contentVersion = (contentVersion: ContentVersionState = null, actio
     }
 };
 
+export type ToastsState = Toast[] | null;
+export const toasts = (toasts: ToastsState = null, action: Action): ToastsState => {
+    switch (action.type) {
+        case ACTION_TYPE.TOASTS_SHOW:
+            toasts = toasts || [];
+            return [...toasts, action.toast];
+        case ACTION_TYPE.TOASTS_HIDE:
+            toasts = toasts || [];
+            return toasts.map(toast => toast.id == action.toastId ? {...toast, showing: false} : toast);
+        case ACTION_TYPE.TOASTS_REMOVE:
+            toasts = toasts || [];
+            return toasts.filter(toast => toast.id != action.toastId);
+        default:
+            return toasts;
+    }
+};
 
 const appReducer = combineReducers({
     user,
@@ -219,6 +240,7 @@ const appReducer = combineReducers({
     contentVersion,
     search,
     error,
+    toasts
 });
 
 export type AppState = undefined | {
@@ -234,6 +256,7 @@ export type AppState = undefined | {
     search: SearchState;
     constants: ConstantsState;
     error: ErrorState;
+    toasts: ToastsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

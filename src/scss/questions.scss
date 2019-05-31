@@ -23,9 +23,9 @@
   margin-bottom: 2rem;
 
   .question-content {
-    font-family: $secondary-font-semi-bold;
+    font-family: $secondary-font;
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 100;
     line-height: 1.6;
   }
 }
@@ -33,6 +33,19 @@
 .numeric-question .unit-selection {
   button.btn {
     min-width: auto !important;
+  }
+}
+
+.symboliclogic-question {
+  .eqn-editor-preview {
+    border: solid 1px $black;
+    padding: 0.3em 0.6em;
+    font-size: 1.5rem;
+    cursor: default;
+
+    &.empty {
+      color: $gray-500;
+    }
   }
 }
 

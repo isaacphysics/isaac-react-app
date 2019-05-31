@@ -1,12 +1,13 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
-import {Alert, Button, Card, CardBody, CardFooter, Col, Form, FormGroup, Input, Row, Label, FormFeedback} from "reactstrap";
+import {Alert, Container, Card, CardBody, CardFooter, Col, Form, FormGroup, Input, Row, Label, FormFeedback} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
 import {submitMessage} from "../../state/actions";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {requestCurrentUser} from "../../state/actions";
 
 
 const stateToProps = (state: AppState) => {
@@ -33,7 +34,8 @@ const stateToProps = (state: AppState) => {
 };
 
 const dispatchToProps = {
-    submitMessage
+    submitMessage,
+    requestCurrentUser
 };
 
 interface ContactPageProps {
@@ -42,9 +44,10 @@ interface ContactPageProps {
     errorMessage: ErrorState | null;
     presetSubject: string;
     presetMessage: string;
+    requestCurrentUser: () => void;
 }
 
-const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject, presetMessage}: ContactPageProps) => {
+const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject, presetMessage, requestCurrentUser}: ContactPageProps) => {
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName || "");
     const [email, setEmail] = useState(user && user.loggedIn && user.email || "");
@@ -58,6 +61,18 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
         setSubject(presetSubject);
         setMessage(presetMessage);
     }, [user, presetSubject, presetMessage]);
+
+    useMemo(() => {
+        setSubject(presetSubject);
+        setMessage(presetMessage);
+    }, [user, presetSubject, presetMessage]);
+
+    useEffect(() => {
+        Promise.resolve(requestCurrentUser()).then(() => {
+            setFirstName(user && user.loggedIn && user.givenName || "");
+            setLastName(user && user.loggedIn && user.familyName || "");
+            setEmail(user && user.loggedIn && user.email || "")});
+    }, [user]);
 
     const isValidEmail = validateEmail(email);
 
@@ -73,7 +88,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
             })
     };
 
-    return <div id="contact-page" className="pb-5">
+    return <Container id="contact-page" className="pb-5">
         <BreadcrumbTrail currentPageTitle="Contact us" />
         <h1>Contact us</h1>
         <h2 className="h-title mb-5">We'd love to hear from you</h2>
@@ -81,7 +96,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">
                     <h3>Upcoming events</h3>
-                    <p>If you'd like to find out more about our upcoming events visit our <a href="/events">Events Page</a></p>
+                    <p>If you'd like to find out more about our upcoming events visit our <a href="https://isaaccomputerscience.org/events">Events Page</a></p>
                     <h3>Problems with the site?</h3>
                     <p>We always want to improve so please report any issues to <a className="small" href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></p>
                     <h3>Follow us</h3>
@@ -183,7 +198,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                 </Col>
             </Row>
         </div>
-    </div>;
+    </Container>;
 };
 
 export const Contact = connect(stateToProps, dispatchToProps)(ContactPageComponent);

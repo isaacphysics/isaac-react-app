@@ -1,11 +1,12 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
+import {Container} from "reactstrap";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 
 interface PageNotFoundProps {location: {pathname: string; state?: {overridePathname?: string}}}
 
 const PageNotFoundComponent = ({location: {pathname, state}}: PageNotFoundProps) => {
-    return <React.Fragment>
+    return <Container>
         <div>
             <BreadcrumbTrail currentPageTitle="Unknown page" />
             <h1 className="h-title">Page Not Found</h1>
@@ -18,7 +19,7 @@ const PageNotFoundComponent = ({location: {pathname, state}}: PageNotFoundProps)
                 </small>
             </h3>
         </div>
-    </React.Fragment>;
+    </Container>;
 };
 
 export const NotFound = withRouter(PageNotFoundComponent);

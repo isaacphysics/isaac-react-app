@@ -9,6 +9,7 @@ import {connect} from "react-redux";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {withRouter} from "react-router-dom";
+import {RelatedContent} from "../elements/RelatedContent";
 
 const stateToProps = (state: AppState, {match: {params: {pageId}}}: any) => {
     return {
@@ -26,17 +27,18 @@ interface GenericPageComponentProps {
 }
 
 export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}: GenericPageComponentProps) => {
+    const pageId = pageIdOverride || urlPageId;
     useEffect(
-        () => {fetchDoc(DOCUMENT_TYPE.GENERIC, pageIdOverride || urlPageId)},
-        [pageIdOverride, urlPageId]
+        () => {fetchDoc(DOCUMENT_TYPE.GENERIC, pageId);},
+        [pageId]
     );
 
     return <ShowLoading until={doc}>
-        {doc && <div className="pattern-01">
+        {doc && <div>
             <Container>
                 <Row>
                     <Col>
-                        <BreadcrumbTrail currentPageTitle={doc.title} />
+                        <BreadcrumbTrail currentPageTitle={doc.title as string} />
                         <h1 className="h-title">{doc.title}</h1>
                     </Col>
                 </Row>
@@ -46,6 +48,10 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
                         <IsaacContent doc={doc} />
                     </Col>
                 </Row>
+
+                {doc.relatedContent &&
+                    <RelatedContent content={doc.relatedContent} />
+                }
             </Container>
         </div>}
     </ShowLoading>;

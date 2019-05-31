@@ -1,23 +1,23 @@
 import React from "react";
 import {Breadcrumb, BreadcrumbItem} from "reactstrap";
-import {withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
+import {LinkInfo} from "../../../IsaacAppTypes";
 
 interface BreadcrumbTrailProps {
-    location: {pathname: string};
     currentPageTitle: string;
+    intermediateCrumbs?: LinkInfo[];
 }
 
-const BreadcrumbTrailBase = ({location: pathname, currentPageTitle}: BreadcrumbTrailProps) => {
-    // TODO breadcrumb logic depending on location, history and params etc.
-
+export const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = []}: BreadcrumbTrailProps) => {
+    const breadcrumbHistory = [{title: "Home", to: "/"}].concat(intermediateCrumbs);
     return <Breadcrumb className="py-2 px-0">
-        <BreadcrumbItem active>
-            <a href="/">Home</a>
-        </BreadcrumbItem>
+        {breadcrumbHistory.map((breadcrumb) => (
+            <BreadcrumbItem key={breadcrumb.title}>
+                <Link to={breadcrumb.to}>{breadcrumb.title}</Link>
+            </BreadcrumbItem>
+        ))}
         <BreadcrumbItem active>
             {currentPageTitle}
         </BreadcrumbItem>
     </Breadcrumb>;
 };
-
-export const BreadcrumbTrail = withRouter(BreadcrumbTrailBase);
