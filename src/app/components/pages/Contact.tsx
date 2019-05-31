@@ -7,7 +7,6 @@ import {LoggedInUser} from "../../../IsaacAppTypes";
 import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
-import {requestCurrentUser} from "../../state/actions";
 
 
 const stateToProps = (state: AppState) => {
@@ -34,8 +33,7 @@ const stateToProps = (state: AppState) => {
 };
 
 const dispatchToProps = {
-    submitMessage,
-    requestCurrentUser
+    submitMessage
 };
 
 interface ContactPageProps {
@@ -44,10 +42,9 @@ interface ContactPageProps {
     errorMessage: ErrorState | null;
     presetSubject: string;
     presetMessage: string;
-    requestCurrentUser: () => void;
 }
 
-const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject, presetMessage, requestCurrentUser}: ContactPageProps) => {
+const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject, presetMessage}: ContactPageProps) => {
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName || "");
     const [email, setEmail] = useState(user && user.loggedIn && user.email || "");
@@ -63,11 +60,10 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
     }, [user, presetSubject, presetMessage]);
 
     useEffect(() => {
-        Promise.resolve(requestCurrentUser()).then(() => {
-            setFirstName(user && user.loggedIn && user.givenName || "");
-            setLastName(user && user.loggedIn && user.familyName || "");
-            setEmail(user && user.loggedIn && user.email || "")});
-    }, []);
+        setFirstName(user && user.loggedIn && user.givenName || "");
+        setLastName(user && user.loggedIn && user.familyName || "");
+        setEmail(user && user.loggedIn && user.email || "");
+    }, [user]);
 
     const isValidEmail = validateEmail(email);
 
