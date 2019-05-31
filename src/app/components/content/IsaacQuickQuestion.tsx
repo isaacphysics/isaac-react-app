@@ -16,23 +16,27 @@ export const IsaacQuickQuestion = (props: IsaacQuickQuestionProps) => {
     const answer: ContentDTO = doc.answer as ContentDTO;
 
     return <div className="question-component p-md-5">
-        <IsaacContentValueOrChildren {...doc} />
-        <Row>
-            <Col sm="12" md={{size: 10, offset: 1}}>
-                <Button color="secondary" block onClick={() => setVisible(!isVisible)}>
-                    {isVisible ? "Hide answer" : "Show answer"}
-                </Button>
-            </Col>
-        </Row>
-        {isVisible &&
-        <Row>
-            <Col sm="12" md={{size: 10, offset: 1}}>
-                <Alert color="secondary">
-                    <IsaacContentValueOrChildren {...answer} />
-                </Alert>
-            </Col>
-        </Row>
-        }
+        <div className="quick-question">
+            <div className="question-content">
+                <IsaacContentValueOrChildren {...doc} />
+            </div>
+            <Row>
+                <Col sm="12" md={{size: 10, offset: 1}}>
+                    <Button color="secondary" block className={isVisible ? "active": ""} onClick={() => setVisible(!isVisible)}>
+                        {isVisible ? "Hide answer" : "Show answer"}
+                    </Button>
+                </Col>
+            </Row>
+            {isVisible &&
+            <Row>
+                <Col sm="12" md={{size: 10, offset: 1}}>
+                    <Alert color="secondary">
+                        <IsaacContentValueOrChildren {...answer} />
+                    </Alert>
+                </Col>
+            </Row>
+            }
+        </div>
     </div>
     ;
 };

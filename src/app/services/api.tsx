@@ -60,13 +60,16 @@ export const api = {
         passwordReset: (params: {email: string}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword`, params);
         },
+        requestEmailVerification(params: {email: string}): AxiosPromise {
+            return endpoint.post(`/users/verifyemail`, params);
+        },
         verifyPasswordReset: (token: string | null): AxiosPromise => {
             return endpoint.get(`/users/resetpassword/${token}`)
         },
         handlePasswordReset: (params: {token: string | null; password: string | null}): AxiosPromise => {
             return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
         },
-        updateCurrent: (params: {registeredUser: LoggedInUser; userPreferences: UserPreferencesDTO; passwordCurrent: string}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        updateCurrent: (params: {registeredUser: LoggedInUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/users`, params);
         }
     },
@@ -88,8 +91,8 @@ export const api = {
         }
     },
     email: {
-        verify: (params: {userId: string | null; token: string | null}): AxiosPromise => {
-            return endpoint.get(`/users/verifyemail/${params.userId}/${params.token}`);
+        verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
+            return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
         }
     },
     questions: {
@@ -144,6 +147,14 @@ export const api = {
         },
         getSegueVersion: (): AxiosPromise<{segueVersion: string}> => {
             return endpoint.get(`/info/segue_version`)
+        }
+    },
+    schools: {
+        search: (query: string): AxiosPromise<Array<AppTypes.School>> => {
+            return endpoint.get(`/schools/?query=${encodeURIComponent(query)}`);
+        },
+        getByUrn: (urn: string): AxiosPromise<Array<AppTypes.School>> => {
+            return endpoint.get(`/schools/?urn=${encodeURIComponent(urn)}`);
         }
     },
     contactForm: {

@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {verifyPasswordReset, handlePasswordReset} from "../../state/actions";
-import {Button, Col, FormFeedback, Input, Label, Row, Card, CardBody, Form, FormGroup, CardFooter} from "reactstrap";
+import {Button, Container, FormFeedback, Input, Label, Row, Card, CardBody, Form, FormGroup, CardFooter} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
-import queryString from "query-string";
 
 const stateToProps = (state: AppState, {match: {params: {token}}}: any) => ({
     errorMessage: state ? state.error : null,
@@ -36,10 +35,11 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
     };
 
     useEffect(
-        () => {verifyPasswordReset(urlToken)
-    }, []);
+        () => {verifyPasswordReset(urlToken)},
+        []
+    );
 
-    return <div id="email-verification">
+    return <Container id="email-verification">
         <div>
             <h3>Password Change</h3>
             <Card>
@@ -71,7 +71,7 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
                 </CardFooter>
             </Card>
         </div>
-    </div>;
+    </Container>;
 };
 
 export const ResetPasswordHandler = connect(stateToProps, dispatchToProps)(ResetPasswordHandlerComponent);

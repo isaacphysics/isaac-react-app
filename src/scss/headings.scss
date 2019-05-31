@@ -1,20 +1,23 @@
 // NOMENSA headings.scss
 h1 {
   font-family: $secondary-font-bold;
-  font-size: 2.75rem;
-  font-weight: 700;
+  font-size: 2.375rem;
   line-height: 1.14;
+  @include respond-above(sm) {
+    font-size: 2.875rem;
+  }
 
   &.h-m {
     font-size: 2.625rem;
-    font-weight: 700;
     line-height: 1.26;
   }
 
   &.h-s {
     font-size: 2.375rem;
-    font-weight: 700;
     line-height: 1.26;
+  }
+  &.h-secondary {
+    font-family: $secondary-font-semi-bold;
   }
 }
 
@@ -22,6 +25,11 @@ h2 {
   font-family: $secondary-font-semi-bold;
   font-size: 2.125rem;
   font-weight: 600;
+
+  &.h-m {
+    font-family: $secondary-font-medium;
+    font-size: 1.625rem;
+  }
 }
 
 h3 {
@@ -48,6 +56,39 @@ h4 {
     font-size: 2.375rem;
     font-weight: 700;
     line-height: 1.26;
+  }
+}
+
+.h-question-mark {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  padding-top: 62px;
+  position: relative;
+  margin-left: 0;
+  @include respond-above(md) {
+    padding-top: 0;
+    padding-left: 62px;
+    margin-left: -62px;
+  }
+
+  > span {
+    border: 2px solid $black;
+    border-radius: 50%;
+    display: inline-block;
+    font-family: $tertiary-font;
+    font-size: 2.375rem;
+    font-weight: 700;
+    height: 42px;
+    line-height: 1.26;
+    position: absolute;
+    left: 0;
+    top: 14px;
+    text-align: center;
+    width: 42px;
+
+    @include respond-above(sm) {
+      top: 5px;
+    }
   }
 }
 

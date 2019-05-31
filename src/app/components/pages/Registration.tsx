@@ -36,7 +36,7 @@ const dispatchToProps = {
 interface RegistrationPageProps {
     user: LoggedInUser
     updateCurrentUser: (
-        params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string},
+        params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null},
         currentUser: LoggedInUser
     ) => void
     errorMessage: string | null
@@ -44,7 +44,22 @@ interface RegistrationPageProps {
     userPassword?: string
 }
 
-const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
+const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
+    const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword ? userPassword : "");
+    const [isValidEmail, setValidEmail] = useState(true);
+    const [isDobValid, setIsDobValid] = useState(true);
+    const [isValidPassword, setValidPassword] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [signUpAttempted, setSignUpAttempted] = useState(false);
+
+    useMemo(() => {
+        userEmail ? setMyUser(Object.assign(myUser, {email: userEmail})) : null;
+    }, [errorMessage]);
+
+    const attemptSignUp = () => {
+        setSignUpAttempted(true);
+    };
+
     const register = (event: React.FormEvent<HTMLFontElement>) => {
         event.preventDefault();
         attemptSignUp();
@@ -54,7 +69,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
             updateCurrentUser({
                 registeredUser: Object.assign(myUser, {loggedIn: false}),
                 userPreferences: {EMAIL_PREFERENCE: emailPreferences, EXAM_BOARD: examPreferences},
-                passwordCurrent: ""
+                passwordCurrent: null
             }, (Object.assign(myUser, {loggedIn: true})))
         }
     };
@@ -65,18 +80,10 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     };
 
     const emailPreferences = {
-            NEWS_AND_UPDATES: true,
-            ASSIGNMENTS: true,
-            EVENTS: true
+        NEWS_AND_UPDATES: true,
+        ASSIGNMENTS: true,
+        EVENTS: true
     };
-
-    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
-    const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword ? userPassword : "");
-    const [isValidEmail, setValidEmail] = useState(true);
-    const [isDobValid, setIsDobValid] = useState(true);
-    const [isValidPassword, setValidPassword] = useState(false);
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [signUpAttempted, setSignUpAttempted] = useState(false);
 
     const validateAndSetPassword = (password: string) => {
         setCurrentPassword(password);
@@ -86,16 +93,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         )
     };
 
-    const attemptSignUp = () => {
-        setSignUpAttempted(true);
-    };
-
-    useMemo(() => {
-        userEmail ? setMyUser(Object.assign(myUser, {email: userEmail})) : null;
-    }, [errorMessage]);
-
-
-    return <div id="registration-page">
+    return <Container id="registration-page">
         <h1>Register</h1>
         <Card>
             <CardBody>
@@ -193,9 +191,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     </Row>
                     <Row>
                         <Col>
-                                <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
-                                    Required field
-                                </span>
+                            <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
+                                Required field
+                            </span>
                         </Col>
                     </Row>
                     <Row>
@@ -211,7 +209,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                 </Form>
             </CardBody>
         </Card>
-    </div>;
+    </Container>;
 };
 
 export const Registration = connect(stateToProps, dispatchToProps)(RegistrationPageComponent);

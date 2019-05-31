@@ -59,7 +59,7 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }
-                    <div className="text-center">
+                    <div className="text-center mb-4">
                         <Label className="d-inline-block pr-2" for="examBoardSelect">Exam Board</Label>
                         <Input
                             className="w-auto d-inline-block pl-1 pr-0"
@@ -73,9 +73,13 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                             <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                         </Input>
                     </div>
+
                     {relatedConcepts && <LinkToContentSummaryList items={relatedConcepts} className="my-4" />}
                     {relatedQuestions && <LinkToContentSummaryList items={relatedQuestions} className="my-4" />}
-                    <Button tag={Link} to="/coming_soon" color="secondary" block>More coming soon&hellip;</Button>
+
+                    <Button tag={Link} to="/coming_soon" color="secondary" block size="lg" className="my-4">
+                        More coming soon&hellip;
+                    </Button>
                 </Col>
             </Row>
         </Container>}

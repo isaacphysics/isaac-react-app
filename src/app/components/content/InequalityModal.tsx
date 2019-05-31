@@ -13,6 +13,7 @@ interface InequalityModalProps {
     sketch?: Inequality;
     close: () => void;
     onEditorStateChange: (state: any) => void;
+    initialEditorSymbols: any;
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
     state: {
@@ -76,7 +77,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             inequalityElement,
             window.innerWidth * Math.ceil(window.devicePixelRatio),
             window.innerHeight * Math.ceil(window.devicePixelRatio),
-            [{ type:'Symbol', position: {x: 0, y: 0}, properties: {letter: 'M'} } as any, { type:'LogicBinaryOperation', position: {x: 0, y: 0}, properties: {operation: 'and'} } as any],
+            this.props.initialEditorSymbols,
             {
                 editorMode: 'logic',
                 textEntry: false,
@@ -182,7 +183,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     render() {
-        // console.log('render()');
         let menu: JSX.Element;
         if (this.state.defaultMenu) {
             menu = 

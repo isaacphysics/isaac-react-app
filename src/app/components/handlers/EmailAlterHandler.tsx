@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 import {handleEmailAlter} from "../../state/actions";
-import {Button, Col} from "reactstrap";
+import {Button, Col, Container} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
 import {history} from "../../services/history";
 import queryString from "query-string";
@@ -13,25 +13,25 @@ const stateToProps = (state: AppState, {location: {search}}: any) => ({
 const dispatchToProps = {handleEmailAlter};
 
 interface EmailAlterHandlerProps {
-    queryParams: {userId?: string; token?: string};
-    handleEmailAlter: (params: {userId: string | null; token: string | null}) => void;
+    queryParams: {userid?: string; token?: string};
+    handleEmailAlter: (params: {userid: string | null; token: string | null}) => void;
     errorMessage: ErrorState;
 }
 
-const EmailAlterHandlerComponent = ({queryParams: {userId, token}, handleEmailAlter, errorMessage}: EmailAlterHandlerProps) => {
+const EmailAlterHandlerComponent = ({queryParams: {userid, token}, handleEmailAlter, errorMessage}: EmailAlterHandlerProps) => {
     useEffect(() => {
-        if (userId && token) {
-            handleEmailAlter({userId, token});
+        if (userid && token) {
+            handleEmailAlter({userid, token});
         }
     }, []);
 
-    return <div id="email-verification">
+    return <Container id="email-verification">
         {(!errorMessage || errorMessage.type !== "generalError") &&
             <div>
                 <h3>Email address verified</h3>
                 <Col>
                     <Button color="primary" onClick={() => {history.push('/account');}} block >
-                        Go to My Account
+                        Log In To My Account
                     </Button>
                 </Col>
             </div>
@@ -42,7 +42,7 @@ const EmailAlterHandlerComponent = ({queryParams: {userId, token}, handleEmailAl
                 <p>{errorMessage.generalError}</p>
             </div>
         }
-    </div>;
+    </Container>;
 };
 
 export const EmailAlterHandler = connect(stateToProps, dispatchToProps)(EmailAlterHandlerComponent);

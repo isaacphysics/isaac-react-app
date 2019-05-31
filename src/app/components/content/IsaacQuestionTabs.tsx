@@ -57,9 +57,9 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
     }
 
     return <React.Fragment>
-        <h2 className="h-question d-flex pb-3">
+        {/* <h2 className="h-question d-flex pb-3">
             <span className="mr-3">{questionIndex !== undefined ? `Q${questionIndex + 1}` : "Question"}</span>
-        </h2>
+        </h2> */}
 
         {/* Difficulty bar */}
 
@@ -80,13 +80,13 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
                 </div>
             </div>}
 
-            <Row>
+            {((!validationResponse) || (validationResponse && !validationResponse.correct) || canSubmit) && <Row>
                 <Col className="text-center pt-3 pb-2">
                     <Button color="secondary" disabled={!canSubmit} onClick={submitCurrentAttempt}>
                         Check my answer
                     </Button>
                 </Col>
-            </Row>
+            </Row>}
 
             <Row>
                 <Col sm="12" md={{size: 8, offset: 2}} >

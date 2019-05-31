@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {connect} from "react-redux";
-import {Alert, Button, Card, CardBody, CardFooter, Col, Form, FormGroup, Input, Row, Label, FormFeedback} from "reactstrap";
+import {Alert, Container, Card, CardBody, CardFooter, Col, Form, FormGroup, Input, Row, Label, FormFeedback} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
 import {submitMessage} from "../../state/actions";
 import {LoggedInUser} from "../../../IsaacAppTypes";
@@ -73,7 +73,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
             })
     };
 
-    return <div id="contact-page" className="pb-5">
+    return <Container id="contact-page" className="pb-5">
         <BreadcrumbTrail currentPageTitle="Contact us" />
         <h1>Contact us</h1>
         <h2 className="h-title mb-5">We'd love to hear from you</h2>
@@ -183,7 +183,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                 </Col>
             </Row>
         </div>
-    </div>;
+    </Container>;
 };
 
 export const Contact = connect(stateToProps, dispatchToProps)(ContactPageComponent);

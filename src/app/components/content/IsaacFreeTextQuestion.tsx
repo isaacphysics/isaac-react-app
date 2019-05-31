@@ -83,12 +83,12 @@ const IsaacFreeTextQuestionComponent = (props: IsaacFreeTextQuestionProps) => {
     const validation = validate(currentAttemptValue);
 
     return (
-        <div>
-            <h4>
+        <div className="freetext-question">
+            <div className="question-content">
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
-            </h4>
+            </div>
             <FormGroup className="mb-4">
                 <Input type="textarea"
                     placeholder="Type your answer here."

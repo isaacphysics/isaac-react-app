@@ -4,7 +4,8 @@ import {
     AppQuestionDTO,
     isValidatedChoice,
     LoggedInUser,
-    UserPreferencesDTO
+    UserPreferencesDTO,
+    Toast
 } from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
@@ -205,6 +206,22 @@ export const contentVersion = (contentVersion: ContentVersionState = null, actio
     }
 };
 
+export type ToastsState = Toast[] | null;
+export const toasts = (toasts: ToastsState = null, action: Action): ToastsState => {
+    switch (action.type) {
+        case ACTION_TYPE.TOASTS_SHOW:
+            toasts = toasts || [];
+            return [...toasts, action.toast];
+        case ACTION_TYPE.TOASTS_HIDE:
+            toasts = toasts || [];
+            return toasts.map(toast => toast.id == action.toastId ? {...toast, showing: false} : toast);
+        case ACTION_TYPE.TOASTS_REMOVE:
+            toasts = toasts || [];
+            return toasts.filter(toast => toast.id != action.toastId);
+        default:
+            return toasts;
+    }
+};
 
 const appReducer = combineReducers({
     user,
@@ -219,6 +236,7 @@ const appReducer = combineReducers({
     contentVersion,
     search,
     error,
+    toasts
 });
 
 export type AppState = undefined | {
@@ -234,6 +252,7 @@ export type AppState = undefined | {
     search: SearchState;
     constants: ConstantsState;
     error: ErrorState;
+    toasts: ToastsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

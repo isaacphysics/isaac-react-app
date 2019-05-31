@@ -1,11 +1,12 @@
 import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import React, {ChangeEvent} from "react";
-import {UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
+import {UserExamPreferences, ValidationUser, School} from "../../../IsaacAppTypes";
 import {validateDob, validateEmail} from "../../services/validation";
 import {EXAM_BOARD} from "../../services/constants";
+import React, {ChangeEvent,  MutableRefObject, useState, useEffect, useRef} from "react";
+import {api} from "../../services/api";
 
 interface UserDetailsProps {
-    examPreferences: UserExamPreferences | null
+    examPreferences: UserExamPreferences | null;
     setExamPreferences: (e: any) => void;
     myUser: ValidationUser;
     setMyUser: (user: any) => void;
@@ -15,7 +16,57 @@ interface UserDetailsProps {
     setIsDobValid: (isDobValid: boolean) => void;
 }
 
-export const UserDetails = ({examPreferences, setExamPreferences, myUser, setMyUser, isEmailValid, setIsEmailValid, isDobValid, setIsDobValid}: UserDetailsProps) => {
+export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, isDobValid, setIsDobValid, examPreferences, setExamPreferences}: UserDetailsProps) => {
+    let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
+    let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
+    let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
+
+    function searchSchool(e?: Event) {
+        if (e) {
+            e.preventDefault();
+        }
+        if (schoolQueryText) {
+            api.schools.search(schoolQueryText).then(({data}) => {
+                setSchoolSearchResults(data);
+            }).catch((response) => {
+                console.error("Error searching for schools. ", response);
+            });
+        } else {
+            setSchoolSearchResults([]);
+        }
+    }
+
+    function fetchSchool(urn: string) {
+        if (urn != "") {
+            api.schools.getByUrn(urn).then(({data}) => {
+                setSelectedSchoolObject(data[0]);
+            });
+        } else {
+            setSelectedSchoolObject(null);
+        }
+    }
+
+    function setUserSchool(school: any) {
+        setMyUser(Object.assign(myUser, {schoolId: school.urn}));
+        setSchoolQueryText(null);
+        setSelectedSchoolObject(school);
+        setSchoolSearchResults([]);
+    }
+
+    const timer: MutableRefObject<number | undefined> = useRef();
+    useEffect(() => {
+        timer.current = window.setTimeout(() => {
+            searchSchool();
+        }, 800);
+        return () => {
+            clearTimeout(timer.current);
+        }
+    }, [schoolQueryText]);
+
+    useEffect(() => {
+        fetchSchool(myUser.schoolId || "");
+    }, [myUser]);
+
     return <CardBody>
         <Row>
             <Col md={6}>
@@ -86,22 +137,12 @@ export const UserDetails = ({examPreferences, setExamPreferences, myUser, setMyU
                 </FormGroup>
             </Col>
         </Row>
+
         <Row>
-            <Col md={6}>
+            <Col xs={6} md={3}>
                 <FormGroup>
                     <Label htmlFor="dob-input">Gender</Label>
                     <Row>
-                        <Col size={6} lg={2}>
-                            <CustomInput
-                                id="gender-male" type="radio"
-                                name="gender" label="Male"
-                                defaultChecked={myUser.gender === 'MALE'}
-                                onChange={
-                                    (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign(myUser, {gender: 'MALE'}))
-                                    }
-                                }/>
-                        </Col>
                         <Col size={6} lg={2}>
                             <CustomInput
                                 id="gender-female" type="radio"
@@ -113,6 +154,20 @@ export const UserDetails = ({examPreferences, setExamPreferences, myUser, setMyU
                                     }
                                 }/>
                         </Col>
+
+                        <Col size={6} lg={2}>
+                            <CustomInput
+                                id="gender-male" type="radio"
+                                name="gender" label="Male"
+                                defaultChecked={myUser.gender === 'MALE'}
+                                onChange={
+                                    (e: React.ChangeEvent<HTMLInputElement>) => {
+                                        setMyUser(Object.assign(myUser, {gender: 'MALE'}))
+                                    }
+                                }/>
+                        </Col>
+
+
                         <Col size={6} lg={2}>
                             <CustomInput
                                 id="gender-other" type="radio"
@@ -127,19 +182,8 @@ export const UserDetails = ({examPreferences, setExamPreferences, myUser, setMyU
                     </Row>
                 </FormGroup>
             </Col>
-            <Col md={6}>
-                <FormGroup>
-                    <Label htmlFor="school-input">School</Label>
-                    <Input
-                        id="school-input" type="text" name="school"
-                        defaultValue={myUser.schoolId}
-                    />
-                    {/* TODO lookup school */}
-                </FormGroup>
-            </Col>
-        </Row>
-        <Row>
-            <Col md={{size: 12, offset: 4}}>
+
+            <Col xs={6} md={3} className="align-self-center text-center">
                 <FormGroup>
                     <Label className="d-inline-block pr-2" for="examBoardSelect">Exam Board</Label>
                     <Input
@@ -154,6 +198,28 @@ export const UserDetails = ({examPreferences, setExamPreferences, myUser, setMyU
                         <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>
+                </FormGroup>
+            </Col>
+
+            <Col md={6}>
+                <FormGroup>
+                    <Label htmlFor="school-input">School</Label>
+                    <Input
+                        id="school-input" type="text" name="school" placeholder="UK School"
+                        value={
+                            schoolQueryText !== null ?
+                                schoolQueryText :
+                                ((selectedSchoolObject && selectedSchoolObject.name) || "")
+                        }
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setSchoolQueryText(e.target.value)}
+                    />
+                    {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results">
+                        {schoolSearchResults.map((item: any) => <li key={item.urn} onClick={() => { setUserSchool(item) }}>{item.name}</li>)}
+                    </ul>}
+                    <Input
+                        id="school-other-input" type="text" name="school-other" placeholder="Other School" className="mt-2"
+                        defaultValue={myUser.schoolOther} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMyUser(Object.assign(myUser, { schoolOther: e.target.value }))}
+                    />
                 </FormGroup>
             </Col>
         </Row>
