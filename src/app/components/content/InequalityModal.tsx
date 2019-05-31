@@ -81,8 +81,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             {
                 editorMode: 'logic',
                 textEntry: false,
-                fontItalicPath: '/fonts/STIXGeneral-Italic.ttf',
-                fontRegularPath: '/fonts/STIXGeneral-Regular.ttf'
+                fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
+                fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf'
             }
         );
         sketch.log = {
@@ -228,9 +228,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             </nav>
         }
 
+        const previewTexString = (this.state.editorState.result || { tex: ""}).tex;
+
         return <div id="inequality-modal">
             <div className="inequality-ui confirm button" onClick={this.close}>OK</div>
-            <div className="inequality-ui katex-preview" dangerouslySetInnerHTML={{ __html: katex.renderToString((this.state.editorState.result || { tex: ""}).tex) }}></div>
+            <div className={`inequality-ui katex-preview ${previewTexString === "" ? "empty" : ""}`} dangerouslySetInnerHTML={{ __html: katex.renderToString(previewTexString) }}></div>
             <div className="inequality-ui centre button" onClick={() => { if (this.state.sketch) this.state.sketch.centre() }}>Centre</div>
             <div id="inequality-trash" className={"inequality-ui trash button" + (this.state.trashActive ? " active" : " inactive")}
                  onDragEnter={() => { this.setState({ trashActive: true }) }}
@@ -238,6 +240,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                  onMouseEnter={() => { this.setState({ trashActive: true }) }}
                  onMouseLeave={() => { this.setState({ trashActive: false }) }} // This is a bit ridiculous but hey...
             >Trash</div>
+            <div className="beta-badge">beta</div>
             { menu }
         </div>;
     }
