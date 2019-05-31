@@ -52,8 +52,8 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
                         {/*    Get Involved*/}
                         {/*</DropdownItemComingSoon>*/}
-                        <DropdownItem tag={Link} to="/events" className="pl-4 py-3 p-md-3">
-                            Events
+                        <DropdownItem tag="a" href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer" className="pl-4 py-3 p-md-3">
+                            Events (Eventbrite)
                         </DropdownItem>
                         {/*<DropdownItem className="pl-4 py-3 p-md-3">*/}
                         {/*    Isaac Physics*/}
