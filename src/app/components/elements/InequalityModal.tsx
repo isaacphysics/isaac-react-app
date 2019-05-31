@@ -14,6 +14,7 @@ interface InequalityModalProps {
     close: () => void;
     onEditorStateChange: (state: any) => void;
     initialEditorSymbols: any;
+    syntax?: string;
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
     state: {
@@ -50,7 +51,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             menuOpen: false,
             editorState: {},
             menuItems: {
-                logicFunctionItems: this.generateLogicFunctionsItems(),
+                logicFunctionItems: this.generateLogicFunctionsItems(props.syntax || "logic"),
                 upperCaseLetters: [],
                 lowerCaseLetters: [],
                 letters: [],
@@ -80,6 +81,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             this.props.initialEditorSymbols,
             {
                 editorMode: 'logic',
+                logicSyntax: this.props.syntax || 'logic',
                 textEntry: false,
                 fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
                 fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf'

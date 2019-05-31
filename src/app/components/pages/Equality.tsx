@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, ChangeEvent} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Button, Col, Container, Row, Label, Input} from "reactstrap";
 import queryString from "query-string";
 import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -35,6 +35,7 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
     const [currentAttempt, setCurrentAttempt] = useState();
+    const [editorSyntax, setEditorSyntax] = useState('logic');
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -62,8 +63,16 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
                     </Col>
                 </Row>
                 <Row>
-                    <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
+                    <Col md={{size: 2}} className="py-4 syntax-picker">
+                        <Label for="inequality-syntax-select">Syntax</Label>
+                        <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditorSyntax(e.target.value)}>
+                            <option value="logic">Boolean Logic</option>
+                            <option value="binary">Digital Electronics</option>
+                        </Input>
+                    </Col>
+                    <Col md={{size: 8}} className="py-4 question-panel">
                         <div className="symboliclogic-question">
+                            <Label>&nbsp;</Label>
                             <div className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} onClick={() => setModalVisible(true)} dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter a formula' }} />
                             {modalVisible && <InequalityModal
                                 close={closeModal}
@@ -73,6 +82,7 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
                                 }}
                                 availableSymbols={[]}
                                 initialEditorSymbols={initialEditorSymbols}
+                                syntax={editorSyntax}
                             />}
                         </div>
                     </Col>
