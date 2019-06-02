@@ -1,12 +1,5 @@
 import {combineReducers} from "redux";
-import {
-    Action,
-    AppQuestionDTO,
-    isValidatedChoice,
-    LoggedInUser,
-    UserPreferencesDTO,
-    Toast
-} from "../../IsaacAppTypes";
+import {Action, AppQuestionDTO, isValidatedChoice, LoggedInUser, Toast, UserPreferencesDTO} from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
     ContentDTO,
@@ -22,8 +15,9 @@ type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
+        case ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS:
             return {loggedIn: true, ...action.user};
-        case ACTION_TYPE.USER_UPDATE_FAILURE:
+        case ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE:
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
             return {loggedIn: false};
         default:
@@ -34,7 +28,7 @@ export const user = (user: UserState = null, action: Action): UserState => {
 type UserAuthSettingsState = UserAuthenticationSettingsDTO | null;
 export const userAuthSettings = (userAuthSettings: UserAuthSettingsState = null, action: Action) => {
     switch (action.type) {
-        case ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS:
+        case ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS:
             return action.userAuthSettings;
         default:
             return userAuthSettings;
@@ -44,7 +38,7 @@ export const userAuthSettings = (userAuthSettings: UserAuthSettingsState = null,
 type UserPreferencesState = UserPreferencesDTO | null;
 export const userPreferences = (userPreferences: UserPreferencesState = null, action: Action) => {
     switch (action.type) {
-        case ACTION_TYPE.USER_PREFERENCES_SUCCESS:
+        case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
             return action.userPreferences;
         default:
             return userPreferences;
@@ -165,13 +159,13 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | null;
 export const error = (error: ErrorState = null, action: Action): ErrorState => {
     switch (action.type) {
-        case ACTION_TYPE.USER_LOG_IN_FAILURE:
-        case ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE:
-        case ACTION_TYPE.EMAIL_AUTHENTICATION_FAILURE:
-        case ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_FAILURE:
-        case ACTION_TYPE.USER_PASSWORD_RESET_FAILURE:
-        case ACTION_TYPE.USER_AUTH_SETTINGS_FAILURE:
-        case ACTION_TYPE.USER_PREFERENCES_FAILURE:
+        case ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE:
+        case ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE:
+        case ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE:
+        case ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE:
+        case ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE:
+        case ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE:
+        case ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE:
             return {type: "generalError", generalError: action.errorMessage};
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:
             return {type: "consistencyError"};

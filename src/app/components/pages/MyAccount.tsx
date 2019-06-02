@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -16,14 +16,14 @@ import {
     Input,
     Row,
 } from "reactstrap";
-import {RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
+import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
 import {updateCurrentUser, resetPassword} from "../../state/actions";
 import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
-import {validateDob, validateEmail} from "../../services/validation";
+import {validateEmail} from "../../services/validation";
 import {Link} from "react-router-dom";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EXAM_BOARD} from "../../services/constants";

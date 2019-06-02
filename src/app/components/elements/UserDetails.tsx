@@ -1,6 +1,6 @@
 import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {School, UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
-import {validateDob, validateEmail} from "../../services/validation";
+import {isDobOverThirteen, validateEmail} from "../../services/validation";
 import {EXAM_BOARD} from "../../services/constants";
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {api} from "../../services/api";
@@ -125,9 +125,9 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         name="date-of-birth"
                         defaultValue={myUser.dateOfBirth}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            const dateOfBirth = event.target.value;
-                            setIsDobValid(validateDob(dateOfBirth));
-                            setMyUser(Object.assign(myUser, {dateOfBirth: new Date(dateOfBirth)}))
+                            const dateOfBirth = event.target.valueAsDate;
+                            setIsDobValid(isDobOverThirteen(dateOfBirth));
+                            setMyUser(Object.assign(myUser, {dateOfBirth: dateOfBirth}))
                         }}
                         aria-describedby="ageValidationMessage"
                     />

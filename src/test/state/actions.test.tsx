@@ -45,9 +45,9 @@ describe("requestCurrentUser action", () => {
         const expectedFirstActions = [{type: ACTION_TYPE.USER_UPDATE_REQUEST}];
         const expectedAsyncActions = [
             {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST},
-            {type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS, userAuthSettings},
+            {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings},
             {type: ACTION_TYPE.USER_PREFERENCES_REQUEST},
-            {type: ACTION_TYPE.USER_PREFERENCES_SUCCESS, userPreferences}
+            {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences}
         ];
         const expectedFinalActions = [{type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: dameShirley}];
 
@@ -63,26 +63,26 @@ describe("requestCurrentUser action", () => {
         expect(axiosMock.history.get.length).toBe(3);
     });
 
-    it("dispatches USER_UPDATE_FAILURE on a 401 response", async () => {
+    it("dispatches USER_UPDATE_RESPONSE_FAILURE on a 401 response", async () => {
         const {mustBeLoggedIn401} = errorResponses;
         axiosMock.onGet(`/users/current_user`).replyOnce(401, mustBeLoggedIn401);
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
             {type: ACTION_TYPE.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPE.USER_UPDATE_FAILURE}
+            {type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
     });
 
-    it("dispatches USER_UPDATE_FAILURE when no connection to the api", async () => {
+    it("dispatches USER_UPDATE_RESPONSE_FAILURE when no connection to the api", async () => {
         axiosMock.onGet(`/users/current_user`).networkError();
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
             {type: ACTION_TYPE.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPE.USER_UPDATE_FAILURE}
+            {type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -94,7 +94,7 @@ describe("requestCurrentUser action", () => {
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
             {type: ACTION_TYPE.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPE.USER_UPDATE_FAILURE}
+            {type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -135,7 +135,7 @@ describe("requestConstantsUnits action", () => {
         expect(axiosMock.history.get.length).toBe(0);
     });
 
-    it("dispatches USER_UPDATE_FAILURE when no connection to the api", async () => {
+    it("dispatches USER_UPDATE_RESPONSE_FAILURE when no connection to the api", async () => {
         axiosMock.onGet(`/content/units`).networkError();
         const store = mockStore();
         await store.dispatch(requestConstantsUnits() as any);

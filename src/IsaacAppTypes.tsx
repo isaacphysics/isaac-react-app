@@ -1,6 +1,7 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "./app/services/constants";
 
+
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
 
@@ -10,28 +11,27 @@ export type Action =
     | {type: ACTION_TYPE.API_GONE_AWAY}
 
     | {type: ACTION_TYPE.USER_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.USER_UPDATE_FAILURE}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
+    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
+    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
-    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
+    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
-    | {type: ACTION_TYPE.USER_PREFERENCES_SUCCESS; userPreferences: UserPreferencesDTO}
-    | {type: ACTION_TYPE.USER_PREFERENCES_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
+    | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
-    | {type: ACTION_TYPE.USER_LOG_IN_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST}
     | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST}
-    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_SUCCESS}
-    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST_SUCCESS}
-    | {type: ACTION_TYPE.USER_PASSWORD_RESET}
-    | {type: ACTION_TYPE.USER_PASSWORD_RESET_SUCCESS}
-    | {type: ACTION_TYPE.USER_PASSWORD_RESET_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS}
+    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST}
+    | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
@@ -45,8 +45,8 @@ export type Action =
     | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST}
-    | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_SUCCESS}
-    | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST}
     | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
@@ -76,9 +76,9 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
 
-    | {type: ACTION_TYPE.CONTACT_FORM_SEND}
-    | {type: ACTION_TYPE.CONTACT_FORM_SEND_SUCCESS}
-    | {type: ACTION_TYPE.CONTACT_FORM_SEND_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST}
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
     | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
@@ -137,6 +137,7 @@ export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {logg
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;
 }
+export type LoggedInValidationUser = ValidationUser & {loggedIn: true}  | {loggedIn: false};
 
 export interface LinkInfo {
     title: string;
@@ -156,8 +157,6 @@ export interface School {
     closed: boolean;
     dataSource: string;
 }
-
-export type LoggedInValidationUser = ValidationUser & {loggedIn: true}  | {loggedIn: false};
 
 export interface Toast {
     color: string;

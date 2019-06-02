@@ -39,9 +39,9 @@ export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST});
     try {
         const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
-        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_SUCCESS, userAuthSettings: authenticationSettings.data});
+        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings: authenticationSettings.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_FAILURE, errorMessage: e.response.data.errorMessage});
+        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
     }
 };
 
@@ -49,9 +49,9 @@ export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
     try {
         const userPreferenceSettings = await api.users.getPreferences();
-        dispatch({type: ACTION_TYPE.USER_PREFERENCES_SUCCESS, userPreferences: userPreferenceSettings.data});
+        dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences: userPreferenceSettings.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_PREFERENCES_FAILURE, errorMessage: e.response.data.errorMessage});
+        dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
     }
 };
 
@@ -67,42 +67,44 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: currentUser.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_UPDATE_FAILURE});
+        dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE});
     }
 };
 
-export const updateCurrentUser = (params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null}, currentUser: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
+// TODO scope for pulling out a registerUser method from this
+export const updateCurrentUser = (
+    params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null},
+    currentUser: LoggedInUser
+) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
     if (currentUser.loggedIn && params.registeredUser.loggedIn && currentUser.email !== params.registeredUser.email) {
         let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
-        // TODO handle the alert ourselves
+        // TODO handle the alert with modal
         if (emailChange) {
             try {
                 const changedUser = await api.users.updateCurrent(params);
-                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
+                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: changedUser.data});
                 history.push('/');
             } catch (e) {
-                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
+                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
             }
         } else {
-            params.registeredUser.email = currentUser.email;
+            params.registeredUser.email = currentUser.email; // TODO I don't think you can do this, or even if so probably shouldn't
         }
     } else {
         const initialLogin = params.registeredUser.loggedIn && params.registeredUser.firstLogin || false;
         try {
             const currentUser = await api.users.updateCurrent(params);
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_SUCCESS});
+            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
             if (initialLogin) {
-                await dispatch(requestCurrentUser() as any);
                 history.push('/account', {firstLogin: initialLogin});
-                return
             } else {
                 history.push('/');
             }
         } catch (e) {
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_FAILURE, errorMessage: e.response.data.errorMessage});
+            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
         }
     }
-    dispatch(requestCurrentUser() as any)
 };
 
 export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
@@ -119,7 +121,7 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
         history.push('/');
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
     }
     dispatch(requestCurrentUser() as any)
 };
@@ -127,27 +129,27 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
 export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
     const response = await api.users.passwordReset(params);
-    dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST_SUCCESS});
+    dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
 };
 
 export const verifyPasswordReset = (token: string | null) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST});
         const response = await api.users.verifyPasswordReset(token);
-        dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_SUCCESS});
+        dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS});
     } catch(e) {
-        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_FAILURE, errorMessage: e.response.data.errorMessage});
+        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: e.response.data.errorMessage});
     }
 };
 
 export const handlePasswordReset = (params: {token: string | null, password: string | null}) => async (dispatch: Dispatch<Action>) => {
     try {
-        dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET});
+        dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
         const response = await api.users.handlePasswordReset(params);
-        dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_SUCCESS});
+        dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
         history.push('/');
     } catch(e) {
-        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST_FAILURE, errorMessage: e.response.data.errorMessage});
+        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: e.response.data.errorMessage});
     }
 };
 
@@ -204,9 +206,9 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
     try {
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST});
         const response = await api.email.verify(params);
-        dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_SUCCESS});
+        dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
     } catch(e) {
-        dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_FAILURE, errorMessage: e.response.data.errorMessage});
+        dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
     }
 };
 
@@ -227,12 +229,12 @@ export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, ge
     }
 };
 export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND});
+    dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST});
     try {
         const response = await api.contactForm.send(extra, params);
-        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_SUCCESS})
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS})
     } catch(e) {
-        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
     }
 };
 

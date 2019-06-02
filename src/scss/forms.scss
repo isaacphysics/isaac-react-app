@@ -134,3 +134,9 @@ label.label-radio > div {
 //  padding-left: 1rem;
 //}
 
+// Remove spinner from date picker
+input[type=date]::-webkit-inner-spin-button,
+input[type=date]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

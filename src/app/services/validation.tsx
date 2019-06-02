@@ -4,10 +4,11 @@ export const validateEmail = (email: string) => {
     return (email.length > 0 && email.includes("@"));
 };
 
-export const validateDob = (dateOfBirth: string) => {
+export const isDobOverThirteen = (dateOfBirth: Date | null) => {
     const today = new Date();
-    const thirteenYearsAgo = Date.UTC(today.getFullYear() - 13, today.getMonth(), today.getDate())/1000;
-    return (dateOfBirth == undefined || (new Date(String(dateOfBirth)).getTime() / 1000) <= thirteenYearsAgo);
+    const thirteenYearsAgo = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+    const hundredAndTwentyYearsAgo = new Date(today.getFullYear() - 120, today.getMonth(), today.getDate());
+    return !!dateOfBirth && dateOfBirth <= thirteenYearsAgo && dateOfBirth >= hundredAndTwentyYearsAgo;
 };
 
 export const MINIMUM_PASSWORD_LENGTH = 6;
