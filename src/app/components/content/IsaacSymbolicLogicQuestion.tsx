@@ -7,19 +7,27 @@ import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiT
 import { InequalityModal } from "../elements/InequalityModal";
 import katex from "katex";
 import {IsaacHints} from "./IsaacHints";
+import { determineExamBoardFrom } from "../../services/examBoard";
+import { EXAM_BOARD } from "../../services/constants";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
     const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
-    return question ? {currentAttempt: question.currentAttempt} : {};
+    const examBoard = state && determineExamBoardFrom(state.userPreferences);
+    let r: { currentAttempt?: LogicFormulaDTO | null, examBoard? : EXAM_BOARD | null } = { examBoard };
+    if (question) {
+        r.currentAttempt = question.currentAttempt;
+    }
+    return r;
 };
 const dispatchToProps = {setCurrentAttempt};
 
 interface IsaacSymbolicLogicQuestionProps {
     doc: IsaacSymbolicLogicQuestionDTO;
     questionId: string;
-    currentAttempt?: LogicFormulaDTO;
+    currentAttempt?: LogicFormulaDTO | null;
     setCurrentAttempt: (questionId: string, attempt: LogicFormulaDTO) => void;
+    examBoard?: EXAM_BOARD | null;
 }
 const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
 
@@ -62,6 +70,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols}
                 visible={modalVisible}
+                syntax={props.examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
             />}
             <IsaacHints hints={doc.hints} />
         </div>
