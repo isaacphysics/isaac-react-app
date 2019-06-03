@@ -19,7 +19,7 @@ import {
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
 import {updateCurrentUser, resetPassword} from "../../state/actions";
-import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
+import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser, Toast} from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
@@ -28,6 +28,8 @@ import {Link} from "react-router-dom";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EXAM_BOARD} from "../../services/constants";
 import {history} from "../../services/history"
+import {showToast} from "../../state/actions";
+import { Toasts } from '../navigation/Toasts';
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state ? state.error : null,
@@ -39,6 +41,7 @@ const stateToProps = (state: AppState) => ({
 const dispatchToProps = {
     updateCurrentUser,
     resetPassword,
+    showToast,
 };
 
 interface AccountPageProps {
@@ -51,9 +54,10 @@ interface AccountPageProps {
         currentUser: LoggedInUser
     ) => void;
     firstLogin: boolean;
+    showToast: (toast: Toast) => void;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, showToast}: AccountPageProps) => {
 
     // Catch the (unlikely?) case where a user does not have email preferences in the database.
     if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
@@ -137,8 +141,15 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             registeredUser: myUser,
                             userPreferences: myUserPreferences,
                             passwordCurrent: currentPassword
-                        }, user)
+                        }, user);
                     }
+                    showToast({
+                        title: "Preferences updated",
+                        body: "Your user preferences were saved correctly.",
+                        color: "success",
+                        timeout: 5000,
+                        closable: false,
+                    });
                 }}>
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId={0}>
