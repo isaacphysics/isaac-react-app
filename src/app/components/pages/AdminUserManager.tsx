@@ -4,20 +4,23 @@ import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {connect} from "react-redux";
-import {adminUserSearch} from "../../state/actions";
+import {adminModifyUserRoles, adminUserSearch} from "../../state/actions";
 import {AdminUserSearchState, AppState} from "../../state/reducers";
+import {Role} from "../../../IsaacApiTypes";
+import {DateString} from "../elements/DateString";
 
 const stateToProps = (state: AppState) => {
     return {
         searchResults: state && state.adminUserSearch || null
     };
 };
-const dispatchToProps = {adminUserSearch};
+const dispatchToProps = {adminUserSearch, adminModifyUserRoles};
 
 interface AdminUserMangerProps {
     user: LoggedInUser;
     adminUserSearch: (query: {}) => void;
     searchResults: AdminUserSearchState;
+    adminModifyUserRoles: (role: Role, userIds: number[]) => void;
 }
 
 /*
@@ -28,22 +31,28 @@ api.adminUserSearch.search({
     'schoolURN': ($scope.userSearch.searchTerms.schoolURN == "") ? null : $scope.userSearch.searchTerms.schoolURN,
     'schoolOther' : ($scope.userSearch.searchTerms.schoolOther == "") ? null : $scope.userSearch.searchTerms.schoolOther,
     'postcode' : ($scope.userSearch.searchTerms.postcode == "") ? null : $scope.userSearch.searchTerms.postcode,
-    'postcodeRadius': ($scope.userSearch.searchTerms.postcoderadius == "") ? null : $scope.userSearch.searchTerms.postcoderadius,
+    'postcodeRadius': ($scope.userSearch.searchTerms.postcodeRadius == "") ? null : $scope.userSearch.searchTerms.postcodeRadius,
     'subjectOfInterest': ($scope.userSearch.searchTerms.subjectOfInterest == "") ? null : $scope.userSearch.searchTerms.subjectOfInterest
 })
- */
+*/
 
-const AdminUserManagerComponent = ({adminUserSearch, searchResults}: AdminUserMangerProps) => {
+const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searchResults}: AdminUserMangerProps) => {
     const [searchRequested, setSearchRequested] = useState(false);
     const [searchQuery, setSearchQuery] = useState({
         familyName: null,
         email: null,
+        role: null,
         schoolURN: null,
+        schoolOther: null,
+        postcode: null,
+        postcodeRadius: "FIVE_MILES",
     });
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
 
-    const updateQuery = (update: {}) => {
-        setSearchQuery(Object.assign({}, searchQuery, update))
+    const updateQuery = (update: {[key: string]: string | null}) => {
+        const nulledUpdate: {[key: string]: string | null} = {};
+        Object.entries(update).forEach(([key, value]) => nulledUpdate[key] = value || null);
+        setSearchQuery(Object.assign({}, searchQuery, nulledUpdate))
     };
     const selectAllToggle = () => {
         if (searchResults && searchResults.length === selectedUserIds.length) {
@@ -59,6 +68,31 @@ const AdminUserManagerComponent = ({adminUserSearch, searchResults}: AdminUserMa
             setSelectedUserIds(selectedUserIds.filter((selectedId) => selectedId !== userId));
         }
     };
+    const confirmUnverifiedUserPromotions = function(){
+        if (searchResults) {
+            const unverifiedSelectedUsers = selectedUserIds
+                .map(selectedId => searchResults.filter(result => result.id === selectedId)[0])
+                .filter(result => result.emailVerificationStatus !== "VERIFIED");
+            if (unverifiedSelectedUsers.length > 0) {
+                return window.confirm(
+                    'Are you really sure you want to promote unverified user(s): ' +
+                    '(' + unverifiedSelectedUsers.map(user => user.email) + ')?\n' +
+                    'They may not be who they claim to be, may have an invalid email or have not yet verified their account.\n\n' +
+                    'Pressing "Cancel" will abort promotion for all selected users.'
+                )
+            } else {
+                return true;
+            }
+        }
+    };
+    const modifyUserRolesAndUpdateResults = async (role: Role) => {
+        let confirmed = (role === "STUDENT") || confirmUnverifiedUserPromotions();
+        if (confirmed) {
+            await adminModifyUserRoles(role, selectedUserIds);
+            adminUserSearch(searchQuery);
+            setSelectedUserIds([]);
+        }
+    };
 
     const search = (event: React.FormEvent<HTMLInputElement>) => {
         event.preventDefault();
@@ -70,30 +104,79 @@ const AdminUserManagerComponent = ({adminUserSearch, searchResults}: AdminUserMa
         <BreadcrumbTrail intermediateCrumbs={[{title: "Admin", to: "/admin"}]} currentPageTitle="User manager"/>
         <h1 className="h-title">User manager</h1>
 
+        {/* Search */}
         <RS.Card className="mt-5">
             <RS.Form name="register" onSubmit={search}>
                 <RS.CardBody>
                     <RS.Row>
                         <RS.Col md={6}>
                             <RS.FormGroup>
-                                <RS.Label htmlFor="family-name-search">Find a user by family name</RS.Label>
+                                <RS.Label htmlFor="family-name-search">Find a user by family name:</RS.Label>
                                 <RS.Input
-                                    id="family-name-search" type="text" defaultValue={searchQuery.familyName}
+                                    id="family-name-search" type="text" defaultValue={searchQuery.familyName} placeholder="Wilkes"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({familyName: e.target.value})}
                                 />
                             </RS.FormGroup>
                             <RS.FormGroup>
-                                <RS.Label htmlFor="email-search">Find a user by email</RS.Label>
+                                <RS.Label htmlFor="email-search">Find a user by email:</RS.Label>
                                 <RS.Input
-                                    id="email-search" type="text" defaultValue={searchQuery.email}
+                                    id="email-search" type="text" defaultValue={searchQuery.email} placeholder="teacher@school.org"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({email: e.target.value})}
+                                />
+                            </RS.FormGroup>
+                            <RS.FormGroup>
+                                <RS.Label htmlFor="school-other-search">Find by manually entered school:</RS.Label>
+                                <RS.Input
+                                    id="school-other-search" type="text" defaultValue={searchQuery.schoolOther}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({schoolOther: e.target.value})}
                                 />
                             </RS.FormGroup>
                         </RS.Col>
 
                         <RS.Col md={6}>
                             <RS.FormGroup>
-                                <RS.Label htmlFor="school-urn-search">Find a user with school URN</RS.Label>
+                                <RS.Label htmlFor="role-search">Find by user role:</RS.Label>
+                                <RS.Input
+                                    id="role-search" type="select" defaultValue={String(searchQuery.role)}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        const role = e.target.value;
+                                        updateQuery({role: role !== "null" ? role : null})
+                                    }}
+                                >
+                                    <option value="null">Any Role</option>
+                                    <option value="STUDENT">Student</option>
+                                    <option value="TEACHER">Teacher</option>
+                                    <option value="CONTENT_EDITOR">Content Editor</option>
+                                    <option value="EVENT_ADMIN">Event Admin</option>
+                                    <option value="ADMIN">Admin</option>
+                                </RS.Input>
+                            </RS.FormGroup>
+                            <RS.FormGroup>
+                                <RS.Label htmlFor="postcode-search">Find users with school within a given distance of postcode:</RS.Label>
+                                <RS.Row>
+                                    <RS.Col md={7}>
+                                        <RS.Input
+                                            id="postcode-search" type="text" defaultValue={searchQuery.postcode} placeholder="CB3 0FD"
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({postcode: e.target.value})}
+                                        />
+                                    </RS.Col>
+                                    <RS.Col md={5} className="mt-2 mt-md-0">
+                                        <RS.Input
+                                            id="postcode-radius-search" type="select" defaultValue={searchQuery.postcodeRadius}
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({postcodeRadius: e.target.value})}
+                                        >
+                                            <option value="FIVE_MILES">5 Miles</option>
+                                            <option value="TEN_MILES">10 Miles</option>
+                                            <option value="FIFTEEN_MILES">15 Miles</option>
+                                            <option value="TWENTY_MILES">20 Miles</option>
+                                            <option value="TWENTY_FIVE_MILES">25 Miles</option>
+                                            <option value="FIFTY_MILES">50 Miles</option>
+                                        </RS.Input>
+                                    </RS.Col>
+                                </RS.Row>
+                            </RS.FormGroup>
+                            <RS.FormGroup>
+                                <RS.Label htmlFor="school-urn-search">Find a user with school URN:</RS.Label>
                                 <RS.Input
                                     id="school-urn-search" type="text" defaultValue={searchQuery.schoolURN}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({schoolURN: e.target.value})}
@@ -112,26 +195,44 @@ const AdminUserManagerComponent = ({adminUserSearch, searchResults}: AdminUserMa
             </RS.Form>
         </RS.Card>
 
-        <RS.Card className="my-5">
-            <RS.CardTitle tag="h4" className="pl-3 pt-2">
+        {/* Result panel */}
+        <RS.Card className="my-4">
+            <RS.CardTitle tag="h4" className="pl-4 pt-3 mb-0">
                 Manage Users ({searchResults && searchResults.length || 0})<br />
                 Selected ({selectedUserIds.length})
             </RS.CardTitle>
 
-            
+            <RS.CardBody id="admin-search-results">
+                {/* Action Buttons */}
+                <RS.Row className="pb-4">
+                    <RS.Col>
+                        <RS.UncontrolledButtonDropdown>
+                            <RS.DropdownToggle caret color="primary" outline>Modify Role</RS.DropdownToggle>
+                            <RS.DropdownMenu>
+                                <RS.DropdownItem header>Promote or demote selected users to:</RS.DropdownItem>
+                                {["STUDENT", "TEACHER"].map(role =>
+                                    <RS.DropdownItem
+                                        key={role} disabled={selectedUserIds.length === 0}
+                                        onClick={() => modifyUserRolesAndUpdateResults(role as Role)}
+                                    >
+                                        {role}
+                                    </RS.DropdownItem>
+                                )}
+                            </RS.DropdownMenu>
+                        </RS.UncontrolledButtonDropdown>
+                    </RS.Col>
+                </RS.Row>
 
-            <RS.CardBody>
+                {/* Results */}
                 {searchRequested &&
                     <ShowLoading until={searchResults}>
                         {searchResults && searchResults.length > 0 ?
                             <div className="overflow-auto">
-                                <RS.Table>
+                                <RS.Table bordered>
                                     <thead>
                                         <tr>
                                             <th>
-                                                <RS.Button onClick={selectAllToggle} color="link">
-                                                    Select
-                                                </RS.Button>
+                                                <RS.Button onClick={selectAllToggle} color="link">Select</RS.Button>
                                             </th>
                                             <th>Actions</th>
                                             <th>Name</th>
@@ -156,31 +257,27 @@ const AdminUserManagerComponent = ({adminUserSearch, searchResults}: AdminUserMa
                                                     />
                                                 </td>
                                                 <td>
-                                                    View
-                                                    Edit
-                                                    Delete
+                                                    {/*View*/} {/*Edit*/} {/*Delete*/}
                                                 </td>
-                                                <td>{user.familyName}, {user.familyName}</td>
+                                                <td>{user.familyName}, {user.givenName}</td>
                                                 <td>{user.email}</td>
                                                 <td>{user.role}</td>
                                                 <td>{user.schoolId}</td>
-                                                <td>{user.registrationDate}</td>
+                                                <td><DateString>{user.registrationDate}</DateString></td>
                                                 <td>{user.emailVerificationStatus}</td>
-                                                <td>{user.lastSeen && new Date(user.lastSeen).toUTCString()}</td>
+                                                <td><DateString>{user.lastSeen}</DateString></td>
                                             </tr>
                                         )}
                                     </tbody>
                                 </RS.Table>
                             </div>
                             :
-                            <em>No results found</em>
+                            <div className="text-center"><em>No results found</em></div>
                         }
                     </ShowLoading>
                 }
             </RS.CardBody>
         </RS.Card>
-
-
     </RS.Container>
 };
 

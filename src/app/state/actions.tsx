@@ -13,7 +13,7 @@ import {
     UserPreferencesDTO,
     ValidatedChoice,
 } from "../../IsaacAppTypes";
-import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO, Role} from "../../IsaacApiTypes";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -381,21 +381,39 @@ export const fetchSearch = (query: string, types: string) => async (dispatch: Di
 };
 
 // Admin
-export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Action>) => {
+export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST});
     try {
         const searchResponse = await api.admin.userSearch.get(queryParams);
         dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS, users: searchResponse.data});
+        const resultElement = window.document.getElementById("admin-search-results");
+        if (resultElement) {
+            resultElement.scrollIntoView({behavior: "smooth"});
+        }
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE});
         dispatch(showToast({
-            color: "danger", title: "User Search Failed",
+            color: "danger", title: "User search failed",
             body: e.response.data.errorMessage || API_REQUEST_FAILURE_MESSAGE,
             timeout: 10000, closable: true,
-        }) as any)
+        }));
     }
 };
 
+export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST});
+    try {
+        await api.admin.modifyUserRoles.post(role, userIds);
+        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "User role modification failed",
+            body: e.response.data.errorMessage || API_REQUEST_FAILURE_MESSAGE,
+            timeout: 10000, closable: true,
+        }));
+    }
+};
 
 // SERVICE TRIGGERED ACTIONS
 // Page change
