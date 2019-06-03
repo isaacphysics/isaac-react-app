@@ -24,6 +24,7 @@ const defaultExamPreferences = {
     [EXAM_BOARD.OCR]: false,
     [EXAM_BOARD.AQA]: false
 };
+
 const defaultEmailPreferences = {
     NEWS_AND_UPDATES: true,
     ASSIGNMENTS: true,
@@ -41,6 +42,7 @@ interface RegistrationPageProps {
     userEmail: string | null;
     userPassword: string | null;
 }
+
 const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
     // Inputs which trigger re-render
     const [registrationUser, setRegistrationUser] = useState(
@@ -142,7 +144,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-input" className="form-required">Password</Label>
+                                <Label htmlFor="password-input" className="form-required">
+                                    Password
+                                </Label>
                                 <Input
                                     id="password" type="password" name="password" required
                                     defaultValue={userPassword}
@@ -154,7 +158,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-confirm" className="form-required">Re-enter Password</Label>
+                                <Label htmlFor="password-confirm" className="form-required">
+                                    Re-enter Password
+                                </Label>
                                 <Input
                                     id="password-confirm" name="password" type="password"
                                     required aria-describedby="invalidPassword"
@@ -176,7 +182,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="email-input" className="form-required">Email</Label>
+                                <Label htmlFor="email-input" className="form-required">
+                                    Email
+                                </Label>
                                 <Input
                                     id="email-input" name="email" type="email"
                                     aria-describedby="email-validation-feedback" required
@@ -193,7 +201,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="dob-input">Date of Birth</Label>
+                                <Label htmlFor="dob-input">
+                                    Date of Birth
+                                </Label>
                                 <Row>
                                     <Col lg={6}>
                                         <Input
