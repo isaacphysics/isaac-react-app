@@ -95,6 +95,13 @@ export const api = {
             return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
         }
     },
+    admin: {
+        userSearch: {
+            get: (queryParams: {}): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO[]> => {
+                return endpoint.get(`admin/users/`, {params: queryParams});
+            }
+        }
+    },
     questions: {
         get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
             return endpoint.get(`/pages/questions/${id}`);

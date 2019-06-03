@@ -4,8 +4,15 @@ import {AppState} from "./reducers";
 import {history, redirectToPageNotFound} from "../services/history";
 import {store} from "./store";
 import {documentCache, topicCache} from "../services/cache";
-import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID, API_REQUEST_FAILURE_MESSAGE} from "../services/constants";
-import {Action, UserPreferencesDTO, ValidatedChoice, Toast, LoggedInUser, LoggedInValidationUser,} from "../../IsaacAppTypes";
+import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
+import {
+    Action,
+    LoggedInUser,
+    LoggedInValidationUser,
+    Toast,
+    UserPreferencesDTO,
+    ValidatedChoice,
+} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 
 // Toasts
@@ -232,9 +239,9 @@ export const submitMessage = (extra: any, params: {firstName: string; lastName: 
     dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST});
     try {
         const response = await api.contactForm.send(extra, params);
-        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS})
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS});
     } catch(e) {
-        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE});
     }
 };
 
@@ -373,7 +380,21 @@ export const fetchSearch = (query: string, types: string) => async (dispatch: Di
     dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
 };
 
-
+// Admin
+export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST});
+    try {
+        const searchResponse = await api.admin.userSearch.get(queryParams);
+        dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS, users: searchResponse.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "User Search Failed",
+            body: e.response.data.errorMessage || API_REQUEST_FAILURE_MESSAGE,
+            timeout: 10000, closable: true,
+        }) as any)
+    }
+};
 
 
 // SERVICE TRIGGERED ACTIONS
