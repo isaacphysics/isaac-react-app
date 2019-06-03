@@ -54,12 +54,14 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     const [dobCheckboxChecked, setDobCheckboxChecked] = useState(false);
     const [attemptedSignUp, setAttemptedSignUp] = useState(false);
 
+
     // Values derived from inputs (props and state)
     const emailIsValid = registrationUser.email && validateEmail(registrationUser.email);
     const passwordIsValid =
         (registrationUser.password == unverifiedPassword) && validatePassword(registrationUser.password || "");
     const dobIsOverThirteen = isDobOverThirteen(registrationUser.dateOfBirth);
     const confirmedOverThirteen = dobCheckboxChecked || dobIsOverThirteen;
+
 
     // Form's submission method
     const register = (event: React.FormEvent<HTMLFontElement>) => {
@@ -76,11 +78,13 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         }
     };
 
+
     // Convenience method
     const assignToRegistrationUser = (updates: {}) => {
         // Create new object to trigger re-render
         setRegistrationUser(Object.assign({}, registrationUser, updates));
     };
+
 
     // Render
     return <Container id="registration-page" className="mb-5">
