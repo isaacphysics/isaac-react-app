@@ -96,7 +96,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             }]
         };
         sketch.onNewEditorState = (s: any) => {
-            if (this.props.visible) {
+            const modal = document.getElementById('inequality-modal');
+            if (modal) {
                 this.setState({ editorState: s });
                 this.props.onEditorStateChange(s);
                 console.log("New editor state: ", s);
