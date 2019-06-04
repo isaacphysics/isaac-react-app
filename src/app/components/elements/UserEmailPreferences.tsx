@@ -28,7 +28,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences}: Use
                                 id="news" type="checkbox" name="news" color="$secondary"
                                 defaultChecked={emailPreferences ? emailPreferences.NEWS_AND_UPDATES : true}
                                 onChange={(e: any) => setEmailPreferences(
-                                    Object.assign(emailPreferences, {NEWS_AND_UPDATES: emailPreferences? !emailPreferences.NEWS_AND_UPDATES : true}))
+                                    Object.assign({}, emailPreferences, {NEWS_AND_UPDATES: emailPreferences? !emailPreferences.NEWS_AND_UPDATES : true}))
                                 }
                             />
                         </td>
@@ -41,7 +41,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences}: Use
                                 id="assignments" type="checkbox" name="assignments"
                                 defaultChecked={emailPreferences ? emailPreferences.ASSIGNMENTS : true}
                                 onChange={(e: any) => setEmailPreferences(
-                                    Object.assign(emailPreferences, {ASSIGNMENTS: emailPreferences ? !emailPreferences.ASSIGNMENTS : true})
+                                    Object.assign({}, emailPreferences, {ASSIGNMENTS: emailPreferences ? !emailPreferences.ASSIGNMENTS : true})
                                 )}
                             />
                         </td>
@@ -54,7 +54,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences}: Use
                                 className="CustomInput" id="events" type="checkbox" name="events"
                                 defaultChecked={emailPreferences ? emailPreferences.EVENTS : true}
                                 onChange={(e: any) => setEmailPreferences(
-                                    Object.assign(emailPreferences, {EVENTS: emailPreferences ? !emailPreferences.EVENTS : true})
+                                    Object.assign({}, emailPreferences, {EVENTS: emailPreferences ? !emailPreferences.EVENTS : true})
                                 )}
                             />
                         </td>

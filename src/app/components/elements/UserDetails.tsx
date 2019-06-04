@@ -10,16 +10,29 @@ interface UserDetailsProps {
     setExamPreferences: (e: any) => void;
     myUser: ValidationUser;
     setMyUser: (user: any) => void;
+    attemptedAccountUpdate: boolean;
     isEmailValid: boolean;
-    setIsEmailValid: (isEmailValid: boolean) => void;
     isDobValid: boolean;
-    setIsDobValid: (isDobValid: boolean) => void;
 }
 
-export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, isDobValid, setIsDobValid, examPreferences, setExamPreferences}: UserDetailsProps) => {
+export const UserDetails = ({myUser, setMyUser, isEmailValid, isDobValid, examPreferences, setExamPreferences, attemptedAccountUpdate}: UserDetailsProps) => {
     let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
     let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
+
+    useEffect(() => {
+        fetchSchool(myUser.schoolId || "");
+    }, [myUser]);
+
+    const timer: MutableRefObject<number | undefined> = useRef();
+    useEffect(() => {
+        timer.current = window.setTimeout(() => {
+            searchSchool();
+        }, 800);
+        return () => {
+            clearTimeout(timer.current);
+        }
+    }, [schoolQueryText]);
 
     function searchSchool(e?: Event) {
         if (e) {
@@ -47,25 +60,11 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
     }
 
     function setUserSchool(school: any) {
-        setMyUser(Object.assign(myUser, {schoolId: school.urn}));
+        setMyUser(Object.assign({}, myUser, {schoolId: school.urn}));
         setSchoolQueryText(null);
         setSelectedSchoolObject(school);
         setSchoolSearchResults([]);
     }
-
-    const timer: MutableRefObject<number | undefined> = useRef();
-    useEffect(() => {
-        timer.current = window.setTimeout(() => {
-            searchSchool();
-        }, 800);
-        return () => {
-            clearTimeout(timer.current);
-        }
-    }, [schoolQueryText]);
-
-    useEffect(() => {
-        fetchSchool(myUser.schoolId || "");
-    }, [myUser]);
 
     return <CardBody>
         <Row>
@@ -76,7 +75,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         id="first-name-input" type="text" name="givenName" maxLength={255}
                         defaultValue={myUser.givenName}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setMyUser(Object.assign(myUser, {givenName: e.target.value}))
+                            setMyUser(Object.assign({}, myUser, {givenName: e.target.value}))
                         }}
                         required
                     />
@@ -89,7 +88,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         id="last-name-input" type="text" name="last-name" maxLength={255}
                         defaultValue={myUser.familyName}
                         onChange={(e:  React.ChangeEvent<HTMLInputElement>) => {
-                            setMyUser(Object.assign(myUser, {familyName: e.target.value}))
+                            setMyUser(Object.assign({}, myUser, {familyName: e.target.value}))
                         }}
                         required
                     />
@@ -104,9 +103,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         invalid={!isEmailValid} id="email-input" type="email"
                         name="email" defaultValue={myUser.email}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            const email = event.target.value;
-                            setIsEmailValid(validateEmail(email));
-                            setMyUser(Object.assign(myUser, {email}))
+                            setMyUser(Object.assign({}, myUser, {email: event.target.value}))
                         }}
                         aria-describedby="emailValidationMessage" required
                     />
@@ -125,9 +122,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         name="date-of-birth"
                         defaultValue={myUser.dateOfBirth}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            const dateOfBirth = event.target.valueAsDate;
-                            setIsDobValid(isDobOverThirteen(dateOfBirth));
-                            setMyUser(Object.assign(myUser, {dateOfBirth: dateOfBirth}))
+                            setMyUser(Object.assign({}, myUser, {dateOfBirth: event.target.valueAsDate}))
                         }}
                         aria-describedby="ageValidationMessage"
                     />
@@ -150,7 +145,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                                 defaultChecked={myUser.gender === 'FEMALE'}
                                 onChange={
                                     (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign(myUser, {gender: 'FEMALE'}))
+                                        setMyUser(Object.assign({}, myUser, {gender: 'FEMALE'}))
                                     }
                                 }/>
                         </Col>
@@ -162,7 +157,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                                 defaultChecked={myUser.gender === 'MALE'}
                                 onChange={
                                     (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign(myUser, {gender: 'MALE'}))
+                                        setMyUser(Object.assign({}, myUser, {gender: 'MALE'}))
                                     }
                                 }/>
                         </Col>
@@ -175,7 +170,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                                 defaultChecked={myUser.gender === 'OTHER'}
                                 onChange={
                                     (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign(myUser, {gender: 'OTHER'}))
+                                        setMyUser(Object.assign({}, myUser, {gender: 'OTHER'}))
                                     }
                                 }/>
                         </Col>
@@ -193,7 +188,6 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         id="examBoardSelect"
                         value={
                             (examPreferences && examPreferences[EXAM_BOARD.OCR] && EXAM_BOARD.OCR) ||
-                            // (examPreferences && examPreferences[EXAM_BOARD.AQA] && [EXAM_BOARD.AQA]) ||
                             EXAM_BOARD.AQA
                         }
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
@@ -228,9 +222,16 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                     </ul>}
                     <Input
                         id="school-other-input" type="text" name="school-other" placeholder="Other School" className="mt-2" maxLength={255}
-                        defaultValue={myUser.schoolOther} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMyUser(Object.assign(myUser, { schoolOther: e.target.value }))}
+                        defaultValue={myUser.schoolOther} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMyUser(Object.assign({}, myUser, { schoolOther: e.target.value }))}
                     />
                 </FormGroup>
+            </Col>
+        </Row>
+        <Row>
+            <Col>
+                <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
+                    Required field
+                </span>
             </Col>
         </Row>
         {/*<Row>*/}

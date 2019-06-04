@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -23,7 +23,7 @@ import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser, Toast} from ".
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
-import {validateEmail} from "../../services/validation";
+import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import {Link} from "react-router-dom";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EXAM_BOARD} from "../../services/constants";
@@ -64,6 +64,12 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         userPreferences.EMAIL_PREFERENCE = { NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true };
     }
 
+    useEffect(() => {
+        setMyUser(Object.assign({}, user, {password: ""}))
+    }, [user]);
+
+    // Inputs which trigger re-render
+    const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
     const [myUser, setMyUser] = useState(
         Object.assign({}, user, {password: ""})
     );
@@ -76,16 +82,40 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [examPreferences, setExamPreferences] = useState(
         Object.assign({}, userPreferences && userPreferences.EXAM_BOARD ? userPreferences.EXAM_BOARD : {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true})
     );
-    const [isEmailValid, setIsEmailValid] = useState(
-        !!user.loggedIn && !!user.email && validateEmail(user.email)
-    );
-    const [isDobValid, setIsDobValid] = useState(
-        true
-    );
+    const [newPassword, setNewPassword] = useState("");
+    const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
     const [currentPassword, setCurrentPassword] = useState("");
-    const [isNewPasswordConfirmed, setIsNewPasswordConfirmed] = useState(false);
+    // const [isNewPasswordConfirmed, setIsNewPasswordConfirmed] = useState(false);
 
     const [activeTab, setTab] = useState(0);
+
+    // Values derived from inputs (props and state)
+    const isEmailValid = myUser.loggedIn && myUser.email && validateEmail(myUser.email) || validateEmail("");
+    const isDobValid = myUser.loggedIn && myUser.dateOfBirth && isDobOverThirteen(new Date(myUser.dateOfBirth)) || false;
+    const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
+
+    //Form's submission method
+    const updateAccount = (event: React.FormEvent<HTMLInputElement>) => {
+        event.preventDefault();
+        setAttemptedAccountUpdate(true);
+        Object.assign({}, myUserPreferences.EMAIL_PREFERENCE || {}, emailPreferences);
+        Object.assign({}, myUserPreferences.EXAM_BOARD || {}, examPreferences);
+        if (myUser.loggedIn && isEmailValid && (isDobValid || myUser.dateOfBirth == undefined) &&
+            (!myUser.password || isNewPasswordConfirmed)) {
+            updateCurrentUser({
+                registeredUser: myUser,
+                userPreferences: myUserPreferences,
+                passwordCurrent: currentPassword
+            }, user);
+            showToast({
+                title: "Preferences updated",
+                body: "Your user preferences were saved correctly.",
+                color: "success",
+                timeout: 5000,
+                closable: false,
+            });
+        }
+    };
 
     {/• TODO handle #... in with react-router for tab url navigation? •/}
 
@@ -132,31 +162,12 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                         </NavLink>
                     </NavItem>
                 </Nav>
-                <Form name="my-account" onSubmit={(event: React.FormEvent<HTMLInputElement>) => {
-                    event.preventDefault();
-                    Object.assign(myUserPreferences.EMAIL_PREFERENCE || {}, emailPreferences);
-                    Object.assign(myUserPreferences.EXAM_BOARD || {}, examPreferences);
-                    if (isEmailValid && (isDobValid || myUser.dateOfBirth == undefined) && (!myUser.password || isNewPasswordConfirmed)) {
-                        updateCurrentUser({
-                            registeredUser: myUser,
-                            userPreferences: myUserPreferences,
-                            passwordCurrent: currentPassword
-                        }, user);
-                    }
-                    showToast({
-                        title: "Preferences updated",
-                        body: "Your user preferences were saved correctly.",
-                        color: "success",
-                        timeout: 5000,
-                        closable: false,
-                    });
-                }}>
+                <Form name="my-account" onSubmit={updateAccount}>
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId={0}>
                             <UserDetails
                                 myUser={myUser} setMyUser={setMyUser} examPreferences={examPreferences} setExamPreferences={setExamPreferences}
-                                isDobValid={isDobValid} setIsDobValid={setIsDobValid}
-                                isEmailValid={isEmailValid} setIsEmailValid={setIsEmailValid}
+                                isDobValid={isDobValid} isEmailValid={isEmailValid} attemptedAccountUpdate={attemptedAccountUpdate}
                             />
                         </TabPane>
                         <TabPane tabId={1}>
@@ -164,7 +175,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                 currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}
                                 myUser={myUser} setMyUser={setMyUser}
                                 setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
-                                isNewPasswordConfirmed={isNewPasswordConfirmed} setIsNewPasswordConfirmed={setIsNewPasswordConfirmed}
+                                isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
+                                setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm}
                             />
                         </TabPane>
                         <TabPane tabId={2}>
@@ -175,13 +187,6 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     </TabContent>
 
                     <CardFooter className="py-4">
-                        <Row>
-                            <Col>
-                                <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
-                                    Required field
-                                </span>
-                            </Col>
-                        </Row>
                         <Row>
                             <Col size={12} md={{size: 6, offset: 3}}>
                                 {errorMessage && errorMessage.type === "generalError" &&
