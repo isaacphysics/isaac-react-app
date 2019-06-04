@@ -49,6 +49,25 @@
   }
 }
 
+.parsons-question {
+  .parsons-items {
+    .parsons-item > pre {
+      margin: 0.5rem 0;
+      padding: 0.5em 1em;
+      cursor: grab; // Doesn't work?
+    }
+
+    .parsons-item {
+      @for $i from 1 through 10 { // Melius est abundare quam deficere
+        &.indent-#{$i} {
+          padding-left: #{$i}em;
+          margin-left: #{$i}em;
+        }
+      }
+    }
+  }
+}
+
 .quick-question {
   button {
       box-shadow: none !important; // How horrible...
