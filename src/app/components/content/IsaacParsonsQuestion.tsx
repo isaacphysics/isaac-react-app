@@ -5,6 +5,7 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {IsaacParsonsQuestionDTO, ParsonsChoiceDTO} from "../../../IsaacApiTypes";
 import {IsaacHints} from "./IsaacHints";
+import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -21,9 +22,6 @@ interface IsaacParsonsQuestionProps {
 }
 const IsaacParsonsQuestionComponent = (props: IsaacParsonsQuestionProps) => {
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
-
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     let currentAttemptValue: ParsonsChoiceDTO = {};
     if (currentAttempt && currentAttempt.value) {
@@ -36,6 +34,20 @@ const IsaacParsonsQuestionComponent = (props: IsaacParsonsQuestionProps) => {
         currentAttemptValue.items = doc.items;
     } // TODO Improve this -^
 
+    const swapItems = (fromIndex: number, toIndex: number) => {
+        console.log(fromIndex, toIndex);
+        console.log(currentAttemptValue.items);
+        if (currentAttemptValue.items) {
+            const sourceItem = currentAttemptValue.items.splice(fromIndex, 1)[0];
+            currentAttemptValue.items.splice(toIndex, 0, sourceItem);
+        }
+        const attempt: ParsonsChoiceDTO = {
+            type: "parsonsChoice",
+            items: currentAttemptValue.items,
+        }
+        setCurrentAttempt(questionId, attempt);
+    }
+
     return (
         <div className="parsons-question">
             <div className="question-content">
@@ -45,9 +57,22 @@ const IsaacParsonsQuestionComponent = (props: IsaacParsonsQuestionProps) => {
             </div>
             {/* TODO Accessibility */}
             {currentAttemptValue && <div className="parsons-items">
-                <ul>
-                    {currentAttemptValue.items && currentAttemptValue.items.map(item => <li>{item.value}</li>)}
-                </ul>
+                <DragDropContext onDragEnd={(e) => e.destination ? swapItems(e.source.index, e.destination.index) : void 0}>
+                    <Droppable droppableId="droppable">
+                        {(providedDroppable, snapshot) => (
+                            <div {...providedDroppable.droppableProps} ref={providedDroppable.innerRef}>
+                                {currentAttemptValue.items && currentAttemptValue.items.map((item, index) => (
+                                    <Draggable draggableId={item.id as string} key={item.id} index={index}>
+                                        {(providedDraggable, snapshot) => (
+                                            <div ref={providedDraggable.innerRef} {...providedDraggable.draggableProps} {...providedDraggable.dragHandleProps}>
+                                                {item.value} {item.indentation}
+                                            </div>
+                                        )}
+                                    </Draggable>))}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
             </div>}
             <IsaacHints hints={doc.hints} />
         </div>
