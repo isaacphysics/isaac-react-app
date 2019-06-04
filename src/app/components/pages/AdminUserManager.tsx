@@ -23,19 +23,6 @@ interface AdminUserMangerProps {
     adminModifyUserRoles: (role: Role, userIds: number[]) => void;
 }
 
-/*
-api.adminUserSearch.search({
-    'familyName' : ($scope.userSearch.searchTerms.familyName == "") ? null : $scope.userSearch.searchTerms.familyName,
-    'email' : ($scope.userSearch.searchTerms.email == "") ? null : $scope.userSearch.searchTerms.email,
-    'role' : ($scope.userSearch.searchTerms.role == "" || $scope.userSearch.searchTerms.role == "NO_ROLE") ? null : $scope.userSearch.searchTerms.role,
-    'schoolURN': ($scope.userSearch.searchTerms.schoolURN == "") ? null : $scope.userSearch.searchTerms.schoolURN,
-    'schoolOther' : ($scope.userSearch.searchTerms.schoolOther == "") ? null : $scope.userSearch.searchTerms.schoolOther,
-    'postcode' : ($scope.userSearch.searchTerms.postcode == "") ? null : $scope.userSearch.searchTerms.postcode,
-    'postcodeRadius': ($scope.userSearch.searchTerms.postcodeRadius == "") ? null : $scope.userSearch.searchTerms.postcodeRadius,
-    'subjectOfInterest': ($scope.userSearch.searchTerms.subjectOfInterest == "") ? null : $scope.userSearch.searchTerms.subjectOfInterest
-})
-*/
-
 const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searchResults}: AdminUserMangerProps) => {
     const [searchRequested, setSearchRequested] = useState(false);
     const [searchQuery, setSearchQuery] = useState({
@@ -50,8 +37,10 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searc
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
 
     const updateQuery = (update: {[key: string]: string | null}) => {
+        // Replace empty strings with nulls
         const nulledUpdate: {[key: string]: string | null} = {};
         Object.entries(update).forEach(([key, value]) => nulledUpdate[key] = value || null);
+        // Create a copy so that we trigger a re-render
         setSearchQuery(Object.assign({}, searchQuery, nulledUpdate))
     };
     const selectAllToggle = () => {
