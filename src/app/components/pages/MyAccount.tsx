@@ -29,20 +29,26 @@ import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EXAM_BOARD} from "../../services/constants";
 import {history} from "../../services/history"
 import {showToast} from "../../state/actions";
-import { Toasts } from '../navigation/Toasts';
+import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
+import {withRouter} from "react-router-dom";
 
-const stateToProps = (state: AppState) => ({
-    errorMessage: state ? state.error : null,
-    userAuthSettings: state ? state.userAuthSettings : null,
-    userPreferences: state ? state.userPreferences : null,
-    firstLogin: history.location && history.location.state && history.location.state.firstLogin
-});
+const stateToProps = (state: AppState, {location: {hash}}: any) => {
+    return {
+        errorMessage: state ? state.error : null,
+        userAuthSettings: state ? state.userAuthSettings : null,
+        userPreferences: state ? state.userPreferences : null,
+        firstLogin: history.location && history.location.state && history.location.state.firstLogin,
+        hashAnchor: (hash && hash.slice(1)) || null,
+    }
+};
 
 const dispatchToProps = {
     updateCurrentUser,
     resetPassword,
     showToast,
 };
+
+enum Tab {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
 interface AccountPageProps {
     user: LoggedInUser;
@@ -55,9 +61,10 @@ interface AccountPageProps {
     ) => void;
     firstLogin: boolean;
     showToast: (toast: Toast) => void;
+    hashAnchor: string | null;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, showToast}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, showToast, hashAnchor}: AccountPageProps) => {
 
     // Catch the (unlikely?) case where a user does not have email preferences in the database.
     if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
@@ -85,9 +92,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [currentPassword, setCurrentPassword] = useState("");
     const [isNewPasswordConfirmed, setIsNewPasswordConfirmed] = useState(false);
 
-    const [activeTab, setTab] = useState(0);
+    // @ts-ignore
+    let initialTab = (hashAnchor && Tab[hashAnchor]) ||Tab.account;
+    const [activeTab, setTab] = useState(initialTab);
 
-    {/• TODO handle #... in with react-router for tab url navigation? •/}
 
     return <Container id="account-page" className="mb-5">
         <BreadcrumbTrail currentPageTitle="My account" />
@@ -107,16 +115,16 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 <Nav tabs className="my-4">
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({ active: activeTab === 0 })}
-                            onClick={() => setTab(0)} tabIndex={0}
+                            className={"mx-2 " + classnames({active: activeTab === Tab.account})}
+                            onClick={() => setTab(Tab.account)} tabIndex={0}
                         >
                             Profile
                         </NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({ active: activeTab === 1 })}
-                            onClick={() => setTab(1)} tabIndex={0}
+                            className={"mx-2 " + classnames({active: activeTab === Tab.passwordreset})}
+                            onClick={() => setTab(Tab.passwordreset)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block d-md-block">Change Password</span>
                             <span className="d-block d-md-none">Password</span>
@@ -124,14 +132,24 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     </NavItem>
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({ active: activeTab === 2 })}
-                            onClick={() => setTab(2)} tabIndex={0}
+                            className={"mx-2 " + classnames({active: activeTab === Tab.teacherconnections})}
+                            onClick={() => setTab(Tab.teacherconnections)} tabIndex={0}
+                        >
+                            <span className="d-none d-lg-block d-md-block">Teacher Connections</span>
+                            <span className="d-block d-md-none">Connections</span>
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink
+                            className={"mx-2 " + classnames({active: activeTab === Tab.emailpreferences})}
+                            onClick={() => setTab(Tab.emailpreferences)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block d-md-block">Email Preferences</span>
                             <span className="d-block d-md-none">Email</span>
                         </NavLink>
                     </NavItem>
                 </Nav>
+
                 <Form name="my-account" onSubmit={(event: React.FormEvent<HTMLInputElement>) => {
                     event.preventDefault();
                     Object.assign(myUserPreferences.EMAIL_PREFERENCE || {}, emailPreferences);
@@ -152,14 +170,14 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     });
                 }}>
                     <TabContent activeTab={activeTab}>
-                        <TabPane tabId={0}>
+                        <TabPane tabId={Tab.account}>
                             <UserDetails
                                 myUser={myUser} setMyUser={setMyUser} examPreferences={examPreferences} setExamPreferences={setExamPreferences}
                                 isDobValid={isDobValid} setIsDobValid={setIsDobValid}
                                 isEmailValid={isEmailValid} setIsEmailValid={setIsEmailValid}
                             />
                         </TabPane>
-                        <TabPane tabId={1}>
+                        <TabPane tabId={Tab.passwordreset}>
                             <UserPassword
                                 currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}
                                 myUser={myUser} setMyUser={setMyUser}
@@ -167,7 +185,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                 isNewPasswordConfirmed={isNewPasswordConfirmed} setIsNewPasswordConfirmed={setIsNewPasswordConfirmed}
                             />
                         </TabPane>
-                        <TabPane tabId={2}>
+                        <TabPane tabId={Tab.teacherconnections}>
+                            <TeacherConnectionsPanel />
+                        </TabPane>
+                        <TabPane tabId={Tab.emailpreferences}>
                             <UserEmailPreference
                                 emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                             />
@@ -199,4 +220,4 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     </Container>;
 };
 
-export const MyAccount = connect(stateToProps, dispatchToProps)(AccountPageComponent);
+export const MyAccount = withRouter(connect(stateToProps, dispatchToProps)(AccountPageComponent));
