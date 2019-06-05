@@ -4,8 +4,15 @@ import {AppState} from "./reducers";
 import {history, redirectToPageNotFound} from "../services/history";
 import {store} from "./store";
 import {documentCache, topicCache} from "../services/cache";
-import {ACTION_TYPE, DOCUMENT_TYPE, TAG_ID, API_REQUEST_FAILURE_MESSAGE} from "../services/constants";
-import {Action, UserPreferencesDTO, ValidatedChoice, Toast, LoggedInUser, LoggedInValidationUser,} from "../../IsaacAppTypes";
+import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
+import {
+    Action,
+    LoggedInUser,
+    LoggedInValidationUser,
+    Toast,
+    UserPreferencesDTO,
+    ValidatedChoice,
+} from "../../IsaacAppTypes";
 import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 
 // Toasts
@@ -99,6 +106,13 @@ export const updateCurrentUser = (
             if (initialLogin) {
                 history.push('/account', {firstLogin: initialLogin});
             }
+            dispatch(showToast({
+                title: "Preferences updated",
+                body: "Your user preferences were updated correctly.",
+                color: "success",
+                timeout: 5000,
+                closable: false,
+            }) as any);
         } catch (e) {
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
         }
@@ -140,7 +154,7 @@ export const verifyPasswordReset = (token: string | null) => async (dispatch: Di
     }
 };
 
-export const handlePasswordReset = (params: {token: string | null, password: string | null}) => async (dispatch: Dispatch<Action>) => {
+export const handlePasswordReset = (params: {token: string | null; password: string | null}) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
         const response = await api.users.handlePasswordReset(params);
@@ -150,7 +164,6 @@ export const handlePasswordReset = (params: {token: string | null, password: str
         dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: e.response.data.errorMessage});
     }
 };
-
 
 export const handleProviderLoginRedirect = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT, provider});
@@ -210,6 +223,32 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
     }
 };
 
+// Contact Us
+export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST});
+    try {
+        const response = await api.contactForm.send(extra, params);
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS})
+    } catch(e) {
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
+    }
+};
+
+// User Connections
+export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ACTIVE_AUTHORISATIONS_REQUEST});
+    try {
+        const authorisationsResponse = await api.authorisations.get();
+        dispatch({
+            type: ACTION_TYPE.ACTIVE_AUTHORISATIONS_RESPONSE_SUCCESS,
+            authorisations: authorisationsResponse.data
+        });
+    } catch {
+        dispatch({type: ACTION_TYPE.ACTIVE_AUTHORISATIONS_RESPONSE_FAILURE});
+
+    }
+};
+
 // Constants
 export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     // Don't request this again if it has already been fetched successfully
@@ -224,15 +263,6 @@ export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, ge
         dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: units.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE});
-    }
-};
-export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST});
-    try {
-        const response = await api.contactForm.send(extra, params);
-        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS})
-    } catch(e) {
-        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
     }
 };
 
@@ -250,7 +280,6 @@ export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Acti
         dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE});
     }
 };
-
 
 // Document & Topic Fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
@@ -326,14 +355,12 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
     // TODO MT handle error case
 };
 
-
 // Assignments
 export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_REQUEST});
     const assignmentsResponse = await api.assignments.getMyAssignments();
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
 };
-
 
 // Content version
 export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
@@ -359,7 +386,6 @@ export const setContentVersion = (version: string) => async (dispatch: Dispatch<
         dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE});
     }
 };
-
 
 // Search
 export const fetchSearch = (query: string, types: string) => async (dispatch: Dispatch<Action>) => {

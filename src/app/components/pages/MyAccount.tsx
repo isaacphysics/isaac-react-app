@@ -65,8 +65,8 @@ interface AccountPageProps {
 }
 
 const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, showToast, hashAnchor}: AccountPageProps) => {
+    const editingSelf = true;
 
-    // Catch the (unlikely?) case where a user does not have email preferences in the database.
     if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
         userPreferences.EMAIL_PREFERENCE = { NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true };
     }
@@ -96,6 +96,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     let initialTab = (hashAnchor && Tab[hashAnchor]) ||Tab.account;
     const [activeTab, setTab] = useState(initialTab);
 
+    const buttonInputClass = "btn btn-block btn-secondary border-0";
 
     return <Container id="account-page" className="mb-5">
         <BreadcrumbTrail currentPageTitle="My account" />
@@ -126,8 +127,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             className={"mx-2 " + classnames({active: activeTab === Tab.passwordreset})}
                             onClick={() => setTab(Tab.passwordreset)} tabIndex={0}
                         >
-                            <span className="d-none d-lg-block d-md-block">Change Password</span>
-                            <span className="d-block d-md-none">Password</span>
+                            <span className="d-none d-lg-block">Change Password</span>
+                            <span className="d-block d-lg-none">Password</span>
                         </NavLink>
                     </NavItem>
                     <NavItem>
@@ -144,8 +145,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             className={"mx-2 " + classnames({active: activeTab === Tab.emailpreferences})}
                             onClick={() => setTab(Tab.emailpreferences)} tabIndex={0}
                         >
-                            <span className="d-none d-lg-block d-md-block">Email Preferences</span>
-                            <span className="d-block d-md-none">Email</span>
+                            <span className="d-none d-lg-block">Teacher Connections</span>
+                            <span className="d-block d-lg-none">Connections</span>
                         </NavLink>
                     </NavItem>
                 </Nav>
@@ -161,9 +162,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             passwordCurrent: currentPassword
                         }, user);
                     }
+                    // TODO this should be moved to updateCurrentUse because we do not know here whether the update was successful or not
                     showToast({
                         title: "Preferences updated",
-                        body: "Your user preferences were saved correctly.",
+                        body: "Your user preferences were updated correctly.",
                         color: "success",
                         timeout: 5000,
                         closable: false,
@@ -186,7 +188,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             />
                         </TabPane>
                         <TabPane tabId={Tab.teacherconnections}>
-                            <TeacherConnectionsPanel />
+                            {editingSelf && <TeacherConnectionsPanel user={user} />}
                         </TabPane>
                         <TabPane tabId={Tab.emailpreferences}>
                             <UserEmailPreference
@@ -197,20 +199,18 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
                     <CardFooter className="py-4">
                         <Row>
-                            <Col>
-                                <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
-                                    Required field
-                                </span>
-                            </Col>
-                        </Row>
-                        <Row>
                             <Col size={12} md={{size: 6, offset: 3}}>
                                 {errorMessage && errorMessage.type === "generalError" &&
                                     <h3 role="alert" className="text-danger text-center">
                                         {errorMessage.generalError}
                                     </h3>
                                 }
-                                <Input type="submit" value="Save" className="btn btn-block btn-secondary border-0" />
+                                <Input
+                                    type="submit" value="Save"
+                                    className={
+                                        (activeTab === Tab.teacherconnections) ?  buttonInputClass + " disabled" : buttonInputClass
+                                    }
+                                />
                             </Col>
                         </Row>
                     </CardFooter>

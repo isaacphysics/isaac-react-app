@@ -95,6 +95,11 @@ export const api = {
             return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
         }
     },
+    authorisations: {
+        get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
+            return endpoint.get(`authorisations`);
+        }
+    },
     questions: {
         get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
             return endpoint.get(`/pages/questions/${id}`);

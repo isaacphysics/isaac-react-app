@@ -7,7 +7,7 @@ import {
     GameboardDTO,
     IsaacTopicSummaryPageDTO,
     ResultsWrapper,
-    UserAuthenticationSettingsDTO
+    UserAuthenticationSettingsDTO, UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
 
@@ -39,12 +39,21 @@ type UserPreferencesState = UserPreferencesDTO | null;
 export const userPreferences = (userPreferences: UserPreferencesState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
-            return action.userPreferences;
+            return {...action.userPreferences};
         default:
             return userPreferences;
     }
 };
 
+export type ActiveAuthorisationsState = UserSummaryWithEmailAddressDTO[] | null;
+export const activeAuthorisations = (activeAuthorisations: ActiveAuthorisationsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.ACTIVE_AUTHORISATIONS_RESPONSE_SUCCESS:
+            return [...action.authorisations];
+        default:
+            return activeAuthorisations;
+    }
+};
 
 type ConstantsState = {units?: string[]; segueVersion?: string} | null;
 export const constants = (constants: ConstantsState = null, action: Action): ConstantsState => {
@@ -225,6 +234,7 @@ const appReducer = combineReducers({
     user,
     userAuthSettings,
     userPreferences,
+    activeAuthorisations,
     constants,
     doc,
     questions,
@@ -241,6 +251,7 @@ export type AppState = undefined | {
     user: UserState;
     userAuthSettings: UserAuthSettingsState;
     userPreferences: UserPreferencesState;
+    activeAuthorisations: ActiveAuthorisationsState;
     doc: DocState;
     questions: QuestionsState;
     currentTopic: CurrentTopicState;
