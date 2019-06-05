@@ -31,12 +31,24 @@ import {history} from "../../services/history"
 import {showToast} from "../../state/actions";
 import { Toasts } from '../navigation/Toasts';
 
-const stateToProps = (state: AppState) => ({
-    errorMessage: state ? state.error : null,
-    userAuthSettings: state ? state.userAuthSettings : null,
-    userPreferences: state ? state.userPreferences : null,
-    firstLogin: history.location && history.location.state && history.location.state.firstLogin
-});
+const stateToProps = (state: AppState) => {
+    const urlQuery = window.location.hash.substr(1);
+    let defaultTab = 0;
+    console.log(urlQuery);
+    switch (urlQuery) {
+        case "passwordreset": defaultTab = 1;
+            break;
+        case "emailpreferences": defaultTab = 2;
+            break;
+    }
+    return {
+        errorMessage: state ? state.error : null,
+        userAuthSettings: state ? state.userAuthSettings : null,
+        userPreferences: state ? state.userPreferences : null,
+        firstLogin: history.location && history.location.state && history.location.state.firstLogin,
+        defaultTab: defaultTab
+    }
+};
 
 const dispatchToProps = {
     updateCurrentUser,
@@ -55,9 +67,10 @@ interface AccountPageProps {
     ) => void;
     firstLogin: boolean;
     showToast: (toast: Toast) => void;
+    defaultTab: number;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, showToast}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, showToast, defaultTab}: AccountPageProps) => {
 
     // Catch the (unlikely?) case where a user does not have email preferences in the database.
     if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
@@ -87,7 +100,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [currentPassword, setCurrentPassword] = useState("");
     // const [isNewPasswordConfirmed, setIsNewPasswordConfirmed] = useState(false);
 
-    const [activeTab, setTab] = useState(0);
+    const [activeTab, setTab] = useState(defaultTab);
 
     // Values derived from inputs (props and state)
     const isEmailValid = myUser.loggedIn && myUser.email && validateEmail(myUser.email) || validateEmail("");
@@ -116,8 +129,6 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
             });
         }
     };
-
-    {/• TODO handle #... in with react-router for tab url navigation? •/}
 
     return <Container id="account-page" className="mb-5">
         <BreadcrumbTrail currentPageTitle="My account" />
