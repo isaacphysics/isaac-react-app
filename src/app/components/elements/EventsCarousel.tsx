@@ -43,7 +43,7 @@ export const EventsCarousel = () => {
                     <CardImg
                         className='m-auto rounded-circle'
                         top
-                        src="/assets/event2.svg"
+                        src="/assets/event1.svg"
                         alt="Teacher event illustration"
                     />
                 </div>
