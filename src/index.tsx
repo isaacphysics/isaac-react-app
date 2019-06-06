@@ -1,4 +1,4 @@
-import 'react-app-polyfill/ie9';
+import "core-js/stable";
 import './scss/isaac.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
