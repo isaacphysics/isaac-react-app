@@ -5,7 +5,6 @@ import {Button, Col, Container} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
 import {history} from "../../services/history";
 import queryString from "query-string";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState, {location: {search}}: any) => ({
     errorMessage: state ? state.error : null,
