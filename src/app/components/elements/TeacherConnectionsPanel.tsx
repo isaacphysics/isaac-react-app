@@ -3,36 +3,48 @@ import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {
-    getActiveAuthorisations,
-    getGroupMembership,
-    processAuthenticationToken,
-    processRevocation
+    getActiveAuthorisations, getGroupMembership, getStudentAuthorisations,
+    processAuthenticationToken, processReleaseAuthorisation, processRevocation
 } from "../../state/actions";
 import {connect} from "react-redux";
-import {ActiveAuthorisationsState, AppState} from "../../state/reducers";
+import {ActiveAuthorisationsState, AppState, OtherUserAuthorisationsState} from "../../state/reducers";
 import {extractTeacherName} from "../../services/role";
-import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
+import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
 
 const stateToProps = (state: AppState) => ({
-    activeAuthorisations: state ? state.activeAuthorisations : null
+    activeAuthorisations: state ? state.activeAuthorisations : null,
+    studentAuthorisations: state ? state.otherUserAuthorisations : null
 });
-const dispatchToProps = {getActiveAuthorisations, getGroupMembership, processAuthenticationToken, processRevocation};
+const dispatchToProps = {
+    getActiveAuthorisations, getStudentAuthorisations, getGroupMembership,
+    processAuthenticationToken, processRevocation,
+    processReleaseAuthorisation,
+};
 
 interface TeacherConnectionsProps {
     user: LoggedInUser;
     getActiveAuthorisations: () => void;
+    getStudentAuthorisations: () => void;
     getGroupMembership: () => void;
     activeAuthorisations: ActiveAuthorisationsState;
+    studentAuthorisations: OtherUserAuthorisationsState;
     processAuthenticationToken: (token: string | null) => void;
     processRevocation: (user: UserSummaryWithEmailAddressDTO) => void;
+    processReleaseAuthorisation: (student: UserSummaryDTO) => void;
+
 }
 
 const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
-    const {user, getActiveAuthorisations, getGroupMembership, activeAuthorisations, processAuthenticationToken, processRevocation} = props;
+    const {
+        user, activeAuthorisations, studentAuthorisations, // state
+        getActiveAuthorisations, processAuthenticationToken, processRevocation, // authorisation actions
+        getStudentAuthorisations, processReleaseAuthorisation, // student authorisation actions
+        getGroupMembership, // group membership actions
+    } = props;
 
     useEffect(() => {getActiveAuthorisations()}, []);
     useEffect(() => {getGroupMembership()}, []);
-    // useEffect(() => {getActiveStudentAuthorisations()}, []);
+    useEffect(() => {getStudentAuthorisations()}, []);
 
     const [authenticationToken, setAuthenticationToken] = useState<string | null>(null);
 
@@ -52,7 +64,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
             </h3>
 
             <RS.Row>
-                <RS.Col lg={8}>
+                <RS.Col lg={7}>
                     <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
                     {/* TODO Need to handle nested form complaint */}
                     <RS.Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => processToken(e)}>
@@ -70,7 +82,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                     </RS.Form>
                 </RS.Col>
 
-                <RS.Col lg={4} className="connect-list">
+                <RS.Col lg={5} className="connect-list">
                     <h3><span className="person-icon-active" /> Teacher connections</h3>
                     <div className="connect-list-inner">
                         <ul className="teachers-connected">
@@ -107,7 +119,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
             {user.loggedIn && user.role !== "STUDENT" && <React.Fragment>
                 <hr />
                 <RS.Row>
-                    <RS.Col lg={8}>
+                    <RS.Col lg={7}>
                         <h3>
                             <span id="student-connections-title">Your Student Connections</span>
                             {/* TODO Help Text Icon */}
@@ -121,25 +133,39 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                             <Link to="/groups">group management page</Link>.
                         </p>
                     </RS.Col>
-                    <RS.Col lg={4}>
+                    <RS.Col lg={5}>
                         <div className="connect-list">
                             <h3><span className="person-icon-active" /> Student connections </h3>
 
                             <div className="connect-list-inner">
                                 <ul className="teachers-connected">
-                                    {/*<li ng-repeat="studentUser in activeStudentAuthorisations"><span*/}
-                                    {/*    className="person-icon-active"></span><span aria-haspopup="true" className="has-tip"*/}
-                                    {/*                                                data-ot="You have access to this user's data and they can see your name and email address. To remove this access, click 'Revoke'.">{{*/}
-                                    {/*    studentUser*/}
-                                    {/*    .givenName*/}
-                                    {/*}} {{studentUser.familyName}}</span><a className="revoke-teacher"*/}
-                                    {/*                                       href="javascript:void(0)"*/}
-                                    {/*                                       ng-click="releaseAuthorisation(studentUser)">Remove</a>*/}
-                                    {/*</li>*/}
+                                    {studentAuthorisations && studentAuthorisations.map(student => (
+                                        <li key={student.id}>
+                                            <span className="person-icon-active" />
+                                            <span id={`student-authorisation-${student.id}`}>
+                                                {student.givenName} {student.familyName}
+                                            </span>
+                                            <RS.UncontrolledTooltip
+                                                placement="bottom" target={`student-authorisation-${student.id}`}
+                                            >
+                                                You have access to this user&apos;s data and they can see your name and email address.
+                                                To remove this access, click &apos;Remove&apos;.
+                                            </RS.UncontrolledTooltip>
+                                            <RS.Button
+                                                color="link" className="revoke-teacher"
+                                                onClick={() => processReleaseAuthorisation(student)}
+                                            >
+                                                Remove
+                                            </RS.Button>
+                                        </li>
+                                    ))}
                                 </ul>
 
-                                {/*<p ng-if="activeStudentAuthorisations.length==0" className="teachers-connected">You have no active student connections.</p>*/}
+                                {studentAuthorisations && studentAuthorisations.length === 0 && <p className="teachers-connected">
+                                    You have no active student connections.
+                                </p>}
                             </div>
+                            {/* TODO Remove all*/}
                             {/*<div ng-if="activeStudentAuthorisations.length>0" className="remove-link">*/}
                             {/*    <p><a href="javascript:void(0)" ng-click="releaseAllAuthorisations()">Remove all</a></p>*/}
                         </div>

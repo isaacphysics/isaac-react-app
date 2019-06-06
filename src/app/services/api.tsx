@@ -99,6 +99,9 @@ export const api = {
         get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
             return endpoint.get(`authorisations`);
         },
+        getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
+            return endpoint.get(`/authorisations/other_users`);
+        },
         getTokenOwner: (token: string): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
             return endpoint.get(`/authorisations/token/${token}/owner`);
         },
@@ -107,6 +110,9 @@ export const api = {
         },
         revoke: (userId: number) => {
             return endpoint.delete(`/authorisations/${userId}`);
+        },
+        release: (userId: number) => {
+            return endpoint.delete(`/authorisations/release/${userId}`);
         }
     },
     groupManagement: {

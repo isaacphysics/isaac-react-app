@@ -16,7 +16,7 @@ import {
     GameboardDTO,
     IsaacTopicSummaryPageDTO,
     ResultsWrapper,
-    UserAuthenticationSettingsDTO,
+    UserAuthenticationSettingsDTO, UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
@@ -62,6 +62,16 @@ export const activeAuthorisations = (activeAuthorisations: ActiveAuthorisationsS
             return [...action.authorisations];
         default:
             return activeAuthorisations;
+    }
+};
+
+export type OtherUserAuthorisationsState = UserSummaryDTO[] | null;
+export const otherUserAuthorisations = (otherUserAuthorisations: OtherUserAuthorisationsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS:
+            return [...action.otherUserAuthorisations];
+        default:
+            return otherUserAuthorisations;
     }
 };
 
@@ -268,6 +278,7 @@ const appReducer = combineReducers({
     userAuthSettings,
     userPreferences,
     activeAuthorisations,
+    otherUserAuthorisations,
     groupMembership,
     constants,
     doc,
@@ -287,6 +298,7 @@ export type AppState = undefined | {
     userAuthSettings: UserAuthSettingsState;
     userPreferences: UserPreferencesState;
     activeAuthorisations: ActiveAuthorisationsState;
+    otherUserAuthorisations: OtherUserAuthorisationsState;
     groupMembership: GroupMembershipState;
     doc: DocState;
     questions: QuestionsState;

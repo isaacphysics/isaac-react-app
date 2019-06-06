@@ -1,6 +1,6 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {activeAuthorisations, AppState} from "./reducers";
+import {AppState} from "./reducers";
 import {history, redirectToPageNotFound} from "../services/history";
 import {store} from "./store";
 import {documentCache, topicCache} from "../services/cache";
@@ -19,9 +19,11 @@ import {
     ChoiceDTO,
     QuestionDTO,
     RegisteredUserDTO,
+    UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {
+    releaseConfirmationModal,
     revocationConfirmationModal,
     tokenVerificationModal
 } from "../components/elements/TeacherConnectionModalCreators";
@@ -264,6 +266,19 @@ export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) 
     }
 };
 
+export const getStudentAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_REQUEST});
+    try {
+        const otherUserAuthorisationsResponse = await api.authorisations.getOtherUsers();
+        dispatch({
+            type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS,
+            otherUserAuthorisations: otherUserAuthorisationsResponse.data
+        });
+    } catch {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_FAILURE});
+    }
+};
+
 export const getGroupMembership = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIP_REQUEST});
     try {
@@ -318,8 +333,8 @@ export const processAuthenticationToken = (userSubmittedAuthenticationToken: str
 };
 
 export const applyToken = (authToken: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_REQUEST});
     try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_REQUEST});
         await api.authorisations.useToken(authToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS});
         dispatch(getActiveAuthorisations() as any);
@@ -362,6 +377,28 @@ export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO
             color: "danger", title: "Revoke Operation Failed",
             body: "With error message (" + e.status + ") " + e.data.errorMessage != undefined ? e.data.errorMessage : ""
         }) as any)
+    }
+};
+
+export const processReleaseAuthorisation = (student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(releaseConfirmationModal(student)) as any);
+};
+export const releaseAuthorisation = (student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_REQUEST});
+        await api.authorisations.release(student.id as number);
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_SUCCESS});
+        dispatch(getStudentAuthorisations() as any);
+        dispatch(closeActiveModal() as any);
+        dispatch(showToast({
+            color: "success", title: "Access Removed", body: "You have ended your access to your student's data."
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "Revoke Operation Failed",
+            body: "With error message (" + e.status + ") " + (e.data.errorMessage || "")
+        }) as any);
     }
 };
 

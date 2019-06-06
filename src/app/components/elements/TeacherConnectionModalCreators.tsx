@@ -1,6 +1,6 @@
 import React from "react";
-import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
-import {applyToken, closeActiveModal, revokeAuthorisation} from "../../state/actions";
+import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
+import {applyToken, closeActiveModal, releaseAuthorisation, revokeAuthorisation} from "../../state/actions";
 import {store} from "../../state/store";
 import * as RS from "reactstrap";
 import {extractTeacherName} from "../../services/role";
@@ -58,17 +58,36 @@ export const revocationConfirmationModal = (userToRevoke: UserSummaryWithEmailAd
         closeAction: () => {store.dispatch(closeActiveModal())},
         title: "Revoke access to your data",
         body: <React.Fragment>
-            <div className="reveal-modal-body ru-page-heading">
-                <p>
-                    The user <strong>{extractTeacherName(userToRevoke)}</strong>
-                    {" "}
-                    will no longer be able to access your data.
-                </p>
-                <p>Are you sure you want to revoke access for this user?</p>
-            </div>
+            <p>
+                The user <strong>{extractTeacherName(userToRevoke)}</strong>
+                {" "}
+                will no longer be able to access your data.
+            </p>
+            <p>Are you sure you want to revoke access for this user?</p>
         </React.Fragment>,
         buttons: [
             <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(revokeAuthorisation(userToRevoke))}}>
+                Confirm
+            </RS.Button>,
+            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
+                Cancel
+            </RS.Button>
+        ]
+    }
+};
+
+export const releaseConfirmationModal = (user: UserSummaryDTO) => {
+    return {
+        closeAction: () => {store.dispatch(closeActiveModal())},
+        title: "Remove access to students' data",
+        body: <React.Fragment>
+            <p>
+                Are you sure you want to end your access to {user.givenName} {user.familyName}&apos;s data?
+                You will need to ask them to grant access again in the future if you change your mind.
+            </p>
+        </React.Fragment>,
+        buttons: [
+            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(releaseAuthorisation(user))}}>
                 Confirm
             </RS.Button>,
             <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
