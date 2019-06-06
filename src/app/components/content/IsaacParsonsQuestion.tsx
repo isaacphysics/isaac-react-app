@@ -7,6 +7,7 @@ import {IsaacParsonsQuestionDTO, ParsonsChoiceDTO, ParsonsItemDTO} from "../../.
 import {IsaacHints} from "./IsaacHints";
 import {SortableContainer, SortableElement, SortStart, SortEvent, SortEnd} from "react-sortable-hoc";
 import {Col, Row} from "reactstrap";
+import {DragDropContext, Droppable, Draggable, DropResult, ResponderProvided, DroppableProvided, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot} from "react-beautiful-dnd";
 
 interface IsaacParsonsQuestionProps {
     doc: IsaacParsonsQuestionDTO;
@@ -91,17 +92,26 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         }
     }
 
-    onSortEnd = (sort: SortEnd, event: SortEvent) => {
-        this.moveItem(sort.oldIndex, sort.newIndex, this.state.currentIndent ? this.state.currentIndent : 0);
-        this.setState({
-            draggedElement: null,
-            initialX: null,
-            currentIndent: null,
-        });
+    // onSortEnd = (sort: SortEnd, event: SortEvent) => {
+    //     this.moveItem(sort.oldIndex, sort.newIndex, this.state.currentIndent ? this.state.currentIndent : 0);
+    //     this.setState({
+    //         draggedElement: null,
+    //         initialX: null,
+    //         currentIndent: null,
+    //     });
+    // }
+
+    onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+        // this.moveItem(result.source.index, sort.newIndex, this.state.currentIndent ? this.state.currentIndent : 0);
+        // this.setState({
+        //     draggedElement: null,
+        //     initialX: null,
+        //     currentIndent: null,
+        // });
     }
 
     render() {
-        let availableItems = this.props.doc.items ;//&& this.props.doc.items.filter(item => this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.includes(item));
+        let availableItems = this.props.doc.items; //&& this.props.doc.items.filter(item => this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.includes(item));
 
         return <div className="parsons-question">
             <div className="question-content">
@@ -111,7 +121,63 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             </div>
             {/* TODO Accessibility */}
             <Row className="my-md-3">
-                <Col md={{size: 6}}>
+                <DragDropContext onDragEnd={this.onDragEnd}>
+                    <Col md={{size: 6}}>
+                        <p>Available items</p>
+                        <Droppable droppableId="availableItems">
+                            {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
+                                return <div ref={provided.innerRef}>
+                                    {availableItems && availableItems.map((item, index) => {
+                                        return <Draggable
+                                            key={item.id}
+                                            draggableId={item.id || `${index}`}
+                                            index={index}
+                                            >
+                                            {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
+                                                return <div
+                                                    id={`parsons-item-${item.id}`}
+                                                    className={`parsons-item indent-${item.indentation}`}
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    ><pre>{item.value} [{item.indentation}]</pre></div>
+                                            }}
+                                        </Draggable>
+                                    })}
+                                    {provided.placeholder}
+                                </div>
+                            }}
+                        </Droppable>
+                    </Col>
+                    <Col md={{size: 6}}>
+                        <p>Your answer</p>
+                        <Droppable droppableId="answerItems">
+                            {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
+                                return <div ref={provided.innerRef}>
+                                    {this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.map((item, index) => {
+                                        return <Draggable
+                                            key={item.id}
+                                            draggableId={item.id || `${index}`}
+                                            index={index}
+                                            >
+                                            {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
+                                                return <div
+                                                    id={`parsons-item-${item.id}`}
+                                                    className={`parsons-item indent-${item.indentation}`}
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    ><pre>{item.value} [{item.indentation}]</pre></div>
+                                            }}
+                                        </Draggable>
+                                    })}
+                                    {provided.placeholder}
+                                </div>
+                            }}
+                        </Droppable>
+                    </Col>
+                </DragDropContext>
+                {/* <Col md={{size: 6}}>
                     <p>Available items</p>
                     {availableItems && <div className="parsons-items">
                         <this.SortableList
@@ -129,7 +195,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                         onSortEnd={this.onSortEnd}
                         />
                     </div>}
-                </Col>
+                </Col> */}
             </Row>
             <IsaacHints hints={this.props.doc.hints} />
         </div>

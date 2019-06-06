@@ -69,6 +69,7 @@
     "query-string": "^6.5.0",
     "react": "^16.8.5",
     "react-app-polyfill": "^0.2.2",
+    "react-beautiful-dnd": "^11.0.3",
     "react-dev-utils": "^8.0.0",
     "react-dom": "16.8.4",
     "react-ga": "^2.5.7",
