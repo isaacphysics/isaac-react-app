@@ -6,6 +6,7 @@ import {AppState} from "../../state/reducers";
 import {IsaacParsonsQuestionDTO, ParsonsChoiceDTO, ParsonsItemDTO} from "../../../IsaacApiTypes";
 import {IsaacHints} from "./IsaacHints";
 import {SortableContainer, SortableElement, SortStart, SortEvent, SortEnd} from "react-sortable-hoc";
+import {Col, Row} from "reactstrap";
 
 interface IsaacParsonsQuestionProps {
     doc: IsaacParsonsQuestionDTO;
@@ -17,7 +18,6 @@ interface IsaacParsonsQuestionProps {
 class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestionProps> {
     state: {
         draggedElement?: HTMLElement | null;
-        currentAttemptValue: ParsonsChoiceDTO;
         initialX?: number | null;
         currentIndent?: number | null;
     };
@@ -26,36 +26,23 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         super(props);
         const {currentAttempt, doc} = props;
 
-        let currentAttemptValue: ParsonsChoiceDTO = {};
-        if (currentAttempt && currentAttempt.items) {
-            try {
-                currentAttemptValue = currentAttempt;
-            } catch(e) {
-                currentAttemptValue.items = doc.items;
-            }
-        } else {
-            currentAttemptValue.items = doc.items;
-        } // TODO Improve this -^
-
         this.state = {
             draggedElement: null,
-            currentAttemptValue: currentAttemptValue,
             initialX: null,
             currentIndent: null,
         }
     }
 
     moveItem = (fromIndex: number, toIndex: number, indent: number) => {
-        const t = Object.assign({}, this.state.currentAttemptValue);
+        const t = Object.assign({}, this.props.currentAttempt);
         if (t.items) {
             const sourceItem = t.items.splice(fromIndex, 1)[0];
             sourceItem.indentation = indent;
             t.items.splice(toIndex, 0, sourceItem);
         }
-        this.setState({ currentAttemptValue: t});
         const attempt: ParsonsChoiceDTO = {
             type: "parsonsChoice",
-            items: this.state.currentAttemptValue.items,
+            items: this.props.currentAttempt && this.props.currentAttempt.items,
         }
         this.props.setCurrentAttempt(this.props.questionId, attempt);
     }
@@ -114,6 +101,8 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
     }
 
     render() {
+        let availableItems = this.props.doc.items ;//&& this.props.doc.items.filter(item => this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.includes(item));
+
         return <div className="parsons-question">
             <div className="question-content">
                 <IsaacContentValueOrChildren value={this.props.doc.value} encoding={this.props.doc.encoding}>
@@ -121,14 +110,27 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                 </IsaacContentValueOrChildren>
             </div>
             {/* TODO Accessibility */}
-            {this.state.currentAttemptValue && <div className="parsons-items">
-                <this.SortableList
-                items={this.state.currentAttemptValue.items}
-                updateBeforeSortStart={this.onUpdateBeforeSortStart}
-                onSortMove={this.onSortMove}
-                onSortEnd={this.onSortEnd}
-                />
-            </div>}
+            <Row className="my-md-3">
+                <Col md={{size: 6}}>
+                    <p>Available items</p>
+                    {availableItems && <div className="parsons-items">
+                        <this.SortableList
+                        items={availableItems}
+                        />
+                    </div>}
+                </Col>
+                <Col md={{size: 6}}>
+                    <p>Your answer</p>
+                    {this.props.currentAttempt && <div className="parsons-items">
+                        <this.SortableList
+                        items={this.props.currentAttempt.items}
+                        updateBeforeSortStart={this.onUpdateBeforeSortStart}
+                        onSortMove={this.onSortMove}
+                        onSortEnd={this.onSortEnd}
+                        />
+                    </div>}
+                </Col>
+            </Row>
             <IsaacHints hints={this.props.doc.hints} />
         </div>
     }

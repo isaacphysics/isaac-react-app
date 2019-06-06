@@ -56,7 +56,7 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
     const goBackToBoard = () => {
         history.push(`/gameboards#${queryParams.board}`);
     };
-
+    
     return <ShowLoading until={doc}>
         {doc && <div className="pattern-01">
             <Container>

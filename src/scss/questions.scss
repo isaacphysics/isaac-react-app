@@ -1,3 +1,6 @@
+@import "../../node_modules/bootstrap/scss/_variables.scss";
+@import "../../node_modules/bootstrap/scss/mixins/_grid.scss";
+
 // ISAAC
 .question-panel > .content-value,
 .question-panel .isaac-accordion .accordion-section > .content-value{
@@ -46,6 +49,13 @@
     &.empty {
       color: $gray-500;
     }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .parsons-layout {
+    @include make-col-offset(-2, 8);
+    width: 150%;
   }
 }
 

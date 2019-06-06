@@ -36,11 +36,10 @@ interface IsaacQuestionTabsProps {
     registerQuestion: (question: ApiTypes.QuestionDTO) => void;
     deregisterQuestion: (questionId: string) => void;
     attemptQuestion: (questionId: string, attempt: ApiTypes.ChoiceDTO) => void;
-    large?: boolean;
 }
 
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
-    const {doc, currentAttempt, validationResponse, questionIndex, canSubmit, registerQuestion, deregisterQuestion, attemptQuestion, large} = props;
+    const {doc, currentAttempt, validationResponse, questionIndex, canSubmit, registerQuestion, deregisterQuestion, attemptQuestion} = props;
 
     useEffect((): (() => void) => {
         registerQuestion(doc);
@@ -59,14 +58,18 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         case 'isaacMultiChoiceQuestion': default: QuestionComponent = IsaacMultiChoiceQuestion; break;
     }
 
+    let extraClasses = "";
+    if (doc.type === 'isaacParsonsQuestion') {
+        extraClasses += "parsons-layout ";
+    }
+
     return <React.Fragment>
         {/* <h2 className="h-question d-flex pb-3">
             <span className="mr-3">{questionIndex !== undefined ? `Q${questionIndex + 1}` : "Question"}</span>
         </h2> */}
 
         {/* Difficulty bar */}
-
-        <div className="question-component p-md-5">
+        <div className={`question-component p-md-5 ${extraClasses}`}>
             <QuestionComponent questionId={doc.id as string} doc={doc} />
 
             {validationResponse && !canSubmit && <div className="validation-response-panel">
