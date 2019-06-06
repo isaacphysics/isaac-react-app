@@ -33,8 +33,9 @@ export const IsaacContent = (props: IsaacContentProps) => {
         case "isaacAnvilQuestion":
         case "isaacStringMatchQuestion":
         case "isaacFreeTextQuestion":
-        case "isaacParsonsQuestion":
             selectedComponent = <IsaacQuestionTabs {...props} />; break;
+        case "isaacParsonsQuestion":
+            selectedComponent = <IsaacQuestionTabs {...props} large />; break;
         default:
             switch (layout) {
                 case "tabs": selectedComponent = <IsaacTabs {...props} />; break;

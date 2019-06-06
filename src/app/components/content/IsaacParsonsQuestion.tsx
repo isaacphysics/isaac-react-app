@@ -24,18 +24,19 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
 
     constructor(props: IsaacParsonsQuestionProps) {
         super(props);
-        const {doc, currentAttempt} = props;
+        const {currentAttempt, doc} = props;
 
         let currentAttemptValue: ParsonsChoiceDTO = {};
-        if (currentAttempt && currentAttempt.value) {
+        if (currentAttempt && currentAttempt.items) {
             try {
-                currentAttemptValue = JSON.parse(currentAttempt.value) as ParsonsChoiceDTO;
+                currentAttemptValue = currentAttempt;
             } catch(e) {
                 currentAttemptValue.items = doc.items;
             }
         } else {
             currentAttemptValue.items = doc.items;
         } // TODO Improve this -^
+
         this.state = {
             draggedElement: null,
             currentAttemptValue: currentAttemptValue,

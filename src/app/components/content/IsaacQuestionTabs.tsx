@@ -36,10 +36,11 @@ interface IsaacQuestionTabsProps {
     registerQuestion: (question: ApiTypes.QuestionDTO) => void;
     deregisterQuestion: (questionId: string) => void;
     attemptQuestion: (questionId: string, attempt: ApiTypes.ChoiceDTO) => void;
+    large?: boolean;
 }
 
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
-    const {doc, currentAttempt, validationResponse, questionIndex, canSubmit, registerQuestion, deregisterQuestion, attemptQuestion} = props;
+    const {doc, currentAttempt, validationResponse, questionIndex, canSubmit, registerQuestion, deregisterQuestion, attemptQuestion, large} = props;
 
     useEffect((): (() => void) => {
         registerQuestion(doc);
