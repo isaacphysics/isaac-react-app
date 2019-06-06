@@ -16,8 +16,10 @@ interface IsaacParsonsQuestionProps {
 
 class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestionProps> {
     state: {
-        draggedElement?: Element | null;
+        draggedElement?: HTMLElement | null;
         currentAttemptValue: ParsonsChoiceDTO;
+        initialX?: number | null;
+        currentIndent?: number | null;
     };
 
     constructor(props: IsaacParsonsQuestionProps) {
@@ -37,13 +39,16 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         this.state = {
             draggedElement: null,
             currentAttemptValue: currentAttemptValue,
+            initialX: null,
+            currentIndent: null,
         }
     }
 
-    moveItem = (fromIndex: number, toIndex: number) => {
+    moveItem = (fromIndex: number, toIndex: number, indent: number) => {
         const t = Object.assign({}, this.state.currentAttemptValue);
         if (t.items) {
             const sourceItem = t.items.splice(fromIndex, 1)[0];
+            sourceItem.indentation = indent;
             t.items.splice(toIndex, 0, sourceItem);
         }
         this.setState({ currentAttemptValue: t});
@@ -66,19 +71,45 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         </div>
     });
 
+    getXFromEvent = (event: SortEvent) => {
+        if (event instanceof MouseEvent) {
+            return event.clientX;
+        } else if (event instanceof TouchEvent) {
+            return event.touches[0].clientX;
+        }
+        return null;
+    }
+
     onUpdateBeforeSortStart = (sort: SortStart, event: SortEvent) => {
+        const element: HTMLElement = sort.node as HTMLElement;
+        const x = this.getXFromEvent(event);
+
         return new Promise((res) => {
-            this.setState({ draggedElement: sort.node }, res);
+            this.setState({
+                draggedElement: element,
+                initialX: x,
+            }, res);
         });
     }
 
     onSortMove = (event: SortEvent) => {
-        console.log(this.state.draggedElement);
+        const x = this.getXFromEvent(event);
+        if (this.state.initialX && x) {
+            const d = Math.max(0, x - this.state.initialX);
+            const i = Math.floor(d/30);
+            this.setState({
+                currentIndent: i,
+            });
+        }
     }
 
     onSortEnd = (sort: SortEnd, event: SortEvent) => {
-        this.moveItem(sort.oldIndex, sort.newIndex);
-        this.setState({ draggedElement: null });
+        this.moveItem(sort.oldIndex, sort.newIndex, this.state.currentIndent ? this.state.currentIndent : 0);
+        this.setState({
+            draggedElement: null,
+            initialX: null,
+            currentIndent: null,
+        });
     }
 
     render() {
