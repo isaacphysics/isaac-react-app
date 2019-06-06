@@ -2,43 +2,44 @@ import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../IsaacAppTypes";
-import {getActiveAuthorisations} from "../../state/actions";
+import {
+    getActiveAuthorisations,
+    getGroupMembership,
+    processAuthenticationToken,
+    processRevocation
+} from "../../state/actions";
 import {connect} from "react-redux";
 import {ActiveAuthorisationsState, AppState} from "../../state/reducers";
+import {extractTeacherName} from "../../services/role";
+import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
 
 const stateToProps = (state: AppState) => ({
-    activeAuthorisations: state ? state.activeAuthorisations : null,
+    activeAuthorisations: state ? state.activeAuthorisations : null
 });
-const dispatchToProps = {getActiveAuthorisations};
+const dispatchToProps = {getActiveAuthorisations, getGroupMembership, processAuthenticationToken, processRevocation};
 
 interface TeacherConnectionsProps {
     user: LoggedInUser;
     getActiveAuthorisations: () => void;
+    getGroupMembership: () => void;
     activeAuthorisations: ActiveAuthorisationsState;
+    processAuthenticationToken: (token: string | null) => void;
+    processRevocation: (user: UserSummaryWithEmailAddressDTO) => void;
 }
 
 const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
-    const {user, getActiveAuthorisations, activeAuthorisations} = props;
+    const {user, getActiveAuthorisations, getGroupMembership, activeAuthorisations, processAuthenticationToken, processRevocation} = props;
 
     useEffect(() => {getActiveAuthorisations()}, []);
+    useEffect(() => {getGroupMembership()}, []);
+    // useEffect(() => {getActiveStudentAuthorisations()}, []);
 
     const [authenticationToken, setAuthenticationToken] = useState<string | null>(null);
 
-    function extractTeacherName(teacher: {givenName?: string; familyName?: string} | null) {
-        if (null == teacher)
-            return null;
-        return (teacher.givenName ? teacher.givenName.charAt(0) + ". " : "") + teacher.familyName;
-    }
-
     function processToken(event: React.FormEvent<HTMLFormElement>) {
-        if (event) {
-            event.preventDefault();
-        }
+        if (event) {event.preventDefault();}
+        processAuthenticationToken(authenticationToken);
     }
-    function showRevocationConfirmation(teacher: {}) {
-        // TODO MT
-    }
-
 
     return <RS.CardBody>
         <RS.Container ng-if="editingSelf">
@@ -53,7 +54,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
             <RS.Row>
                 <RS.Col lg={8}>
                     <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
-                    {/* TODO Need to handle nested form problem */}
+                    {/* TODO Need to handle nested form complaint */}
                     <RS.Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => processToken(e)}>
                         <RS.InputGroup>
                             <RS.Input
@@ -88,7 +89,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                                         </RS.UncontrolledTooltip>
                                         <RS.Button
                                             color="link" className="revoke-teacher"
-                                            onClick={() => showRevocationConfirmation(teacherAuthorisation)}
+                                            onClick={() => processRevocation(teacherAuthorisation)}
                                         >
                                             Revoke
                                         </RS.Button>
@@ -116,7 +117,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                             </RS.UncontrolledTooltip>
                         </h3>
                         <p>
-                            You can invite students to share their Isaac data with you through the
+                            You can invite students to share their Isaac data with you through the {" "}
                             <Link to="/groups">group management page</Link>.
                         </p>
                     </RS.Col>

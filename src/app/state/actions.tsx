@@ -1,19 +1,30 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {AppState} from "./reducers";
+import {activeAuthorisations, AppState} from "./reducers";
 import {history, redirectToPageNotFound} from "../services/history";
 import {store} from "./store";
 import {documentCache, topicCache} from "../services/cache";
 import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
 import {
     Action,
+    ActiveModal,
     LoggedInUser,
     LoggedInValidationUser,
     Toast,
     UserPreferencesDTO,
     ValidatedChoice,
 } from "../../IsaacAppTypes";
-import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import {
+    AuthenticationProvider,
+    ChoiceDTO,
+    QuestionDTO,
+    RegisteredUserDTO,
+    UserSummaryWithEmailAddressDTO
+} from "../../IsaacApiTypes";
+import {
+    revocationConfirmationModal,
+    tokenVerificationModal
+} from "../components/elements/TeacherConnectionModalCreators";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -40,6 +51,11 @@ export const showToast = (toast: Toast) => (dispatch: any) => {
     dispatch({type: ACTION_TYPE.TOASTS_SHOW, toast});
     return toastId;
 };
+
+// ActiveModal
+export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
+
+export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
 
 // User Authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
@@ -236,16 +252,116 @@ export const submitMessage = (extra: any, params: {firstName: string; lastName: 
 
 // User Connections
 export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.ACTIVE_AUTHORISATIONS_REQUEST});
+    dispatch({type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST});
     try {
         const authorisationsResponse = await api.authorisations.get();
         dispatch({
-            type: ACTION_TYPE.ACTIVE_AUTHORISATIONS_RESPONSE_SUCCESS,
+            type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS,
             authorisations: authorisationsResponse.data
         });
     } catch {
-        dispatch({type: ACTION_TYPE.ACTIVE_AUTHORISATIONS_RESPONSE_FAILURE});
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_FAILURE});
+    }
+};
 
+export const getGroupMembership = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIP_REQUEST});
+    try {
+        const groupMembershipResponse = await api.groupManagement.getMyMembership();
+        dispatch({
+            type: ACTION_TYPE.GROUP_GET_MEMBERSHIP_RESPONSE_SUCCESS,
+            groupMembership: groupMembershipResponse.data
+        });
+    } catch {
+        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIP_RESPONSE_FAILURE});
+    }
+};
+
+export const processAuthenticationToken = (userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
+    if (!userSubmittedAuthenticationToken) {
+        dispatch(showToast({color: "failure", title: "No Token Provided", body: "You have to enter a token!"}) as any);
+        return;
+    }
+
+    // Some users paste the URL in the token box, so remove the token from the end if they do.
+    // Tokens so far are also always uppercase; this is hardcoded in the API, so safe to assume here:
+    let authenticationToken = userSubmittedAuthenticationToken.split("?authToken=").pop() as string;
+    authenticationToken = authenticationToken.toUpperCase().replace(/ /g,'');
+
+    dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST})
+    try {
+        const result = await api.authorisations.getTokenOwner(authenticationToken);
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_SUCCESS});
+        const usersToGrantAccess = result.data;
+
+        // TODO can use state (second thunk param) to highlight teachers who have already been granted access
+        // const toGrantIds = usersToGrantAccess && usersToGrantAccess.map(u => u.id);
+        // const state = getState();
+        // const usersAlreadyAuthorised = (state && state.activeAuthorisations && state.activeAuthorisations
+        //     .filter((currentAuthorisation) => (toGrantIds as number[]).includes(currentAuthorisation.id as number)));
+
+        dispatch(openActiveModal(tokenVerificationModal(authenticationToken, usersToGrantAccess)) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_FAILURE});
+        if (e.status == 429) {
+            dispatch(showToast({
+                color: "danger", title: "Too Many Attempts",
+                body: "You have entered too many tokens. Please check your code with your teacher and try again later!"
+            }) as any);
+        } else {
+            dispatch(showToast({
+                color: "danger", title: "Teacher Connection Failed",
+                body: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
+            }) as any);
+        }
+    }
+};
+
+export const applyToken = (authToken: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_REQUEST});
+    try {
+        await api.authorisations.useToken(authToken);
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS});
+        dispatch(getActiveAuthorisations() as any);
+        dispatch(getGroupMembership() as any);
+        //     $scope.authenticationToken = {value: null}; // could be done with a history push but might lose other info
+        dispatch(showToast({color: "success", title: "Granted Access", body: "You have granted access to your data."}) as any);
+        // TODO handle firstLogin redirect
+        //     // user.firstLogin is set correctly using SSO, but not with Segue: check session storage too:
+        //     if ($scope.user.firstLogin || persistence.session.load('firstLogin')) {
+        //         // If we've just signed up and used a group code immediately, change back to the main settings page:
+        //         $scope.activeTab = 0;
+        //     }
+        dispatch(closeActiveModal() as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "Teacher Connection Failed",
+            body: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
+        }) as any);
+    }
+};
+
+export const processRevocation = (user: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(revocationConfirmationModal(user)) as any);
+};
+
+export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_REQUEST});
+        await api.authorisations.revoke(userToRevoke.id as number);
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            color: "success", title: "Access Revoked", body: "You have revoked access to your data."
+        }) as any)
+        dispatch(getActiveAuthorisations() as any);
+        dispatch(closeActiveModal() as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "Revoke Operation Failed",
+            body: "With error message (" + e.status + ") " + e.data.errorMessage != undefined ? e.data.errorMessage : ""
+        }) as any)
     }
 };
 
@@ -397,10 +513,7 @@ export const fetchSearch = (query: string, types: string) => async (dispatch: Di
     dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
 };
 
-
-
-
-// SERVICE TRIGGERED ACTIONS
+// SERVICE ACTIONS (w/o dispatch)
 // Page change
 export const changePage = (path: string) => {
     store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});

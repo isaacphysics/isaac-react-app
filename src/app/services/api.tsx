@@ -98,6 +98,20 @@ export const api = {
     authorisations: {
         get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
             return endpoint.get(`authorisations`);
+        },
+        getTokenOwner: (token: string): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
+            return endpoint.get(`/authorisations/token/${token}/owner`);
+        },
+        useToken: (token: string) => {
+            return endpoint.post(`/authorisations/use_token/${token}`);
+        },
+        revoke: (userId: number) => {
+            return endpoint.delete(`/authorisations/${userId}`);
+        }
+    },
+    groupManagement: {
+        getMyMembership: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get(`/groups/membership`);
         }
     },
     questions: {
