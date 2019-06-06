@@ -19,6 +19,7 @@ function formatDate(date: number | Date) {
     const dateObject = new Date(date);
     return dateObject.toLocaleDateString();
 }
+
 const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; showOld?: (event: any) => void}) => {
     const now = new Date();
 
