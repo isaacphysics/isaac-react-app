@@ -123,7 +123,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         id="dob-input"
                         type="date"
                         name="date-of-birth"
-                        defaultValue={myUser.dateOfBirth && myUser.dateOfBirth.toLocaleDateString()}
+                        defaultValue={myUser.dateOfBirth as unknown as string}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             const dateOfBirth = event.target.valueAsDate;
                             setIsDobValid(isDobOverThirteen(dateOfBirth));
