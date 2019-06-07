@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {withRouter, Link} from "react-router-dom";
 import {connect} from "react-redux";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import queryString from "query-string";
 import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -9,7 +9,7 @@ import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
-import {DOCUMENT_TYPE, EXAM_BOARD} from "../../services/constants";
+import {DOCUMENT_TYPE} from "../../services/constants";
 import {determineNextTopicContentLink, determineTopicHistory, idIsPresent} from "../../services/topics";
 import {PageNavigation} from "../../../IsaacAppTypes";
 import {History} from "history";

@@ -1,5 +1,5 @@
 import * as ApiTypes from "./IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "./app/services/constants";
+import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 
 
 export type Action =
@@ -51,10 +51,39 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST}
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS; users: {}[]}
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST}
+    | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS; authorisations: ApiTypes.UserSummaryWithEmailAddressDTO[]}
+    | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_REQUEST}
+    | {type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS; otherUserAuthorisations: ApiTypes.UserSummaryDTO[]}
+    | {type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST}
+    | {type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_REQUEST}
+    | {type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.AUTHORISATIONS_REVOKE_REQUEST}
+    | {type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_REQUEST}
+    | {type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_REQUEST}
+    | {type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST}
+    | {type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS; groupMemberships: GroupMembershipDetailDTO[]}
+    | {type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST}
+    | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS; groupId: number; newStatus: MEMBERSHIP_STATUS}
+    | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST}
     | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
@@ -105,6 +134,9 @@ export type Action =
     | {type: ACTION_TYPE.TOASTS_SHOW; toast: Toast}
     | {type: ACTION_TYPE.TOASTS_HIDE; toastId: string}
     | {type: ACTION_TYPE.TOASTS_REMOVE; toastId: string}
+
+    | {type: ACTION_TYPE.ACTIVE_MODAL_OPEN; activeModal: ActiveModal}
+    | {type: ACTION_TYPE.ACTIVE_MODAL_CLOSE}
 ;
 
 
@@ -147,6 +179,11 @@ export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
 }
 export type LoggedInValidationUser = ValidationUser & {loggedIn: true}  | {loggedIn: false};
 
+export interface GroupMembershipDetailDTO {
+    group: ApiTypes.UserGroupDTO;
+    membershipStatus: MEMBERSHIP_STATUS;
+}
+
 export interface LinkInfo {
     title: string;
     to: string;
@@ -176,4 +213,11 @@ export interface Toast {
     // For internal use
     id?: string;
     showing?: boolean;
+}
+
+export interface ActiveModal {
+    closeAction: () => void;
+    title: string;
+    body: any;
+    buttons: any[];
 }

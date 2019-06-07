@@ -19,26 +19,37 @@ import {
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
 import {updateCurrentUser, resetPassword} from "../../state/actions";
-import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
+import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser, Toast} from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
 import {validateEmail} from "../../services/validation";
+import queryString from "query-string";
 import {Link} from "react-router-dom";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
-import {EXAM_BOARD} from "../../services/constants";
+import {EXAM_BOARD, ACCOUNT_TAB} from "../../services/constants";
 import {history} from "../../services/history"
+import {showToast} from "../../state/actions";
+import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
+import {withRouter} from "react-router-dom";
 
-const stateToProps = (state: AppState) => ({
-    errorMessage: state ? state.error : null,
-    userAuthSettings: state ? state.userAuthSettings : null,
-    userPreferences: state ? state.userPreferences : null,
-    firstLogin: history.location && history.location.state && history.location.state.firstLogin
-});
+const stateToProps = (state: AppState, props: any) => {
+    const {location: {search, hash}} = props;
+    const searchParams = queryString.parse(search);
+    return {
+        errorMessage: state ? state.error : null,
+        userAuthSettings: state ? state.userAuthSettings : null,
+        userPreferences: state ? state.userPreferences : null,
+        firstLogin: history.location && history.location.state && history.location.state.firstLogin,
+        hashAnchor: (hash && hash.slice(1)) || null,
+        authToken: (searchParams && searchParams.authToken) ? (searchParams.authToken as string) : null
+    }
+};
 
 const dispatchToProps = {
     updateCurrentUser,
     resetPassword,
+    showToast,
 };
 
 interface AccountPageProps {
@@ -51,11 +62,14 @@ interface AccountPageProps {
         currentUser: LoggedInUser
     ) => void;
     firstLogin: boolean;
+    showToast: (toast: Toast) => void;
+    hashAnchor: string | null;
+    authToken: string | null;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, showToast, hashAnchor, authToken}: AccountPageProps) => {
+    const editingSelf = true;
 
-    // Catch the (unlikely?) case where a user does not have email preferences in the database.
     if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
         userPreferences.EMAIL_PREFERENCE = { NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true };
     }
@@ -81,9 +95,12 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [currentPassword, setCurrentPassword] = useState("");
     const [isNewPasswordConfirmed, setIsNewPasswordConfirmed] = useState(false);
 
-    const [activeTab, setTab] = useState(0);
-
-    {/• TODO handle #... in with react-router for tab url navigation? •/}
+    // @ts-ignore
+    let initialTab: ACCOUNT_TAB =
+        (authToken && ACCOUNT_TAB.teacherconnections) ||
+        (hashAnchor && ACCOUNT_TAB[hashAnchor as any]) ||
+        ACCOUNT_TAB.account;
+    const [activeTab, setTab] = useState(initialTab);
 
     return <Container id="account-page" className="mb-5">
         <BreadcrumbTrail currentPageTitle="My account" />
@@ -100,35 +117,44 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         }
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
-                <Nav tabs className="my-4">
+                <Nav tabs className="my-4 flex-wrap">
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({ active: activeTab === 0 })}
-                            onClick={() => setTab(0)} tabIndex={0}
+                            className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.account})}
+                            onClick={() => setTab(ACCOUNT_TAB.account)} tabIndex={0}
                         >
                             Profile
                         </NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({ active: activeTab === 1 })}
-                            onClick={() => setTab(1)} tabIndex={0}
+                            className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.passwordreset})}
+                            onClick={() => setTab(ACCOUNT_TAB.passwordreset)} tabIndex={0}
                         >
-                            <span className="d-none d-lg-block d-md-block">Change Password</span>
-                            <span className="d-block d-md-none">Password</span>
+                            <span className="d-none d-lg-block">Change Password</span>
+                            <span className="d-block d-lg-none">Password</span>
                         </NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({ active: activeTab === 2 })}
-                            onClick={() => setTab(2)} tabIndex={0}
+                            className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.teacherconnections})}
+                            onClick={() => setTab(ACCOUNT_TAB.teacherconnections)} tabIndex={0}
                         >
-                            <span className="d-none d-lg-block d-md-block">Email Preferences</span>
-                            <span className="d-block d-md-none">Email</span>
+                            <span className="d-none d-lg-block d-md-block">Teacher Connections</span>
+                            <span className="d-block d-md-none">Connections</span>
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink
+                            className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.emailpreferences})}
+                            onClick={() => setTab(ACCOUNT_TAB.emailpreferences)} tabIndex={0}
+                        >
+                            <span className="d-none d-lg-block">Email Preferences</span>
+                            <span className="d-block d-lg-none">Emails</span>
                         </NavLink>
                     </NavItem>
                 </Nav>
-                <Form name="my-account" onSubmit={(event: React.FormEvent<HTMLInputElement>) => {
+                <Form name="my-account" onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
                     event.preventDefault();
                     Object.assign(myUserPreferences.EMAIL_PREFERENCE || {}, emailPreferences);
                     Object.assign(myUserPreferences.EXAM_BOARD || {}, examPreferences);
@@ -137,18 +163,26 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             registeredUser: myUser,
                             userPreferences: myUserPreferences,
                             passwordCurrent: currentPassword
-                        }, user)
+                        }, user);
                     }
+                    // TODO this should be moved to updateCurrentUse because we do not know here whether the update was successful or not
+                    showToast({
+                        title: "Preferences updated",
+                        body: "Your user preferences were updated correctly.",
+                        color: "success",
+                        timeout: 5000,
+                        closable: false,
+                    });
                 }}>
                     <TabContent activeTab={activeTab}>
-                        <TabPane tabId={0}>
+                        <TabPane tabId={ACCOUNT_TAB.account}>
                             <UserDetails
                                 myUser={myUser} setMyUser={setMyUser} examPreferences={examPreferences} setExamPreferences={setExamPreferences}
                                 isDobValid={isDobValid} setIsDobValid={setIsDobValid}
                                 isEmailValid={isEmailValid} setIsEmailValid={setIsEmailValid}
                             />
                         </TabPane>
-                        <TabPane tabId={1}>
+                        <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                             <UserPassword
                                 currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}
                                 myUser={myUser} setMyUser={setMyUser}
@@ -156,7 +190,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                 isNewPasswordConfirmed={isNewPasswordConfirmed} setIsNewPasswordConfirmed={setIsNewPasswordConfirmed}
                             />
                         </TabPane>
-                        <TabPane tabId={2}>
+                        <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
+                            {editingSelf && <TeacherConnectionsPanel user={user} authToken={authToken} />}
+                        </TabPane>
+                        <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                             <UserEmailPreference
                                 emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                             />
@@ -165,19 +202,13 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
                     <CardFooter className="py-4">
                         <Row>
-                            <Col>
-                                <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
-                                    Required field
-                                </span>
-                            </Col>
-                        </Row>
-                        <Row>
                             <Col size={12} md={{size: 6, offset: 3}}>
                                 {errorMessage && errorMessage.type === "generalError" &&
                                     <h3 role="alert" className="text-danger text-center">
                                         {errorMessage.generalError}
                                     </h3>
                                 }
+                                {/* TODO only show Save on relevant pages? */}
                                 <Input type="submit" value="Save" className="btn btn-block btn-secondary border-0" />
                             </Col>
                         </Row>
@@ -188,4 +219,4 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     </Container>;
 };
 
-export const MyAccount = connect(stateToProps, dispatchToProps)(AccountPageComponent);
+export const MyAccount = withRouter(connect(stateToProps, dispatchToProps)(AccountPageComponent));

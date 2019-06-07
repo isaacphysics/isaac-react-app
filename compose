@@ -37,7 +37,7 @@ pg-$ENV:
       POSTGRES_USER: rutherford
       POSTGRES_PASSWORD: rutherf0rd
     volumes:
-      - cs-pg-$ENV:/pgdata
+      - cs-pg-$ENV:/var/lib/postgresql/data
       - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-create-script.sql:/docker-entrypoint-initdb.d/00-isaac-create.sql:ro
       - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-functions.sql:/docker-entrypoint-initdb.d/01-isaac-functions.sql:ro
       - ../isaac-api/src/main/resources/db_scripts/quartz_scheduler_create_script.sql:/docker-entrypoint-initdb.d/02-isaac-quartz.sql:ro

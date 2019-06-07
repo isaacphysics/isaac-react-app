@@ -1,4 +1,4 @@
-import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
@@ -60,7 +60,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
         [query, problems, concepts]
     );
 
-    function doSearch(e?: Event) {
+    function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {
             e.preventDefault();
         }

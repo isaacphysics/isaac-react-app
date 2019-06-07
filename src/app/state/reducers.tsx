@@ -1,5 +1,14 @@
 import {combineReducers} from "redux";
-import {Action, AppQuestionDTO, isValidatedChoice, LoggedInUser, Toast, UserPreferencesDTO} from "../../IsaacAppTypes";
+import {
+    Action,
+    ActiveModal,
+    AppQuestionDTO,
+    GroupMembershipDetailDTO,
+    isValidatedChoice,
+    LoggedInUser,
+    Toast,
+    UserPreferencesDTO
+} from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
     ContentDTO,
@@ -7,7 +16,9 @@ import {
     GameboardDTO,
     IsaacTopicSummaryPageDTO,
     ResultsWrapper,
-    UserAuthenticationSettingsDTO, UserSummaryForAdminUsersDTO,
+    UserSummaryForAdminUsersDTO,
+    UserAuthenticationSettingsDTO,
+    UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
@@ -40,7 +51,7 @@ type UserPreferencesState = UserPreferencesDTO | null;
 export const userPreferences = (userPreferences: UserPreferencesState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
-            return action.userPreferences;
+            return {...action.userPreferences};
         default:
             return userPreferences;
     }
@@ -55,6 +66,49 @@ export const adminUserSearch = (adminUserSearch: AdminUserSearchState = null, ac
             return action.users;
         default:
             return adminUserSearch;
+    }
+}
+
+export type ActiveAuthorisationsState = UserSummaryWithEmailAddressDTO[] | null;
+export const activeAuthorisations = (activeAuthorisations: ActiveAuthorisationsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS:
+            return [...action.authorisations];
+        default:
+            return activeAuthorisations;
+    }
+};
+
+export type OtherUserAuthorisationsState = UserSummaryDTO[] | null;
+export const otherUserAuthorisations = (otherUserAuthorisations: OtherUserAuthorisationsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS:
+            return [...action.otherUserAuthorisations];
+        default:
+            return otherUserAuthorisations;
+    }
+};
+
+const groupMembership = (groupMembership: GroupMembershipDetailDTO, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS:
+            return {membershipStatus: action.newStatus, group: groupMembership.group};
+        default:
+            return groupMembership;
+    }
+};
+
+export type GroupMembershipsState = GroupMembershipDetailDTO[] | null;
+export const groupMemberships = (groupMemberships: GroupMembershipsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS:
+            return [...action.groupMemberships];
+        // delegate to group membership reducer
+        case ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS:
+            return groupMemberships &&
+                groupMemberships.map(m => m.group.id === action.groupId ? groupMembership(m, action) : m);
+        default:
+            return groupMemberships;
     }
 };
 
@@ -217,7 +271,7 @@ export const contentVersion = (contentVersion: ContentVersionState = null, actio
 };
 
 export type ToastsState = Toast[] | null;
-export const toasts = (toasts: ToastsState = null, action: Action): ToastsState => {
+export const toasts = (toasts: ToastsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.TOASTS_SHOW:
             toasts = toasts || [];
@@ -233,11 +287,27 @@ export const toasts = (toasts: ToastsState = null, action: Action): ToastsState 
     }
 };
 
+export type ActiveModalState = ActiveModal | null;
+export const activeModal = (activeModal: ActiveModalState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.ACTIVE_MODAL_OPEN:
+            return action.activeModal;
+        case ACTION_TYPE.ACTIVE_MODAL_CLOSE:
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
+            return null;
+        default:
+            return activeModal;
+    }
+};
+
 const appReducer = combineReducers({
     user,
     userAuthSettings,
     userPreferences,
     adminUserSearch,
+    activeAuthorisations,
+    otherUserAuthorisations,
+    groupMemberships,
     constants,
     doc,
     questions,
@@ -247,7 +317,8 @@ const appReducer = combineReducers({
     contentVersion,
     search,
     error,
-    toasts
+    toasts,
+    activeModal,
 });
 
 export type AppState = undefined | {
@@ -255,6 +326,9 @@ export type AppState = undefined | {
     userAuthSettings: UserAuthSettingsState;
     userPreferences: UserPreferencesState;
     adminUserSearch: AdminUserSearchState;
+    activeAuthorisations: ActiveAuthorisationsState;
+    otherUserAuthorisations: OtherUserAuthorisationsState;
+    groupMemberships: GroupMembershipsState;
     doc: DocState;
     questions: QuestionsState;
     currentTopic: CurrentTopicState;
@@ -265,6 +339,7 @@ export type AppState = undefined | {
     constants: ConstantsState;
     error: ErrorState;
     toasts: ToastsState;
+    activeModal: ActiveModalState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

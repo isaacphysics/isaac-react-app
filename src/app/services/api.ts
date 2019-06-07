@@ -1,5 +1,5 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, TAG_ID} from "./constants";
+import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
@@ -47,8 +47,7 @@ export const apiHelper = {
 export const api = {
     search: {
         get: (query: string, types: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
-            return endpoint.get(`/search/` + encodeURIComponent(query),
-                {params: {types}});
+            return endpoint.get(`/search/` + encodeURIComponent(query), {params: {types}});
         }
     },
     users: {
@@ -106,6 +105,37 @@ export const api = {
             post: (role: ApiTypes.Role, userIds: number[]) => {
                 return endpoint.post(`/admin/users/change_role/${role}`, userIds);
             }
+        }
+    },
+    authorisations: {
+        get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
+            return endpoint.get(`authorisations`);
+        },
+        getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
+            return endpoint.get(`/authorisations/other_users`);
+        },
+        getTokenOwner: (token: string): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
+            return endpoint.get(`/authorisations/token/${token}/owner`);
+        },
+        useToken: (token: string) => {
+            return endpoint.post(`/authorisations/use_token/${token}`);
+        },
+        revoke: (userId: number) => {
+            return endpoint.delete(`/authorisations/${userId}`);
+        },
+        release: (userId: number) => {
+            return endpoint.delete(`/authorisations/release/${userId}`);
+        },
+        releaseAll: () => {
+            return endpoint.delete(`/authorisations/release/`);
+        }
+    },
+    groupManagement: {
+        getMyMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get(`/groups/membership`);
+        },
+        changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => {
+            return endpoint.post(`/groups/membership/${groupId}/${newStatus}`)
         }
     },
     questions: {

@@ -83,7 +83,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searc
         }
     };
 
-    const search = (event: React.FormEvent<HTMLInputElement>) => {
+    const search = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSearchRequested(true);
         adminUserSearch(searchQuery);
@@ -102,21 +102,21 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searc
                             <RS.FormGroup>
                                 <RS.Label htmlFor="family-name-search">Find a user by family name:</RS.Label>
                                 <RS.Input
-                                    id="family-name-search" type="text" defaultValue={searchQuery.familyName} placeholder="Wilkes"
+                                    id="family-name-search" type="text" defaultValue={searchQuery.familyName || undefined} placeholder="Wilkes"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({familyName: e.target.value})}
                                 />
                             </RS.FormGroup>
                             <RS.FormGroup>
                                 <RS.Label htmlFor="email-search">Find a user by email:</RS.Label>
                                 <RS.Input
-                                    id="email-search" type="text" defaultValue={searchQuery.email} placeholder="teacher@school.org"
+                                    id="email-search" type="text" defaultValue={searchQuery.email || undefined} placeholder="teacher@school.org"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({email: e.target.value})}
                                 />
                             </RS.FormGroup>
                             <RS.FormGroup>
                                 <RS.Label htmlFor="school-other-search">Find by manually entered school:</RS.Label>
                                 <RS.Input
-                                    id="school-other-search" type="text" defaultValue={searchQuery.schoolOther}
+                                    id="school-other-search" type="text" defaultValue={searchQuery.schoolOther || undefined}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({schoolOther: e.target.value})}
                                 />
                             </RS.FormGroup>
@@ -145,7 +145,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searc
                                 <RS.Row>
                                     <RS.Col md={7}>
                                         <RS.Input
-                                            id="postcode-search" type="text" defaultValue={searchQuery.postcode} placeholder="CB3 0FD"
+                                            id="postcode-search" type="text" defaultValue={searchQuery.postcode || undefined} placeholder="CB3 0FD"
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({postcode: e.target.value})}
                                         />
                                     </RS.Col>
@@ -167,7 +167,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searc
                             <RS.FormGroup>
                                 <RS.Label htmlFor="school-urn-search">Find a user with school URN:</RS.Label>
                                 <RS.Input
-                                    id="school-urn-search" type="text" defaultValue={searchQuery.schoolURN}
+                                    id="school-urn-search" type="text" defaultValue={searchQuery.schoolURN || undefined}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({schoolURN: e.target.value})}
                                 />
                             </RS.FormGroup>
@@ -239,7 +239,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searc
                                                 <td className="text-center">
                                                     <RS.Input
                                                         type="checkbox" className="m-0 position-relative"
-                                                        checked={user.id && selectedUserIds.includes(user.id)}
+                                                        checked={user.id && selectedUserIds.includes(user.id) || undefined}
                                                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                                             user.id && updateUserSelection(user.id, event.target.checked)
                                                         }}

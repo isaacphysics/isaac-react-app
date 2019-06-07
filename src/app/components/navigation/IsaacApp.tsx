@@ -37,6 +37,7 @@ import {Header} from "./Header";
 import {Route} from "react-router";
 import {ScrollManager} from "../handlers/ScrollManager";
 import {AdminUserManager} from "../pages/AdminUserManager";
+import {ActiveModal} from "../elements/ActiveModal";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -57,6 +58,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
             <React.Fragment>
                 <Header />
                 <Toasts />
+                <ActiveModal />
                 <CookieBanner />
                 <EmailVerificationBanner />
                 <main role="main" className="flex-fill content-body">

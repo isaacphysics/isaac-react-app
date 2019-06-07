@@ -102,20 +102,26 @@ export const UserPassword = (
                 </Col>
             </Row>
             : !passwordResetRequested ?
-                <Row className="text-center">
-                    {userAuthSettings && userAuthSettings.linkedAccounts &&
-                    <p>
-                        You do not currently have a password set for this account; you
-                        sign in using
-                        {(userAuthSettings.linkedAccounts).map((linked, index) => {
-                            return <span key={index} className="text-capitalize">{linked.toLowerCase()}</span>;
-                        })}.
-                    </p>
-                    }
-                    <Button className="btn-secondary" onClick={resetPasswordIfValidEmail}>
-                        Click here to add a password
-                    </Button>
-                </Row>
+                <React.Fragment>
+                    <Row className="pt-4">
+                        <Col className="text-center">
+                            {userAuthSettings && userAuthSettings.linkedAccounts && <p>
+                                You do not currently have a password set for this account; you
+                                sign in using {" "}
+                                {(userAuthSettings.linkedAccounts).map((linked, index) => {
+                                    return <span key={index} className="text-capitalize">{linked.toLowerCase()}</span>;
+                                })}.
+                            </p>}
+                        </Col>
+                    </Row>
+                    <Row className="pb-4">
+                        <Col className="text-center">
+                            <Button className="btn-secondary" onClick={resetPasswordIfValidEmail}>
+                                Click here to add a password
+                            </Button>
+                        </Col>
+                    </Row>
+                </React.Fragment>
                 :
                 <p>
                     <strong className="d-block">Your password reset request is being processed.</strong>

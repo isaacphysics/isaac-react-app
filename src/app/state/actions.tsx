@@ -4,16 +4,39 @@ import {AppState} from "./reducers";
 import {history, redirectToPageNotFound} from "../services/history";
 import {store} from "./store";
 import {documentCache, topicCache} from "../services/cache";
-import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
+import {
+    ACTION_TYPE,
+    API_REQUEST_FAILURE_MESSAGE,
+    DOCUMENT_TYPE,
+    MEMBERSHIP_STATUS, ACCOUNT_TAB,
+    TAG_ID
+} from "../services/constants";
 import {
     Action,
+    ActiveModal,
     LoggedInUser,
     LoggedInValidationUser,
     Toast,
     UserPreferencesDTO,
     ValidatedChoice,
 } from "../../IsaacAppTypes";
-import {AuthenticationProvider, ChoiceDTO, QuestionDTO, RegisteredUserDTO, Role} from "../../IsaacApiTypes";
+import {
+    AuthenticationProvider,
+    ChoiceDTO,
+    QuestionDTO,
+    RegisteredUserDTO,
+    Role,
+    UserSummaryDTO,
+    UserSummaryWithEmailAddressDTO
+} from "../../IsaacApiTypes";
+import {
+    releaseAllConfirmationModal,
+    releaseConfirmationModal,
+    revocationConfirmationModal,
+    tokenVerificationModal
+} from "../components/elements/TeacherConnectionModalCreators";
+import * as persistance from "../services/localStorage";
+
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -40,6 +63,11 @@ export const showToast = (toast: Toast) => (dispatch: any) => {
     dispatch({type: ACTION_TYPE.TOASTS_SHOW, toast});
     return toastId;
 };
+
+// ActiveModal
+export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
+
+export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
 
 // User Authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
@@ -105,9 +133,14 @@ export const updateCurrentUser = (
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
             if (initialLogin) {
                 history.push('/account', {firstLogin: initialLogin});
-            } else {
-                history.push('/');
             }
+            dispatch(showToast({
+                title: "Preferences updated",
+                body: "Your user preferences were updated correctly.",
+                color: "success",
+                timeout: 5000,
+                closable: false,
+            }) as any);
         } catch (e) {
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
         }
@@ -149,7 +182,7 @@ export const verifyPasswordReset = (token: string | null) => async (dispatch: Di
     }
 };
 
-export const handlePasswordReset = (params: {token: string | null, password: string | null}) => async (dispatch: Dispatch<Action>) => {
+export const handlePasswordReset = (params: {token: string | null; password: string | null}) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
         const response = await api.users.handlePasswordReset(params);
@@ -159,7 +192,6 @@ export const handlePasswordReset = (params: {token: string | null, password: str
         dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: e.response.data.errorMessage});
     }
 };
-
 
 export const handleProviderLoginRedirect = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT, provider});
@@ -219,6 +251,212 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
     }
 };
 
+// Contact Us
+export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST});
+    try {
+        await api.contactForm.send(extra, params);
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS})
+    } catch(e) {
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
+    }
+};
+
+// Group Management
+export const getGroupMemberships = () => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST});
+        const groupMembershipsResponse = await api.groupManagement.getMyMemberships();
+        dispatch({
+            type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS,
+            groupMemberships: groupMembershipsResponse.data
+        });
+    } catch {
+        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_FAILURE});
+    }
+};
+
+export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_STATUS) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST});
+        await api.groupManagement.changeMyMembershipStatus(groupId, newStatus);
+        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS, groupId, newStatus});
+        dispatch(showToast({
+            color: "success", title: "Status Updated", timeout: 5000,
+            body: "You have updated your membership status."
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "failure", title: "Status Update Failed", timeout: 5000,
+            body: "With error message (" + e.status + ") " + e.data.errorMessage || ""
+        }) as any);
+    }
+};
+
+// Teacher Connections
+export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST});
+        const authorisationsResponse = await api.authorisations.get();
+        dispatch({
+            type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS,
+            authorisations: authorisationsResponse.data
+        });
+    } catch {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_FAILURE});
+    }
+};
+
+export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
+    if (!userSubmittedAuthenticationToken) {
+        dispatch(showToast({color: "failure", title: "No Token Provided", body: "You have to enter a token!"}) as any);
+        return;
+    }
+
+    try {
+        // Some users paste the URL in the token box, so remove the token from the end if they do.
+        // Tokens so far are also always uppercase; this is hardcoded in the API, so safe to assume here:
+        let authenticationToken = userSubmittedAuthenticationToken.split("?authToken=").pop() as string;
+        authenticationToken = authenticationToken.toUpperCase().replace(/ /g,'');
+
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST})
+        const result = await api.authorisations.getTokenOwner(authenticationToken);
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_SUCCESS});
+        const usersToGrantAccess = result.data;
+
+        // TODO can use state (second thunk param) to highlight teachers who have already been granted access
+        // const toGrantIds = usersToGrantAccess && usersToGrantAccess.map(u => u.id);
+        // const state = getState();
+        // const usersAlreadyAuthorised = (state && state.activeAuthorisations && state.activeAuthorisations
+        //     .filter((currentAuthorisation) => (toGrantIds as number[]).includes(currentAuthorisation.id as number)));
+
+        dispatch(openActiveModal(tokenVerificationModal(authenticationToken, usersToGrantAccess)) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_FAILURE});
+        if (e.status == 429) {
+            dispatch(showToast({
+                color: "danger", title: "Too Many Attempts", timeout: 5000,
+                body: "You have entered too many tokens. Please check your code with your teacher and try again later!"
+            }) as any);
+        } else {
+            dispatch(showToast({
+                color: "danger", title: "Teacher Connection Failed", timeout: 5000,
+                body: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
+            }) as any);
+        }
+    }
+};
+export const authenticateWithToken = (authToken: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_REQUEST});
+        await api.authorisations.useToken(authToken);
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS});
+        dispatch(getActiveAuthorisations() as any);
+        dispatch(getGroupMemberships() as any);
+        dispatch(showToast({
+            color: "success", title: "Granted Access", timeout: 5000,
+            body: "You have granted access to your data."
+        }) as any);
+        const state = getState();
+        // user.firstLogin is set correctly using SSO, but not with Segue: check session storage too:
+        if (state && state.user && state.user.loggedIn && state.user.firstLogin || persistance.load('firstLogin')) {
+            // If we've just signed up and used a group code immediately, change back to the main settings page:
+            history.push("/account");
+        }
+        dispatch(closeActiveModal() as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "Teacher Connection Failed", timeout: 5000,
+            body: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
+        }) as any);
+    }
+};
+
+export const revokeAuthorisationAfterPrompt = (user: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(revocationConfirmationModal(user)) as any);
+};
+export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_REQUEST});
+        await api.authorisations.revoke(userToRevoke.id as number);
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            color: "success", title: "Access Revoked", timeout: 5000,
+            body: "You have revoked access to your data."
+        }) as any)
+        dispatch(getActiveAuthorisations() as any);
+        dispatch(closeActiveModal() as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "Revoke Operation Failed", timeout: 5000,
+            body: "With error message (" + e.status + ") " + e.data.errorMessage != undefined ? e.data.errorMessage : ""
+        }) as any)
+    }
+};
+
+// Student/Other Connections
+export const getStudentAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_REQUEST});
+        const otherUserAuthorisationsResponse = await api.authorisations.getOtherUsers();
+        dispatch({
+            type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS,
+            otherUserAuthorisations: otherUserAuthorisationsResponse.data
+        });
+    } catch {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_FAILURE});
+    }
+};
+
+export const releaseAuthorisationAfterPrompt = (student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(releaseConfirmationModal(student)) as any);
+};
+export const releaseAuthorisation = (student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_REQUEST});
+        await api.authorisations.release(student.id as number);
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_SUCCESS});
+        dispatch(getStudentAuthorisations() as any);
+        dispatch(closeActiveModal() as any);
+        dispatch(showToast({
+            color: "success", title: "Access Removed", timeout: 5000,
+            body: "You have ended your access to your student's data."
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "Revoke Operation Failed", timeout: 5000,
+            body: "With error message (" + e.status + ") " + (e.data.errorMessage || "")
+        }) as any);
+    }
+};
+
+export const releaseAllAuthorisationsAfterPrompt = () => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(releaseAllConfirmationModal()) as any);
+};
+export const releaseAllAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_REQUEST});
+        await api.authorisations.releaseAll();
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_SUCCESS});
+        dispatch(getStudentAuthorisations() as any);
+        dispatch(closeActiveModal() as any);
+        dispatch(showToast({
+            color: "success", title: "Access Removed", timeout: 5000,
+            body: "You have ended your access to all of your students' data."
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "Revoke Operation Failed",
+            body: "With error message (" + e.status + ") " + e.data.errorMessage != undefined ? e.data.errorMessage : ""
+        }) as any);
+    }
+};
+
 // Constants
 export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     // Don't request this again if it has already been fetched successfully
@@ -233,15 +471,6 @@ export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, ge
         dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: units.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE});
-    }
-};
-export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST});
-    try {
-        const response = await api.contactForm.send(extra, params);
-        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS});
-    } catch(e) {
-        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE});
     }
 };
 
@@ -259,7 +488,6 @@ export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Acti
         dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE});
     }
 };
-
 
 // Document & Topic Fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
@@ -335,14 +563,12 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
     // TODO MT handle error case
 };
 
-
 // Assignments
 export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_REQUEST});
     const assignmentsResponse = await api.assignments.getMyAssignments();
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
 };
-
 
 // Content version
 export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
@@ -368,7 +594,6 @@ export const setContentVersion = (version: string) => async (dispatch: Dispatch<
         dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE});
     }
 };
-
 
 // Search
 export const fetchSearch = (query: string, types: string) => async (dispatch: Dispatch<Action>) => {
@@ -415,7 +640,7 @@ export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (di
     }
 };
 
-// SERVICE TRIGGERED ACTIONS
+// SERVICE ACTIONS (w/o dispatch)
 // Page change
 export const changePage = (path: string) => {
     store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});

@@ -8,6 +8,7 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
 import {IsaacTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
+import {IsaacHorizontal} from "./IsaacHorizontal";
 
 interface IsaacContentProps {
     doc: ContentDTO;
@@ -37,7 +38,7 @@ export const IsaacContent = (props: IsaacContentProps) => {
             switch (layout) {
                 case "tabs": selectedComponent = <IsaacTabs {...props} />; break;
                 case "accordion": selectedComponent = <IsaacAccordion {...props} />; break;
-                // case "horizontal": selectedComponent = <IsaacHorizontal {...props} />; break; // TODO
+                case "horizontal": selectedComponent = <IsaacHorizontal {...props} />; break;
                 default: selectedComponent =
                     <IsaacContentValueOrChildren encoding={encoding} value={value}>
                         {children}
