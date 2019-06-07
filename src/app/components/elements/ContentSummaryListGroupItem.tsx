@@ -32,7 +32,7 @@ export const linkToContent = (item: ContentSummaryDTO) => {
 };
 
 export const LinkToContentSummaryList = ({items, ...rest}: {items: ContentSummaryDTO[];
-    tag?: () => string|string;
+    tag?: React.ElementType;
     flush?: boolean;
     className?: string;
     cssModule?: any;}) => {

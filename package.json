@@ -16,6 +16,7 @@
     "@types/react-dom": "16.8.2",
     "@types/react-redux": "7.0.3",
     "@types/react-router": "5.0.0",
+    "@types/reactstrap": "^8.0.1",
     "@types/redux-logger": "3.0.7",
     "@types/remarkable": "1.7.3",
     "@types/seedrandom": "^2.4.28",

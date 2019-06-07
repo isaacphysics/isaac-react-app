@@ -11,9 +11,9 @@ import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EXAM_BOARD} from "../../services/constants";
 
 const stateToProps = (state: AppState) => ({
-    errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || null,
-    userEmail: (history.location && history.location.state && history.location.state.email) || null,
-    userPassword: (history.location && history.location.state && history.location.state.password) || null
+    errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
+    userEmail: (history.location && history.location.state && history.location.state.email) || undefined,
+    userPassword: (history.location && history.location.state && history.location.state.password) || undefined
 });
 const dispatchToProps = {
     updateCurrentUser
@@ -38,9 +38,9 @@ interface RegistrationPageProps {
         params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null},
         currentUser: LoggedInUser
     ) => void;
-    errorMessage: string | null;
-    userEmail: string | null;
-    userPassword: string | null;
+    errorMessage: string | undefined;
+    userEmail: string | undefined;
+    userPassword: string | undefined;
 }
 
 const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
@@ -66,7 +66,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
 
 
     // Form's submission method
-    const register = (event: React.FormEvent<HTMLFontElement>) => {
+    const register = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedSignUp(true);
 
