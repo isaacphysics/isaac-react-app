@@ -273,7 +273,7 @@ export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) 
     }
 };
 
-export const processAuthenticateWithToken = (userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
+export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
     if (!userSubmittedAuthenticationToken) {
         dispatch(showToast({color: "failure", title: "No Token Provided", body: "You have to enter a token!"}) as any);
         return;
@@ -301,12 +301,12 @@ export const processAuthenticateWithToken = (userSubmittedAuthenticationToken: s
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_FAILURE});
         if (e.status == 429) {
             dispatch(showToast({
-                color: "danger", title: "Too Many Attempts",
+                color: "danger", title: "Too Many Attempts", timeout: 5000,
                 body: "You have entered too many tokens. Please check your code with your teacher and try again later!"
             }) as any);
         } else {
             dispatch(showToast({
-                color: "danger", title: "Teacher Connection Failed",
+                color: "danger", title: "Teacher Connection Failed", timeout: 5000,
                 body: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
             }) as any);
         }
@@ -320,7 +320,10 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
         dispatch(getActiveAuthorisations() as any);
         dispatch(getGroupMemberships() as any);
         //     $scope.authenticationToken = {value: null}; // could be done with a history push but might lose other info
-        dispatch(showToast({color: "success", title: "Granted Access", body: "You have granted access to your data."}) as any);
+        dispatch(showToast({
+            color: "success", title: "Granted Access", timeout: 5000,
+            body: "You have granted access to your data."
+        }) as any);
         // TODO handle firstLogin redirect
         //     // user.firstLogin is set correctly using SSO, but not with Segue: check session storage too:
         //     if ($scope.user.firstLogin || persistence.session.load('firstLogin')) {
@@ -331,13 +334,13 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_FAILURE});
         dispatch(showToast({
-            color: "danger", title: "Teacher Connection Failed",
+            color: "danger", title: "Teacher Connection Failed", timeout: 5000,
             body: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
         }) as any);
     }
 };
 
-export const processRevokeAuthorisation = (user: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
+export const revokeAuthorisationAfterPrompt = (user: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(revocationConfirmationModal(user)) as any);
 };
 export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
@@ -346,76 +349,17 @@ export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO
         await api.authorisations.revoke(userToRevoke.id as number);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_SUCCESS});
         dispatch(showToast({
-            color: "success", title: "Access Revoked", body: "You have revoked access to your data."
+            color: "success", title: "Access Revoked", timeout: 5000,
+            body: "You have revoked access to your data."
         }) as any)
         dispatch(getActiveAuthorisations() as any);
         dispatch(closeActiveModal() as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_FAILURE});
         dispatch(showToast({
-            color: "danger", title: "Revoke Operation Failed",
+            color: "danger", title: "Revoke Operation Failed", timeout: 5000,
             body: "With error message (" + e.status + ") " + e.data.errorMessage != undefined ? e.data.errorMessage : ""
         }) as any)
-    }
-};
-
-// Student/Other Connections
-export const getStudentAuthorisations = () => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_REQUEST});
-        const otherUserAuthorisationsResponse = await api.authorisations.getOtherUsers();
-        dispatch({
-            type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS,
-            otherUserAuthorisations: otherUserAuthorisationsResponse.data
-        });
-    } catch {
-        dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_FAILURE});
-    }
-};
-
-export const processReleaseAuthorisation = (student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(releaseConfirmationModal(student)) as any);
-};
-export const releaseAuthorisation = (student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_REQUEST});
-        await api.authorisations.release(student.id as number);
-        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_SUCCESS});
-        dispatch(getStudentAuthorisations() as any);
-        dispatch(closeActiveModal() as any);
-        dispatch(showToast({
-            color: "success", title: "Access Removed", body: "You have ended your access to your student's data."
-        }) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_FAILURE});
-        dispatch(showToast({
-            color: "danger", title: "Revoke Operation Failed",
-            body: "With error message (" + e.status + ") " + (e.data.errorMessage || "")
-        }) as any);
-    }
-};
-
-export const processReleaseAllAuthorisations = () => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(releaseAllConfirmationModal()) as any);
-};
-export const releaseAllAuthorisations = () => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_REQUEST});
-        await api.authorisations.releaseAll();
-        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_SUCCESS});
-        dispatch(getStudentAuthorisations() as any);
-        dispatch(closeActiveModal() as any);
-        dispatch(showToast({
-            color: "success", title: "Access Removed",
-            body: "You have ended your access to all of your students' data."
-        }) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_FAILURE});
-        // $scope.showToast($scope.toastTypes.Failure, "Revoke Operation Failed", "With error message (" + e.status + ") " + e.data.errorMessage != undefined ? e.data.errorMessage : "");
-        dispatch(showToast({
-            color: "danger", title: "Revoke Operation Failed",
-            body: "With error message (" + e.status + ") " + e.data.errorMessage != undefined ? e.data.errorMessage : ""
-        }) as any);
     }
 };
 
@@ -439,14 +383,74 @@ export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_
         await api.groupManagement.changeMyMembershipStatus(groupId, newStatus);
         dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS, groupId, newStatus});
         dispatch(showToast({
-            color: "success", title: "Status Updated",
+            color: "success", title: "Status Updated", timeout: 5000,
             body: "You have updated your membership status."
         }) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
         dispatch(showToast({
-            color: "failure", title: "Status Update Failed",
+            color: "failure", title: "Status Update Failed", timeout: 5000,
             body: "With error message (" + e.status + ") " + e.data.errorMessage || ""
+        }) as any);
+    }
+};
+
+// Student/Other Connections
+export const getStudentAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_REQUEST});
+        const otherUserAuthorisationsResponse = await api.authorisations.getOtherUsers();
+        dispatch({
+            type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS,
+            otherUserAuthorisations: otherUserAuthorisationsResponse.data
+        });
+    } catch {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_FAILURE});
+    }
+};
+
+export const releaseAuthorisationAfterPrompt = (student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(releaseConfirmationModal(student)) as any);
+};
+export const releaseAuthorisation = (student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_REQUEST});
+        await api.authorisations.release(student.id as number);
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_SUCCESS});
+        dispatch(getStudentAuthorisations() as any);
+        dispatch(closeActiveModal() as any);
+        dispatch(showToast({
+            color: "success", title: "Access Removed", timeout: 5000,
+            body: "You have ended your access to your student's data."
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "Revoke Operation Failed", timeout: 5000,
+            body: "With error message (" + e.status + ") " + (e.data.errorMessage || "")
+        }) as any);
+    }
+};
+
+export const releaseAllAuthorisationsAfterPrompt = () => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(releaseAllConfirmationModal()) as any);
+};
+export const releaseAllAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_REQUEST});
+        await api.authorisations.releaseAll();
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_SUCCESS});
+        dispatch(getStudentAuthorisations() as any);
+        dispatch(closeActiveModal() as any);
+        dispatch(showToast({
+            color: "success", title: "Access Removed", timeout: 5000,
+            body: "You have ended your access to all of your students' data."
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "Revoke Operation Failed",
+            body: "With error message (" + e.status + ") " + e.data.errorMessage != undefined ? e.data.errorMessage : ""
         }) as any);
     }
 };

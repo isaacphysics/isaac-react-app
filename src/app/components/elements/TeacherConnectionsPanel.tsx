@@ -7,10 +7,10 @@ import {
     getActiveAuthorisations,
     getGroupMemberships,
     getStudentAuthorisations,
-    processAuthenticateWithToken,
-    processReleaseAllAuthorisations,
-    processReleaseAuthorisation,
-    processRevokeAuthorisation
+    authenticateWithTokenAfterPrompt,
+    releaseAllAuthorisationsAfterPrompt,
+    releaseAuthorisationAfterPrompt,
+    revokeAuthorisationAfterPrompt
 } from "../../state/actions";
 import {connect} from "react-redux";
 import {
@@ -31,8 +31,8 @@ const stateToProps = (state: AppState) => ({
 });
 
 const dispatchToProps = {
-    getActiveAuthorisations, processAuthenticateWithToken, processRevokeAuthorisation,
-    getStudentAuthorisations, processReleaseAuthorisation, processReleaseAllAuthorisations,
+    getActiveAuthorisations, processAuthenticateWithToken: authenticateWithTokenAfterPrompt, processRevokeAuthorisation: revokeAuthorisationAfterPrompt,
+    getStudentAuthorisations, processReleaseAuthorisation: releaseAuthorisationAfterPrompt, processReleaseAllAuthorisations: releaseAllAuthorisationsAfterPrompt,
     getGroupMemberships, changeMyMembershipStatus
 };
 
@@ -224,7 +224,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                         inactive in a group you won&apos;t receive any assignments from that group. If you want to
                         permanently leave a group, ask your teacher to remove you.
                     </p>
-                    <div className="my-groups-table-section">
+                    <div className="my-groups-table-section overflow-auto">
                         <RS.Table borderless>
                             <thead>
                                 <tr>
