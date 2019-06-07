@@ -16,6 +16,7 @@ import {
     GameboardDTO,
     IsaacTopicSummaryPageDTO,
     ResultsWrapper,
+    UserSummaryForAdminUsersDTO,
     UserAuthenticationSettingsDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
@@ -55,6 +56,18 @@ export const userPreferences = (userPreferences: UserPreferencesState = null, ac
             return userPreferences;
     }
 };
+
+export type AdminUserSearchState = UserSummaryForAdminUsersDTO[] | null;
+export const adminUserSearch = (adminUserSearch: AdminUserSearchState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST:
+            return null;
+        case ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS:
+            return action.users;
+        default:
+            return adminUserSearch;
+    }
+}
 
 export type ActiveAuthorisationsState = UserSummaryWithEmailAddressDTO[] | null;
 export const activeAuthorisations = (activeAuthorisations: ActiveAuthorisationsState = null, action: Action) => {
@@ -100,7 +113,7 @@ export const groupMemberships = (groupMemberships: GroupMembershipsState = null,
 };
 
 type ConstantsState = {units?: string[]; segueVersion?: string} | null;
-export const constants = (constants: ConstantsState = null, action: Action): ConstantsState => {
+export const constants = (constants: ConstantsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS:
             return {...constants, units: action.units};
@@ -291,6 +304,7 @@ const appReducer = combineReducers({
     user,
     userAuthSettings,
     userPreferences,
+    adminUserSearch,
     activeAuthorisations,
     otherUserAuthorisations,
     groupMemberships,
@@ -311,6 +325,7 @@ export type AppState = undefined | {
     user: UserState;
     userAuthSettings: UserAuthSettingsState;
     userPreferences: UserPreferencesState;
+    adminUserSearch: AdminUserSearchState;
     activeAuthorisations: ActiveAuthorisationsState;
     otherUserAuthorisations: OtherUserAuthorisationsState;
     groupMemberships: GroupMembershipsState;

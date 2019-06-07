@@ -25,6 +25,7 @@ import {
     ChoiceDTO,
     QuestionDTO,
     RegisteredUserDTO,
+    Role,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
@@ -254,7 +255,7 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
 export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST});
     try {
-        const response = await api.contactForm.send(extra, params);
+        await api.contactForm.send(extra, params);
         dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS})
     } catch(e) {
         dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
@@ -602,6 +603,41 @@ export const fetchSearch = (query: string, types: string) => async (dispatch: Di
     }
     const searchResponse = await api.search.get(query, types);
     dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
+};
+
+// Admin
+export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST});
+    try {
+        const searchResponse = await api.admin.userSearch.get(queryParams);
+        dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS, users: searchResponse.data});
+        const resultElement = window.document.getElementById("admin-search-results");
+        if (resultElement) {
+            resultElement.scrollIntoView({behavior: "smooth"});
+        }
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "User search failed",
+            body: e.response.data.errorMessage || API_REQUEST_FAILURE_MESSAGE,
+            timeout: 10000, closable: true,
+        }));
+    }
+};
+
+export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST});
+    try {
+        await api.admin.modifyUserRoles.post(role, userIds);
+        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "danger", title: "User role modification failed",
+            body: e.response.data.errorMessage || API_REQUEST_FAILURE_MESSAGE,
+            timeout: 10000, closable: true,
+        }));
+    }
 };
 
 // SERVICE ACTIONS (w/o dispatch)

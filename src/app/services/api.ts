@@ -4,6 +4,7 @@ import * as ApiTypes from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
+import {Role} from "../../IsaacApiTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -92,6 +93,18 @@ export const api = {
     email: {
         verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
             return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
+        }
+    },
+    admin: {
+        userSearch: {
+            get: (queryParams: {}): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO[]> => {
+                return endpoint.get(`/admin/users/`, {params: queryParams});
+            }
+        },
+        modifyUserRoles: {
+            post: (role: ApiTypes.Role, userIds: number[]) => {
+                return endpoint.post(`/admin/users/change_role/${role}`, userIds);
+            }
         }
     },
     authorisations: {

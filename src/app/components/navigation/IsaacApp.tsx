@@ -36,6 +36,7 @@ import {Toasts} from "./Toasts";
 import {Header} from "./Header";
 import {Route} from "react-router";
 import {ScrollManager} from "../handlers/ScrollManager";
+import {AdminUserManager} from "../pages/AdminUserManager";
 import {ActiveModal} from "../elements/ActiveModal";
 
 const mapStateToProps = (state: AppState) => ({
@@ -72,10 +73,11 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute exact path="/topics" component={AllTopics} />
                         <TrackedRoute path="/topics/:topicName" component={Topic} />
 
-                        <TrackedRoute path="/admin" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Admin} />
+                        <TrackedRoute exact path="/admin" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Admin} />
+                        <TrackedRoute path="/admin/usermanager" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={AdminUserManager} />
 
                         {/* June release application pages */}
-                        <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events";return null;}}/>
+                        <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
                         <TrackedRoute path="/gameboards" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Gameboard} />
                         <TrackedRoute path="/assignments" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={MyAssignments} />
 
