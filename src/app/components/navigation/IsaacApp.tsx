@@ -18,12 +18,12 @@ import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
 import {NotFound} from "../pages/NotFound";
-import {requestCurrentUser, showToast} from "../../state/actions";
+import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 import {Admin} from "../pages/Admin";
-import {LoggedInUser, Toast} from "../../../IsaacAppTypes";
+import {LoggedInUser} from "../../../IsaacAppTypes";
 import {history} from "../../services/history"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
@@ -38,6 +38,8 @@ import {Route} from "react-router";
 import {ScrollManager} from "../handlers/ScrollManager";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {ActiveModal} from "../elements/ActiveModal";
+import {isAdmin, isTeacher} from "../../services/user";
+import {Groups} from "../pages/Groups";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -73,13 +75,15 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute exact path="/topics" component={AllTopics} />
                         <TrackedRoute path="/topics/:topicName" component={Topic} />
 
-                        <TrackedRoute exact path="/admin" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Admin} />
-                        <TrackedRoute path="/admin/usermanager" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={AdminUserManager} />
+                        <TrackedRoute exact path="/admin" onlyFor={isAdmin} component={Admin} />
+                        <TrackedRoute path="/admin/usermanager" onlyFor={isAdmin} component={AdminUserManager} />
+                        
+                        <TrackedRoute path="/groups" onlyFor={isTeacher} component={Groups} />
 
                         {/* June release application pages */}
-                        <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
-                        <TrackedRoute path="/gameboards" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Gameboard} />
-                        <TrackedRoute path="/assignments" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={MyAssignments} />
+                        <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events";return null;}}/>
+                        <TrackedRoute path="/gameboards" onlyFor={isAdmin} component={Gameboard} />
+                        <TrackedRoute path="/assignments" onlyFor={isAdmin} component={MyAssignments} />
 
                         {/* Authentication */}
                         <TrackedRoute path="/login" component={LogIn} />

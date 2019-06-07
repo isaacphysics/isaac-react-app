@@ -137,6 +137,20 @@ export type Action =
 
     | {type: ACTION_TYPE.ACTIVE_MODAL_OPEN; activeModal: ActiveModal}
     | {type: ACTION_TYPE.ACTIVE_MODAL_CLOSE}
+
+    | {type: ACTION_TYPE.GROUPS_REQUEST}
+    | {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS; groups: ApiTypes.UserGroupDTO[]; archivedGroupsOnly: boolean}
+
+    | {type: ACTION_TYPE.GROUPS_CREATE_REQUEST}
+    | {type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS; newGroup: ApiTypes.UserGroupDTO}
+
+    | {type: ACTION_TYPE.GROUPS_DELETE_REQUEST}
+    | {type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS; deletedGroup: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_FAILURE; deletedGroup: ApiTypes.UserGroupDTO}
+
+    | {type: ACTION_TYPE.GROUPS_UPDATE_REQUEST}
+    | {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS; updatedGroup: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE; updatedGroup: ApiTypes.UserGroupDTO}
 ;
 
 
@@ -206,7 +220,7 @@ export interface School {
 export interface Toast {
     color: string;
     title: string;
-    body: string;
+    body?: string;
     timeout?: number;
     closable?: boolean;
 

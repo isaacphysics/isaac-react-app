@@ -204,5 +204,19 @@ export const api = {
         send: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
             return endpoint.post(`/contact/`, params, {});
         }
+    },
+    groups: {
+        get: (archivedGroupsOnly: boolean): AxiosPromise<ApiTypes.UserGroupDTO[]> => {
+            return endpoint.get(`/groups?archived_groups_only=${archivedGroupsOnly}`);
+        },
+        create: (groupName: string): AxiosPromise<ApiTypes.UserGroupDTO> => {
+            return endpoint.post(`/groups`, {groupName});
+        },
+        delete: (group: ApiTypes.UserGroupDTO): AxiosPromise => {
+            return endpoint.delete(`/groups/${group.id}`);
+        },
+        update: (updatedGroup: ApiTypes.UserGroupDTO): AxiosPromise => {
+            return endpoint.post(`/groups/${updatedGroup.id}`, updatedGroup);
+        }
     }
 };

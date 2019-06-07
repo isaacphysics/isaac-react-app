@@ -18,10 +18,12 @@ import {
     ResultsWrapper,
     UserSummaryForAdminUsersDTO,
     UserAuthenticationSettingsDTO,
+    UserGroupDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
+import {without} from "lodash";
 
 type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -300,6 +302,62 @@ export const activeModal = (activeModal: ActiveModalState = null, action: Action
     }
 };
 
+function remove<T>(from: T[] | undefined, what: T): T[] | undefined {
+    if (from === undefined) return from;
+    return without(from, what);
+}
+function update(from: GroupsState, what: UserGroupDTO): GroupsState {
+    if (from === null) return from;
+
+    function update(archived: boolean, from?: UserGroupDTO[]) {
+        if (from === undefined) return from;
+        from = from.slice();
+        let found = false;
+        for (let i = 0; i < from.length; i++) {
+            if (from[i].id == what.id) {
+                if (what.archived != archived) {
+                    // Remove
+                    from.splice(i, 1);
+                    i--;
+                } else {
+                    // Update
+                    from[i] = what;
+                }
+                found = true;
+            }
+        }
+        if (!found && what.archived == archived) {
+            from.push(what);
+        }
+        return from;
+    }
+    return {
+        active: update(false, from.active),
+        archived: update(true, from.archived)
+    };
+}
+
+export type GroupsState = {active?: UserGroupDTO[]; archived?: UserGroupDTO[]} | null;
+export const groups = (groups: GroupsState = null, action: Action): GroupsState => {
+    switch (action.type) {
+        case ACTION_TYPE.GROUPS_RESPONSE_SUCCESS:
+            if (action.archivedGroupsOnly) {
+                return {...groups, archived: action.groups};
+            } else {
+                return {...groups, active: action.groups};
+            }
+        case ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS:
+            return update(groups, action.newGroup);
+        case ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS:
+            return groups && {active: remove(groups.active, action.deletedGroup),
+                archived: remove(groups.archived, action.deletedGroup)};
+        case ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS:
+            return update(groups, action.updatedGroup);
+        default:
+            return groups;
+    }
+};
+
 const appReducer = combineReducers({
     user,
     userAuthSettings,
@@ -319,6 +377,7 @@ const appReducer = combineReducers({
     error,
     toasts,
     activeModal,
+    groups
 });
 
 export type AppState = undefined | {
@@ -340,6 +399,7 @@ export type AppState = undefined | {
     error: ErrorState;
     toasts: ToastsState;
     activeModal: ActiveModalState;
+    groups: GroupsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

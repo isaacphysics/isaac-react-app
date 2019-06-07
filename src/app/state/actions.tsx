@@ -26,6 +26,7 @@ import {
     QuestionDTO,
     RegisteredUserDTO,
     Role,
+    UserGroupDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
@@ -36,7 +37,6 @@ import {
     tokenVerificationModal
 } from "../components/elements/TeacherConnectionModalCreators";
 import * as persistance from "../services/localStorage";
-
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -637,6 +637,43 @@ export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (di
             body: e.response.data.errorMessage || API_REQUEST_FAILURE_MESSAGE,
             timeout: 10000, closable: true,
         }));
+    }
+};
+
+// Groups
+
+export const loadGroups = (archivedGroupsOnly: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUPS_REQUEST});
+    const groups = await api.groups.get(archivedGroupsOnly);
+    dispatch({type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: groups.data, archivedGroupsOnly});
+};
+
+export const createGroup = (groupName: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUPS_CREATE_REQUEST});
+    const newGroup = await api.groups.create(groupName);
+    dispatch({type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS, newGroup: newGroup.data});
+};
+
+export const deleteGroup = (group: UserGroupDTO) => async (dispatch: Dispatch<any>) => {
+    dispatch({type: ACTION_TYPE.GROUPS_DELETE_REQUEST});
+    const result = await api.groups.delete(group);
+    if (result.status < 300) {
+        dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS, deletedGroup: group});
+        dispatch(loadGroups(group.archived || false));
+    } else {
+        dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_FAILURE, deletedGroup: group});
+    }
+};
+
+export const updateGroup = (updatedGroup: UserGroupDTO, message?: string) => async (dispatch: Dispatch<any>) => {
+    dispatch({type: ACTION_TYPE.GROUPS_UPDATE_REQUEST});
+    const result = await api.groups.update(updatedGroup);
+    if (result.status < 300) {
+        dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS, updatedGroup: updatedGroup});
+        dispatch(loadGroups(updatedGroup.archived || false));
+        dispatch(showToast({color: "success", title: "Group saved successfully", body: message, timeout: 3000}));
+    } else {
+        dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE, updatedGroup: updatedGroup});
     }
 };
 
