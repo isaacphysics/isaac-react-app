@@ -66,7 +66,6 @@ declare module '*.module.sass' {
 // TODO check if correctly versioned types have been added
 declare module "react-router-dom";
 declare module "bootstrap";
-declare module "reactstrap";
 declare module "math-random-seed";
 
 declare var MathJax: any;

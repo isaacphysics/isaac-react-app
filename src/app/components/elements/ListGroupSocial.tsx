@@ -1,5 +1,5 @@
 import React from "react";
-import {ListGroup, ListGroupItem, Link} from "reactstrap";
+import {ListGroup, ListGroupItem} from "reactstrap";
 
 export const ListGroupSocial = () => (
     <div className='footer-links footer-links-social'>
