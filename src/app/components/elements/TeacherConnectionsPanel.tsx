@@ -99,7 +99,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                     <RS.Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => processToken(e)}>
                         <RS.InputGroup>
                             <RS.Input
-                                type="text" placeholder="Enter your code in here" value={authToken}
+                                type="text" placeholder="Enter your code in here" value={authToken || undefined}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                             />
                             <RS.InputGroupAddon addonType="append">

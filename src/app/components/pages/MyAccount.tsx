@@ -154,8 +154,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                         </NavLink>
                     </NavItem>
                 </Nav>
-
-                <Form name="my-account" onSubmit={(event: React.FormEvent<HTMLInputElement>) => {
+                <Form name="my-account" onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
                     event.preventDefault();
                     Object.assign(myUserPreferences.EMAIL_PREFERENCE || {}, emailPreferences);
                     Object.assign(myUserPreferences.EXAM_BOARD || {}, examPreferences);

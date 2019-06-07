@@ -13,7 +13,7 @@ interface ActiveModalProps {
 }
 
 const ActiveModalComponent = ({activeModal}: ActiveModalProps) => (
-    <RS.Modal isOpen={activeModal}>
+    <RS.Modal isOpen={!!activeModal}>
         {activeModal && <React.Fragment>
             <RS.ModalHeader
                 className="h-title pb-5 mb-4"

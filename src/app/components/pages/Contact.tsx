@@ -39,7 +39,7 @@ const dispatchToProps = {
 interface ContactPageProps {
     user: LoggedInUser | null;
     submitMessage: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string}) => void;
-    errorMessage: ErrorState | null;
+    errorMessage: ErrorState;
     presetSubject: string;
     presetMessage: string;
 }
@@ -170,7 +170,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                 </CardBody>
                                 <CardFooter>
                                     <div>
-                                        <Alert color="danger" isOpen={errorMessage}>{errorMessage} You can contact us at <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></Alert>
+                                        <Alert color="danger" isOpen={!!errorMessage}>{errorMessage} You can contact us at <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></Alert>
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>

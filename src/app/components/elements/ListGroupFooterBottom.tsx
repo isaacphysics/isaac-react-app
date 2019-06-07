@@ -1,5 +1,5 @@
 import React from "react";
-import {ListGroup, ListGroupItem, Link} from "reactstrap";
+import {ListGroup, ListGroupItem} from "reactstrap";
 
 const ExternalLink = ({href, children, className=""}: {href: string; children: any; className?: string}) => (
     // eslint-disable-next-line react/jsx-no-target-blank
