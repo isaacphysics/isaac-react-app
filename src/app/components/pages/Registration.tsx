@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
+import ReactGA from "react-ga";
 import {Card, CardBody, CardTitle, Col, CustomInput, Form, FormGroup, Input, Row, Label, FormFeedback, Container} from "reactstrap";
 import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
@@ -76,7 +77,13 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                 registeredUser: registrationUser,
                 userPreferences: {EMAIL_PREFERENCE: defaultEmailPreferences, EXAM_BOARD: defaultExamPreferences},
                 passwordCurrent: null
-            }, (Object.assign(registrationUser, {loggedIn: true})))
+            }, (Object.assign(registrationUser, {loggedIn: true})));
+            // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
+            ReactGA.event({
+                category: 'user',
+                action: 'registration',
+                label: 'Create Account (SEGUE)',
+            });
         }
     };
 
