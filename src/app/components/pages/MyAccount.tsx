@@ -27,13 +27,11 @@ import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
 import {Link} from "react-router-dom";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
-import {EXAM_BOARD} from "../../services/constants";
+import {EXAM_BOARD, ACCOUNT_TAB} from "../../services/constants";
 import {history} from "../../services/history"
 import {showToast} from "../../state/actions";
 import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
 import {withRouter} from "react-router-dom";
-
-enum Tab {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -98,10 +96,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [isNewPasswordConfirmed, setIsNewPasswordConfirmed] = useState(false);
 
     // @ts-ignore
-    let initialTab: Tab =
-        (authToken && Tab.teacherconnections) ||
-        (hashAnchor && Tab[hashAnchor as any]) ||
-        Tab.account;
+    let initialTab: ACCOUNT_TAB =
+        (authToken && ACCOUNT_TAB.teacherconnections) ||
+        (hashAnchor && ACCOUNT_TAB[hashAnchor as any]) ||
+        ACCOUNT_TAB.account;
     const [activeTab, setTab] = useState(initialTab);
 
     return <Container id="account-page" className="mb-5">
@@ -122,16 +120,16 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 <Nav tabs className="my-4 flex-wrap">
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({active: activeTab === Tab.account})}
-                            onClick={() => setTab(Tab.account)} tabIndex={0}
+                            className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.account})}
+                            onClick={() => setTab(ACCOUNT_TAB.account)} tabIndex={0}
                         >
                             Profile
                         </NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({active: activeTab === Tab.passwordreset})}
-                            onClick={() => setTab(Tab.passwordreset)} tabIndex={0}
+                            className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.passwordreset})}
+                            onClick={() => setTab(ACCOUNT_TAB.passwordreset)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block">Change Password</span>
                             <span className="d-block d-lg-none">Password</span>
@@ -139,8 +137,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     </NavItem>
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({active: activeTab === Tab.teacherconnections})}
-                            onClick={() => setTab(Tab.teacherconnections)} tabIndex={0}
+                            className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.teacherconnections})}
+                            onClick={() => setTab(ACCOUNT_TAB.teacherconnections)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block d-md-block">Teacher Connections</span>
                             <span className="d-block d-md-none">Connections</span>
@@ -148,8 +146,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     </NavItem>
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({active: activeTab === Tab.emailpreferences})}
-                            onClick={() => setTab(Tab.emailpreferences)} tabIndex={0}
+                            className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.emailpreferences})}
+                            onClick={() => setTab(ACCOUNT_TAB.emailpreferences)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block">Email Preferences</span>
                             <span className="d-block d-lg-none">Emails</span>
@@ -178,14 +176,14 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     });
                 }}>
                     <TabContent activeTab={activeTab}>
-                        <TabPane tabId={Tab.account}>
+                        <TabPane tabId={ACCOUNT_TAB.account}>
                             <UserDetails
                                 myUser={myUser} setMyUser={setMyUser} examPreferences={examPreferences} setExamPreferences={setExamPreferences}
                                 isDobValid={isDobValid} setIsDobValid={setIsDobValid}
                                 isEmailValid={isEmailValid} setIsEmailValid={setIsEmailValid}
                             />
                         </TabPane>
-                        <TabPane tabId={Tab.passwordreset}>
+                        <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                             <UserPassword
                                 currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}
                                 myUser={myUser} setMyUser={setMyUser}
@@ -193,10 +191,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                 isNewPasswordConfirmed={isNewPasswordConfirmed} setIsNewPasswordConfirmed={setIsNewPasswordConfirmed}
                             />
                         </TabPane>
-                        <TabPane tabId={Tab.teacherconnections}>
+                        <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
                             {editingSelf && <TeacherConnectionsPanel user={user} authToken={authToken} />}
                         </TabPane>
-                        <TabPane tabId={Tab.emailpreferences}>
+                        <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                             <UserEmailPreference
                                 emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                             />

@@ -8,7 +8,7 @@ import {
     ACTION_TYPE,
     API_REQUEST_FAILURE_MESSAGE,
     DOCUMENT_TYPE,
-    MEMBERSHIP_STATUS,
+    MEMBERSHIP_STATUS, ACCOUNT_TAB,
     TAG_ID
 } from "../services/constants";
 import {
@@ -34,6 +34,8 @@ import {
     revocationConfirmationModal,
     tokenVerificationModal
 } from "../components/elements/TeacherConnectionModalCreators";
+import * as persistance from "../services/localStorage";
+
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -259,6 +261,38 @@ export const submitMessage = (extra: any, params: {firstName: string; lastName: 
     }
 };
 
+// Group Management
+export const getGroupMemberships = () => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST});
+        const groupMembershipsResponse = await api.groupManagement.getMyMemberships();
+        dispatch({
+            type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS,
+            groupMemberships: groupMembershipsResponse.data
+        });
+    } catch {
+        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_FAILURE});
+    }
+};
+
+export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_STATUS) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST});
+        await api.groupManagement.changeMyMembershipStatus(groupId, newStatus);
+        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS, groupId, newStatus});
+        dispatch(showToast({
+            color: "success", title: "Status Updated", timeout: 5000,
+            body: "You have updated your membership status."
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "failure", title: "Status Update Failed", timeout: 5000,
+            body: "With error message (" + e.status + ") " + e.data.errorMessage || ""
+        }) as any);
+    }
+};
+
 // Teacher Connections
 export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) => {
     try {
@@ -312,24 +346,23 @@ export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToke
         }
     }
 };
-export const authenticateWithToken = (authToken: string) => async (dispatch: Dispatch<Action>) => {
+export const authenticateWithToken = (authToken: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_REQUEST});
         await api.authorisations.useToken(authToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS});
         dispatch(getActiveAuthorisations() as any);
         dispatch(getGroupMemberships() as any);
-        //     $scope.authenticationToken = {value: null}; // could be done with a history push but might lose other info
         dispatch(showToast({
             color: "success", title: "Granted Access", timeout: 5000,
             body: "You have granted access to your data."
         }) as any);
-        // TODO handle firstLogin redirect
-        //     // user.firstLogin is set correctly using SSO, but not with Segue: check session storage too:
-        //     if ($scope.user.firstLogin || persistence.session.load('firstLogin')) {
-        //         // If we've just signed up and used a group code immediately, change back to the main settings page:
-        //         $scope.activeTab = 0;
-        //     }
+        const state = getState();
+        // user.firstLogin is set correctly using SSO, but not with Segue: check session storage too:
+        if (state && state.user && state.user.loggedIn && state.user.firstLogin || persistance.load('firstLogin')) {
+            // If we've just signed up and used a group code immediately, change back to the main settings page:
+            history.push("/account");
+        }
         dispatch(closeActiveModal() as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_FAILURE});
@@ -360,38 +393,6 @@ export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO
             color: "danger", title: "Revoke Operation Failed", timeout: 5000,
             body: "With error message (" + e.status + ") " + e.data.errorMessage != undefined ? e.data.errorMessage : ""
         }) as any)
-    }
-};
-
-// Group Management
-export const getGroupMemberships = () => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST});
-        const groupMembershipsResponse = await api.groupManagement.getMyMemberships();
-        dispatch({
-            type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS,
-            groupMemberships: groupMembershipsResponse.data
-        });
-    } catch {
-        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_FAILURE});
-    }
-};
-
-export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_STATUS) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST});
-        await api.groupManagement.changeMyMembershipStatus(groupId, newStatus);
-        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS, groupId, newStatus});
-        dispatch(showToast({
-            color: "success", title: "Status Updated", timeout: 5000,
-            body: "You have updated your membership status."
-        }) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
-        dispatch(showToast({
-            color: "failure", title: "Status Update Failed", timeout: 5000,
-            body: "With error message (" + e.status + ") " + e.data.errorMessage || ""
-        }) as any);
     }
 };
 

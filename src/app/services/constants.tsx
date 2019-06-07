@@ -272,3 +272,6 @@ export enum MEMBERSHIP_STATUS {
     INACTIVE = "INACTIVE",
     // DELETED = "DELETED", I believe this state should never arrive at the front-end
 }
+
+export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
+
