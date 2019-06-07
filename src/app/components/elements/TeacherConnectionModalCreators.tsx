@@ -1,6 +1,12 @@
 import React from "react";
 import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
-import {applyToken, closeActiveModal, releaseAuthorisation, revokeAuthorisation} from "../../state/actions";
+import {
+    authenticateWithToken,
+    closeActiveModal,
+    releaseAllAuthorisations,
+    releaseAuthorisation,
+    revokeAuthorisation
+} from "../../state/actions";
 import {store} from "../../state/store";
 import * as RS from "reactstrap";
 import {extractTeacherName} from "../../services/role";
@@ -43,12 +49,12 @@ export const tokenVerificationModal = (authToken: string, usersToGrantAccess: Us
             </p>
         </React.Fragment>,
         buttons: [
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(applyToken(authToken))}}>
-                Confirm
-            </RS.Button>,
             <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
                 Cancel
-            </RS.Button>
+            </RS.Button>,
+            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(authenticateWithToken(authToken))}}>
+                Confirm
+            </RS.Button>,
         ]
     }
 };
@@ -62,16 +68,17 @@ export const revocationConfirmationModal = (userToRevoke: UserSummaryWithEmailAd
                 The user <strong>{extractTeacherName(userToRevoke)}</strong>
                 {" "}
                 will no longer be able to access your data.
+                <br />
+                Are you sure you want to revoke access for this user?
             </p>
-            <p>Are you sure you want to revoke access for this user?</p>
         </React.Fragment>,
         buttons: [
+            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
+                Cancel
+            </RS.Button>,
             <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(revokeAuthorisation(userToRevoke))}}>
                 Confirm
             </RS.Button>,
-            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
-                Cancel
-            </RS.Button>
         ]
     }
 };
@@ -82,17 +89,41 @@ export const releaseConfirmationModal = (user: UserSummaryDTO) => {
         title: "Remove access to students' data",
         body: <React.Fragment>
             <p>
-                Are you sure you want to end your access to {user.givenName} {user.familyName}&apos;s data?
+                Are you sure you want to end your access to <strong>{user.givenName} {user.familyName}</strong>
+                &apos;s data?
+                <br />
                 You will need to ask them to grant access again in the future if you change your mind.
             </p>
         </React.Fragment>,
         buttons: [
+            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
+                Cancel
+            </RS.Button>,
             <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(releaseAuthorisation(user))}}>
                 Confirm
             </RS.Button>,
+        ]
+    }
+};
+
+export const releaseAllConfirmationModal = () => {
+    return {
+        closeAction: () => {store.dispatch(closeActiveModal())},
+        title: "Remove access to all students' data",
+        body: <React.Fragment>
+            <p>
+                Are you sure you want to end your access to all students&apos; data?
+                <br />
+                You will need to ask them to grant access again in the future if you change your mind.
+            </p>
+        </React.Fragment>,
+        buttons: [
             <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
                 Cancel
-            </RS.Button>
+            </RS.Button>,
+            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(releaseAllAuthorisations())}}>
+                Confirm
+            </RS.Button>,
         ]
     }
 };

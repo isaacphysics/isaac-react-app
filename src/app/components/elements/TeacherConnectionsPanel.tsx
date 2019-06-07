@@ -3,61 +3,79 @@ import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {
-    getActiveAuthorisations, getGroupMembership, getStudentAuthorisations,
-    processAuthenticationToken, processReleaseAuthorisation, processRevocation
+    changeMyMembershipStatus,
+    getActiveAuthorisations,
+    getGroupMemberships,
+    getStudentAuthorisations,
+    processAuthenticateWithToken,
+    processReleaseAllAuthorisations,
+    processReleaseAuthorisation,
+    processRevokeAuthorisation
 } from "../../state/actions";
 import {connect} from "react-redux";
-import {ActiveAuthorisationsState, AppState, OtherUserAuthorisationsState} from "../../state/reducers";
+import {
+    ActiveAuthorisationsState,
+    AppState,
+    GroupMembershipsState,
+    OtherUserAuthorisationsState
+} from "../../state/reducers";
 import {extractTeacherName} from "../../services/role";
 import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
+import classnames from "classnames";
+import {MEMBERSHIP_STATUS} from "../../services/constants";
 
 const stateToProps = (state: AppState) => ({
     activeAuthorisations: state ? state.activeAuthorisations : null,
-    studentAuthorisations: state ? state.otherUserAuthorisations : null
+    studentAuthorisations: state ? state.otherUserAuthorisations : null,
+    groupMemberships: state ? state.groupMemberships : null,
 });
+
 const dispatchToProps = {
-    getActiveAuthorisations, getStudentAuthorisations, getGroupMembership,
-    processAuthenticationToken, processRevocation,
-    processReleaseAuthorisation,
+    getActiveAuthorisations, processAuthenticateWithToken, processRevokeAuthorisation,
+    getStudentAuthorisations, processReleaseAuthorisation, processReleaseAllAuthorisations,
+    getGroupMemberships, changeMyMembershipStatus
 };
 
 interface TeacherConnectionsProps {
     user: LoggedInUser;
     getActiveAuthorisations: () => void;
     getStudentAuthorisations: () => void;
-    getGroupMembership: () => void;
+    getGroupMemberships: () => void;
     activeAuthorisations: ActiveAuthorisationsState;
     studentAuthorisations: OtherUserAuthorisationsState;
-    processAuthenticationToken: (token: string | null) => void;
-    processRevocation: (user: UserSummaryWithEmailAddressDTO) => void;
+    groupMemberships: GroupMembershipsState;
+    processAuthenticateWithToken: (token: string | null) => void;
+    processRevokeAuthorisation: (user: UserSummaryWithEmailAddressDTO) => void;
     processReleaseAuthorisation: (student: UserSummaryDTO) => void;
-
+    processReleaseAllAuthorisations: () => void;
+    changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => void;
 }
 
 const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
     const {
-        user, activeAuthorisations, studentAuthorisations, // state
-        getActiveAuthorisations, processAuthenticationToken, processRevocation, // authorisation actions
-        getStudentAuthorisations, processReleaseAuthorisation, // student authorisation actions
-        getGroupMembership, // group membership actions
+        user, activeAuthorisations, studentAuthorisations, groupMemberships, // state
+        getActiveAuthorisations, processAuthenticateWithToken, processRevokeAuthorisation, // authorisation actions
+        getStudentAuthorisations, processReleaseAuthorisation, processReleaseAllAuthorisations, // student authorisation actions
+        getGroupMemberships, changeMyMembershipStatus // group membership actions
     } = props;
 
-    useEffect(() => {getActiveAuthorisations()}, []);
-    useEffect(() => {getGroupMembership()}, []);
-    useEffect(() => {getStudentAuthorisations()}, []);
+    useEffect(() => {
+        getActiveAuthorisations();
+        getGroupMemberships();
+        getStudentAuthorisations();
+    }, []);
 
     const [authenticationToken, setAuthenticationToken] = useState<string | null>(null);
 
     function processToken(event: React.FormEvent<HTMLFormElement>) {
         if (event) {event.preventDefault();}
-        processAuthenticationToken(authenticationToken);
+        processAuthenticateWithToken(authenticationToken);
     }
 
     return <RS.CardBody>
         <RS.Container ng-if="editingSelf">
             <h3>
-                <span id="teacher-connections-title">Teacher Connections</span>
-                {/* TODO Help Text Icon */}
+                <span>Teacher Connections<span id="teacher-connections-title" className="icon-help" /></span>
                 <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your Isaac assignment progress.
                 </RS.UncontrolledTooltip>
@@ -82,47 +100,48 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                     </RS.Form>
                 </RS.Col>
 
-                <RS.Col lg={5} className="connect-list">
-                    <h3><span className="person-icon-active" /> Teacher connections</h3>
-                    <div className="connect-list-inner">
-                        <ul className="teachers-connected">
-                            {activeAuthorisations && activeAuthorisations.map((teacherAuthorisation) =>
-                                <React.Fragment key={teacherAuthorisation.id}>
-                                    <li>
-                                        <span className="person-icon-active" />
-                                        <span id={`teacher-authorisation-${teacherAuthorisation.id}`}>
-                                            {extractTeacherName(teacherAuthorisation)}
-                                        </span>
-                                        <RS.UncontrolledTooltip
-                                            placement="bottom" target={`teacher-authorisation-${teacherAuthorisation.id}`}
-                                        >
-                                            This user ({teacherAuthorisation.email}) has access to your data.
-                                            To remove this access, click &apos;Revoke&apos;.
-                                        </RS.UncontrolledTooltip>
-                                        <RS.Button
-                                            color="link" className="revoke-teacher"
-                                            onClick={() => processRevocation(teacherAuthorisation)}
-                                        >
-                                            Revoke
-                                        </RS.Button>
-                                    </li>
-                                </React.Fragment>
-                            )}
-                        </ul>
-                        {activeAuthorisations && activeAuthorisations.length === 0 && <p className="teachers-connected">
-                            You have no active teacher connections.
-                        </p>}
+                <RS.Col lg={5} className="mt-4 mt-lg-0">
+                    <div className="connect-list">
+                        <h3><span className="person-icon-active" />Teacher connections</h3>
+                        <div className="connect-list-inner">
+                            <ul className="teachers-connected list-unstyled">
+                                {activeAuthorisations && activeAuthorisations.map((teacherAuthorisation) =>
+                                    <React.Fragment key={teacherAuthorisation.id}>
+                                        <li>
+                                            <span className="person-icon-active" />
+                                            <span id={`teacher-authorisation-${teacherAuthorisation.id}`}>
+                                                {extractTeacherName(teacherAuthorisation)}
+                                            </span>
+                                            <RS.UncontrolledTooltip
+                                                placement="bottom" target={`teacher-authorisation-${teacherAuthorisation.id}`}
+                                            >
+                                                This user ({teacherAuthorisation.email}) has access to your data.
+                                                To remove this access, click &apos;Revoke&apos;.
+                                            </RS.UncontrolledTooltip>
+                                            <RS.Button
+                                                color="link" className="revoke-teacher"
+                                                onClick={() => processRevokeAuthorisation(teacherAuthorisation)}
+                                            >
+                                                Revoke
+                                            </RS.Button>
+                                        </li>
+                                    </React.Fragment>
+                                )}
+                            </ul>
+                            {activeAuthorisations && activeAuthorisations.length === 0 && <p className="teachers-connected">
+                                You have no active teacher connections.
+                            </p>}
+                        </div>
                     </div>
                 </RS.Col>
             </RS.Row>
 
             {user.loggedIn && user.role !== "STUDENT" && <React.Fragment>
-                <hr />
+                <hr className="my-5" />
                 <RS.Row>
                     <RS.Col lg={7}>
                         <h3>
-                            <span id="student-connections-title">Your Student Connections</span>
-                            {/* TODO Help Text Icon */}
+                            <span>Your Student Connections<span id="student-connections-title" className="icon-help" /></span>
                             <RS.UncontrolledTooltip placement="bottom" target="student-connections-title">
                                 These are the students who have shared their Isaac data with you.
                                 These students are also able to view your name and email address on their Teacher Connections page.
@@ -138,7 +157,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                             <h3><span className="person-icon-active" /> Student connections </h3>
 
                             <div className="connect-list-inner">
-                                <ul className="teachers-connected">
+                                <ul className="teachers-connected list-unstyled">
                                     {studentAuthorisations && studentAuthorisations.map(student => (
                                         <li key={student.id}>
                                             <span className="person-icon-active" />
@@ -165,21 +184,25 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                                     You have no active student connections.
                                 </p>}
                             </div>
-                            {/* TODO Remove all*/}
-                            {/*<div ng-if="activeStudentAuthorisations.length>0" className="remove-link">*/}
-                            {/*    <p><a href="javascript:void(0)" ng-click="releaseAllAuthorisations()">Remove all</a></p>*/}
+                            {studentAuthorisations && studentAuthorisations.length > 0 && <p className="remove-link">
+                                <RS.Button color="link" onClick={() => processReleaseAllAuthorisations()}>
+                                    Remove all
+                                </RS.Button>
+                            </p>}
                         </div>
                     </RS.Col>
                 </RS.Row>
             </React.Fragment>}
 
-            <hr />
+            <hr className="my-5" />
 
             <RS.Row>
                 <RS.Col>
                     <h3>
-                        <span id="group-memberships-title">Your Group Memberships</span>
-                        {/* TODO Help Text Icon */}
+                        <span>
+                            Your Group Memberships
+                            <span id="group-memberships-title" className="icon-help" />
+                        </span>
                         <RS.UncontrolledTooltip placement="bottom" target="group-memberships-title">
                             These are the groups you are currently a member of.
                             Groups on Isaac let teachers set assignments to multiple students in one go.
@@ -190,53 +213,64 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                         inactive in a group you won&apos;t receive any assignments from that group. If you want to
                         permanently leave a group, ask your teacher to remove you.
                     </p>
-                    {/*<div ng-show="myGroupMembership.length > 0" className="my-groups-table-section">*/}
-                    {/*    <table className="">*/}
-                    {/*        <tr>*/}
-                    {/*            <th>Group Name</th>*/}
-                    {/*            <th>Teachers</th>*/}
-                    {/*            <th>Membership Status</th>*/}
-                    {/*            <th>Actions</th>*/}
-                    {/*        </tr>*/}
-                    {/*    </table>*/}
-                    {/*    <div className="my-groups-table-row-container">*/}
-                    {/*        <table>*/}
-                    {/*            <tr ng-repeat="entry in myGroupMembership | orderBy:'group.groupName'">*/}
-                    {/*                <td>{{*/}
-                    {/*                    entry*/}
-                    {/*                    .group.groupName == null ? ("Group " + entry.group.id) : entry.group.groupName*/}
-                    {/*                }}</td>*/}
-                    {/*                <td>*/}
-                    {/*                    <ul ng-show="entry.group.ownerSummary">*/}
-                    {/*                        <li><span>{{convertToTeacherName(entry.group.ownerSummary)}}</span></li>*/}
-                    {/*                        <li ng-repeat="manager in entry.group.additionalManagers">*/}
-                    {/*                            {{convertToTeacherName(manager)}}</li>*/}
-                    {/*                    </ul>*/}
-                    {/*                </td>*/}
-                    {/*                <td ng-class="{ru_red:entry.membershipStatus == 'INACTIVE'}"*/}
-                    {/*                    className="centered-table-column">{{entry.membershipStatus}}</td>*/}
+                    <div className="my-groups-table-section">
+                        <RS.Table>
+                            <thead>
+                                <tr>
+                                    <th className="align-middle">Group Name</th>
+                                    <th className="align-middle">Teachers</th>
+                                    <th className="align-middle">Membership Status</th>
+                                    <th className="align-middle">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {groupMemberships && groupMemberships.map((membership) => (<tr key={membership.group.id}>
+                                    <td>
+                                        {membership.group.groupName || "Group " + membership.group.id}
+                                    </td>
+                                    <td>
+                                        {membership.group.ownerSummary && <ul className="list-unstyled">
+                                            <li>{extractTeacherName(membership.group.ownerSummary)}</li>
+                                            {membership.group.additionalManagers && membership.group.additionalManagers.map(manager => (
+                                                <li key={manager.id}>{extractTeacherName(manager)}</li>
+                                            ))}
+                                        </ul>}
+                                    </td>
+                                    <td className={classnames({danger: membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE})}>
+                                        {membership.membershipStatus}
+                                    </td>
+                                    <td>
+                                        {membership.membershipStatus == MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
+                                            <RS.Button color="link" onClick={() =>
+                                                changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.INACTIVE)
+                                            }>
+                                                Leave Group
+                                            </RS.Button>
+                                            <span id="leave-group-action" className="icon-help" />
+                                            <RS.UncontrolledTooltip placement="bottom" target="leave-group-action">
+                                                If you leave a group you will no longer receive notifications of new assignments.
+                                            </RS.UncontrolledTooltip>
+                                        </React.Fragment>}
 
-                    {/*                <td className="centered-table-column">*/}
-                    {/*                    <a ng-click="changeMyMembershipStatus(entry.group.id, 'INACTIVE')"*/}
-                    {/*                       ng-if="entry.membershipStatus == 'ACTIVE'" href="javascript:void(0)">Leave*/}
-                    {/*                        Group</a>*/}
-                    {/*                    <span ng-if="entry.membershipStatus == 'ACTIVE'" aria-haspopup="true"*/}
-                    {/*                          className="icon-help has-tip"*/}
-                    {/*                          data-ot="If you leave a group you will no longer receive notifications of new assignments."></span>*/}
-
-                    {/*                    <a ng-click="changeMyMembershipStatus(entry.group.id, 'ACTIVE')"*/}
-                    {/*                       ng-if="entry.membershipStatus == 'INACTIVE'" href="javascript:void(0)">Rejoin*/}
-                    {/*                        Group</a>*/}
-                    {/*                    <span ng-if="entry.membershipStatus == 'INACTIVE'" aria-haspopup="true"*/}
-                    {/*                          className="icon-help has-tip"*/}
-                    {/*                          data-ot="If you rejoin a group you will see all the assignments set since the group was created."></span>*/}
-                    {/*                </td>*/}
-                    {/*            </tr>*/}
-                    {/*        </table>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-                    {/*<p ng-hide="myGroupMembership.length > 0" className="teachers-connected text-center">You are not a*/}
-                    {/*    member of any groups.</p>*/}
+                                        {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE && <React.Fragment>
+                                            <RS.Button color="link" onClick={() =>
+                                                changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.ACTIVE)
+                                            }>
+                                                Rejoin Group
+                                            </RS.Button>
+                                            <span id="rejoin-group-action" className="icon-help" />
+                                            <RS.UncontrolledTooltip placement="bottom" target="rejoin-group-action">
+                                                If you rejoin a group you will see all the assignments set since the group was created.
+                                            </RS.UncontrolledTooltip>
+                                        </React.Fragment>}
+                                    </td>
+                                </tr>))}
+                            </tbody>
+                        </RS.Table>
+                    </div>
+                    {groupMemberships && groupMemberships.length === 0 && <p className="teachers-connected text-center">
+                        You are not a member of any groups.
+                    </p>}
                 </RS.Col>
             </RS.Row>
         </RS.Container>

@@ -32,6 +32,8 @@ import {showToast} from "../../state/actions";
 import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
 import {withRouter} from "react-router-dom";
 
+enum Tab {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
+
 const stateToProps = (state: AppState, {location: {hash}}: any) => {
     return {
         errorMessage: state ? state.error : null,
@@ -47,8 +49,6 @@ const dispatchToProps = {
     resetPassword,
     showToast,
 };
-
-enum Tab {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
 interface AccountPageProps {
     user: LoggedInUser;
@@ -96,8 +96,6 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     let initialTab = (hashAnchor && Tab[hashAnchor]) ||Tab.account;
     const [activeTab, setTab] = useState(initialTab);
 
-    const buttonInputClass = "btn btn-block btn-secondary border-0";
-
     return <Container id="account-page" className="mb-5">
         <BreadcrumbTrail currentPageTitle="My account" />
         <h1 className="h-title mb-4">My Account</h1>
@@ -113,7 +111,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         }
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
-                <Nav tabs className="my-4">
+                <Nav tabs className="my-4 flex-wrap">
                     <NavItem>
                         <NavLink
                             className={"mx-2 " + classnames({active: activeTab === Tab.account})}
@@ -205,12 +203,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                         {errorMessage.generalError}
                                     </h3>
                                 }
-                                <Input
-                                    type="submit" value="Save"
-                                    className={
-                                        (activeTab === Tab.teacherconnections) ?  buttonInputClass + " disabled" : buttonInputClass
-                                    }
-                                />
+                                {/* TODO only show Save on relevant pages? */}
+                                <Input type="submit" value="Save" className="btn btn-block btn-secondary border-0" />
                             </Col>
                         </Row>
                     </CardFooter>

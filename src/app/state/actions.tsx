@@ -4,7 +4,13 @@ import {AppState} from "./reducers";
 import {history, redirectToPageNotFound} from "../services/history";
 import {store} from "./store";
 import {documentCache, topicCache} from "../services/cache";
-import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE, DOCUMENT_TYPE, TAG_ID} from "../services/constants";
+import {
+    ACTION_TYPE,
+    API_REQUEST_FAILURE_MESSAGE,
+    DOCUMENT_TYPE,
+    MEMBERSHIP_STATUS,
+    TAG_ID
+} from "../services/constants";
 import {
     Action,
     ActiveModal,
@@ -23,6 +29,7 @@ import {
     UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {
+    releaseAllConfirmationModal,
     releaseConfirmationModal,
     revocationConfirmationModal,
     tokenVerificationModal
@@ -252,10 +259,10 @@ export const submitMessage = (extra: any, params: {firstName: string; lastName: 
     }
 };
 
-// User Connections
+// Teacher Connections
 export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST});
     try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST});
         const authorisationsResponse = await api.authorisations.get();
         dispatch({
             type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS,
@@ -266,45 +273,19 @@ export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) 
     }
 };
 
-export const getStudentAuthorisations = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_REQUEST});
-    try {
-        const otherUserAuthorisationsResponse = await api.authorisations.getOtherUsers();
-        dispatch({
-            type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS,
-            otherUserAuthorisations: otherUserAuthorisationsResponse.data
-        });
-    } catch {
-        dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_FAILURE});
-    }
-};
-
-export const getGroupMembership = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIP_REQUEST});
-    try {
-        const groupMembershipResponse = await api.groupManagement.getMyMembership();
-        dispatch({
-            type: ACTION_TYPE.GROUP_GET_MEMBERSHIP_RESPONSE_SUCCESS,
-            groupMembership: groupMembershipResponse.data
-        });
-    } catch {
-        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIP_RESPONSE_FAILURE});
-    }
-};
-
-export const processAuthenticationToken = (userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
+export const processAuthenticateWithToken = (userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
     if (!userSubmittedAuthenticationToken) {
         dispatch(showToast({color: "failure", title: "No Token Provided", body: "You have to enter a token!"}) as any);
         return;
     }
 
-    // Some users paste the URL in the token box, so remove the token from the end if they do.
-    // Tokens so far are also always uppercase; this is hardcoded in the API, so safe to assume here:
-    let authenticationToken = userSubmittedAuthenticationToken.split("?authToken=").pop() as string;
-    authenticationToken = authenticationToken.toUpperCase().replace(/ /g,'');
-
-    dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST})
     try {
+        // Some users paste the URL in the token box, so remove the token from the end if they do.
+        // Tokens so far are also always uppercase; this is hardcoded in the API, so safe to assume here:
+        let authenticationToken = userSubmittedAuthenticationToken.split("?authToken=").pop() as string;
+        authenticationToken = authenticationToken.toUpperCase().replace(/ /g,'');
+
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST})
         const result = await api.authorisations.getTokenOwner(authenticationToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_SUCCESS});
         const usersToGrantAccess = result.data;
@@ -331,14 +312,13 @@ export const processAuthenticationToken = (userSubmittedAuthenticationToken: str
         }
     }
 };
-
-export const applyToken = (authToken: string) => async (dispatch: Dispatch<Action>) => {
+export const authenticateWithToken = (authToken: string) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_REQUEST});
         await api.authorisations.useToken(authToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS});
         dispatch(getActiveAuthorisations() as any);
-        dispatch(getGroupMembership() as any);
+        dispatch(getGroupMemberships() as any);
         //     $scope.authenticationToken = {value: null}; // could be done with a history push but might lose other info
         dispatch(showToast({color: "success", title: "Granted Access", body: "You have granted access to your data."}) as any);
         // TODO handle firstLogin redirect
@@ -357,10 +337,9 @@ export const applyToken = (authToken: string) => async (dispatch: Dispatch<Actio
     }
 };
 
-export const processRevocation = (user: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
+export const processRevokeAuthorisation = (user: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(revocationConfirmationModal(user)) as any);
 };
-
 export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_REQUEST});
@@ -377,6 +356,20 @@ export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO
             color: "danger", title: "Revoke Operation Failed",
             body: "With error message (" + e.status + ") " + e.data.errorMessage != undefined ? e.data.errorMessage : ""
         }) as any)
+    }
+};
+
+// Student/Other Connections
+export const getStudentAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_REQUEST});
+        const otherUserAuthorisationsResponse = await api.authorisations.getOtherUsers();
+        dispatch({
+            type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS,
+            otherUserAuthorisations: otherUserAuthorisationsResponse.data
+        });
+    } catch {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_FAILURE});
     }
 };
 
@@ -398,6 +391,62 @@ export const releaseAuthorisation = (student: UserSummaryDTO) => async (dispatch
         dispatch(showToast({
             color: "danger", title: "Revoke Operation Failed",
             body: "With error message (" + e.status + ") " + (e.data.errorMessage || "")
+        }) as any);
+    }
+};
+
+export const processReleaseAllAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(releaseAllConfirmationModal()) as any);
+};
+export const releaseAllAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_REQUEST});
+        await api.authorisations.releaseAll();
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_SUCCESS});
+        dispatch(getStudentAuthorisations() as any);
+        dispatch(closeActiveModal() as any);
+        dispatch(showToast({
+            color: "success", title: "Access Removed",
+            body: "You have ended your access to all of your students' data."
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_FAILURE});
+        // $scope.showToast($scope.toastTypes.Failure, "Revoke Operation Failed", "With error message (" + e.status + ") " + e.data.errorMessage != undefined ? e.data.errorMessage : "");
+        dispatch(showToast({
+            color: "danger", title: "Revoke Operation Failed",
+            body: "With error message (" + e.status + ") " + e.data.errorMessage != undefined ? e.data.errorMessage : ""
+        }) as any);
+    }
+};
+
+// Group Management
+export const getGroupMemberships = () => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST});
+        const groupMembershipsResponse = await api.groupManagement.getMyMemberships();
+        dispatch({
+            type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS,
+            groupMemberships: groupMembershipsResponse.data
+        });
+    } catch {
+        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_FAILURE});
+    }
+};
+
+export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_STATUS) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST});
+        await api.groupManagement.changeMyMembershipStatus(groupId, newStatus);
+        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS, groupId, newStatus});
+        dispatch(showToast({
+            color: "success", title: "Status Updated",
+            body: "You have updated your membership status."
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "failure", title: "Status Update Failed",
+            body: "With error message (" + e.status + ") " + e.data.errorMessage || ""
         }) as any);
     }
 };

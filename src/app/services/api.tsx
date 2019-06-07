@@ -1,5 +1,5 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, TAG_ID} from "./constants";
+import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
@@ -46,8 +46,7 @@ export const apiHelper = {
 export const api = {
     search: {
         get: (query: string, types: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
-            return endpoint.get(`/search/` + encodeURIComponent(query),
-                {params: {types}});
+            return endpoint.get(`/search/` + encodeURIComponent(query), {params: {types}});
         }
     },
     users: {
@@ -113,11 +112,17 @@ export const api = {
         },
         release: (userId: number) => {
             return endpoint.delete(`/authorisations/release/${userId}`);
+        },
+        releaseAll: () => {
+            return endpoint.delete(`/authorisations/release/`);
         }
     },
     groupManagement: {
-        getMyMembership: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+        getMyMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
             return endpoint.get(`/groups/membership`);
+        },
+        changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => {
+            return endpoint.post(`/groups/membership/${groupId}/${newStatus}`)
         }
     },
     questions: {
