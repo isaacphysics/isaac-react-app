@@ -113,3 +113,43 @@
     margin-bottom: 0;
   }
 }
+.basic-card {
+  @include aspect-ratio(145, 93);
+  background-color: $white;
+  box-shadow: 0 2px 30px 0 $shadow-08;
+  height: 100%;
+
+  h2 {
+    font-size: 1.25rem;
+  }
+  > p {
+    flex: 1 0 4rem;
+    margin: auto 0;
+  }
+  .list-group-item & > a {
+    font-family: $primary-font;
+  }
+}
+.action-card {
+  height: 100%;
+  h2 {
+    font-family: $secondary-font-medium;
+    font-size: 1.625rem;
+  }
+  p:first-of-type > span {
+    display: inline-block;
+    font-weight: 700;
+  }
+
+  p {
+    flex: 1 0 3rem;
+  }
+
+  .btn {
+    font-family: $secondary-font-bold;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
