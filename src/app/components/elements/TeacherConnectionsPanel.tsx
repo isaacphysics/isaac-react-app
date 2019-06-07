@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../IsaacAppTypes";
@@ -38,6 +38,7 @@ const dispatchToProps = {
 
 interface TeacherConnectionsProps {
     user: LoggedInUser;
+    authToken: string | null;
     getActiveAuthorisations: () => void;
     getStudentAuthorisations: () => void;
     getGroupMemberships: () => void;
@@ -53,10 +54,14 @@ interface TeacherConnectionsProps {
 
 const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
     const {
-        user, activeAuthorisations, studentAuthorisations, groupMemberships, // state
-        getActiveAuthorisations, processAuthenticateWithToken, processRevokeAuthorisation, // authorisation actions
-        getStudentAuthorisations, processReleaseAuthorisation, processReleaseAllAuthorisations, // student authorisation actions
-        getGroupMemberships, changeMyMembershipStatus // group membership actions
+        // state
+        user, authToken, activeAuthorisations, studentAuthorisations, groupMemberships,
+        // authorisation actions
+        getActiveAuthorisations, processAuthenticateWithToken, processRevokeAuthorisation,
+        // student authorisation actions
+        getStudentAuthorisations, processReleaseAuthorisation, processReleaseAllAuthorisations,
+        // group membership actions
+        getGroupMemberships, changeMyMembershipStatus,
     } = props;
 
     useEffect(() => {
@@ -65,7 +70,13 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
         getStudentAuthorisations();
     }, []);
 
-    const [authenticationToken, setAuthenticationToken] = useState<string | null>(null);
+    useEffect(() => {
+        if (authToken) {
+            processAuthenticateWithToken(authToken);
+        }
+    }, [authToken]);
+
+    const [authenticationToken, setAuthenticationToken] = useState<string | null>(authToken);
 
     function processToken(event: React.FormEvent<HTMLFormElement>) {
         if (event) {event.preventDefault();}
@@ -88,7 +99,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                     <RS.Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => processToken(e)}>
                         <RS.InputGroup>
                             <RS.Input
-                                type="text" placeholder="Enter your code in here"
+                                type="text" placeholder="Enter your code in here" value={authToken}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                             />
                             <RS.InputGroupAddon addonType="append">
@@ -214,7 +225,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                         permanently leave a group, ask your teacher to remove you.
                     </p>
                     <div className="my-groups-table-section">
-                        <RS.Table>
+                        <RS.Table borderless>
                             <thead>
                                 <tr>
                                     <th className="align-middle">Group Name</th>

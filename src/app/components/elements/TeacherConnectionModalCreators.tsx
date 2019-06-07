@@ -17,7 +17,7 @@ export const tokenVerificationModal = (authToken: string, usersToGrantAccess: Us
         title: "Sharing your data",
         body: <React.Fragment>
             <p>Are you sure you would like to give the following Isaac users access to your data?</p>
-            <table className="group-table">
+            <RS.Table bordered>
                 <tbody>
                     {usersToGrantAccess.map((member) => (<tr key={member.id}>
                         <td>
@@ -26,7 +26,7 @@ export const tokenVerificationModal = (authToken: string, usersToGrantAccess: Us
                         </td>
                     </tr>))}
                 </tbody>
-            </table>
+            </RS.Table>
 
             {/* TODO Highlight already authorised teachers */}
             {/*{anyUsersAlreadyAuthorised && <p>*/}

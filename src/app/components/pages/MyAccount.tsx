@@ -24,6 +24,7 @@ import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
 import {validateEmail} from "../../services/validation";
+import queryString from "query-string";
 import {Link} from "react-router-dom";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EXAM_BOARD} from "../../services/constants";
@@ -34,13 +35,16 @@ import {withRouter} from "react-router-dom";
 
 enum Tab {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
-const stateToProps = (state: AppState, {location: {hash}}: any) => {
+const stateToProps = (state: AppState, props: any) => {
+    const {location: {search, hash}} = props;
+    const searchParams = queryString.parse(search);
     return {
         errorMessage: state ? state.error : null,
         userAuthSettings: state ? state.userAuthSettings : null,
         userPreferences: state ? state.userPreferences : null,
         firstLogin: history.location && history.location.state && history.location.state.firstLogin,
         hashAnchor: (hash && hash.slice(1)) || null,
+        authToken: (searchParams && searchParams.authToken) ? (searchParams.authToken as string) : null
     }
 };
 
@@ -62,9 +66,10 @@ interface AccountPageProps {
     firstLogin: boolean;
     showToast: (toast: Toast) => void;
     hashAnchor: string | null;
+    authToken: string | null;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, showToast, hashAnchor}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, showToast, hashAnchor, authToken}: AccountPageProps) => {
     const editingSelf = true;
 
     if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
@@ -93,7 +98,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [isNewPasswordConfirmed, setIsNewPasswordConfirmed] = useState(false);
 
     // @ts-ignore
-    let initialTab = (hashAnchor && Tab[hashAnchor]) ||Tab.account;
+    let initialTab: Tab =
+        (authToken && Tab.teacherconnections) ||
+        (hashAnchor && Tab[hashAnchor as any]) ||
+        Tab.account;
     const [activeTab, setTab] = useState(initialTab);
 
     return <Container id="account-page" className="mb-5">
@@ -143,8 +151,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             className={"mx-2 " + classnames({active: activeTab === Tab.emailpreferences})}
                             onClick={() => setTab(Tab.emailpreferences)} tabIndex={0}
                         >
-                            <span className="d-none d-lg-block">Teacher Connections</span>
-                            <span className="d-block d-lg-none">Connections</span>
+                            <span className="d-none d-lg-block">Email Preferences</span>
+                            <span className="d-block d-lg-none">Emails</span>
                         </NavLink>
                     </NavItem>
                 </Nav>
@@ -186,7 +194,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             />
                         </TabPane>
                         <TabPane tabId={Tab.teacherconnections}>
-                            {editingSelf && <TeacherConnectionsPanel user={user} />}
+                            {editingSelf && <TeacherConnectionsPanel user={user} authToken={authToken} />}
                         </TabPane>
                         <TabPane tabId={Tab.emailpreferences}>
                             <UserEmailPreference
