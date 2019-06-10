@@ -26,9 +26,16 @@ h2 {
   font-size: 2.125rem;
   font-weight: 600;
 
+  &.h-s {
+    font-family: $secondary-font-medium;
+    font-size: 1.25rem;
+    margin: 0;
+  }
+
   &.h-m {
     font-family: $secondary-font-medium;
     font-size: 1.625rem;
+    margin: 0;
   }
 }
 
@@ -93,6 +100,7 @@ h4 {
 }
 
 .h-title {
+  font-family: $secondary-font-semi-bold;
   font-size: 2.125rem;
   line-height: 1.47;
   padding-bottom: 1.25rem;

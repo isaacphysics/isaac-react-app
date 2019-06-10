@@ -10,10 +10,12 @@ interface BreadcrumbTrailProps {
 
 export const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = []}: BreadcrumbTrailProps) => {
     const breadcrumbHistory = [{title: "Home", to: "/"}].concat(intermediateCrumbs);
-    return <Breadcrumb className="py-2 px-0">
+    return <Breadcrumb className="py-md-2 px-md-0 bread">
         {breadcrumbHistory.map((breadcrumb) => (
             <BreadcrumbItem key={breadcrumb.title}>
-                <Link to={breadcrumb.to}>{breadcrumb.title}</Link>
+                <Link to={breadcrumb.to}>
+                    {breadcrumb.title}
+                </Link>
             </BreadcrumbItem>
         ))}
         <BreadcrumbItem active>

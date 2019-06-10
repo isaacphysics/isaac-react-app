@@ -1,4 +1,4 @@
-import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {CardBody, CardFooter, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {School, UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
 import {isDobOverThirteen, validateEmail} from "../../services/validation";
 import {EXAM_BOARD} from "../../services/constants";
@@ -123,7 +123,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         id="dob-input"
                         type="date"
                         name="date-of-birth"
-                        defaultValue={myUser.dateOfBirth}
+                        defaultValue={myUser.dateOfBirth as unknown as string}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             const dateOfBirth = event.target.valueAsDate;
                             setIsDobValid(isDobOverThirteen(dateOfBirth));
@@ -241,5 +241,14 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
         {/*        </FormGroup>*/}
         {/*    </Col>*/}
         {/*</Row>*/}
+
+        <Row>
+            <Col>
+                <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
+                    Required field
+                </span>
+            </Col>
+        </Row>
+
     </CardBody>
 };
