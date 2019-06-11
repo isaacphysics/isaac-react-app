@@ -359,6 +359,15 @@ function update(from: GroupsState, what: AppGroup) {
     });
 }
 
+function updateToken(from: GroupsState, group: AppGroup, token: string) {
+    return groupsProcessor(from, (g) => {
+        if (g && g.id == group.id) {
+            return {...g, token: token}
+        }
+        return g;
+    });
+}
+
 function updateMembers(from: GroupsState, group: AppGroup, members: UserSummaryWithGroupMembershipDTO[]) {
     return groupsProcessor(from, (g) => {
         if (g && g.id == group.id) {
@@ -393,6 +402,8 @@ export const groups = (groups: GroupsState = null, action: Action): GroupsState 
             return remove(groups, action.deletedGroup);
         case ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS:
             return update(groups, action.updatedGroup);
+        case ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS:
+            return updateToken(groups, action.group, action.token);
         case ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS:
             return updateMembers(groups, action.group, action.members);
         case ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS:

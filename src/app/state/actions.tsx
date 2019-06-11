@@ -13,7 +13,7 @@ import {
 } from "../services/constants";
 import {
     Action,
-    ActiveModal, AppGroupMembership,
+    ActiveModal, AppGroup, AppGroupMembership,
     LoggedInUser,
     LoggedInValidationUser,
     Toast,
@@ -37,6 +37,8 @@ import {
     tokenVerificationModal
 } from "../components/elements/TeacherConnectionModalCreators";
 import * as persistance from "../services/localStorage";
+import {groupInvitationModal} from "../components/elements/GroupsModalCreators";
+import {ThunkDispatch} from "redux-thunk";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -620,6 +622,7 @@ export const createGroup = (groupName: string) => async (dispatch: Dispatch<Acti
     dispatch({type: ACTION_TYPE.GROUPS_CREATE_REQUEST});
     const newGroup = await api.groups.create(groupName);
     dispatch({type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS, newGroup: newGroup.data});
+    return newGroup.data as AppGroup;
 };
 
 export const deleteGroup = (group: UserGroupDTO) => async (dispatch: Dispatch<any>) => {
@@ -655,6 +658,21 @@ export const getGroupMembers = (group: UserGroupDTO) => async (dispatch: Dispatc
     }
 };
 
+export const getGroupToken = (group: AppGroup) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUPS_TOKEN_REQUEST, group});
+    const result = await api.authorisations.getToken(group.id as number);
+    if (result.status < 300) {
+        dispatch({type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS, group: group, token: result.data.token});
+    } else {
+        dispatch({type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_FAILURE, group: group});
+    }
+};
+
+export const getGroupInfo = (group: AppGroup) => async (dispatch: ThunkDispatch<AppState, void, Action>) => {
+    dispatch(getGroupMembers(group));
+    dispatch(getGroupToken(group));
+};
+
 export const resetMemberPassword = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST, member});
     const result = await api.users.passwordResetById(member.groupMembershipInformation.userId as number);
@@ -676,6 +694,11 @@ export const deleteMember = (member: AppGroupMembership) => async (dispatch: Dis
         dispatch(showToast({color: "failure", title: "Failed to delete member", body: result.data, timeout: 5000}) as any);
     }
 };
+
+export const showGroupInvitationModal = (group: AppGroup, firstTime: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(groupInvitationModal(group, firstTime)) as any);
+};
+
 
 export const getMyGroupMemberships = () => async (dispatch: Dispatch<Action>) => {
     try {

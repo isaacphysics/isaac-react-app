@@ -117,6 +117,9 @@ export const api = {
         getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
             return endpoint.get(`/authorisations/other_users`);
         },
+        getToken: (groupId: number): AxiosPromise<AppTypes.AppGroupTokenDTO> => {
+            return endpoint.get(`/authorisations/token/${groupId}`);
+        },
         getTokenOwner: (token: string): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
             return endpoint.get(`/authorisations/token/${token}/owner`);
         },

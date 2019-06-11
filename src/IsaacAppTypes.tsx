@@ -158,6 +158,10 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; members: ApiTypes.UserSummaryWithGroupMembershipDTO[]}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO}
 
+    | {type: ACTION_TYPE.GROUPS_TOKEN_REQUEST; group: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; token: string}
+    | {type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO}
+
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE; member: AppGroupMembership}
@@ -218,6 +222,12 @@ export type LoggedInValidationUser = ValidationUser & {loggedIn: true}  | {logge
 export interface GroupMembershipDetailDTO {
     group: ApiTypes.UserGroupDTO;
     membershipStatus: MEMBERSHIP_STATUS;
+}
+
+export interface AppGroupTokenDTO {
+    token: string;
+    ownerUserId: number;
+    groupId: number;
 }
 
 export interface LinkInfo {

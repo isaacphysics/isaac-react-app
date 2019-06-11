@@ -17,24 +17,25 @@ import {
     ButtonGroup, Button, Input, Table, ButtonDropdown
 } from "reactstrap"
 import {Link} from "react-router-dom";
-import {loadGroups, createGroup, deleteGroup, updateGroup, getGroupMembers, resetMemberPassword, deleteMember} from "../../state/actions";
+import {loadGroups, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState, GroupsState} from "../../state/reducers";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 
 const stateFromProps = (state: AppState) => (state && {groups: state.groups});
-const dispatchFromProps = {loadGroups, createGroup, deleteGroup, updateGroup, getGroupMembers, resetMemberPassword, deleteMember};
+const dispatchFromProps = {loadGroups, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal};
 
 interface GroupsPageProps {
     groups: GroupsState | null;
     loadGroups: (getArchived: boolean) => void;
-    createGroup: (groupName: string) => void;
+    createGroup: (groupName: string) => Promise<AppGroup>;
     deleteGroup: (group: AppGroup) => void;
     updateGroup: (newGroup: AppGroup, message?: string) => void;
-    getGroupMembers: (group: AppGroup) => void;
+    getGroupInfo: (group: AppGroup) => void;
     resetMemberPassword: (member: AppGroupMembership) => void;
     deleteMember: (member: AppGroupMembership) => void;
+    showGroupInvitationModal: (group: AppGroup, firstTime: boolean) => void;
 }
 
 enum SortOrder {
@@ -42,7 +43,7 @@ enum SortOrder {
     "Date Created" = "Date Created"
 }
 
-type GroupEditorProps = Pick<GroupsPageProps, "updateGroup" | "getGroupMembers" | "resetMemberPassword" | "deleteMember"> & {
+type GroupEditorProps = Exclude<GroupsPageProps, "groups" | "loadGroups" | "createGroup"> & {
     group?: AppGroup;
     createNewGroup: (groupName: string) => void;
     groupNameRef: MutableRefObject<HTMLInputElement | null>;
@@ -116,7 +117,7 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
     </tr>;
 };
 
-const GroupEditor = ({group, updateGroup, getGroupMembers, createNewGroup, groupNameRef, resetMemberPassword, deleteMember}: GroupEditorProps) => {
+const GroupEditor = ({group, updateGroup, getGroupInfo, createNewGroup, groupNameRef, resetMemberPassword, deleteMember, showGroupInvitationModal}: GroupEditorProps) => {
     const groupId = group && group.id;
 
     const [isExpanded, setExpanded] = useState(false);
@@ -128,7 +129,7 @@ const GroupEditor = ({group, updateGroup, getGroupMembers, createNewGroup, group
         setExpanded(false);
         setNewGroupName(initialGroupName);
         if (group) {
-            getGroupMembers(group);
+            getGroupInfo(group);
         }
     }, [groupId]); // This can't just be group, because group changes when the members change, causing an infinite reload loop
 
@@ -155,7 +156,7 @@ const GroupEditor = ({group, updateGroup, getGroupMembers, createNewGroup, group
     return <>
         <Row>
             <Col sm={8}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
-            {group && <Col sm={4}>Invite Users</Col>}
+            {group && <Col sm={4}><Button onClick={() => showGroupInvitationModal(group, false)}>Invite Users</Button></Col>}
         </Row>
         <Row>
             <Col xs={8}>
@@ -199,7 +200,7 @@ const GroupEditor = ({group, updateGroup, getGroupMembers, createNewGroup, group
 };
 
 const GroupsPageComponent = (props: GroupsPageProps) => {
-    const {groups, loadGroups, createGroup, deleteGroup} = props;
+    const {groups, loadGroups, createGroup, deleteGroup, showGroupInvitationModal} = props;
 
     const [showArchived, setShowArchived] = useState(false);
 
@@ -233,21 +234,23 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
         }
     }
 
-    const [newGroupName, setNewGroupName] = useState("");
+    const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>();
 
-    const createNewGroup = () => {
-        createGroup(newGroupName);
-        setNewGroupName("");
+    const createNewGroup = async (newGroupName: string) => {
         setShowArchived(false);
+        const group = await createGroup(newGroupName);
+        setSelectedGroupId(group.id);
+        showGroupInvitationModal(group, true);
     };
 
     const confirmDeleteGroup = (group: AppGroup) => {
         if (confirm("Are you sure you want to permanently delete the group '" + group.groupName + "' and remove all associated assignments?\n\nTHIS ACTION CANNOT BE UNDONE!")) {
             deleteGroup(group);
+            if (selectedGroupId == group.id) {
+                setSelectedGroupId(undefined);
+            }
         }
     };
-
-    const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>();
 
     useEffect(() => {
         loadGroups(showArchived);
