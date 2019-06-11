@@ -2,6 +2,7 @@ import {combineReducers} from "redux";
 import {
     Action,
     ActiveModal,
+    AppGroup, AppGroupMembership,
     AppQuestionDTO,
     GroupMembershipDetailDTO,
     isValidatedChoice,
@@ -18,12 +19,11 @@ import {
     ResultsWrapper,
     UserSummaryForAdminUsersDTO,
     UserAuthenticationSettingsDTO,
-    UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
+    UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
-import {without} from "lodash";
+import {arch} from "os";
 
 type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -302,42 +302,83 @@ export const activeModal = (activeModal: ActiveModalState = null, action: Action
     }
 };
 
-function remove<T>(from: T[] | undefined, what: T): T[] | undefined {
-    if (from === undefined) return from;
-    return without(from, what);
-}
-function update(from: GroupsState, what: UserGroupDTO): GroupsState {
-    if (from === null) return from;
-
-    function update(archived: boolean, from?: UserGroupDTO[]) {
+function groupsProcessor(groups: GroupsState, updater: (group: AppGroup | null, inArchived: boolean | null) => AppGroup | null) {
+    if (groups === null) return groups;
+    function update(archived: boolean, from?: AppGroup[]) {
+        updater(null, null);
         if (from === undefined) return from;
-        from = from.slice();
-        let found = false;
-        for (let i = 0; i < from.length; i++) {
-            if (from[i].id == what.id) {
-                if (what.archived != archived) {
-                    // Remove
-                    from.splice(i, 1);
-                    i--;
-                } else {
-                    // Update
-                    from[i] = what;
-                }
-                found = true;
+        const result = [];
+        from.forEach(group => {
+            const newGroup = updater(group, archived);
+            if (newGroup) {
+                result.push(newGroup);
             }
+        });
+        const extraGroup = updater(null, archived);
+        if (extraGroup) {
+            result.push(extraGroup);
         }
-        if (!found && what.archived == archived) {
-            from.push(what);
-        }
-        return from;
+        return result;
     }
     return {
-        active: update(false, from.active),
-        archived: update(true, from.archived)
+        active: update(false, groups.active),
+        archived: update(true, groups.archived)
     };
 }
 
-export type GroupsState = {active?: UserGroupDTO[]; archived?: UserGroupDTO[]} | null;
+function remove(from: GroupsState, what: AppGroup) {
+    return groupsProcessor(from, (g) => {
+        if (g && g.id == what.id) return null;
+        return g;
+    });
+}
+
+function update(from: GroupsState, what: AppGroup) {
+    let found: boolean;
+    return groupsProcessor(from, (g, archived) => {
+        if (g) {
+            if (g.id == what.id) {
+                if (what.archived != archived) {
+                    return null;
+                } else {
+                    found = true;
+                    return what;
+                }
+            }
+            return g;
+        } else {
+            if (archived === null) {
+                found = false;
+            } else {
+                if (!found && what.archived == archived) {
+                    return what;
+                }
+            }
+        }
+        return null;
+    });
+}
+
+function updateMembers(from: GroupsState, group: AppGroup, members: UserSummaryWithGroupMembershipDTO[]) {
+    return groupsProcessor(from, (g) => {
+        if (g && g.id == group.id) {
+            return {...g, members: members as AppGroupMembership[]}
+        }
+        return g;
+    });
+}
+
+function deleteMember(from: GroupsState, member: AppGroupMembership) {
+    return groupsProcessor(from, (g) => {
+        if (g && g.id == member.groupMembershipInformation.groupId) {
+            return {...g, members: g.members && g.members.filter(m => m.groupMembershipInformation.userId != member.groupMembershipInformation.userId)};
+        }
+        return g;
+    });
+}
+
+export type GroupsState = {active?: AppGroup[]; archived?: AppGroup[]} | null;
+
 export const groups = (groups: GroupsState = null, action: Action): GroupsState => {
     switch (action.type) {
         case ACTION_TYPE.GROUPS_RESPONSE_SUCCESS:
@@ -349,10 +390,13 @@ export const groups = (groups: GroupsState = null, action: Action): GroupsState 
         case ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS:
             return update(groups, action.newGroup);
         case ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS:
-            return groups && {active: remove(groups.active, action.deletedGroup),
-                archived: remove(groups.archived, action.deletedGroup)};
+            return remove(groups, action.deletedGroup);
         case ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS:
             return update(groups, action.updatedGroup);
+        case ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS:
+            return updateMembers(groups, action.group, action.members);
+        case ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS:
+            return deleteMember(groups, action.member);
         default:
             return groups;
     }

@@ -14,23 +14,27 @@ import {
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
-    ButtonGroup, Button, Input, Table
+    ButtonGroup, Button, Input, Table, ButtonDropdown
 } from "reactstrap"
-import {loadGroups, createGroup, deleteGroup, updateGroup} from "../../state/actions";
+import {Link} from "react-router-dom";
+import {loadGroups, createGroup, deleteGroup, updateGroup, getGroupMembers, resetMemberPassword, deleteMember} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState, GroupsState} from "../../state/reducers";
 import {sortBy} from "lodash";
-import {UserGroupDTO} from "../../../IsaacApiTypes";
+import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 
 const stateFromProps = (state: AppState) => (state && {groups: state.groups});
-const dispatchFromProps = {loadGroups, createGroup, deleteGroup, updateGroup};
+const dispatchFromProps = {loadGroups, createGroup, deleteGroup, updateGroup, getGroupMembers, resetMemberPassword, deleteMember};
 
 interface GroupsPageProps {
     groups: GroupsState | null;
     loadGroups: (getArchived: boolean) => void;
     createGroup: (groupName: string) => void;
-    deleteGroup: (group: UserGroupDTO) => void;
-    updateGroup: (newGroup: UserGroupDTO, message?: string) => void;
+    deleteGroup: (group: AppGroup) => void;
+    updateGroup: (newGroup: AppGroup, message?: string) => void;
+    getGroupMembers: (group: AppGroup) => void;
+    resetMemberPassword: (member: AppGroupMembership) => void;
+    deleteMember: (member: AppGroupMembership) => void;
 }
 
 enum SortOrder {
@@ -38,21 +42,95 @@ enum SortOrder {
     "Date Created" = "Date Created"
 }
 
-type GroupEditorProps = Pick<GroupsPageProps, "updateGroup"> & {
-    group?: UserGroupDTO;
+type GroupEditorProps = Pick<GroupsPageProps, "updateGroup" | "getGroupMembers" | "resetMemberPassword" | "deleteMember"> & {
+    group?: AppGroup;
     createNewGroup: (groupName: string) => void;
     groupNameRef: MutableRefObject<HTMLInputElement | null>;
 };
 
-const GroupEditor = ({group, updateGroup, createNewGroup, groupNameRef}: GroupEditorProps) => {
-    const initialGroupName = group ? group.groupName : "";
+let tooltip = 0;
+const Tooltip = ({children, tipText, ...props}: any) => {
+    const [tooltipId] = useState("forTooltip-" + tooltip++);
+    return <>
+        <span id={tooltipId} {...props}>{children}</span>
+        <UncontrolledTooltip target={`#${tooltipId}`}>{tipText}</UncontrolledTooltip>
+    </>;
+};
 
+const canSendPasswordResetRequest = function(user: AppGroupMembership, passwordRequestSent: boolean) {
+    return user.role == 'ADMIN' || (!passwordRequestSent && user.authorisedFullAccess && user.emailVerificationStatus != 'DELIVERY_FAILED');
+};
+
+const passwordResetInformation = function(member: AppGroupMembership, passwordRequestSent: boolean) {
+    let message = 'Cannot send password reset request email.';
+    if (canSendPasswordResetRequest(member, passwordRequestSent)) {
+        message = 'Send a password reset request to this user\'s email address.';
+    } else if (passwordRequestSent) {
+        message = 'Password reset request sent.';
+    } else if (member.emailVerificationStatus == 'DELIVERY_FAILED') {
+        message = 'Password reset request cannot be sent because this user\'s account email address is either invalid or not accepting email.';
+    }
+    return message;
+};
+
+interface MemberInfoProps {
+    member: AppGroupMembership;
+    resetMemberPassword: (member: AppGroupMembership) => void;
+    deleteMember: (member: AppGroupMembership) => void;
+}
+const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps) => {
+    const [passwordRequestSent, setPasswordRequestSent] = useState(false);
+
+    function resetPassword() {
+        setPasswordRequestSent(true);
+        resetMemberPassword(member);
+    }
+
+    return <tr>
+        <td>
+            <Link to={`/progress/${member.groupMembershipInformation.userId}`}>{member.givenName} {member.familyName}</Link>
+            {member.emailVerificationStatus == "DELIVERY_FAILED" &&
+                <Tooltip tipText={<>This user&apos;s account email address is invalid or not accepting email.<br />They will not be able to reset their password or receive update emails. Ask them to login and update it, or contact us to help resolve the issue.</>} className="icon-email-status unverified">DF</Tooltip>
+            }
+            {member.emailVerificationStatus == "NOT_VERIFIED" &&
+            <Tooltip
+                tipText="This user has not yet verified their email."
+                className="icon-email-status unverified">NV</Tooltip>
+            }
+            {member.groupMembershipInformation && member.groupMembershipInformation.status == "INACTIVE" &&
+                <Tooltip tipText="This user has set their status to inactive for this group. This means they will no longer see new assignments."> (inactive in group)</Tooltip>
+            }
+        </td>
+        <td>
+            <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-right">
+                <Button color="Link" onClick={resetPassword} disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
+                    {!passwordRequestSent? 'Reset Password': 'Reset email sent'}
+                </Button>
+            </Tooltip>
+        </td>
+        <td>
+            <Button color="Link" className="flex-grow-0" style={{minWidth: 0}} onClick={() => deleteMember(member)}>
+                X
+            </Button>
+        </td>
+    </tr>;
+};
+
+const GroupEditor = ({group, updateGroup, getGroupMembers, createNewGroup, groupNameRef, resetMemberPassword, deleteMember}: GroupEditorProps) => {
+    const groupId = group && group.id;
+
+    const [isExpanded, setExpanded] = useState(false);
+
+    const initialGroupName = group ? group.groupName : "";
     const [newGroupName, setNewGroupName] = useState(initialGroupName);
+
     useEffect(() => {
+        setExpanded(false);
         setNewGroupName(initialGroupName);
         if (group) {
+            getGroupMembers(group);
         }
-    }, [group]);
+    }, [groupId]); // This can't just be group, because group changes when the members change, causing an infinite reload loop
 
     function saveUpdatedGroup() {
         if (group) {
@@ -71,6 +149,8 @@ const GroupEditor = ({group, updateGroup, createNewGroup, groupNameRef}: GroupEd
             updateGroup(newGroup, "Group " + group.groupName + (newGroup.archived ? " archived" : " unarchived"));
         }
     }
+
+    const bigGroup = group && group.members && group.members.length > 100;
 
     return <>
         <Row>
@@ -99,11 +179,28 @@ const GroupEditor = ({group, updateGroup, createNewGroup, groupNameRef}: GroupEd
                     {group.archived ? "Unarchive this group" : "Archive this group"}
                 </Button>
             </Row>
+            <Row className="mt-2">
+                <ShowLoading until={group.members}>
+                    {group.members && <Table>
+                        <thead>
+                            <tr>
+                                <th>{group.members.length} users in this group {bigGroup && !isExpanded && <ButtonDropdown className="float-right" toggle={() => setExpanded(true)}><DropdownToggle caret>Show</DropdownToggle></ButtonDropdown>}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {(!bigGroup || isExpanded) && group.members.map(member => <MemberInfo key={member.groupMembershipInformation.userId}
+                                {...{member, resetMemberPassword, deleteMember}} />)}
+                        </tbody>
+                    </Table>}
+                </ShowLoading>
+            </Row>
         </>}
     </>;
 };
 
-const GroupsPageComponent = ({groups, loadGroups, createGroup, deleteGroup, updateGroup}: GroupsPageProps) => {
+const GroupsPageComponent = (props: GroupsPageProps) => {
+    const {groups, loadGroups, createGroup, deleteGroup} = props;
+
     const [showArchived, setShowArchived] = useState(false);
 
     const tabs = [
@@ -144,7 +241,7 @@ const GroupsPageComponent = ({groups, loadGroups, createGroup, deleteGroup, upda
         setShowArchived(false);
     };
 
-    const confirmDeleteGroup = (group: UserGroupDTO) => {
+    const confirmDeleteGroup = (group: AppGroup) => {
         if (confirm("Are you sure you want to permanently delete the group '" + group.groupName + "' and remove all associated assignments?\n\nTHIS ACTION CANNOT BE UNDONE!")) {
             deleteGroup(group);
         }
@@ -241,7 +338,7 @@ const GroupsPageComponent = ({groups, loadGroups, createGroup, deleteGroup, upda
                 </ShowLoading>
             </Col>
             <Col md={7} className="d-none d-md-block">
-                <GroupEditor group={selectedGroup} updateGroup={updateGroup} createNewGroup={createNewGroup} groupNameRef={groupNameRef} />
+                <GroupEditor group={selectedGroup} {...props} createNewGroup={createNewGroup} groupNameRef={groupNameRef} />
             </Col>
         </Row>
     </Container>;

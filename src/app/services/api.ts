@@ -71,6 +71,9 @@ export const api = {
         },
         updateCurrent: (params: {registeredUser: LoggedInUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/users`, params);
+        },
+        passwordResetById: (id: number): AxiosPromise => {
+            return endpoint.post(`/users/${id}/resetpassword`);
         }
     },
     authentication: {
@@ -128,14 +131,6 @@ export const api = {
         },
         releaseAll: () => {
             return endpoint.delete(`/authorisations/release/`);
-        }
-    },
-    groupManagement: {
-        getMyMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
-            return endpoint.get(`/groups/membership`);
-        },
-        changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => {
-            return endpoint.post(`/groups/membership/${groupId}/${newStatus}`)
         }
     },
     questions: {
@@ -215,8 +210,21 @@ export const api = {
         delete: (group: ApiTypes.UserGroupDTO): AxiosPromise => {
             return endpoint.delete(`/groups/${group.id}`);
         },
-        update: (updatedGroup: ApiTypes.UserGroupDTO): AxiosPromise => {
-            return endpoint.post(`/groups/${updatedGroup.id}`, updatedGroup);
+        update: (updatedGroup: AppTypes.AppGroup): AxiosPromise => {
+            return endpoint.post(`/groups/${updatedGroup.id}`, {...updatedGroup, members: undefined});
+        },
+        getMyMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get(`/groups/membership`);
+        },
+        changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => {
+            return endpoint.post(`/groups/membership/${groupId}/${newStatus}`);
+        },
+        getMembers: (group: ApiTypes.UserGroupDTO): AxiosPromise<ApiTypes.UserSummaryWithGroupMembershipDTO[]> => {
+            return endpoint.get(`/groups/${group.id}/membership`);
+        },
+        deleteMember: (member: AppTypes.AppGroupMembership): AxiosPromise => {
+            const info = member.groupMembershipInformation;
+            return endpoint.delete(`/groups/${info.groupId}/membership/${info.userId}`)
         }
     }
 };

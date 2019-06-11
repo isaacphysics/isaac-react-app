@@ -1,5 +1,7 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
+import {UserSummaryWithGroupMembershipDTO} from "./IsaacApiTypes";
+import {GroupMembershipDTO} from "./IsaacApiTypes";
 
 
 export type Action =
@@ -151,6 +153,18 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_UPDATE_REQUEST}
     | {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS; updatedGroup: ApiTypes.UserGroupDTO}
     | {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE; updatedGroup: ApiTypes.UserGroupDTO}
+
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_REQUEST; group: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; members: ApiTypes.UserSummaryWithGroupMembershipDTO[]}
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO}
+
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST; member: AppGroupMembership}
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS; member: AppGroupMembership}
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE; member: AppGroupMembership}
+
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_REQUEST; member: AppGroupMembership}
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS; member: AppGroupMembership}
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_FAILURE; member: AppGroupMembership}
 ;
 
 
@@ -158,6 +172,14 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
     currentAttempt?: ApiTypes.ChoiceDTO;
     canSubmit?: boolean;
+}
+
+export interface AppGroup extends ApiTypes.UserGroupDTO {
+    members?: AppGroupMembership[];
+}
+
+export interface AppGroupMembership extends ApiTypes.UserSummaryWithGroupMembershipDTO {
+    groupMembershipInformation: GroupMembershipDTO;
 }
 
 export interface UserEmailPreferences {

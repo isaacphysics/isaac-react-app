@@ -13,7 +13,7 @@ import {
 } from "../services/constants";
 import {
     Action,
-    ActiveModal,
+    ActiveModal, AppGroupMembership,
     LoggedInUser,
     LoggedInValidationUser,
     Toast,
@@ -262,38 +262,6 @@ export const submitMessage = (extra: any, params: {firstName: string; lastName: 
     }
 };
 
-// Group Management
-export const getGroupMemberships = () => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST});
-        const groupMembershipsResponse = await api.groupManagement.getMyMemberships();
-        dispatch({
-            type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS,
-            groupMemberships: groupMembershipsResponse.data
-        });
-    } catch {
-        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_FAILURE});
-    }
-};
-
-export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_STATUS) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST});
-        await api.groupManagement.changeMyMembershipStatus(groupId, newStatus);
-        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS, groupId, newStatus});
-        dispatch(showToast({
-            color: "success", title: "Status Updated", timeout: 5000,
-            body: "You have updated your membership status."
-        }) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
-        dispatch(showToast({
-            color: "failure", title: "Status Update Failed", timeout: 5000,
-            body: "With error message (" + e.status + ") " + e.data.errorMessage || ""
-        }) as any);
-    }
-};
-
 // Teacher Connections
 export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) => {
     try {
@@ -353,7 +321,7 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
         await api.authorisations.useToken(authToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS});
         dispatch(getActiveAuthorisations() as any);
-        dispatch(getGroupMemberships() as any);
+        dispatch(getMyGroupMemberships() as any);
         dispatch(showToast({
             color: "success", title: "Granted Access", timeout: 5000,
             body: "You have granted access to your data."
@@ -665,15 +633,78 @@ export const deleteGroup = (group: UserGroupDTO) => async (dispatch: Dispatch<an
     }
 };
 
-export const updateGroup = (updatedGroup: UserGroupDTO, message?: string) => async (dispatch: Dispatch<any>) => {
+export const updateGroup = (updatedGroup: UserGroupDTO, message?: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_UPDATE_REQUEST});
     const result = await api.groups.update(updatedGroup);
     if (result.status < 300) {
         dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS, updatedGroup: updatedGroup});
-        dispatch(loadGroups(updatedGroup.archived || false));
-        dispatch(showToast({color: "success", title: "Group saved successfully", body: message, timeout: 3000}));
+        dispatch(loadGroups(updatedGroup.archived || false) as any);
+        dispatch(showToast({color: "success", title: "Group saved successfully", body: message, timeout: 3000}) as any);
     } else {
         dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE, updatedGroup: updatedGroup});
+    }
+};
+
+export const getGroupMembers = (group: UserGroupDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_REQUEST, group});
+    const result = await api.groups.getMembers(group);
+    if (result.status < 300) {
+        dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS, group: group, members: result.data});
+    } else {
+        dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_FAILURE, group: group});
+    }
+};
+
+export const resetMemberPassword = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST, member});
+    const result = await api.users.passwordResetById(member.groupMembershipInformation.userId as number);
+    if (result.status < 300) {
+        dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS, member});
+    } else {
+        dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE, member});
+        dispatch(showToast({color: "failure", title: "Failed to send password reset", body: result.data, timeout: 5000}) as any);
+    }
+};
+
+export const deleteMember = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_REQUEST, member});
+    const result = await api.groups.deleteMember(member);
+    if (result.status < 300) {
+        dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS, member});
+    } else {
+        dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_FAILURE, member});
+        dispatch(showToast({color: "failure", title: "Failed to delete member", body: result.data, timeout: 5000}) as any);
+    }
+};
+
+export const getMyGroupMemberships = () => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST});
+        const groupMembershipsResponse = await api.groups.getMyMemberships();
+        dispatch({
+            type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS,
+            groupMemberships: groupMembershipsResponse.data
+        });
+    } catch {
+        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_FAILURE});
+    }
+};
+
+export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_STATUS) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST});
+        await api.groups.changeMyMembershipStatus(groupId, newStatus);
+        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS, groupId, newStatus});
+        dispatch(showToast({
+            color: "success", title: "Status Updated", timeout: 5000,
+            body: "You have updated your membership status."
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
+        dispatch(showToast({
+            color: "failure", title: "Status Update Failed", timeout: 5000,
+            body: "With error message (" + e.status + ") " + e.data.errorMessage || ""
+        }) as any);
     }
 };
 

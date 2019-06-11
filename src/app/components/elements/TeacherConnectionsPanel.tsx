@@ -5,7 +5,7 @@ import {LoggedInUser} from "../../../IsaacAppTypes";
 import {
     changeMyMembershipStatus,
     getActiveAuthorisations,
-    getGroupMemberships,
+    getMyGroupMemberships,
     getStudentAuthorisations,
     authenticateWithTokenAfterPrompt,
     releaseAllAuthorisationsAfterPrompt,
@@ -33,7 +33,7 @@ const stateToProps = (state: AppState) => ({
 const dispatchToProps = {
     getActiveAuthorisations, processAuthenticateWithToken: authenticateWithTokenAfterPrompt, processRevokeAuthorisation: revokeAuthorisationAfterPrompt,
     getStudentAuthorisations, processReleaseAuthorisation: releaseAuthorisationAfterPrompt, processReleaseAllAuthorisations: releaseAllAuthorisationsAfterPrompt,
-    getGroupMemberships, changeMyMembershipStatus
+    getGroupMemberships: getMyGroupMemberships, changeMyMembershipStatus
 };
 
 interface TeacherConnectionsProps {
