@@ -74,7 +74,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/admin" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Admin} />
 
                         {/* June release application pages */}
-                        <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events";return null;}}/>
+                        <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
                         <TrackedRoute path="/gameboards" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Gameboard} />
                         <TrackedRoute path="/assignments" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={MyAssignments} />
 

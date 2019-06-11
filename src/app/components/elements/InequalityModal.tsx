@@ -61,12 +61,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
 
         if (props.availableSymbols && props.availableSymbols.length > 0) {
-            console.log(`Parsing available symbols: ${this.availableSymbols}`);
             // Assuming these are only letters... might become more complicated in the future.
             this.state.menuItems.letters = props.availableSymbols.map( l => new MenuItem("Symbol", { letter: l.trim() }, { label: l.trim(), texLabel: true }) );
             this.state.defaultMenu = false;
         } else {
-            console.log("No symbols available, generating default menu.");
             this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true }) );
             this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true }) );
         }
@@ -100,7 +98,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             if (modal) {
                 this.setState({ editorState: s });
                 this.props.onEditorStateChange(s);
-                console.log("New editor state: ", s);
             }
         };
         sketch.onCloseMenus = () => { this.setState({ menuOpen: false }) }; // TODO Maybe nice to have
@@ -215,13 +212,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         let menu: JSX.Element =
         <nav className="inequality-ui">
             <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
-                {/* {this.state.activeMenu == "numbers" && <div className="top-menu numbers">
-                    <ul className="sub-menu">{
-                        "0123456789".split("").map((n, i) => {
-                            return this.menuItem(new MenuItem("Num", { significand: n }, { label: n, texLabel: true}), i);
-                        })
-                    }</ul>
-                </div>} */}
                 {this.state.activeMenu == "letters" && lettersMenu}
                 {this.state.activeMenu == "functions" && <div className="top-menu function">
                     <ul className="sub-menu">{
@@ -231,7 +221,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             </div>
             <div className="menu-tabs">
                 <ul>
-                    {/* <li className={this.state.activeMenu == "numbers" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("1\\ 2") }} onClick={() => this.onMenuTabClick("numbers")} /> */}
                     <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A\\ b") }} onClick={() => this.onMenuTabClick("letters")} />
                     <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString(this.props.syntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }} onClick={() => this.onMenuTabClick("functions")} />
                 </ul>
