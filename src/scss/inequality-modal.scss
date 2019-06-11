@@ -92,10 +92,12 @@
 
         &.katex-preview {
             border: 1px solid darkgreen;
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
             bottom: 20px;
-            right: 100px;
+            right: 96px;
             height: 80px;
-            padding: 0 20px;
+            padding: 0 24px 0 20px;
             width: fit-content; // This is contentious with browsers
             vertical-align: middle;
             line-height: 80px;

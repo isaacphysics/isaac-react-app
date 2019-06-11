@@ -14,6 +14,8 @@ interface InequalityModalProps {
     close: () => void;
     onEditorStateChange: (state: any) => void;
     initialEditorSymbols: any;
+    syntax?: string;
+    visible: boolean;
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
     state: {
@@ -50,7 +52,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             menuOpen: false,
             editorState: {},
             menuItems: {
-                logicFunctionItems: this.generateLogicFunctionsItems(),
+                logicFunctionItems: this.generateLogicFunctionsItems(props.syntax || "logic"),
                 upperCaseLetters: [],
                 lowerCaseLetters: [],
                 letters: [],
@@ -59,12 +61,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
 
         if (props.availableSymbols && props.availableSymbols.length > 0) {
-            console.log(`Parsing available symbols: ${this.availableSymbols}`);
             // Assuming these are only letters... might become more complicated in the future.
-            this.state.menuItems.letters = props.availableSymbols.map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true }) );
+            this.state.menuItems.letters = props.availableSymbols.map( l => new MenuItem("Symbol", { letter: l.trim() }, { label: l.trim(), texLabel: true }) );
             this.state.defaultMenu = false;
         } else {
-            console.log("No symbols available, generating default menu.");
             this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true }) );
             this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true }) );
         }
@@ -80,6 +80,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             this.props.initialEditorSymbols,
             {
                 editorMode: 'logic',
+                logicSyntax: this.props.syntax || 'logic',
                 textEntry: false,
                 fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
                 fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf'
@@ -93,9 +94,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             }]
         };
         sketch.onNewEditorState = (s: any) => {
-            this.setState({ editorState: s });
-            this.props.onEditorStateChange(s);
-            console.log("New editor state: ", s);
+            const modal = document.getElementById('inequality-modal');
+            if (modal) {
+                this.setState({ editorState: s });
+                this.props.onEditorStateChange(s);
+            }
         };
         sketch.onCloseMenus = () => { this.setState({ menuOpen: false }) }; // TODO Maybe nice to have
         sketch.isUserPrivileged = () => true; // TODO Integrate with currentUser object
@@ -183,50 +186,46 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     render() {
-        let menu: JSX.Element;
+        let lettersMenu: JSX.Element;
         if (this.state.defaultMenu) {
-            menu = 
-            <nav className="inequality-ui">
-                <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
-                    {/* {this.state.activeMenu == "numbers" && <div className="top-menu numbers">
-                        <ul className="sub-menu">{
-                            "0123456789".split("").map((n, i) => {
-                                return this.menuItem(new MenuItem("Num", { significand: n }, { label: n, texLabel: true}), i);
-                            })
-                        }</ul>
-                    </div>} */}
-                    {this.state.activeMenu == "letters" && <div className="top-menu letters">
-                        <ul className="sub-menu-tabs">
-                            <li className={this.state.activeSubMenu == "upperCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A") }} onClick={() => this.setState({ activeSubMenu: "upperCaseLetters" })} />
-                            <li className={this.state.activeSubMenu == "lowerCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("a") }} onClick={() => this.setState({ activeSubMenu: "lowerCaseLetters"})} />
-                        </ul>
-                        {(this.state.activeSubMenu == "upperCaseLetters") && <ul className="sub-menu uppercaseletters">{
-                            this.state.menuItems.upperCaseLetters.map(this.menuItem)
-                        }</ul>}
-                        {(this.state.activeSubMenu == "lowerCaseLetters") && <ul className="sub-menu lowercaseletters">{
-                            this.state.menuItems.lowerCaseLetters.map(this.menuItem)
-                        }</ul>}
-                    </div>}
-                    {this.state.activeMenu == "functions" && <div className="top-menu function">
-                        <ul className="sub-menu">{
-                            this.state.menuItems.logicFunctionItems.map(this.menuItem)
-                        }</ul>
-                    </div>}
-                </div>
-                <div className="menu-tabs">
-                    <ul>
-                        {/* <li className={this.state.activeMenu == "numbers" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("1\\ 2") }} onClick={() => this.onMenuTabClick("numbers")} /> */}
-                        <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A\\ b") }} onClick={() => this.onMenuTabClick("letters")} />
-                        <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("\\wedge\\ \\lnot") }} onClick={() => this.onMenuTabClick("functions")} />
-                    </ul>
-                </div>
-            </nav>
+            lettersMenu =
+            <div className="top-menu letters">
+                <ul className="sub-menu-tabs">
+                    <li className={this.state.activeSubMenu == "upperCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A") }} onClick={() => this.setState({ activeSubMenu: "upperCaseLetters" })} />
+                    <li className={this.state.activeSubMenu == "lowerCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("a") }} onClick={() => this.setState({ activeSubMenu: "lowerCaseLetters"})} />
+                </ul>
+                {(this.state.activeSubMenu == "upperCaseLetters") && <ul className="sub-menu uppercaseletters">{
+                    this.state.menuItems.upperCaseLetters.map(this.menuItem)
+                }</ul>}
+                {(this.state.activeSubMenu == "lowerCaseLetters") && <ul className="sub-menu lowercaseletters">{
+                    this.state.menuItems.lowerCaseLetters.map(this.menuItem)
+                }</ul>}
+            </div>
         } else {
-            menu =
-            <nav className="inequality-ui menubar">
-                NOPE
-            </nav>
+            lettersMenu =
+            <div className="top-menu function">
+                <ul className="sub-menu letters">{
+                    this.state.menuItems.letters.map(this.menuItem)
+                }</ul>
+            </div>
         }
+        let menu: JSX.Element =
+        <nav className="inequality-ui">
+            <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
+                {this.state.activeMenu == "letters" && lettersMenu}
+                {this.state.activeMenu == "functions" && <div className="top-menu function">
+                    <ul className="sub-menu">{
+                        this.state.menuItems.logicFunctionItems.map(this.menuItem)
+                    }</ul>
+                </div>}
+            </div>
+            <div className="menu-tabs">
+                <ul>
+                    <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A\\ b") }} onClick={() => this.onMenuTabClick("letters")} />
+                    <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString(this.props.syntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }} onClick={() => this.onMenuTabClick("functions")} />
+                </ul>
+            </div>
+        </nav>
 
         const previewTexString = (this.state.editorState.result || { tex: ""}).tex;
 
