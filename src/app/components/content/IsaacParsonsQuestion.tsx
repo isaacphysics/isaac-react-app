@@ -108,7 +108,6 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         if (!result.source || !result.destination) {
             return;
         }
-        console.log(this);
         if (result.source.droppableId == result.destination.droppableId && result.destination.droppableId == 'answerItems' && this.props.currentAttempt) {
             // Reorder currentAttempt
             let items = [...(this.props.currentAttempt.items || [])];
@@ -152,7 +151,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             </div>
             {/* TODO Accessibility */}
             <Row className="my-md-3">
-                <DragDropContext onDragEnd={this.onDragEnd} onBeforeDragStart={this.onUpdateBeforeSortStart} onDragUpdate={console.log}>
+                <DragDropContext onDragEnd={this.onDragEnd} onBeforeDragStart={this.onUpdateBeforeSortStart}>
                     <Col md={{size: 6}}>
                         <p>Available items</p>
                         <Droppable droppableId="availableItems">
@@ -171,7 +170,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    ><pre>{item.value} [{item.indentation}]</pre></div>
+                                                    ><pre>{item.value}</pre></div>
                                             }}
                                         </Draggable>
                                     })}
@@ -182,7 +181,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                         </Droppable>
                     </Col>
                     <Col md={{size: 6}}>
-                        <p>Your answer {this.state.currentIndent}</p>
+                        <p>Your answer</p>
                         <Droppable droppableId="answerItems">
                             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
                                 return <div id="parsons-choice-area" ref={provided.innerRef} className={`parsons-items ${this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length > 0 ? "" : "empty"}`}>
@@ -199,7 +198,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    ><pre>{item.value} [{item.indentation}]</pre></div>
+                                                    ><pre>{item.value}</pre></div>
                                             }}
                                         </Draggable>
                                     })}
