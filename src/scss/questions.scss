@@ -77,8 +77,7 @@
     .parsons-item {
       @for $i from 1 through 10 { // Melius est abundare quam deficere
         &.indent-#{$i} {
-          padding-left: #{$i}em;
-          margin-left: #{$i}em;
+          margin-left: #{$i * 30}px;
         }
       }
     }

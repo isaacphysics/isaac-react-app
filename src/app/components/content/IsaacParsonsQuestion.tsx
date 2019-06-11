@@ -8,6 +8,9 @@ import {IsaacHints} from "./IsaacHints";
 import {SortableContainer, SortableElement, SortStart, SortEvent, SortEnd} from "react-sortable-hoc";
 import {Col, Row} from "reactstrap";
 import {DragDropContext, Droppable, Draggable, DragStart, DropResult, ResponderProvided, DroppableProvided, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot} from "react-beautiful-dnd";
+import { ContentSummaryListGroupItem } from "../elements/ContentSummaryListGroupItem";
+import { TrustedHtml } from "../elements/TrustedHtml";
+import _differenceBy from "lodash/differenceBy";
 
 interface IsaacParsonsQuestionProps {
     doc: IsaacParsonsQuestionDTO;
@@ -16,93 +19,88 @@ interface IsaacParsonsQuestionProps {
     setCurrentAttempt: (questionId: string, attempt: ParsonsChoiceDTO) => void;
 }
 
+interface IsaacParsonsQuestionState {
+    availableItems: Array<ParsonsItemDTO>;
+    draggedElement?: HTMLElement | null;
+    initialX?: number | null;
+    currentIndent?: number | null;
+    move?: { src: Array<ParsonsItemDTO>, srcIndex: number, dst: Array<ParsonsItemDTO>, dstIndex: number, indent: number } | null;
+}
+
 class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestionProps> {
-    state: {
-        draggedElement?: HTMLElement | null;
-        initialX?: number | null;
-        currentIndent?: number | null;
-        move?: { src: Array<ParsonsItemDTO>, srcIndex: number, dst: Array<ParsonsItemDTO>, dstIndex: number, indent: number } | null;
-    };
+    state: IsaacParsonsQuestionState;
 
     constructor(props: IsaacParsonsQuestionProps) {
         super(props);
-        const {currentAttempt, doc} = props;
 
         this.state = {
+            availableItems: [...(this.props.doc.items || [])],
             draggedElement: null,
             initialX: null,
             currentIndent: null,
             move: null,
         }
-
-        window.addEventListener('mousemove', (e: MouseEvent) => {
-            if (this.state.draggedElement) {
-                if (!this.state.initialX) {
-                    this.setState({ initialX: e.clientX });
-                } else {
-                    console.log(e);
-                    const x = e.clientX;
-                    if (this.state.initialX && x) {
-                        const d = Math.max(0, x - this.state.initialX);
-                        const i = Math.floor(d/30);
-                        this.setState({
-                            currentIndent: i,
-                        });
-                    }
-                }
-            }
-        });
+        window.addEventListener('mousemove', this.onMouseMove);
     }
 
-    componentDidUpdate = (prevProps: IsaacParsonsQuestionProps) => {
-        if (!this.props.currentAttempt) {
-            const attempt: ParsonsChoiceDTO = {
+    componentDidUpdate = (prevProps: IsaacParsonsQuestionProps, prevState: IsaacParsonsQuestionState) => {
+        if (!prevProps.currentAttempt && !this.props.currentAttempt) {
+            const defaultAttempt: ParsonsChoiceDTO = {
                 type: "parsonsChoice",
                 items: [],
             }
-            this.props.setCurrentAttempt(this.props.questionId, attempt);
+            this.props.setCurrentAttempt(this.props.questionId, defaultAttempt);
+        }
+        if (this.props.currentAttempt) {
+            let availableItems: Array<ParsonsItemDTO> = [];
+            let currentAttemptItems: Array<ParsonsItemDTO> = (this.props.currentAttempt && this.props.currentAttempt.items) || [];
+            if (this.props.doc.items && this.props.currentAttempt) {
+                availableItems = this.props.doc.items.filter(item => {
+                    let found = false;
+                    for (const i of currentAttemptItems) {
+                        if (i.id === item.id) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    return !found;
+                });
+            }
+            // WARNING: Inverting the order of the arrays breaks this.
+            // TODO: Investigate if there is a method that gives more formal guarantees.
+            let diff = _differenceBy(prevState.availableItems, availableItems, 'id');
+            if (diff.length > 0) {
+                this.setState({ availableItems });
+            }
         }
     }
 
-    getXFromEvent = (event: SortEvent) => {
-        if (event instanceof MouseEvent) {
-            return event.clientX;
-        } else if (event instanceof TouchEvent) {
-            return event.touches[0].clientX;
-        }
-        return null;
-    }
-
-    // onUpdateBeforeSortStart = (sort: SortStart, event: SortEvent) => {
     onUpdateBeforeSortStart = (initial: DragStart) => {
-        console.log(initial);
-        const element: HTMLElement | null = document.getElementById(`parsons-item-${initial.draggableId}`);
+        const draggedElement: HTMLElement | null = document.getElementById(`parsons-item-${initial.draggableId}`);
+        const choiceElement: HTMLElement | null = document.getElementById("parsons-choice-area");
         this.setState({
-            draggedElement: element
+            draggedElement: draggedElement,
+            initialX: choiceElement && choiceElement.getBoundingClientRect().left,
         });
-        // const x = this.getXFromEvent(event);
-
-        // return new Promise((res) => {
-        //     this.setState({
-        //         initialX: x,
-        //     }, res);
-        // });
     }
 
-    onSortMove = (event: SortEvent) => {
-        const x = this.getXFromEvent(event);
-        if (this.state.initialX && x) {
-            const d = Math.max(0, x - this.state.initialX);
-            const i = Math.floor(d/30);
-            this.setState({
-                currentIndent: i,
-            });
+    onMouseMove = (e: MouseEvent) => {
+        if (this.state.draggedElement) {
+            const x = this.state.draggedElement.getBoundingClientRect().left;
+            if (this.state.initialX && x) {
+                const d = Math.max(0, x - this.state.initialX);
+                const i = Math.floor(d/30);
+                this.setState({
+                    currentIndent: i,
+                });
+            }
         }
     }
 
     moveItem = (src: Array<ParsonsItemDTO> | undefined, fromIndex: number, dst: Array<ParsonsItemDTO> | undefined, toIndex: number, indent: number) => {
         if (!src || !dst) return;
         const srcItem = src.splice(fromIndex, 1)[0];
+        srcItem.indentation = indent;
         dst.splice(toIndex, 0, srcItem);
     }
 
@@ -113,15 +111,28 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         console.log(this);
         if (result.source.droppableId == result.destination.droppableId && result.destination.droppableId == 'answerItems' && this.props.currentAttempt) {
             // Reorder currentAttempt
-            this.moveItem(this.props.currentAttempt.items, result.source.index, this.props.currentAttempt.items, result.destination.index, 0);
+            let items = [...(this.props.currentAttempt.items || [])];
+            this.moveItem(items, result.source.index, items, result.destination.index, this.state.currentIndent || 0);
+            this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items }});
         } else if (result.source.droppableId == result.destination.droppableId && result.destination.droppableId == 'availableItems') {
             // Reorder availableItems
-            this.moveItem(this.props.doc.items, result.source.index, this.props.doc.items, result.destination.index, 0);
+            let items = [...this.state.availableItems];
+            this.moveItem(items, result.source.index, items, result.destination.index, 0);
+            this.setState({ availableItems: items });
         } else if (result.source.droppableId == 'availableItems' && result.destination.droppableId == 'answerItems' && this.props.currentAttempt) {
-            this.moveItem(this.props.doc.items, result.source.index, this.props.currentAttempt.items, result.destination.index, 0);
+            // Move from availableItems to currentAttempt
+            let srcItems = [...this.state.availableItems];
+            let dstItems = [...(this.props.currentAttempt.items || [])];
+            this.moveItem(srcItems, result.source.index, dstItems, result.destination.index, this.state.currentIndent || 0);
+            this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items: dstItems }});
+            this.setState({ availableItems: srcItems });
         } else if (result.source.droppableId == 'answerItems' && result.destination.droppableId == 'availableItems' && this.props.currentAttempt) {
             // Move from currentAttempt to availableItems
-            this.moveItem(this.props.currentAttempt.items, result.source.index, this.props.doc.items, result.destination.index, 0);
+            let srcItems = [...(this.props.currentAttempt.items || [])];
+            let dstItems = [...this.state.availableItems];
+            this.moveItem(srcItems, result.source.index, dstItems, result.destination.index, 0);
+            this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items: srcItems }});
+            this.setState({ availableItems: dstItems });
         } else {
             console.error("Not sure how we got here...");
         }
@@ -133,8 +144,6 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
     }
 
     render() {
-        let availableItems = this.props.doc.items;// && this.props.doc.items.filter(item => this.props.currentAttempt && this.props.currentAttempt.items && !this.props.currentAttempt.items.includes(item));
-
         return <div className="parsons-question">
             <div className="question-content">
                 <IsaacContentValueOrChildren value={this.props.doc.value} encoding={this.props.doc.encoding}>
@@ -148,8 +157,8 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                         <p>Available items</p>
                         <Droppable droppableId="availableItems">
                             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
-                                return <div ref={provided.innerRef} className={`parsons-items ${availableItems && availableItems.length > 0 ? "" : "empty"}`}>
-                                    {availableItems && availableItems.map((item, index) => {
+                                return <div ref={provided.innerRef} className={`parsons-items ${this.state.availableItems && this.state.availableItems.length > 0 ? "" : "empty"}`}>
+                                    {this.state.availableItems && this.state.availableItems.map((item, index) => {
                                         return <Draggable
                                             key={item.id}
                                             draggableId={item.id || `${index}`}
@@ -166,17 +175,17 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                             }}
                                         </Draggable>
                                     })}
-                                    {(!availableItems || availableItems.length == 0) && <div>&nbsp;</div>}
+                                    {(!this.state.availableItems || this.state.availableItems.length == 0) && <div>&nbsp;</div>}
                                     {provided.placeholder}
                                 </div>
                             }}
                         </Droppable>
                     </Col>
                     <Col md={{size: 6}}>
-                        <p>Your answer</p>
+                        <p>Your answer {this.state.currentIndent}</p>
                         <Droppable droppableId="answerItems">
                             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
-                                return <div ref={provided.innerRef} className={`parsons-items ${this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length > 0 ? "" : "empty"}`}>
+                                return <div id="parsons-choice-area" ref={provided.innerRef} className={`parsons-items ${this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length > 0 ? "" : "empty"}`}>
                                     {this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.map((item, index) => {
                                         return <Draggable
                                             key={item.id}
