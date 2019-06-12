@@ -9,28 +9,30 @@ let timeoutHandle: number | undefined;
 // you can make your own asynchronous one from a synchronous one, but not vice-versa. In these cases, we only want to
 // use it asynchronously, so that is what we do.
 
-const scheduleNextCheck = (dispatch: Dispatch) => {
+const scheduleNextCheck = (middleware: MiddlewareAPI) => {
     // @ts-ignore I don't know why Typescript picks up Node for setTimeout and DOM for clearTimeout but it is stupid.
-    timeoutHandle = setTimeout(() => dispatch({type: ACTION_TYPE.USER_CONSISTENCY_CHECK}), 1000);
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    timeoutHandle = setTimeout(() => checkUserConsistency(middleware), 1000);
 };
 
-const checkUserConsistency = ({getState, dispatch}: MiddlewareAPI) => {
+const checkUserConsistency = (middleware: MiddlewareAPI) => {
     const storedUserId = getUserId();
-    const state = getState();
+    const state = middleware.getState();
     const appUserId = state && state.user && state.user._id;
     if (storedUserId != appUserId) {
         // Mark error after this check has finished, else the error will be snuffed by the error reducer.
-        setImmediate(() => dispatch({type: ACTION_TYPE.USER_CONSISTENCY_ERROR}));
+        setImmediate(() => middleware.dispatch({type: ACTION_TYPE.USER_CONSISTENCY_ERROR}));
     } else {
-        scheduleNextCheck(dispatch);
+        scheduleNextCheck(middleware);
     }
 };
+
 
 const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
     clearTimeout(timeoutHandle);
     // Only start checking if we can successfully store the user id
     if (setUserId(user._id)) {
-        scheduleNextCheck(api.dispatch);
+        scheduleNextCheck(api);
     }
 };
 
@@ -46,9 +48,6 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
             break;
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
             setCurrentUser(action.user, api);
-            break;
-        case ACTION_TYPE.USER_CONSISTENCY_CHECK:
-            checkUserConsistency(api);
             break;
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:
             clearCurrentUser();
