@@ -57,8 +57,7 @@ enum SortOrder {
     "Date Created" = "Date Created"
 }
 
-type GroupEditorProps = Exclude<GroupsPageProps, "groups" | "loadGroups" | "selectGroup" | "createGroup"> & {
-    group: AppGroup | null;
+type GroupEditorProps = GroupsPageProps & {
     createNewGroup: (groupName: string) => void;
     groupNameRef: MutableRefObject<HTMLInputElement | null>;
 };
@@ -131,7 +130,7 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
     </tr>;
 };
 
-const GroupEditor = ({group, updateGroup, getGroupInfo, createNewGroup, groupNameRef, resetMemberPassword, deleteMember, showGroupInvitationModal}: GroupEditorProps) => {
+const GroupEditor = ({group, selectGroup, updateGroup, getGroupInfo, createNewGroup, groupNameRef, resetMemberPassword, deleteMember, showGroupInvitationModal}: GroupEditorProps) => {
     const groupId = group && group.id;
 
     const [isExpanded, setExpanded] = useState(false);
@@ -162,6 +161,7 @@ const GroupEditor = ({group, updateGroup, getGroupInfo, createNewGroup, groupNam
         if (group) {
             const newGroup = {...group, archived: !group.archived};
             updateGroup(newGroup, "Group " + group.groupName + (newGroup.archived ? " archived" : " unarchived"));
+            selectGroup(null);
         }
     }
 
