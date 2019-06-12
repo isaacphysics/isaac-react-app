@@ -59,6 +59,18 @@ export const AdminContentErrorsPageComponent = ({errors, getAdminContentErrors}:
             {errors && <div>
                 <Row>
                     <Col>
+                        <p>
+                            <strong>Critical errors:</strong> {errors.failedFiles},&nbsp;
+                            <strong>Files with errors:</strong> {errors.brokenFiles},&nbsp;
+                            <strong>Total errors:</strong> {errors.totalErrors}
+                        </p>
+                        <p>
+                            <strong>Content Version:</strong> {errors.currentLiveVersion}
+                        </p>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
                         <Table>
                             <tbody>
                                 <tr>
