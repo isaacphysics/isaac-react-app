@@ -1,6 +1,6 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
-import {UserSummaryWithGroupMembershipDTO} from "./IsaacApiTypes";
+import {UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "./IsaacApiTypes";
 import {GroupMembershipDTO} from "./IsaacApiTypes";
 
 
@@ -170,6 +170,14 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_REQUEST; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_FAILURE; member: AppGroupMembership}
+
+    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_REQUEST; group: ApiTypes.UserGroupDTO; managerEmail: string}
+    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; managerEmail: string; newGroup: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; managerEmail: string}
+
+    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
+    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
+    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
 ;
 
 

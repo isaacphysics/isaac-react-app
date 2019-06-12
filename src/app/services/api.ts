@@ -227,7 +227,13 @@ export const api = {
         },
         deleteMember: (member: AppTypes.AppGroupMembership): AxiosPromise => {
             const info = member.groupMembershipInformation;
-            return endpoint.delete(`/groups/${info.groupId}/membership/${info.userId}`)
+            return endpoint.delete(`/groups/${info.groupId}/membership/${info.userId}`);
+        },
+        addManager: (group: AppTypes.AppGroup, managerEmail: string): AxiosPromise => {
+            return endpoint.post(`/groups/${group.id}/manager`, {email: managerEmail});
+        },
+        deleteManager: (group: AppTypes.AppGroup, manager: ApiTypes.UserSummaryWithEmailAddressDTO): AxiosPromise => {
+            return endpoint.delete(`/groups/${group.id}/manager/${manager.id}`);
         }
     }
 };

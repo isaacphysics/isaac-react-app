@@ -39,8 +39,9 @@ import {
     tokenVerificationModal
 } from "../components/elements/TeacherConnectionModalCreators";
 import * as persistance from "../services/localStorage";
-import {groupInvitationModal} from "../components/elements/GroupsModalCreators";
+import {groupInvitationModal, groupManagersModal} from "../components/elements/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
+import {groups} from "./selectors";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -633,42 +634,41 @@ export const createGroup = (groupName: string) => async (dispatch: Dispatch<Acti
 
 export const deleteGroup = (group: UserGroupDTO) => async (dispatch: Dispatch<any>) => {
     dispatch({type: ACTION_TYPE.GROUPS_DELETE_REQUEST});
-    const result = await api.groups.delete(group);
-    if (result.status < 300) {
+    try {
+        await api.groups.delete(group);
         dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS, deletedGroup: group});
-        dispatch(loadGroups(group.archived || false));
-    } else {
+    } catch {
         dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_FAILURE, deletedGroup: group});
     }
 };
 
 export const updateGroup = (updatedGroup: UserGroupDTO, message?: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_UPDATE_REQUEST});
-    const result = await api.groups.update(updatedGroup);
-    if (result.status < 300) {
+    try {
+        await api.groups.update(updatedGroup);
         dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS, updatedGroup: updatedGroup});
         dispatch(showToast({color: "success", title: "Group saved successfully", body: message, timeout: 3000}) as any);
-    } else {
+    } catch {
         dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE, updatedGroup: updatedGroup});
     }
 };
 
 export const getGroupMembers = (group: UserGroupDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_REQUEST, group});
-    const result = await api.groups.getMembers(group);
-    if (result.status < 300) {
+    try {
+        const result = await api.groups.getMembers(group);
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS, group: group, members: result.data});
-    } else {
+    } catch {
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_FAILURE, group: group});
     }
 };
 
 export const getGroupToken = (group: AppGroup) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_TOKEN_REQUEST, group});
-    const result = await api.authorisations.getToken(group.id as number);
-    if (result.status < 300) {
+    try {
+        const result = await api.authorisations.getToken(group.id as number);
         dispatch({type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS, group: group, token: result.data.token});
-    } else {
+    } catch {
         dispatch({type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_FAILURE, group: group});
     }
 };
@@ -680,23 +680,48 @@ export const getGroupInfo = (group: AppGroup) => async (dispatch: ThunkDispatch<
 
 export const resetMemberPassword = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST, member});
-    const result = await api.users.passwordResetById(member.groupMembershipInformation.userId as number);
-    if (result.status < 300) {
+    try {
+        await api.users.passwordResetById(member.groupMembershipInformation.userId as number);
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS, member});
-    } else {
+    } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE, member});
-        dispatch(showToast({color: "failure", title: "Failed to send password reset", body: result.data, timeout: 5000}) as any);
+        dispatch(showToast({color: "failure", title: "Failed to send password reset", body: e.data.errorMessage, timeout: 5000}) as any);
     }
 };
 
 export const deleteMember = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_REQUEST, member});
-    const result = await api.groups.deleteMember(member);
-    if (result.status < 300) {
+    try {
+        await api.groups.deleteMember(member);
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS, member});
-    } else {
+    } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_FAILURE, member});
-        dispatch(showToast({color: "failure", title: "Failed to delete member", body: result.data, timeout: 5000}) as any);
+        dispatch(showToast({color: "failure", title: "Failed to delete member", body: e.data.errorMessage, timeout: 5000}) as any);
+    }
+};
+
+export const addGroupManager = (group: AppGroup, managerEmail: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUPS_MANAGER_ADD_REQUEST, group, managerEmail});
+    try {
+        const result = await api.groups.addManager(group, managerEmail);
+        dispatch({type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS, group, managerEmail, newGroup: result.data});
+        return true;
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_FAILURE, group, managerEmail});
+        // TODO: Use e.response.data.errorMessage everywhere?
+        dispatch(showToast({color: "failure", title: "Group Manager Addition Failed", body: e.response.data.errorMessage, timeout: 5000}) as any);
+        return false;
+    }
+};
+
+export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST, group, manager});
+    try {
+        await api.groups.deleteManager(group, manager);
+        dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS, group, manager});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE, group, manager});
+        dispatch(showToast({color: "failure", title: "Group Manager Removal Failed", body: e.data.errorMessage, timeout: 5000}) as any);
     }
 };
 
@@ -704,6 +729,13 @@ export const showGroupInvitationModal = (firstTime: boolean) => async (dispatch:
     dispatch(openActiveModal(groupInvitationModal(firstTime)) as any);
 };
 
+export const showGroupManagersModal = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    const group = groups.current(state);
+    const user = state && state.user && state.user.loggedIn && state.user || null;
+    const userIsOwner = group && user && group.ownerId == user.id || false;
+    dispatch(openActiveModal(groupManagersModal(userIsOwner)) as any);
+};
 
 export const getMyGroupMemberships = () => async (dispatch: Dispatch<Action>) => {
     try {

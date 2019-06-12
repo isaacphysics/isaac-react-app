@@ -20,7 +20,7 @@ import {
     UserSummaryForAdminUsersDTO,
     UserAuthenticationSettingsDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO
+    UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO, UserGroupDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
 import {arch} from "os";
@@ -387,6 +387,30 @@ function deleteMember(from: GroupsState, member: AppGroupMembership) {
     });
 }
 
+function addManager(groups: GroupsState, group: AppGroup, newGroup: UserGroupDTO) {
+    return groupsProcessor(groups, (g) => {
+        if (g && g.id == group.id) {
+            return {
+                ...g,
+                additionalManagers: newGroup.additionalManagers
+            };
+        }
+        return g;
+    });
+}
+
+function removeManager(groups: GroupsState, group: AppGroup, manager: UserSummaryWithEmailAddressDTO) {
+    return groupsProcessor(groups, (g) => {
+        if (g && g.id == group.id) {
+            return {
+                ...g,
+                additionalManagers: g.additionalManagers && g.additionalManagers.filter(am => am.id != manager.id)
+            };
+        }
+        return g;
+    });
+}
+
 export type GroupsState = {active?: AppGroup[]; archived?: AppGroup[]; selectedGroupId?: number} | null;
 
 export const groups = (groups: GroupsState = null, action: Action): GroupsState => {
@@ -407,6 +431,10 @@ export const groups = (groups: GroupsState = null, action: Action): GroupsState 
             return update(groups, action.updatedGroup);
         case ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS:
             return updateToken(groups, action.group, action.token);
+        case ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS:
+            return addManager(groups, action.group, action.newGroup);
+        case ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS:
+            return removeManager(groups, action.group, action.manager);
         case ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS:
             return updateMembers(groups, action.group, action.members);
         case ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS:

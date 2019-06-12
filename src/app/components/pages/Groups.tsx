@@ -26,6 +26,7 @@ import {
     resetMemberPassword,
     deleteMember,
     showGroupInvitationModal,
+    showGroupManagersModal,
     selectGroup
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -36,7 +37,7 @@ import {groups} from "../../state/selectors";
 import {UserGroupDTO} from "../../../IsaacApiTypes";
 
 const stateFromProps = (state: AppState) => (state && {groups: state.groups, group: groups.current(state)});
-const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal};
+const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal};
 
 interface GroupsPageProps {
     groups: GroupsState | null;
@@ -50,6 +51,7 @@ interface GroupsPageProps {
     resetMemberPassword: (member: AppGroupMembership) => void;
     deleteMember: (member: AppGroupMembership) => void;
     showGroupInvitationModal: (firstTime: boolean) => void;
+    showGroupManagersModal: () => void;
 }
 
 enum SortOrder {
@@ -130,7 +132,7 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
     </tr>;
 };
 
-const GroupEditor = ({group, selectGroup, updateGroup, getGroupInfo, createNewGroup, groupNameRef, resetMemberPassword, deleteMember, showGroupInvitationModal}: GroupEditorProps) => {
+const GroupEditor = ({group, selectGroup, updateGroup, getGroupInfo, createNewGroup, groupNameRef, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal}: GroupEditorProps) => {
     const groupId = group && group.id;
 
     const [isExpanded, setExpanded] = useState(false);
@@ -170,7 +172,11 @@ const GroupEditor = ({group, selectGroup, updateGroup, getGroupInfo, createNewGr
     return <>
         <Row>
             <Col sm={8}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
-            {group && <Col sm={4}><Button onClick={() => showGroupInvitationModal(false)}>Invite Users</Button></Col>}
+            {group && <Col sm={4}>
+                <Button onClick={() => showGroupInvitationModal(false)}>Invite Users</Button>
+                or
+                <Button onClick={() => showGroupManagersModal()}>Edit Group Managers</Button>
+            </Col>}
         </Row>
         <Row>
             <Col xs={8}>
