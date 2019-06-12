@@ -74,10 +74,22 @@
       cursor: grab; // Doesn't work?
     }
 
+    $parsons-step: 45;
+
     .parsons-item {
       @for $i from 1 through 10 { // Melius est abundare quam deficere
         &.indent-#{$i} {
-          margin-left: #{$i * 30}px;
+          margin-left: #{$i * $parsons-step}px;
+        }
+      }
+    }
+
+    &#parsons-choice-area {
+      @for $i from 1 through 10 {
+        &.ghost-indent-#{$i} {
+          background: linear-gradient(to right,
+            white #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 7}px, white #{$i * $parsons-step + 7}px
+          );
         }
       }
     }

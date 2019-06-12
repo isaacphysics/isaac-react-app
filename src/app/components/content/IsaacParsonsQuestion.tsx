@@ -41,6 +41,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             move: null,
         }
         window.addEventListener('mousemove', this.onMouseMove);
+        window.addEventListener('touchmove', this.onMouseMove);
     }
 
     componentDidUpdate = (prevProps: IsaacParsonsQuestionProps, prevState: IsaacParsonsQuestionState) => {
@@ -84,12 +85,13 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         });
     }
 
-    onMouseMove = (e: MouseEvent) => {
+    // WARNING: There's a limit to how far right an element can be dragged, presumably due to react-beautiful-dnd
+    onMouseMove = (e: MouseEvent | TouchEvent) => {
         if (this.state.draggedElement) {
             const x = this.state.draggedElement.getBoundingClientRect().left;
             if (this.state.initialX && x) {
                 const d = Math.max(0, x - this.state.initialX);
-                const i = Math.floor(d/30);
+                const i = Math.floor(d/45); // TODO: Change $parsons-step in questions.scss
                 this.setState({
                     currentIndent: i,
                 });
@@ -153,7 +155,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             <Row className="my-md-3">
                 <DragDropContext onDragEnd={this.onDragEnd} onBeforeDragStart={this.onUpdateBeforeSortStart}>
                     <Col md={{size: 6}}>
-                        <p>Available items</p>
+                        <h4>Available items</h4>
                         <Droppable droppableId="availableItems">
                             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
                                 return <div ref={provided.innerRef} className={`parsons-items ${this.state.availableItems && this.state.availableItems.length > 0 ? "" : "empty"}`}>
@@ -181,10 +183,10 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                         </Droppable>
                     </Col>
                     <Col md={{size: 6}}>
-                        <p>Your answer</p>
+                        <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
                         <Droppable droppableId="answerItems">
                             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
-                                return <div id="parsons-choice-area" ref={provided.innerRef} className={`parsons-items ${this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length > 0 ? "" : "empty"}`}>
+                                return <div id="parsons-choice-area" ref={provided.innerRef} className={`parsons-items ${this.state.currentIndent == null ? '' : `ghost-indent-${this.state.currentIndent}`} ${this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length > 0 ? "" : "empty"}`}>
                                     {this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.map((item, index) => {
                                         return <Draggable
                                             key={item.id}
