@@ -13,7 +13,6 @@ const USER_ID2 = "bar";
 
 const actionLogin = {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: {_id: USER_ID1}};
 const actionLogout = {type: ACTION_TYPE.USER_LOG_OUT_REQUEST};
-const actionCheck = {type: ACTION_TYPE.USER_CONSISTENCY_CHECK};
 const actionError = {type: ACTION_TYPE.USER_CONSISTENCY_ERROR};
 
 describe("userConsistencyCheckerMiddleware", () => {
@@ -26,6 +25,8 @@ describe("userConsistencyCheckerMiddleware", () => {
 
         // @ts-ignore
         setUserId.mockImplementation(() => true);
+
+        jest.clearAllMocks();
     });
 
     it("sets the current user after a successful login and starts consistency checking", async () => {
@@ -34,9 +35,9 @@ describe("userConsistencyCheckerMiddleware", () => {
         expect(fakeNext).toBeCalledWith(actionLogin);
         expect(setUserId).toBeCalledWith(USER_ID1);
 
-        jest.runAllTimers();
+        jest.runOnlyPendingTimers();
 
-        expect(fakeDispatch).toBeCalledWith(actionCheck);
+        expect(getUserId).toBeCalled();
     });
 
     it("clears the current user after logout and stops consistency checking", async () => {
@@ -60,10 +61,6 @@ describe("userConsistencyCheckerMiddleware", () => {
 
         // @ts-ignore
         getUserId.mockImplementation(() => USER_ID2);
-
-        userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(actionCheck);
-
-        expect(fakeNext).toBeCalledWith(actionCheck);
 
         jest.runAllTimers();
 
@@ -96,6 +93,6 @@ describe("userConsistencyCheckerMiddleware", () => {
 
         jest.runAllTimers();
 
-        expect(fakeDispatch).not.toHaveBeenCalledWith(actionCheck);
+        expect(getUserId).not.toHaveBeenCalled();
     });
 });
