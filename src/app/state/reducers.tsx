@@ -2,7 +2,7 @@ import {combineReducers} from "redux";
 import {
     Action,
     ActiveModal,
-    AppQuestionDTO,
+    AppQuestionDTO, ContentErrorsResponse,
     GroupMembershipDetailDTO,
     isValidatedChoice,
     LoggedInUser,
@@ -68,6 +68,18 @@ export const adminUserSearch = (adminUserSearch: AdminUserSearchState = null, ac
             return adminUserSearch;
     }
 }
+
+export type AdminContentErrorsState = ContentErrorsResponse | null;
+export const adminContentErrors = (adminContentErrors: AdminContentErrorsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST:
+            return null;
+        case ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS:
+            return action.errors;
+        default:
+            return adminContentErrors;
+    }
+};
 
 export type ActiveAuthorisationsState = UserSummaryWithEmailAddressDTO[] | null;
 export const activeAuthorisations = (activeAuthorisations: ActiveAuthorisationsState = null, action: Action) => {
@@ -305,6 +317,7 @@ const appReducer = combineReducers({
     userAuthSettings,
     userPreferences,
     adminUserSearch,
+    adminContentErrors,
     activeAuthorisations,
     otherUserAuthorisations,
     groupMemberships,
@@ -326,6 +339,7 @@ export type AppState = undefined | {
     userAuthSettings: UserAuthSettingsState;
     userPreferences: UserPreferencesState;
     adminUserSearch: AdminUserSearchState;
+    adminContentErrors: AdminContentErrorsState;
     activeAuthorisations: ActiveAuthorisationsState;
     otherUserAuthorisations: OtherUserAuthorisationsState;
     groupMemberships: GroupMembershipsState;

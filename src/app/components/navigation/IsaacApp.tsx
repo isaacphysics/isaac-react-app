@@ -37,6 +37,7 @@ import {Header} from "./Header";
 import {Route} from "react-router";
 import {ScrollManager} from "../handlers/ScrollManager";
 import {AdminUserManager} from "../pages/AdminUserManager";
+import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {ActiveModal} from "../elements/ActiveModal";
 import { Equality } from '../pages/Equality';
 
@@ -76,6 +77,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
 
                         <TrackedRoute exact path="/admin" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Admin} />
                         <TrackedRoute path="/admin/usermanager" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={AdminUserManager} />
+                        <TrackedRoute path="/admin/content_errors" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={AdminContentErrors} />
 
                         {/* June release application pages */}
                         <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
