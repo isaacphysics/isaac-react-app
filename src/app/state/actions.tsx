@@ -8,12 +8,14 @@ import {
     ACTION_TYPE,
     API_REQUEST_FAILURE_MESSAGE,
     DOCUMENT_TYPE,
-    MEMBERSHIP_STATUS, ACCOUNT_TAB,
+    MEMBERSHIP_STATUS,
     TAG_ID
 } from "../services/constants";
 import {
     Action,
-    ActiveModal, AppGroup, AppGroupMembership,
+    ActiveModal,
+    AppGroup,
+    AppGroupMembership,
     LoggedInUser,
     LoggedInValidationUser,
     Toast,
@@ -618,6 +620,10 @@ export const loadGroups = (archivedGroupsOnly: boolean) => async (dispatch: Disp
     dispatch({type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: groups.data, archivedGroupsOnly});
 };
 
+export const selectGroup = (group: UserGroupDTO | null) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUPS_SELECT, group});
+};
+
 export const createGroup = (groupName: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_CREATE_REQUEST});
     const newGroup = await api.groups.create(groupName);
@@ -641,7 +647,6 @@ export const updateGroup = (updatedGroup: UserGroupDTO, message?: string) => asy
     const result = await api.groups.update(updatedGroup);
     if (result.status < 300) {
         dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS, updatedGroup: updatedGroup});
-        dispatch(loadGroups(updatedGroup.archived || false) as any);
         dispatch(showToast({color: "success", title: "Group saved successfully", body: message, timeout: 3000}) as any);
     } else {
         dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE, updatedGroup: updatedGroup});
@@ -695,8 +700,8 @@ export const deleteMember = (member: AppGroupMembership) => async (dispatch: Dis
     }
 };
 
-export const showGroupInvitationModal = (group: AppGroup, firstTime: boolean) => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(groupInvitationModal(group, firstTime)) as any);
+export const showGroupInvitationModal = (firstTime: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(groupInvitationModal(firstTime)) as any);
 };
 
 

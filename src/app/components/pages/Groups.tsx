@@ -17,25 +17,39 @@ import {
     ButtonGroup, Button, Input, Table, ButtonDropdown
 } from "reactstrap"
 import {Link} from "react-router-dom";
-import {loadGroups, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal} from "../../state/actions";
+import {
+    loadGroups,
+    createGroup,
+    deleteGroup,
+    updateGroup,
+    getGroupInfo,
+    resetMemberPassword,
+    deleteMember,
+    showGroupInvitationModal,
+    selectGroup
+} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState, GroupsState} from "../../state/reducers";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
+import {groups} from "../../state/selectors";
+import {UserGroupDTO} from "../../../IsaacApiTypes";
 
-const stateFromProps = (state: AppState) => (state && {groups: state.groups});
-const dispatchFromProps = {loadGroups, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal};
+const stateFromProps = (state: AppState) => (state && {groups: state.groups, group: groups.current(state)});
+const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal};
 
 interface GroupsPageProps {
     groups: GroupsState | null;
+    group: AppGroup | null;
     loadGroups: (getArchived: boolean) => void;
+    selectGroup: (group: UserGroupDTO | null) => void;
     createGroup: (groupName: string) => Promise<AppGroup>;
     deleteGroup: (group: AppGroup) => void;
     updateGroup: (newGroup: AppGroup, message?: string) => void;
     getGroupInfo: (group: AppGroup) => void;
     resetMemberPassword: (member: AppGroupMembership) => void;
     deleteMember: (member: AppGroupMembership) => void;
-    showGroupInvitationModal: (group: AppGroup, firstTime: boolean) => void;
+    showGroupInvitationModal: (firstTime: boolean) => void;
 }
 
 enum SortOrder {
@@ -43,8 +57,8 @@ enum SortOrder {
     "Date Created" = "Date Created"
 }
 
-type GroupEditorProps = Exclude<GroupsPageProps, "groups" | "loadGroups" | "createGroup"> & {
-    group?: AppGroup;
+type GroupEditorProps = Exclude<GroupsPageProps, "groups" | "loadGroups" | "selectGroup" | "createGroup"> & {
+    group: AppGroup | null;
     createNewGroup: (groupName: string) => void;
     groupNameRef: MutableRefObject<HTMLInputElement | null>;
 };
@@ -156,7 +170,7 @@ const GroupEditor = ({group, updateGroup, getGroupInfo, createNewGroup, groupNam
     return <>
         <Row>
             <Col sm={8}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
-            {group && <Col sm={4}><Button onClick={() => showGroupInvitationModal(group, false)}>Invite Users</Button></Col>}
+            {group && <Col sm={4}><Button onClick={() => showGroupInvitationModal(false)}>Invite Users</Button></Col>}
         </Row>
         <Row>
             <Col xs={8}>
@@ -200,7 +214,7 @@ const GroupEditor = ({group, updateGroup, getGroupInfo, createNewGroup, groupNam
 };
 
 const GroupsPageComponent = (props: GroupsPageProps) => {
-    const {groups, loadGroups, createGroup, deleteGroup, showGroupInvitationModal} = props;
+    const {group, groups, loadGroups, selectGroup, createGroup, deleteGroup, showGroupInvitationModal} = props;
 
     const [showArchived, setShowArchived] = useState(false);
 
@@ -234,20 +248,18 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
         }
     }
 
-    const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>();
-
     const createNewGroup = async (newGroupName: string) => {
         setShowArchived(false);
         const group = await createGroup(newGroupName);
-        setSelectedGroupId(group.id);
-        showGroupInvitationModal(group, true);
+        selectGroup(group);
+        showGroupInvitationModal(true);
     };
 
-    const confirmDeleteGroup = (group: AppGroup) => {
-        if (confirm("Are you sure you want to permanently delete the group '" + group.groupName + "' and remove all associated assignments?\n\nTHIS ACTION CANNOT BE UNDONE!")) {
-            deleteGroup(group);
-            if (selectedGroupId == group.id) {
-                setSelectedGroupId(undefined);
+    const confirmDeleteGroup = (groupToDelete: AppGroup) => {
+        if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nTHIS ACTION CANNOT BE UNDONE!")) {
+            deleteGroup(groupToDelete);
+            if (group && group.id == groupToDelete.id) {
+                selectGroup(null);
             }
         }
     };
@@ -255,15 +267,8 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     useEffect(() => {
         loadGroups(showArchived);
         // Clear the selected group when switching between tabs
-        setSelectedGroupId(undefined);
+        selectGroup(null);
     }, [showArchived]);
-
-    const selectedGroup = data && data.find(group => group.id == selectedGroupId) || undefined;
-    if (selectedGroupId && !selectedGroup) {
-        // If a group is selected, but is not in this list, remove the selection ID.
-        // This happens when a group is archived/unarchived.
-        setSelectedGroupId(undefined);
-    }
 
     const groupNameRef = useRef<HTMLInputElement>(null);
 
@@ -316,9 +321,9 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                             </UncontrolledButtonDropdown>
                                         </Col>
                                     </Row>
-                                    {selectedGroup && <Row className="w-100">
+                                    {group && <Row className="w-100">
                                         <Button block className="w-100" onClick={() => {
-                                            setSelectedGroupId(undefined);
+                                            selectGroup(null);
                                             if (groupNameRef.current) {
                                                 groupNameRef.current.focus();
                                             }
@@ -328,7 +333,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                         {data && data.map((group) =>
                                             <div key={group.id} className="w-100">
                                                 <ButtonGroup className="w-100">
-                                                    <Button color="light" onClick={() => setSelectedGroupId(group.id)}>{group.groupName}</Button>
+                                                    <Button color="light" onClick={() => selectGroup(group)}>{group.groupName}</Button>
                                                     <Button className="flex-grow-0" style={{minWidth: "unset"}} onClick={() => confirmDeleteGroup(group)}>X</Button>
                                                 </ButtonGroup>
                                             </div>
@@ -341,7 +346,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                 </ShowLoading>
             </Col>
             <Col md={7} className="d-none d-md-block">
-                <GroupEditor group={selectedGroup} {...props} createNewGroup={createNewGroup} groupNameRef={groupNameRef} />
+                <GroupEditor {...props} createNewGroup={createNewGroup} groupNameRef={groupNameRef} />
             </Col>
         </Row>
     </Container>;

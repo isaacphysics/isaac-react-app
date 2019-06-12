@@ -143,6 +143,8 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_REQUEST}
     | {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS; groups: ApiTypes.UserGroupDTO[]; archivedGroupsOnly: boolean}
 
+    | {type: ACTION_TYPE.GROUPS_SELECT; group: ApiTypes.UserGroupDTO | null}
+
     | {type: ACTION_TYPE.GROUPS_CREATE_REQUEST}
     | {type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS; newGroup: ApiTypes.UserGroupDTO}
 

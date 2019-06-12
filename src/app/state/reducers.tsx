@@ -321,6 +321,7 @@ function groupsProcessor(groups: GroupsState, updater: (group: AppGroup | null, 
         return result;
     }
     return {
+        ...groups,
         active: update(false, groups.active),
         archived: update(true, groups.archived)
     };
@@ -386,7 +387,7 @@ function deleteMember(from: GroupsState, member: AppGroupMembership) {
     });
 }
 
-export type GroupsState = {active?: AppGroup[]; archived?: AppGroup[]} | null;
+export type GroupsState = {active?: AppGroup[]; archived?: AppGroup[]; selectedGroupId?: number} | null;
 
 export const groups = (groups: GroupsState = null, action: Action): GroupsState => {
     switch (action.type) {
@@ -396,6 +397,8 @@ export const groups = (groups: GroupsState = null, action: Action): GroupsState 
             } else {
                 return {...groups, active: action.groups};
             }
+        case ACTION_TYPE.GROUPS_SELECT:
+            return {...groups, selectedGroupId: action.group && action.group.id || undefined};
         case ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS:
             return update(groups, action.newGroup);
         case ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS:
