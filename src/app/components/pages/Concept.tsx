@@ -10,7 +10,7 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, EXAM_BOARD} from "../../services/constants";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {determineNextTopicContentLink, determineTopicHistory, idIsPresent} from "../../services/topics";
-import {PageNavigation} from "../../../IsaacAppTypes";
+import {NOT_FOUND_TYPE, PageNavigation} from "../../../IsaacAppTypes";
 import history, {History} from "history";
 import {RelatedContent} from "../elements/RelatedContent";
 import {determineExamBoardFrom} from "../../services/examBoard";
@@ -37,7 +37,7 @@ const stateToProps = (state: AppState, {history, match: {params: {conceptId}}}: 
 const dispatchToProps = {fetchDoc};
 
 interface ConceptPageProps {
-    doc: ContentDTO | null;
+    doc: ContentDTO | NOT_FOUND_TYPE | null;
     urlConceptId: string;
     navigation: PageNavigation;
     history: History;
@@ -52,8 +52,8 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
         [urlConceptId]
     );
 
-    return <ShowLoading until={doc}>
-        {doc && <div>
+    return <ShowLoading until={doc} render={(doc: ContentDTO) =>
+        <div>
             <Container>
                 <Row>
                     <Col>
@@ -90,13 +90,13 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
                         </React.Fragment>}
 
                         {doc.relatedContent &&
-                            <RelatedContent content={doc.relatedContent} />
+                        <RelatedContent content={doc.relatedContent} />
                         }
                     </Col>
                 </Row>
             </Container>
-        </div>}
-    </ShowLoading>;
+        </div>
+    }/>;
 };
 
 export const Concept = withRouter(connect(stateToProps, dispatchToProps)(ConceptPageComponent));

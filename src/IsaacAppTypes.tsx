@@ -138,6 +138,7 @@ export type Action =
     | {type: ACTION_TYPE.ACTIVE_MODAL_CLOSE}
 ;
 
+export type NOT_FOUND_TYPE = 404;
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
