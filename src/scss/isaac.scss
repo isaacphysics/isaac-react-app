@@ -85,6 +85,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./topic";
 @import "./search";
 @import "./my-assignments";
+@import "./gameboard";
 
 a.disabled {
     color: $gray-600;
