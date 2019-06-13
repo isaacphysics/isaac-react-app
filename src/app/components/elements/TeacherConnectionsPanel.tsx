@@ -113,13 +113,13 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
 
                 <RS.Col lg={5} className="mt-4 mt-lg-0">
                     <div className="connect-list">
-                        <h3><span className="person-icon-active" />Teacher connections</h3>
+                        <h3><span className="icon-person-active" />Teacher connections</h3>
                         <div className="connect-list-inner">
                             <ul className="teachers-connected list-unstyled">
                                 {activeAuthorisations && activeAuthorisations.map((teacherAuthorisation) =>
                                     <React.Fragment key={teacherAuthorisation.id}>
                                         <li>
-                                            <span className="person-icon-active" />
+                                            <span className="icon-person-active" />
                                             <span id={`teacher-authorisation-${teacherAuthorisation.id}`}>
                                                 {extractTeacherName(teacherAuthorisation)}
                                             </span>
@@ -165,13 +165,13 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                     </RS.Col>
                     <RS.Col lg={5}>
                         <div className="connect-list">
-                            <h3><span className="person-icon-active" /> Student connections </h3>
+                            <h3><span className="icon-person-active" /> Student connections </h3>
 
                             <div className="connect-list-inner">
                                 <ul className="teachers-connected list-unstyled">
                                     {studentAuthorisations && studentAuthorisations.map(student => (
                                         <li key={student.id}>
-                                            <span className="person-icon-active" />
+                                            <span className="icon-person-active" />
                                             <span id={`student-authorisation-${student.id}`}>
                                                 {student.givenName} {student.familyName}
                                             </span>
