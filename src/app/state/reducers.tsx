@@ -23,7 +23,6 @@ import {
     UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO, UserGroupDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
-import {arch} from "os";
 
 type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {

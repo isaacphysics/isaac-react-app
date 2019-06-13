@@ -27,7 +27,7 @@ const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; show
 
     return <ShowLoading until={assignments}>
         {assignments && assignments.map((assignment, index) =>
-            <>
+            <React.Fragment>
                 <Row key={index}>
                     <Col xs={2} md={1} className="myAssignments-percentageCompleted"><h4>{assignment.gameboard && assignment.gameboard.percentageCompleted}</h4></Col>
                     <Col xs={10} md={4}>
@@ -61,7 +61,7 @@ const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; show
                     </Col>
                 </Row>
                 <hr />
-            </>
+            </React.Fragment>
         )}
         {assignments && assignments.length === 0 && (showOld ? <p>You have <a href="#" onClick={showOld}>unfinished older assignments</a></p> : <p>There are no assignments to display.</p>)}
     </ShowLoading>;
