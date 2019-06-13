@@ -39,13 +39,19 @@
 .symboliclogic-question {
   .eqn-editor-preview {
     border: solid 1px $black;
-    padding: 0.3em 0.6em;
+    padding: 0.15em 0.6em;
     font-size: 1.5rem;
     cursor: default;
 
     &.empty {
       color: $gray-500;
     }
+  }
+}
+
+.inequality-results {
+  pre {
+    white-space: pre-wrap;
   }
 }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import {ListGroup, ListGroupItem, Link} from "reactstrap";
+import {ListGroup, ListGroupItem} from "reactstrap";
 
 const ExternalLink = ({href, children, className=""}: {href: string; children: any; className?: string}) => (
     // eslint-disable-next-line react/jsx-no-target-blank
@@ -13,10 +13,10 @@ export const ListGroupFooterBottom = () => (
         <ListGroup className='d-flex flex-wrap flex-row'>
             <ListGroupItem className='footer-bottom-info border-0 px-0 py-0 bg-transparent'>
                 <p className='pt-2 mb-lg-0'>
-                    All teaching materials on this site are licensed under the&nbsp;
+                    All teaching materials on this site are available under the&nbsp;
                     <ExternalLink href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" className="d-inline text-dark font-weight-bold">
-                        Open Government License
-                    </ExternalLink>, unless otherwise noted.
+                        Open Government Licence v3.0
+                    </ExternalLink>, except where otherwise stated.
                 </p>
             </ListGroupItem>
 

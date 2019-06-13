@@ -159,7 +159,7 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
                             <DropdownMenu right>
                                 {selectedUnits && selectedUnits.map((unit) =>
                                     <DropdownItem key={wrapUnitForSelect(unit)}
-                                        className={unit == currentAttemptUnits ? "btn btn-primary" : null}
+                                        className={unit == currentAttemptUnits ? "btn btn-primary" : undefined}
                                         onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
                                         <TrustedHtml span html={wrapUnitForSelect(unit)}/>
                                     </DropdownItem>

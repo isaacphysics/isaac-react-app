@@ -36,6 +36,9 @@ import {Toasts} from "./Toasts";
 import {Header} from "./Header";
 import {Route} from "react-router";
 import {ScrollManager} from "../handlers/ScrollManager";
+import {AdminUserManager} from "../pages/AdminUserManager";
+import {ActiveModal} from "../elements/ActiveModal";
+import { Equality } from '../pages/Equality';
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -56,6 +59,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
             <React.Fragment>
                 <Header />
                 <Toasts />
+                <ActiveModal />
                 <CookieBanner />
                 <EmailVerificationBanner />
                 <main role="main" className="flex-fill content-body">
@@ -70,10 +74,11 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute exact path="/topics" component={AllTopics} />
                         <TrackedRoute path="/topics/:topicName" component={Topic} />
 
-                        <TrackedRoute path="/admin" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Admin} />
+                        <TrackedRoute exact path="/admin" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Admin} />
+                        <TrackedRoute path="/admin/usermanager" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={AdminUserManager} />
 
                         {/* June release application pages */}
-                        <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events";return null;}}/>
+                        <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
                         <TrackedRoute path="/gameboards" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Gameboard} />
                         <TrackedRoute path="/assignments" onlyFor={(user: LoggedInUser) => user.loggedIn} component={MyAssignments} />
 
@@ -93,6 +98,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}} />
                         <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
                         <TrackedRoute path="/coming_soon" component={ComingSoon} />
+                        <TrackedRoute path="/equality" component={Equality} />
 
                         {/* Error pages */}
                         <TrackedRoute path="/error" component={ServerError} />

@@ -13,7 +13,7 @@ export const RelatedContent = ({content}: RelatedContentProps) => {
         <div className="d-lg-flex">
             <ListGroup className="w-100 mb-lg-3 mr-lg-3 w-lg-50">
                 {content.map((contentSummary) => (
-                    <ListGroupItem key={contentSummary} className="w-100 mb-lg-3 mr-lg-3 w-lg-50">
+                    <ListGroupItem key={`${contentSummary.type}/${contentSummary.id}`} className="w-100 mb-lg-3 mr-lg-3 w-lg-50">
                         <Link
                             to={`/${documentTypePathPrefix[contentSummary.type as DOCUMENT_TYPE]}/${contentSummary.id}`}
                             className="lrg-text font-weight-bold"
