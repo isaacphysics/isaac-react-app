@@ -24,7 +24,6 @@ interface IsaacParsonsQuestionState {
     draggedElement?: HTMLElement | null;
     initialX?: number | null;
     currentIndent?: number | null;
-    move?: { src: Array<ParsonsItemDTO>, srcIndex: number, dst: Array<ParsonsItemDTO>, dstIndex: number, indent: number } | null;
 }
 
 class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestionProps> {
@@ -38,7 +37,6 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             draggedElement: null,
             initialX: null,
             currentIndent: null,
-            move: null,
         }
         window.addEventListener('mousemove', this.onMouseMove);
         window.addEventListener('touchmove', this.onMouseMove);
@@ -53,6 +51,10 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             this.props.setCurrentAttempt(this.props.questionId, defaultAttempt);
         }
         if (this.props.currentAttempt) {
+            // This makes sure that available items and current attempt items contain different items.
+            // This is because available items always start from the document's available items (see constructor)
+            // and the current attempt is assigned afterwards, so we need to carve it out of the available items.
+            // This also takes care of updating the two lists when a user moves items from one to the other.
             let availableItems: Array<ParsonsItemDTO> = [];
             let currentAttemptItems: Array<ParsonsItemDTO> = (this.props.currentAttempt && this.props.currentAttempt.items) || [];
             if (this.props.doc.items && this.props.currentAttempt) {
@@ -70,6 +72,8 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             // WARNING: Inverting the order of the arrays breaks this.
             // TODO: Investigate if there is a method that gives more formal guarantees.
             let diff = _differenceBy(prevState.availableItems, availableItems, 'id');
+            // This stops re-rendering when availableItems have not changed from one state update to the next.
+            // The set difference is empty if the two sets contain the same elements (by 'id', see above).
             if (diff.length > 0) {
                 this.setState({ availableItems });
             }
@@ -91,7 +95,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             const x = this.state.draggedElement.getBoundingClientRect().left;
             if (this.state.initialX && x) {
                 const d = Math.max(0, x - this.state.initialX);
-                const i = Math.floor(d/45); // TODO: Change $parsons-step in questions.scss
+                const i = Math.floor(d/45); // REMINDER: If you change this, you also have to change $parsons-step in questions.scss
                 this.setState({
                     currentIndent: i,
                 });
