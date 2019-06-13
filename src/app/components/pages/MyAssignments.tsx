@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {MouseEvent, useEffect, useState} from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {loadMyAssignments} from "../../state/actions";
@@ -6,6 +6,8 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
 import {Container, Row, Col, Nav, NavItem, NavLink, UncontrolledTooltip} from 'reactstrap';
+import {orderBy} from "lodash";
+import {extractTeacherName} from "../../services/role";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments};
@@ -20,7 +22,7 @@ function formatDate(date: number | Date) {
     return dateObject.toLocaleDateString();
 }
 
-const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; showOld?: (event: any) => void}) => {
+const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; showOld?: (event: MouseEvent) => void}) => {
     const now = new Date();
 
     return <ShowLoading until={assignments}>
@@ -39,7 +41,7 @@ const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; show
                             <p>Due: {formatDate(assignment.dueDate)}</p>
                         }
                         {assignment.assignerSummary &&
-                            <p>By: {(assignment.assignerSummary.givenName ? assignment.assignerSummary.givenName.charAt(0) + ". " : "") + assignment.assignerSummary.familyName}</p>
+                            <p>By: {extractTeacherName(assignment.assignerSummary)}</p>
                         }
                     </Col>
                     <Col xs={7} md={5} className="mt-sm-2">
@@ -55,7 +57,7 @@ const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; show
                             View Assignment
                         </Link>
                         {assignment.dueDate && assignment.gameboard && now > assignment.dueDate && assignment.gameboard.percentageCompleted != 100 &&
-                            <p><em className="overdue">Overdue:</em> {formatDate(assignment.dueDate)}</p>}
+                            <p><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>}
                     </Col>
                 </Row>
                 <hr />
@@ -68,32 +70,6 @@ const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; show
 function notMissing<T>(item: T | undefined): T {
     if (item === undefined) throw new Error("Missing item");
     return item;
-}
-
-function sortInProgress(assignments: AssignmentDTO[]) {
-    assignments.sort((a, b) => {
-        if (!a.dueDate < !b.dueDate) return -1;
-        if (!a.dueDate > !b.dueDate) return 1;
-        if (a.dueDate && b.dueDate) {
-            if (a.dueDate < b.dueDate) return -1;
-            if (a.dueDate > b.dueDate) return 1;
-        }
-        if (a.creationDate && b.creationDate) {
-            if (a.creationDate > b.creationDate) return -1;
-            if (a.creationDate < b.creationDate) return 1;
-        }
-        return 0;
-    });
-}
-
-function sortCompleted(assignments: AssignmentDTO[]) {
-    assignments.sort((a, b) => {
-        if (a.creationDate && b.creationDate) {
-            if (a.creationDate > b.creationDate) return -1;
-            if (a.creationDate < b.creationDate) return 1;
-        }
-        return 0;
-    });
 }
 
 const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignmentsPageProps) => {
@@ -130,38 +106,31 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignme
                 myAssignments.completed.push(assignment);
             }
         });
-        sortInProgress(myAssignments.inProgressRecent);
-        sortInProgress(myAssignments.inProgressOld);
-        sortCompleted(myAssignments.completed);
+        myAssignments.inProgressRecent = orderBy(myAssignments.inProgressRecent, ["dueDate", "creationDate"], ["asc", "desc"]);
+        myAssignments.inProgressOld = orderBy(myAssignments.inProgressOld, ["dueDate", "creationDate"], ["asc", "desc"]);
+        myAssignments.completed = orderBy(myAssignments.completed, ["creationDate"], ["desc"]);
     }
 
     const [activeTab, setActiveTab] = useState(0);
 
-    const showOld = myAssignments.inProgressRecent.length == 0 && myAssignments.inProgressOld.length > 0 && function(event: any) {
+    const showOld = myAssignments.inProgressRecent.length == 0 && myAssignments.inProgressOld.length > 0 && function(event: MouseEvent) {
         setActiveTab(1);
         event.preventDefault();
     } || undefined;
 
-    const tabs: [any, AssignmentDTO[]][] = [
+    const tabs: [string, AssignmentDTO[]][] = [
         ['<span class="d-none d-md-inline">Assignments </span>To&nbsp;Do', myAssignments.inProgressRecent],
         ['Older<span class="d-none d-md-inline"> Assignments</span>', myAssignments.inProgressOld],
         ['<span class="d-none d-md-inline">Completed Assignments</span><span class="d-inline d-md-none">Done</span>', myAssignments.completed]
     ];
 
     return <Container>
-        <Row>
-            <Col sm={10}>
-                <h1>My Assignments</h1>
-                <p className="d-none d-sm-block">Keep track of your assignments</p>
-            </Col>
-            {/* TODO: replace this with code from teacher-connections branch once it is merged */}
-            <Col sm={2} className="d-none d-sm-flex align-self-center">
-                <UncontrolledTooltip placement="left" target="myAssignments-help">
-                    Any assignments you have been set will appear here.<br />Unfinished overdue assignments will show in Assignments To Do for 5 days after they are due, after which they move to Older Assignments.
-                </UncontrolledTooltip>
-                <span id="myAssignments-help" style={{cursor: "help"}}><span role="img" aria-label="">❓</span>Help</span>
-            </Col>
-        </Row>
+        <h3><span>My Assignments<span id="my-assignments-title" className="icon-help" /></span>
+            <UncontrolledTooltip placement="bottom" target="my-assignments-title">
+                Any assignments you have been set will appear here.<br />Unfinished overdue assignments will show in Assignments To Do for 5 days after they are due, after which they move to Older Assignments.
+            </UncontrolledTooltip>
+        </h3>
+        <p className="d-none d-sm-block">Keep track of your assignments</p>
         <Nav tabs>
             {tabs.map(([tabTitle, tabItems], mapIndex) => {
                 const tabIndex = mapIndex;
