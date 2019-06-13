@@ -52,7 +52,7 @@ export const groupInvitationModal = (firstTime: boolean) => {
         title: firstTime ? "Group Created" : "Invite Users",
         body: <ConnectedCurrentGroupInviteModal firstTime={firstTime} />,
         buttons: [
-            <RS.Button key={1} color="secondary" outline onClick={() => {
+            <RS.Button key={1} color="secondary" onClick={() => {
                 store.dispatch(closeActiveModal());
                 store.dispatch(selectGroup(null));
             }}>

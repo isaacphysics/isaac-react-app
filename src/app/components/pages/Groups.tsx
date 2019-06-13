@@ -59,18 +59,21 @@ enum SortOrder {
     "Date Created" = "Date Created"
 }
 
-type GroupEditorProps = GroupsPageProps & {
+interface GroupCreatorProps {
     createNewGroup: (groupName: string) => void;
-    groupNameRef: MutableRefObject<HTMLInputElement | null>;
+}
+
+type GroupEditorProps = GroupsPageProps & GroupCreatorProps & {
+    groupNameRef?: MutableRefObject<HTMLInputElement | null>;
 };
 
 let tooltip = 0;
 const Tooltip = ({children, tipText, ...props}: any) => {
     const [tooltipId] = useState("forTooltip-" + tooltip++);
-    return <>
+    return <React.Fragment>
         <span id={tooltipId} {...props}>{children}</span>
         <UncontrolledTooltip target={`#${tooltipId}`}>{tipText}</UncontrolledTooltip>
-    </>;
+    </React.Fragment>;
 };
 
 const canSendPasswordResetRequest = function(user: AppGroupMembership, passwordRequestSent: boolean) {
@@ -106,7 +109,7 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
         <td>
             <Link to={`/progress/${member.groupMembershipInformation.userId}`}>{member.givenName} {member.familyName}</Link>
             {member.emailVerificationStatus == "DELIVERY_FAILED" &&
-                <Tooltip tipText={<>This user&apos;s account email address is invalid or not accepting email.<br />They will not be able to reset their password or receive update emails. Ask them to login and update it, or contact us to help resolve the issue.</>} className="icon-email-status unverified">DF</Tooltip>
+                <Tooltip tipText={<React.Fragment>This user&apos;s account email address is invalid or not accepting email.<br />They will not be able to reset their password or receive update emails. Ask them to login and update it, or contact us to help resolve the issue.</React.Fragment>} className="icon-email-status unverified">DF</Tooltip>
             }
             {member.emailVerificationStatus == "NOT_VERIFIED" &&
             <Tooltip
@@ -132,9 +135,7 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
     </tr>;
 };
 
-const GroupEditor = ({group, selectGroup, updateGroup, getGroupInfo, createNewGroup, groupNameRef, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal}: GroupEditorProps) => {
-    const groupId = group && group.id;
-
+const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupNameRef, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal}: GroupEditorProps) => {
     const [isExpanded, setExpanded] = useState(false);
 
     const initialGroupName = group ? group.groupName : "";
@@ -143,10 +144,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, getGroupInfo, createNewGr
     useEffect(() => {
         setExpanded(false);
         setNewGroupName(initialGroupName);
-        if (group) {
-            getGroupInfo(group);
-        }
-    }, [groupId]); // This can't just be group, because group changes when the members change, causing an infinite reload loop
+    }, [group]);
 
     function saveUpdatedGroup() {
         if (group) {
@@ -169,7 +167,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, getGroupInfo, createNewGr
 
     const bigGroup = group && group.members && group.members.length > 100;
 
-    return <>
+    return <React.Fragment>
         <Row>
             <Col sm={8}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
             {group && <Col sm={4}>
@@ -194,7 +192,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, getGroupInfo, createNewGr
                 Group name is shared with students
             </Col>
         </Row>
-        {group && <>
+        {group && <React.Fragment>
             <Row>
                 <Button block onClick={toggleArchived}>
                     {group.archived ? "Unarchive this group" : "Archive this group"}
@@ -209,18 +207,41 @@ const GroupEditor = ({group, selectGroup, updateGroup, getGroupInfo, createNewGr
                             </tr>
                         </thead>
                         <tbody>
-                            {(!bigGroup || isExpanded) && group.members.map(member => <MemberInfo key={member.groupMembershipInformation.userId}
+                            {(!bigGroup || isExpanded) && group.members.map((member: AppGroupMembership) => <MemberInfo key={member.groupMembershipInformation.userId}
                                 {...{member, resetMemberPassword, deleteMember}} />)}
                         </tbody>
                     </Table>}
                 </ShowLoading>
             </Row>
-        </>}
-    </>;
+        </React.Fragment>}
+    </React.Fragment>;
+};
+
+const MobileGroupCreatorComponent = ({createNewGroup, ...props}: GroupCreatorProps & {className: string}) => {
+    const [newGroupName, setNewGroupName] = useState("");
+
+    function saveUpdatedGroup() {
+        createNewGroup(newGroupName);
+        setNewGroupName("");
+    }
+    return <Row {...props}>
+        <Col xs={12} className="mt-2">
+            <h6>Create New Group</h6>
+        </Col>
+        <Col xs={12} className="mb-2">
+            <Input length={50} placeholder="Enter the name of your group here" value={newGroupName}
+                onChange={e => setNewGroupName(e.target.value)}/>
+        </Col>
+        <Col xs={12}>
+            <Button block color="primary" onClick={saveUpdatedGroup} disabled={newGroupName == ""}>
+                Create group
+            </Button>
+        </Col>
+    </Row>;
 };
 
 const GroupsPageComponent = (props: GroupsPageProps) => {
-    const {group, groups, loadGroups, selectGroup, createGroup, deleteGroup, showGroupInvitationModal} = props;
+    const {group, groups, loadGroups, getGroupInfo, selectGroup, createGroup, deleteGroup, showGroupInvitationModal} = props;
 
     const [showArchived, setShowArchived] = useState(false);
 
@@ -276,6 +297,15 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
         selectGroup(null);
     }, [showArchived]);
 
+    const groupId = group && group.id;
+
+    useEffect(() => {
+        if (group) {
+            getGroupInfo(group);
+        }
+    }, [groupId]); // This can't just be group, because group changes when the members change, causing an infinite reload loop
+
+
     const groupNameRef = useRef<HTMLInputElement>(null);
 
     return <Container>
@@ -296,7 +326,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
         <Row>
             <Col md={5}>
                 <ShowLoading until={activeTab}>
-                    {activeTab && <>
+                    {activeTab && <React.Fragment>
                         <Nav tabs>
                             {tabs.map((tab) => {
                                 const classes = tab.active() ? "active" : "";
@@ -310,7 +340,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                         <TabContent activeTab="thisOne">
                             <TabPane tabId="thisOne">
                                 <ShowLoading until={data}>
-                                    <Row className="align-items-center py-3">
+                                    <Row className="align-items-center py-3 d-none d-md-block">
                                         <Col>
                                         Groups:
                                         </Col>
@@ -327,7 +357,8 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                             </UncontrolledButtonDropdown>
                                         </Col>
                                     </Row>
-                                    {group && <Row className="w-100">
+                                    <MobileGroupCreatorComponent className="d-block d-md-none" createNewGroup={createNewGroup}/>
+                                    {group && <Row className="w-100 d-none d-md-block">
                                         <Button block className="w-100" onClick={() => {
                                             selectGroup(null);
                                             if (groupNameRef.current) {
@@ -336,19 +367,22 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                         }}>Create new group</Button>
                                     </Row>}
                                     <Row className="w-100 py-3">
-                                        {data && data.map((group) =>
-                                            <div key={group.id} className="w-100">
+                                        {data && data.map((g: AppGroup) =>
+                                            <div key={g.id} className="w-100">
                                                 <ButtonGroup className="w-100">
-                                                    <Button color="light" onClick={() => selectGroup(group)}>{group.groupName}</Button>
-                                                    <Button className="flex-grow-0" style={{minWidth: "unset"}} onClick={() => confirmDeleteGroup(group)}>X</Button>
+                                                    <Button color="light" onClick={() => selectGroup(g)}>{g.groupName}</Button>
+                                                    <Button className="flex-grow-0" style={{minWidth: "unset"}} onClick={() => confirmDeleteGroup(g)}>X</Button>
                                                 </ButtonGroup>
+                                                {group && group.id == g.id && <div className="d-block d-md-none">
+                                                    <GroupEditor {...props} createNewGroup={createNewGroup} />
+                                                </div>}
                                             </div>
                                         )}
                                     </Row>
                                 </ShowLoading>
                             </TabPane>
                         </TabContent>
-                    </>}
+                    </React.Fragment>}
                 </ShowLoading>
             </Col>
             <Col md={7} className="d-none d-md-block">
