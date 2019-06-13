@@ -1,5 +1,6 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
+import React from "react";
 
 
 export type Action =
@@ -221,3 +222,5 @@ export interface ActiveModal {
     body: any;
     buttons: any[];
 }
+
+export const FigureNumberingContext = React.createContext({nextFigureNumber: 1});

@@ -14,7 +14,7 @@ import {determineNextTopicContentLink, determineTopicHistory, idIsPresent} from 
 import {History} from "history";
 import {RelatedContent} from "../elements/RelatedContent";
 import {determineExamBoardFrom} from "../../services/examBoard";
-import {NOT_FOUND_TYPE, PageNavigation} from "../../../IsaacAppTypes";
+import {NOT_FOUND_TYPE, PageNavigation, FigureNumberingContext} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState, {history, match: {params: {questionId}}, location: {search}}: any) => {
     const navigation: PageNavigation = {
@@ -74,7 +74,9 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
                 </Row>
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
-                        <IsaacContent doc={doc} />
+                        <FigureNumberingContext.Provider value={{nextFigureNumber: 1}}>
+                            <IsaacContent doc={doc} />
+                        </FigureNumberingContext.Provider>
 
                         {/* Superseded notice */}
 
