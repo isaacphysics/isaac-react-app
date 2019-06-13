@@ -36,3 +36,22 @@
   background: url(/assets/ru.png) -330px -321px no-repeat;
   margin: 10px 10px 10px 0;
 }
+.icon-group-table-person {
+  float: left;
+  width: 11px;
+  height: 18px;
+  background: url(/assets/ru.png) -357px -320px no-repeat;
+  margin: 8px 10px 0 0;
+}
+.icon-email-status {
+  display: inline-block;
+  width: 25px;
+  height: 19px;
+  margin-left: 15px;
+  margin-bottom: -7px;
+}
+.icon-email-status.unverified {
+  background: url(/assets/email-status.png) -25px 0px no-repeat;
+  background-size: 75px;
+}
+

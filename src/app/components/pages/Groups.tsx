@@ -14,7 +14,7 @@ import {
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
-    ButtonGroup, Button, Input, Table, ButtonDropdown
+    Button, Input, Table, ButtonDropdown, Form
 } from "reactstrap"
 import {Link} from "react-router-dom";
 import {
@@ -105,30 +105,34 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
         resetMemberPassword(member);
     }
 
+    function confirmDeleteMember() {
+        if (confirm("Are you sure you want to remove this user from the group?")) {
+            deleteMember(member);
+        }
+    }
+
     return <tr>
-        <td>
-            <Link to={`/progress/${member.groupMembershipInformation.userId}`}>{member.givenName} {member.familyName}</Link>
+        <td className="w-75">
+            <Link to={`/progress/${member.groupMembershipInformation.userId}`}><span className="icon-group-table-person" />{member.givenName} {member.familyName}</Link>
             {member.emailVerificationStatus == "DELIVERY_FAILED" &&
-                <Tooltip tipText={<React.Fragment>This user&apos;s account email address is invalid or not accepting email.<br />They will not be able to reset their password or receive update emails. Ask them to login and update it, or contact us to help resolve the issue.</React.Fragment>} className="icon-email-status unverified">DF</Tooltip>
+                <Tooltip tipText={<React.Fragment>This user&apos;s account email address is invalid or not accepting email.<br />They will not be able to reset their password or receive update emails. Ask them to login and update it, or contact us to help resolve the issue.</React.Fragment>} className="icon-email-status unverified" />
             }
             {member.emailVerificationStatus == "NOT_VERIFIED" &&
             <Tooltip
                 tipText="This user has not yet verified their email."
-                className="icon-email-status unverified">NV</Tooltip>
+                className="icon-email-status unverified" />
             }
             {member.groupMembershipInformation && member.groupMembershipInformation.status == "INACTIVE" &&
                 <Tooltip tipText="This user has set their status to inactive for this group. This means they will no longer see new assignments."> (inactive in group)</Tooltip>
             }
         </td>
-        <td>
+        <td style={{whiteSpace: "nowrap"}}>
             <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-right">
-                <Button color="Link" onClick={resetPassword} disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
+                <Button color="link" size="sm" onClick={resetPassword} disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
                     {!passwordRequestSent? 'Reset Password': 'Reset email sent'}
                 </Button>
-            </Tooltip>
-        </td>
-        <td>
-            <Button color="Link" className="flex-grow-0" style={{minWidth: 0}} onClick={() => deleteMember(member)}>
+            </Tooltip>{"  "}
+            <Button color="tertiary" size="sm" className="flex-grow-0" style={{minWidth: "unset"}} onClick={confirmDeleteMember}>
                 X
             </Button>
         </td>
@@ -169,24 +173,21 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
 
     return <React.Fragment>
         <Row>
-            <Col sm={8}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
-            {group && <Col sm={4}>
-                <Button onClick={() => showGroupInvitationModal(false)}>Invite Users</Button>
-                or
-                <Button onClick={() => showGroupManagersModal()}>Edit Group Managers</Button>
+            <Col sm={3} md={5} lg={3}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
+            {group && <Col sm={9} md={7} lg={9} className="text-right">
+                <Button size="sm" color="tertiary" onClick={() => showGroupManagersModal()}>Edit Group Managers</Button>
+                <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
+                <span className="d-inline-block d-md-none">&nbsp;</span>
+                <Button size="sm" onClick={() => showGroupInvitationModal(false)}>Invite Users</Button>
             </Col>}
         </Row>
-        <Row>
-            <Col xs={8}>
-                <Input innerRef={groupNameRef} length={50} placeholder="Enter the name of your group here" value={newGroupName}
-                    onChange={e => setNewGroupName(e.target.value)}/>
-            </Col>
-            <Col xs={4}>
-                <Button color="primary" onClick={saveUpdatedGroup} disabled={newGroupName == "" || initialGroupName == newGroupName}>
-                    {group ? "Update" : "Create"}
-                </Button>
-            </Col>
-        </Row>
+        <Form inline className="pt-2">
+            <Input className="flex-grow-1 mr-1" innerRef={groupNameRef} length={50} placeholder="Enter the name of your group here" value={newGroupName}
+                onChange={e => setNewGroupName(e.target.value)}/>
+            <Button color="primary" style={{fontSize: "1rem", padding: "7px 2rem"}} onClick={saveUpdatedGroup} disabled={newGroupName == "" || initialGroupName == newGroupName}>
+                {group ? "Update" : "Create"}
+            </Button>
+        </Form>
         <Row>
             <Col xs={8} className="text-right">
                 Group name is shared with students
@@ -194,7 +195,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
         </Row>
         {group && <React.Fragment>
             <Row>
-                <Button block onClick={toggleArchived}>
+                <Button block color="tertiary" onClick={toggleArchived}>
                     {group.archived ? "Unarchive this group" : "Archive this group"}
                 </Button>
             </Row>
@@ -203,7 +204,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                     {group.members && <Table>
                         <thead>
                             <tr>
-                                <th>{group.members.length} users in this group {bigGroup && !isExpanded && <ButtonDropdown className="float-right" toggle={() => setExpanded(true)}><DropdownToggle caret>Show</DropdownToggle></ButtonDropdown>}</th>
+                                <th colSpan={2}>{group.members.length} users in this group {bigGroup && !isExpanded && <ButtonDropdown className="float-right" toggle={() => setExpanded(true)}><DropdownToggle caret>Show</DropdownToggle></ButtonDropdown>}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -340,13 +341,13 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                         <TabContent activeTab="thisOne">
                             <TabPane tabId="thisOne">
                                 <ShowLoading until={data}>
-                                    <Row className="align-items-center py-3 d-none d-md-block">
+                                    <Row className="align-items-center py-3 d-none d-md-flex">
                                         <Col>
                                         Groups:
                                         </Col>
                                         <Col className="text-right">
-                                            <UncontrolledButtonDropdown>
-                                                <DropdownToggle caret>
+                                            <UncontrolledButtonDropdown size="sm">
+                                                <DropdownToggle color="tertiary" caret>
                                                     {sortOrder}
                                                 </DropdownToggle>
                                                 <DropdownMenu>
@@ -359,33 +360,33 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                     </Row>
                                     <MobileGroupCreatorComponent className="d-block d-md-none" createNewGroup={createNewGroup}/>
                                     {group && <Row className="w-100 d-none d-md-block">
-                                        <Button block className="w-100" onClick={() => {
+                                        <Button block color="primary" className="w-100" onClick={() => {
                                             selectGroup(null);
                                             if (groupNameRef.current) {
                                                 groupNameRef.current.focus();
                                             }
                                         }}>Create new group</Button>
                                     </Row>}
-                                    <Row className="w-100 py-3">
-                                        {data && data.map((g: AppGroup) =>
-                                            <div key={g.id} className="w-100">
-                                                <ButtonGroup className="w-100">
-                                                    <Button color="light" onClick={() => selectGroup(g)}>{g.groupName}</Button>
-                                                    <Button className="flex-grow-0" style={{minWidth: "unset"}} onClick={() => confirmDeleteGroup(g)}>X</Button>
-                                                </ButtonGroup>
-                                                {group && group.id == g.id && <div className="d-block d-md-none">
+                                    <Table className="py-3">
+                                        <tbody>{data && data.map((g: AppGroup) =>
+                                            <React.Fragment key={g.id}>
+                                                <tr onClick={() => selectGroup(g)}>
+                                                    <td className="w-100"><Button color="light" block>{g.groupName}</Button></td>
+                                                    <td><Button color="tertiary" className="py-2 px-4" style={{minWidth: "unset"}} onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}>X</Button></td>
+                                                </tr>
+                                                {group && group.id == g.id && <tr className="d-table-row d-md-none bg-white"><td colSpan={2} className="w-100">
                                                     <GroupEditor {...props} createNewGroup={createNewGroup} />
-                                                </div>}
-                                            </div>
-                                        )}
-                                    </Row>
+                                                </td></tr>}
+                                            </React.Fragment>
+                                        )}</tbody>
+                                    </Table>
                                 </ShowLoading>
                             </TabPane>
                         </TabContent>
                     </React.Fragment>}
                 </ShowLoading>
             </Col>
-            <Col md={7} className="d-none d-md-block">
+            <Col md={7} className="d-none d-md-block pl-lg-5">
                 <GroupEditor {...props} createNewGroup={createNewGroup} groupNameRef={groupNameRef} />
             </Col>
         </Row>

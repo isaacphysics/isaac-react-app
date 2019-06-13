@@ -97,6 +97,14 @@ const CurrentGroupManagersModal = ({group, user, addGroupManager, deleteGroupMan
         }
     }
 
+    function removeManager(manager: UserSummaryWithEmailAddressDTO) {
+        if (group) {
+            if (confirm("Are you sure you want to remove this teacher from the group?\nThey may still have access to student data until students revoke the connection from their My Account pages.")) {
+                deleteGroupManager(group, manager)
+            }
+        }
+    }
+
     return group && <React.Fragment>
         <h2>Selected group: {group.groupName}</h2>
 
@@ -126,9 +134,9 @@ const CurrentGroupManagersModal = ({group, user, addGroupManager, deleteGroupMan
         <RS.Table className="group-table">
             <tbody>{additionalManagers && additionalManagers.map(manager =>
                 <tr key={manager.email}>
-                    <td><span className="group-table-person" />{manager.givenName} {manager.familyName} ({manager.email})</td>
+                    <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} ({manager.email})</td>
                     {userIsOwner && <td className="group-table-delete"><a className="delete-icon" href="javascript:void(0)"
-                        onClick={() => deleteGroupManager(group, manager)}>X</a></td>}
+                        onClick={() => removeManager(manager)}>X</a></td>}
                 </tr>
             )}</tbody>
         </RS.Table>
