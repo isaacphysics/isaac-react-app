@@ -1,9 +1,9 @@
 import React, {useEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {loadGroups, loadBoards, deleteBoard, showToast} from "../../state/actions";
+import {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, showToast} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState, GroupsState} from "../../state/reducers";
+import {AppState, BoardsState, GroupsState} from "../../state/reducers";
 import {
     Button,
     Card,
@@ -19,22 +19,23 @@ import {
     Spinner,
     UncontrolledTooltip
 } from 'reactstrap';
-import {ActualBoardLimit, BoardOrder, Toast} from "../../../IsaacAppTypes";
-import {GameboardDTO, GameboardListDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {ActualBoardLimit, AppGameBoard, BoardOrder, Toast} from "../../../IsaacAppTypes";
+import {GameboardDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
     groups: state && state.groups || null,
-    boards: state && state.boards && state.boards.boards || null});
+    boards: state && state.boards || null});
 
-const dispatchToProps = {loadGroups, loadBoards, deleteBoard, showToast};
+const dispatchToProps = {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, showToast};
 
 interface SetAssignmentsPageProps {
     user: RegisteredUserDTO;
-    boards: GameboardListDTO | null;
+    boards: BoardsState;
     groups: GroupsState | null;
     loadGroups: (getArchived: boolean) => void;
     loadBoards: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => void;
+    loadGroupsForBoard: (board: AppGameBoard) => void;
     deleteBoard: (board: GameboardDTO) => void;
     showToast: (toast: Toast) => void;
 }
@@ -56,10 +57,14 @@ function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
 }
 
 type BoardProps = SetAssignmentsPageProps & {
-    board: GameboardDTO;
+    board: AppGameBoard;
 }
 
-const Board = ({user, board, deleteBoard}: BoardProps) => {
+const Board = ({user, board, loadGroupsForBoard, deleteBoard}: BoardProps) => {
+
+    useEffect( () => {
+        loadGroupsForBoard(board);
+    }, [board.id]);
     const [showShareLink, setShowShareLink] = useState(false);
     const shareLink = useRef<HTMLInputElement>(null);
 
@@ -84,7 +89,7 @@ const Board = ({user, board, deleteBoard}: BoardProps) => {
         }
     }
 
-    const hasAssignedGroups = false;
+    const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
 
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
@@ -106,7 +111,9 @@ const Board = ({user, board, deleteBoard}: BoardProps) => {
     return <Card className="board-card">
         <CardBody>
             <Button className="close" size="small" onClick={confirmDeleteBoard}>X</Button>
-            <button onClick={() => setShowAssignments(true)} className="groups-assigned subject-compsci"><strong>0</strong>groups assigned</button>
+            <button onClick={() => setShowAssignments(true)} className="groups-assigned subject-compsci">
+                <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
+                group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"} assigned</button>
             <aside>
                 <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                 <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
@@ -118,7 +125,7 @@ const Board = ({user, board, deleteBoard}: BoardProps) => {
             {showAssignments && <React.Fragment>
                 <hr />
                 <Label>Board currently assigned to:</Label>
-                {hasAssignedGroups && <ul></ul>}
+                {board.assignedGroups && hasAssignedGroups && <ul>{board.assignedGroups.map(group => <li key={group.id}>{group.groupName}</li>)}</ul>}
                 {!hasAssignedGroups && <p>No groups.</p>}
             </React.Fragment>}
             <Button block color="tertiary" onClick={() => setShowAssignments(!showAssignments)}>{showAssignments ? "Close" : "Assign / Unassign"}</Button>
@@ -150,7 +157,7 @@ function orderName(order: BoardOrder) {
 }
 
 const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
-    const {user, groups, loadGroups, boards, loadBoards, deleteBoard, showToast} = props;
+    const {groups, loadGroups, boards, loadBoards} = props;
 
     useEffect(() => {loadGroups(false);}, []);
 
@@ -186,11 +193,11 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     useEffect( () => {
         if (boards) {
             setLoading(false);
-            if (boards.results) {
-                if (actualBoardLimit != boards.results.length) {
-                    setActualBoardLimit(actualBoardLimit = boards.results.length);
+            if (boards.boards) {
+                if (actualBoardLimit != boards.boards.length) {
+                    setActualBoardLimit(actualBoardLimit = boards.boards.length);
                 }
-                if (boards.results.length == 0) {
+                if (boards.boards.length == 0) {
                     // Through deletion or something we have ended up with no boards, so fetch more.
                     viewMore();
                 }
@@ -209,7 +216,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         <hr />
         <ShowLoading until={boards}>
             {boards && (boards.totalResults == 0 ? <h4>You have no boards to assign; select an option above to add a board.</h4> : <React.Fragment>
-                <h4>You have <strong>{boards.totalResults}</strong> board{boards.totalResults && boards.totalResults > 1 && "s"} ready to assign...</h4>
+                <h4>You have <strong>{boards.totalResults}</strong> board{boards.totalResults > 1 && "s"} ready to assign...</h4>
                 <Row>
                     <Col>
                         <Form inline>
@@ -223,13 +230,13 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                         </Form>
                     </Col>
                 </Row>
-                {boards.results && <div>
+                {boards.boards && <div>
                     <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
-                        {boards.results && boards.results.map(board => <div key={board.id}><Board {...props} board={board} /></div>)}
+                        {boards.boards && boards.boards.map(board => <div key={board.id}><Board {...props} board={board} /></div>)}
                     </div>
                     <div className="text-center mt-2 mb-4" style={{clear: "both"}}>
-                        <p>Showing <strong>{boards.results.length}</strong> of <strong>{boards.totalResults}</strong></p>
-                        {boards.totalResults && boards.results.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
+                        <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
+                        {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
                     </div>
                 </div>}
             </React.Fragment>)}

@@ -1,5 +1,5 @@
 import * as ApiTypes from "./IsaacApiTypes";
-import {GameboardDTO, GroupMembershipDTO, UserSummaryWithEmailAddressDTO} from "./IsaacApiTypes";
+import {GameboardDTO, GroupMembershipDTO, UserGroupDTO, UserSummaryWithEmailAddressDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 
 
@@ -181,9 +181,13 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_REQUEST}
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
 
-    | {type: ACTION_TYPE.BOARDS_DELETE_REQUEST; board: GameboardDTO}
-    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS; board: GameboardDTO}
-    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE; board: GameboardDTO}
+    | {type: ACTION_TYPE.BOARDS_GROUPS_REQUEST; board: ApiTypes.GameboardDTO}
+    | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groups: ApiTypes.UserGroupDTO[]}
+    | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
+
+    | {type: ACTION_TYPE.BOARDS_DELETE_REQUEST; board: ApiTypes.GameboardDTO}
+    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO}
+    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
 ;
 
 
@@ -291,3 +295,5 @@ export enum BoardOrder {
 }
 
 export type ActualBoardLimit = number | "ALL";
+
+export type AppGameBoard = GameboardDTO & {assignedGroups?: UserGroupDTO[]};

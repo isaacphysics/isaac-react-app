@@ -1,7 +1,7 @@
 import {combineReducers} from "redux";
 import {
     Action,
-    ActiveModal,
+    ActiveModal, AppGameBoard,
     AppGroup,
     AppGroupMembership,
     AppQuestionDTO,
@@ -448,19 +448,24 @@ export const groups = (groups: GroupsState = null, action: Action): GroupsState 
     }
 };
 
-export type BoardsState = {boards?: GameboardListDTO} | null;
+export interface Boards {
+    boards: AppGameBoard[];
+    totalResults: number;
+}
 
-function mergeBoards(boards: GameboardListDTO, additional: GameboardListDTO) {
+export type BoardsState = Boards | null;
+
+function mergeBoards(boards: AppGameBoard[], additional: GameboardListDTO) {
     return {
-        ...additional,
-        results: unionWith(boards.results, additional.results, function(a, b) {return a.id == b.id})
+        totalResults: additional.totalResults as number,
+        boards: unionWith(boards, additional.results, function(a, b) {return a.id == b.id})
     };
 }
 
 export const boards = (boards: BoardsState = null, action: Action): BoardsState => {
-    function modifyBoards(modify: (current: GameboardDTO[]) => GameboardDTO[], tweak?: (boards: {boards: GameboardListDTO}) => void) {
-        if (boards && boards.boards && boards.boards.results) {
-            const result = {...boards, boards: {...boards.boards, results: modify(boards.boards.results)}};
+    function modifyBoards(modify: (current: AppGameBoard[]) => AppGameBoard[], tweak?: (boards: Boards) => void) {
+        if (boards && boards.boards) {
+            const result = {...boards, boards: modify(boards.boards)};
             if (tweak) tweak(result);
             return result;
         }
@@ -470,13 +475,16 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
     switch (action.type) {
         case ACTION_TYPE.BOARDS_RESPONSE_SUCCESS:
             if (boards && boards.boards && action.accumulate) {
-                return {...boards, boards: mergeBoards(boards.boards, action.boards)};
+                return mergeBoards(boards.boards, action.boards);
             } else {
-                return {...boards, boards: action.boards};
+                return {boards: action.boards.results as AppGameBoard[], totalResults: action.boards.totalResults as number};
             }
+        case ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS:
+            return modifyBoards(existing => existing.map(board =>
+                board.id == action.board.id ? {...board, assignedGroups: action.groups} : board));
         case ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS:
             return modifyBoards(existing => differenceBy(existing, [action.board], board => board.id),
-                ({boards}) => {if (boards.totalResults) boards.totalResults--;});
+                boards => {boards.totalResults--;});
         default:
             return boards;
     }

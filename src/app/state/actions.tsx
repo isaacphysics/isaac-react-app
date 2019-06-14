@@ -776,6 +776,17 @@ export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: Bo
     dispatch({type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: boards.data, accumulate: startIndex != 0});
 };
 
+export const loadGroupsForBoard = (board: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.BOARDS_GROUPS_REQUEST, board});
+    try {
+        const result = await api.boards.getGroupsForBoard(board);
+        dispatch({type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS, board, groups: result});
+    } catch {
+        dispatch({type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE, board});
+    }
+}
+
+
 export const deleteBoard = (board: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.BOARDS_DELETE_REQUEST, board});
     try {
