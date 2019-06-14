@@ -1,12 +1,25 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {loadGroups, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState, GroupsState} from "../../state/reducers";
-import {Button, Col, Container, Form, Input, Label, Row, Spinner, UncontrolledTooltip} from 'reactstrap';
+import {
+    Button,
+    Card,
+    CardBody,
+    CardImg, CardSubtitle, CardText, CardTitle,
+    Col,
+    Container,
+    Form,
+    Input,
+    Label,
+    Row,
+    Spinner,
+    UncontrolledTooltip
+} from 'reactstrap';
 import {ActualBoardLimit, BoardOrder} from "../../../IsaacAppTypes";
-import {GameboardListDTO} from "../../../IsaacApiTypes";
+import {GameboardDTO, GameboardListDTO} from "../../../IsaacApiTypes";
 
 const stateToProps = (state: AppState) => ({groups: state && state.groups || null, boards: state && state.boards && state.boards.boards || null});
 const dispatchToProps = {loadGroups, loadBoards};
@@ -18,10 +31,63 @@ interface SetAssignmentsPageProps {
     loadBoards: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => void;
 }
 
-function formatDate(date: number | Date) {
+function formatDate(date: number | Date | undefined) {
+    if (!date) return "Unknown";
     const dateObject = new Date(date);
     return dateObject.toLocaleDateString();
 }
+
+function formatBoardOwner(board: GameboardDTO) {
+    return "Unknown";
+}
+
+interface BoardProps {
+    board: GameboardDTO;
+}
+
+
+const Board = ({board}: BoardProps) => {
+    const [showShareLink, setShowShareLink] = useState(false);
+    const shareLink = useRef<HTMLInputElement>(null);
+
+    const assignmentLink = `${location.origin}/assignment/${board.id}`;
+
+    function toggleShareLink() {
+        if (showShareLink) {
+            setShowShareLink(false);
+        } else {
+            setShowShareLink(true);
+            setImmediate(() => {
+                if (shareLink.current) {
+                    if (window.getSelection && shareLink.current) {
+                        let selection = window.getSelection();
+                        let range = document.createRange();
+                        range.selectNodeContents(shareLink.current);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
+                }
+            });
+        }
+    }
+
+    return <Card className="board-card">
+        <CardBody>
+            <Button className="close" size="small">X</Button>
+            <button className="groups-assigned subject-compsci"><strong>0</strong>groups assigned</button>
+            <aside>
+                <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
+                <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
+            </aside>
+            <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{assignmentLink}</div></div>
+            <button className="ru_share" onClick={toggleShareLink}/>
+            <CardTitle>{board.title}</CardTitle>
+            <CardSubtitle>By: <strong>{formatBoardOwner(board)}</strong></CardSubtitle>
+            <Button block color="tertiary">Assign / Unassign</Button>
+        </CardBody>
+    </Card>;
+};
+
 
 enum BoardLimit {
     "two" = "2",
@@ -112,10 +178,10 @@ const SetAssignmentsPageComponent = ({groups, loadGroups, boards, loadBoards}: S
                     </Col>
                 </Row>
                 {boards.results && <div>
-                    <ul>
-                        {boards.results && boards.results.map(board => <li key={board.id}>{board.title}</li>)}
-                    </ul>
-                    <div className="text-center mb-2">
+                    <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
+                        {boards.results && boards.results.map(board => <div key={board.id}><Board board={board} /></div>)}
+                    </div>
+                    <div className="text-center mt-2 mb-4" style={{clear: "both"}}>
                         <p>Showing <strong>{boards.results.length}</strong> of <strong>{boards.totalResults}</strong></p>
                         {boards.totalResults && boards.results.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
                     </div>

@@ -1,0 +1,103 @@
+.subject-physics, .subject-maths, .subject-complete, .subject-compsci {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 71px;
+  height: 82px;
+  background: url(/assets/my-boards-sprite.png) no-repeat 0 0;
+  padding: 20px 0 0;
+}
+
+.subject-physics {
+  background-position: 0 0;
+}
+.subject-maths {
+  background-position: -71px 0;
+}
+.subject-complete {
+  background-position: -142px 0;
+}
+.subject-compsci {
+  background-position: -71px 0; // FIXME: Give this a better colour
+}
+
+.groups-assigned {
+  font-size: 12px;
+  line-height: 110%;
+  font-weight: 100;
+  font-style: normal;
+  padding-top: 7px;
+  color: #fff;
+  text-align: center;
+  strong {
+    display: block;
+    font-size: 30px;
+    font-weight: 600;
+    font-style: italic;
+    padding-bottom: 8px;
+  }
+}
+
+.board-card {
+  .close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+    min-width: 20px;
+    padding-left: 1px;
+  }
+  aside {
+    position: relative;
+    margin-left: 88px;
+    margin-top: 14px;
+    margin-bottom: 12px;
+    .card-subtitle {
+      margin-top: 4px;
+    }
+  }
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-right: 50px;
+  }
+  .card-subtitle {
+    margin-bottom: 0.25rem;
+  }
+  button {
+    -webkit-appearance: none;
+    border: none;
+    outline: none !important;
+  }
+  .share-link {
+    display: none;
+    position: absolute;
+    padding: 4px;
+    border: 1px solid $gray-118;
+    left: 20px;
+    right: 54px;
+    background: #fff;
+  }
+  .share-link div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    user-select: all;
+    -webkit-user-select: all;
+    -moz-user-select: all;
+    -ms-user-select: all;
+    width: 100%;
+  }
+}
+
+.ru_share {
+  background-image: url(/assets/share.svg);
+  width: 50px;
+  height: 58px;
+  background-repeat: no-repeat;
+  z-index: 1;
+  float: right;
+  position: relative;
+  margin-right: 10px;
+  background-color: transparent;
+}
