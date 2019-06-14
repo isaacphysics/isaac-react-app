@@ -27,7 +27,7 @@ import {
     UserSummaryWithGroupMembershipDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
-import {unionWith} from "lodash";
+import {unionWith, differenceBy} from "lodash";
 
 type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -458,6 +458,15 @@ function mergeBoards(boards: GameboardListDTO, additional: GameboardListDTO) {
 }
 
 export const boards = (boards: BoardsState = null, action: Action): BoardsState => {
+    function modifyBoards(modify: (current: GameboardDTO[]) => GameboardDTO[], tweak?: (boards: {boards: GameboardListDTO}) => void) {
+        if (boards && boards.boards && boards.boards.results) {
+            const result = {...boards, boards: {...boards.boards, results: modify(boards.boards.results)}};
+            if (tweak) tweak(result);
+            return result;
+        }
+        return boards;
+    }
+
     switch (action.type) {
         case ACTION_TYPE.BOARDS_RESPONSE_SUCCESS:
             if (boards && boards.boards && action.accumulate) {
@@ -465,6 +474,9 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
             } else {
                 return {...boards, boards: action.boards};
             }
+        case ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS:
+            return modifyBoards(existing => differenceBy(existing, [action.board], board => board.id),
+                ({boards}) => {if (boards.totalResults) boards.totalResults--;});
         default:
             return boards;
     }

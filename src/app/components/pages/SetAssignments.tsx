@@ -1,14 +1,15 @@
 import React, {useEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {loadGroups, loadBoards} from "../../state/actions";
+import {loadGroups, loadBoards, deleteBoard, showToast} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState, GroupsState} from "../../state/reducers";
 import {
     Button,
     Card,
     CardBody,
-    CardImg, CardSubtitle, CardText, CardTitle,
+    CardSubtitle,
+    CardTitle,
     Col,
     Container,
     Form,
@@ -18,17 +19,24 @@ import {
     Spinner,
     UncontrolledTooltip
 } from 'reactstrap';
-import {ActualBoardLimit, BoardOrder} from "../../../IsaacAppTypes";
-import {GameboardDTO, GameboardListDTO} from "../../../IsaacApiTypes";
+import {ActualBoardLimit, BoardOrder, Toast} from "../../../IsaacAppTypes";
+import {GameboardDTO, GameboardListDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 
-const stateToProps = (state: AppState) => ({groups: state && state.groups || null, boards: state && state.boards && state.boards.boards || null});
-const dispatchToProps = {loadGroups, loadBoards};
+const stateToProps = (state: AppState) => ({
+    user: (state && state.user) as RegisteredUserDTO,
+    groups: state && state.groups || null,
+    boards: state && state.boards && state.boards.boards || null});
+
+const dispatchToProps = {loadGroups, loadBoards, deleteBoard, showToast};
 
 interface SetAssignmentsPageProps {
+    user: RegisteredUserDTO;
     boards: GameboardListDTO | null;
     groups: GroupsState | null;
     loadGroups: (getArchived: boolean) => void;
     loadBoards: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => void;
+    deleteBoard: (board: GameboardDTO) => void;
+    showToast: (toast: Toast) => void;
 }
 
 function formatDate(date: number | Date | undefined) {
@@ -37,16 +45,22 @@ function formatDate(date: number | Date | undefined) {
     return dateObject.toLocaleDateString();
 }
 
-function formatBoardOwner(board: GameboardDTO) {
-    return "Unknown";
+function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
+    if (board.tags && board.tags.includes("isaac")) {
+        return "Isaac CS";
+    }
+    if (user.id == board.ownerUserId) {
+        return "Me";
+    }
+    return "Someone else";
 }
 
-interface BoardProps {
+type BoardProps = SetAssignmentsPageProps & {
     board: GameboardDTO;
 }
 
 
-const Board = ({board}: BoardProps) => {
+const Board = ({user, board, deleteBoard}: BoardProps) => {
     const [showShareLink, setShowShareLink] = useState(false);
     const shareLink = useRef<HTMLInputElement>(null);
 
@@ -71,9 +85,26 @@ const Board = ({board}: BoardProps) => {
         }
     }
 
+    const hasAssignedGroups = false;
+
+    function confirmDeleteBoard() {
+        if (hasAssignedGroups) {
+            if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
+                alert("Warning: You currently have groups assigned to this board. If you delete this your groups will still be assigned but you won't be able to unassign them or see the board in your Assigned Boards or My boards page.");
+            } else {
+                showToast({color: "failure", title: "Board Deletion Not Allowed", body: "You have groups assigned to this board. To delete this board, you must unassign all groups.", timeout: 5000});
+                return;
+            }
+        }
+
+        if (confirm(`You are about to delete ${board.title} board?`)) {
+            deleteBoard(board);
+        }
+    }
+
     return <Card className="board-card">
         <CardBody>
-            <Button className="close" size="small">X</Button>
+            <Button className="close" size="small" onClick={confirmDeleteBoard}>X</Button>
             <button className="groups-assigned subject-compsci"><strong>0</strong>groups assigned</button>
             <aside>
                 <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
@@ -81,8 +112,8 @@ const Board = ({board}: BoardProps) => {
             </aside>
             <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{assignmentLink}</div></div>
             <button className="ru_share" onClick={toggleShareLink}/>
-            <CardTitle>{board.title}</CardTitle>
-            <CardSubtitle>By: <strong>{formatBoardOwner(board)}</strong></CardSubtitle>
+            <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
+            <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
             <Button block color="tertiary">Assign / Unassign</Button>
         </CardBody>
     </Card>;
@@ -111,7 +142,9 @@ function orderName(order: BoardOrder) {
     return orderNames[order];
 }
 
-const SetAssignmentsPageComponent = ({groups, loadGroups, boards, loadBoards}: SetAssignmentsPageProps) => {
+const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
+    const {user, groups, loadGroups, boards, loadBoards, deleteBoard, showToast} = props;
+
     useEffect(() => {loadGroups(false);}, []);
 
     const [loading, setLoading] = useState(false);
@@ -146,8 +179,14 @@ const SetAssignmentsPageComponent = ({groups, loadGroups, boards, loadBoards}: S
     useEffect( () => {
         if (boards) {
             setLoading(false);
-            if (boards.results && actualBoardLimit != boards.results.length) {
-                setActualBoardLimit(boards.results.length);
+            if (boards.results) {
+                if (actualBoardLimit != boards.results.length) {
+                    setActualBoardLimit(actualBoardLimit = boards.results.length);
+                }
+                if (boards.results.length == 0) {
+                    // Through deletion or something we have ended up with no boards, so fetch more.
+                    viewMore();
+                }
             }
         }
     }, [boards]);
@@ -179,7 +218,7 @@ const SetAssignmentsPageComponent = ({groups, loadGroups, boards, loadBoards}: S
                 </Row>
                 {boards.results && <div>
                     <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
-                        {boards.results && boards.results.map(board => <div key={board.id}><Board board={board} /></div>)}
+                        {boards.results && boards.results.map(board => <div key={board.id}><Board {...props} board={board} /></div>)}
                     </div>
                     <div className="text-center mt-2 mb-4" style={{clear: "both"}}>
                         <p>Showing <strong>{boards.results.length}</strong> of <strong>{boards.totalResults}</strong></p>

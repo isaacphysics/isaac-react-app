@@ -241,6 +241,9 @@ export const api = {
     boards: {
         get: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder): AxiosPromise<ApiTypes.GameboardListDTO> => {
             return endpoint.get(`/gameboards/user_gameboards`, {params: {"start_index": startIndex, limit, sort}});
+        },
+        delete: (board: ApiTypes.GameboardDTO) => {
+            return endpoint.delete(`/gameboards/user_gameboards/${board.id}`);
         }
     }
 };

@@ -1,5 +1,5 @@
 import * as ApiTypes from "./IsaacApiTypes";
-import {GroupMembershipDTO, UserSummaryWithEmailAddressDTO} from "./IsaacApiTypes";
+import {GameboardDTO, GroupMembershipDTO, UserSummaryWithEmailAddressDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 
 
@@ -180,6 +180,10 @@ export type Action =
 
     | {type: ACTION_TYPE.BOARDS_REQUEST}
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
+
+    | {type: ACTION_TYPE.BOARDS_DELETE_REQUEST; board: GameboardDTO}
+    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS; board: GameboardDTO}
+    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE; board: GameboardDTO}
 ;
 
 

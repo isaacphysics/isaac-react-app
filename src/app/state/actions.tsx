@@ -24,7 +24,7 @@ import {
 } from "../../IsaacAppTypes";
 import {
     AuthenticationProvider,
-    ChoiceDTO,
+    ChoiceDTO, GameboardDTO,
     QuestionDTO,
     RegisteredUserDTO,
     Role,
@@ -721,7 +721,7 @@ export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmai
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS, group, manager});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE, group, manager});
-        dispatch(showToast({color: "failure", title: "Group Manager Removal Failed", body: e.data.errorMessage, timeout: 5000}) as any);
+        dispatch(showToast({color: "failure", title: "Group Manager Removal Failed", body: e.response.data.errorMessage, timeout: 5000}) as any);
     }
 };
 
@@ -774,6 +774,18 @@ export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: Bo
     dispatch({type: ACTION_TYPE.BOARDS_REQUEST});
     const boards = await api.boards.get(startIndex, limit, sort);
     dispatch({type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: boards.data, accumulate: startIndex != 0});
+};
+
+export const deleteBoard = (board: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.BOARDS_DELETE_REQUEST, board});
+    try {
+        await api.boards.delete(board);
+        dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, board});
+        dispatch(showToast({color: "success", title: "Board Deleted", body: "You have deleted board " + board.title, timeout: 5000}) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE, board});
+        dispatch(showToast({color: "failure", title: "Couldn't delete board", body: e.response.data.errorMessage, timeout: 5000}) as any);
+    }
 };
 
 // SERVICE ACTIONS (w/o dispatch)
