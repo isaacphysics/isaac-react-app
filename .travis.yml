@@ -7,8 +7,8 @@ install:
 cache: npm
 script:
 - npm run build
-- npm test
-- codecov -f coverage/coverage-final.json
+- npm test -- --coverage
+- codecov
 notifications:
   slack:
     rooms:
