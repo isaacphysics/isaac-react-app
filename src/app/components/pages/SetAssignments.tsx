@@ -59,7 +59,6 @@ type BoardProps = SetAssignmentsPageProps & {
     board: GameboardDTO;
 }
 
-
 const Board = ({user, board, deleteBoard}: BoardProps) => {
     const [showShareLink, setShowShareLink] = useState(false);
     const shareLink = useRef<HTMLInputElement>(null);
@@ -102,10 +101,12 @@ const Board = ({user, board, deleteBoard}: BoardProps) => {
         }
     }
 
+    const [showAssignments, setShowAssignments] = useState(false);
+
     return <Card className="board-card">
         <CardBody>
             <Button className="close" size="small" onClick={confirmDeleteBoard}>X</Button>
-            <button className="groups-assigned subject-compsci"><strong>0</strong>groups assigned</button>
+            <button onClick={() => setShowAssignments(true)} className="groups-assigned subject-compsci"><strong>0</strong>groups assigned</button>
             <aside>
                 <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                 <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
@@ -114,7 +115,13 @@ const Board = ({user, board, deleteBoard}: BoardProps) => {
             <button className="ru_share" onClick={toggleShareLink}/>
             <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
             <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
-            <Button block color="tertiary">Assign / Unassign</Button>
+            {showAssignments && <React.Fragment>
+                <hr />
+                <Label>Board currently assigned to:</Label>
+                {hasAssignedGroups && <ul></ul>}
+                {!hasAssignedGroups && <p>No groups.</p>}
+            </React.Fragment>}
+            <Button block color="tertiary" onClick={() => setShowAssignments(!showAssignments)}>{showAssignments ? "Close" : "Assign / Unassign"}</Button>
         </CardBody>
     </Card>;
 };
