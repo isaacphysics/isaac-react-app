@@ -1,0 +1,18 @@
+// ISAAC
+
+.myAssignments-percentageCompleted {
+  align-self: center;
+}
+
+.myAssignments-percentageCompleted h4{
+  font-size: 2em;
+  text-align: center;
+}
+
+.myAssignments-percentageCompleted h4::after {
+  font-size: 0.7em;
+  content: '%';
+  position: absolute;
+  top: -5px;
+
+}

@@ -1,4 +1,5 @@
 import Remarkable from "remarkable";
+import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 
 export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
 
@@ -15,6 +16,8 @@ if (document.location.hostname === "localhost") {
 export const API_PATH: string = apiPath;
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
+
+export const NOT_FOUND: NOT_FOUND_TYPE = 404;
 
 export const MARKDOWN_RENDERER = new Remarkable({
     linkify: true,
@@ -63,7 +66,6 @@ export enum ACTION_TYPE {
     AUTHENTICATION_REDIRECT = "AUTHENTICATION_REDIRECT",
     AUTHENTICATION_HANDLE_CALLBACK = "AUTHENTICATION_HANDLE_CALLBACK",
 
-    USER_CONSISTENCY_CHECK = "USER_CONSISTENCY_CHECK",
     USER_CONSISTENCY_ERROR = "USER_CONSISTENCY_ERROR",
 
     USER_REQUEST_EMAIL_VERIFICATION_REQUEST = "USER_REQUEST_EMAIL_VERIFICATION_REQUEST",

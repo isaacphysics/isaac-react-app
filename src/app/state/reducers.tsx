@@ -6,6 +6,7 @@ import {
     GroupMembershipDetailDTO,
     isValidatedChoice,
     LoggedInUser,
+    NOT_FOUND_TYPE,
     Toast,
     UserPreferencesDTO
 } from "../../IsaacAppTypes";
@@ -16,12 +17,12 @@ import {
     GameboardDTO,
     IsaacTopicSummaryPageDTO,
     ResultsWrapper,
-    UserSummaryForAdminUsersDTO,
     UserAuthenticationSettingsDTO,
     UserSummaryDTO,
+    UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
-import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
+import {ACTION_TYPE, ContentVersionUpdatingStatus, NOT_FOUND} from "../services/constants";
 
 type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -124,7 +125,8 @@ export const constants = (constants: ConstantsState = null, action: Action) => {
     }
 };
 
-type DocState = ContentDTO | null;
+
+type DocState = ContentDTO | NOT_FOUND_TYPE | null;
 export const doc = (doc: DocState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.DOCUMENT_REQUEST:
@@ -134,6 +136,8 @@ export const doc = (doc: DocState = null, action: Action) => {
             return {...action.doc};
         case ACTION_TYPE.ROUTER_PAGE_CHANGE:
             return null;
+        case ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE:
+            return NOT_FOUND;
         default:
             return doc;
     }

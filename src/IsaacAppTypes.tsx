@@ -37,7 +37,6 @@ export type Action =
     | {type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
     | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
-    | {type: ACTION_TYPE.USER_CONSISTENCY_CHECK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
 
     | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST}
@@ -139,6 +138,7 @@ export type Action =
     | {type: ACTION_TYPE.ACTIVE_MODAL_CLOSE}
 ;
 
+export type NOT_FOUND_TYPE = 404;
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
