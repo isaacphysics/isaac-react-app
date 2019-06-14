@@ -3,6 +3,7 @@ node_js:
 - 10
 install:
     - npm install -g codecov
+    - npm ci
 cache: npm
 script:
 - npm run build
