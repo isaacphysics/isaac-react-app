@@ -41,6 +41,7 @@ import {ActiveModal} from "../elements/ActiveModal";
 import {isAdmin, isTeacher} from "../../services/user";
 import {Groups} from "../pages/Groups";
 import { Equality } from '../pages/Equality';
+import {SetAssignments} from "../pages/SetAssignments";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -80,11 +81,12 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/admin/usermanager" onlyFor={isAdmin} component={AdminUserManager} />
                         
                         <TrackedRoute path="/groups" onlyFor={isTeacher} component={Groups} />
+                        <TrackedRoute path="/set_assignments" onlyFor={isTeacher} component={SetAssignments} />
 
                         {/* June release application pages */}
                         <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
                         <TrackedRoute path="/gameboards" onlyFor={isAdmin} component={Gameboard} />
-                        <TrackedRoute path="/assignments" onlyFor={(user: LoggedInUser) => user.loggedIn} component={MyAssignments} />
+                        <TrackedRoute path="/assignments" onlyFor={user => user.loggedIn} component={MyAssignments} />
 
                         {/* Authentication */}
                         <TrackedRoute path="/login" component={LogIn} />

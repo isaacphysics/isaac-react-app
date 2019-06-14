@@ -2,7 +2,8 @@ import {combineReducers} from "redux";
 import {
     Action,
     ActiveModal,
-    AppGroup, AppGroupMembership,
+    AppGroup,
+    AppGroupMembership,
     AppQuestionDTO,
     GroupMembershipDetailDTO,
     isValidatedChoice,
@@ -15,14 +16,18 @@ import {
     ContentDTO,
     ContentSummaryDTO,
     GameboardDTO,
+    GameboardListDTO,
     IsaacTopicSummaryPageDTO,
     ResultsWrapper,
-    UserSummaryForAdminUsersDTO,
     UserAuthenticationSettingsDTO,
+    UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO, UserGroupDTO
+    UserSummaryForAdminUsersDTO,
+    UserSummaryWithEmailAddressDTO,
+    UserSummaryWithGroupMembershipDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
+import {unionWith} from "lodash";
 
 type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -443,6 +448,28 @@ export const groups = (groups: GroupsState = null, action: Action): GroupsState 
     }
 };
 
+export type BoardsState = {boards?: GameboardListDTO} | null;
+
+function mergeBoards(boards: GameboardListDTO, additional: GameboardListDTO) {
+    return {
+        ...additional,
+        results: unionWith(boards.results, additional.results, function(a, b) {return a.id == b.id})
+    };
+}
+
+export const boards = (boards: BoardsState = null, action: Action): BoardsState => {
+    switch (action.type) {
+        case ACTION_TYPE.BOARDS_RESPONSE_SUCCESS:
+            if (boards && boards.boards && action.accumulate) {
+                return {...boards, boards: mergeBoards(boards.boards, action.boards)};
+            } else {
+                return {...boards, boards: action.boards};
+            }
+        default:
+            return boards;
+    }
+};
+
 const appReducer = combineReducers({
     user,
     userAuthSettings,
@@ -462,7 +489,8 @@ const appReducer = combineReducers({
     error,
     toasts,
     activeModal,
-    groups
+    groups,
+    boards
 });
 
 export type AppState = undefined | {
@@ -485,6 +513,7 @@ export type AppState = undefined | {
     toasts: ToastsState;
     activeModal: ActiveModalState;
     groups: GroupsState;
+    boards: BoardsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

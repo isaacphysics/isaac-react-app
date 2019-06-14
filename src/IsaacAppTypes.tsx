@@ -1,7 +1,6 @@
 import * as ApiTypes from "./IsaacApiTypes";
+import {GroupMembershipDTO, UserSummaryWithEmailAddressDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
-import {UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "./IsaacApiTypes";
-import {GroupMembershipDTO} from "./IsaacApiTypes";
 
 
 export type Action =
@@ -178,6 +177,9 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
+
+    | {type: ACTION_TYPE.BOARDS_REQUEST}
+    | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
 ;
 
 
@@ -276,3 +278,12 @@ export interface ActiveModal {
     body: any;
     buttons: any[];
 }
+
+export enum BoardOrder {
+    "created" = "created",
+    "visited" = "visited",
+    "title" = "title",
+    "-title" = "-title"
+}
+
+export type ActualBoardLimit = number | "ALL";

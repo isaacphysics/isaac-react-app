@@ -13,9 +13,9 @@ import {
 } from "../services/constants";
 import {
     Action,
-    ActiveModal,
+    ActiveModal, ActualBoardLimit,
     AppGroup,
-    AppGroupMembership,
+    AppGroupMembership, BoardOrder,
     LoggedInUser,
     LoggedInValidationUser,
     Toast,
@@ -766,6 +766,14 @@ export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_
             body: "With error message (" + e.status + ") " + e.data.errorMessage || ""
         }) as any);
     }
+};
+
+// boards
+
+export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.BOARDS_REQUEST});
+    const boards = await api.boards.get(startIndex, limit, sort);
+    dispatch({type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: boards.data, accumulate: startIndex != 0});
 };
 
 // SERVICE ACTIONS (w/o dispatch)

@@ -92,9 +92,9 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
                         {/*    <p>For Teachers</p>*/}
                         {/*</DropdownItemComingSoon>*/}
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        <DropdownItem tag={Link} to="/set_assignments" className="pl-4 py-3 p-md-3">
                             Set Assignments
-                        </DropdownItemComingSoon>
+                        </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             Assignment Progress
                         </DropdownItemComingSoon>

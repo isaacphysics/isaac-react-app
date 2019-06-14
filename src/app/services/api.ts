@@ -5,6 +5,8 @@ import * as AppTypes from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
 import {Role} from "../../IsaacApiTypes";
+import {ActualBoardLimit} from "../../IsaacAppTypes";
+import {BoardOrder} from "../../IsaacAppTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -234,6 +236,11 @@ export const api = {
         },
         deleteManager: (group: AppTypes.AppGroup, manager: ApiTypes.UserSummaryWithEmailAddressDTO): AxiosPromise => {
             return endpoint.delete(`/groups/${group.id}/manager/${manager.id}`);
+        }
+    },
+    boards: {
+        get: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder): AxiosPromise<ApiTypes.GameboardListDTO> => {
+            return endpoint.get(`/gameboards/user_gameboards`, {params: {"start_index": startIndex, limit, sort}});
         }
     }
 };
