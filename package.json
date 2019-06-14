@@ -22,7 +22,7 @@
     "@types/seedrandom": "^2.4.28",
     "@types/store": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^1.6.0",
-    "axios": "0.18.0",
+    "axios": "^0.19.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
     "babel-jest": "^24.7.1",
