@@ -8,7 +8,7 @@ cache: npm
 script:
 - npm run build
 - npm test
-- codecov
+- codecov -f coverage/coverage-final.json
 notifications:
   slack:
     rooms:
