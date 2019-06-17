@@ -407,8 +407,8 @@ function update(groups: GroupsState, what: AppGroup) {
     const archived = groups && groups.archived || [];
     return {
         ...groups,
-        active: what.archived ? active : [...active, what.id as number],
-        archived: what.archived ? [...archived, what.id as number] : archived
+        active: what.archived ? active : union(active, [what.id as number]),
+        archived: what.archived ? union(archived, [what.id as number]) : archived
     };
 }
 
