@@ -10,6 +10,7 @@ import {DOCUMENT_TYPE} from "../../services/constants";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
+import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState, {match: {params: {pageId}}}: any) => {
     return {
@@ -20,7 +21,7 @@ const stateToProps = (state: AppState, {match: {params: {pageId}}}: any) => {
 const dispatchToProps = {fetchDoc};
 
 interface GenericPageComponentProps {
-    doc: ContentDTO | null;
+    doc: ContentDTO | NOT_FOUND_TYPE | null;
     pageIdOverride?: string;
     urlPageId: string;
     fetchDoc: (documentType: DOCUMENT_TYPE, pageId: string) => void;
@@ -33,8 +34,8 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
         [pageId]
     );
 
-    return <ShowLoading until={doc}>
-        {doc && <div>
+    return <ShowLoading until={doc} render={(doc: ContentDTO) =>
+        <div>
             <Container>
                 <Row>
                     <Col>
@@ -50,11 +51,11 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
                 </Row>
 
                 {doc.relatedContent &&
-                    <RelatedContent content={doc.relatedContent} />
+                <RelatedContent content={doc.relatedContent} />
                 }
             </Container>
-        </div>}
-    </ShowLoading>;
+        </div>
+    }/>;
 };
 
 export const Generic = withRouter(connect(stateToProps, dispatchToProps)(GenericPageComponent));

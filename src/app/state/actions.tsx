@@ -482,7 +482,6 @@ export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (
             documentCache[documentType][pageId] = response.data;
         } catch (e) {
             dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE});
-            redirectToPageNotFound();
         }
     }
 };
