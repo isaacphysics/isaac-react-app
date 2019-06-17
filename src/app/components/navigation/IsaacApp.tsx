@@ -42,6 +42,7 @@ import {isAdmin, isTeacher} from "../../services/user";
 import {Groups} from "../pages/Groups";
 import { Equality } from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
+import {RedirectToGameboard} from './RedirectToGameboard';
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -87,6 +88,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
                         <TrackedRoute path="/gameboards" onlyFor={isAdmin} component={Gameboard} />
                         <TrackedRoute path="/assignments" onlyFor={user => user.loggedIn} component={MyAssignments} />
+                        <TrackedRoute path="/assignment/:gameboardId" onlyFor={user => user.loggedIn} component={RedirectToGameboard} />
 
                         {/* Authentication */}
                         <TrackedRoute path="/login" component={LogIn} />
