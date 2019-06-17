@@ -21,12 +21,12 @@ interface AdminContentErrorsPageComponentProps {
     getAdminContentErrors: () => void;
 }
 
-const contentErrorDetailsListItem = (errorDetailsListItem: string) => {
-    return <li>{errorDetailsListItem}</li>
+const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number) => {
+    return <li key={index}>{errorDetailsListItem}</li>
 };
 
-const contentErrorRow = (errorRecord: ContentErrorItem) => {
-    return <tr>
+const contentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
+    return <tr key={index}>
         <td>
             {/* eslint-disable-next-line react/jsx-no-target-blank */}
             <a href={EDITOR_URL + errorRecord.partialContent.canonicalSourceFile} target="_blank">
