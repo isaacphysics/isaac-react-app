@@ -6,7 +6,7 @@ import ResponsiveCarousel from "./Carousel";
 export const EventsCarousel = () => {
     return (
         <ResponsiveCarousel>
-            <Card key={0} className='card-event my-4 mx-2'>
+            <Card key={0} className='card-neat m-4'>
                 <div className='card-image text-center mt-3'>
                     <CardImg
                         className='m-auto rounded-circle'
@@ -39,7 +39,7 @@ export const EventsCarousel = () => {
                     </CardText>
                 </CardBody>
             </Card>
-            <Card key={1} className='card-event my-4 mx-2'>
+            <Card key={1} className='card-neat m-4'>
                 <div className='card-image text-center mt-3'>
                     <CardImg
                         className='m-auto rounded-circle'
@@ -72,7 +72,7 @@ export const EventsCarousel = () => {
                     </CardText>
                 </CardBody>
             </Card>
-            <Card key={2} className='card-event my-4 mx-2'>
+            <Card key={2} className='card-neat m-4'>
                 <div className='card-image text-center mt-3'>
                     <CardImg
                         className='m-auto rounded-circle'
@@ -105,7 +105,7 @@ export const EventsCarousel = () => {
                     </CardText>
                 </CardBody>
             </Card>
-            <Card key={3} className='card-event my-4 mx-2'>
+            <Card key={3} className='card-neat m-4'>
                 <div className='card-image text-center mt-3'>
                     <CardImg
                         className='m-auto rounded-circle'
@@ -138,7 +138,7 @@ export const EventsCarousel = () => {
                     </CardText>
                 </CardBody>
             </Card>
-            <Card key={4} className='card-event my-4 mx-2'>
+            <Card key={4} className='card-neat m-4'>
                 <div className='card-image text-center mt-3'>
                     <CardImg
                         className='m-auto rounded-circle'
@@ -171,7 +171,7 @@ export const EventsCarousel = () => {
                     </CardText>
                 </CardBody>
             </Card>
-            <Card key={5} className='card-event my-4 mx-2'>
+            <Card key={5} className='card-neat m-4'>
                 <div className='card-image text-center mt-3'>
                     <CardImg
                         className='m-auto rounded-circle'
