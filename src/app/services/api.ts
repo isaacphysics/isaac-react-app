@@ -105,6 +105,9 @@ export const api = {
             post: (role: ApiTypes.Role, userIds: number[]) => {
                 return endpoint.post(`/admin/users/change_role/${role}`, userIds);
             }
+        },
+        getContentErrors: (): AxiosPromise<AppTypes.ContentErrorsResponse> => {
+            return endpoint.get(`/admin/content_problems`)
         }
     },
     authorisations: {

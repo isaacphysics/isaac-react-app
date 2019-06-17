@@ -639,6 +639,17 @@ export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (di
     }
 };
 
+// Content Errors
+export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST});
+    try {
+        const errorsResponse = await api.admin.getContentErrors();
+        dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS, errors: errorsResponse.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE});
+    }
+};
+
 // SERVICE ACTIONS (w/o dispatch)
 // Page change
 export const changePage = (path: string) => {

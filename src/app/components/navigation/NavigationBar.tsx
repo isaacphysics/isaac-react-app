@@ -151,6 +151,9 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                             <DropdownItem tag={Link} to="/admin/usermanager" className="pl-4 py-3 p-md-3">
                                 User Manager
                             </DropdownItem>
+                            <DropdownItem tag={Link} to="/admin/content_errors" className="pl-4 py-3 p-md-3">
+                                Content Errors
+                            </DropdownItem>
                         </DropdownMenu>
                     </UncontrolledDropdown>
                 }
