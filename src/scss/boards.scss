@@ -91,6 +91,10 @@
     -ms-user-select: all;
     width: 100%;
   }
+  .unassign {
+    cursor: pointer;
+    min-width: 20px;
+  }
 }
 
 .ru_share {

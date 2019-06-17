@@ -771,21 +771,21 @@ export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_
 // boards
 
 export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.BOARDS_REQUEST});
+    const accumulate = startIndex != 0;
+    dispatch({type: ACTION_TYPE.BOARDS_REQUEST, accumulate});
     const boards = await api.boards.get(startIndex, limit, sort);
-    dispatch({type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: boards.data, accumulate: startIndex != 0});
+    dispatch({type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: boards.data, accumulate});
 };
 
 export const loadGroupsForBoard = (board: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.BOARDS_GROUPS_REQUEST, board});
     try {
         const result = await api.boards.getGroupsForBoard(board);
-        dispatch({type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS, board, groups: result});
+        dispatch({type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS, board, groups: result.data});
     } catch {
         dispatch({type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE, board});
     }
-}
-
+};
 
 export const deleteBoard = (board: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.BOARDS_DELETE_REQUEST, board});
@@ -798,6 +798,51 @@ export const deleteBoard = (board: GameboardDTO) => async (dispatch: Dispatch<Ac
         dispatch(showToast({color: "failure", title: "Couldn't delete board", body: e.response.data.errorMessage, timeout: 5000}) as any);
     }
 };
+
+export const unassignBoard = (board: GameboardDTO, group: UserGroupDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_REQUEST, board, group});
+    try {
+        await api.boards.unassign(board, group);
+        dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, board, group});
+        dispatch(showToast({color: "success", title: "Assignment Deleted", body: "This assignment has been unset successfully.", timeout: 5000}) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE, board, group});
+        dispatch(showToast({color: "failure", title: "Board Unassignment Failed", body: e.response.data.errorMessage, timeout: 5000}) as any);
+    }
+};
+
+export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Date) => async (dispatch: Dispatch<Action>) => {
+    if (groupId == null) {
+        dispatch(showToast({color: "failure", title: "Board Assignment Failed", body: "Error: Please choose a group.", timeout: 5000}) as any);
+        return false;
+    }
+
+    let dueDateUTC = undefined;
+    if (dueDate != undefined) {
+        dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
+        let today = new Date();
+        today.setUTCHours(0, 0, 0, 0);
+        if ((dueDateUTC - today.valueOf()) < 0) {
+            dispatch(showToast({color: "failure", title: "Board Assignment Failed", body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
+            return false;
+        }
+    }
+
+    const assignment = {board, groupId, dueDate: dueDateUTC};
+
+    dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST, ...assignment});
+    try {
+        await api.boards.assign(board, groupId, dueDateUTC);
+        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, ...assignment});
+        dispatch(showToast({color: "success", title: "Assignment Saved", body: "This assignment has been saved successfully.", timeout: 5000}) as any);
+        return true;
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, ...assignment});
+        dispatch(showToast({color: "failure", title: "Board Assignment Failed", body: e.response.data.errorMessage, timeout: 5000}) as any);
+        return false;
+    }
+};
+
 
 // SERVICE ACTIONS (w/o dispatch)
 // Page change

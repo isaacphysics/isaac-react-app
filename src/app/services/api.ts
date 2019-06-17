@@ -1,10 +1,9 @@
-import axios, {AxiosPromise, AxiosResponse} from "axios";
+import axios, {AxiosPromise} from "axios";
 import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
-import {Role, UserGroupDTO} from "../../IsaacApiTypes";
 import {ActualBoardLimit} from "../../IsaacAppTypes";
 import {BoardOrder} from "../../IsaacAppTypes";
 
@@ -245,9 +244,14 @@ export const api = {
         delete: (board: ApiTypes.GameboardDTO) => {
             return endpoint.delete(`/gameboards/user_gameboards/${board.id}`);
         },
-        getGroupsForBoard: (board: ApiTypes.GameboardDTO) => {
-            return endpoint.get(`/assignments/assign/groups`, {params: {"gameboard_ids": board.id}})
-                .then((response: AxiosResponse<{[index: string]: ApiTypes.UserGroupDTO[]}>) => response.data[board.id as string]);
+        getGroupsForBoard: (board: ApiTypes.GameboardDTO): AxiosPromise<{[key: string]: ApiTypes.UserGroupDTO[]}> => {
+            return endpoint.get(`/assignments/assign/groups`, {params: {"gameboard_ids": board.id}});
+        },
+        unassign: (board: ApiTypes.GameboardDTO, group: ApiTypes.UserGroupDTO) => {
+            return endpoint.delete(`/assignments/assign/${board.id}/${group.id}`);
+        },
+        assign: (board: ApiTypes.GameboardDTO, groupId: number, dueDate?: number) => {
+            return endpoint.post(`/assignments/assign`, {dueDate, gameboardId: board.id, groupId})
         }
     }
 };

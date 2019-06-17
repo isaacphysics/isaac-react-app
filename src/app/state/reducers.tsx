@@ -27,7 +27,7 @@ import {
     UserSummaryWithGroupMembershipDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../services/constants";
-import {unionWith, differenceBy} from "lodash";
+import {unionWith, differenceBy, mapValues, unionBy, union, difference, without} from "lodash";
 
 type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -306,62 +306,44 @@ export const activeModal = (activeModal: ActiveModalState = null, action: Action
     }
 };
 
-function groupsProcessor(groups: GroupsState, updater: (group: AppGroup | null, inArchived: boolean | null) => AppGroup | null) {
-    if (groups === null) return groups;
-    function update(archived: boolean, from?: AppGroup[]) {
-        updater(null, null);
-        if (from === undefined) return from;
-        const result = [];
-        from.forEach(group => {
-            const newGroup = updater(group, archived);
-            if (newGroup) {
-                result.push(newGroup);
-            }
-        });
-        const extraGroup = updater(null, archived);
-        if (extraGroup) {
-            result.push(extraGroup);
+function updateGroupsCache(groups: GroupsState | undefined, newGroups: AppGroup[]): GroupsState {
+    const cache: {[groupId: number]: AppGroup} = {...(groups && groups.cache)};
+    newGroups.forEach(group => {
+        if (!group.id) return;
+        if (group.id in cache) {
+            const existing = cache[group.id];
+            cache[group.id] = {
+                ...group,
+                token: group.token || existing.token,
+                members: group.members || existing.members
+            };
+        } else {
+            cache[group.id] = group;
         }
-        return result;
-    }
+    });
     return {
         ...groups,
-        active: update(false, groups.active),
-        archived: update(true, groups.archived)
+        cache
     };
 }
 
-function remove(from: GroupsState, what: AppGroup) {
-    return groupsProcessor(from, (g) => {
-        if (g && g.id == what.id) return null;
-        return g;
-    });
+function groupsProcessor(groups: GroupsState, updater: (group: AppGroup) => AppGroup) {
+    if (groups === null) return groups;
+    return {
+        ...groups,
+        cache: mapValues(groups.cache, (value) => updater(value))
+    };
 }
 
-function update(from: GroupsState, what: AppGroup) {
-    let found: boolean;
-    return groupsProcessor(from, (g, archived) => {
-        if (g) {
-            if (g.id == what.id) {
-                if (what.archived != archived) {
-                    return null;
-                } else {
-                    found = true;
-                    return what;
-                }
-            }
-            return g;
-        } else {
-            if (archived === null) {
-                found = false;
-            } else {
-                if (!found && what.archived == archived) {
-                    return what;
-                }
-            }
-        }
-        return null;
-    });
+function remove(groups: GroupsState, what: AppGroup) {
+    const cache: {[groupId: number]: AppGroup}  = {...groups && groups.cache};
+    delete cache[what.id as number];
+    return {
+        ...groups,
+        cache: cache,
+        active: without(groups && groups.active, what.id as number),
+        archived: without(groups && groups.archived, what.id as number)
+    };
 }
 
 function updateToken(from: GroupsState, group: AppGroup, token: string) {
@@ -415,24 +397,37 @@ function removeManager(groups: GroupsState, group: AppGroup, manager: UserSummar
     });
 }
 
-export type GroupsState = {active?: AppGroup[]; archived?: AppGroup[]; selectedGroupId?: number} | null;
+function update(groups: GroupsState, what: AppGroup) {
+    groups = updateGroupsCache(groups, [what]);
+    const active = groups && groups.active || [];
+    const archived = groups && groups.archived || [];
+    return {
+        ...groups,
+        active: what.archived ? active : [...active, what.id as number],
+        archived: what.archived ? [...archived, what.id as number] : archived
+    };
+}
+
+export type GroupsState = {active?: number[]; archived?: number[]; cache?: {[groupId: number]: AppGroup}; selectedGroupId?: number} | null;
 
 export const groups = (groups: GroupsState = null, action: Action): GroupsState => {
     switch (action.type) {
-        case ACTION_TYPE.GROUPS_RESPONSE_SUCCESS:
+        case ACTION_TYPE.GROUPS_RESPONSE_SUCCESS: {
+            groups = updateGroupsCache(groups, action.groups);
             if (action.archivedGroupsOnly) {
-                return {...groups, archived: action.groups};
+                return {...groups, archived: action.groups.map(g => g.id as number)};
             } else {
-                return {...groups, active: action.groups};
+                return {...groups, active: action.groups.map(g => g.id as number)};
             }
+        }
         case ACTION_TYPE.GROUPS_SELECT:
             return {...groups, selectedGroupId: action.group && action.group.id || undefined};
         case ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS:
             return update(groups, action.newGroup);
-        case ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS:
-            return remove(groups, action.deletedGroup);
         case ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS:
             return update(groups, action.updatedGroup);
+        case ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS:
+            return remove(groups, action.deletedGroup);
         case ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS:
             return updateToken(groups, action.group, action.token);
         case ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS:
@@ -443,48 +438,88 @@ export const groups = (groups: GroupsState = null, action: Action): GroupsState 
             return updateMembers(groups, action.group, action.members);
         case ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS:
             return deleteMember(groups, action.member);
+        case ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS:
+            // You might be wondering what this doing here.
+            // Basically, it updates the cache with groups that are loaded because they are assigned to gameboards
+            // even if those groups have not been loaded (e.g. they are archived), they are still needed here.
+            return updateGroupsCache(groups, Object.values(action.groups).flat(1));
         default:
             return groups;
     }
 };
 
 export interface Boards {
-    boards: AppGameBoard[];
+    boards: GameboardDTO[];
     totalResults: number;
 }
 
-export type BoardsState = Boards | null;
+export interface BoardAssignees {
+    boardAssignees?: {[key: string]: number[]};
+}
 
-function mergeBoards(boards: AppGameBoard[], additional: GameboardListDTO) {
+export type BoardsState = {boards?: Boards} & BoardAssignees | null;
+
+function mergeBoards(boards: Boards, additional: GameboardListDTO) {
     return {
+        ...boards,
         totalResults: additional.totalResults as number,
-        boards: unionWith(boards, additional.results, function(a, b) {return a.id == b.id})
+        boards: unionWith(boards.boards, additional.results, function(a, b) {return a.id == b.id})
     };
 }
 
 export const boards = (boards: BoardsState = null, action: Action): BoardsState => {
-    function modifyBoards(modify: (current: AppGameBoard[]) => AppGameBoard[], tweak?: (boards: Boards) => void) {
+    function modifyBoards(modify: (current: GameboardDTO[]) => GameboardDTO[], tweak?: (boards: Boards) => void) {
         if (boards && boards.boards) {
-            const result = {...boards, boards: modify(boards.boards)};
-            if (tweak) tweak(result);
+            const result = {...boards, boards: {...boards.boards, boards: modify(boards.boards.boards)}};
+            if (tweak) tweak(result.boards);
             return result;
         }
         return boards;
     }
 
     switch (action.type) {
+        case ACTION_TYPE.BOARDS_REQUEST:
+            if (boards && boards.boardAssignees) {
+                if (!action.accumulate) {
+                    return {
+                        boardAssignees: boards.boardAssignees
+                    };
+                }
+            }
+            return boards;
         case ACTION_TYPE.BOARDS_RESPONSE_SUCCESS:
             if (boards && boards.boards && action.accumulate) {
-                return mergeBoards(boards.boards, action.boards);
+                return {...boards, boards: mergeBoards(boards.boards, action.boards)};
             } else {
-                return {boards: action.boards.results as AppGameBoard[], totalResults: action.boards.totalResults as number};
+                return {...boards, boards: {boards: action.boards.results as GameboardDTO[], totalResults: action.boards.totalResults as number}};
             }
-        case ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS:
-            return modifyBoards(existing => existing.map(board =>
-                board.id == action.board.id ? {...board, assignedGroups: action.groups} : board));
         case ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS:
             return modifyBoards(existing => differenceBy(existing, [action.board], board => board.id),
                 boards => {boards.totalResults--;});
+        case ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS:
+            if (boards) {
+                return {
+                    ...boards,
+                    boardAssignees: {...boards.boardAssignees, ...(mapValues(action.groups, groups => groups.map(g => g.id as number)))}
+                };
+            }
+            return boards;
+        case ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS:
+            if (boards) {
+                return {
+                    ...boards,
+                    boardAssignees: mapValues(boards.boardAssignees, (value, key) => key == action.board.id ? difference(value, [action.group.id as number]) : value)
+                };
+            }
+            return boards;
+        case ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS:
+            if (boards) {
+                return {
+                    ...boards,
+                    boardAssignees: mapValues(boards.boardAssignees, (value, key) => key == action.board.id ? union(value, [action.groupId]) : value)
+                };
+            }
+            return boards;
         default:
             return boards;
     }

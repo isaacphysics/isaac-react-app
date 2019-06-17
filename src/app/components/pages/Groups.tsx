@@ -30,17 +30,17 @@ import {
     selectGroup
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState, GroupsState} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {groups} from "../../state/selectors";
 import {UserGroupDTO} from "../../../IsaacApiTypes";
 
-const stateFromProps = (state: AppState) => (state && {groups: state.groups, group: groups.current(state)});
+const stateFromProps = (state: AppState) => (state && {groups: groups.groups(state), group: groups.current(state)});
 const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal};
 
 interface GroupsPageProps {
-    groups: GroupsState | null;
+    groups: {active: AppGroup[] | null; archived: AppGroup[] | null};
     group: AppGroup | null;
     loadGroups: (getArchived: boolean) => void;
     selectGroup: (group: UserGroupDTO | null) => void;
