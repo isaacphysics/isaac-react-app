@@ -95,7 +95,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             const x = this.state.draggedElement.getBoundingClientRect().left;
             if (this.state.initialX && x) {
                 const d = Math.max(0, x - this.state.initialX);
-                const i = Math.floor(d/45); // REMINDER: If you change this, you also have to change $parsons-step in questions.scss
+                const i = Math.min(Math.floor(d/45), 3); // REMINDER: If you change this, you also have to change $parsons-step in questions.scss
                 if (i != this.state.currentIndent) {
                     this.setState({
                         currentIndent: i,
@@ -210,7 +210,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                             }}
                                         </Draggable>
                                     })}
-                                    {(!(this.props.currentAttempt && this.props.currentAttempt.items) || (this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length == 0)) && <div>&nbsp;</div>}
+                                    {(!(this.props.currentAttempt && this.props.currentAttempt.items) || (this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length == 0)) && <div className="text-muted text-center">Drag items across to build your answer</div>}
                                     {provided.placeholder}
                                 </div>
                             }}

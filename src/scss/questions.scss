@@ -77,7 +77,7 @@
     $parsons-step: 45;
 
     .parsons-item {
-      @for $i from 1 through 10 { // Melius est abundare quam deficere
+      @for $i from 0 through 3 { // Melius est abundare quam deficere
         &.indent-#{$i} {
           margin-left: #{$i * $parsons-step}px;
         }
@@ -85,7 +85,7 @@
     }
 
     &#parsons-choice-area {
-      @for $i from 1 through 10 {
+      @for $i from 0 through 3 {
         &.ghost-indent-#{$i} {
           background: linear-gradient(to right,
             white #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 7}px, white #{$i * $parsons-step + 7}px
