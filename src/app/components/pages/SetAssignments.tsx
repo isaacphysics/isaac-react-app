@@ -176,7 +176,7 @@ const Board = (props: BoardProps) => {
                 {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
                     <Row key={group.id}>
                         <span className="flex-grow-1">{group.groupName}</span>
-                        <Button size="sm" className="unassign" aria-label="Unassign" onClick={() => confirmUnassignBoard(group)}><span aria-hidden="true">&times;</span></Button>
+                        <Button size="sm" color="tertiary" className="unassign" aria-label="Unassign" onClick={() => confirmUnassignBoard(group)}><span aria-hidden="true">&times;</span></Button>
                     </Row>
                 )}</Container>}
                 {!hasAssignedGroups && <p>No groups.</p>}
