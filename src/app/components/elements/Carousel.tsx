@@ -1,15 +1,6 @@
-/* eslint-disable */
-//ie 11 custom event polyfill
-//import 'custom-event-polyfill/polyfill';
-
 import React, {useState} from 'react';
-import {
-    Carousel,
-    CarouselItem,
-    CarouselControl,
-    CarouselIndicators,
-    CarouselCaption,
-} from 'reactstrap';
+import {Carousel, CarouselItem, CarouselIndicators} from 'reactstrap';
+
 
 // TODO should be possible to make this more generic
 const ControlledCarouselInstance = ({children, collectionTag}: any) => {
@@ -43,7 +34,7 @@ const ControlledCarouselInstance = ({children, collectionTag}: any) => {
                 </CarouselItem>
             ))}
             <CarouselIndicators
-                items={items}
+                items={items.map((item: any, index: number) => ({key: index}))}
                 activeIndex={activeIndex}
                 onClickHandler={gotoIndex}
             />
@@ -54,11 +45,11 @@ const ControlledCarouselInstance = ({children, collectionTag}: any) => {
 export const ResponsiveCarousel = ({children, collectionTag = 'div'}: any) => {
     const triplets: any = [];
 
-    children.forEach ((child: any, index: number) => {
+    children.forEach((child: any, index: number) => {
         if (index % 3 === 0) {
-            triplets.push ([]);
+            triplets.push([]);
         }
-        triplets[Math.floor (index / 3)].push (child);
+        triplets[Math.floor(index / 3)].push (child);
     });
 
     return (
