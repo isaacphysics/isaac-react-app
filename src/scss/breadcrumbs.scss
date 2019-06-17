@@ -1,11 +1,11 @@
 // ISAAC
 .bread {
-  background-color: none !important;
+  background-color: transparent !important;
 }
 
 // NOMENSA breadcrumbs.scss
 .bread {
-  background-color: white;
+  background-color: $white;
 
   @include respond-above(sm) {
     background-color: transparent;
