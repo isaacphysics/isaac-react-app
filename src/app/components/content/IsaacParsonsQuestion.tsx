@@ -96,9 +96,11 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             if (this.state.initialX && x) {
                 const d = Math.max(0, x - this.state.initialX);
                 const i = Math.floor(d/45); // REMINDER: If you change this, you also have to change $parsons-step in questions.scss
-                this.setState({
-                    currentIndent: i,
-                });
+                if (i != this.state.currentIndent) {
+                    this.setState({
+                        currentIndent: i,
+                    });
+                }
             }
         }
     }
