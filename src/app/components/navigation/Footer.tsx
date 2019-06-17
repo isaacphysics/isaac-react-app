@@ -17,7 +17,7 @@ export const Footer = () => (
         <div className="footerTop">
             <Container>
                 <Row className="pt-5 px-3 px-sm-0 pb-3 pb-md-5">
-                    <Col className="footer-links logo-col">
+                    <Col md='4' lg='3' className="logo-col">
                         <div className="d-flex flex-row">
                             <Link to="/">
                                 <img
@@ -27,7 +27,7 @@ export const Footer = () => (
                                 />
                             </Link>
                         </div>
-                        <div className=" logo-text">
+                        <div className="footer-links logo-text pt-3">
                             <p>
                                 A <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">Department for Education</ExternalLink> project,
                                 part of the <ExternalLink href="https://teachcomputing.org/">National Centre for Computing Education</ExternalLink> and created by
@@ -36,10 +36,14 @@ export const Footer = () => (
                             </p>
                         </div>
                     </Col>
-                    <Col md="6" lg="6" className="mt-4 mt-md-0">
+                    <Col
+                        md={{size: 7, offset: 1}}
+                        lg={{size: 5, offset: 1}}
+                        className="mt-4 mt-md-0"
+                    >
                         <ListGroupFooter />
                     </Col>
-                    <Col xs="12" sm="5" lg="3" className="mt-4 mt-lg-0">
+                    <Col md="5" lg="3" className="mt-4 mt-lg-0">
                         <ListGroupSocial />
                     </Col>
                 </Row>
