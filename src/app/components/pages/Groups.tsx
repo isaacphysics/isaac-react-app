@@ -311,7 +311,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     const groupNameRef = useRef<HTMLInputElement>(null);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage Groups" subTitle="Keep track of your groups" intermediateCrumbs={[{title: "Teachers", to: "#"}]} help={<span>
+        <TitleAndBreadcrumb currentPageTitle="Manage Groups" subTitle="Keep track of your groups" intermediateCrumbs={[{title: "Teachers", to: "#"}]} className="mb-4" help={<span>
             Use this page to manage groups. You can add users to a group by giving them the group token and asking them paste it into their account settings page.
             <br />You can find the token for an existing group by selecting the group and clicking <i>Invite Users</i>.</span>} />
         <Row>

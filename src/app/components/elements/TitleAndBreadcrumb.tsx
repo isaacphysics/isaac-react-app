@@ -7,9 +7,9 @@ type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & {
 };
 
 export const TitleAndBreadcrumb = (props: TitleAndBreadcrumbProps) => {
-    let breadcrumbProps = props;
+    const breadcrumbProps = {...props, className: undefined};
     if (props.breadcrumbTitleOverride) {
-        breadcrumbProps = {...props, currentPageTitle: props.breadcrumbTitleOverride};
+        breadcrumbProps.currentPageTitle = props.breadcrumbTitleOverride;
     }
     return <React.Fragment>
         <BreadcrumbTrail {...breadcrumbProps} />

@@ -4,7 +4,7 @@ import {Badge, Col, Container, Row} from "reactstrap";
 import "../../services/tags";
 import * as Tags from "../../services/tags";
 import {Tag} from "../../services/tags";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 export const AllTopics = () => {
 
@@ -29,9 +29,7 @@ export const AllTopics = () => {
 
     return <div className="pattern-02">
         <Container>
-            <BreadcrumbTrail currentPageTitle="All topics"/>
-
-            <h1 className="h-title h-secondary">All topics</h1>
+            <TitleAndBreadcrumb currentPageTitle="All topics"/>
 
             {/* Search topics TODO MT */}
 

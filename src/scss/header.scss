@@ -44,6 +44,15 @@ header {
 #title-help {
   float: right;
   cursor: help;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.h-subtitle {
+  padding-top: 5px;
+  margin-bottom: -5px;
+  font-size: 1.25rem;
+  line-height: 1.2;
 }
 
 // NOMENSA header.scss

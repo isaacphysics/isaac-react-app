@@ -5,13 +5,14 @@ export interface PageTitleProps {
     currentPageTitle: string;
     subTitle?: string;
     help?: string | ReactElement;
+    className?: string;
 }
 
-export const PageTitle = ({currentPageTitle, subTitle, help}: PageTitleProps) => {
-    return <h1 className="h-title h-secondary">
+export const PageTitle = ({currentPageTitle, subTitle, help, className}: PageTitleProps) => {
+    return <h1 className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
         {currentPageTitle}
-        {help && <h4 id="title-help">Help</h4>}
+        {help && <span id="title-help">Help</span>}
         {help && <UncontrolledTooltip target="#title-help">{help}</UncontrolledTooltip>}
-        {subTitle && <h5 className="d-none d-sm-block">{subTitle}</h5>}
+        {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
     </h1>
 };

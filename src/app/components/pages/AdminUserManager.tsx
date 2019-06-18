@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import * as RS from "reactstrap";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {connect} from "react-redux";
@@ -8,6 +7,7 @@ import {adminModifyUserRoles, adminUserSearch} from "../../state/actions";
 import {AdminUserSearchState, AppState} from "../../state/reducers";
 import {Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -90,8 +90,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searc
     };
 
     return <RS.Container>
-        <BreadcrumbTrail intermediateCrumbs={[{title: "Admin", to: "/admin"}]} currentPageTitle="User manager"/>
-        <h1 className="h-title">User manager</h1>
+        <TitleAndBreadcrumb intermediateCrumbs={[{title: "Admin", to: "/admin"}]} currentPageTitle="User manager"/>
 
         {/* Search */}
         <RS.Card className="mt-5">
