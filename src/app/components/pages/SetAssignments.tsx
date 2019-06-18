@@ -127,9 +127,9 @@ const Board = (props: BoardProps) => {
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
             if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
-                alert("Warning: You currently have groups assigned to this board. If you delete this your groups will still be assigned but you won't be able to unassign them or see the board in your Assigned Boards or My boards page.");
+                alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your Assigned Boards or My boards page.");
             } else {
-                showToast({color: "failure", title: "Board Deletion Not Allowed", body: "You have groups assigned to this board. To delete this board, you must unassign all groups.", timeout: 5000});
+                showToast({color: "failure", title: "Board Deletion Not Allowed", body: "You have groups assigned to this gameboard. To delete this board, you must unassign all groups.", timeout: 5000});
                 return;
             }
         }
@@ -261,15 +261,15 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     return <Container>
         <h2 className="mt-4"><span>Set Assignments<span id="set-assignments-title" className="icon-help" /></span>
             <UncontrolledTooltip placement="bottom" target="set-assignments-title">
-                Assign any of the boards you have selected to your groups.
+                Assign any of the gameboards you have selected to your groups.
             </UncontrolledTooltip>
         </h2>
         <hr />
-        <p>Add a board from <Link to="/lesson_plans">our lesson plans</Link></p>
+        <p>Add a gameboard from <Link to="/lesson_plans">our lesson plans</Link></p>
         <hr />
-        {boards && boards.totalResults == 0 && <h4>You have no boards to assign; select an option above to add a board.</h4>}
-        {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> board{boards.totalResults > 1 && "s"} ready to assign...</h4>}
-        {!boards && <h4>You have <Spinner size="sm" /> boards ready to assign...</h4>}
+        {boards && boards.totalResults == 0 && <h4>You have no gameboards to assign; select an option above to add a gameboard.</h4>}
+        {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...</h4>}
+        {!boards && <h4>You have <Spinner size="sm" /> gameboards ready to assign...</h4>}
         <Row>
             <Col>
                 <Form inline>
