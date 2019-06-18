@@ -7,12 +7,12 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {ContentSummaryDTO, IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {filterAndSeparateRelatedContent} from "../../services/topics";
 import {Button, Col, Container, Input, Label, Row} from "reactstrap";
 import {DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
 import {UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom} from "../../services/examBoard";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState, {match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => ({
     topicName: topicName,
@@ -48,11 +48,10 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
         {topicPage && <Container id="topic-page">
             <Row>
                 <Col>
-                    <BreadcrumbTrail
+                    <TitleAndBreadcrumb
                         intermediateCrumbs={[{title: "All topics", to: "/topics"}]}
                         currentPageTitle={topicPage.title as string}
                     />
-                    <h1 className="h-title">{topicPage.title}</h1>
                 </Col>
             </Row>
             <Row className="pb-5">

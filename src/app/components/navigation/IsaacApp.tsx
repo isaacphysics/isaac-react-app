@@ -18,12 +18,12 @@ import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
 import {NotFound} from "../pages/NotFound";
-import {requestCurrentUser, showToast} from "../../state/actions";
+import {requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 import {Admin} from "../pages/Admin";
-import {LoggedInUser, Toast} from "../../../IsaacAppTypes";
+import {LoggedInUser} from "../../../IsaacAppTypes";
 import {history} from "../../services/history"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
@@ -37,8 +37,13 @@ import {Header} from "./Header";
 import {Route} from "react-router";
 import {ScrollManager} from "../handlers/ScrollManager";
 import {AdminUserManager} from "../pages/AdminUserManager";
+import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {ActiveModal} from "../elements/ActiveModal";
+import {isAdmin, isTeacher} from "../../services/user";
+import {Groups} from "../pages/Groups";
 import { Equality } from '../pages/Equality';
+import {SetAssignments} from "../pages/SetAssignments";
+import {RedirectToGameboard} from './RedirectToGameboard';
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -68,19 +73,28 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
                         <TrackedRoute path="/search" component={Search} />
                         <TrackedRoute path="/account" onlyFor={(user: LoggedInUser) => user.loggedIn} component={MyAccount} />
+
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute path="/pages/:pageId" component={Generic} />
+
                         <TrackedRoute exact path="/topics" component={AllTopics} />
                         <TrackedRoute path="/topics/:topicName" component={Topic} />
 
-                        <TrackedRoute exact path="/admin" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={Admin} />
-                        <TrackedRoute path="/admin/usermanager" onlyFor={(user: LoggedInUser) => user.loggedIn && user.role == "ADMIN"} component={AdminUserManager} />
+                        <TrackedRoute path="/gameboards" onlyFor={user => user.loggedIn} component={Gameboard} />
+                        <TrackedRoute path="/assignments" onlyFor={user => user.loggedIn} component={MyAssignments} />
+                        <TrackedRoute path="/assignment/:gameboardId" onlyFor={user => user.loggedIn} component={RedirectToGameboard} />
 
-                        {/* June release application pages */}
                         <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
-                        <TrackedRoute exact path="/gameboards" onlyFor={(user: LoggedInUser) => user.loggedIn} component={Gameboard} />
-                        <TrackedRoute path="/assignments" onlyFor={(user: LoggedInUser) => user.loggedIn} component={MyAssignments} />
+
+                        {/* Teacher pages */}
+                        <TrackedRoute path="/groups" onlyFor={isTeacher} component={Groups} />
+                        <TrackedRoute path="/set_assignments" onlyFor={isTeacher} component={SetAssignments} />
+
+                        {/* Admin */}
+                        <TrackedRoute exact path="/admin" onlyFor={isAdmin} component={Admin} />
+                        <TrackedRoute path="/admin/usermanager" onlyFor={isAdmin} component={AdminUserManager} />
+                        <TrackedRoute path="/admin/content_errors" onlyFor={isAdmin} component={AdminContentErrors} />
 
                         {/* Authentication */}
                         <TrackedRoute path="/login" component={LogIn} />

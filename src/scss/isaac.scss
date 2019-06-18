@@ -48,6 +48,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 // Node module imports
 @import "~bootstrap/scss/bootstrap";
 @import "~katex/dist/katex.min.css";
+@import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
 
 // Utility
 @import "./_preload";
@@ -70,6 +71,8 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./list-groups";
 @import "./inequality-modal";
 @import "./carousel";
+@import "./icons";
+@import "./boards";
 
 // Navigation
 @import "./navigation-bar";
@@ -119,49 +122,69 @@ body {
 
 .content-body {
     background-color: rgba($gray-107, 0.4);
+}
+.pattern-01 {
+    background-image: url('/assets/pattern_sm.svg');
+    background-position: left top;
+    background-repeat: repeat;
+    @include respond-above(md) {
+        background-image: none;
+    }
+    > .container {
+        @include respond-above(md) {
+            background-image: url('/assets/pattern01a.svg');
+            background-position: left top;
+            background-repeat: repeat-y;
+        }
+    }
+}
 
-    .pattern-01 {
-        > .container {
-            background-image: url('/assets/pattern01.svg');
-            background-position: left 292px;
-            background-repeat: no-repeat;
+.pattern-02 {
+    position: relative;
 
-            @include respond-above(md) {
-                background-position: left 338px;
-            }
+    &:after,
+    &:before {
+        @include pseudo-element;
+        background-image: url('/assets/pattern01.svg');
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        display: none;
+        width: 600px;
+        height: 600px;
+        z-index: 0;
+    }
+
+    &:after {
+        @include respond-above(sm) {
+            display: block;
+            right: -9%;
+            top: 250px;
         }
     }
 
-    .pattern-02 {
-        position: relative;
-
-        &:after,
-        &:before {
-            @include pseudo-element;
-            background-image: url('/assets/pattern01.svg');
-            background-position: 0 0;
-            background-repeat: no-repeat;
-            display: none;
-            width: 600px;
-            height: 600px;
-            z-index: 0;
+    &:before {
+        @include respond-above(sm) {
+            display: block;
+            left: -9%;
+            top: 800px;
         }
+    }
+}
 
-        &:after {
-            @include respond-above(sm) {
-                display: block;
-                right: -9%;
-                top: 250px;
-            }
-        }
+.pattern-03 {
+    background-image: url('/assets/pattern04.svg');
+    background-position: 0 63%;
+    background-repeat: repeat-x;
 
-        &:before {
-            @include respond-above(sm) {
-                display: block;
-                left: -9%;
-                top: 800px;
-            }
-        }
+    @include respond-above(sm) {
+        background-image: url('/assets/pattern03.svg');
+        background-position: left 0;
+        background-repeat: no-repeat;
+    }
+    @include respond-above(md) {
+        background-image: url('/assets/pattern03.svg');
+        background-position: left 0;
+        background-repeat: no-repeat;
     }
 }
 
@@ -207,7 +230,13 @@ body {
         padding: 0;
     }
 }
-
+.pattern-08 {
+    @include respond-above(md) {
+        background-image: url('/assets/pattern04a.svg');
+        background-position: right 39px;
+        background-repeat: no-repeat;
+    }
+}
 .list-group-item {
     border-width: 0;
     width: 100%;
@@ -217,6 +246,14 @@ p small {
     border: 0;
 }
 
+//.bg-light-grey {
+//    background: $gray-107;
+//    > div {
+//        background: $gray-107;
+//        position: relative;
+//        z-index: 1;
+//    }
+//}
 .bg-light-grey {
     > div {
         background: rgba(#f7f7f7, 0.9);

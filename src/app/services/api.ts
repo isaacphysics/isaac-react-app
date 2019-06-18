@@ -4,7 +4,8 @@ import * as ApiTypes from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
-import {Role} from "../../IsaacApiTypes";
+import {ActualBoardLimit} from "../../IsaacAppTypes";
+import {BoardOrder} from "../../IsaacAppTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -71,6 +72,9 @@ export const api = {
         },
         updateCurrent: (params: {registeredUser: LoggedInUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null}):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/users`, params);
+        },
+        passwordResetById: (id: number): AxiosPromise => {
+            return endpoint.post(`/users/${id}/resetpassword`);
         }
     },
     authentication: {
@@ -105,6 +109,9 @@ export const api = {
             post: (role: ApiTypes.Role, userIds: number[]) => {
                 return endpoint.post(`/admin/users/change_role/${role}`, userIds);
             }
+        },
+        getContentErrors: (): AxiosPromise<AppTypes.ContentErrorsResponse> => {
+            return endpoint.get(`/admin/content_problems`)
         }
     },
     authorisations: {
@@ -113,6 +120,9 @@ export const api = {
         },
         getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
             return endpoint.get(`/authorisations/other_users`);
+        },
+        getToken: (groupId: number): AxiosPromise<AppTypes.AppGroupTokenDTO> => {
+            return endpoint.get(`/authorisations/token/${groupId}`);
         },
         getTokenOwner: (token: string): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
             return endpoint.get(`/authorisations/token/${token}/owner`);
@@ -128,14 +138,6 @@ export const api = {
         },
         releaseAll: () => {
             return endpoint.delete(`/authorisations/release/`);
-        }
-    },
-    groupManagement: {
-        getMyMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
-            return endpoint.get(`/groups/membership`);
-        },
-        changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => {
-            return endpoint.post(`/groups/membership/${groupId}/${newStatus}`)
         }
     },
     questions: {
@@ -204,5 +206,60 @@ export const api = {
         send: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
             return endpoint.post(`/contact/`, params, {});
         }
-    }
+    },
+    groups: {
+        get: (archivedGroupsOnly: boolean): AxiosPromise<ApiTypes.UserGroupDTO[]> => {
+            return endpoint.get(`/groups?archived_groups_only=${archivedGroupsOnly}`);
+        },
+        create: (groupName: string): AxiosPromise<ApiTypes.UserGroupDTO> => {
+            return endpoint.post(`/groups`, {groupName});
+        },
+        delete: (group: ApiTypes.UserGroupDTO): AxiosPromise => {
+            return endpoint.delete(`/groups/${group.id}`);
+        },
+        update: (updatedGroup: AppTypes.AppGroup): AxiosPromise => {
+            return endpoint.post(`/groups/${updatedGroup.id}`, {...updatedGroup, members: undefined});
+        },
+        getMyMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get(`/groups/membership`);
+        },
+        changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => {
+            return endpoint.post(`/groups/membership/${groupId}/${newStatus}`);
+        },
+        getMembers: (group: ApiTypes.UserGroupDTO): AxiosPromise<ApiTypes.UserSummaryWithGroupMembershipDTO[]> => {
+            return endpoint.get(`/groups/${group.id}/membership`);
+        },
+        deleteMember: (member: AppTypes.AppGroupMembership): AxiosPromise => {
+            const info = member.groupMembershipInformation;
+            return endpoint.delete(`/groups/${info.groupId}/membership/${info.userId}`);
+        },
+        addManager: (group: AppTypes.AppGroup, managerEmail: string): AxiosPromise => {
+            return endpoint.post(`/groups/${group.id}/manager`, {email: managerEmail});
+        },
+        deleteManager: (group: AppTypes.AppGroup, manager: ApiTypes.UserSummaryWithEmailAddressDTO): AxiosPromise => {
+            return endpoint.delete(`/groups/${group.id}/manager/${manager.id}`);
+        }
+    },
+    boards: {
+        get: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder): AxiosPromise<ApiTypes.GameboardListDTO> => {
+            return endpoint.get(`/gameboards/user_gameboards`, {params: {"start_index": startIndex, limit, sort}});
+        },
+        delete: (board: ApiTypes.GameboardDTO) => {
+            return endpoint.delete(`/gameboards/user_gameboards/${board.id}`);
+        },
+        getGroupsForBoard: (board: ApiTypes.GameboardDTO): AxiosPromise<{[key: string]: ApiTypes.UserGroupDTO[]}> => {
+            return endpoint.get(`/assignments/assign/groups`, {params: {"gameboard_ids": board.id}});
+        },
+        unassign: (board: ApiTypes.GameboardDTO, group: ApiTypes.UserGroupDTO) => {
+            return endpoint.delete(`/assignments/assign/${board.id}/${group.id}`);
+        },
+        assign: (board: ApiTypes.GameboardDTO, groupId: number, dueDate?: number) => {
+            return endpoint.post(`/assignments/assign`, {dueDate, gameboardId: board.id, groupId})
+        }
+    },
+    logger: {
+        log : (eventDetails: object): AxiosPromise<void> => {
+            return endpoint.post(`/log`, eventDetails);
+        },
+    },
 };

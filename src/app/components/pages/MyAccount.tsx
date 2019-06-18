@@ -26,12 +26,12 @@ import {UserEmailPreference} from "../elements/UserEmailPreferences";
 import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
 import {Link} from "react-router-dom";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EXAM_BOARD, ACCOUNT_TAB} from "../../services/constants";
 import {history} from "../../services/history"
 import {showToast} from "../../state/actions";
 import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
 import {withRouter} from "react-router-dom";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -103,8 +103,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [activeTab, setTab] = useState(initialTab);
 
     return <Container id="account-page" className="mb-5">
-        <BreadcrumbTrail currentPageTitle="My account" />
-        <h1 className="h-title mb-4">My Account</h1>
+        <TitleAndBreadcrumb currentPageTitle="My account" className="mb-4" />
         <h3 className="d-md-none text-center text-muted m-3">
             <small>
                 Update your Isaac Computer Science account, or <Link to="/logout" className="text-secondary">Log out</Link>
@@ -165,14 +164,6 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             passwordCurrent: currentPassword
                         }, user);
                     }
-                    // TODO this should be moved to updateCurrentUse because we do not know here whether the update was successful or not
-                    showToast({
-                        title: "Preferences updated",
-                        body: "Your user preferences were updated correctly.",
-                        color: "success",
-                        timeout: 5000,
-                        closable: false,
-                    });
                 }}>
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId={ACCOUNT_TAB.account}>

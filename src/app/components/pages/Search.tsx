@@ -12,7 +12,7 @@ import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -96,8 +96,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
         <Container id="search-page">
             <Row>
                 <Col>
-                    <BreadcrumbTrail currentPageTitle="Search" />
-                    <h1 className="h-title">Search</h1>
+                    <TitleAndBreadcrumb currentPageTitle="Search" />
                 </Col>
             </Row>
             <Row>
