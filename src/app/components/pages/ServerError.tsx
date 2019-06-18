@@ -1,13 +1,12 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {Container} from "reactstrap";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 export const ServerError = () => {
     return <Container>
         <div>
-            <BreadcrumbTrail currentPageTitle="Error" />
-            <h1 className="h-title">Error</h1>
+            <TitleAndBreadcrumb currentPageTitle="Error" />
 
             <h3 className="my-4"><small>{"We're sorry, but an error has occurred on the Isaac server!"}</small></h3>
 

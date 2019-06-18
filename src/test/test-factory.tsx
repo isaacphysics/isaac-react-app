@@ -3,7 +3,7 @@ import {
     QuestionDTO,
     RegisteredUserDTO,
     ResultsWrapper,
-    UserAuthenticationSettingsDTO
+    UserAuthenticationSettingsDTO, UserGroupDTO
 } from "../IsaacApiTypes";
 import {UserPreferencesDTO} from "../IsaacAppTypes";
 
@@ -29,6 +29,41 @@ export const registeredUserDTOs: {[key: string]: RegisteredUserDTO} = {
         gender: "MALE",
         id: 2,
         email: "dw@example.com"
+    }
+};
+
+export const userGroupDTOs: {[key: string]: UserGroupDTO} = {
+    one: {
+        archived: false,
+        groupName: "Group One",
+        id: 1,
+        ownerId: 1,
+        additionalManagers: [],
+        ownerSummary: registeredUserDTOs.dameShirley
+    },
+    two: {
+        archived: false,
+        groupName: "Group Two",
+        id: 2,
+        ownerId: 1,
+        additionalManagers: [],
+        ownerSummary: registeredUserDTOs.dameShirley
+    },
+    three: {
+        archived: false,
+        groupName: "Group Three (new)",
+        id: 3,
+        ownerId: 2,
+        additionalManagers: [],
+        ownerSummary: registeredUserDTOs.profWheeler
+    },
+    archivedX: {
+        archived: true,
+        groupName: "Group Ten",
+        id: 10,
+        ownerId: 1,
+        additionalManagers: [],
+        ownerSummary: registeredUserDTOs.dameShirley
     }
 };
 

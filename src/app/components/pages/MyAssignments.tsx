@@ -8,6 +8,8 @@ import {AssignmentDTO} from "../../../IsaacApiTypes";
 import {Container, Row, Col, Nav, NavItem, NavLink, UncontrolledTooltip} from 'reactstrap';
 import {orderBy} from "lodash";
 import {extractTeacherName} from "../../services/role";
+import {PageTitle} from "../elements/PageTitle";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments};
@@ -27,7 +29,7 @@ const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; show
 
     return <ShowLoading until={assignments}>
         {assignments && assignments.map((assignment, index) =>
-            <>
+            <React.Fragment>
                 <Row key={index}>
                     <Col xs={2} md={1} className="myAssignments-percentageCompleted"><h4>{assignment.gameboard && assignment.gameboard.percentageCompleted}</h4></Col>
                     <Col xs={10} md={4}>
@@ -61,7 +63,7 @@ const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; show
                     </Col>
                 </Row>
                 <hr />
-            </>
+            </React.Fragment>
         )}
         {assignments && assignments.length === 0 && (showOld ? <p>You have <a href="#" onClick={showOld}>unfinished older assignments</a></p> : <p>There are no assignments to display.</p>)}
     </ShowLoading>;
@@ -125,12 +127,8 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignme
     ];
 
     return <Container>
-        <h3><span>My Assignments<span id="my-assignments-title" className="icon-help" /></span>
-            <UncontrolledTooltip placement="bottom" target="my-assignments-title">
-                Any assignments you have been set will appear here.<br />Unfinished overdue assignments will show in Assignments To Do for 5 days after they are due, after which they move to Older Assignments.
-            </UncontrolledTooltip>
-        </h3>
-        <p className="d-none d-sm-block">Keep track of your assignments</p>
+        <TitleAndBreadcrumb currentPageTitle="My Assignments" subTitle="Keep track of your assignments"
+            help={<span>Any assignments you have been set will appear here.<br />Unfinished overdue assignments will show in Assignments To Do for 5 days after they are due, after which they move to Older Assignments.</span>} />
         <Nav tabs>
             {tabs.map(([tabTitle, tabItems], mapIndex) => {
                 const tabIndex = mapIndex;

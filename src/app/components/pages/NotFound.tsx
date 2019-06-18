@@ -1,15 +1,14 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
 import {Container} from "reactstrap";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 interface PageNotFoundProps {location: {pathname: string; state?: {overridePathname?: string}}}
 
 const PageNotFoundComponent = ({location: {pathname, state}}: PageNotFoundProps) => {
     return <Container>
         <div>
-            <BreadcrumbTrail currentPageTitle="Unknown page" />
-            <h1 className="h-title">Page Not Found</h1>
+            <TitleAndBreadcrumb breadcrumbTitleOverride="Unknown page" currentPageTitle="Page Not Found" />
             <h3 className="my-4">
                 <small>
                     {"We're sorry, page not found: "}

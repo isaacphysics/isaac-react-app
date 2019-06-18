@@ -66,8 +66,8 @@
     font-size: 14px;
     margin-bottom: 5px;
   }
-  .person-icon,
-  .person-icon-active {
+  .icon-person,
+  .icon-person-active {
     margin-top: 2px;
   }
 }
@@ -119,37 +119,4 @@
       margin-bottom: 0px;
     }
   }
-}
-
-
-.person-icon-active {
-  float: left;
-  width: 9px;
-  height: 14px;
-  background: url(/assets/ru.png) -296px -302px no-repeat;
-  margin: 3px 10px 0 0;
-}
-.person-icon {
-  float: left;
-  width: 9px;
-  height: 14px;
-  background: url(/assets/ru.png) -296px -316px no-repeat;
-  margin: 0 10px 0 0;
-}
-.icon-warning {
-  float: left;
-  width: 19px;
-  height: 22px;
-  background: url(/assets/ru.png) -308px -302px no-repeat;
-  margin-left: 15px;
-  margin-right: 12px;
-}
-.icon-help {
-  display: inline-block;
-  width: 19px;
-  height: 22px;
-  background: url(/assets/ru.png) -308px -324px no-repeat;
-  margin-bottom: -4px;
-  margin-left: 8px;
-  margin-right: 8px;
 }

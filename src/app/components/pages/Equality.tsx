@@ -8,11 +8,11 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {DOCUMENT_TYPE} from "../../services/constants";
 
 import { InequalityModal } from "../elements/InequalityModal";
 import katex from "katex";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 
 const stateToProps = (state: AppState, {match: {params: {questionId}}, location: {search}}: any) => {
@@ -58,8 +58,7 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
             <Container>
                 <Row>
                     <Col>
-                        <BreadcrumbTrail currentPageTitle="Inequality Demo Page" />
-                        <h1 className="h-title">Inequality Demo Page</h1>
+                        <TitleAndBreadcrumb currentPageTitle="Inequality Demo Page" />
                     </Col>
                 </Row>
                 <Row>

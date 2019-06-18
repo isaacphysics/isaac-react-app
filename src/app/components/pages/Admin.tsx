@@ -7,7 +7,7 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {getContentVersion, requestConstantsSegueVersion, setContentVersion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {ContentVersionUpdatingStatus} from "../../services/constants";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => ({
     segueVersion: state && state.constants && state.constants.segueVersion || "unknown",
@@ -47,8 +47,7 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
     const updateState = contentVersion && contentVersion.updateState || null;
 
     return <Container id="admin-page">
-        <BreadcrumbTrail currentPageTitle="Admin tools"/>
-        <h1 className="h-title">Isaac administration</h1>
+        <TitleAndBreadcrumb currentPageTitle="Isaac administration" breadcrumbTitleOverride="Admin tools" />
 
         <div className="py-4">
 

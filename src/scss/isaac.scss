@@ -48,6 +48,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 // Node module imports
 @import "~bootstrap/scss/bootstrap";
 @import "~katex/dist/katex.min.css";
+@import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
 
 // Utility
 @import "./_preload";
@@ -70,6 +71,8 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./list-groups";
 @import "./inequality-modal";
 @import "./carousel";
+@import "./icons";
+@import "./boards";
 
 // Navigation
 @import "./navigation-bar";
