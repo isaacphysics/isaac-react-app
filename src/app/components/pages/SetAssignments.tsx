@@ -23,6 +23,7 @@ import {ActualBoardLimit, AppGameBoard, BoardOrder, Toast} from "../../../IsaacA
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {boards, groups} from "../../state/selectors";
 import {sortBy} from "lodash";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -259,12 +260,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     }, [boards]);
 
     return <Container>
-        <h2 className="mt-4"><span>Set Assignments<span id="set-assignments-title" className="icon-help" /></span>
-            <UncontrolledTooltip placement="bottom" target="set-assignments-title">
-                Assign any of the gameboards you have selected to your groups.
-            </UncontrolledTooltip>
-        </h2>
-        <hr />
+        <TitleAndBreadcrumb currentPageTitle="Set Assignments" intermediateCrumbs={[{title: "Teachers", to: "#"}]} help="Assign any of the gameboards you have selected to your groups." />
         <p>Choose a gameboard from one of our <Link to="/pages/gameboards">pre-made gameboards</Link> or find one from the <Link to="/topics">Topics list</Link></p>
         <hr />
         {boards && boards.totalResults == 0 ? <h3 className="text-center mt-5 pt-5">You have no gameboards to assign; use one of the options above to find one.</h3> :

@@ -41,6 +41,10 @@ header {
   box-shadow: 0 2px 30px 0 $shadow-08;
 }
 
+#title-help {
+  float: right;
+  cursor: help;
+}
 
 // NOMENSA header.scss
 // !important used to override bootstraps use of !important :(

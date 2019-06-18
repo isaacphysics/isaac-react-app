@@ -3,7 +3,7 @@ import {Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {Link} from "react-router-dom";
 import {LinkInfo} from "../../../IsaacAppTypes";
 
-interface BreadcrumbTrailProps {
+export interface BreadcrumbTrailProps {
     currentPageTitle: string;
     intermediateCrumbs?: LinkInfo[];
 }

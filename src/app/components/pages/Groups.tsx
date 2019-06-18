@@ -35,6 +35,7 @@ import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {groups} from "../../state/selectors";
 import {UserGroupDTO} from "../../../IsaacApiTypes";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateFromProps = (state: AppState) => (state && {groups: groups.groups(state), group: groups.current(state)});
 const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal};
@@ -310,20 +311,9 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     const groupNameRef = useRef<HTMLInputElement>(null);
 
     return <Container>
-        <Row>
-            <Col sm={8}>
-                <h1>Manage Groups</h1>
-                <p className="d-none d-sm-block">Keep track of your groups</p>
-            </Col>
-            <Col sm={4} className="d-none d-sm-block text-right align-self-center">
-                <h4 id="helpTooltip" className="d-inline-block" style={{cursor: "help"}}>Help</h4>
-                <UncontrolledTooltip placement="left" target="helpTooltip">
-                    Use this page to manage groups. You can add users to a group by giving them the group token and asking them paste it into their account settings page.
-                    <br />You can find the token for an existing group by selecting the group and clicking <i>Invite Users</i>.
-                </UncontrolledTooltip>
-            </Col>
-        </Row>
-        <hr />
+        <TitleAndBreadcrumb currentPageTitle="Manage Groups" subTitle="Keep track of your groups" intermediateCrumbs={[{title: "Teachers", to: "#"}]} help={<span>
+            Use this page to manage groups. You can add users to a group by giving them the group token and asking them paste it into their account settings page.
+            <br />You can find the token for an existing group by selecting the group and clicking <i>Invite Users</i>.</span>} />
         <Row>
             <Col md={5}>
                 <ShowLoading until={activeTab}>
