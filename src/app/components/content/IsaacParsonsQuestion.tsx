@@ -1,15 +1,12 @@
-import React, {useState, useEffect, useMemo} from "react";
+import React from "react";
 import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {IsaacParsonsQuestionDTO, ParsonsChoiceDTO, ParsonsItemDTO} from "../../../IsaacApiTypes";
 import {IsaacHints} from "./IsaacHints";
-import {SortableContainer, SortableElement, SortStart, SortEvent, SortEnd} from "react-sortable-hoc";
 import {Col, Row} from "reactstrap";
 import {DragDropContext, Droppable, Draggable, DragStart, DropResult, ResponderProvided, DroppableProvided, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot} from "react-beautiful-dnd";
-import { ContentSummaryListGroupItem } from "../elements/ContentSummaryListGroupItem";
-import { TrustedHtml } from "../elements/TrustedHtml";
 import _differenceBy from "lodash/differenceBy";
 
 interface IsaacParsonsQuestionProps {
@@ -20,7 +17,7 @@ interface IsaacParsonsQuestionProps {
 }
 
 interface IsaacParsonsQuestionState {
-    availableItems: Array<ParsonsItemDTO>;
+    availableItems: ParsonsItemDTO[];
     draggedElement?: HTMLElement | null;
     initialX?: number | null;
     currentIndent?: number | null;
@@ -37,7 +34,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             draggedElement: null,
             initialX: null,
             currentIndent: null,
-        }
+        };
         window.addEventListener('mousemove', this.onMouseMove);
         window.addEventListener('touchmove', this.onMouseMove);
     }
@@ -55,8 +52,8 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             // This is because available items always start from the document's available items (see constructor)
             // and the current attempt is assigned afterwards, so we need to carve it out of the available items.
             // This also takes care of updating the two lists when a user moves items from one to the other.
-            let availableItems: Array<ParsonsItemDTO> = [];
-            let currentAttemptItems: Array<ParsonsItemDTO> = (this.props.currentAttempt && this.props.currentAttempt.items) || [];
+            let availableItems: ParsonsItemDTO[] = [];
+            let currentAttemptItems: ParsonsItemDTO[] = (this.props.currentAttempt && this.props.currentAttempt.items) || [];
             if (this.props.doc.items && this.props.currentAttempt) {
                 availableItems = this.props.doc.items.filter(item => {
                     let found = false;
@@ -105,7 +102,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         }
     }
 
-    moveItem = (src: Array<ParsonsItemDTO> | undefined, fromIndex: number, dst: Array<ParsonsItemDTO> | undefined, toIndex: number, indent: number) => {
+    moveItem = (src: ParsonsItemDTO[] | undefined, fromIndex: number, dst: ParsonsItemDTO[] | undefined, toIndex: number, indent: number) => {
         if (!src || !dst) return;
         const srcItem = src.splice(fromIndex, 1)[0];
         srcItem.indentation = indent;
@@ -170,7 +167,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                             key={item.id}
                                             draggableId={item.id || `${index}`}
                                             index={index}
-                                            >
+                                        >
                                             {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
                                                 return <div
                                                     id={`parsons-item-${item.id}`}
@@ -178,7 +175,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    ><pre>{item.value}</pre></div>
+                                                ><pre>{item.value}</pre></div>
                                             }}
                                         </Draggable>
                                     })}
@@ -198,7 +195,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                             key={item.id}
                                             draggableId={item.id || `${index}`}
                                             index={index}
-                                            >
+                                        >
                                             {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
                                                 return <div
                                                     id={`parsons-item-${item.id}`}
@@ -206,7 +203,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    ><pre>{item.value}</pre></div>
+                                                ><pre>{item.value}</pre></div>
                                             }}
                                         </Draggable>
                                     })}
