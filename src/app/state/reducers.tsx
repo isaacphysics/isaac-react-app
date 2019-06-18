@@ -483,12 +483,10 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
 
     switch (action.type) {
         case ACTION_TYPE.BOARDS_REQUEST:
-            if (boards && boards.boardAssignees) {
-                if (!action.accumulate) {
-                    return {
-                        boardAssignees: boards.boardAssignees
-                    };
-                }
+            if (!action.accumulate) {
+                return {
+                    boardAssignees: boards && boards.boardAssignees || undefined
+                };
             }
             return boards;
         case ACTION_TYPE.BOARDS_RESPONSE_SUCCESS:
@@ -518,9 +516,11 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
             return boards;
         case ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS:
             if (boards) {
+                const boardId = action.board.id as string;
+                const assignees = union(boards.boardAssignees && boards.boardAssignees[boardId], [action.groupId]);
                 return {
                     ...boards,
-                    boardAssignees: mapValues(boards.boardAssignees, (value, key) => key == action.board.id ? union(value, [action.groupId]) : value)
+                    boardAssignees: {...boards.boardAssignees, [boardId]: assignees}
                 };
             }
             return boards;

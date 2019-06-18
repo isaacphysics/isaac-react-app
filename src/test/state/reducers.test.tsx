@@ -1,10 +1,27 @@
-import {constants, groups, GroupsState, questions, rootReducer, search, toasts, user} from "../../app/state/reducers";
-import {Action, AppGroupMembership, LoggedInUser} from "../../IsaacAppTypes";
+import {
+    constants,
+    groups,
+    GroupsState,
+    questions,
+    rootReducer,
+    search,
+    toasts,
+    user,
+    boards,
+    BoardsState
+} from "../../app/state/reducers";
+import {Action, AppGameBoard, AppGroupMembership, LoggedInUser} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
-import {mapValues} from "lodash";
-import {groups as groupsSelector} from "../../app/state/selectors";
-import {UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
+import {mapValues, union, without} from "lodash";
+import {groups as groupsSelector, boards as boardsSelector} from "../../app/state/selectors";
+import {
+    GameboardDTO,
+    UserGroupDTO,
+    UserSummaryWithEmailAddressDTO,
+    UserSummaryWithGroupMembershipDTO
+} from "../../IsaacApiTypes";
+import {act} from "react-dom/test-utils";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
@@ -373,4 +390,91 @@ describe("groups reducer", () => {
             expect(groupSelector.active(actualNextState)).toEqual([{...userGroupDTOs.one, additionalManagers: []}, userGroupDTOs.two]);
         });
     });
+});
+
+describe("boards reducer", () => {
+    it("returns null as an initial value", () => {
+        const actualState = boards(undefined, ignoredTestAction);
+        expect(actualState).toBe(null);
+    });
+
+    const testGroupsMap: {[index: number]: UserGroupDTO} = {1: userGroupDTOs.one, 2: userGroupDTOs.two};
+    const testGroups = Object.values(testGroupsMap);
+    const groupCreationAction: Action = {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: testGroups, archivedGroupsOnly: false};
+    const groupsState = groups(null, groupCreationAction);
+
+    // @ts-ignore It's not a complete state
+    const selector = mapValues(boardsSelector, f => (boardsState: BoardsState) => f({boards: boardsState, groups: groupsState}));
+
+    const testBoards: AppGameBoard[] = [{id: "abc", title: "ABC Board"}, {id: "def", title: "DEF Board"}];
+
+    const simpleState: BoardsState = {boards: {totalResults: 42, boards: testBoards}};
+
+    it ("can get a new set of boards", () => {
+        const action: Action = {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: {results: testBoards, totalResults: 42}, accumulate: false};
+        const previousStates = [{}, null];
+        previousStates.map((previousState) => {
+            const actualNextState = boards(previousState, action);
+            expect(selector.boards(actualNextState)).toEqual({totalResults: 42, boards: testBoards});
+        });
+    });
+
+    it ("can add to the set of boards", () => {
+        const newBoards: AppGameBoard[] = [{id: "ghi", title: "Ghi Board"}, {id: "jkl", title: "JKL Board"}];
+        const action: Action = {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: {results: newBoards, totalResults: 40}, accumulate: true};
+        const withDupes = {boards: {totalResults: 38, boards: [...testBoards, newBoards[1]]}};
+        const previousStates = [{}, null, simpleState, withDupes];
+        previousStates.map((previousState) => {
+            const actualNextState = boards(previousState, action);
+            const priorBoards = previousState && previousState.boards && previousState.boards.boards || [];
+            expect(selector.boards(actualNextState)).toEqual({totalResults: 40, boards: union(priorBoards, newBoards)});
+        });
+    });
+
+    it ("getting a new set of boards clears the current boards", () => {
+        const action: Action = {type: ACTION_TYPE.BOARDS_REQUEST, accumulate: false};
+        const previousStates = [{}, null, simpleState];
+        previousStates.map((previousState) => {
+            const actualNextState = boards(previousState, action);
+            expect(selector.boards(actualNextState)).toEqual(null);
+        });
+    });
+
+    it("can delete an existing board", () => {
+        const deleteBoard = testBoards[0];
+        const action: Action = {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, board: deleteBoard};
+        const previousStates = [simpleState];
+        previousStates.map((previousState) => {
+            const actualNextState = boards(previousState, action);
+            expect(selector.boards(actualNextState)).toEqual({totalResults: 41, boards: [testBoards[1]]});
+        });
+    });
+
+    const assignedState: BoardsState = {...simpleState, boardAssignees: {[testBoards[0].id as string]: testGroups.map(g => g.id as number)}};
+
+    it ("can load up board assignees", () => {
+        const action: Action = {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS, board: testBoards[1], groups: {[testBoards[1].id as string]: testGroups}};
+        const previousStates = [simpleState, assignedState];
+        previousStates.map((previousState) => {
+            const actualNextState = boards(previousState, action);
+            expect(selector.boards(actualNextState).boards[1]).toEqual({...testBoards[1], assignedGroups: testGroups});
+        });
+    });
+
+    it ("can remove a board assignees", () => {
+        const action: Action = {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, board: testBoards[0], group: testGroups[0]};
+        const actualNextState = boards(assignedState, action);
+        expect(selector.boards(actualNextState).boards[0]).toEqual({...testBoards[0], assignedGroups: without(testGroups, testGroups[0])});
+    });
+
+    it ("can add a board assignee", () => {
+        const action: Action = {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board: testBoards[0], groupId: 1};
+        const previousStates = [simpleState, assignedState];
+        previousStates.map((previousState) => {
+            const actualNextState = boards(previousState, action);
+            const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(gId => testGroupsMap[gId]) || [];
+            expect(selector.boards(actualNextState).boards[0]).toEqual({...testBoards[0], assignedGroups: union(assignedGroups, [testGroupsMap[1]])});
+        });
+    });
+
 });
