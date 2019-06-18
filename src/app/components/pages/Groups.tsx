@@ -127,7 +127,7 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
                 <Tooltip tipText="This user has set their status to inactive for this group. This means they will no longer see new assignments."> (inactive in group)</Tooltip>
             }
         </td>
-        <td style={{whiteSpace: "nowrap"}}>
+        <td className="text-nowrap">
             <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-right">
                 <Button color="link" size="sm" onClick={resetPassword} disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
                     {!passwordRequestSent? 'Reset Password': 'Reset email sent'}
