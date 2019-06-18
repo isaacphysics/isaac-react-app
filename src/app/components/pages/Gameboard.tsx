@@ -45,7 +45,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, loadGameboard}: Ga
 
     return <Container>
         <ShowLoading until={gameboard}>
-            <h2 className="my-2">{gameboard && gameboard.title || "Filter Generated Gameboard"}</h2>
+            <h2 className="mt-2 mb-4">{gameboard && gameboard.title || "Filter Generated Gameboard"}</h2>
             <ListGroup className="mb-3 link-list list-group-links list-gameboard">
                 {gameboard && gameboard.questions && gameboard.questions.map(gameboardItem.bind(null, gameboard))}
             </ListGroup>
