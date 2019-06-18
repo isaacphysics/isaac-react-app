@@ -210,7 +210,7 @@ function orderName(order: BoardOrder) {
 }
 
 const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
-    const {groups, loadGroups, boards, loadBoards} = props;
+    const {loadGroups, boards, loadBoards} = props;
 
     useEffect(() => {loadGroups(false);}, []);
 
