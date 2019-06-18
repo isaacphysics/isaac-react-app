@@ -141,45 +141,47 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
         <Row>
             <Col xs={6} md={3}>
                 <FormGroup>
-                    <Label htmlFor="dob-input">Gender</Label>
-                    <Row>
-                        <Col size={6} lg={4}>
-                            <CustomInput
-                                id="gender-female" type="radio"
-                                name="gender" label="Female"
-                                defaultChecked={myUser.gender === 'FEMALE'}
-                                onChange={
-                                    (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign(myUser, {gender: 'FEMALE'}))
-                                    }
-                                }/>
-                        </Col>
+                    <fieldset>
+                        <legend>Gender</legend>
+                        <Row>
+                            <Col size={6} lg={4}>
+                                <CustomInput
+                                    id="gender-female" type="radio"
+                                    name="gender" label="Female"
+                                    defaultChecked={myUser.gender === 'FEMALE'}
+                                    onChange={
+                                        (e: React.ChangeEvent<HTMLInputElement>) => {
+                                            setMyUser(Object.assign(myUser, {gender: 'FEMALE'}))
+                                        }
+                                    }/>
+                            </Col>
 
-                        <Col size={6} lg={4}>
-                            <CustomInput
-                                id="gender-male" type="radio"
-                                name="gender" label="Male"
-                                defaultChecked={myUser.gender === 'MALE'}
-                                onChange={
-                                    (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign(myUser, {gender: 'MALE'}))
-                                    }
-                                }/>
-                        </Col>
+                            <Col size={6} lg={4}>
+                                <CustomInput
+                                    id="gender-male" type="radio"
+                                    name="gender" label="Male"
+                                    defaultChecked={myUser.gender === 'MALE'}
+                                    onChange={
+                                        (e: React.ChangeEvent<HTMLInputElement>) => {
+                                            setMyUser(Object.assign(myUser, {gender: 'MALE'}))
+                                        }
+                                    }/>
+                            </Col>
 
 
-                        <Col size={6} lg={4}>
-                            <CustomInput
-                                id="gender-other" type="radio"
-                                name="gender" label="Other"
-                                defaultChecked={myUser.gender === 'OTHER'}
-                                onChange={
-                                    (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign(myUser, {gender: 'OTHER'}))
-                                    }
-                                }/>
-                        </Col>
-                    </Row>
+                            <Col size={6} lg={4}>
+                                <CustomInput
+                                    id="gender-other" type="radio"
+                                    name="gender" label="Other"
+                                    defaultChecked={myUser.gender === 'OTHER'}
+                                    onChange={
+                                        (e: React.ChangeEvent<HTMLInputElement>) => {
+                                            setMyUser(Object.assign(myUser, {gender: 'OTHER'}))
+                                        }
+                                    }/>
+                            </Col>
+                        </Row>
+                    </fieldset>
                 </FormGroup>
             </Col>
 

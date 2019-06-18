@@ -109,6 +109,9 @@ export const api = {
             post: (role: ApiTypes.Role, userIds: number[]) => {
                 return endpoint.post(`/admin/users/change_role/${role}`, userIds);
             }
+        },
+        getContentErrors: (): AxiosPromise<AppTypes.ContentErrorsResponse> => {
+            return endpoint.get(`/admin/content_problems`)
         }
     },
     authorisations: {
@@ -253,5 +256,10 @@ export const api = {
         assign: (board: ApiTypes.GameboardDTO, groupId: number, dueDate?: number) => {
             return endpoint.post(`/assignments/assign`, {dueDate, gameboardId: board.id, groupId})
         }
-    }
+    },
+    logger: {
+        log : (eventDetails: object): AxiosPromise<void> => {
+            return endpoint.post(`/log`, eventDetails);
+        },
+    },
 };

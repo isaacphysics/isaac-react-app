@@ -1,6 +1,7 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {GameboardDTO, GroupMembershipDTO, UserGroupDTO, UserSummaryWithEmailAddressDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
+import {Content, ContentDTO} from "./IsaacApiTypes";
 
 
 export type Action =
@@ -54,6 +55,10 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS; errors: ContentErrorsResponse}
+    | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST}
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS; authorisations: ApiTypes.UserSummaryWithEmailAddressDTO[]}
@@ -306,3 +311,18 @@ export enum BoardOrder {
 export type ActualBoardLimit = number | "ALL";
 
 export type AppGameBoard = GameboardDTO & {assignedGroups?: UserGroupDTO[]};
+
+// Admin Content Errors:
+export interface ContentErrorItem {
+    listOfErrors: string[];
+    partialContent: Content;
+    successfulIngest: boolean;
+}
+
+export interface ContentErrorsResponse {
+    brokenFiles: number;
+    currentLiveVersion: string;
+    errorsList: ContentErrorItem[];
+    failedFiles: number;
+    totalErrors: number;
+}

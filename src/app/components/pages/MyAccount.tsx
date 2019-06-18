@@ -164,14 +164,6 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             passwordCurrent: currentPassword
                         }, user);
                     }
-                    // TODO this should be moved to updateCurrentUse because we do not know here whether the update was successful or not
-                    showToast({
-                        title: "Preferences updated",
-                        body: "Your user preferences were updated correctly.",
-                        color: "success",
-                        timeout: 5000,
-                        closable: false,
-                    });
                 }}>
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId={ACCOUNT_TAB.account}>
