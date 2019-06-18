@@ -8,7 +8,8 @@ import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacA
 import {Action, AppGroup} from "../../../IsaacAppTypes";
 
 import {store} from "../../state/store";
-import {closeActiveModal, selectGroup, addGroupManager, deleteGroupManager, showGroupInvitationModal} from "../../state/actions";
+import {closeActiveModal, selectGroup, addGroupManager, deleteGroupManager, showGroupInvitationModal,
+    showGroupManagersModal} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {groups} from "../../state/selectors";
 import {bindActionCreators, Dispatch} from "redux";
@@ -60,6 +61,12 @@ export const groupInvitationModal = (firstTime: boolean) => {
             </RS.Button>,
             <RS.Button key={0} color="secondary" tag={Link} to="/set_assignments">
                 Set an assignment
+            </RS.Button>,
+            <RS.Button key={2} color="secondary" onClick={() => {
+                store.dispatch(closeActiveModal());
+                store.dispatch(showGroupManagersModal());
+            }}>
+                {firstTime ? "Add group managers" : "Edit group managers"}
             </RS.Button>,
         ]
     }
@@ -136,7 +143,7 @@ const CurrentGroupManagersModal = ({group, user, addGroupManager, deleteGroupMan
                 <tr key={manager.email}>
                     <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} ({manager.email})</td>
                     {userIsOwner && <td className="group-table-delete"><a className="delete-icon" href="javascript:void(0)"
-                        onClick={() => removeManager(manager)}>X</a></td>}
+                        onClick={() => removeManager(manager)} aria-label="Remove manager">X</a></td>}
                 </tr>
             )}</tbody>
         </RS.Table>

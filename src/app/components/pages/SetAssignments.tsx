@@ -151,7 +151,7 @@ const Board = (props: BoardProps) => {
 
     return <Card className="board-card">
         <CardBody>
-            <Button className="close" size="small" onClick={confirmDeleteBoard}>X</Button>
+            <Button className="close" size="small" onClick={confirmDeleteBoard} aria-label="Delete board">X</Button>
             <button onClick={() => setShowAssignments(!showAssignments)} className="groups-assigned subject-compsci" id={hexagonId}>
                 <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
                 group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"} assigned
@@ -176,7 +176,7 @@ const Board = (props: BoardProps) => {
                 {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
                     <Row key={group.id}>
                         <span className="flex-grow-1">{group.groupName}</span>
-                        <Button size="sm" color="tertiary" className="unassign" aria-label="Unassign" onClick={() => confirmUnassignBoard(group)}><span aria-hidden="true">&times;</span></Button>
+                        <Button size="sm" color="tertiary" className="unassign" aria-label="Unassign group" onClick={() => confirmUnassignBoard(group)}>X</Button>
                     </Row>
                 )}</Container>}
                 {!hasAssignedGroups && <p>No groups.</p>}
@@ -188,7 +188,6 @@ const Board = (props: BoardProps) => {
 
 
 enum BoardLimit {
-    "two" = "2",
     "six" = "6",
     "eighteen" = "18",
     "sixy" = "60",
@@ -216,7 +215,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
 
     const [loading, setLoading] = useState(false);
 
-    const [boardLimit, setBoardLimit] = useState<BoardLimit>(BoardLimit.two);
+    const [boardLimit, setBoardLimit] = useState<BoardLimit>(BoardLimit.six);
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.created);
 
     let [actualBoardLimit, setActualBoardLimit] = useState<ActualBoardLimit>(toActual(boardLimit));
@@ -245,14 +244,15 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
 
     useEffect( () => {
         if (boards) {
+            const wasLoading = loading;
             setLoading(false);
             if (boards.boards) {
                 if (actualBoardLimit != boards.boards.length) {
                     setActualBoardLimit(actualBoardLimit = boards.boards.length);
-                }
-                if (boards.boards.length == 0) {
-                    // Through deletion or something we have ended up with no boards, so fetch more.
-                    viewMore();
+                    if (!wasLoading && boards.boards.length == 0) {
+                        // Through deletion or something we have ended up with no boards, so fetch more.
+                        viewMore();
+                    }
                 }
             }
         }
@@ -265,35 +265,37 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
             </UncontrolledTooltip>
         </h2>
         <hr />
-        <p>Add a gameboard from <Link to="/lesson_plans">our lesson plans</Link></p>
+        <p>Choose a gameboard from one of our <Link to="/pages/gameboards">pre-made gameboards</Link> or find one from the <Link to="/topics">Topics list</Link></p>
         <hr />
-        {boards && boards.totalResults == 0 && <h4>You have no gameboards to assign; select an option above to add a gameboard.</h4>}
-        {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...</h4>}
-        {!boards && <h4>You have <Spinner size="sm" /> gameboards ready to assign...</h4>}
-        <Row>
-            <Col>
-                <Form inline>
-                    <span className="flex-grow-1" />
-                    <Label>Show <Input className="ml-2 mr-3" type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
-                        {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
-                    </Input></Label>
-                    <Label>Sort by <Input className="ml-2" type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
-                        {Object.values(BoardOrder).map(order => <option key={order} value={order}>{orderName(order)}</option>)}
-                    </Input></Label>
-                </Form>
-            </Col>
-        </Row>
-        <ShowLoading until={boards}>
-            {boards && boards.boards && <div>
-                <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
-                    {boards.boards && boards.boards.map(board => <div key={board.id}><Board {...props} board={board} /></div>)}
-                </div>
-                <div className="text-center mt-2 mb-4" style={{clear: "both"}}>
-                    <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
-                    {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
-                </div>
-            </div>}
-        </ShowLoading>
+        {boards && boards.totalResults == 0 ? <h3 className="text-center mt-5 pt-5">You have no gameboards to assign; use one of the options above to find one.</h3> :
+            <React.Fragment>
+                {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...</h4>}
+                {!boards && <h4>You have <Spinner size="sm" /> gameboards ready to assign...</h4>}
+                <Row>
+                    <Col>
+                        <Form inline>
+                            <span className="flex-grow-1" />
+                            <Label>Show <Input className="ml-2 mr-3" type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+                            </Input></Label>
+                            <Label>Sort by <Input className="ml-2" type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
+                                {Object.values(BoardOrder).map(order => <option key={order} value={order}>{orderName(order)}</option>)}
+                            </Input></Label>
+                        </Form>
+                    </Col>
+                </Row>
+                <ShowLoading until={boards}>
+                    {boards && boards.boards && <div>
+                        <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
+                            {boards.boards && boards.boards.map(board => <div key={board.id}><Board {...props} board={board} /></div>)}
+                        </div>
+                        <div className="text-center mt-2 mb-4" style={{clear: "both"}}>
+                            <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
+                            {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
+                        </div>
+                    </div>}
+                </ShowLoading>
+            </React.Fragment>}
     </Container>;
 };
 

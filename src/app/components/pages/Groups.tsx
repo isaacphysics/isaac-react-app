@@ -77,7 +77,7 @@ const Tooltip = ({children, tipText, ...props}: any) => {
 };
 
 const canSendPasswordResetRequest = function(user: AppGroupMembership, passwordRequestSent: boolean) {
-    return user.role == 'ADMIN' || (!passwordRequestSent && user.authorisedFullAccess && user.emailVerificationStatus != 'DELIVERY_FAILED');
+    return !passwordRequestSent && user.authorisedFullAccess && user.emailVerificationStatus != 'DELIVERY_FAILED';
 };
 
 const passwordResetInformation = function(member: AppGroupMembership, passwordRequestSent: boolean) {
@@ -115,7 +115,7 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
         <td className="w-75">
             <Link to={`/progress/${member.groupMembershipInformation.userId}`}><span className="icon-group-table-person" />{member.givenName} {member.familyName}</Link>
             {member.emailVerificationStatus == "DELIVERY_FAILED" &&
-                <Tooltip tipText={<React.Fragment>This user&apos;s account email address is invalid or not accepting email.<br />They will not be able to reset their password or receive update emails. Ask them to login and update it, or contact us to help resolve the issue.</React.Fragment>} className="icon-email-status unverified" />
+                <Tooltip tipText={<React.Fragment>This user&apos;s account email address is invalid or not accepting email.<br />They will not be able to reset their password or receive update emails. Ask them to login and update it, or contact us to help resolve the issue.</React.Fragment>} className="icon-email-status failed" />
             }
             {member.emailVerificationStatus == "NOT_VERIFIED" &&
             <Tooltip
@@ -132,7 +132,7 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
                     {!passwordRequestSent? 'Reset Password': 'Reset email sent'}
                 </Button>
             </Tooltip>{"  "}
-            <Button color="tertiary" size="sm" className="flex-grow-0" style={{minWidth: "unset"}} onClick={confirmDeleteMember}>
+            <Button color="tertiary" size="sm" className="flex-grow-0" style={{minWidth: "unset"}} onClick={confirmDeleteMember} aria-label="Remove member">
                 X
             </Button>
         </td>
@@ -372,7 +372,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                             <React.Fragment key={g.id}>
                                                 <tr onClick={() => selectGroup(g)}>
                                                     <td className="w-100"><Button color="light" block>{g.groupName}</Button></td>
-                                                    <td><Button color="tertiary" className="py-2 px-4" style={{minWidth: "unset"}} onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}>X</Button></td>
+                                                    <td><Button color="tertiary" className="py-2 px-4" style={{minWidth: "unset"}} onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}} aria-label="Delete group">X</Button></td>
                                                 </tr>
                                                 {group && group.id == g.id && <tr className="d-table-row d-md-none bg-white"><td colSpan={2} className="w-100">
                                                     <GroupEditor {...props} createNewGroup={createNewGroup} />
