@@ -22,7 +22,7 @@ export const IsaacHintModal = (props: HintModalProps) => {
             {label}
         </Button>
 
-        <Modal isOpen={isOpen} toggle={toggle} {...restOfProps}>
+        <Modal isOpen={isOpen} toggle={toggle} size={"lg"} {...restOfProps}>
             <ModalHeader close={closeButton}>
                 {title}
             </ModalHeader>
