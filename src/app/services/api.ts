@@ -207,5 +207,10 @@ export const api = {
         send: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
             return endpoint.post(`/contact/`, params, {});
         }
-    }
+    },
+    logger: {
+        log : (eventDetails: object): AxiosPromise<void> => {
+            return endpoint.post(`/log`, eventDetails);
+        },
+    },
 };

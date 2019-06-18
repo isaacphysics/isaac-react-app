@@ -10,9 +10,8 @@ let timeoutHandle: number | undefined;
 // use it asynchronously, so that is what we do.
 
 const scheduleNextCheck = (middleware: MiddlewareAPI) => {
-    // @ts-ignore I don't know why Typescript picks up Node for setTimeout and DOM for clearTimeout but it is stupid.
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    timeoutHandle = setTimeout(() => checkUserConsistency(middleware), 1000);
+    timeoutHandle = window.setTimeout(() => checkUserConsistency(middleware), 1000);
 };
 
 const checkUserConsistency = (middleware: MiddlewareAPI) => {
