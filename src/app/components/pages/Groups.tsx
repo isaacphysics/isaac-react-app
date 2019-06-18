@@ -185,7 +185,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
         <Form inline className="pt-2">
             <Input className="flex-grow-1 mr-1" innerRef={groupNameRef} length={50} placeholder="Enter the name of your group here" value={newGroupName}
                 onChange={e => setNewGroupName(e.target.value)}/>
-            <Button color="primary" style={{fontSize: "1rem", padding: "7px 2rem"}} onClick={saveUpdatedGroup} disabled={newGroupName == "" || initialGroupName == newGroupName}>
+            <Button color="primary" style={{fontSize: "1rem", padding: "0.5rem 2rem"}} onClick={saveUpdatedGroup} disabled={newGroupName == "" || initialGroupName == newGroupName}>
                 {group ? "Update" : "Create"}
             </Button>
         </Form>
