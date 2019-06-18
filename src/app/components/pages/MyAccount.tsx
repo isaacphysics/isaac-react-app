@@ -201,7 +201,12 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                     </h3>
                                 }
                                 {/* TODO only show Save on relevant pages? */}
-                                <Input type="submit" value="Save" className="btn btn-block btn-secondary border-0" />
+                                <Input type="submit" value="Save" className="mb-2 btn btn-block btn-secondary border-0" />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                If you would like to delete your account please <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a>.
                             </Col>
                         </Row>
                     </CardFooter>

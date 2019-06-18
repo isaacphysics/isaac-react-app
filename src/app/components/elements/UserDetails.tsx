@@ -69,6 +69,13 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
 
     return <CardBody>
         <Row>
+            <Col>
+                <span className="d-block pb-3 pb-md-0 text-md-right required-before">
+                    Required
+                </span>
+            </Col>
+        </Row>
+        <Row>
             <Col md={6}>
                 <FormGroup>
                     <Label htmlFor="first-name-input" className="form-required">First Name</Label>
@@ -241,14 +248,16 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
         {/*        </FormGroup>*/}
         {/*    </Col>*/}
         {/*</Row>*/}
-
-        <Row>
-            <Col>
-                <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
-                    Required field
-                </span>
-            </Col>
-        </Row>
+        {myUser && myUser.role == "STUDENT" &&
+            <Row>
+                <Col>
+                    Are you a teacher? <a href="/pages/teacher_account_request" target="_blank" rel="noopener noreferrer">
+                    <span className='sr-only'> Are you a teacher? </span>
+                    Let us know
+                </a> and we'll convert your account to a teacher account.
+                </Col>
+            </Row>
+        }
 
     </CardBody>
 };
