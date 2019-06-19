@@ -215,7 +215,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                     </Col>
                 </DragDropContext>
             </Row>
-            <IsaacHints hints={this.props.doc.hints} />
+            <IsaacHints questionPartId={this.props.questionId} hints={this.props.doc.hints} />
         </div>
     }
 }
