@@ -73,13 +73,15 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
                         <TrackedRoute path="/search" component={Search} />
                         <TrackedRoute path="/account" onlyFor={(user: LoggedInUser) => user.loggedIn} component={MyAccount} />
+
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute path="/pages/:pageId" component={Generic} />
+
                         <TrackedRoute exact path="/topics" component={AllTopics} />
                         <TrackedRoute path="/topics/:topicName" component={Topic} />
 
-                        <TrackedRoute path="/gameboards" onlyFor={isAdmin} component={Gameboard} />
+                        <TrackedRoute path="/gameboards" onlyFor={user => user.loggedIn} component={Gameboard} />
                         <TrackedRoute path="/assignments" onlyFor={user => user.loggedIn} component={MyAssignments} />
                         <TrackedRoute path="/assignment/:gameboardId" onlyFor={user => user.loggedIn} component={RedirectToGameboard} />
 
