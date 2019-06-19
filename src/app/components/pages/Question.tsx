@@ -8,14 +8,14 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {determineNextTopicContentLink, determineTopicHistory, idIsPresent} from "../../services/topics";
 import {History} from "history";
 import {RelatedContent} from "../elements/RelatedContent";
 import {determineExamBoardFrom} from "../../services/examBoard";
-import {NOT_FOUND_TYPE, PageNavigation, FigureNumberingContext} from "../../../IsaacAppTypes";
+import {NOT_FOUND_TYPE, PageNavigation} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState, {history, match: {params: {questionId}}, location: {search}}: any) => {
     const navigation: PageNavigation = {
@@ -66,11 +66,10 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
                 {/*High contrast option*/}
                 <Row>
                     <Col>
-                        <BreadcrumbTrail
+                        <TitleAndBreadcrumb
                             intermediateCrumbs={navigation.breadcrumbHistory}
                             currentPageTitle={doc.title as string}
                         />
-                        <h1 className="h-title">{doc.title}</h1>
                     </Col>
                 </Row>
                 <Row>

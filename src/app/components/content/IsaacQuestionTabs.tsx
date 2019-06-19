@@ -10,6 +10,7 @@ import {Button, Col, Row} from "reactstrap";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
 import * as ApiTypes from "../../../IsaacApiTypes";
+import { IsaacParsonsQuestion } from "./IsaacParsonsQuestion";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -53,7 +54,13 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         case 'isaacNumericQuestion': QuestionComponent = IsaacNumericQuestion; break;
         case 'isaacSymbolicLogicQuestion': QuestionComponent = IsaacSymbolicLogicQuestion; break;
         case 'isaacStringMatchQuestion': QuestionComponent = IsaacStringMatchQuestion; break;
+        case 'isaacParsonsQuestion': QuestionComponent = IsaacParsonsQuestion; break;
         case 'isaacMultiChoiceQuestion': default: QuestionComponent = IsaacMultiChoiceQuestion; break;
+    }
+
+    let extraClasses = "";
+    if (doc.type === 'isaacParsonsQuestion') {
+        extraClasses += "parsons-layout ";
     }
 
     return <React.Fragment>
@@ -62,8 +69,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         </h2> */}
 
         {/* Difficulty bar */}
-
-        <div className="question-component p-md-5">
+        <div className={`question-component p-md-5 ${extraClasses}`}>
             <QuestionComponent questionId={doc.id as string} doc={doc} />
 
             {validationResponse && !canSubmit && <div className="validation-response-panel">

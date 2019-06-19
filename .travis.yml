@@ -1,10 +1,14 @@
 language: node_js
 node_js:
 - 10
+install:
+    - npm install -g codecov
+    - npm ci
 cache: npm
 script:
 - npm run build
-- npm test
+- npm test -- --coverage
+- codecov
 notifications:
   slack:
     rooms:

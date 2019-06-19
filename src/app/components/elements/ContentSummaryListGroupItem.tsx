@@ -6,7 +6,7 @@ import React from "react";
 
 export const ContentSummaryListGroupItem = ({item}: {item: ContentSummaryDTO}) => {
     let linkDestination, icon;
-    let itemClasses = "p-3 pb-1 bg-transparent content-summary-link p-0 ";
+    let itemClasses = "p-3 bg-transparent content-summary-link ";
     switch (item.type) {
         case (DOCUMENT_TYPE.QUESTION):
             itemClasses += "text-info";

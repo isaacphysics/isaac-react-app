@@ -44,29 +44,30 @@
     display: block;
     text-decoration: none;
 
-    :hover {
+    &:hover {
       color: $gray-120;
     }
   }
 
-  .footerLink{
+  .footerLink {
     font-family: $primary-font;
     font-size: 16px;
-  }
-
-
-  .logo-text {
-    font-family: $primary-font;
-    font-size: 13px;
-    padding-top: 30px;
   }
 
   .logo-col {
     @include respond-below(sm) {
       padding: 1rem;
     }
-  }
+    a {
+      color: $gray-120;
+      display: block;
+      text-decoration: none;
 
+      &:hover {
+        color: $gray-120;
+      }
+    }
+  }
   &.footer-links-social {
     background-image: url('/assets/social_dots.svg');
     background-position: left 82%;
@@ -79,6 +80,12 @@
   }
 }
 
+.logo-text {
+  color: $gray-120;
+  font-family: $primary-font;
+  font-size: 0.8rem;
+  padding-top: 30px;
+}
 .footerTop {
   background-color: black;
   color: white;

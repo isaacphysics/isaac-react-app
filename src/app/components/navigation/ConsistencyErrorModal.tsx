@@ -2,7 +2,7 @@ import React from "react";
 import * as RS from "reactstrap";
 
 export const ConsistencyErrorModal = ({consistencyError}: {consistencyError: boolean}) => {
-    return <RS.Modal isOpen={consistencyError}>
+    return <RS.Modal isOpen={consistencyError} size={"lg"}>
         <RS.ModalHeader className="h-title pb-5 mb-4">Your Isaac Computer Science session has changed</RS.ModalHeader>
         <RS.ModalBody className="px-0 mx-4">
             <h3>This browser window / tab is out of sync.</h3>

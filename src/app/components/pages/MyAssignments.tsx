@@ -5,9 +5,10 @@ import {loadMyAssignments} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
-import {Container, Row, Col, Nav, NavItem, NavLink, UncontrolledTooltip} from 'reactstrap';
+import {Card, CardBody, Container, Row, Col, Nav, NavItem, NavLink} from 'reactstrap';
 import {orderBy} from "lodash";
 import {extractTeacherName} from "../../services/role";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments};
@@ -27,9 +28,12 @@ const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; show
 
     return <ShowLoading until={assignments}>
         {assignments && assignments.map((assignment, index) =>
-            <>
-                <Row key={index}>
-                    <Col xs={2} md={1} className="myAssignments-percentageCompleted"><h4>{assignment.gameboard && assignment.gameboard.percentageCompleted}</h4></Col>
+            <React.Fragment key={index}>
+                <hr />
+                <Row>
+                    <Col xs={2} md={1} className="myAssignments-percentageCompleted">
+                        <h4>{assignment.gameboard && assignment.gameboard.percentageCompleted}</h4>
+                    </Col>
                     <Col xs={10} md={4}>
                         <Link to={`/gameboards#${assignment.gameboardId}`}>
                             <h4>{assignment.gameboard && assignment.gameboard.title}</h4>
@@ -60,10 +64,16 @@ const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; show
                             <p><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>}
                     </Col>
                 </Row>
-                <hr />
-            </>
+            </React.Fragment>
         )}
-        {assignments && assignments.length === 0 && (showOld ? <p>You have <a href="#" onClick={showOld}>unfinished older assignments</a></p> : <p>There are no assignments to display.</p>)}
+        {
+            assignments &&
+            assignments.length === 0 &&
+            (showOld ?
+                <p className="text-center py-4"><strong>You have <a href="#" onClick={showOld}>unfinished older assignments</a></strong></p> :
+                <p className="text-center py-4"><strong>There are no assignments to display.</strong></p>
+            )
+        }
     </ShowLoading>;
 };
 
@@ -91,9 +101,8 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignme
     if (assignments) {
         assignments.forEach(assignment => {
             assignment.gameboard = notMissing(assignment.gameboard);
-            assignment.gameboard.percentageCompleted = notMissing(assignment.gameboard.percentageCompleted);
             assignment.creationDate = notMissing(assignment.creationDate);
-            if (assignment.gameboard.percentageCompleted < 100) {
+            if (assignment.gameboard.percentageCompleted === undefined || assignment.gameboard.percentageCompleted < 100) {
                 let noDueDateButRecent = !assignment.dueDate && (assignment.creationDate > fourWeeksAgo);
                 let dueDateAndCurrent = assignment.dueDate && (assignment.dueDate >= fiveDaysAgo);
                 if (noDueDateButRecent || dueDateAndCurrent) {
@@ -118,35 +127,39 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignme
         event.preventDefault();
     } || undefined;
 
-    const tabs: [string, AssignmentDTO[]][] = [
-        ['<span class="d-none d-md-inline">Assignments </span>To&nbsp;Do', myAssignments.inProgressRecent],
-        ['Older<span class="d-none d-md-inline"> Assignments</span>', myAssignments.inProgressOld],
-        ['<span class="d-none d-md-inline">Completed Assignments</span><span class="d-inline d-md-none">Done</span>', myAssignments.completed]
+    const tabs: [React.ReactElement, AssignmentDTO[]][] = [
+        [<span key={1}><span className="d-none d-md-inline">Assignments </span>To&nbsp;Do</span>, myAssignments.inProgressRecent],
+        [<span key={2}>Older<span className="d-none d-md-inline"> Assignments</span></span>, myAssignments.inProgressOld],
+        [<span key={3}><span className="d-none d-md-inline">Completed Assignments</span><span className="d-inline d-md-none">Done</span></span>, myAssignments.completed]
     ];
 
+    const pageHelp = <span>
+        Any assignments you have been set will appear here.<br />
+        Unfinished overdue assignments will show in Assignments To Do for 5 days after they are due, after which they move to Older Assignments.
+    </span>;
+
     return <Container>
-        <h3><span>My Assignments<span id="my-assignments-title" className="icon-help" /></span>
-            <UncontrolledTooltip placement="bottom" target="my-assignments-title">
-                Any assignments you have been set will appear here.<br />Unfinished overdue assignments will show in Assignments To Do for 5 days after they are due, after which they move to Older Assignments.
-            </UncontrolledTooltip>
-        </h3>
-        <p className="d-none d-sm-block">Keep track of your assignments</p>
-        <Nav tabs>
-            {tabs.map(([tabTitle, tabItems], mapIndex) => {
-                const tabIndex = mapIndex;
-                const classes = activeTab === tabIndex ? "active" : "";
-                return <NavItem key={tabTitle} className="px-3">
-                    <NavLink className={classes} onClick={() => setActiveTab(tabIndex)}>
-                        <span dangerouslySetInnerHTML={{__html: tabTitle}} /> ({tabItems.length || 0})
-                    </NavLink>
-                </NavItem>;
-            })}
-        </Nav>
-        <Row>
-            <Col sm="12">
-                <Assignments assignments={tabs[activeTab][1]} showOld={showOld} />
-            </Col>
-        </Row>
+        <TitleAndBreadcrumb currentPageTitle="My Assignments" help={pageHelp} />
+        <Card className="my-5">
+            <CardBody className="py-0">
+                <Nav className="my-4" tabs>
+                    {tabs.map(([tabTitle, tabItems], mapIndex) => {
+                        const tabIndex = mapIndex;
+                        const classes = activeTab === tabIndex ? "active" : "";
+                        return <NavItem key={tabIndex} className="px-3">
+                            <NavLink className={classes} onClick={() => setActiveTab(tabIndex)}>
+                                {tabTitle} ({tabItems.length || 0})
+                            </NavLink>
+                        </NavItem>;
+                    })}
+                </Nav>
+                <Row>
+                    <Col sm="12">
+                        <Assignments assignments={tabs[activeTab][1]} showOld={showOld} />
+                    </Col>
+                </Row>
+            </CardBody>
+        </Card>
     </Container>;
 };
 

@@ -1,6 +1,8 @@
 import * as ApiTypes from "./IsaacApiTypes";
+import {GameboardDTO, GroupMembershipDTO, UserGroupDTO, UserSummaryWithEmailAddressDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 import React from "react";
+import {Content, ContentDTO} from "./IsaacApiTypes";
 
 
 export type Action =
@@ -54,6 +56,10 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS; errors: ContentErrorsResponse}
+    | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST}
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS; authorisations: ApiTypes.UserSummaryWithEmailAddressDTO[]}
@@ -137,6 +143,65 @@ export type Action =
 
     | {type: ACTION_TYPE.ACTIVE_MODAL_OPEN; activeModal: ActiveModal}
     | {type: ACTION_TYPE.ACTIVE_MODAL_CLOSE}
+
+    | {type: ACTION_TYPE.GROUPS_REQUEST}
+    | {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS; groups: ApiTypes.UserGroupDTO[]; archivedGroupsOnly: boolean}
+
+    | {type: ACTION_TYPE.GROUPS_SELECT; group: ApiTypes.UserGroupDTO | null}
+
+    | {type: ACTION_TYPE.GROUPS_CREATE_REQUEST}
+    | {type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS; newGroup: ApiTypes.UserGroupDTO}
+
+    | {type: ACTION_TYPE.GROUPS_DELETE_REQUEST}
+    | {type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS; deletedGroup: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_FAILURE; deletedGroup: ApiTypes.UserGroupDTO}
+
+    | {type: ACTION_TYPE.GROUPS_UPDATE_REQUEST}
+    | {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS; updatedGroup: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE; updatedGroup: ApiTypes.UserGroupDTO}
+
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_REQUEST; group: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; members: ApiTypes.UserSummaryWithGroupMembershipDTO[]}
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO}
+
+    | {type: ACTION_TYPE.GROUPS_TOKEN_REQUEST; group: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; token: string}
+    | {type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO}
+
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST; member: AppGroupMembership}
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS; member: AppGroupMembership}
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE; member: AppGroupMembership}
+
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_REQUEST; member: AppGroupMembership}
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS; member: AppGroupMembership}
+    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_FAILURE; member: AppGroupMembership}
+
+    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_REQUEST; group: ApiTypes.UserGroupDTO; managerEmail: string}
+    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; managerEmail: string; newGroup: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; managerEmail: string}
+
+    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
+    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
+    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
+
+    | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
+    | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
+
+    | {type: ACTION_TYPE.BOARDS_GROUPS_REQUEST; board: ApiTypes.GameboardDTO}
+    | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groups: {[key: string]: ApiTypes.UserGroupDTO[]}}
+    | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
+
+    | {type: ACTION_TYPE.BOARDS_DELETE_REQUEST; board: ApiTypes.GameboardDTO}
+    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO}
+    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
+
+    | {type: ACTION_TYPE.BOARDS_UNASSIGN_REQUEST; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
+
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
 ;
 
 export type NOT_FOUND_TYPE = 404;
@@ -145,6 +210,14 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
     currentAttempt?: ApiTypes.ChoiceDTO;
     canSubmit?: boolean;
+}
+
+export interface AppGroup extends ApiTypes.UserGroupDTO {
+    members?: AppGroupMembership[];
+}
+
+export interface AppGroupMembership extends ApiTypes.UserSummaryWithGroupMembershipDTO {
+    groupMembershipInformation: GroupMembershipDTO;
 }
 
 export interface UserEmailPreferences {
@@ -185,6 +258,12 @@ export interface GroupMembershipDetailDTO {
     membershipStatus: MEMBERSHIP_STATUS;
 }
 
+export interface AppGroupTokenDTO {
+    token: string;
+    ownerUserId: number;
+    groupId: number;
+}
+
 export interface LinkInfo {
     title: string;
     to: string;
@@ -207,7 +286,7 @@ export interface School {
 export interface Toast {
     color: string;
     title: string;
-    body: string;
+    body?: string;
     timeout?: number;
     closable?: boolean;
 
@@ -221,6 +300,32 @@ export interface ActiveModal {
     title: string;
     body: any;
     buttons: any[];
+}
+
+export enum BoardOrder {
+    "created" = "created",
+    "visited" = "visited",
+    "title" = "title",
+    "-title" = "-title"
+}
+
+export type ActualBoardLimit = number | "ALL";
+
+export type AppGameBoard = GameboardDTO & {assignedGroups?: UserGroupDTO[]};
+
+// Admin Content Errors:
+export interface ContentErrorItem {
+    listOfErrors: string[];
+    partialContent: Content;
+    successfulIngest: boolean;
+}
+
+export interface ContentErrorsResponse {
+    brokenFiles: number;
+    currentLiveVersion: string;
+    errorsList: ContentErrorItem[];
+    failedFiles: number;
+    totalErrors: number;
 }
 
 export interface FigureNumbersById {[figureId: string]: number}
