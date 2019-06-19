@@ -235,14 +235,6 @@ export const UserDetails = (props: UserDetailsProps) => {
             </Col>
         </Row>
 
-        <Row>
-            <Col>
-                <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
-                    Required field
-                </span>
-            </Col>
-        </Row>
-
         {/*<Row>*/}
         {/*    <Col md={6}>*/}
         {/*        <FormGroup>*/}
