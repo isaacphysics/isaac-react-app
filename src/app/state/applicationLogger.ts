@@ -11,8 +11,9 @@ export const applicationLoggerMiddleware: Middleware = (middlewareApi: Middlewar
             api.logger.log({type: "VIEW_MY_ASSIGNMENTS"});
             break;
 
-        case ACTION_TYPE.ACCEPT_COOKIES:
-            api.logger.log({type: "ACCEPT_COOKIES"});
+        // For generic log events:
+        case ACTION_TYPE.LOG_EVENT:
+            api.logger.log(action.eventDetails);
             break;
     }
 

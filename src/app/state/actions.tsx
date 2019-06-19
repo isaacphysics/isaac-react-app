@@ -856,9 +856,9 @@ export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) =>
     }
 };
 
-// Empty log actions:
-export const acceptCookies = () => {
-    return {type: ACTION_TYPE.ACCEPT_COOKIES};
+// Generic log action:
+export const logAction = (eventDetails: object) => {
+    return {type: ACTION_TYPE.LOG_EVENT, eventDetails: eventDetails};
 };
 
 // SERVICE ACTIONS (w/o dispatch)
