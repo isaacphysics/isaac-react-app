@@ -48,7 +48,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences}: Use
                     </tr>
                     <tr>
                         <td>Events</td>
-                        <td>Information about new virtual or real world physics events.</td>
+                        <td>Information about our computer science events.</td>
                         <td>
                             <CustomInput
                                 className="CustomInput" id="events" type="checkbox" name="events"

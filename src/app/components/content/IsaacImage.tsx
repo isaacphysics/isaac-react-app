@@ -20,6 +20,7 @@ export const IsaacImage = ({doc}: IsaacImageProps) => {
                 <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
+                {doc.attribution && <div className="text-muted">{doc.attribution}</div>}
             </div>
         </figure>
     </div>;

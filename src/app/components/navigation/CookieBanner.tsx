@@ -2,10 +2,12 @@ import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import * as RS from 'reactstrap';
 import Cookies from 'js-cookie';
+import {connect} from "react-redux";
+import {acceptCookies} from "../../state/actions";
 
 const COOKIE_COOKIE = "isaacCookiesAccepted";
 
-export const CookieBanner = () => {
+const CookieBannerComponent = ({acceptCookies}: {acceptCookies: () => void}) => {
     const [show, setShown] = useState(() => {
         const currentCookieValue = Cookies.get(COOKIE_COOKIE);
         return currentCookieValue != "1";
@@ -13,7 +15,8 @@ export const CookieBanner = () => {
 
     function clickDismiss() {
         setShown(false);
-        Cookies.set(COOKIE_COOKIE, "1", {expires: 720 /* days*/})
+        Cookies.set(COOKIE_COOKIE, "1", {expires: 720 /* days*/});
+        acceptCookies();
     }
 
     return show ? <div className="banner">
@@ -37,3 +40,5 @@ export const CookieBanner = () => {
         </RS.Container>
     </div>: null;
 };
+
+export const CookieBanner = connect(null, {acceptCookies})(CookieBannerComponent);

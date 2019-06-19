@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, FormEvent, useState} from "react";
 import {SearchButton} from "./SearchButton";
 import {pushSearchToHistory} from "../../services/search";
 import {History} from "history";
@@ -13,7 +13,7 @@ const MainSearchComponent = ({history}: MainSearchProps) => {
     const [searchText, setSearchText] = useState("");
     const [showSearchBox, setShowSearchBox] = useState(false);
 
-    function doSearch(e: Event) {
+    function doSearch(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         pushSearchToHistory(history, searchText, true, true);
     }

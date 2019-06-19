@@ -1,4 +1,4 @@
-import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
@@ -12,7 +12,7 @@ import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -60,7 +60,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
         [query, problems, concepts]
     );
 
-    function doSearch(e?: Event) {
+    function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {
             e.preventDefault();
         }
@@ -96,8 +96,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
         <Container id="search-page">
             <Row>
                 <Col>
-                    <BreadcrumbTrail currentPageTitle="Search" />
-                    <h1 className="h-title">Search</h1>
+                    <TitleAndBreadcrumb currentPageTitle="Search" />
                 </Col>
             </Row>
             <Row>

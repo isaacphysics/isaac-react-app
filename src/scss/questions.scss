@@ -1,3 +1,6 @@
+@import "../../node_modules/bootstrap/scss/_variables.scss";
+@import "../../node_modules/bootstrap/scss/mixins/_grid.scss";
+
 // ISAAC
 .question-panel > .content-value,
 .question-panel .isaac-accordion .accordion-section > .content-value{
@@ -39,13 +42,63 @@
 .symboliclogic-question {
   .eqn-editor-preview {
     border: solid 1px $black;
-    padding: 0.3em 0.6em;
+    padding: 0.15em 0.6em;
     font-size: 1.5rem;
     cursor: default;
 
     &.empty {
       color: $gray-500;
     }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .parsons-layout {
+    @include make-col-offset(-2, 8);
+    width: 150%;
+  }
+}
+
+.parsons-question {
+  .parsons-items {
+    border: solid 1px #00000021;
+    padding: 0 0.5em;
+
+    &.empty {
+      padding: 0.875em 0.5em;
+    }
+    
+    .parsons-item > pre {
+      margin: 0.5rem 0;
+      padding: 0.5em 1em;
+      cursor: grab; // Doesn't work?
+    }
+
+    $parsons-step: 45;
+
+    .parsons-item {
+      @for $i from 1 through 3 { // Melius est abundare quam deficere
+        &.indent-#{$i} {
+          margin-left: #{$i * $parsons-step}px;
+        }
+      }
+    }
+
+    &#parsons-choice-area {
+      @for $i from 1 through 3 {
+        &.ghost-indent-#{$i} {
+          background: linear-gradient(to right,
+            white #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 7}px, white #{$i * $parsons-step + 7}px
+          );
+        }
+      }
+    }
+  }
+}
+
+.inequality-results {
+  pre {
+    white-space: pre-wrap;
   }
 }
 

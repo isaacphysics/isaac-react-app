@@ -1,6 +1,5 @@
 import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {School, UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
-import {isDobOverThirteen, validateEmail} from "../../services/validation";
 import {EXAM_BOARD} from "../../services/constants";
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {api} from "../../services/api";
@@ -15,24 +14,11 @@ interface UserDetailsProps {
     isDobValid: boolean;
 }
 
-export const UserDetails = ({myUser, setMyUser, isEmailValid, isDobValid, examPreferences, setExamPreferences, attemptedAccountUpdate}: UserDetailsProps) => {
+export const UserDetails = (props: UserDetailsProps) => {
+    const {myUser, setMyUser, isEmailValid, isDobValid, examPreferences, setExamPreferences, attemptedAccountUpdate} = props;
     let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
     let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
-
-    useEffect(() => {
-        fetchSchool(myUser.schoolId || "");
-    }, [myUser]);
-
-    const timer: MutableRefObject<number | undefined> = useRef();
-    useEffect(() => {
-        timer.current = window.setTimeout(() => {
-            searchSchool();
-        }, 800);
-        return () => {
-            clearTimeout(timer.current);
-        }
-    }, [schoolQueryText]);
 
     function searchSchool(e?: Event) {
         if (e) {
@@ -58,6 +44,20 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, isDobValid, examPr
             setSelectedSchoolObject(null);
         }
     }
+
+    useEffect(() => {
+        fetchSchool(myUser.schoolId || "");
+    }, [myUser]);
+
+    const timer: MutableRefObject<number | undefined> = useRef();
+    useEffect(() => {
+        timer.current = window.setTimeout(() => {
+            searchSchool();
+        }, 800);
+        return () => {
+            clearTimeout(timer.current);
+        }
+    }, [schoolQueryText]);
 
     function setUserSchool(school: any) {
         setMyUser(Object.assign({}, myUser, {schoolId: school.urn}));
@@ -120,7 +120,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, isDobValid, examPr
                         id="dob-input"
                         type="date"
                         name="date-of-birth"
-                        defaultValue={myUser.dateOfBirth}
+                        defaultValue={myUser.dateOfBirth as unknown as string}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             setMyUser(Object.assign({}, myUser, {dateOfBirth: event.target.valueAsDate}))
                         }}
@@ -136,45 +136,44 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, isDobValid, examPr
         <Row>
             <Col xs={6} md={3}>
                 <FormGroup>
-                    <Label htmlFor="dob-input">Gender</Label>
-                    <Row>
-                        <Col size={6} lg={4}>
-                            <CustomInput
-                                id="gender-female" type="radio"
-                                name="gender" label="Female"
-                                defaultChecked={myUser.gender === 'FEMALE'}
-                                onChange={
-                                    (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign({}, myUser, {gender: 'FEMALE'}))
-                                    }
-                                }/>
-                        </Col>
-
-                        <Col size={6} lg={4}>
-                            <CustomInput
-                                id="gender-male" type="radio"
-                                name="gender" label="Male"
-                                defaultChecked={myUser.gender === 'MALE'}
-                                onChange={
-                                    (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign({}, myUser, {gender: 'MALE'}))
-                                    }
-                                }/>
-                        </Col>
-
-
-                        <Col size={6} lg={4}>
-                            <CustomInput
-                                id="gender-other" type="radio"
-                                name="gender" label="Other"
-                                defaultChecked={myUser.gender === 'OTHER'}
-                                onChange={
-                                    (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign({}, myUser, {gender: 'OTHER'}))
-                                    }
-                                }/>
-                        </Col>
-                    </Row>
+                    <fieldset>
+                        <legend>Gender</legend>
+                        <Row>
+                            <Col size={6} lg={4}>
+                                <CustomInput
+                                    id="gender-female" type="radio"
+                                    name="gender" label="Female"
+                                    defaultChecked={myUser.gender === 'FEMALE'}
+                                    onChange={
+                                        (e: React.ChangeEvent<HTMLInputElement>) => {
+                                            setMyUser(Object.assign({}, myUser, {gender: 'FEMALE'}))
+                                        }
+                                    }/>
+                            </Col>
+                            <Col size={6} lg={4}>
+                                <CustomInput
+                                    id="gender-male" type="radio"
+                                    name="gender" label="Male"
+                                    defaultChecked={myUser.gender === 'MALE'}
+                                    onChange={
+                                        (e: React.ChangeEvent<HTMLInputElement>) => {
+                                            setMyUser(Object.assign({}, myUser, {gender: 'MALE'}))
+                                        }
+                                    }/>
+                            </Col>
+                            <Col size={6} lg={4}>
+                                <CustomInput
+                                    id="gender-other" type="radio"
+                                    name="gender" label="Other"
+                                    defaultChecked={myUser.gender === 'OTHER'}
+                                    onChange={
+                                        (e: React.ChangeEvent<HTMLInputElement>) => {
+                                            setMyUser(Object.assign({}, myUser, {gender: 'OTHER'}))
+                                        }
+                                    }/>
+                            </Col>
+                        </Row>
+                    </fieldset>
                 </FormGroup>
             </Col>
 
@@ -218,15 +217,24 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, isDobValid, examPr
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setSchoolQueryText(e.target.value)}
                     />
                     {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results">
-                        {schoolSearchResults.map((item: any) => <li key={item.urn} onClick={() => { setUserSchool(item) }}>{item.name + ", " + item.postcode}</li>)}
+                        {schoolSearchResults.map((item: any) =>
+                            <li key={item.urn} onClick={() => { setUserSchool(item) }}>
+                                {item.name + ", " + item.postcode}
+                            </li>
+                        )}
                     </ul>}
                     <Input
-                        id="school-other-input" type="text" name="school-other" placeholder="Other School" className="mt-2" maxLength={255}
-                        defaultValue={myUser.schoolOther} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMyUser(Object.assign({}, myUser, { schoolOther: e.target.value }))}
+                        id="school-other-input" type="text" name="school-other" placeholder="Other School"
+                        className="mt-2" maxLength={255}
+                        defaultValue={myUser.schoolOther}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setMyUser(Object.assign({}, myUser, { schoolOther: e.target.value }))
+                        }
                     />
                 </FormGroup>
             </Col>
         </Row>
+
         <Row>
             <Col>
                 <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
@@ -234,6 +242,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, isDobValid, examPr
                 </span>
             </Col>
         </Row>
+
         {/*<Row>*/}
         {/*    <Col md={6}>*/}
         {/*        <FormGroup>*/}
@@ -242,5 +251,14 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, isDobValid, examPr
         {/*        </FormGroup>*/}
         {/*    </Col>*/}
         {/*</Row>*/}
+
+        <Row>
+            <Col>
+                <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
+                    Required field
+                </span>
+            </Col>
+        </Row>
+
     </CardBody>
 };

@@ -6,7 +6,7 @@ import {submitMessage} from "../../state/actions";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 
 const stateToProps = (state: AppState) => {
@@ -39,7 +39,7 @@ const dispatchToProps = {
 interface ContactPageProps {
     user: LoggedInUser | null;
     submitMessage: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string}) => void;
-    errorMessage: ErrorState | null;
+    errorMessage: ErrorState;
     presetSubject: string;
     presetMessage: string;
 }
@@ -80,9 +80,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
     };
 
     return <Container id="contact-page" className="pb-5">
-        <BreadcrumbTrail currentPageTitle="Contact us" />
-        <h1>Contact us</h1>
-        <h2 className="h-title mb-5">We'd love to hear from you</h2>
+        <TitleAndBreadcrumb currentPageTitle="Contact us" subTitle="We'd love to hear from you"/>
         <div>
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">
@@ -170,7 +168,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                 </CardBody>
                                 <CardFooter>
                                     <div>
-                                        <Alert color="danger" isOpen={errorMessage}>{errorMessage} You can contact us at <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></Alert>
+                                        <Alert color="danger" isOpen={!!errorMessage}>{errorMessage} You can contact us at <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></Alert>
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>

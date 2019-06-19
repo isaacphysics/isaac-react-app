@@ -1,19 +1,20 @@
 import React, {useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
+import ReactGA from "react-ga";
 import {Card, CardBody, CardTitle, Col, CustomInput, Form, FormGroup, Input, Row, Label, FormFeedback, Container} from "reactstrap";
 import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EXAM_BOARD} from "../../services/constants";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => ({
-    errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || null,
-    userEmail: (history.location && history.location.state && history.location.state.email) || null,
-    userPassword: (history.location && history.location.state && history.location.state.password) || null
+    errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
+    userEmail: (history.location && history.location.state && history.location.state.email) || undefined,
+    userPassword: (history.location && history.location.state && history.location.state.password) || undefined
 });
 const dispatchToProps = {
     updateCurrentUser
@@ -24,6 +25,7 @@ const defaultExamPreferences = {
     [EXAM_BOARD.OCR]: false,
     [EXAM_BOARD.AQA]: false
 };
+
 const defaultEmailPreferences = {
     NEWS_AND_UPDATES: true,
     ASSIGNMENTS: true,
@@ -37,10 +39,11 @@ interface RegistrationPageProps {
         params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null},
         currentUser: LoggedInUser
     ) => void;
-    errorMessage: string | null;
-    userEmail: string | null;
-    userPassword: string | null;
+    errorMessage: string | undefined;
+    userEmail: string | undefined;
+    userPassword: string | undefined;
 }
+
 const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
     // Inputs which trigger re-render
     const [registrationUser, setRegistrationUser] = useState(
@@ -64,7 +67,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
 
 
     // Form's submission method
-    const register = (event: React.FormEvent<HTMLFontElement>) => {
+    const register = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedSignUp(true);
 
@@ -74,7 +77,13 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                 registeredUser: registrationUser,
                 userPreferences: {EMAIL_PREFERENCE: defaultEmailPreferences, EXAM_BOARD: defaultExamPreferences},
                 passwordCurrent: null
-            }, (Object.assign(registrationUser, {loggedIn: true})))
+            }, (Object.assign(registrationUser, {loggedIn: true})));
+            // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
+            ReactGA.event({
+                category: 'user',
+                action: 'registration',
+                label: 'Create Account (SEGUE)',
+            });
         }
     };
 
@@ -89,8 +98,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     // Render
     return <Container id="registration-page" className="mb-5">
 
-        <BreadcrumbTrail currentPageTitle="Registration" />
-        <h1 className="h-title mb-4">Registration</h1>
+        <TitleAndBreadcrumb currentPageTitle="Registration" className="mb-4" />
 
         <Card>
             <CardBody>
@@ -142,7 +150,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-input" className="form-required">Password</Label>
+                                <Label htmlFor="password-input" className="form-required">
+                                    Password
+                                </Label>
                                 <Input
                                     id="password" type="password" name="password" required
                                     defaultValue={userPassword}
@@ -154,7 +164,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-confirm" className="form-required">Re-enter Password</Label>
+                                <Label htmlFor="password-confirm" className="form-required">
+                                    Re-enter Password
+                                </Label>
                                 <Input
                                     id="password-confirm" name="password" type="password"
                                     required aria-describedby="invalidPassword"
@@ -176,7 +188,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="email-input" className="form-required">Email</Label>
+                                <Label htmlFor="email-input" className="form-required">
+                                    Email
+                                </Label>
                                 <Input
                                     id="email-input" name="email" type="email"
                                     aria-describedby="email-validation-feedback" required
@@ -193,7 +207,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="dob-input">Date of Birth</Label>
+                                <Label htmlFor="dob-input">
+                                    Date of Birth
+                                </Label>
                                 <Row>
                                     <Col lg={6}>
                                         <Input
