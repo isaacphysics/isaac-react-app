@@ -532,7 +532,7 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
     // TODO MT handle local storage load if gameboardId == null
     // TODO MT handle requesting new gameboard if local storage is also null
     if (gameboardId) {
-        const gameboardResponse = await api.gameboards.get(gameboardId.slice(1));
+        const gameboardResponse = await api.gameboards.get(gameboardId);
         dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS, gameboard: gameboardResponse.data});
     }
     // TODO MT handle error case
