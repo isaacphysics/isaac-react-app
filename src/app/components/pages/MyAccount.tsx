@@ -109,7 +109,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
     //Form's submission method
-    const updateAccount = (event: React.FormEvent<HTMLInputElement>) => {
+    const updateAccount = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedAccountUpdate(true);
         Object.assign({}, myUserPreferences.EMAIL_PREFERENCE || {}, emailPreferences);

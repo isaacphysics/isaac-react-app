@@ -68,7 +68,7 @@ export const UserPassword = (
                             <FormGroup>
                                 <Label htmlFor="password-confirm">Re-enter New Password</Label>
                                 <Input
-                                    invalid={currentPassword && !isNewPasswordConfirmed}
+                                    invalid={!!currentPassword && !isNewPasswordConfirmed}
                                     id="password-confirm"
                                     type="password" name="password-confirmation"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
