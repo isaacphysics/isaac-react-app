@@ -13,9 +13,11 @@ import {
 } from "../services/constants";
 import {
     Action,
-    ActiveModal, ActualBoardLimit,
+    ActiveModal,
+    ActualBoardLimit,
     AppGroup,
-    AppGroupMembership, BoardOrder,
+    AppGroupMembership,
+    BoardOrder,
     LoggedInUser,
     LoggedInValidationUser,
     Toast,
@@ -24,7 +26,8 @@ import {
 } from "../../IsaacAppTypes";
 import {
     AuthenticationProvider,
-    ChoiceDTO, GameboardDTO,
+    ChoiceDTO,
+    GameboardDTO,
     QuestionDTO,
     RegisteredUserDTO,
     Role,
@@ -851,6 +854,11 @@ export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) =>
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE});
     }
+};
+
+// Empty log actions:
+export const acceptCookies = () => {
+    return {type: ACTION_TYPE.ACCEPT_COOKIES};
 };
 
 // SERVICE ACTIONS (w/o dispatch)

@@ -10,6 +10,10 @@ export const applicationLoggerMiddleware: Middleware = (middlewareApi: Middlewar
         case ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS:
             api.logger.log({type: "VIEW_MY_ASSIGNMENTS"});
             break;
+
+        case ACTION_TYPE.ACCEPT_COOKIES:
+            api.logger.log({type: "ACCEPT_COOKIES"});
+            break;
     }
 
     return next(action);
