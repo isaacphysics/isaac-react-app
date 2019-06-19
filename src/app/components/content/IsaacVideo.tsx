@@ -1,8 +1,20 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {VideoDTO} from "../../../IsaacApiTypes";
+import {connect} from "react-redux";
+import {logAction} from "../../state/actions";
+import {AppState} from "../../state/reducers";
 
 interface IsaacVideoProps {
     doc: VideoDTO;
+    pageId?: string;
+    logAction: (eventDetails: object) => void;
+}
+
+function mapStateToProps(state: AppState) {
+    // TODO: This reference to 404 may want refactoring!
+    if (state && state.doc && state.doc != 404) {
+        return {pageId: state.doc.id};
+    }
 }
 
 function rewrite(src: string) {
@@ -12,13 +24,53 @@ function rewrite(src: string) {
     + "?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=" + window.location.origin
 }
 
-export const IsaacVideo = (props: IsaacVideoProps) => {
-    const {doc: {src, altText}} = props;
+function onPlayerStateChange(event: any, logAction: (eventDetails: any) => void, pageId?: string) {
+    const YT = (window as any).YT;
+    let logEventDetails: any = {
+        videoUrl: event.target.getVideoUrl(),
+        videoPosition: event.target.getCurrentTime(),
+    };
+
+    if (pageId) {
+        logEventDetails.pageId = pageId;
+    }
+
+    switch(event.data) {
+        case YT.PlayerState.PLAYING:
+            logEventDetails.type = "VIDEO_PLAY";
+            break;
+        case YT.PlayerState.PAUSED:
+            logEventDetails.type = "VIDEO_PAUSE";
+            break;
+        case YT.PlayerState.ENDED:
+            logEventDetails.type = "VIDEO_ENDED";
+            delete logEventDetails.videoPosition;
+            break;
+        default:
+            return; // Don't send a log message.
+    }
+
+    logAction(logEventDetails);
+}
+
+const IsaacVideoComponent = (props: IsaacVideoProps) => {
+    const {doc: {src, altText}, pageId, logAction} = props;
+
+    const videoRef = useCallback( node => {
+        if (node !== null) {
+            (window as any).YT.ready(function() {
+                const stateChangeCallback = (event: any) => onPlayerStateChange(event, logAction, pageId);
+                new (window as any).YT.Player(node, {events: {'onStateChange': stateChangeCallback}});
+            });
+        }
+    }, [logAction, pageId]);
 
     return <div className="content-value">
         { src ?
-            <iframe className="mw-100" title={altText} width="614" height="390" src={rewrite(src)} frameBorder="0" allowFullScreen/>
+            <iframe ref={videoRef} className="mw-100" title={altText} width="614" height="390" src={rewrite(src)} frameBorder="0" allowFullScreen/>
             : altText
         }
     </div>;
 };
+
+export const IsaacVideo = connect(mapStateToProps, {logAction: logAction})(IsaacVideoComponent);
