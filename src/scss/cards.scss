@@ -1,6 +1,6 @@
 // NOMENSA cards.scss
 // REPLACE ./assets with /assets
-.card-event {
+.card-neat {
   background-color: $white;
   border-radius: 0;
   border-width: 0;
@@ -10,8 +10,13 @@
   @include respond-above(sm) {
     box-shadow: 0 2px 30px 0 $shadow-08;
   }
-
-  .card-image {
+  .news-carousel & {
+    @include aspect-ratio(100, 59);
+    > .card-image img {
+      left: -1.45rem;
+    }
+  }
+  .events-carousel & .card-image {
     img {
       display: block;
       height: 150px;
@@ -31,10 +36,10 @@
         font-weight: bold;
       }
       &.card-text01 {
-        flex: 1 0 56px;
+        flex: 1 0 auto;
       }
       &.card-date-time {
-        flex: 1 0 138px;
+        flex: 1 0 auto;
       }
     }
   }
@@ -90,14 +95,17 @@
       }
       @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
         &:before {
-          @include pseudo-element;
-          background-image: url('/assets/box-line.svg');
-          background-repeat: no-repeat;
-          border-width: 0;
-          height: 318px;
-          left: -438px;
-          top: -31px;
-          width: 500px;
+          display: none;
+          @include respond-above(md) {
+            @include pseudo-element;
+            background-image: url('/assets/box-line.svg');
+            background-repeat: no-repeat;
+            border-width: 0;
+            height: 318px;
+            left: -438px;
+            top: -31px;
+            width: 500px;
+          }
         }
       }
     }
@@ -112,4 +120,52 @@
   p:last-of-type {
     margin-bottom: 0;
   }
+}
+.basic-card {
+  @include aspect-ratio(145, 93);
+  background-color: $white;
+  box-shadow: 0 2px 30px 0 $shadow-08;
+  height: 100%;
+
+  h2 {
+    font-size: 1.25rem;
+  }
+  > p {
+    flex: 1 0 auto;
+    margin: auto 0;
+  }
+  .list-group-item & > a {
+    font-family: $primary-font;
+  }
+}
+.action-card {
+  height: 100%;
+  h2 {
+    font-family: $secondary-font-medium;
+    font-size: 1.625rem;
+  }
+  p:first-of-type > span {
+    display: inline-block;
+    font-weight: 700;
+  }
+
+  p {
+    flex: 1 0 3rem;
+  }
+
+  .btn {
+    font-family: $secondary-font-bold;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+.news-carousel + a,
+.events-carousel + a {
+  display: block;
+  font-family: $primary-font;
+  font-size: 1.125rem;
+  font-weight: bold;
+  padding: 0;
 }

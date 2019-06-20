@@ -45,7 +45,7 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
                         <span className="d-inline-block d-sm-none">&nbsp;Email Verification</span>
                     </h3>
                 </RS.Col>
-                {(status == null || status == "NOT_VERIFIED") && <>
+                {(status == null || status == "NOT_VERIFIED") && <React.Fragment>
                     <RS.Col xs={12} sm={10} md={8}>
                         <small>Your email address is not verified -
                             please find our email in your inbox and follow the verification link. To request a new
@@ -56,7 +56,7 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
                     <RS.Col xs={12} md={3} className="text-center">
                         <RS.Button color="primary" outline className="mt-3 mb-2 d-block d-md-inline-block banner-button" onClick={clickSnooze}>Snooze</RS.Button>
                     </RS.Col>
-                </>}
+                </React.Fragment>}
                 {(status == "DELIVERY_FAILED") &&
                     <RS.Col xs={12} sm={10} md={11}>
                         <small>One or more email(s) sent to your email

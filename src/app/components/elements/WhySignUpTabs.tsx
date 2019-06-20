@@ -26,7 +26,7 @@ export const WhySignUpTabs = () => (
                                     <li>Learn relevant content tailored to your A level exam board</li>
                                 </ul>
                                 <p>
-                                    Everything on Isaac Computer Science is free, funded by the DfE.
+                                    Everything on Isaac Computer Science is free, funded by the Department for Education.
                                 </p>
                             </CardText>
                             <CardText className="mb-auto text-center">
@@ -62,11 +62,11 @@ export const WhySignUpTabs = () => (
                                 </ul>
 
                                 <p>
-                                    Everything on Isaac Computer Science is free, funded by the DfE.
+                                    Everything on Isaac Computer Science is free, funded by the Department for Education.
                                 </p>
                             </CardText>
                             <CardText className="text-center">
-                                <Button tag={Link} to="/register" color="secondary">Sign Up</Button>
+                                <Button tag={Link} to="/pages/teacher_account_request" color="secondary">Teacher Account Page</Button>
                             </CardText>
                         </CardBody>
                     </Card>

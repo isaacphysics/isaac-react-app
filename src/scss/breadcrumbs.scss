@@ -1,31 +1,46 @@
-// ISAAC
-
 // NOMENSA breadcrumbs.scss
-.breadcrumb {
-  background-color: transparent;
-  margin: 0;
-  padding-left: 0;
-  padding-right: 0;
+.bread {
+  background-color: $white;
+  margin-left: -1 * ($grid-gutter-width / 2);
+  margin-right: -1 * ($grid-gutter-width / 2);
+  box-shadow: 0 2px 30px 0 $shadow-08;
+  @include respond-above(xs) {
+    background-color: transparent;
+    box-shadow: none;
+  }
+  @include respond-above(sm) {
+    margin: 0;
+  }
 
-  .breadcrumb-item {
-    font-family: $secondary-font-medium;
+  .breadcrumb {
+    background-color: transparent;
+    margin: 0;
+    padding-left: 1rem;
+    padding-right: 0;
+    @include respond-above(sm) {
+      padding-left: 0;
+    }
 
-    &.active {
-      color: $gray-blue;
+    .breadcrumb-item {
+      font-family: $secondary-font-medium;
+
+      &.active {
+        color: $gray-blue;
+      }
     }
   }
-}
 
-.breadcrumb-item + .breadcrumb-item::before {
-  background-image: url('/assets/chevron_right.svg');
-  background-repeat: no-repeat;
-  background-size: contain;
-  content: '';
-  height: 14px;
-  left: 20px;
-  margin-bottom: -2px;
-  margin-left: 2px;
-  margin-right: 10px;
-  margin-top: 0;
-  width: 9px;
+  .breadcrumb-item + .breadcrumb-item::before {
+    background-image: url('/assets/chevron_right.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: '';
+    height: 14px;
+    left: 20px;
+    margin-bottom: -2px;
+    margin-left: 2px;
+    margin-right: 10px;
+    margin-top: 0;
+    width: 9px;
+  }
 }

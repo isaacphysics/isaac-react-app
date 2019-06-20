@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {connect} from "react-redux";
-import {Link} from "react-router-dom";
 import {Button, Card, CardBody, Col, Container, Form, FormGroup, FormFeedback, Input, Row, Label} from "reactstrap";
 import {handleProviderLoginRedirect} from "../../state/actions";
 import {logInUser, resetPassword} from "../../state/actions";
@@ -34,14 +33,14 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
     const isValidPassword = password.length > 5;
     const [passwordResetRequest, setPasswordResetRequest] = useState(false);
 
-    const validateAndLogIn = (event: React.FormEvent<HTMLFontElement>) => {
+    const validateAndLogIn = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if ((isValidPassword && isValidEmail)) {
             logInUser("SEGUE", {email: email, password: password});
         }
     };
 
-    const signUp = (event: React.FormEvent<HTMLFontElement>) => {
+    const signUp = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         history.push("/register", {email: email, password: password});
     }

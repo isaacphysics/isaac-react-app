@@ -1,0 +1,32 @@
+// NOMENSA carousel.scss
+
+.carousel {
+  .carousel-item {
+    > div {
+      display: flex;
+    }
+  }
+  .carousel-indicators {
+    margin-top: 3rem;
+    li {
+      background-color: transparent;
+      border: 2px solid $black;
+      border-radius: 50%;
+      height: 12px;
+      opacity: 1;
+      width: 12px;
+
+      &.active {
+        background-color: $secondary;
+        border-color: $secondary;
+      }
+    }
+  }
+  > a {
+    display: block;
+    font-family: $primary-font;
+    font-size: 1.125rem;
+    font-weight: bold;
+    padding: 0 1rem;
+  }
+}

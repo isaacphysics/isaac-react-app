@@ -5,11 +5,12 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 
 interface HintsProps {
     hints?: ContentDTO[];
+    questionPartId: string;
 }
-export const IsaacHints = ({hints}: HintsProps) => {
+export const IsaacHints = ({hints, questionPartId}: HintsProps) => {
     return <ListGroup className="question-hints mb-1 pt-3 mt-3">
         {hints && hints.map((hint, index) => <ListGroupItem key={index} className="pl-0 py-1">
-            <IsaacHintModal label={`Hint ${index + 1}`} title={hint.title || `Hint ${index + 1}`} body={hint} scrollable />
+            <IsaacHintModal questionPartId={questionPartId} hintIndex={index} label={`Hint ${index + 1}`} title={hint.title || `Hint ${index + 1}`} body={hint} scrollable/>
         </ListGroupItem>)}
     </ListGroup>;
 };

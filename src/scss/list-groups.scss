@@ -89,6 +89,8 @@
         border-right: 1px solid $gray-107;
         margin-right: 1rem;
         padding-right: 1rem;
+        text-align: center;
+        min-width: 3rem;
       }
 
       &:after {
@@ -98,7 +100,7 @@
         background-size: contain;
         background-position-y: center;
         height: 100%;
-        right: 20px;
+        right: 10px;
         top: 0;
         bottom: 0;
         width: 9px;

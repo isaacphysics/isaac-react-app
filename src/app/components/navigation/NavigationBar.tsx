@@ -72,9 +72,9 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             My Gameboards
                         </DropdownItemComingSoon>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        <DropdownItem tag={Link} to="/assignments" className="pl-4 py-3 p-md-3">
                             My Assignments
-                        </DropdownItemComingSoon>
+                        </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             My Progress
                         </DropdownItemComingSoon>
@@ -92,18 +92,15 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
                         {/*    <p>For Teachers</p>*/}
                         {/*</DropdownItemComingSoon>*/}
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        <DropdownItem tag={Link} to="/set_assignments" className="pl-4 py-3 p-md-3">
                             Set Assignments
-                        </DropdownItemComingSoon>
+                        </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             Assignment Progress
                         </DropdownItemComingSoon>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        <DropdownItem tag={Link} to="/groups" className="pl-4 py-3 p-md-3">
                             Manage Groups
-                        </DropdownItemComingSoon>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
-                            My Progress
-                        </DropdownItemComingSoon>
+                        </DropdownItem>
                     </DropdownMenu>
                 </UncontrolledDropdown>
                 <UncontrolledDropdown nav inNavbar>
@@ -147,6 +144,12 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         <DropdownMenu className="p-0 pl-md-3 m-0" onClick={closeMenuIfMobile}>
                             <DropdownItem tag={Link} to="/admin" className="pl-4 py-3 p-md-3">
                                 Admin Tools
+                            </DropdownItem>
+                            <DropdownItem tag={Link} to="/admin/usermanager" className="pl-4 py-3 p-md-3">
+                                User Manager
+                            </DropdownItem>
+                            <DropdownItem tag={Link} to="/admin/content_errors" className="pl-4 py-3 p-md-3">
+                                Content Errors
                             </DropdownItem>
                         </DropdownMenu>
                     </UncontrolledDropdown>

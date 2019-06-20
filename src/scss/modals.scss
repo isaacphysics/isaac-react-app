@@ -1,3 +1,9 @@
+// Isaac
+
+.modal-content {
+  max-width: none !important;
+}
+
 // NOMENSA modal.scss
 
 .modal-content {
@@ -38,14 +44,18 @@
 
   .modal-footer {
     @include respond-below(sm) {
-      button {
+      button, a {
         font-family: $secondary-font-medium;
         margin: 0 0.25rem 1rem;
 
-        + button {
+        + button, +a {
           margin: 0 0 1rem;
         }
       }
     }
+  }
+
+  .jumbotron {
+    padding: 1.5rem;
   }
 }

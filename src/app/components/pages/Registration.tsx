@@ -1,19 +1,20 @@
 import React, {useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
+import ReactGA from "react-ga";
 import {Card, CardBody, CardTitle, Col, CustomInput, Form, FormGroup, Input, Row, Label, FormFeedback, Container} from "reactstrap";
 import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EXAM_BOARD} from "../../services/constants";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => ({
-    errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || null,
-    userEmail: (history.location && history.location.state && history.location.state.email) || null,
-    userPassword: (history.location && history.location.state && history.location.state.password) || null
+    errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
+    userEmail: (history.location && history.location.state && history.location.state.email) || undefined,
+    userPassword: (history.location && history.location.state && history.location.state.password) || undefined
 });
 const dispatchToProps = {
     updateCurrentUser
@@ -38,9 +39,9 @@ interface RegistrationPageProps {
         params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null},
         currentUser: LoggedInUser
     ) => void;
-    errorMessage: string | null;
-    userEmail: string | null;
-    userPassword: string | null;
+    errorMessage: string | undefined;
+    userEmail: string | undefined;
+    userPassword: string | undefined;
 }
 
 const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
@@ -66,7 +67,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
 
 
     // Form's submission method
-    const register = (event: React.FormEvent<HTMLFontElement>) => {
+    const register = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedSignUp(true);
 
@@ -76,7 +77,13 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                 registeredUser: registrationUser,
                 userPreferences: {EMAIL_PREFERENCE: defaultEmailPreferences, EXAM_BOARD: defaultExamPreferences},
                 passwordCurrent: null
-            }, (Object.assign(registrationUser, {loggedIn: true})))
+            }, (Object.assign(registrationUser, {loggedIn: true})));
+            // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
+            ReactGA.event({
+                category: 'user',
+                action: 'registration',
+                label: 'Create Account (SEGUE)',
+            });
         }
     };
 
@@ -91,8 +98,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     // Render
     return <Container id="registration-page" className="mb-5">
 
-        <BreadcrumbTrail currentPageTitle="Registration" />
-        <h1 className="h-title mb-4">Registration</h1>
+        <TitleAndBreadcrumb currentPageTitle="Registration" className="mb-4" />
 
         <Card>
             <CardBody>

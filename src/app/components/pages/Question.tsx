@@ -1,20 +1,21 @@
 import React, {useEffect} from "react";
 import {withRouter, Link} from "react-router-dom";
 import {connect} from "react-redux";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import queryString from "query-string";
 import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
-import {DOCUMENT_TYPE, EXAM_BOARD} from "../../services/constants";
+import {DOCUMENT_TYPE} from "../../services/constants";
 import {determineNextTopicContentLink, determineTopicHistory, idIsPresent} from "../../services/topics";
-import {PageNavigation} from "../../../IsaacAppTypes";
 import {History} from "history";
 import {RelatedContent} from "../elements/RelatedContent";
 import {determineExamBoardFrom} from "../../services/examBoard";
+import {NOT_FOUND_TYPE, PageNavigation} from "../../../IsaacAppTypes";
+import {WithFigureNumbering} from "../elements/WithFigureNumbering";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState, {history, match: {params: {questionId}}, location: {search}}: any) => {
     const navigation: PageNavigation = {
@@ -37,7 +38,7 @@ const stateToProps = (state: AppState, {history, match: {params: {questionId}}, 
 const dispatchToProps = {fetchDoc};
 
 interface QuestionPageProps {
-    doc: ContentDTO | null;
+    doc: ContentDTO | NOT_FOUND_TYPE | null;
     urlQuestionId: string;
     queryParams: {board?: string};
     history: History;
@@ -57,24 +58,25 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
         history.push(`/gameboards#${queryParams.board}`);
     };
 
-    return <ShowLoading until={doc}>
-        {doc && <div className="pattern-01">
+    return <ShowLoading until={doc} render={ (doc: ContentDTO) =>
+        <div className="pattern-01">
             <Container>
                 {/*FastTrack progress bar*/}
                 {/*Print options*/}
                 {/*High contrast option*/}
                 <Row>
                     <Col>
-                        <BreadcrumbTrail
+                        <TitleAndBreadcrumb
                             intermediateCrumbs={navigation.breadcrumbHistory}
                             currentPageTitle={doc.title as string}
                         />
-                        <h1 className="h-title">{doc.title}</h1>
                     </Col>
                 </Row>
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
-                        <IsaacContent doc={doc} />
+                        <WithFigureNumbering doc={doc}>
+                            <IsaacContent doc={doc} />
+                        </WithFigureNumbering>
 
                         {/* Superseded notice */}
 
@@ -98,13 +100,13 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
                         </React.Fragment>}
 
                         {doc.relatedContent &&
-                            <RelatedContent content={doc.relatedContent} />
+                        <RelatedContent content={doc.relatedContent} parentPage={doc} />
                         }
                     </Col>
                 </Row>
             </Container>
-        </div>}
-    </ShowLoading>;
+        </div>
+    }/>;
 };
 
 export const Question = withRouter(connect(stateToProps, dispatchToProps)(QuestionPageComponent));
