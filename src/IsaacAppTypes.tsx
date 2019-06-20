@@ -1,6 +1,7 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {GameboardDTO, GroupMembershipDTO, UserGroupDTO, UserSummaryWithEmailAddressDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
+import React from "react";
 import {Content, ContentDTO} from "./IsaacApiTypes";
 
 
@@ -326,3 +327,6 @@ export interface ContentErrorsResponse {
     failedFiles: number;
     totalErrors: number;
 }
+
+export interface FigureNumbersById {[figureId: string]: number}
+export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
