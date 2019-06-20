@@ -6,6 +6,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {connect} from "react-redux";
 import {AppState} from "../../state/reducers";
 import * as persistance from "../../services/localStorage";
+import {Unauthorised} from "../pages/Unauthorised";
 
 ReactGA.initialize("UA-137475074-1");
 ReactGA.set({ anonymizeIp: true });
@@ -43,8 +44,9 @@ const TrackedRouteComponent = function({component, trackingOptions, componentPro
                 const propsWithUser = {user, ...props};
                 return <ShowLoading until={user}>
                     {user && onlyFor(user) ?
-                        <WrapperComponent component={component} trackingOptions={trackingOptions} {...propsWithUser} {...componentProps} />
-                        : persistance.save('path', props.location.pathname) && <Redirect to="/login"/>
+                        <WrapperComponent component={component} trackingOptions={trackingOptions} {...propsWithUser} {...componentProps} /> :
+                        user && user.loggedIn && !onlyFor(user) ?
+                            <Unauthorised/> : persistance.save('path', props.location.pathname) && <Redirect to="/login"/>
                     }
                 </ShowLoading>;
             }}/>;
