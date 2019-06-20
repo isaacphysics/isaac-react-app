@@ -5,12 +5,11 @@ import {ListGroup, ListGroupItem} from "reactstrap";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../services/constants";
 import {connect} from "react-redux";
 import {logAction} from "../../state/actions";
-import {func} from "prop-types";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
     parentPage: ContentDTO;
-    logAction: (eventDetails: any) => void;
+    logAction: (eventDetails: object) => void;
 }
 
 function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentDTO) {

@@ -9,7 +9,7 @@ import {logAction} from "../../state/actions";
 
 interface IsaacQuickQuestionProps {
     doc: ApiTypes.IsaacQuickQuestionDTO;
-    logAction: (eventDetails: any) => void;
+    logAction: (eventDetails: object) => void;
 }
 export const IsaacQuickQuestionComponent = (props: IsaacQuickQuestionProps) => {
     const {doc, logAction} = props;

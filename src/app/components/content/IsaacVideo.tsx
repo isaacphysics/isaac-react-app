@@ -24,7 +24,7 @@ function rewrite(src: string) {
     + "?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=" + window.location.origin
 }
 
-function onPlayerStateChange(event: any, logAction: (eventDetails: any) => void, pageId?: string) {
+function onPlayerStateChange(event: any, logAction: (eventDetails: object) => void, pageId?: string) {
     const YT = (window as any).YT;
     let logEventDetails: any = {
         videoUrl: event.target.getVideoUrl(),

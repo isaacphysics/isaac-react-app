@@ -8,7 +8,6 @@ import {AssignmentDTO} from "../../../IsaacApiTypes";
 import {Container, Row, Col, Nav, NavItem, NavLink, UncontrolledTooltip} from 'reactstrap';
 import {orderBy} from "lodash";
 import {extractTeacherName} from "../../services/role";
-import {PageTitle} from "../elements/PageTitle";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
@@ -17,7 +16,7 @@ const dispatchToProps = {loadMyAssignments, logAction};
 interface MyAssignmentsPageProps {
     assignments: AssignmentDTO[] | null;
     loadMyAssignments: () => void;
-    logAction: (eventDetails: any) => void;
+    logAction: (eventDetails: object) => void;
 }
 
 function formatDate(date: number | Date) {

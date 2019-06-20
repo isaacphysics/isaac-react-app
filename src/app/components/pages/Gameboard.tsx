@@ -7,14 +7,14 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 
-const stateFromProps = (state: AppState, currentProps: object) => (state && {gameboard: state.currentGameboard});
+const stateFromProps = (state: AppState) => (state && {gameboard: state.currentGameboard});
 const dispatchFromProps = {loadGameboard, logAction};
 
 interface GameboardPageProps {
     location: {hash: string};
     gameboard: GameboardDTO | null;
     loadGameboard: (gameboardId: string | null) => void;
-    logAction: (eventDetails: any) => void;
+    logAction: (eventDetails: object) => void;
 }
 
 const GameboardPageComponent = ({location: {hash}, gameboard, loadGameboard, logAction}: GameboardPageProps) => {
