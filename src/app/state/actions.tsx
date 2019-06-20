@@ -216,7 +216,12 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     const response = await api.authentication.checkProviderCallback(provider, parameters);
     dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
-    history.push(persistance.load("path") || '/');
+    let initialLogin = response.data.loggedIn && response.data.firstLogin || false;
+    if (initialLogin) {
+        history.push('/')
+    } else {
+        history.push(persistance.load("path") || '/');
+    }
     // TODO MT handle error case
 };
 
