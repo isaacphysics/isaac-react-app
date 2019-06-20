@@ -25,6 +25,7 @@ import {
     ValidatedChoice,
 } from "../../IsaacAppTypes";
 import {
+    AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
     GameboardDTO,
@@ -549,6 +550,23 @@ export const loadAssignmentsOwnedByMe = () => async (dispatch: Dispatch<Action>)
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST});
     const assignmentsResponse = await api.assignments.getAssignmentsOwnedByMe();
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
+};
+
+
+export const loadProgress = (assignment: AssignmentDTO) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    // Don't request this again if it has already been fetched successfully
+    const state = getState();
+    if (state && state.progress && (assignment._id as number) in state.progress) {
+        return;
+    }
+
+    dispatch({type: ACTION_TYPE.PROGRESS_REQUEST, assignment});
+    try {
+        const result = await api.assignments.getProgressForAssignment(assignment);
+        dispatch({type: ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS, assignment, progress: result.data});
+    } catch {
+        dispatch({type: ACTION_TYPE.PROGRESS_RESPONSE_FAILURE, assignment});
+    }
 };
 
 // Content version

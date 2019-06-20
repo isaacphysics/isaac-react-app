@@ -176,6 +176,8 @@ $failed-bg-size: 25%;
   border: 1px solid $gray-118;
   align-content: stretch;
   display: flex;
+  cursor: pointer;
+  justify-content: space-between;
 }
 
 .assignment-progress-gameboard .gameboard-title {
@@ -187,14 +189,151 @@ $failed-bg-size: 25%;
   counter-increment: board-count;
   content: counter(board-count) ". ";
   display: inline-block;
-  padding: 7px 0.5rem 0;
+  padding: 3px 0.5rem 0;
+  font-weight: bold;
 }
 .assignment-progress-gameboard .gameboard-title span {
   padding-left: 0.5rem;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 .gameboard-due-date {
   font-weight: normal;
   color: $gray-160;
   font-size: 0.875rem !important;
 }
+
+.gameboard-links {
+  align-items: baseline;
+  display: flex;
+  padding-top: 2px;
+}
+.gameboard-links > * {
+  margin-right: 0.5rem !important;
+}
+
+.assignment-progress-progress {
+  background: $gray-103;
+  border: 1px solid $gray-118;
+  border-top: none;
+}
+
+.progress-header {
+  text-align: center;
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.progress-questions {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.2rem;
+  align-items: center;
+  background: white;
+}
+
+.progress-questions button {
+  min-width: 50px;
+  border: none;
+  border-radius: 0;
+  &.btn.disabled {
+    opacity: 0.5;
+  }
+}
+
+.progress-table {
+  table {
+    width: 100%;
+  }
+
+  tbody tr:nth-of-type(even) {
+    background: $gray-110;
+  }
+
+  thead th {
+    border-top: 1px solid $gray-118;
+    border-bottom: 1px solid $gray-118;
+    &.selected {
+      border-top-color: #fff;
+      background: #fff;
+    }
+  }
+
+  tfoot th {
+    border-top: 1px solid $gray-118;
+    &.selected {
+      background: #fff;
+    }
+  }
+
+  .progress-table-header-footer th {
+    position: relative;
+    padding-right: 8px;
+  }
+
+  .progress-table-header-footer button {
+    background: none;
+    border: none;
+    padding: 0;
+
+    position: absolute;
+    right: 1px;
+    font-size: 8px;
+    opacity: 0.5;
+    top: 50%;
+
+    line-height: initial;
+    &.up {
+      transform: translateY(-22px);
+      padding-top: 10px;
+    }
+    &.down {
+      padding-bottom: 10px;
+    }
+  }
+
+  .progress-table-header-footer .sorted.forward .up, .progress-table-header-footer .sorted.reverse .down {
+    opacity: 1;
+  }
+
+  td, th {
+    vertical-align: middle;
+    text-align: center;
+    line-height: 1.3rem;
+
+    &:first-child {
+      border-right: 1px solid $gray-118;
+    }
+  }
+
+  .revoked .student-name {
+    text-decoration: line-through;
+  }
+
+  .selected {
+    border-left: 1px solid $gray-118;
+    border-right: 1px solid $gray-118;
+  }
+
+  th {
+    font-weight: normal;
+  }
+
+  td.selected, td.total-column {
+    font-weight: bold;
+  }
+
+  .total-column {
+    width: 70px;
+    &.left {
+      border-left: 1px solid $gray-118;
+    }
+  }
+
+  .student-name {
+    font-weight: bold;
+    color: $text-muted;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}
+

@@ -2,6 +2,7 @@ import {combineReducers} from "redux";
 import {
     Action,
     ActiveModal,
+    AppAssignmentProgress,
     AppGameBoard,
     AppGroup,
     AppGroupMembership,
@@ -229,6 +230,16 @@ export const assignmentsByMe = (assignments: AssignmentsState = null, action: Ac
             return action.assignments;
         default:
             return assignments;
+    }
+};
+
+type ProgressState = {[assignmentId: number]: AppAssignmentProgress[]} | null;
+export const progress = (progress: ProgressState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS:
+            return {...progress, [action.assignment._id as number]: action.progress};
+        default:
+            return progress;
     }
 };
 
@@ -576,7 +587,8 @@ const appReducer = combineReducers({
     activeModal,
     groups,
     boards,
-    assignmentsByMe
+    assignmentsByMe,
+    progress
 });
 
 export type AppState = undefined | {
@@ -602,6 +614,7 @@ export type AppState = undefined | {
     groups: GroupsState;
     boards: BoardsState;
     assignmentsByMe: AssignmentsState;
+    progress: ProgressState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

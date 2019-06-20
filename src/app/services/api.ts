@@ -179,6 +179,9 @@ export const api = {
         },
         getAssignmentsOwnedByMe: (): AxiosPromise<ApiTypes.AssignmentDTO[]> => {
             return endpoint.get(`/assignments/assign`);
+        },
+        getProgressForAssignment: (assignment: ApiTypes.AssignmentDTO): AxiosPromise<AppTypes.AppAssignmentProgress[]> => {
+            return endpoint.get(`/assignments/assign/${assignment._id}/progress`);
         }
     },
     contentVersion: {
