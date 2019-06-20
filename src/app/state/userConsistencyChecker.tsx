@@ -2,7 +2,12 @@ import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE} from "../services/constants";
 import {getUserId, setUserId} from "./userConsistencyCheckerCurrentUser";
-import {logAction} from "./actions";
+
+// Generic log action:
+// This is not imported from actions to avoid a circular dependency through store.
+export const logAction = (eventDetails: object) => {
+    return {type: ACTION_TYPE.LOG_EVENT, eventDetails: eventDetails};
+};
 
 let timeoutHandle: number | undefined;
 
