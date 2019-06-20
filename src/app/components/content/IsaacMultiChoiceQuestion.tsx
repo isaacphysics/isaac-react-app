@@ -47,7 +47,7 @@ const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps)
                 </li>)
             }</ul>
 
-            <IsaacHints hints={doc.hints}/>
+            <IsaacHints questionPartId={questionId} hints={doc.hints}/>
         </div>
     );
 };

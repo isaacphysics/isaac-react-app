@@ -100,7 +100,7 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
                         </React.Fragment>}
 
                         {doc.relatedContent &&
-                        <RelatedContent content={doc.relatedContent} />
+                        <RelatedContent content={doc.relatedContent} parentPage={doc} />
                         }
                     </Col>
                 </Row>

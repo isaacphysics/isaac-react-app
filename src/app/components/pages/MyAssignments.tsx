@@ -1,7 +1,7 @@
 import React, {MouseEvent, useEffect, useState} from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {loadMyAssignments} from "../../state/actions";
+import {loadMyAssignments, logAction} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
@@ -11,11 +11,12 @@ import {extractTeacherName} from "../../services/role";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
-const dispatchToProps = {loadMyAssignments};
+const dispatchToProps = {loadMyAssignments, logAction};
 
 interface MyAssignmentsPageProps {
     assignments: AssignmentDTO[] | null;
     loadMyAssignments: () => void;
+    logAction: (eventDetails: object) => void;
 }
 
 function formatDate(date: number | Date) {
@@ -79,8 +80,9 @@ function notMissing<T>(item: T | undefined): T {
     return item;
 }
 
-const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignmentsPageProps) => {
+const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}: MyAssignmentsPageProps) => {
     useEffect(() => {loadMyAssignments();}, []);
+    useEffect(() => {logAction({type: "VIEW_MY_ASSIGNMENTS"})}, []);
 
     const now = new Date();
     const fourWeeksAgo = new Date(now.valueOf() - (4 * 7 * 24 * 60 * 60 * 1000));

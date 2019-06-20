@@ -3,11 +3,11 @@ import {Link} from "react-router-dom";
 import * as RS from 'reactstrap';
 import Cookies from 'js-cookie';
 import {connect} from "react-redux";
-import {acceptCookies} from "../../state/actions";
+import {logAction} from "../../state/actions";
 
 const COOKIE_COOKIE = "isaacCookiesAccepted";
 
-const CookieBannerComponent = ({acceptCookies}: {acceptCookies: () => void}) => {
+const CookieBannerComponent = ({logAction}: {logAction: (eventDetails: object) => void}) => {
     const [show, setShown] = useState(() => {
         const currentCookieValue = Cookies.get(COOKIE_COOKIE);
         return currentCookieValue != "1";
@@ -16,7 +16,8 @@ const CookieBannerComponent = ({acceptCookies}: {acceptCookies: () => void}) => 
     function clickDismiss() {
         setShown(false);
         Cookies.set(COOKIE_COOKIE, "1", {expires: 720 /* days*/});
-        acceptCookies();
+        const eventDetails = {type: "ACCEPT_COOKIES"};
+        logAction(eventDetails);
     }
 
     return show ? <div className="banner">
@@ -41,4 +42,4 @@ const CookieBannerComponent = ({acceptCookies}: {acceptCookies: () => void}) => 
     </div>: null;
 };
 
-export const CookieBanner = connect(null, {acceptCookies})(CookieBannerComponent);
+export const CookieBanner = connect(null, {logAction: logAction})(CookieBannerComponent);
