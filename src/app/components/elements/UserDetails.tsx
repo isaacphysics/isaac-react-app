@@ -215,7 +215,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                 <FormGroup className="school">
                     <Label htmlFor="school-input">School</Label>
                     <Input
-                        id="school-input" type="text" name="school" placeholder="UK School"
+                        id="school-input" type="text" name="school" placeholder="UK School" autocomplete="isaac-off"
                         value={
                             schoolQueryText !== null ?
                                 schoolQueryText :
