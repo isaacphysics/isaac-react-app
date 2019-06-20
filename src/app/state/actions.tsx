@@ -158,16 +158,18 @@ export const updateCurrentUser = (
 export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_OUT_REQUEST});
     const response = await api.authentication.logout();
+    persistance.remove("path");
     dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     // TODO MT handle error case
 };
 
 export const logInUser = (provider: AuthenticationProvider, params: {email: string; password: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
+    var path = persistance.load("path") || '/';
     try {
         const response = await api.authentication.login(provider, params);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
-        history.push('/');
+        history.push(path);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
     }
