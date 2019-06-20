@@ -8,13 +8,14 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {determineNextTopicContentLink, determineTopicHistory, idIsPresent} from "../../services/topics";
 import {History} from "history";
 import {RelatedContent} from "../elements/RelatedContent";
 import {determineExamBoardFrom} from "../../services/examBoard";
 import {NOT_FOUND_TYPE, PageNavigation} from "../../../IsaacAppTypes";
+import {WithFigureNumbering} from "../elements/WithFigureNumbering";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState, {history, match: {params: {questionId}}, location: {search}}: any) => {
     const navigation: PageNavigation = {
@@ -65,16 +66,17 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
                 {/*High contrast option*/}
                 <Row>
                     <Col>
-                        <BreadcrumbTrail
+                        <TitleAndBreadcrumb
                             intermediateCrumbs={navigation.breadcrumbHistory}
                             currentPageTitle={doc.title as string}
                         />
-                        <h1 className="h-title">{doc.title}</h1>
                     </Col>
                 </Row>
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
-                        <IsaacContent doc={doc} />
+                        <WithFigureNumbering doc={doc}>
+                            <IsaacContent doc={doc} />
+                        </WithFigureNumbering>
 
                         {/* Superseded notice */}
 
@@ -98,7 +100,7 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
                         </React.Fragment>}
 
                         {doc.relatedContent &&
-                        <RelatedContent content={doc.relatedContent} />
+                        <RelatedContent content={doc.relatedContent} parentPage={doc} />
                         }
                     </Col>
                 </Row>

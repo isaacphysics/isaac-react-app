@@ -99,7 +99,7 @@ const IsaacFreeTextQuestionComponent = (props: IsaacFreeTextQuestionProps) => {
                         setCurrentAttempt(questionId, validatedChoiceDTOfromEvent(event))}/>
             </FormGroup>
             <FreeTextValidation {...validation} />
-            <IsaacHints hints={doc.hints}/>
+            <IsaacHints questionPartId={questionId} hints={doc.hints}/>
         </div>
     );
 };

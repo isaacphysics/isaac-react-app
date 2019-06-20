@@ -6,7 +6,7 @@ import {submitMessage} from "../../state/actions";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 
 const stateToProps = (state: AppState) => {
@@ -80,9 +80,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
     };
 
     return <Container id="contact-page" className="pb-5">
-        <BreadcrumbTrail currentPageTitle="Contact us" />
-        <h1>Contact us</h1>
-        <h2 className="h-title mb-5">We'd love to hear from you</h2>
+        <TitleAndBreadcrumb currentPageTitle="Contact us" subTitle="We'd love to hear from you"/>
         <div>
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">

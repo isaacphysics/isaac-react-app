@@ -8,12 +8,13 @@ import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, EXAM_BOARD} from "../../services/constants";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {determineNextTopicContentLink, determineTopicHistory, idIsPresent} from "../../services/topics";
 import {NOT_FOUND_TYPE, PageNavigation} from "../../../IsaacAppTypes";
 import history, {History} from "history";
 import {RelatedContent} from "../elements/RelatedContent";
 import {determineExamBoardFrom} from "../../services/examBoard";
+import {WithFigureNumbering} from "../elements/WithFigureNumbering";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState, {history, match: {params: {conceptId}}}: any) => {
     // TODO All of navigation should be moved into a service once it gets more complicated
@@ -57,16 +58,17 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
             <Container>
                 <Row>
                     <Col>
-                        <BreadcrumbTrail
+                        <TitleAndBreadcrumb
                             intermediateCrumbs={navigation.breadcrumbHistory}
                             currentPageTitle={doc.title as string}
                         />
-                        <h1 className="h-title">{doc.title}</h1>
                     </Col>
                 </Row>
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4">
-                        <IsaacContent doc={doc} />
+                        <WithFigureNumbering doc={doc}>
+                            <IsaacContent doc={doc} />
+                        </WithFigureNumbering>
 
                         {/* Superseded notice */}
 
@@ -90,7 +92,7 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
                         </React.Fragment>}
 
                         {doc.relatedContent &&
-                        <RelatedContent content={doc.relatedContent} />
+                        <RelatedContent content={doc.relatedContent} parentPage={doc} />
                         }
                     </Col>
                 </Row>

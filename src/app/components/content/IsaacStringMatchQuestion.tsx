@@ -45,7 +45,7 @@ const IsaacStringMatchQuestionComponent = (props: IsaacStringMatchQuestionProps)
                 value={currentAttemptValue || ""}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     setCurrentAttempt(questionId, choiceDTOfromEvent(event))}/>
-            <IsaacHints hints={doc.hints}/>
+            <IsaacHints questionPartId={questionId} hints={doc.hints}/>
         </div>
     );
 };

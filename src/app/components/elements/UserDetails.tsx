@@ -1,6 +1,5 @@
-import {CardBody, CardFooter, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {School, UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
-import {isDobOverThirteen, validateEmail} from "../../services/validation";
 import {EXAM_BOARD} from "../../services/constants";
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {api} from "../../services/api";
@@ -10,13 +9,13 @@ interface UserDetailsProps {
     setExamPreferences: (e: any) => void;
     myUser: ValidationUser;
     setMyUser: (user: any) => void;
+    attemptedAccountUpdate: boolean;
     isEmailValid: boolean;
-    setIsEmailValid: (isEmailValid: boolean) => void;
     isDobValid: boolean;
-    setIsDobValid: (isDobValid: boolean) => void;
 }
 
-export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, isDobValid, setIsDobValid, examPreferences, setExamPreferences}: UserDetailsProps) => {
+export const UserDetails = (props: UserDetailsProps) => {
+    const {myUser, setMyUser, isEmailValid, isDobValid, examPreferences, setExamPreferences, attemptedAccountUpdate} = props;
     let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
     let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
@@ -46,12 +45,9 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
         }
     }
 
-    function setUserSchool(school: any) {
-        setMyUser(Object.assign(myUser, {schoolId: school.urn}));
-        setSchoolQueryText(null);
-        setSelectedSchoolObject(school);
-        setSchoolSearchResults([]);
-    }
+    useEffect(() => {
+        fetchSchool(myUser.schoolId || "");
+    }, [myUser]);
 
     const timer: MutableRefObject<number | undefined> = useRef();
     useEffect(() => {
@@ -63,9 +59,12 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
         }
     }, [schoolQueryText]);
 
-    useEffect(() => {
-        fetchSchool(myUser.schoolId || "");
-    }, [myUser]);
+    function setUserSchool(school: any) {
+        setMyUser(Object.assign({}, myUser, {schoolId: school && school.urn}));
+        setSchoolQueryText(null);
+        setSelectedSchoolObject(school);
+        setSchoolSearchResults([]);
+    }
 
     return <CardBody>
         <Row>
@@ -83,7 +82,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         id="first-name-input" type="text" name="givenName" maxLength={255}
                         defaultValue={myUser.givenName}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setMyUser(Object.assign(myUser, {givenName: e.target.value}))
+                            setMyUser(Object.assign({}, myUser, {givenName: e.target.value}))
                         }}
                         required
                     />
@@ -96,7 +95,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         id="last-name-input" type="text" name="last-name" maxLength={255}
                         defaultValue={myUser.familyName}
                         onChange={(e:  React.ChangeEvent<HTMLInputElement>) => {
-                            setMyUser(Object.assign(myUser, {familyName: e.target.value}))
+                            setMyUser(Object.assign({}, myUser, {familyName: e.target.value}))
                         }}
                         required
                     />
@@ -111,9 +110,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         invalid={!isEmailValid} id="email-input" type="email"
                         name="email" defaultValue={myUser.email}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            const email = event.target.value;
-                            setIsEmailValid(validateEmail(email));
-                            setMyUser(Object.assign(myUser, {email}))
+                            setMyUser(Object.assign({}, myUser, {email: event.target.value}))
                         }}
                         aria-describedby="emailValidationMessage" required
                     />
@@ -126,19 +123,17 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                 <FormGroup>
                     <Label htmlFor="dob-input">Date of Birth</Label>
                     <Input
-                        invalid={!isDobValid}
+                        invalid={!isDobValid && !!myUser.dateOfBirth}
                         id="dob-input"
                         type="date"
                         name="date-of-birth"
                         defaultValue={myUser.dateOfBirth as unknown as string}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            const dateOfBirth = event.target.valueAsDate;
-                            setIsDobValid(isDobOverThirteen(dateOfBirth));
-                            setMyUser(Object.assign(myUser, {dateOfBirth: dateOfBirth}))
+                            setMyUser(Object.assign({}, myUser, {dateOfBirth: event.target.valueAsDate}))
                         }}
                         aria-describedby="ageValidationMessage"
                     />
-                    {!isDobValid && <FormFeedback id="ageValidationMessage">
+                    {!isDobValid && !!myUser.dateOfBirth && <FormFeedback id="ageValidationMessage">
                         You must be over 13 years old
                     </FormFeedback>}
                 </FormGroup>
@@ -148,45 +143,44 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
         <Row>
             <Col xs={6} md={3}>
                 <FormGroup>
-                    <Label htmlFor="dob-input">Gender</Label>
-                    <Row>
-                        <Col size={6} lg={4}>
-                            <CustomInput
-                                id="gender-female" type="radio"
-                                name="gender" label="Female"
-                                defaultChecked={myUser.gender === 'FEMALE'}
-                                onChange={
-                                    (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign(myUser, {gender: 'FEMALE'}))
-                                    }
-                                }/>
-                        </Col>
-
-                        <Col size={6} lg={4}>
-                            <CustomInput
-                                id="gender-male" type="radio"
-                                name="gender" label="Male"
-                                defaultChecked={myUser.gender === 'MALE'}
-                                onChange={
-                                    (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign(myUser, {gender: 'MALE'}))
-                                    }
-                                }/>
-                        </Col>
-
-
-                        <Col size={6} lg={4}>
-                            <CustomInput
-                                id="gender-other" type="radio"
-                                name="gender" label="Other"
-                                defaultChecked={myUser.gender === 'OTHER'}
-                                onChange={
-                                    (e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setMyUser(Object.assign(myUser, {gender: 'OTHER'}))
-                                    }
-                                }/>
-                        </Col>
-                    </Row>
+                    <fieldset>
+                        <legend>Gender</legend>
+                        <Row>
+                            <Col size={6} lg={4}>
+                                <CustomInput
+                                    id="gender-female" type="radio"
+                                    name="gender" label="Female"
+                                    defaultChecked={myUser.gender === 'FEMALE'}
+                                    onChange={
+                                        (e: React.ChangeEvent<HTMLInputElement>) => {
+                                            setMyUser(Object.assign({}, myUser, {gender: 'FEMALE'}))
+                                        }
+                                    }/>
+                            </Col>
+                            <Col size={6} lg={4}>
+                                <CustomInput
+                                    id="gender-male" type="radio"
+                                    name="gender" label="Male"
+                                    defaultChecked={myUser.gender === 'MALE'}
+                                    onChange={
+                                        (e: React.ChangeEvent<HTMLInputElement>) => {
+                                            setMyUser(Object.assign({}, myUser, {gender: 'MALE'}))
+                                        }
+                                    }/>
+                            </Col>
+                            <Col size={6} lg={4}>
+                                <CustomInput
+                                    id="gender-other" type="radio"
+                                    name="gender" label="Other"
+                                    defaultChecked={myUser.gender === 'OTHER'}
+                                    onChange={
+                                        (e: React.ChangeEvent<HTMLInputElement>) => {
+                                            setMyUser(Object.assign({}, myUser, {gender: 'OTHER'}))
+                                        }
+                                    }/>
+                            </Col>
+                        </Row>
+                    </fieldset>
                 </FormGroup>
             </Col>
 
@@ -200,7 +194,6 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         id="examBoardSelect"
                         value={
                             (examPreferences && examPreferences[EXAM_BOARD.OCR] && EXAM_BOARD.OCR) ||
-                            // (examPreferences && examPreferences[EXAM_BOARD.AQA] && [EXAM_BOARD.AQA]) ||
                             EXAM_BOARD.AQA
                         }
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
@@ -219,27 +212,42 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
             </Col>
 
             <Col md={6}>
-                <FormGroup>
+                <FormGroup className="school">
                     <Label htmlFor="school-input">School</Label>
                     <Input
-                        id="school-input" type="text" name="school" placeholder="UK School"
+                        id="school-input" type="text" name="school" placeholder="UK School" autocomplete="isaac-off"
                         value={
                             schoolQueryText !== null ?
                                 schoolQueryText :
                                 (selectedSchoolObject && (selectedSchoolObject.name + ", " + selectedSchoolObject.postcode) || "")
                         }
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => setSchoolQueryText(e.target.value)}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            const queryValue = e.target.value;
+                            setSchoolQueryText(queryValue);
+                            if (queryValue === "") {
+                                setUserSchool(undefined);
+                            }
+                        }}
                     />
                     {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results">
-                        {schoolSearchResults.map((item: any) => <li key={item.urn} onClick={() => { setUserSchool(item) }}>{item.name + ", " + item.postcode}</li>)}
+                        {schoolSearchResults.map((item: any) =>
+                            <li key={item.urn} onClick={() => { setUserSchool(item) }}>
+                                {item.name + ", " + item.postcode}
+                            </li>
+                        )}
                     </ul>}
-                    <Input
-                        id="school-other-input" type="text" name="school-other" placeholder="Other School" className="mt-2" maxLength={255}
-                        defaultValue={myUser.schoolOther} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMyUser(Object.assign(myUser, { schoolOther: e.target.value }))}
-                    />
+                    {!myUser.schoolId && <Input
+                        id="school-other-input" type="text" name="school-other" placeholder="Other School"
+                        className="mt-2" maxLength={255}
+                        defaultValue={myUser.schoolOther}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setMyUser(Object.assign({}, myUser, { schoolOther: e.target.value }))
+                        }
+                    />}
                 </FormGroup>
             </Col>
         </Row>
+
         {/*<Row>*/}
         {/*    <Col md={6}>*/}
         {/*        <FormGroup>*/}

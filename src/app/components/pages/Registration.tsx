@@ -8,8 +8,8 @@ import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EXAM_BOARD} from "../../services/constants";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
@@ -98,8 +98,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     // Render
     return <Container id="registration-page" className="mb-5">
 
-        <BreadcrumbTrail currentPageTitle="Registration" />
-        <h1 className="h-title mb-4">Registration</h1>
+        <TitleAndBreadcrumb currentPageTitle="Registration" className="mb-4" />
 
         <Card>
             <CardBody>

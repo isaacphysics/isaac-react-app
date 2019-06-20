@@ -1,12 +1,10 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {Col, Container, Row} from "reactstrap";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 export const ComingSoon = () => <Container>
-    <BreadcrumbTrail currentPageTitle="Coming soon" />
-
-    <h1 className="h-title">Coming soon</h1>
+    <TitleAndBreadcrumb currentPageTitle="Coming soon" />
 
     <Row>
         <Col>

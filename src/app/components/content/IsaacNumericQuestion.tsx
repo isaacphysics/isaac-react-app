@@ -172,7 +172,7 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
                 </Col>
                 }
             </Row>
-            <IsaacHints hints={doc.hints}/>
+            <IsaacHints questionPartId={questionId} hints={doc.hints}/>
         </div>
     );
 };

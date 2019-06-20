@@ -1,6 +1,6 @@
 import {applyMiddleware, compose, createStore, Middleware} from "redux";
 import thunk from "redux-thunk";
-import {createLogger} from "redux-logger";
+import * as reduxLogger from "redux-logger";
 import {rootReducer} from "./reducers";
 import {userConsistencyCheckerMiddleware} from "./userConsistencyChecker";
 
@@ -8,9 +8,12 @@ import {userConsistencyCheckerMiddleware} from "./userConsistencyChecker";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const storeFactory = (initialState: object) => {
-    const middleware: Middleware[] = [userConsistencyCheckerMiddleware, thunk];
+    const middleware: Middleware[] = [
+        userConsistencyCheckerMiddleware,
+        thunk
+    ];
     if (process.env.NODE_ENV !== 'production') {
-        middleware.push(createLogger());
+        middleware.push(reduxLogger.createLogger());
     }
 
     const enhancer = composeEnhancers(

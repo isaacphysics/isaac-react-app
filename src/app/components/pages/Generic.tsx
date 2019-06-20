@@ -7,10 +7,10 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {connect} from "react-redux";
 import {DOCUMENT_TYPE} from "../../services/constants";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState, {match: {params: {pageId}}}: any) => {
     return {
@@ -39,8 +39,7 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
             <Container>
                 <Row>
                     <Col>
-                        <BreadcrumbTrail currentPageTitle={doc.title as string} />
-                        <h1 className="h-title">{doc.title}</h1>
+                        <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
                     </Col>
                 </Row>
                 {/* TODO add printing and sharing links */}
@@ -51,7 +50,7 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
                 </Row>
 
                 {doc.relatedContent &&
-                <RelatedContent content={doc.relatedContent} />
+                <RelatedContent content={doc.relatedContent} parentPage={doc} />
                 }
             </Container>
         </div>
