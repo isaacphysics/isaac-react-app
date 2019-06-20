@@ -212,7 +212,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
             </Col>
 
             <Col md={6}>
-                <FormGroup>
+                <FormGroup className="school">
                     <Label htmlFor="school-input">School</Label>
                     <Input
                         id="school-input" type="text" name="school" placeholder="UK School"
@@ -223,7 +223,7 @@ export const UserDetails = ({myUser, setMyUser, isEmailValid, setIsEmailValid, i
                         }
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setSchoolQueryText(e.target.value)}
                     />
-                    {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results" className="selection-area">
+                    {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results" className="selection-area md-6">
                         {schoolSearchResults.map((item: any) => <li key={item.urn} onClick={() => { setUserSchool(item) }}>{item.name + ", " + item.postcode}</li>)}
                     </ul>}
                     <Input
