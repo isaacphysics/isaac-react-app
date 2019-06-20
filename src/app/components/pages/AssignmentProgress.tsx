@@ -243,7 +243,7 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
         let incorrectParts = studentProgress.incorrectPartResults[index];
         let status = studentProgress.results[index];
 
-        let result = isSelected(question);
+        let result = isSelected(question) + " ";
         if (!studentProgress.user.authorisedFullAccess) {
             result += "revoked";
         } else if (correctParts == totalParts) {
