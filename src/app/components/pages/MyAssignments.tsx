@@ -31,10 +31,10 @@ const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; show
             <React.Fragment key={index}>
                 <hr />
                 <Row>
-                    <Col xs={2} md={1} className="myAssignments-percentageCompleted">
+                    <Col xs={3} md={1} className="myAssignments-percentageCompleted">
                         <h4>{assignment.gameboard && assignment.gameboard.percentageCompleted}</h4>
                     </Col>
-                    <Col xs={10} md={4}>
+                    <Col xs={9} md={4}>
                         <Link to={`/gameboards#${assignment.gameboardId}`}>
                             <h4>{assignment.gameboard && assignment.gameboard.title}</h4>
                         </Link>
@@ -66,14 +66,11 @@ const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; show
                 </Row>
             </React.Fragment>
         )}
-        {
-            assignments &&
-            assignments.length === 0 &&
-            (showOld ?
-                <p className="text-center py-4"><strong>You have <a href="#" onClick={showOld}>unfinished older assignments</a></strong></p> :
-                <p className="text-center py-4"><strong>There are no assignments to display.</strong></p>
-            )
-        }
+        {assignments && assignments.length === 0 &&
+        (showOld ?
+            <p className="text-center py-4"><strong>You have <a href="#" onClick={showOld}>unfinished older assignments</a></strong></p> :
+            <p className="text-center py-4"><strong>There are no assignments to display.</strong></p>
+        )}
     </ShowLoading>;
 };
 
@@ -142,7 +139,7 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments}: MyAssignme
         <TitleAndBreadcrumb currentPageTitle="My Assignments" help={pageHelp} />
         <Card className="my-5">
             <CardBody className="py-0">
-                <Nav className="my-4" tabs>
+                <Nav className="mt-4 mb-3" tabs>
                     {tabs.map(([tabTitle, tabItems], mapIndex) => {
                         const tabIndex = mapIndex;
                         const classes = activeTab === tabIndex ? "active" : "";
