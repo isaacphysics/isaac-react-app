@@ -329,7 +329,4 @@ export interface ContentErrorsResponse {
 }
 
 export interface FigureNumbersById {[figureId: string]: number}
-
-// TODO: Work out how to initialise the context to {} with the right type, instead of these two silly lines.
-let defaultFigureNumbers: FigureNumbersById = {};
-export const FigureNumberingContext = React.createContext( defaultFigureNumbers);
+export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
