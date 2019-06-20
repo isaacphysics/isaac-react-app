@@ -158,7 +158,6 @@ export const updateCurrentUser = (
 export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_OUT_REQUEST});
     const response = await api.authentication.logout();
-    persistance.remove("path");
     dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     // TODO MT handle error case
 };
@@ -217,6 +216,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     const response = await api.authentication.checkProviderCallback(provider, parameters);
     dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
+    history.push(persistance.load("path") || '/');
     // TODO MT handle error case
 };
 

@@ -45,6 +45,8 @@ const TrackedRouteComponent = function({component, trackingOptions, componentPro
                 return <ShowLoading until={user}>
                     {user && onlyFor(user) ?
                         <WrapperComponent component={component} trackingOptions={trackingOptions} {...propsWithUser} {...componentProps} /> :
+                        user && user.loggedIn && user.role == "STUDENT" && rest.onlyFor && rest.onlyFor.name == "isTeacher" ?
+                            <Redirect to="/pages/teacher_account_request"/> :
                         user && user.loggedIn && !onlyFor(user) ?
                             <Unauthorised/> : persistance.save('path', props.location.pathname) && <Redirect to="/login"/>
                     }
