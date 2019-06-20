@@ -176,6 +176,9 @@ export const api = {
     assignments: {
         getMyAssignments: (): AxiosPromise<ApiTypes.AssignmentDTO[]> => {
             return endpoint.get(`/assignments`);
+        },
+        getAssignmentsOwnedByMe: (): AxiosPromise<ApiTypes.AssignmentDTO[]> => {
+            return endpoint.get(`/assignments/assign`);
         }
     },
     contentVersion: {
@@ -255,6 +258,9 @@ export const api = {
         },
         assign: (board: ApiTypes.GameboardDTO, groupId: number, dueDate?: number) => {
             return endpoint.post(`/assignments/assign`, {dueDate, gameboardId: board.id, groupId})
+        },
+        getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
+            return endpoint.get(`/gameboards/${boardId}`);
         }
     },
     logger: {

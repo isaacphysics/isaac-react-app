@@ -544,6 +544,13 @@ export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
 };
 
+
+export const loadAssignmentsOwnedByMe = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST});
+    const assignmentsResponse = await api.assignments.getAssignmentsOwnedByMe();
+    dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
+};
+
 // Content version
 export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST});
@@ -842,6 +849,24 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
         dispatch(showToast({color: "failure", title: "Board Assignment Failed", body: e.response.data.errorMessage, timeout: 5000}) as any);
         return false;
     }
+};
+
+export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    if (state && state.boards && state.boards.boards && state.boards.boards.boards) {
+        if (state.boards.boards.boards.some(board => board.id == boardId)) {
+            // Don't load the board if it is already available
+            return;
+        }
+    }
+    const accumulate = true;
+    dispatch({type: ACTION_TYPE.BOARDS_REQUEST, accumulate});
+    const board = await api.boards.getById(boardId);
+    dispatch({
+        type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS,
+        boards: {totalResults: undefined, results: [board.data]},
+        accumulate
+    });
 };
 
 // Content Errors

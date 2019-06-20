@@ -44,6 +44,7 @@ import {Groups} from "../pages/Groups";
 import { Equality } from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
+import {AssignmentProgress} from "../pages/AssignmentProgress";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -90,6 +91,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         {/* Teacher pages */}
                         <TrackedRoute path="/groups" onlyFor={isTeacher} component={Groups} />
                         <TrackedRoute path="/set_assignments" onlyFor={isTeacher} component={SetAssignments} />
+                        <TrackedRoute path="/assignment_progress" onlyFor={isTeacher} component={AssignmentProgress} />
 
                         {/* Admin */}
                         <TrackedRoute exact path="/admin" onlyFor={isAdmin} component={Admin} />

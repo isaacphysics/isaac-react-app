@@ -221,6 +221,17 @@ export const assignments = (assignments: AssignmentsState = null, action: Action
     }
 };
 
+export const assignmentsByMe = (assignments: AssignmentsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST:
+            return null;
+        case ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS:
+            return action.assignments;
+        default:
+            return assignments;
+    }
+};
+
 type CurrentGameboardState = GameboardDTO | null;
 export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action) => {
     switch (action.type) {
@@ -480,7 +491,7 @@ export type BoardsState = {boards?: Boards} & BoardAssignees | null;
 function mergeBoards(boards: Boards, additional: GameboardListDTO) {
     return {
         ...boards,
-        totalResults: additional.totalResults as number,
+        totalResults: additional.totalResults || boards.totalResults,
         boards: unionWith(boards.boards, additional.results, function(a, b) {return a.id == b.id})
     };
 }
@@ -564,7 +575,8 @@ const appReducer = combineReducers({
     toasts,
     activeModal,
     groups,
-    boards
+    boards,
+    assignmentsByMe
 });
 
 export type AppState = undefined | {
@@ -589,6 +601,7 @@ export type AppState = undefined | {
     activeModal: ActiveModalState;
     groups: GroupsState;
     boards: BoardsState;
+    assignmentsByMe: AssignmentsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {
