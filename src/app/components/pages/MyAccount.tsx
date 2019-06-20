@@ -14,7 +14,7 @@ import {
     Col,
     Form,
     Input,
-    Row,
+    Row, CardBody,
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
@@ -216,6 +216,11 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 </Form>
             </Card>
         }
+        <Row className="text-muted text-center mt-3">
+            <Col>
+                If you would like to delete your account please <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a>.
+            </Col>
+        </Row>
     </Container>;
 };
 

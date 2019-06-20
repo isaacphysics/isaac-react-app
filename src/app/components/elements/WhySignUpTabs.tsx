@@ -66,7 +66,7 @@ export const WhySignUpTabs = () => (
                                 </p>
                             </CardText>
                             <CardText className="text-center">
-                                <Button tag={Link} to="/register" color="secondary">Sign Up</Button>
+                                <Button tag={Link} to="/pages/teacher_account_request" color="secondary">Teacher Account Page</Button>
                             </CardText>
                         </CardBody>
                     </Card>
