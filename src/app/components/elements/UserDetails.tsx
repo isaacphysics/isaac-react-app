@@ -1,4 +1,4 @@
-import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {CardBody, CardFooter, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {School, UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../services/constants";
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
@@ -66,14 +66,15 @@ export const UserDetails = (props: UserDetailsProps) => {
         setSchoolSearchResults([]);
     }
 
-    return <CardBody>
+    return <CardBody className="pt-0">
         <Row>
             <Col>
-                <span className="d-block pb-3 pb-md-0 text-md-right required-before">
+                <span className="d-block pb-0 text-right text-muted required-before">
                     Required
                 </span>
             </Col>
         </Row>
+
         <Row>
             <Col md={6}>
                 <FormGroup>
@@ -256,16 +257,17 @@ export const UserDetails = (props: UserDetailsProps) => {
         {/*        </FormGroup>*/}
         {/*    </Col>*/}
         {/*</Row>*/}
-        {myUser && myUser.role == "STUDENT" &&
-            <Row>
-                <Col>
-                    Are you a teacher? <a href="/pages/teacher_account_request" target="_blank" rel="noopener noreferrer">
+
+
+        {myUser && myUser.role == "STUDENT" && <Row>
+            <Col className="text-muted text-center mt-2">
+                Are you a teacher? {" "}
+                <a href="/pages/teacher_account_request" target="_blank" rel="noopener noreferrer">
                     <span className='sr-only'> Are you a teacher? </span>
                     Let us know
-                </a> and we'll convert your account to a teacher account.
-                </Col>
-            </Row>
-        }
-
+                </a> {" "}
+                and we&apos;ll convert your account to a teacher account.
+            </Col>
+        </Row>}
     </CardBody>
 };
