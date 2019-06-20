@@ -4,18 +4,20 @@
   margin-left: -1 * ($grid-gutter-width / 2);
   margin-right: -1 * ($grid-gutter-width / 2);
   box-shadow: 0 2px 30px 0 $shadow-08;
-
-  @include respond-above(sm) {
+  @include respond-above(xs) {
     background-color: transparent;
-    margin: 0;
     box-shadow: none;
   }
+  @include respond-above(sm) {
+    margin: 0;
+  }
+
   .breadcrumb {
     background-color: transparent;
     margin: 0;
     padding-left: 1rem;
     padding-right: 0;
-    @include respond-above(xs) {
+    @include respond-above(sm) {
       padding-left: 0;
     }
 

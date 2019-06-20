@@ -13,6 +13,7 @@ import {NOT_FOUND_TYPE, PageNavigation} from "../../../IsaacAppTypes";
 import history, {History} from "history";
 import {RelatedContent} from "../elements/RelatedContent";
 import {determineExamBoardFrom} from "../../services/examBoard";
+import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState, {history, match: {params: {conceptId}}}: any) => {
@@ -65,7 +66,9 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
                 </Row>
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4">
-                        <IsaacContent doc={doc} />
+                        <WithFigureNumbering doc={doc}>
+                            <IsaacContent doc={doc} />
+                        </WithFigureNumbering>
 
                         {/* Superseded notice */}
 

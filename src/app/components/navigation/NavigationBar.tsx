@@ -101,9 +101,6 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         <DropdownItem tag={Link} to="/groups" className="pl-4 py-3 p-md-3">
                             Manage Groups
                         </DropdownItem>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
-                            My Progress
-                        </DropdownItemComingSoon>
                     </DropdownMenu>
                 </UncontrolledDropdown>
                 <UncontrolledDropdown nav inNavbar>
