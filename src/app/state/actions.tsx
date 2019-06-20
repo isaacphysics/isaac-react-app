@@ -218,7 +218,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
     let initialLogin = response.data.loggedIn && response.data.firstLogin || false;
     if (initialLogin) {
-        history.push('/')
+        history.push('/account')
     } else {
         history.push(persistance.load("path") || '/');
     }
