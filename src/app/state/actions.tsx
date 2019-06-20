@@ -127,7 +127,6 @@ export const updateCurrentUser = (
             try {
                 const changedUser = await api.users.updateCurrent(params);
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: changedUser.data});
-                history.push('/');
             } catch (e) {
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
             }
