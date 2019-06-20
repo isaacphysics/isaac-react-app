@@ -91,7 +91,7 @@ export const api = {
         }
     },
     email: {
-        verify: (params: {userid: string | null; token: string | null}): AxiosPromise<ApiTypes.RegisteredUserDTO>  => {
+        verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
             return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
         }
     },

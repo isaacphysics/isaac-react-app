@@ -16,7 +16,6 @@ export const user = (user: UserState = null, action: Action): UserState => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS:
-        case ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS:
             return {loggedIn: true, ...action.user};
         case ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE:
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:

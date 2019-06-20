@@ -5,26 +5,24 @@ import {Button, Col, Container} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
 import {history} from "../../services/history";
 import queryString from "query-string";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 
-const stateToProps = (state: AppState, {location: {search}}: any) => ({
+const stateToProps = (state: AppState, {location: {search}}: {location: {search?: string}}) => ({
     errorMessage: state ? state.error : null,
-    queryParams: queryString.parse(search)
+    queryParams: search ? queryString.parse(search) : {}
 });
 const dispatchToProps = {handleEmailAlter, requestCurrentUser};
 
 interface EmailAlterHandlerProps {
-    user: LoggedInUser;
     queryParams: {userid?: string; token?: string};
     handleEmailAlter: (params: {userid: string | null; token: string | null}) => void;
     errorMessage: ErrorState;
     requestCurrentUser: () => void;
 }
 
-const EmailAlterHandlerComponent = ({user, queryParams: {userid, token}, handleEmailAlter, errorMessage, requestCurrentUser}: EmailAlterHandlerProps) => {
+const EmailAlterHandlerComponent = ({queryParams: {userid, token}, handleEmailAlter, errorMessage, requestCurrentUser}: EmailAlterHandlerProps) => {
     useEffect(() => {
         if (userid && token) {
-            Promise.resolve(handleEmailAlter({userid, token})).then(requestCurrentUser);
+            handleEmailAlter({userid, token});
         }
     }, []);
 
@@ -33,8 +31,9 @@ const EmailAlterHandlerComponent = ({user, queryParams: {userid, token}, handleE
             <div>
                 <h3>Email address verified</h3>
                 <Col>
-                    <Button color="primary" onClick={() => {
-                        Promise.resolve(requestCurrentUser()).then(() => history.push('/account'));
+                    <Button color="secondary" onClick={() => {
+                        requestCurrentUser();
+                        history.push('/account');
                     }} block >
                         Go to My Account
                     </Button>
