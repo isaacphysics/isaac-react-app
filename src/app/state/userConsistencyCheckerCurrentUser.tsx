@@ -1,4 +1,4 @@
-import {save, load, remove} from "../services/localStorage";
+import {save, load, clear} from "../services/localStorage";
 
 const USER_ID = "currentUserId";
 
@@ -8,7 +8,7 @@ export const getUserId = function(): any {
 
 export const setUserId = function(id: any): boolean {
     if (id === undefined) {
-        return remove(USER_ID);
+        return clear();
     }
     return save(USER_ID, id);
 };
