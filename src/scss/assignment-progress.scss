@@ -232,21 +232,32 @@ $failed-bg-size: 25%;
 }
 
 .progress-questions button {
-  min-width: 50px;
+  min-width: 65px;
   border: none;
   border-radius: 0;
+  padding: 0.5rem 0;
   &.btn.disabled {
     opacity: 0.5;
   }
 }
 
 .progress-table {
+
+  overflow-y: scroll;
+
   table {
     width: 100%;
   }
 
   tbody tr:nth-of-type(even) {
     background: $gray-110;
+    th {
+      background: $gray-110;
+    }
+  }
+
+  tbody td, tbody th {
+    min-width: 65px;
   }
 
   thead th {
@@ -302,6 +313,20 @@ $failed-bg-size: 25%;
 
     &:first-child {
       border-right: 1px solid $gray-118;
+      position: sticky;
+      left: 0;
+      top: 0;
+      background: $gray-103;
+      z-index: 1;
+      &:after{
+        content:'';
+        position:absolute;
+        left: -1px;
+        top: -1px;
+        right: -1px;
+        bottom: -1px;
+        border: 1px solid $gray-118;
+      }
     }
   }
 
@@ -323,9 +348,33 @@ $failed-bg-size: 25%;
   }
 
   .total-column {
-    width: 70px;
+    width: 65px;
+    position: sticky !important;
+    right: 0;
+    top: 0;
+    background: $gray-103;
+    z-index: 1;
+    &:after{
+      content:'';
+      position:absolute;
+      left: -1px;
+      top: -1px;
+      right: -1px;
+      bottom: -1px;
+      border-top: 1px solid $gray-118;
+    }
     &.left {
+      right: 65px;
       border-left: 1px solid $gray-118;
+      &:after{
+        content:'';
+        position:absolute;
+        left: -1px;
+        top: -1px;
+        right: -1px;
+        bottom: -1px;
+        border-left: 1px solid $gray-118;
+      }
     }
   }
 
@@ -334,6 +383,7 @@ $failed-bg-size: 25%;
     color: $text-muted;
     padding-top: 5px;
     padding-bottom: 5px;
+    min-width: 130px;
   }
 }
 

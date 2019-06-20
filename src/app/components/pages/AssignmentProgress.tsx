@@ -1,4 +1,4 @@
-import React, {ComponentProps, useEffect, useState} from "react";
+import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {
     Container,
@@ -69,7 +69,7 @@ const dispatchFromProps = {loadGroups, loadAssignmentsOwnedByMe, loadBoard, load
 type EnhancedAssignment = AssignmentDTO & {
     gameboard: GameboardDTO & {questions: (GameboardItem & {questionPartsTotal: number})[]};
     _id: number;
-    progress?: AppAssignmentProgress[]
+    progress?: AppAssignmentProgress[];
 };
 
 type AppGroupWithAssignments = AppGroup & {assignments: EnhancedAssignment[]};
@@ -135,7 +135,7 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
     const [sortOrder, setSortOrder] = useState<SortOrder>("name");
     const [reverseOrder, setReverseOrder] = useState(false);
 
-    // TODO: useMemo on this stuff
+    // TODO: useMemo on this stuff if performance is a problem
 
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     let questions = assignment.gameboard.questions;
@@ -260,9 +260,40 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
         return result;
     }
 
+    const tableRef = useRef<HTMLTableElement>(null);
+
+    useLayoutEffect(() => {
+        const table = tableRef.current;
+        if (table) {
+            const parentElement = table.parentElement as HTMLElement;
+            const firstRow = (table.firstChild as HTMLTableSectionElement).firstChild as HTMLTableRowElement;
+            const questionTH = firstRow.children[selectedQuestionNumber + 1] as HTMLTableHeaderCellElement;
+
+            const offsetLeft = questionTH.offsetLeft;
+            const parentScrollLeft = parentElement.scrollLeft;
+            const parentLeft = parentScrollLeft + parentElement.offsetLeft + 130;
+            const width = questionTH.offsetWidth;
+
+            let newScrollLeft;
+
+            if (offsetLeft < parentLeft) {
+                newScrollLeft = parentScrollLeft + offsetLeft - parentLeft - width / 2;
+            } else {
+                const offsetRight = offsetLeft + width;
+                const parentRight = parentLeft + parentElement.offsetWidth - 260;
+                if (offsetRight > parentRight) {
+                    newScrollLeft = parentScrollLeft + offsetRight - parentRight + width / 2;
+                }
+            }
+            if (newScrollLeft != undefined) {
+                parentElement.scrollLeft = newScrollLeft;
+            }
+        }
+    }, [selectedQuestionNumber]);
+
     return <div className="assignment-progress-progress">
         <div className="progress-header">
-            <strong>{studentsCorrect}</strong> of <strong>{progress.length}</strong> students have completed the board <Link to={`/gameboards#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link> correctly.
+            <strong>{studentsCorrect}</strong> of <strong>{progress.length}</strong> students have completed the gameboard <Link to={`/gameboards#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link> correctly.
         </div>
         {progress.length > 0 && <React.Fragment>
             <div className="progress-questions">
@@ -275,14 +306,14 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
                     onClick={() => setSelectedQuestion(selectedQuestionNumber + 1)}>►</Button>
             </div>
             <div className="progress-table">
-                <table>
+                <table ref={tableRef}>
                     <thead>
                         {tableHeaderFooter}
                     </thead>
                     <tbody>
                         {sortedProgress.map((studentProgress) => {
                             const fullAccess = studentProgress.user.authorisedFullAccess;
-                            return <tr key={studentProgress.user.id} className={`${fullAccess ? "" : "revoked"}`}>
+                            return <tr key={studentProgress.user.id} className={`${fullAccess ? "" : "revoked"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
                                 <th className="student-name">{studentProgress.user.givenName}<span
                                     className="d-none d-lg-inline"> {studentProgress.user.familyName}</span></th>
                                 {questions.map((q, index) =>
