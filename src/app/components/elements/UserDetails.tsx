@@ -116,7 +116,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <FormGroup>
                     <Label htmlFor="dob-input">Date of Birth</Label>
                     <Input
-                        invalid={!isDobValid && attemptedAccountUpdate}
+                        invalid={!isDobValid && !!myUser.dateOfBirth}
                         id="dob-input"
                         type="date"
                         name="date-of-birth"
@@ -126,7 +126,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                         }}
                         aria-describedby="ageValidationMessage"
                     />
-                    {!isDobValid && attemptedAccountUpdate && <FormFeedback id="ageValidationMessage">
+                    {!isDobValid && !!myUser.dateOfBirth && <FormFeedback id="ageValidationMessage">
                         You must be over 13 years old
                     </FormFeedback>}
                 </FormGroup>
