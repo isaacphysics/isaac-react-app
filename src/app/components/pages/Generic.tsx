@@ -50,7 +50,7 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
                 </Row>
 
                 {doc.relatedContent &&
-                <RelatedContent content={doc.relatedContent} />
+                <RelatedContent content={doc.relatedContent} parentPage={doc} />
                 }
             </Container>
         </div>

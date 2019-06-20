@@ -60,7 +60,7 @@ export const UserDetails = (props: UserDetailsProps) => {
     }, [schoolQueryText]);
 
     function setUserSchool(school: any) {
-        setMyUser(Object.assign({}, myUser, {schoolId: school.urn}));
+        setMyUser(Object.assign({}, myUser, {schoolId: school && school.urn}));
         setSchoolQueryText(null);
         setSelectedSchoolObject(school);
         setSchoolSearchResults([]);
@@ -205,16 +205,22 @@ export const UserDetails = (props: UserDetailsProps) => {
             </Col>
 
             <Col md={6}>
-                <FormGroup>
+                <FormGroup className="school">
                     <Label htmlFor="school-input">School</Label>
                     <Input
-                        id="school-input" type="text" name="school" placeholder="UK School"
+                        id="school-input" type="text" name="school" placeholder="UK School" autocomplete="isaac-off"
                         value={
                             schoolQueryText !== null ?
                                 schoolQueryText :
                                 (selectedSchoolObject && (selectedSchoolObject.name + ", " + selectedSchoolObject.postcode) || "")
                         }
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => setSchoolQueryText(e.target.value)}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            const queryValue = e.target.value;
+                            setSchoolQueryText(queryValue);
+                            if (queryValue === "") {
+                                setUserSchool(undefined);
+                            }
+                        }}
                     />
                     {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results">
                         {schoolSearchResults.map((item: any) =>
@@ -223,14 +229,14 @@ export const UserDetails = (props: UserDetailsProps) => {
                             </li>
                         )}
                     </ul>}
-                    <Input
+                    {!myUser.schoolId && <Input
                         id="school-other-input" type="text" name="school-other" placeholder="Other School"
                         className="mt-2" maxLength={255}
                         defaultValue={myUser.schoolOther}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setMyUser(Object.assign({}, myUser, { schoolOther: e.target.value }))
                         }
-                    />
+                    />}
                 </FormGroup>
             </Col>
         </Row>

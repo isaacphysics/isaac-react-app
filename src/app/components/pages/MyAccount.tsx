@@ -28,7 +28,6 @@ import queryString from "query-string";
 import {Link} from "react-router-dom";
 import {EXAM_BOARD, ACCOUNT_TAB} from "../../services/constants";
 import {history} from "../../services/history"
-import {showToast} from "../../state/actions";
 import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
 import {withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -49,7 +48,6 @@ const stateToProps = (state: AppState, props: any) => {
 const dispatchToProps = {
     updateCurrentUser,
     resetPassword,
-    showToast,
 };
 
 interface AccountPageProps {
@@ -62,21 +60,16 @@ interface AccountPageProps {
         currentUser: LoggedInUser
     ) => void;
     firstLogin: boolean;
-    showToast: (toast: Toast) => void;
     hashAnchor: string | null;
     authToken: string | null;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, showToast, hashAnchor, authToken}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, hashAnchor, authToken}: AccountPageProps) => {
     const editingSelf = true;
 
     if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
         userPreferences.EMAIL_PREFERENCE = { NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true };
     }
-
-    useEffect(() => {
-        setMyUser(Object.assign({}, user, {password: ""}))
-    }, [user]);
 
     // Inputs which trigger re-render
     const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
@@ -102,6 +95,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         (hashAnchor && ACCOUNT_TAB[hashAnchor as any]) ||
         ACCOUNT_TAB.account;
     const [activeTab, setTab] = useState(initialTab);
+
+    useEffect(() => {
+        setMyUser(Object.assign({}, user, {password: ""}))
+    }, [user]);
 
     // Values derived from inputs (props and state)
     const isEmailValid = myUser.loggedIn && myUser.email && validateEmail(myUser.email) || validateEmail("");
