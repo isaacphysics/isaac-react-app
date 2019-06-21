@@ -328,13 +328,15 @@ export enum DOCUMENT_TYPE {
     QUESTION = "isaacQuestionPage",
     GENERIC = "page",
     FRAGMENT = "isaacPageFragment",
+    SHORTCUT = "shortcut"
 }
 
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.FRAGMENT]: "pages/fragments",
     [DOCUMENT_TYPE.GENERIC]: "pages",
     [DOCUMENT_TYPE.CONCEPT]: "concepts",
-    [DOCUMENT_TYPE.QUESTION]: "questions"
+    [DOCUMENT_TYPE.QUESTION]: "questions",
+    [DOCUMENT_TYPE.SHORTCUT]: ""
 };
 
 export enum ContentVersionUpdatingStatus {

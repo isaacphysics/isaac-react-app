@@ -51,7 +51,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
     let [searchText, setSearchText] = useState(query);
     let [searchFilterProblems, setSearchFilterProblems] = useState(problems);
     let [searchFilterConcepts, setSearchFilterConcepts] = useState(concepts);
-    let [shortcutResponse, setShortcutResponse] = useState<ShortcutResponses[]>();
+    let [shortcutResponse, setShortcutResponse] = useState<(ShortcutResponses | ContentSummaryDTO)[]>();
 
     useEffect(
         () => {
@@ -99,9 +99,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
     const filteredSearchResults = searchResults && searchResults.results && searchResults.results.filter(filterResult);
 
     // const shortcutSearchResults = Object.assign([], shortcutResponse, filteredSearchResults);
-    const shortcutSearchResults = (shortcutResponse || []).concat(filteredSearchResults);
-
-    console.log(shortcutResponse);
+    const shortcutSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
 
     return (
         <Container id="search-page">

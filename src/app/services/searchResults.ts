@@ -22,13 +22,6 @@ export const searchList = [
         url: "/logout",
         type: "shortcut"
     }, {
-        id: "spc",
-        title: "Senior Physics Challenge",
-        terms: ["senior physics challenge", "spc", "masterclass", "bootcamp"],
-        summary: "Learn more about the Senior Physics Challenge.",
-        url: "/spc",
-        type: "shortcut"
-    }, {
         id: "help",
         title: "Student Support",
         terms: ["help", "support"],
@@ -49,14 +42,7 @@ export const searchList = [
         summary: "Click here to register for an Isaac account.",
         url: "/register",
         type: "shortcut"
-    }, {
-        id: "chemistry",
-        title: "Isaac Chemistry",
-        terms: ["chemistry", "isaac chemistry", "chem"],
-        summary: "View our Chemistry material.",
-        url: "/chemistry",
-        type: "shortcut"
-    }, {
+    },  {
         id: "teacher_support",
         title: "Teacher Support",
         terms: ["teacher", "teacher support", "teaching", "teachers", "help", "support"],
@@ -86,6 +72,8 @@ let group = /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6}$/;
 export function shortcuts(term: string) {
     let lterm = term.toLowerCase();
     let response = [];
+    console.log(term);
+    console.log(group.test(term));
     if (group.test(term)) {
         response.push({
             id: "teacher_connections",

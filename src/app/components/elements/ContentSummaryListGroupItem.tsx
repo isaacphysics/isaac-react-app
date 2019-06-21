@@ -8,6 +8,10 @@ export const ContentSummaryListGroupItem = ({item}: {item: ContentSummaryDTO}) =
     let linkDestination, icon;
     let itemClasses = "p-3 bg-transparent content-summary-link ";
     switch (item.type) {
+        case (DOCUMENT_TYPE.SHORTCUT):
+            linkDestination = item.url;
+            icon = "🎯";
+            break;
         case (DOCUMENT_TYPE.QUESTION):
             itemClasses += "text-info";
             linkDestination = `/questions/${item.id}`;
