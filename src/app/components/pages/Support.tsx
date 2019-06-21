@@ -78,7 +78,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         </Row>
         <Row>
             <Col className="py-4">
-                <Tabs defaultActiveTab={categoryIndex + 1} activeTabChanged={activeTabChanged} tabTitleClass={tabTitleClass}>
+                <Tabs defaultActiveTab={categoryIndex + 1} activeTabChanged={activeTabChanged} tabTitleClass={tabTitleClass} tabContentClass="pt-5">
                     {/* eslint-disable-next-line react/jsx-key */}
                     {fromPairs(Object.values(section.categories).map(category => [category.title, <PageFragment name={`support_${type}_${category.category}`} />]))}
                 </Tabs>
