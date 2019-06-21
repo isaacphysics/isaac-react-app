@@ -32,7 +32,6 @@ const support: {student: SupportCategories; teacher: SupportCategories} = {
         categories: {
             general: {category: "general", title: "General Questions", icon: "faq"},
             homework: {category: "homework", title: "Finding Homework", icon: "faq"},
-            questions: {category: "questions", title: "Answering Questions", icon: "faq"},
         }
     },
     teacher: {
@@ -41,8 +40,6 @@ const support: {student: SupportCategories; teacher: SupportCategories} = {
             general: { category: "general", title: "General Questions", icon: "faq" },
             assignments: { category: "assignments", title: "Assigning Work", icon: "faq" },
             progress: { category: "progress", title: "Viewing Student Progress", icon: "faq" },
-            suggestions: { category: "suggestions", title: "Teaching Suggestions", icon: "teacher-hat" },
-            direct: { category: "direct", title: "One-to-One Support", icon: "teacher-hat" },
         }
     }
 };
