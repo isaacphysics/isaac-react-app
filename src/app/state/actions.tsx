@@ -164,11 +164,11 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
 
 export const logInUser = (provider: AuthenticationProvider, params: {email: string; password: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
-    var path = persistance.load("path") || '/';
+    var afterAuthPath = persistance.load('afterAuthPath') || '/';
     try {
         const response = await api.authentication.login(provider, params);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
-        history.push(path);
+        history.push(afterAuthPath);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
     }
@@ -220,7 +220,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     if (initialLogin) {
         history.push('/account')
     } else {
-        history.push(persistance.load("path") || '/');
+        history.push(persistance.load('afterAuthPath') || '/');
     }
     // TODO MT handle error case
 };
