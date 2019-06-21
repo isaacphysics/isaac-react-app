@@ -233,9 +233,11 @@ $failed-bg-size: 25%;
 
 .progress-questions button {
   min-width: 65px;
-  border: none;
   border-radius: 0;
   padding: 0.5rem 0;
+  border: 1px solid $gray-118;
+  margin: -1px;
+  z-index: 10;
   &.btn.disabled {
     opacity: 0.5;
   }
@@ -258,7 +260,13 @@ $failed-bg-size: 25%;
 
 .progress-table {
 
-  overflow-y: scroll;
+  overflow-x: scroll;
+  overflow-y: visible;
+  padding-bottom: 1px; // Fixes odd broswer bugs around the magic :after borders
+  th.selected {
+    // Fixes Firefox bug with position: relative table cells: https://bugzilla.mozilla.org/show_bug.cgi?id=688556
+    background-clip: padding-box !important;
+  }
 
   table {
     width: 100%;
@@ -340,7 +348,7 @@ $failed-bg-size: 25%;
     border-left: 1px solid $gray-118;
   }
 
-  .selected:not(:nth-child(-3)) {
+  .selected:not(:nth-last-child(3)) {
     border-right: 1px solid $gray-118;
   }
 
