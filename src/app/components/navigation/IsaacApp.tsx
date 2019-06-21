@@ -72,7 +72,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         {/* Application pages */}
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
                         <TrackedRoute path="/search" component={Search} />
-                        <TrackedRoute path="/account" onlyFor={(user: LoggedInUser) => user.loggedIn} component={MyAccount} />
+                        <TrackedRoute path="/account" onlyFor={user => user.loggedIn} component={MyAccount} />
 
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
@@ -102,7 +102,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/register" component={Registration} />
                         <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                         <TrackedRoute path="/resetpassword/:token" component={ResetPasswordHandler}/>
-                        <TrackedRoute path="/verifyemail" component={EmailAlterHandler}/>
+                        <TrackedRoute path="/verifyemail" onlyFor={user => user.loggedIn} component={EmailAlterHandler}/>
 
                         {/* Static pages */}
                         <TrackedRoute path="/contact" component={Contact}/>
