@@ -8,12 +8,25 @@ import {history} from "../../services/history";
 import {fromPairs} from "lodash";
 import {PageFragment} from "../elements/PageFragment";
 
+type SupportType = "student" | "teacher";
+
 interface Params {
-    type?: "student" | "teacher";
+    type?: SupportType;
     category?: string;
 }
 
-const support = {
+interface SupportCategories {
+    title: string;
+    categories: {
+        [category: string]: {
+            category: string;
+            title: string;
+            icon: string;
+        };
+    };
+}
+
+const support: {student: SupportCategories; teacher: SupportCategories} = {
     student: {
         title: "Student Support",
         categories: {
@@ -56,6 +69,10 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         history.push(supportPath(type, categoryNames[tabIndex - 1]));
     }
 
+    function tabTitleClass(tabName: string, tabIndex: number) {
+        return "support-tab-" + section.categories[categoryNames[tabIndex - 1]].icon;
+    }
+
     return <Container>
         <Row>
             <Col>
@@ -64,7 +81,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         </Row>
         <Row>
             <Col className="py-4">
-                <Tabs defaultActiveTab={categoryIndex + 1} activeTabChanged={activeTabChanged}>
+                <Tabs defaultActiveTab={categoryIndex + 1} activeTabChanged={activeTabChanged} tabTitleClass={tabTitleClass}>
                     {/* eslint-disable-next-line react/jsx-key */}
                     {fromPairs(Object.values(section.categories).map(category => [category.title, <PageFragment name={`support_${type}_${category.category}`} />]))}
                 </Tabs>
