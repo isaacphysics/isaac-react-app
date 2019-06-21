@@ -25,8 +25,9 @@ export const ContentSummaryListGroupItem = ({item}: {item: ContentSummaryDTO}) =
     }
     return <ListGroupItem className={itemClasses} key={linkDestination}>
         <Link to={linkDestination}>
-            <span>{icon}</span>
-            <span>{item.title}</span>
+            <span className="content-summary-link-title">{icon}</span>
+            <span className="content-summary-link-title">{item.title}</span>
+            {item.summary && <span className="small pt-1 pl-4 d-none d-md-inline">{item.summary}</span>}
         </Link>
     </ListGroupItem>;
 };
