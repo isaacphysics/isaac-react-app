@@ -251,8 +251,9 @@ export const requestEmailVerification = () => async (dispatch: any, getState: ()
 export const handleEmailAlter = (params: ({userid: string | null; token: string | null})) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST});
-        const response = await api.email.verify(params);
+        await api.email.verify(params);
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
+        dispatch(requestCurrentUser() as any);
     } catch(e) {
         dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
     }

@@ -37,15 +37,19 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
 
     return show ? <div className="banner">
         <RS.Container className="py-3">
+
             <RS.Row style={{alignItems: "center"}}>
                 <RS.Col xs={12} sm={2} md={1}>
-                    <h3 className="text-center" role="presentation">ℹ️<span className="d-inline-block d-sm-none">&nbsp;Email Verification</span></h3>
+                    <h3 className="text-center" role="presentation">
+                        ℹ️
+                        <span className="d-inline-block d-sm-none">&nbsp;Email Verification</span>
+                    </h3>
                 </RS.Col>
                 {(status == null || status == "NOT_VERIFIED") && <React.Fragment>
                     <RS.Col xs={12} sm={10} md={8}>
                         <small>Your email address is not verified -
                             please find our email in your inbox and follow the verification link. To request a new
-                            verification email <Link onClick={clickVerify} to="/account">click here</Link>. To change
+                            verification email <Link onClick={clickVerify}>click here</Link>. To change
                             your email address, go to <Link to="/account">Account Settings</Link>.
                         </small>
                     </RS.Col>

@@ -43,7 +43,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
     const signUp = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         history.push("/register", {email: email, password: password});
-    }
+    };
 
     const resetPasswordIfValidEmail = () => {
         if (isValidEmail) {
