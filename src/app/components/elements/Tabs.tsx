@@ -7,11 +7,19 @@ interface TabsProps {
     tabContentClass?: string;
     children: {};
     defaultActiveTab?: number;
+    activeTabChanged?: (tabIndex: number) => void;
 }
 
-export const Tabs = ({className = "", tabTitleClass = "", tabContentClass = "", children, defaultActiveTab}: TabsProps) => {
+export const Tabs = ({className = "", tabTitleClass = "", tabContentClass = "", children, defaultActiveTab, activeTabChanged}: TabsProps) => {
     const [activeTab, setActiveTab] = useState(defaultActiveTab || 1);
     const tabs = children;
+
+    function changeTab(tabIndex: number) {
+        setActiveTab(tabIndex);
+        if (activeTabChanged) {
+            activeTabChanged(tabIndex);
+        }
+    }
 
     return <div className={className}>
         <Nav tabs>
@@ -19,7 +27,7 @@ export const Tabs = ({className = "", tabTitleClass = "", tabContentClass = "", 
                 const tabIndex = mapIndex + 1;
                 const classes = activeTab === tabIndex ? `${tabTitleClass} active` : tabTitleClass;
                 return <NavItem key={tabTitle} className="px-3">
-                    <NavLink className={classes} onClick={() => setActiveTab(tabIndex)}>
+                    <NavLink className={classes} onClick={() => changeTab(tabIndex)}>
                         {tabTitle}
                     </NavLink>
                 </NavItem>;
