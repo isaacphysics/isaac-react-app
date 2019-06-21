@@ -48,7 +48,7 @@ const TrackedRouteComponent = function({component, trackingOptions, componentPro
                         user && user.loggedIn && user.role == "STUDENT" && rest.onlyFor && rest.onlyFor.name == "isTeacher" ?
                             <Redirect to="/pages/teacher_account_request"/> :
                         user && user.loggedIn && !onlyFor(user) ?
-                            <Unauthorised/> : persistance.save('afterAuthPath', props.location.pathname) && <Redirect to="/login"/>
+                            <Unauthorised/> : persistance.save('afterAuthPath', props.location.pathname + props.location.search) && <Redirect to="/login"/>
                     }
                 </ShowLoading>;
             }}/>;

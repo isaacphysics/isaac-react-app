@@ -5,6 +5,7 @@ import {handleProviderCallback} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {LoggedInUser} from "../../../IsaacAppTypes";
+import * as persistance from "../../services/localStorage"
 
 const stateToProps = (state: AppState) => (state && {user: state.user});
 const dispatchToProps = {handleProviderCallback: handleProviderCallback};
@@ -26,7 +27,7 @@ const ProviderCallbackHandlerComponent = (props: ProviderCallbackHandlerProps) =
     const nextPage = '/'; // TODO MT handle afterAuth in local storage
     return <React.Fragment>
         {user ?
-            (user.loggedIn && user.firstLogin ? <Redirect to="/account" /> : <Redirect to={nextPage} />) :
+            (user.loggedIn && persistance.session.load('firstLogin') == 'true' ? <Redirect to="/account" /> : <Redirect to={nextPage} />) :
             <div>Signing in...</div>
         }
     </React.Fragment>;

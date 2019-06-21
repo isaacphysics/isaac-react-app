@@ -134,11 +134,14 @@ export const updateCurrentUser = (
             params.registeredUser.email = currentUser.email; // TODO I don't think you can do this, or even if so probably shouldn't
         }
     } else {
-        const initialLogin = params.registeredUser.loggedIn && params.registeredUser.firstLogin || false;
+        const initialLogin = params.registeredUser.loggedIn && persistance.session.load('firstLogin') == 'true' || false;
         try {
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
             if (initialLogin) {
+                if ((persistance.load('afterAuthPath') || '').includes('account')) {
+                    history.push(persistance.load('afterAuthPath') || '/account', {firstLogin: initialLogin})
+                }
                 history.push('/account', {firstLogin: initialLogin});
             }
             dispatch(showToast({
@@ -215,7 +218,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     const response = await api.authentication.checkProviderCallback(provider, parameters);
     dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
-    let initialLogin = response.data.loggedIn && response.data.firstLogin || false;
+    let initialLogin = response.data.loggedIn && persistance.session.load('firstLogin') == 'true' || false;
     if (initialLogin) {
         history.push('/account')
     } else {
@@ -342,9 +345,9 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
         }) as any);
         const state = getState();
         // user.firstLogin is set correctly using SSO, but not with Segue: check session storage too:
-        if (state && state.user && state.user.loggedIn && state.user.firstLogin || persistance.load('firstLogin')) {
+        if (state && state.user && state.user.loggedIn && state.user.firstLogin || persistance.session.load('firstLogin')) {
             // If we've just signed up and used a group code immediately, change back to the main settings page:
-            history.push("/account");
+            history.push("/account#account");
         }
         dispatch(closeActiveModal() as any);
     } catch (e) {

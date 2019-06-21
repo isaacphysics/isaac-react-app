@@ -31,6 +31,7 @@ import {history} from "../../services/history"
 import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
 import {withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import * as persistance from "../../services/localStorage";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -89,12 +90,19 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
     const [currentPassword, setCurrentPassword] = useState("");
 
-    // @ts-ignore
-    let initialTab: ACCOUNT_TAB =
-        (authToken && ACCOUNT_TAB.teacherconnections) ||
-        (hashAnchor && ACCOUNT_TAB[hashAnchor as any]) ||
-        ACCOUNT_TAB.account;
-    const [activeTab, setTab] = useState(initialTab);
+
+    const [activeTab, setActiveTab] = useState(0);
+    const [bannerShown, setBannerShown] = useState((persistance.session.load('bannerShown') == 'true'));
+    console.log(persistance.session.load('bannerShown'));
+
+    useMemo(() => {
+        // @ts-ignore
+        let tab: ACCOUNT_TAB =
+            (authToken && ACCOUNT_TAB.teacherconnections) ||
+            (hashAnchor && ACCOUNT_TAB[hashAnchor as any]) ||
+            ACCOUNT_TAB.account;
+        setActiveTab(tab);
+    }, [hashAnchor, authToken]);
 
     useEffect(() => {
         setMyUser(Object.assign({}, user, {password: ""}))
@@ -128,10 +136,13 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 Update your Isaac Computer Science account, or <Link to="/logout" className="text-secondary">Log out</Link>
             </small>
         </h3>
-        {firstLogin &&
+        {firstLogin && bannerShown != true &&
             <Alert color="success">
                 Registration successful
             </Alert>
+        }
+        {
+            attemptedAccountUpdate && persistance.session.save('bannerShown', 'true')
         }
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
@@ -139,7 +150,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <NavItem>
                         <NavLink
                             className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.account})}
-                            onClick={() => setTab(ACCOUNT_TAB.account)} tabIndex={0}
+                            onClick={() => setActiveTab(ACCOUNT_TAB.account)} tabIndex={0}
                         >
                             Profile
                         </NavLink>
@@ -147,7 +158,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <NavItem>
                         <NavLink
                             className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.passwordreset})}
-                            onClick={() => setTab(ACCOUNT_TAB.passwordreset)} tabIndex={0}
+                            onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block">Change Password</span>
                             <span className="d-block d-lg-none">Password</span>
@@ -156,7 +167,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <NavItem>
                         <NavLink
                             className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.teacherconnections})}
-                            onClick={() => setTab(ACCOUNT_TAB.teacherconnections)} tabIndex={0}
+                            onClick={() => setActiveTab(ACCOUNT_TAB.teacherconnections)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block d-md-block">Teacher Connections</span>
                             <span className="d-block d-md-none">Connections</span>
@@ -165,7 +176,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <NavItem>
                         <NavLink
                             className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.emailpreferences})}
-                            onClick={() => setTab(ACCOUNT_TAB.emailpreferences)} tabIndex={0}
+                            onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block">Email Preferences</span>
                             <span className="d-block d-lg-none">Emails</span>

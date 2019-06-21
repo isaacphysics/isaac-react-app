@@ -39,3 +39,44 @@ export const clear = function clear() {
         return false;
     }
 };
+
+export const session = {
+    save: function sessionSave(key: string, value: string) {
+        try {
+            $window.sessionStorage.setItem(key, value);
+            return true;
+        } catch (e) {
+            console.error("Failed to save to session storage. This might be a browser restriction.", e);
+            return false;
+        }
+    },
+
+    load: function sessionLoad(key: string) {
+        try {
+            return $window.sessionStorage.getItem(key);
+        } catch (e) {
+            console.error("Failed to read from session storage. This might be a browser restriction.", e);
+            return null;
+        }
+    },
+
+    remove: function sessionRemove(key: string) {
+        try {
+            return $window.sessionStorage.removeItem(key);
+            return true;
+        } catch (e) {
+            console.error("Failed to remove from session storage. This might be a browser restriction.", e);
+            return false;
+        }
+    },
+
+    clear: function clear() {
+        try {
+            return $window.sessionStorage.clear();
+            return true;
+        } catch (e) {
+            console.error("Failed to clear session storage. This might be a browser restriction.", e);
+            return false;
+        }
+    },
+};

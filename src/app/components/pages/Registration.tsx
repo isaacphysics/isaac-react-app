@@ -10,6 +10,7 @@ import {history} from "../../services/history"
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import {EXAM_BOARD} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import * as persistance from "../../services/localStorage"
 
 const stateToProps = (state: AppState) => ({
     errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
@@ -72,7 +73,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         setAttemptedSignUp(true);
 
         if (passwordIsValid && emailIsValid && confirmedOverThirteen) {
-            Object.assign(registrationUser, {firstLogin: true, loggedIn: false});
+            persistance.session.save('firstLogin', 'true');
+            persistance.session.save('bannerShown', 'false');
+            Object.assign(registrationUser, {loggedIn: false});
             updateCurrentUser({
                 registeredUser: registrationUser,
                 userPreferences: {EMAIL_PREFERENCE: defaultEmailPreferences, EXAM_BOARD: defaultExamPreferences},
