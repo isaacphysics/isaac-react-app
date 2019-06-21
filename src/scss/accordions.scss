@@ -1,0 +1,45 @@
+// Nomensa accordions.scss
+.accordion {
+  background: transparent;
+  border-top: 1px solid $gray-120;
+  &:first-of-type {
+    margin-top: 2rem;
+  }
+  &:last-of-type {
+    border-bottom: 1px solid $gray-120;
+    margin-bottom: 1rem;
+  }
+
+  > button {
+    border-radius: 0;
+    font-family: $secondary-font-semi-bold;
+    font-size: 1.25rem !important;
+    padding-right: 50px;
+    position: relative;
+    transition: all 0.5s ease;
+
+    &:after {
+      @include pseudo-element;
+      background-image: url('/assets/chevron_down.svg');
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position-y: center;
+      height: 100%;
+      right: 20px;
+      top: 0;
+      bottom: 0;
+      width: 15px;
+    }
+
+    &.active {
+      &:after {
+        background-image: url('/assets/chevron_up.svg');
+      }
+    }
+  }
+
+  .card {
+    background: transparent;
+    border-width: 0;
+  }
+}
