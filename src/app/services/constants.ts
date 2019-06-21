@@ -353,3 +353,4 @@ export enum MEMBERSHIP_STATUS {
 
 export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
+export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

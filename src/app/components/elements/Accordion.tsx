@@ -1,43 +1,65 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
+import {withRouter} from "react-router-dom";
+import {ALPHABET} from "../../services/constants";
 
 interface AccordionsProps {
     id?: string;
     title?: string;
-    className?: string;
-    children: any;
+    index: number;
+    location: {hash: string};
+    children: React.ReactChildren;
 }
 
-export const Accordion = ({id, title, className, children}: AccordionsProps) => {
+export const Accordion = withRouter(({id, title, index, children, location: {hash}}: AccordionsProps) => {
+    // Toggle
+    const isFirst = index === 0;
+    const [open, setOpen] = useState(isFirst);
+
     // Hash anchoring
-    let idParts: string[] = [];
+    let anchorId: string | null = null;
     if (id) {
-        idParts = id.split('|');
+        const idParts = id.split("|");
+        if (idParts.length > 1) {
+            anchorId = idParts[1];
+        }
     }
-    const anchorId = idParts.length > 1 ? idParts[1] : null;
 
     useEffect(() => {
-        const fragment = window.location.hash.slice(1);
-        if (fragment === anchorId) {
-            const element = document.getElementById(fragment);
-            if (element) {
-                element.scrollIntoView(true);
+        if (hash.includes("#")) {
+            const hashAnchor = hash.slice(1);
+            const element = document.getElementById(hashAnchor);
+            if (element) { // exists on page
+                if (hashAnchor === anchorId) {
+                    element.scrollIntoView(true);
+                    setOpen(true);
+                } else {
+                    setOpen(false);
+                }
             }
         }
-    });
-
-    // Toggle
-    const [open, setOpen] = useState(false);
+    }, [hash, anchorId]);
 
     return <div className="accordion">
-        <RS.Button
-            id={anchorId || ""} block color="link"
-            onClick={() => {setOpen(!open)}}
-            className={open ? 'active p-3 text-left' : 'p-3 text-left'}
-        >
-            Section A: {title}
-        </RS.Button>
-        <RS.Collapse className="mt-1" isOpen={open}>
+        <div className="accordion-header">
+            <RS.Button
+                id={anchorId || ""} block color="link"
+                className={open ? 'active p-3 pr-5 text-left' : 'p-3 pr-5 text-left'}
+                onClick={(event: any) => {
+                    const nextState = !open;
+                    setOpen(nextState);
+                    if (nextState) {
+                        event.target.scrollIntoView({behavior: "smooth"});
+                    }
+                }}
+            >
+                <span className="text-secondary pr-2">
+                    Part {ALPHABET[index % ALPHABET.length]}
+                </span> {" "}
+                {title}
+            </RS.Button>
+        </div>
+        <RS.Collapse isOpen={open} className="mt-1">
             <RS.Card>
                 <RS.CardBody>
                     {children}
@@ -45,7 +67,4 @@ export const Accordion = ({id, title, className, children}: AccordionsProps) => 
             </RS.Card>
         </RS.Collapse>
     </div>;
-
-    /*
-     */
-};
+});

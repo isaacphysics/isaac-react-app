@@ -12,10 +12,10 @@ interface IsaacAccordionProps {
 export const IsaacAccordion = (props: any) => {
     const {doc: {children}} = props as IsaacAccordionProps;
     return <div className="isaac-accordion">
-        {children.map(child => (
-            <Accordion key={child.id} className="accordion-section" title={child.title} id={child.id}>
-                {child.children && child.children.map(contentChild => (
-                    <IsaacContent key={contentChild.id} doc={contentChild} />
+        {children.map((child, index) => (
+            <Accordion key={index} title={child.title} id={child.id} index={index} >
+                {child.children && child.children.map((contentChild, index) => (
+                    <IsaacContent key={index} doc={contentChild} />
                 ))}
             </Accordion>
         ))}

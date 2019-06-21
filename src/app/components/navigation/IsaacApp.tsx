@@ -35,7 +35,7 @@ import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
 import {Header} from "./Header";
 import {Route} from "react-router";
-import {ScrollManager} from "../handlers/ScrollManager";
+import {ScrollManager} from "./ScrollManager";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {ActiveModal} from "../elements/ActiveModal";
@@ -58,7 +58,7 @@ interface IsaacAppProps {
 
 const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
 
-    useEffect(() => {requestCurrentUser();}, []); // run only once on mount
+    useEffect(() => {requestCurrentUser();}, [requestCurrentUser]);
 
     return <Router history={history}>
         <ScrollManager>

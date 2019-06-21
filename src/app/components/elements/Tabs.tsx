@@ -34,7 +34,7 @@ export const Tabs = ({className = "", tabTitleClass = "", tabContentClass = "", 
                 const tabIndex = mapIndex + 1;
                 const c = callOrString(tabTitleClass, tabTitle, tabIndex);
                 const classes = activeTab === tabIndex ? `${c} active` : c;
-                return <NavItem key={tabTitle} className="px-3">
+                return <NavItem key={tabTitle} className="px-3 text-center">
                     <NavLink className={classes} onClick={() => changeTab(tabIndex)}>
                         {tabTitle}
                     </NavLink>
