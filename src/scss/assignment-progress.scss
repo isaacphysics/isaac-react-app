@@ -241,6 +241,12 @@ $failed-bg-size: 25%;
   }
 }
 
+@mixin table-sticky() {
+  position: sticky !important;
+  background: $gray-103;
+  z-index: 2;
+}
+
 @mixin after-border() {
   content:'';
   position:absolute;
@@ -260,7 +266,7 @@ $failed-bg-size: 25%;
 
   tbody tr:nth-of-type(even) {
     background: $gray-110;
-    th, .total-column {
+    th {
       background: $gray-110;
     }
   }
@@ -304,6 +310,7 @@ $failed-bg-size: 25%;
     font-size: 8px;
     opacity: 0.5;
     top: 50%;
+    z-index: 1;
 
     line-height: initial;
     &.up {
@@ -323,30 +330,17 @@ $failed-bg-size: 25%;
     vertical-align: middle;
     text-align: center;
     line-height: 1.3rem;
-
-    &:first-child {
-      //border-right: 1px solid $gray-118;
-      position: sticky;
-      left: 0;
-      top: 0;
-      background: $gray-103;
-      z-index: 1;
-      &:after{
-        @include after-border;
-        border-right: 1px solid $gray-118;
-      }
-    }
   }
 
   .revoked .student-name {
     text-decoration: line-through;
   }
 
-  .selected:not(:first-of-type) {
+  .selected:not(:nth-child(2)) {
     border-left: 1px solid $gray-118;
   }
 
-  .selected:not(:last-of-type) {
+  .selected:not(:nth-child(-3)) {
     border-right: 1px solid $gray-118;
   }
 
@@ -358,13 +352,25 @@ $failed-bg-size: 25%;
     font-weight: bold;
   }
 
+  th:first-child {
+    @include table-sticky;
+    left: 0;
+    top: 0;
+
+    &:after {
+      @include after-border;
+      border-right: 1px solid $gray-118;
+    }
+  }
+
   .total-column {
+    @include table-sticky;
     width: 65px;
-    position: sticky !important;
     right: 0;
     top: 0;
-    background: $gray-103;
-    z-index: 1;
+    button {
+      z-index: 2;
+    }
     &.left {
       right: 65px;
       &:after{

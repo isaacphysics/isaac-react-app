@@ -53,8 +53,7 @@ const stateFromProps = (state: AppState) => {
                 return gWithAssignments;
             });
             return {
-                groups: activeGroupsWithAssignments,
-                progressMap: state.progress
+                groups: activeGroupsWithAssignments
             };
         }
     }
@@ -193,13 +192,13 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
             case "name":
                 return item.user.familyName + ", " + item.user.givenName;
             case "totalQuestionPartPercentage":
-                return item.correctQuestionPartsCount;
+                return -item.correctQuestionPartsCount;
             case "totalQuestionPercentage":
-                return item.tickCount;
+                return -item.tickCount;
             default:
-                return item.correctPartResults[sortOrder];
+                return -item.correctPartResults[sortOrder];
         }
-    }, [reverseOrder]);
+    }, [reverseOrder ? "desc" : "asc"]);
 
     function isSelected(q: GameboardItem) {
         return q == selectedQuestion ? "selected" : "";
@@ -323,16 +322,16 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
                                             pageSettings.formatAsPercentage) : ""}
                                     </td>
                                 )}
-                                <td className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
+                                <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
                                     {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
                                         assignmentTotalQuestionParts,
                                         pageSettings.formatAsPercentage) : ""}
-                                </td>
-                                <td className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
+                                </th>
+                                <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
                                     {fullAccess ? formatMark(studentProgress.tickCount,
                                         questions.length,
                                         pageSettings.formatAsPercentage) : ""}
-                                </td>
+                                </th>
                             </tr>;
                         })}
                     </tbody>
