@@ -4,6 +4,7 @@
   margin-right: auto;
   margin-left: auto;
 }
+
 @include respond-below(sm) {
   .assignment-progress-container {
     margin: 0 -1px;
@@ -263,6 +264,7 @@ $failed-bg-size: 25%;
 
 @mixin table-sticky() {
   position: sticky !important;
+  background-clip:  padding-box !important;
   background: $gray-103;
   z-index: 2;
 }
