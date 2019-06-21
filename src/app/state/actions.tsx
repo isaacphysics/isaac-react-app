@@ -46,6 +46,7 @@ import * as persistance from "../services/localStorage";
 import {groupInvitationModal, groupManagersModal} from "../components/elements/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
 import {groups} from "./selectors";
+import {downloadLinkModal} from "../components/elements/AssignmentProgressModalCreators";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -567,6 +568,10 @@ export const loadProgress = (assignment: AssignmentDTO) => async (dispatch: Disp
     } catch {
         dispatch({type: ACTION_TYPE.PROGRESS_RESPONSE_FAILURE, assignment});
     }
+};
+
+export const showDownloadModal = (link: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(downloadLinkModal(link)) as any);
 };
 
 // Content version

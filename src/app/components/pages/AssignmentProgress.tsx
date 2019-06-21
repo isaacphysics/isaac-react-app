@@ -10,7 +10,7 @@ import {
     DropdownItem,
     Label, Spinner, Button
 } from "reactstrap"
-import {loadGroups, loadAssignmentsOwnedByMe, loadBoard, loadProgress} from "../../state/actions";
+import {loadGroups, loadAssignmentsOwnedByMe, loadBoard, loadProgress, showDownloadModal} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {sortBy, orderBy} from "lodash";
@@ -19,6 +19,7 @@ import {groups} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
+import {API_PATH} from "../../services/constants";
 
 const stateFromProps = (state: AppState) => {
     if (state != null) {
@@ -62,7 +63,7 @@ const stateFromProps = (state: AppState) => {
     };
 };
 
-const dispatchFromProps = {loadGroups, loadAssignmentsOwnedByMe, loadBoard, loadProgress};
+const dispatchFromProps = {loadGroups, loadAssignmentsOwnedByMe, loadBoard, loadProgress, showDownloadModal};
 
 
 type EnhancedAssignment = AssignmentDTO & {
@@ -79,6 +80,7 @@ interface AssignmentProgressPageProps {
     loadAssignmentsOwnedByMe: () => void;
     loadBoard: (boardId: string) => void;
     loadProgress: (assignment: AssignmentDTO) => void;
+    showDownloadModal: (link: string) => void;
 }
 
 enum SortOrder {
@@ -357,15 +359,20 @@ const ProgressLoader = (props: AssignmentDetailsProps) => {
         : <div className="p-4 text-center"><Spinner color="primary" size="lg" /></div>;
 };
 
+function getCSVDownloadLink(assignmentId: number) {
+    return API_PATH + "/assignments/assign/" + assignmentId + "/progress/download";
+}
+
 const AssignmentDetails = (props: AssignmentDetailsProps) => {
-    const {assignment} = props;
+    const {assignment, showDownloadModal} = props;
 
     const [isExpanded, setIsExpanded] = useState(false);
 
-    function openAssignmentDownloadLink(event: React.MouseEvent<any>) {
+    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
+        event.preventDefault();
+        showDownloadModal(event.currentTarget.href);
     }
-
 
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
         <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
@@ -375,7 +382,7 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
             <div className="gameboard-links">
                 <Button color="link">{isExpanded ? "Hide " : "View "} <span className="d-none d-md-inline">mark sheet</span></Button>
                 <span>or</span>
-                <Button color="link" onClick={(e) => openAssignmentDownloadLink(e)}>Download CSV</Button>
+                <Button color="link" tag="a" href={getCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
             </div>
         </div>
         {isExpanded && <ProgressLoader {...props} />}
@@ -438,18 +445,28 @@ const GroupDetails = (props: GroupDetailsProps) => {
     </div>;
 };
 
+function getGroupProgressCSVDownloadLink(groupId: number) {
+    return API_PATH + "/assignments/assign/group/" + groupId + "/progress/download";
+}
+
 const GroupAssignmentProgress = (props: GroupDetailsProps) => {
-    const {group} = props;
+    const {group, showDownloadModal} = props;
     const [isExpanded, setExpanded] = useState(false);
 
     const assignmentCount = group.assignments.length;
+
+    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.stopPropagation();
+        event.preventDefault();
+        showDownloadModal(event.currentTarget.href);
+    }
 
     return <React.Fragment>
         <Row onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active" : "assignment-progress-group"}>
             <Col className="group-name"><span className="icon-group"/><span>{group.groupName}</span></Col>
             <Col className="flex-grow-1" />
             <Col><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"} set</Col>
-            <Col className="d-none d-md-block"><a href="">(Download Group CSV)</a></Col>
+            <Col className="d-none d-md-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" onClick={openAssignmentDownloadLink}>(Download Group CSV)</a></Col>
             <Col><img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" /></Col>
         </Row>
         {isExpanded && <GroupDetails {...props} />}
