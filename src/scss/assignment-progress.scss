@@ -241,6 +241,15 @@ $failed-bg-size: 25%;
   }
 }
 
+@mixin after-border() {
+  content:'';
+  position:absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
 .progress-table {
 
   overflow-y: scroll;
@@ -251,7 +260,7 @@ $failed-bg-size: 25%;
 
   tbody tr:nth-of-type(even) {
     background: $gray-110;
-    th {
+    th, .total-column {
       background: $gray-110;
     }
   }
@@ -261,11 +270,15 @@ $failed-bg-size: 25%;
   }
 
   thead th {
-    border-top: 1px solid $gray-118;
+    //border-top: 1px solid $gray-118;
     border-bottom: 1px solid $gray-118;
     &.selected {
       border-top-color: #fff;
       background: #fff;
+    }
+    &:not(.selected):after {
+      @include after-border;
+      border-top: 1px solid $gray-118;
     }
   }
 
@@ -312,20 +325,15 @@ $failed-bg-size: 25%;
     line-height: 1.3rem;
 
     &:first-child {
-      border-right: 1px solid $gray-118;
+      //border-right: 1px solid $gray-118;
       position: sticky;
       left: 0;
       top: 0;
       background: $gray-103;
       z-index: 1;
       &:after{
-        content:'';
-        position:absolute;
-        left: -1px;
-        top: -1px;
-        right: -1px;
-        bottom: -1px;
-        border: 1px solid $gray-118;
+        @include after-border;
+        border-right: 1px solid $gray-118;
       }
     }
   }
@@ -334,8 +342,11 @@ $failed-bg-size: 25%;
     text-decoration: line-through;
   }
 
-  .selected {
+  .selected:not(:first-of-type) {
     border-left: 1px solid $gray-118;
+  }
+
+  .selected:not(:last-of-type) {
     border-right: 1px solid $gray-118;
   }
 
@@ -354,25 +365,10 @@ $failed-bg-size: 25%;
     top: 0;
     background: $gray-103;
     z-index: 1;
-    &:after{
-      content:'';
-      position:absolute;
-      left: -1px;
-      top: -1px;
-      right: -1px;
-      bottom: -1px;
-      border-top: 1px solid $gray-118;
-    }
     &.left {
       right: 65px;
-      border-left: 1px solid $gray-118;
       &:after{
-        content:'';
-        position:absolute;
-        left: -1px;
-        top: -1px;
-        right: -1px;
-        bottom: -1px;
+        @include after-border;
         border-left: 1px solid $gray-118;
       }
     }
