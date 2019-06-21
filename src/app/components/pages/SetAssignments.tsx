@@ -22,8 +22,9 @@ import {
 import {ActualBoardLimit, AppGameBoard, BoardOrder, Toast} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {boards, groups} from "../../state/selectors";
-import {sortBy} from "lodash";
+import {sortBy, range} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {currentYear, DateInput} from "../elements/DateInput";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -79,15 +80,19 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
         });
     }
 
+    const yearRange = range(currentYear, currentYear + 5);
+    const currentMonth = (new Date()).getMonth() + 1;
+
     return <Container>
-        <Label>Group:
+        <Label className="w-100">Group:
             <Input type="select" value={groupId} onChange={(e: ChangeEvent<HTMLInputElement>) => setGroupId(e.target.value ? parseInt(e.target.value, 10) : undefined)}>
                 <option key={undefined} value={undefined} />
                 {groups && sortBy(groups, group => group.groupName).map(group => <option key={group.id} value={group.id}>{group.groupName}</option>)}
             </Input>
         </Label>
-        <Label>Due Date Reminder <span className="font-weight-lighter"> (optional)</span>
-            <Input type="date" value={dueDate ? dueDate.toISOString().slice(0, 10) : ""} placeholder="Select your due date..." onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate)} />
+        <Label className="w-100">Due Date Reminder <span className="text-muted"> (optional)</span>
+            <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate)} />
         </Label>
         <Button block color="primary" onClick={assign} disabled={groupId === null}>Assign to group</Button>
     </Container>;
