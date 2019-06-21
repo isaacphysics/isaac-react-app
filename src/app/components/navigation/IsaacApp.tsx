@@ -44,6 +44,7 @@ import {Groups} from "../pages/Groups";
 import { Equality } from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
+import {Support} from "../pages/Support";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -113,6 +114,9 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
                         <TrackedRoute path="/coming_soon" component={ComingSoon} />
                         <TrackedRoute path="/equality" component={Equality} />
+
+                        {/* Support pages */}
+                        <TrackedRoute path="/support/:type?/:category?" component={Support} />
 
                         {/* Error pages */}
                         <TrackedRoute path="/error" component={ServerError} />

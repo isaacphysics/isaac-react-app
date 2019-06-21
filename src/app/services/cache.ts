@@ -6,7 +6,6 @@ export const documentCache: {[documentType in DOCUMENT_TYPE]: {[id: string]: Con
     [DOCUMENT_TYPE.CONCEPT]: {},
     [DOCUMENT_TYPE.QUESTION]: {},
     [DOCUMENT_TYPE.GENERIC]: {},
-    [DOCUMENT_TYPE.FRAGMENT]: {},
 };
 
 export const topicCache: {[tag: string]: IsaacTopicSummaryPageDTO} = {};

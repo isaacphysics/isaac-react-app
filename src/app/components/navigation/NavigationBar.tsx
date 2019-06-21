@@ -127,12 +127,12 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         <DropdownItem className="pl-4 py-3 p-md-3">
                             <Link to={"/contact"}>Contact Us</Link>
                         </DropdownItem>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        <DropdownItem tag={Link} to="/support/teacher" className="pl-4 py-3 p-md-3">
                             Teacher Support
-                        </DropdownItemComingSoon>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        </DropdownItem>
+                        <DropdownItem tag={Link} to="/support/student"  className="pl-4 py-3 p-md-3">
                             Student Support
-                        </DropdownItemComingSoon>
+                        </DropdownItem>
                     </DropdownMenu>
                 </UncontrolledDropdown>
 
