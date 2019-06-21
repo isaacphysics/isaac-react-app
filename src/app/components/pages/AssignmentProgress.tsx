@@ -23,7 +23,7 @@ import {sortBy, orderBy} from "lodash";
 import {AppGroup, AppAssignmentProgress, ActiveModal} from "../../../IsaacAppTypes";
 import {groups} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AssignmentDTO, GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
+import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/AssignmentProgressModalCreators";
@@ -243,6 +243,30 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
         {sortItem({key: "totalQuestionPercentage", itemOrder: "totalQuestionPercentage", className:"total-column right", children: "Total Qs"})}
     </tr>;
 
+    function markClassesInternal(studentProgress: AppAssignmentProgress, status: GameboardItemState | null, correctParts: number, incorrectParts: number, totalParts: number) {
+        if (!studentProgress.user.authorisedFullAccess) {
+            return "revoked";
+        } else if (correctParts == totalParts) {
+            return "completed";
+        } else if (status == "PASSED" || (correctParts / totalParts) >= passMark) {
+            return "passed";
+        } else if (status == "FAILED" || (incorrectParts / totalParts) > (1 - passMark)) {
+            return "failed";
+        } else if (correctParts > 0 || incorrectParts > 0) {
+            return "in-progress";
+        } else {
+            return "not-attempted";
+        }
+    }
+
+    function markClasses(studentProgress: AppAssignmentProgress, totalParts: number) {
+        let correctParts = studentProgress.correctQuestionPartsCount;
+        let incorrectParts = studentProgress.incorrectQuestionPartsCount;
+        let status = null;
+
+        return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
+    }
+
     function markQuestionClasses(studentProgress: AppAssignmentProgress, index: number) {
         const question = questions[index];
 
@@ -251,21 +275,7 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
         let incorrectParts = studentProgress.incorrectPartResults[index];
         let status = studentProgress.results[index];
 
-        let result = isSelected(question) + " ";
-        if (!studentProgress.user.authorisedFullAccess) {
-            result += "revoked";
-        } else if (correctParts == totalParts) {
-            result += "completed";
-        } else if (status == "PASSED" || (correctParts / totalParts) >= passMark) {
-            result += "passed";
-        } else if (status == "FAILED" || (incorrectParts / totalParts) > (1 - passMark)) {
-            result += "failed";
-        } else if (correctParts > 0 || incorrectParts > 0) {
-            result += "in-progress";
-        } else {
-            result += "not-attempted";
-        }
-        return result;
+        return isSelected(question) + " " + markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
     }
 
     const tableRef = useRef<HTMLTableElement>(null);
@@ -321,7 +331,7 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
                     <tbody>
                         {sortedProgress.map((studentProgress) => {
                             const fullAccess = studentProgress.user.authorisedFullAccess;
-                            return <tr key={studentProgress.user.id} className={`${fullAccess ? "" : "revoked"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
+                            return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " revoked"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
                                 <th className="student-name">{studentProgress.user.givenName}<span
                                     className="d-none d-lg-inline"> {studentProgress.user.familyName}</span></th>
                                 {questions.map((q, index) =>

@@ -135,6 +135,51 @@ $failed-bg-size: 25%;
     }
   }
 
+  .completed th {
+    &:first-child, .icon-person { color: rgba($perfect-fill, 1); }
+    &.total-column {
+      background-image: $completed-total-bg-img;
+      background-size: $completed-bg-size;
+    }
+  }
+
+  .passed th {
+    &:first-child, .icon-person { color: rgba($passed-fill, 1); }
+    &.total-column {
+      background-image: $passed-total-bg-img;
+      background-size: $passed-bg-size;
+    }
+  }
+
+  .in-progress th {
+    &:first-child, .icon-person  { color: rgba($default-name-fill, 1); }
+    &.total-column {
+      background-image: $in-progress-total-bg-img;
+      background-size: $in-progress-bg-size;
+    }
+  }
+
+  .failed th {
+    &:first-child, .icon-person { color: rgba($failed-fill, 1); }
+    &.total-column {
+      background-image: $failed-total-bg-img;
+      background-size: $failed-bg-size;
+    }
+  }
+
+  .not-attempted {
+    th {
+      &:first-child, .icon-person  { color: rgba($default-name-fill, 1); }
+    }
+  }
+  .revoked {
+    th {
+      &:first-child, .icon-person {
+        color: gray;
+      }
+    }
+  }
+
   .key-cell {
     float: left;
   }
@@ -169,6 +214,11 @@ $failed-bg-size: 25%;
       background-image: $failed-cb-bg-img;
     }
   }
+
+  .completed th.total-column { background-image: $completed-cb-bg-img;}
+  .passed th.total-column { background-image: $passed-cb-bg-img; }
+  .in-progress th.total-column { background-image: $in-progress-cb-bg-img; }
+  .failed th.total-column { background-image: $failed-cb-bg-img; }
 }
 
 .assignment-progress-options {
