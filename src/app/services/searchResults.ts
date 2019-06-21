@@ -3,14 +3,15 @@ export const searchList = [
     {
         id: "assignments",
         title: "My Assignments",
-        terms: ["my assignments", "assignments", "homework", "assignemts"],
+        terms: ["my assignments", "assignments", "homework", "hw"],
         summary: "View your assignments.",
         url: "/assignments",
         type: "shortcut"
     }, {
         id: "join_group",
         title: "Teacher Connections",
-        terms: ["join group", "join class", "teacher connections", "class code", "join a class", "classes", "share token", "groups", "group"],
+        terms: ["join group", "join class", "teacher connections", "class code", "join a class",
+            "classes", "share token", "groups", "group", "join", "group code"],
         summary: "Join groups and manage your teacher connections.",
         url: "/account#teacherconnections",
         type: "shortcut"
@@ -18,43 +19,36 @@ export const searchList = [
         id: "logout",
         title: "Logout",
         terms: ["logout"],
-        summary: "You can logout using the link in the menu, or by clicking here.",
+        summary: "You can logout using the link in the header, or by clicking here.",
         url: "/logout",
         type: "shortcut"
     }, {
         id: "help",
         title: "Student Support",
         terms: ["help", "support"],
-        summary: "View student FAQs for using Isaac Physics.",
+        summary: "View student FAQs for using Isaac Computer Science.",
         url: "/support/student/general",
         type: "shortcut"
     }, {
         id: "login",
         title: "Login",
-        terms: ["login", "sign up", "register"],
-        summary: "You can login using the link in the menu, or by clicking here.",
+        terms: ["login", "log in", "signin", "sign in"],
+        summary: "You can login using the link in the header, or by clicking here.",
         url: "/login",
         type: "shortcut"
     }, {
         id: "register",
         title: "Create an Account",
-        terms: ["register"],
-        summary: "Click here to register for an Isaac account.",
+        terms: ["register", "signup", "sign up"],
+        summary: "Click here to register for an Isaac Computer Science account.",
         url: "/register",
         type: "shortcut"
     },  {
         id: "teacher_support",
         title: "Teacher Support",
         terms: ["teacher", "teacher support", "teaching", "teachers", "help", "support"],
-        summary: "View teacher FAQs for using Isaac Physics.",
+        summary: "View teacher FAQs for using Isaac Computer Science.",
         url: "/support/teacher/assignments",
-        type: "shortcut"
-    }, {
-        id: "answers",
-        title: "Where can I find answers?",
-        terms: ["answers", "solutions", "worked answers", "working"],
-        summary: "We don't provide answers to Isaac questions. Learn more here.",
-        url: "/answers",
         type: "shortcut"
     }, {
         id: "my_account",
