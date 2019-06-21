@@ -13,6 +13,8 @@ import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem"
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {shortcuts} from "../../services/searchResults";
+import {ShortcutResponses} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -49,6 +51,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
     let [searchText, setSearchText] = useState(query);
     let [searchFilterProblems, setSearchFilterProblems] = useState(problems);
     let [searchFilterConcepts, setSearchFilterConcepts] = useState(concepts);
+    let [shortcutResponse, setShortcutResponse] = useState<ShortcutResponses[]>();
 
     useEffect(
         () => {
@@ -66,6 +69,9 @@ const SearchPageComponent = (props: SearchPageProps) => {
         }
         if (searchText != query || searchFilterProblems != problems || searchFilterConcepts != concepts) {
             pushSearchToHistory(history, searchText, searchFilterProblems, searchFilterConcepts);
+        }
+        if (searchText) {
+            setShortcutResponse(shortcuts(searchText))
         }
     }
 
@@ -92,6 +98,11 @@ const SearchPageComponent = (props: SearchPageProps) => {
 
     const filteredSearchResults = searchResults && searchResults.results && searchResults.results.filter(filterResult);
 
+    // const shortcutSearchResults = Object.assign([], shortcutResponse, filteredSearchResults);
+    const shortcutSearchResults = (shortcutResponse || []).concat(filteredSearchResults);
+
+    console.log(shortcutResponse);
+
     return (
         <Container id="search-page">
             <Row>
@@ -117,7 +128,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
                         <RS.CardHeader className="search-header">
                             <Col md={5} xs={12}>
                                 <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? filteredSearchResults ? <RS.Badge color="primary">{filteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
+                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutSearchResults ? <RS.Badge color="primary">{shortcutSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
                                 </h3>
                             </Col>
                             <Col md={7} xs={12}>
@@ -129,9 +140,9 @@ const SearchPageComponent = (props: SearchPageProps) => {
                             </Col>
                         </RS.CardHeader>
                         {query != "" && <RS.CardBody>
-                            <ShowLoading until={filteredSearchResults}>
-                                {filteredSearchResults && filteredSearchResults.length > 0 ?
-                                    <LinkToContentSummaryList items={filteredSearchResults}/>
+                            <ShowLoading until={shortcutSearchResults}>
+                                {shortcutSearchResults && shortcutSearchResults.length > 0 ?
+                                    <LinkToContentSummaryList items={shortcutSearchResults}/>
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </RS.CardBody>}

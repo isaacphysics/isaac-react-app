@@ -220,6 +220,15 @@ export interface AppGroupMembership extends ApiTypes.UserSummaryWithGroupMembers
     groupMembershipInformation: GroupMembershipDTO;
 }
 
+export interface ShortcutResponses {
+    id: string;
+    title: string;
+    terms: string[];
+    summary: string;
+    url: string;
+    type: string;
+}
+
 export interface UserEmailPreferences {
     NEWS_AND_UPDATES: boolean;
     ASSIGNMENTS: boolean;
