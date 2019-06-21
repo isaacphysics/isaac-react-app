@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -14,7 +14,7 @@ import {
     Col,
     Form,
     Input,
-    Row,
+    Row, CardBody,
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
@@ -23,12 +23,11 @@ import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser, Toast} from ".
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
-import {validateEmail} from "../../services/validation";
+import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import queryString from "query-string";
 import {Link} from "react-router-dom";
 import {EXAM_BOARD, ACCOUNT_TAB} from "../../services/constants";
 import {history} from "../../services/history"
-import {showToast} from "../../state/actions";
 import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
 import {withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -49,7 +48,6 @@ const stateToProps = (state: AppState, props: any) => {
 const dispatchToProps = {
     updateCurrentUser,
     resetPassword,
-    showToast,
 };
 
 interface AccountPageProps {
@@ -62,18 +60,19 @@ interface AccountPageProps {
         currentUser: LoggedInUser
     ) => void;
     firstLogin: boolean;
-    showToast: (toast: Toast) => void;
     hashAnchor: string | null;
     authToken: string | null;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, showToast, hashAnchor, authToken}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, hashAnchor, authToken}: AccountPageProps) => {
     const editingSelf = true;
 
     if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
         userPreferences.EMAIL_PREFERENCE = { NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true };
     }
 
+    // Inputs which trigger re-render
+    const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
     const [myUser, setMyUser] = useState(
         Object.assign({}, user, {password: ""})
     );
@@ -86,14 +85,9 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [examPreferences, setExamPreferences] = useState(
         Object.assign({}, userPreferences && userPreferences.EXAM_BOARD ? userPreferences.EXAM_BOARD : {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true})
     );
-    const [isEmailValid, setIsEmailValid] = useState(
-        !!user.loggedIn && !!user.email && validateEmail(user.email)
-    );
-    const [isDobValid, setIsDobValid] = useState(
-        true
-    );
+    const [newPassword, setNewPassword] = useState("");
+    const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
     const [currentPassword, setCurrentPassword] = useState("");
-    const [isNewPasswordConfirmed, setIsNewPasswordConfirmed] = useState(false);
 
     // @ts-ignore
     let initialTab: ACCOUNT_TAB =
@@ -101,6 +95,31 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         (hashAnchor && ACCOUNT_TAB[hashAnchor as any]) ||
         ACCOUNT_TAB.account;
     const [activeTab, setTab] = useState(initialTab);
+
+    useEffect(() => {
+        setMyUser(Object.assign({}, user, {password: ""}))
+    }, [user]);
+
+    // Values derived from inputs (props and state)
+    const isEmailValid = myUser.loggedIn && myUser.email && validateEmail(myUser.email) || validateEmail("");
+    const isDobValid = myUser.loggedIn && myUser.dateOfBirth && isDobOverThirteen(new Date(myUser.dateOfBirth)) || false;
+    const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
+
+    //Form's submission method
+    const updateAccount = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setAttemptedAccountUpdate(true);
+        Object.assign({}, myUserPreferences.EMAIL_PREFERENCE || {}, emailPreferences);
+        Object.assign({}, myUserPreferences.EXAM_BOARD || {}, examPreferences);
+        if (myUser.loggedIn && isEmailValid && (isDobValid || myUser.dateOfBirth == undefined) &&
+            (!myUser.password || isNewPasswordConfirmed)) {
+            updateCurrentUser({
+                registeredUser: myUser,
+                userPreferences: myUserPreferences,
+                passwordCurrent: currentPassword
+            }, user);
+        }
+    };
 
     return <Container id="account-page" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="My account" className="mb-4" />
@@ -153,24 +172,13 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                         </NavLink>
                     </NavItem>
                 </Nav>
-                <Form name="my-account" onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-                    event.preventDefault();
-                    Object.assign(myUserPreferences.EMAIL_PREFERENCE || {}, emailPreferences);
-                    Object.assign(myUserPreferences.EXAM_BOARD || {}, examPreferences);
-                    if (isEmailValid && (isDobValid || myUser.dateOfBirth == undefined) && (!myUser.password || isNewPasswordConfirmed)) {
-                        updateCurrentUser({
-                            registeredUser: myUser,
-                            userPreferences: myUserPreferences,
-                            passwordCurrent: currentPassword
-                        }, user);
-                    }
-                }}>
+
+                <Form name="my-account" onSubmit={updateAccount}>
                     <TabContent activeTab={activeTab}>
                         <TabPane tabId={ACCOUNT_TAB.account}>
                             <UserDetails
                                 myUser={myUser} setMyUser={setMyUser} examPreferences={examPreferences} setExamPreferences={setExamPreferences}
-                                isDobValid={isDobValid} setIsDobValid={setIsDobValid}
-                                isEmailValid={isEmailValid} setIsEmailValid={setIsEmailValid}
+                                isDobValid={isDobValid} isEmailValid={isEmailValid} attemptedAccountUpdate={attemptedAccountUpdate}
                             />
                         </TabPane>
                         <TabPane tabId={ACCOUNT_TAB.passwordreset}>
@@ -178,7 +186,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                 currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}
                                 myUser={myUser} setMyUser={setMyUser}
                                 setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
-                                isNewPasswordConfirmed={isNewPasswordConfirmed} setIsNewPasswordConfirmed={setIsNewPasswordConfirmed}
+                                isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
+                                setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm}
                             />
                         </TabPane>
                         <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
@@ -207,6 +216,11 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 </Form>
             </Card>
         }
+        <Row className="text-muted text-center mt-3">
+            <Col>
+                If you would like to delete your account please <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a>.
+            </Col>
+        </Row>
     </Container>;
 };
 

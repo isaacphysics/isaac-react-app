@@ -127,7 +127,6 @@ export const updateCurrentUser = (
             try {
                 const changedUser = await api.users.updateCurrent(params);
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: changedUser.data});
-                history.push('/');
             } catch (e) {
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
             }
@@ -539,7 +538,7 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
     // TODO MT handle local storage load if gameboardId == null
     // TODO MT handle requesting new gameboard if local storage is also null
     if (gameboardId) {
-        const gameboardResponse = await api.gameboards.get(gameboardId.slice(1));
+        const gameboardResponse = await api.gameboards.get(gameboardId);
         dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS, gameboard: gameboardResponse.data});
     }
     // TODO MT handle error case
@@ -863,9 +862,10 @@ export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) =>
     }
 };
 
-// Empty log actions:
-export const acceptCookies = () => {
-    return {type: ACTION_TYPE.ACCEPT_COOKIES};
+// Generic log action:
+export const logAction = (eventDetails: object) => {
+    api.logger.log(eventDetails); // We do not care whether this completes or not
+    return {type: ACTION_TYPE.LOG_EVENT, eventDetails: eventDetails};
 };
 
 // SERVICE ACTIONS (w/o dispatch)

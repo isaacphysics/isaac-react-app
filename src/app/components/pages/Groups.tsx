@@ -184,7 +184,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
         </Row>
         <Form inline className="pt-2">
             <Input className="flex-grow-1 mr-1" innerRef={groupNameRef} length={50} placeholder="Enter the name of your group here" value={newGroupName}
-                onChange={e => setNewGroupName(e.target.value)}/>
+                onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name"/>
             <Button color="primary" style={{fontSize: "1rem", padding: "0.5rem 2rem"}} onClick={saveUpdatedGroup} disabled={newGroupName == "" || initialGroupName == newGroupName}>
                 {group ? "Update" : "Create"}
             </Button>
@@ -232,7 +232,7 @@ const MobileGroupCreatorComponent = ({createNewGroup, ...props}: GroupCreatorPro
         </Col>
         <Col xs={12} className="mb-2">
             <Input length={50} placeholder="Enter the name of your group here" value={newGroupName}
-                onChange={e => setNewGroupName(e.target.value)}/>
+                onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name"/>
         </Col>
         <Col xs={12}>
             <Button block color="primary" onClick={saveUpdatedGroup} disabled={newGroupName == ""}>
@@ -310,10 +310,14 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
 
     const groupNameRef = useRef<HTMLInputElement>(null);
 
+    const pageHelp = <span>
+        Use this page to manage groups. You can add users to a group by giving them the group token and asking them paste it into their account settings page.
+        <br />
+        You can find the token for an existing group by selecting the group and clicking <i>Invite Users</i>.
+    </span>;
+
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage Groups" subTitle="Keep track of your groups" intermediateCrumbs={[{title: "Teachers", to: "#"}]} className="mb-4" help={<span>
-            Use this page to manage groups. You can add users to a group by giving them the group token and asking them paste it into their account settings page.
-            <br />You can find the token for an existing group by selecting the group and clicking <i>Invite Users</i>.</span>} />
+        <TitleAndBreadcrumb currentPageTitle="Manage Groups" intermediateCrumbs={[{title: "Teachers", to: "#"}]} className="mb-4" help={pageHelp} />
         <Row>
             <Col md={5}>
                 <ShowLoading until={activeTab}>

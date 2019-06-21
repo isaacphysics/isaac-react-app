@@ -1,20 +1,21 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom"
+import {loadGameboard, logAction} from "../../state/actions";
 import {Col, Container, ListGroup, ListGroupItem, Row} from "reactstrap"
-import {loadGameboard} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateFromProps = (state: AppState) => (state && {gameboard: state.currentGameboard});
-const dispatchFromProps = {loadGameboard};
+const dispatchFromProps = {loadGameboard, logAction};
 
 interface GameboardPageProps {
     location: {hash: string};
     gameboard: GameboardDTO | null;
     loadGameboard: (gameboardId: string | null) => void;
+    logAction: (eventDetails: object) => void;
 }
 
 const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
@@ -43,10 +44,17 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     </ListGroupItem>;
 };
 
+const GameboardPageComponent = ({location: {hash}, gameboard, loadGameboard, logAction}: GameboardPageProps) => {
+    let gameboardId = hash ? hash.slice(1) : null;
 
-const GameboardPageComponent = ({location: {hash}, gameboard, loadGameboard}: GameboardPageProps) => {
+    useEffect(() => {loadGameboard(gameboardId);}, [gameboardId]);
 
-    useEffect(() => {loadGameboard(hash || null);}, [hash]);
+    // Only log a gameboard view when we have a gameboard loaded:
+    useEffect(() => {
+        if (gameboard !== null) {
+            logAction({type: "VIEW_GAMEBOARD_BY_ID", gameboardId: gameboard.id});
+        }
+    }, [gameboard]);
 
     return <Container>
         <ShowLoading until={gameboard}>

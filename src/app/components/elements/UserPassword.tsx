@@ -12,20 +12,16 @@ interface UserPasswordProps {
     myUser: ValidationUser;
     setMyUser: (e: any) => void;
     isNewPasswordConfirmed: boolean;
-    setIsNewPasswordConfirmed: (isValid: boolean) => void;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
+    setNewPassword: (e: any) => void;
+    setNewPasswordConfirm: (e: any) => void;
+    newPasswordConfirm: string;
 }
 
 export const UserPassword = (
-    {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, setIsNewPasswordConfirmed, userAuthSettings}: UserPasswordProps) => {
-    const [newPassword, setNewPassword] = useState("");
-    const [isNewPasswordValid, setIsNewPasswordValid] = useState(false);
+    {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, userAuthSettings, setNewPassword, setNewPasswordConfirm, newPasswordConfirm}: UserPasswordProps) => {
 
     const [passwordResetRequested, setPasswordResetRequested] = useState(false);
-
-    const validateNewPasswordsMatch = (newPassword: string, newPasswordCopy: string) => {
-        return newPassword === newPasswordCopy;
-    };
 
     const resetPasswordIfValidEmail = () => {
         if (currentUserEmail && validateEmail(currentUserEmail)) {
@@ -44,7 +40,9 @@ export const UserPassword = (
                                 <Label htmlFor="password-current">Current Password</Label>
                                 <Input
                                     id="password-current" type="password" name="current-password"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrentPassword(e.target.value)}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                        setCurrentPassword(e.target.value)
+                                    }
                                 />
                             </FormGroup>
                         </Col>
@@ -54,21 +52,14 @@ export const UserPassword = (
                             <FormGroup>
                                 <Label htmlFor="new-password">New Password</Label>
                                 <Input
-                                    invalid={!!newPassword && !isNewPasswordValid}
+                                    invalid={!!newPasswordConfirm && !isNewPasswordConfirmed}
                                     id="new-password" type="password" name="new-password"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        const newPassword = e.target.value;
-                                        setIsNewPasswordValid(validatePassword(newPassword));
-                                        setNewPassword(newPassword);
+                                        setNewPassword(e.target.value);
                                     }}
                                     aria-describedby="passwordValidationMessage"
                                     disabled={currentPassword == ""}
                                 />
-                                {newPassword && !isNewPasswordValid &&
-                                    <FormFeedback id="passwordValidationMessage">
-                                        {`Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long`}
-                                    </FormFeedback>
-                                }
                             </FormGroup>
                         </Col>
                     </Row>
@@ -77,23 +68,18 @@ export const UserPassword = (
                             <FormGroup>
                                 <Label htmlFor="password-confirm">Re-enter New Password</Label>
                                 <Input
-                                    invalid={isNewPasswordValid && !isNewPasswordConfirmed}
+                                    invalid={!!currentPassword && !isNewPasswordConfirmed}
                                     id="password-confirm"
                                     type="password" name="password-confirmation"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        const newPasswordCopy = e.target.value;
-                                        if (isNewPasswordValid && validateNewPasswordsMatch(newPassword, newPasswordCopy)) {
-                                            setMyUser(Object.assign(myUser, {password: newPasswordCopy}))
-                                            setIsNewPasswordConfirmed(true);
-                                        } else {
-                                            setIsNewPasswordConfirmed(false);
-                                        }
+                                        setNewPasswordConfirm(e.target.value);
+                                        setMyUser(Object.assign({}, myUser, {password: e.target.value}));
                                     }} aria-describedby="passwordConfirmationValidationMessage"
                                     disabled={currentPassword == ""}
                                 />
-                                {isNewPasswordValid && !isNewPasswordConfirmed &&
+                                {currentPassword && !isNewPasswordConfirmed &&
                                     <FormFeedback id="passwordConfirmationValidationMessage">
-                                        New passwords do not match
+                                        New passwords must match and be at least {MINIMUM_PASSWORD_LENGTH} characters long.
                                     </FormFeedback>
                                 }
                             </FormGroup>
