@@ -483,28 +483,32 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
         loadAssignmentsOwnedByMe();
     }, []);
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Assignment Progress" subTitle="Track your class performance" intermediateCrumbs={[{title: "Teachers", to: "#"}]} help="Click on your groups to see the assignments you have set. View your students' progress by question." />
-        <Row className="align-items-center d-none d-md-flex">
-            <Col className="text-right">
-                <Label className="pr-2">Sort groups:</Label>
-                <UncontrolledButtonDropdown size="sm">
-                    <DropdownToggle color="tertiary" caret>
-                        {sortOrder}
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        {Object.values(SortOrder).map(item =>
-                            <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
-                        )}
-                    </DropdownMenu>
-                </UncontrolledButtonDropdown>
-            </Col>
-        </Row>
-        <ShowLoading until={data}>
-            {data && data.map(group => <GroupAssignmentProgress key={group.id} {...props} group={group} pageSettings={pageSettings} />)}
-            {data && data.length == 0 && <h3>You&apos;ll need to create a group using <Link to="/groups">Manage Groups</Link> to set an assignment.</h3>}
-        </ShowLoading>
-    </Container>;
+    return <React.Fragment>
+        <Container>
+            <TitleAndBreadcrumb currentPageTitle="Assignment Progress" subTitle="Track your class performance" intermediateCrumbs={[{title: "Teachers", to: "#"}]} help="Click on your groups to see the assignments you have set. View your students' progress by question." />
+            <Row className="align-items-center d-none d-md-flex">
+                <Col className="text-right">
+                    <Label className="pr-2">Sort groups:</Label>
+                    <UncontrolledButtonDropdown size="sm">
+                        <DropdownToggle color="tertiary" caret>
+                            {sortOrder}
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            {Object.values(SortOrder).map(item =>
+                                <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
+                            )}
+                        </DropdownMenu>
+                    </UncontrolledButtonDropdown>
+                </Col>
+            </Row>
+        </Container>
+        <div className="assignment-progress-container">
+            <ShowLoading until={data}>
+                {data && data.map(group => <GroupAssignmentProgress key={group.id} {...props} group={group} pageSettings={pageSettings} />)}
+                {data && data.length == 0 && <h3>You&apos;ll need to create a group using <Link to="/groups">Manage Groups</Link> to set an assignment.</h3>}
+            </ShowLoading>
+        </div>
+    </React.Fragment>;
 };
 
 export const AssignmentProgress = connect(stateFromProps, dispatchFromProps)(AssignmentProgressPageComponent);

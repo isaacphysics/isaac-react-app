@@ -1,3 +1,21 @@
+.assignment-progress-container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@include respond-below(sm) {
+  .assignment-progress-container {
+    margin: 0 -1px;
+    padding: 0;
+  }
+
+  .assignment-progress-gameboard {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
 .assignment-progress-group {
   border: 1px solid $gray-118;
   margin: 1rem 0;
@@ -263,6 +281,7 @@ $failed-bg-size: 25%;
   overflow-x: scroll;
   overflow-y: visible;
   padding-bottom: 1px; // Fixes odd broswer bugs around the magic :after borders
+
   th.selected {
     // Fixes Firefox bug with position: relative table cells: https://bugzilla.mozilla.org/show_bug.cgi?id=688556
     background-clip: padding-box !important;
@@ -279,8 +298,22 @@ $failed-bg-size: 25%;
     }
   }
 
+  font-size: 12px;
   tbody td, tbody th {
-    min-width: 65px;
+    min-width: 40px;
+  }
+  .total-column.left {
+    right: 40px;
+  }
+
+  @include respond-above(sm) {
+    font-size: 17px;
+    tbody td, tbody th {
+      min-width: 65px;
+    }
+    .total-column.left {
+      right: 65px;
+    }
   }
 
   thead th {
@@ -379,12 +412,9 @@ $failed-bg-size: 25%;
     button {
       z-index: 2;
     }
-    &.left {
-      right: 65px;
-      &:after{
-        @include after-border;
-        border-left: 1px solid $gray-118;
-      }
+    &.left:after{
+      @include after-border;
+      border-left: 1px solid $gray-118;
     }
   }
 
