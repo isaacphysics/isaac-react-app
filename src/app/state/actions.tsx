@@ -475,7 +475,6 @@ export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (
         switch (documentType) {
             case DOCUMENT_TYPE.CONCEPT: apiEndpoint = api.concepts; break;
             case DOCUMENT_TYPE.QUESTION: apiEndpoint = api.questions; break;
-            case DOCUMENT_TYPE.FRAGMENT: apiEndpoint = api.fragments; break;
             case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
         }
         try {
@@ -504,6 +503,18 @@ export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatc
         }
     }
 };
+
+// Page fragments
+export const fetchFragment = (name: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.FRAGMENT_REQUEST, name});
+    try {
+        const response = await api.fragments.get(name);
+        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS, name, doc: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE, name});
+    }
+};
+
 
 // Questions
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
