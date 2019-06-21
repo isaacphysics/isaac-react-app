@@ -10,16 +10,23 @@ import {
     DropdownItem,
     Label, Spinner, Button
 } from "reactstrap"
-import {loadGroups, loadAssignmentsOwnedByMe, loadBoard, loadProgress, showDownloadModal} from "../../state/actions";
+import {
+    loadGroups,
+    loadAssignmentsOwnedByMe,
+    loadBoard,
+    loadProgress,
+    openActiveModal
+} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {sortBy, orderBy} from "lodash";
-import {AppGroup, AppAssignmentProgress} from "../../../IsaacAppTypes";
+import {AppGroup, AppAssignmentProgress, ActiveModal} from "../../../IsaacAppTypes";
 import {groups} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH} from "../../services/constants";
+import {downloadLinkModal} from "../elements/AssignmentProgressModalCreators";
 
 const stateFromProps = (state: AppState) => {
     if (state != null) {
@@ -63,7 +70,7 @@ const stateFromProps = (state: AppState) => {
     };
 };
 
-const dispatchFromProps = {loadGroups, loadAssignmentsOwnedByMe, loadBoard, loadProgress, showDownloadModal};
+const dispatchFromProps = {loadGroups, loadAssignmentsOwnedByMe, loadBoard, loadProgress, openActiveModal};
 
 
 type EnhancedAssignment = AssignmentDTO & {
@@ -80,7 +87,7 @@ interface AssignmentProgressPageProps {
     loadAssignmentsOwnedByMe: () => void;
     loadBoard: (boardId: string) => void;
     loadProgress: (assignment: AssignmentDTO) => void;
-    showDownloadModal: (link: string) => void;
+    openActiveModal: (modal: ActiveModal) => void;
 }
 
 enum SortOrder {
@@ -364,14 +371,14 @@ function getCSVDownloadLink(assignmentId: number) {
 }
 
 const AssignmentDetails = (props: AssignmentDetailsProps) => {
-    const {assignment, showDownloadModal} = props;
+    const {assignment, openActiveModal} = props;
 
     const [isExpanded, setIsExpanded] = useState(false);
 
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
-        showDownloadModal(event.currentTarget.href);
+        openActiveModal(downloadLinkModal(event.currentTarget.href));
     }
 
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
@@ -450,15 +457,16 @@ function getGroupProgressCSVDownloadLink(groupId: number) {
 }
 
 const GroupAssignmentProgress = (props: GroupDetailsProps) => {
-    const {group, showDownloadModal} = props;
+    const {group, openActiveModal} = props;
     const [isExpanded, setExpanded] = useState(false);
 
     const assignmentCount = group.assignments.length;
 
-    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
+    function openGroupDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
-        showDownloadModal(event.currentTarget.href);
+        //showDownloadModal(event.currentTarget.href);
+        openActiveModal(downloadLinkModal(event.currentTarget.href));
     }
 
     return <React.Fragment>
@@ -466,7 +474,7 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
             <Col className="group-name"><span className="icon-group"/><span>{group.groupName}</span></Col>
             <Col className="flex-grow-1" />
             <Col><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"} set</Col>
-            <Col className="d-none d-md-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" onClick={openAssignmentDownloadLink}>(Download Group CSV)</a></Col>
+            <Col className="d-none d-md-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" onClick={openGroupDownloadLink}>(Download Group CSV)</a></Col>
             <Col><img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" /></Col>
         </Row>
         {isExpanded && <GroupDetails {...props} />}

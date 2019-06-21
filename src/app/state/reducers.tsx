@@ -164,6 +164,16 @@ export const doc = (doc: DocState = null, action: Action) => {
     }
 };
 
+type FragmentsState = {[name: string]: (ContentDTO | NOT_FOUND_TYPE)} | null;
+export const fragments = (fragments: FragmentsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS:
+            return {...fragments, [action.name]: action.doc};
+        default:
+            return fragments;
+    }
+};
+
 export const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
@@ -588,7 +598,8 @@ const appReducer = combineReducers({
     groups,
     boards,
     assignmentsByMe,
-    progress
+    progress,
+    fragments
 });
 
 export type AppState = undefined | {
@@ -615,6 +626,7 @@ export type AppState = undefined | {
     boards: BoardsState;
     assignmentsByMe: AssignmentsState;
     progress: ProgressState;
+    fragments: FragmentsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {
