@@ -7,8 +7,8 @@ import {AppState} from "../../state/reducers";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
 import {Card, CardBody, Container, Row, Col, Nav, NavItem, NavLink} from 'reactstrap';
 import {orderBy} from "lodash";
-import {extractTeacherName} from "../../services/role";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {extractTeacherName} from "../../services/user";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments, logAction};

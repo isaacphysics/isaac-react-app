@@ -9,7 +9,7 @@ import {
 } from "../../state/actions";
 import {store} from "../../state/store";
 import * as RS from "reactstrap";
-import {extractTeacherName} from "../../services/role";
+import {extractTeacherName} from "../../services/user";
 
 export const tokenVerificationModal = (authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
     return {
