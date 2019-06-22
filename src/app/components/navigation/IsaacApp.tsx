@@ -45,6 +45,8 @@ import { Equality } from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
 import {Support} from "../pages/Support";
+import {ForStudents} from "../pages/ForStudents";
+import {ForTeachers} from "../pages/ForTeachers";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -58,7 +60,7 @@ interface IsaacAppProps {
 
 const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
 
-    useEffect(() => {requestCurrentUser();}, [requestCurrentUser]);
+    useEffect(() => {requestCurrentUser()}, [requestCurrentUser]);
 
     return <Router history={history}>
         <ScrollManager>
@@ -72,8 +74,9 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                     <Switch>
                         {/* Application pages */}
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
-                        <TrackedRoute path="/search" component={Search} />
                         <TrackedRoute path="/account" onlyFor={user => user.loggedIn} component={MyAccount} />
+
+                        <TrackedRoute path="/search" component={Search} />
 
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
@@ -83,12 +86,16 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/topics/:topicName" component={Topic} />
 
                         <TrackedRoute path="/gameboards" onlyFor={user => user.loggedIn} component={Gameboard} />
-                        <TrackedRoute path="/assignments" onlyFor={user => user.loggedIn} component={MyAssignments} />
                         <TrackedRoute path="/assignment/:gameboardId" onlyFor={user => user.loggedIn} component={RedirectToGameboard} />
 
                         <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
 
+                        {/* Student pages */}
+                        <TrackedRoute path="/students" component={ForStudents} />
+                        <TrackedRoute path="/assignments" onlyFor={user => user.loggedIn} component={MyAssignments} />
+
                         {/* Teacher pages */}
+                        <TrackedRoute path="/teachers" component={ForTeachers} />
                         <TrackedRoute path="/groups" onlyFor={isTeacher} component={Groups} />
                         <TrackedRoute path="/set_assignments" onlyFor={isTeacher} component={SetAssignments} />
 

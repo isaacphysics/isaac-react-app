@@ -53,9 +53,9 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Students</p>
                     </DropdownToggle>
                     <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
-                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
-                        {/*    For Students*/}
-                        {/*</DropdownItemComingSoon>*/}
+                        <DropdownItem tag={Link} to="/students" className="pl-4 py-3 p-md-3">
+                            For Students
+                        </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             My Gameboards
                         </DropdownItemComingSoon>
@@ -76,9 +76,9 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Teachers</p>
                     </DropdownToggle>
                     <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
-                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
-                        {/*    <p>For Teachers</p>*/}
-                        {/*</DropdownItemComingSoon>*/}
+                        <DropdownItem tag={Link} to="/teachers" className="pl-4 py-3 p-md-3">
+                            For Teachers
+                        </DropdownItem>
                         <DropdownItem tag={Link} to="/set_assignments" className="pl-4 py-3 p-md-3">
                             Set Assignments
                         </DropdownItem>
