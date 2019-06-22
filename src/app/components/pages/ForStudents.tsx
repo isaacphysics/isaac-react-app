@@ -6,6 +6,7 @@ import {PageFragment} from "../elements/PageFragment";
 import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {Link} from "react-router-dom";
+import {ActionCard} from "../elements/ActionCard";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) || null
@@ -21,21 +22,81 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
         <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>Sign up</RS.Button>
     </div>;
 
-    return <RS.Container>
-        <RS.Row>
+    return <RS.Container className="students-page">
+        <RS.Row className="pb-4">
             <RS.Col>
                 <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="Students" />
             </RS.Col>
         </RS.Row>
+
+        {!(user && user.loggedIn) && <RS.Row>
+            <RS.Col md={{size: 8, offset: 2}} className="pb-4">
+                <React.Fragment>
+                    <PageFragment fragmentId="for_students_logged_out"/>
+                    {registrationButton}
+                </React.Fragment>
+            </RS.Col>
+        </RS.Row>}
+
         <RS.Row>
-            <RS.Col md={{size: 8, offset: 2}} className="pt-4 pb-5">
-                {user && user.loggedIn ?
-                    <div>Welcome back to Isaac Computer Science.</div> :
-                    <React.Fragment>
-                        <PageFragment fragmentId="for_students_logged_out"/>
-                        {registrationButton}
-                    </React.Fragment>
-                }
+            <RS.Col>
+                {user && user.loggedIn && <h2 className="h-secondary h-m">Pick up where you left off</h2>}
+                <div className="pattern-07">
+                    <RS.Row className="pb-5">
+                        <RS.ListGroup className="mt-md-4 mb-3 d-block d-md-flex flex-wrap flex-row link-list align-items-stretch">
+                            <RS.ListGroupItem className="bg-transparent">
+                                <ActionCard
+                                    title="Assignments" imageSource="/assets/card04.svg"
+                                    linkDestination="/assignments" linkText="View your assignments"
+                                >
+                                    View the current status of your assignments.
+                                </ActionCard>
+                            </RS.ListGroupItem>
+
+                            <RS.ListGroupItem className="bg-transparent">
+                                <ActionCard
+                                    title="Topics" imageSource="/assets/card01.svg"
+                                    linkDestination="/topics" linkText="View all topics"
+                                >
+                                    Work through one of your course&apos;s topics.
+                                </ActionCard>
+                            </RS.ListGroupItem>
+
+                            <RS.ListGroupItem className="bg-transparent">
+                                <ActionCard
+                                    title="Events" imageSource="/assets/card02.svg"
+                                    linkDestination="/events" linkText="View our events"
+                                >
+                                    Attend one of our free student workshop events.
+                                </ActionCard>
+                            </RS.ListGroupItem>
+
+                            {/*<RS.ListGroupItem className="bg-transparent">*/}
+                            {/*    <ActionCard*/}
+                            {/*        title="Boards" imageSource="/assets/card01.svg"*/}
+                            {/*        linkDestination="link/link" linkText="View your boards"*/}
+                            {/*    />*/}
+                            {/*</RS.ListGroupItem>*/}
+
+                            {/*<RS.ListGroupItem className="bg-transparent">*/}
+                            {/*    <ActionCard*/}
+                            {/*        title="Progress" imageSource="/assets/card03.svg"*/}
+                            {/*        linkDestination="link/link" linkText="View your progress"*/}
+                            {/*    />*/}
+                            {/*</RS.ListGroupItem>*/}
+
+                            {/*<RS.ListGroupItem className="bg-transparent">*/}
+                            {/*    <ActionCard*/}
+                            {/*        title="Favourites" imageSource="/assets/card05.svg"*/}
+                            {/*        linkDestination="link/link" linkText="View favourites"*/}
+                            {/*    >*/}
+                            {/*        Jump to questions and content you have favourited*/}
+                            {/*    </ActionCard>*/}
+                            {/*</RS.ListGroupItem>*/}
+
+                        </RS.ListGroup>
+                    </RS.Row>
+                </div>
             </RS.Col>
         </RS.Row>
     </RS.Container>;
