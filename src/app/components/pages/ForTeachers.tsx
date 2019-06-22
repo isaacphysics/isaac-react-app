@@ -30,7 +30,7 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
         <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>Sign up</RS.Button>
     </div>;
 
-    return <RS.Container>
+    return <RS.Container className="teachers-page">
         <RS.Row>
             <RS.Col>
                 <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="Teachers" />
@@ -46,6 +46,11 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
                     !isTeacher(user) && teacherUpgradeLink :
                     registrationButton
                 }
+            </RS.Col>
+        </RS.Row>
+        <RS.Row>
+            <RS.Col>
+                {user && user.loggedIn && <h2 className="h-secondary h-m">Pick up where you left off</h2>}
             </RS.Col>
         </RS.Row>
     </RS.Container>;

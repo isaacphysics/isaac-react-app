@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 
-interface ActionCardProps {
+interface LinkCardProps {
     title: string;
     imageSource: string;
     linkDestination: string;
@@ -9,7 +9,7 @@ interface ActionCardProps {
     children?: React.ReactChildren | string;
 }
 
-export const ActionCard = ({title, imageSource, linkDestination, linkText, children}: ActionCardProps) => {
+export const LinkCard = ({title, imageSource, linkDestination, linkText, children}: LinkCardProps) => {
     return (
         <div className="basic-card my-0 p-3 d-flex flex-column">
             <h2 className="pt-3">

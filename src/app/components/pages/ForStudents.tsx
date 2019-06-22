@@ -6,7 +6,7 @@ import {PageFragment} from "../elements/PageFragment";
 import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {Link} from "react-router-dom";
-import {ActionCard} from "../elements/ActionCard";
+import {LinkCard} from "../elements/LinkCard";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) || null
@@ -45,30 +45,30 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
                     <RS.Row className="pb-5">
                         <RS.ListGroup className="mt-md-4 mb-3 d-block d-md-flex flex-wrap flex-row link-list align-items-stretch">
                             <RS.ListGroupItem className="bg-transparent">
-                                <ActionCard
+                                <LinkCard
                                     title="Assignments" imageSource="/assets/card04.svg"
                                     linkDestination="/assignments" linkText="View your assignments"
                                 >
                                     View the current status of your assignments.
-                                </ActionCard>
+                                </LinkCard>
                             </RS.ListGroupItem>
 
                             <RS.ListGroupItem className="bg-transparent">
-                                <ActionCard
+                                <LinkCard
                                     title="Topics" imageSource="/assets/card01.svg"
                                     linkDestination="/topics" linkText="View all topics"
                                 >
                                     Work through one of your course&apos;s topics.
-                                </ActionCard>
+                                </LinkCard>
                             </RS.ListGroupItem>
 
                             <RS.ListGroupItem className="bg-transparent">
-                                <ActionCard
+                                <LinkCard
                                     title="Events" imageSource="/assets/card02.svg"
                                     linkDestination="/events" linkText="View our events"
                                 >
                                     Attend one of our free student workshop events.
-                                </ActionCard>
+                                </LinkCard>
                             </RS.ListGroupItem>
 
                             {/*<RS.ListGroupItem className="bg-transparent">*/}
