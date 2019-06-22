@@ -7,23 +7,23 @@ import {connect} from "react-redux";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {fetchFragment} from "../../state/actions";
 
-const stateToProps = (state: AppState, {name}: {name: string}) => {
+const stateToProps = (state: AppState, {fragmentId}: {fragmentId: string}) => {
     return {
-        fragment: state && state.fragments && state.fragments[name] || null
+        fragment: state && state.fragments && state.fragments[fragmentId] || null
     };
 };
 const dispatchToProps = {fetchFragment};
 
 interface PageFragmentComponentProps {
-    name: string;
+    fragmentId: string;
     fragment: ContentDTO | NOT_FOUND_TYPE | null;
-    fetchFragment: (name: string) => void;
+    fetchFragment: (id: string) => void;
 }
 
-const PageFragmentComponent = ({name, fragment, fetchFragment}: PageFragmentComponentProps) => {
+const PageFragmentComponent = ({fragmentId, fragment, fetchFragment}: PageFragmentComponentProps) => {
     useEffect(
-        () => {fetchFragment(name);},
-        [name]
+        () => {fetchFragment(fragmentId);},
+        [fragmentId]
     );
 
     return <ShowLoading until={fragment} render={(fragment: ContentDTO) =>

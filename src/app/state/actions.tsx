@@ -506,13 +506,13 @@ export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatc
 };
 
 // Page fragments
-export const fetchFragment = (name: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.FRAGMENT_REQUEST, name});
+export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.FRAGMENT_REQUEST, id});
     try {
-        const response = await api.fragments.get(name);
-        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS, name, doc: response.data});
+        const response = await api.fragments.get(id);
+        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS, id, doc: response.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE, name});
+        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE, id});
     }
 };
 

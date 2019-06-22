@@ -84,7 +84,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
                 >
                     {fromPairs(Object.values(section.categories).map(category => {
                         // eslint-disable-next-line react/jsx-key
-                        return [category.title, <PageFragment name={`support_${type}_${category.category}`}/>];
+                        return [category.title, <PageFragment fragmentId={`support_${type}_${category.category}`} />];
                     }))}
                 </Tabs>
             </Col>

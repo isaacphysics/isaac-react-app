@@ -167,7 +167,7 @@ type FragmentsState = {[name: string]: (ContentDTO | NOT_FOUND_TYPE)} | null;
 export const fragments = (fragments: FragmentsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS:
-            return {...fragments, [action.name]: action.doc};
+            return {...fragments, [action.id]: action.doc};
         default:
             return fragments;
     }
