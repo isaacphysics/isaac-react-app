@@ -73,14 +73,19 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
     return <Container>
         <Row>
             <Col>
-                <TitleAndBreadcrumb currentPageTitle={section.title} subTitle="Help with ..." />
+                <TitleAndBreadcrumb currentPageTitle={section.title} />
             </Col>
         </Row>
         <Row>
-            <Col className="py-4">
-                <Tabs defaultActiveTab={categoryIndex + 1} activeTabChanged={activeTabChanged} tabTitleClass={tabTitleClass} tabContentClass="pt-5">
-                    {/* eslint-disable-next-line react/jsx-key */}
-                    {fromPairs(Object.values(section.categories).map(category => [category.title, <PageFragment name={`support_${type}_${category.category}`} />]))}
+            <Col className="pt-4 pb-5">
+                <Tabs
+                    defaultActiveTab={categoryIndex + 1} activeTabChanged={activeTabChanged}
+                    tabTitleClass={tabTitleClass} tabContentClass="pt-4"
+                >
+                    {fromPairs(Object.values(section.categories).map(category => {
+                        // eslint-disable-next-line react/jsx-key
+                        return [category.title, <PageFragment name={`support_${type}_${category.category}`}/>];
+                    }))}
                 </Tabs>
             </Col>
         </Row>
