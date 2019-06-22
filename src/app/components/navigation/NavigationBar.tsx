@@ -46,18 +46,9 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         <DropdownItem tag={Link} to="/about" className="pl-4 py-3 p-md-3">
                             What We Do
                         </DropdownItem>
-                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
-                        {/*    News*/}
-                        {/*</DropdownItemComingSoon>*/}
-                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
-                        {/*    Get Involved*/}
-                        {/*</DropdownItemComingSoon>*/}
                         <DropdownItem tag="a" href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer" className="pl-4 py-3 p-md-3">
                             Events (Eventbrite)
                         </DropdownItem>
-                        {/*<DropdownItem className="pl-4 py-3 p-md-3">*/}
-                        {/*    Isaac Physics*/}
-                        {/*</DropdownItem>*/}
                     </DropdownMenu>
                 </UncontrolledDropdown>
 
@@ -103,6 +94,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         </DropdownItem>
                     </DropdownMenu>
                 </UncontrolledDropdown>
+
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         Topics
@@ -119,13 +111,14 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         </DropdownItemComingSoon>
                     </DropdownMenu>
                 </UncontrolledDropdown>
+
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
-                        <p className="m-0"><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</p>
+                        <span className="m-0"><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</span>
                     </DropdownToggle>
                     <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={closeMenuIfMobile}>
-                        <DropdownItem className="pl-4 py-3 p-md-3">
-                            <Link to={"/contact"}>Contact Us</Link>
+                        <DropdownItem tag={Link} to="/contact" className="pl-4 py-3 p-md-3">
+                            Contact Us
                         </DropdownItem>
                         <DropdownItem tag={Link} to="/support/teacher" className="pl-4 py-3 p-md-3">
                             Teacher Support
