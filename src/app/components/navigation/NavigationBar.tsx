@@ -19,12 +19,8 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
 
     const DropdownItemComingSoon = ({children, className}: {children: React.ReactNode; className: string}) => (
         <DropdownItem tag={Link} to="/coming_soon" className={`${className}`} aria-disabled="true">
-            <Row className="w-100">
-                <Col>
-                    <span className="mr-2 text-muted">{children}</span>
-                    <Badge  color="light" className="border-secondary border bg-white ml-auto mr-1">Coming Soon</Badge>
-                </Col>
-            </Row>
+            <span className="mr-2 text-muted">{children}</span>
+            <Badge  color="light" className="border-secondary border bg-white ml-auto mr-1">Coming Soon</Badge>
         </DropdownItem>
     );
 
@@ -42,7 +38,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         About Us
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/about" className="pl-4 py-3 p-md-3">
                             What We Do
                         </DropdownItem>
@@ -56,7 +52,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Students</p>
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
                         {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
                         {/*    For Students*/}
                         {/*</DropdownItemComingSoon>*/}
@@ -79,7 +75,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Teachers</p>
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
                         {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
                         {/*    <p>For Teachers</p>*/}
                         {/*</DropdownItemComingSoon>*/}
@@ -99,7 +95,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         Topics
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/topics" className="pl-4 py-3 p-md-3">
                             All Topics
                         </DropdownItem>
@@ -116,7 +112,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <span className="m-0"><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</span>
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/contact" className="pl-4 py-3 p-md-3">
                             Contact Us
                         </DropdownItem>
