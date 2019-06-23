@@ -9,7 +9,7 @@ import {ContentSummaryDTO, IsaacTopicSummaryPageDTO} from "../../../IsaacApiType
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
 import {filterAndSeparateRelatedContent} from "../../services/topics";
 import {Button, Col, Container, Input, Label, Row} from "reactstrap";
-import {DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
+import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
 import {UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom} from "../../services/examBoard";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -49,7 +49,7 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
             <Row>
                 <Col>
                     <TitleAndBreadcrumb
-                        intermediateCrumbs={[{title: "All topics", to: "/topics"}]}
+                        intermediateCrumbs={[ALL_TOPICS_CRUMB]}
                         currentPageTitle={topicPage.title as string}
                     />
                 </Col>

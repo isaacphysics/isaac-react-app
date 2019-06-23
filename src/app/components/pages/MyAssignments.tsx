@@ -9,6 +9,7 @@ import {Card, CardBody, Container, Row, Col, Nav, NavItem, NavLink} from 'reacts
 import {orderBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {extractTeacherName} from "../../services/user";
+import {STUDENTS_CRUMB} from "../../services/constants";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments, logAction};
@@ -138,7 +139,7 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}:
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My Assignments" help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="My Assignments" intermediateCrumbs={[STUDENTS_CRUMB]} help={pageHelp} />
         <Card className="my-5">
             <CardBody className="py-0">
                 <Nav className="mt-4 mb-3" tabs>

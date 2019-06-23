@@ -1,5 +1,5 @@
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, documentTypePathPrefix, EXAM_BOARD, examBoardTagMap} from "./constants";
+import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, documentTypePathPrefix, EXAM_BOARD, examBoardTagMap} from "./constants";
 import {CurrentTopicState} from "../state/reducers";
 import {LinkInfo} from "../../IsaacAppTypes";
 
@@ -30,7 +30,7 @@ export const idIsPresent = (id: string, contents: {id?: string}[] | undefined) =
 export const determineTopicHistory = (currentTopic: CurrentTopicState) => {
     const result: LinkInfo[] = [];
     if (currentTopic && currentTopic.id && currentTopic.title) {
-        result.push({title: "All topics", to: "/topics"});
+        result.push(ALL_TOPICS_CRUMB);
         result.push({title: currentTopic.title, to: `/topics/${currentTopic.id.slice("topic_summary_".length)}`})
     }
     return result;
