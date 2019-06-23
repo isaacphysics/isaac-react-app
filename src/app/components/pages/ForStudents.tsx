@@ -70,30 +70,6 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
                                     Attend one of our free student workshop events.
                                 </LinkCard>
                             </RS.ListGroupItem>
-
-                            {/*<RS.ListGroupItem className="bg-transparent">*/}
-                            {/*    <ActionCard*/}
-                            {/*        title="Boards" imageSource="/assets/card01.svg"*/}
-                            {/*        linkDestination="link/link" linkText="View your boards"*/}
-                            {/*    />*/}
-                            {/*</RS.ListGroupItem>*/}
-
-                            {/*<RS.ListGroupItem className="bg-transparent">*/}
-                            {/*    <ActionCard*/}
-                            {/*        title="Progress" imageSource="/assets/card03.svg"*/}
-                            {/*        linkDestination="link/link" linkText="View your progress"*/}
-                            {/*    />*/}
-                            {/*</RS.ListGroupItem>*/}
-
-                            {/*<RS.ListGroupItem className="bg-transparent">*/}
-                            {/*    <ActionCard*/}
-                            {/*        title="Favourites" imageSource="/assets/card05.svg"*/}
-                            {/*        linkDestination="link/link" linkText="View favourites"*/}
-                            {/*    >*/}
-                            {/*        Jump to questions and content you have favourited*/}
-                            {/*    </ActionCard>*/}
-                            {/*</RS.ListGroupItem>*/}
-
                         </RS.ListGroup>
                     </RS.Row>
                 </div>

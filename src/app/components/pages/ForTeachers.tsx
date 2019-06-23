@@ -34,9 +34,9 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
         <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>Sign up</RS.Button>
     </div>;
 
-    // TODO hopefully we have a nice way of finding these values without websockets
-    const numberOfGroupsCreated = 999;
-    const numberOfAssignmentsSet = 999;
+    // TODO
+    const numberOfGroupsCreated = 999; // need to merge pull to get access to loadAssignmentsOwnedByMe()
+    const numberOfAssignmentsSet = 999; // need to create action for hitting /groups/userid
 
     return <RS.Container className="teachers-page">
         <RS.Row className="pb-4">
@@ -121,16 +121,6 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
                                     Review the site&apos;s material arranged by topic.
                                 </LinkCard>
                             </RS.ListGroupItem>
-
-                            {/*<RS.ListGroupItem className="bg-transparent">*/}
-                            {/*    <ActionCard*/}
-                            {/*        title="Favourites" imageSource="/assets/card05.svg"*/}
-                            {/*        linkDestination="link/link" linkText="View favourites"*/}
-                            {/*    >*/}
-                            {/*        Jump to questions and content you have favourited*/}
-                            {/*    </ActionCard>*/}
-                            {/*</RS.ListGroupItem>*/}
-
                         </RS.ListGroup>
                     </RS.Row>
                 </div>
