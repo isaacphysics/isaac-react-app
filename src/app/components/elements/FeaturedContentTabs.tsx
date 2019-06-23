@@ -39,10 +39,7 @@ export const FeaturedContentTabs = () => (
                             </h4>
                         </ListGroup>
                     </Col>
-                    <Col
-                        md={{size: 5, offset: 1}}
-                        className="feattab-image mt-md-5 text-center"
-                    >
+                    <Col md={{size: 5, offset: 1}} className="feattab-image mt-md-5 text-center" >
                         <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
                     </Col>
                 </Row>
