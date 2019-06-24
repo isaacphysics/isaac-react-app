@@ -41,7 +41,7 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
     return <RS.Container className="teachers-page">
         <RS.Row className="pb-4">
             <RS.Col>
-                <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="Teachers" />
+                <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="For Teachers" />
             </RS.Col>
         </RS.Row>
 
