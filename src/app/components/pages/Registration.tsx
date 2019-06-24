@@ -2,8 +2,21 @@ import React, {useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import ReactGA from "react-ga";
-import {Card, CardBody, CardTitle, Col, CustomInput, Form, FormGroup, Input, Row, Label, FormFeedback, Container} from "reactstrap";
-import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
+import {
+    Card,
+    CardBody,
+    CardTitle,
+    Col,
+    Container,
+    CustomInput,
+    Form,
+    FormFeedback,
+    FormGroup,
+    Input,
+    Label,
+    Row
+} from "reactstrap";
+import {LoggedInUser, LoggedInValidationUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
@@ -11,6 +24,7 @@ import {isDobOverThirteen, validateEmail, validatePassword} from "../../services
 import {EXAM_BOARD} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistance from "../../services/localStorage"
+import {KEY} from "../../services/localStorage"
 import {DateInput} from "../elements/DateInput";
 
 const stateToProps = (state: AppState) => ({
@@ -74,8 +88,8 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         setAttemptedSignUp(true);
 
         if (passwordIsValid && emailIsValid && confirmedOverThirteen) {
-            persistance.session.save('firstLogin', 'true');
-            persistance.session.save('bannerShown', 'false');
+            persistance.session.save(KEY.FIRST_LOGIN, 'true');
+            persistance.session.save(KEY.BANNER_SHOWN, 'false');
             Object.assign(registrationUser, {loggedIn: false});
             updateCurrentUser({
                 registeredUser: registrationUser,

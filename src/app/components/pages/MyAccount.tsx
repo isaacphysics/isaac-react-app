@@ -1,37 +1,37 @@
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
     Alert,
-    Container,
-    TabContent,
-    TabPane,
-    Nav,
-    NavItem,
-    NavLink,
     Card,
     CardFooter,
     Col,
+    Container,
     Form,
     Input,
-    Row, CardBody,
+    Nav,
+    NavItem,
+    NavLink,
+    Row,
+    TabContent,
+    TabPane,
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
-import {updateCurrentUser, resetPassword} from "../../state/actions";
-import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser, Toast} from "../../../IsaacAppTypes";
+import {resetPassword, updateCurrentUser} from "../../state/actions";
+import {LoggedInUser, LoggedInValidationUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import queryString from "query-string";
-import {Link} from "react-router-dom";
-import {EXAM_BOARD, ACCOUNT_TAB} from "../../services/constants";
+import {Link, withRouter} from "react-router-dom";
+import {ACCOUNT_TAB, EXAM_BOARD} from "../../services/constants";
 import {history} from "../../services/history"
 import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
-import {withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistance from "../../services/localStorage";
+import {KEY} from "../../services/localStorage";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -92,8 +92,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
 
     const [activeTab, setActiveTab] = useState(0);
-    const [bannerShown, setBannerShown] = useState((persistance.session.load('bannerShown') == 'true'));
-    console.log(persistance.session.load('bannerShown'));
+    const [bannerShown, _setBannerShown] = useState((persistance.session.load(KEY.BANNER_SHOWN) == 'true'));
 
     useMemo(() => {
         // @ts-ignore
@@ -142,7 +141,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
             </Alert>
         }
         {
-            attemptedAccountUpdate && persistance.session.save('bannerShown', 'true')
+            attemptedAccountUpdate && persistance.session.save(KEY.BANNER_SHOWN, 'true')
         }
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>

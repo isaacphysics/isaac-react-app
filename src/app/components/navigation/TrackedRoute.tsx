@@ -6,6 +6,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {connect} from "react-redux";
 import {AppState} from "../../state/reducers";
 import * as persistance from "../../services/localStorage";
+import {KEY} from "../../services/localStorage";
 import {Unauthorised} from "../pages/Unauthorised";
 
 ReactGA.initialize("UA-137475074-1");
@@ -48,7 +49,7 @@ const TrackedRouteComponent = function({component, trackingOptions, componentPro
                         user && user.loggedIn && user.role == "STUDENT" && rest.onlyFor && rest.onlyFor.name == "isTeacher" ?
                             <Redirect to="/pages/teacher_account_request"/> :
                         user && user.loggedIn && !onlyFor(user) ?
-                            <Unauthorised/> : persistance.save('afterAuthPath', props.location.pathname + props.location.search) && <Redirect to="/login"/>
+                            <Unauthorised/> : persistance.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                     }
                 </ShowLoading>;
             }}/>;

@@ -1,7 +1,14 @@
 /* eslint-disable no-console */
 const $window = window;
 
-export const save = function save(key: string, value: string) {
+export enum KEY {
+    AFTER_AUTH_PATH = "afterAuthPath",
+    CURRENT_USER_ID = "currentUserId",
+    FIRST_LOGIN = "firstLogin",
+    BANNER_SHOWN = "bannerShown",
+}
+
+export const save = function save(key: KEY, value: string) {
     try {
         $window.localStorage.setItem(key, value);
         return true;
@@ -11,7 +18,7 @@ export const save = function save(key: string, value: string) {
     }
 };
 
-export const load = function load(key: string) {
+export const load = function load(key: KEY) {
     try {
         return $window.localStorage.getItem(key);
     } catch (e) {
@@ -20,7 +27,7 @@ export const load = function load(key: string) {
     }
 };
 
-export const remove = function remove(key: string) {
+export const remove = function remove(key: KEY) {
     try {
         $window.localStorage.removeItem(key);
         return true;
@@ -41,7 +48,7 @@ export const clear = function clear() {
 };
 
 export const session = {
-    save: function sessionSave(key: string, value: string) {
+    save: function sessionSave(key: KEY, value: string) {
         try {
             $window.sessionStorage.setItem(key, value);
             return true;
@@ -51,7 +58,7 @@ export const session = {
         }
     },
 
-    load: function sessionLoad(key: string) {
+    load: function sessionLoad(key: KEY) {
         try {
             return $window.sessionStorage.getItem(key);
         } catch (e) {
@@ -60,9 +67,9 @@ export const session = {
         }
     },
 
-    remove: function sessionRemove(key: string) {
+    remove: function sessionRemove(key: KEY) {
         try {
-            return $window.sessionStorage.removeItem(key);
+            $window.sessionStorage.removeItem(key);
             return true;
         } catch (e) {
             console.error("Failed to remove from session storage. This might be a browser restriction.", e);
@@ -72,7 +79,7 @@ export const session = {
 
     clear: function clear() {
         try {
-            return $window.sessionStorage.clear();
+            $window.sessionStorage.clear();
             return true;
         } catch (e) {
             console.error("Failed to clear session storage. This might be a browser restriction.", e);
