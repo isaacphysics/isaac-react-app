@@ -141,8 +141,10 @@ export const updateCurrentUser = (
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
             if (initialLogin) {
-                if ((persistance.load('afterAuthPath') || '').includes('account')) {
-                    history.push(persistance.load('afterAuthPath') || '/account', {firstLogin: initialLogin})
+                const afterAuthPath = persistance.load('afterAuthPath') || '';
+                persistance.remove('afterAuthPath');
+                if ((afterAuthPath).includes('account')) {
+                    history.push(afterAuthPath, {firstLogin: initialLogin})
                 }
                 history.push('/account', {firstLogin: initialLogin});
             }
@@ -168,7 +170,8 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
 
 export const logInUser = (provider: AuthenticationProvider, params: {email: string; password: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
-    var afterAuthPath = persistance.load('afterAuthPath') || '/';
+    const afterAuthPath = persistance.load('afterAuthPath') || '/';
+    persistance.remove("afterAuthPath");
     try {
         const response = await api.authentication.login(provider, params);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
@@ -224,7 +227,9 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     if (initialLogin) {
         history.push('/account')
     } else {
-        history.push(persistance.load('afterAuthPath') || '/');
+        const afterAuthPath = persistance.load('afterAuthPath') || '/';
+        persistance.remove("afterAuthPath");
+        history.push(afterAuthPath);
     }
     // TODO MT handle error case
 };
