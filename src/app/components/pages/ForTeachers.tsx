@@ -46,7 +46,7 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
         </RS.Row>
 
         {!(user && isTeacher(user)) && <RS.Row>
-            <RS.Col md={{size: 8, offset: 2}} className="pt-4 pb-5">
+            <RS.Col md={{size: 8, offset: 2}} className="pt-4 pb-5 mb-5">
                 <PageFragment fragmentId="for_teachers_logged_out" />
                 {(user && user.loggedIn) ?
                     !isTeacher(user) && teacherUpgradeLink :

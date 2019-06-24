@@ -30,7 +30,7 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
         </RS.Row>
 
         {!(user && user.loggedIn) && <RS.Row>
-            <RS.Col md={{size: 8, offset: 2}} className="pb-4">
+            <RS.Col md={{size: 8, offset: 2}} className="pb-4 mb-5">
                 <React.Fragment>
                     <PageFragment fragmentId="for_students_logged_out"/>
                     {registrationButton}
