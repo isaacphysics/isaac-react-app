@@ -43,6 +43,7 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
         [relatedConcepts, relatedQuestions] = topicPage && topicPage.relatedContent &&
             filterAndSeparateRelatedContent(topicPage.relatedContent, examBoardFilter);
     }
+    const searchQuery = `?topic=${topicName}`;
 
     return <ShowLoading until={topicPage}>
         {topicPage && <Container id="topic-page">
@@ -60,8 +61,12 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                         <IsaacContent key={index} doc={child}/>)
                     }
 
-                    {relatedConcepts && <LinkToContentSummaryList items={relatedConcepts} className="my-4" />}
-                    {relatedQuestions && <LinkToContentSummaryList items={relatedQuestions} className="my-4" />}
+                    {relatedConcepts &&
+                        <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />
+                    }
+                    {relatedQuestions &&
+                        <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
+                    }
 
                     <Button tag={Link} to="/coming_soon" color="secondary" block size="lg" className="my-4">
                         More coming soon&hellip;

@@ -268,17 +268,6 @@ export interface AppGroupTokenDTO {
     groupId: number;
 }
 
-export interface LinkInfo {
-    title: string;
-    to: string;
-}
-
-export interface PageNavigation {
-    breadcrumbHistory: LinkInfo[];
-    backToTopic?: LinkInfo;
-    nextTopicContent?: LinkInfo;
-}
-
 export interface School {
     urn: string;
     name: string;

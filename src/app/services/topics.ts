@@ -1,8 +1,7 @@
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
 import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, documentTypePathPrefix, EXAM_BOARD, examBoardTagMap} from "./constants";
 import {CurrentTopicState} from "../state/reducers";
-import {LinkInfo} from "../../IsaacAppTypes";
-
+import {LinkInfo} from "./navigation";
 
 const filterOnExamBoard = (contents: ContentSummaryDTO[], examBoard: EXAM_BOARD) => {
     return contents.filter(content => content.tags && content.tags.includes(examBoardTagMap[examBoard]));
@@ -36,7 +35,12 @@ export const determineTopicHistory = (currentTopic: CurrentTopicState) => {
     return result;
 };
 
-export const determineNextTopicContentLink = (currentTopic: CurrentTopicState, contentId: string, examBoard: EXAM_BOARD) => {
+export const makeAttemptAtTopicHistory = () => {
+    return [ALL_TOPICS_CRUMB, {title: "Topic", to: "/topics/"}]
+};
+
+
+export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, examBoard: EXAM_BOARD) => {
     if (currentTopic && currentTopic.relatedContent) {
         const [relatedConcepts, relatedQuestions] = filterAndSeparateRelatedContent(currentTopic.relatedContent, examBoard);
         const orderedRelatedContent = relatedConcepts.concat(relatedQuestions);
@@ -51,3 +55,4 @@ export const determineNextTopicContentLink = (currentTopic: CurrentTopicState, c
         }
     }
 };
+
