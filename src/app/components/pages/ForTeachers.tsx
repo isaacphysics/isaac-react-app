@@ -55,6 +55,7 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
             </RS.Col>
         </RS.Row>}
 
+        {user && user.loggedIn && isTeacher(user) &&
         <RS.Row>
             <RS.Col>
                 {user && user.loggedIn && <h2 className="h-secondary h-m">Pick up where you left off</h2>}
@@ -125,7 +126,7 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
                     </RS.Row>
                 </div>
             </RS.Col>
-        </RS.Row>
+        </RS.Row>}
     </RS.Container>;
 };
 
