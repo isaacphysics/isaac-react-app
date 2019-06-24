@@ -26,7 +26,6 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
-
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
 
@@ -162,7 +161,7 @@ export enum ACTION_TYPE {
     PROGRESS_REQUEST = "PROGRESS_REQUEST",
     PROGRESS_RESPONSE_SUCCESS = "PROGRESS_SUCCESS",
     PROGRESS_RESPONSE_FAILURE = "PROGRESS_RESPONSE_FAILURE",
-    
+
     CONTENT_VERSION_GET_REQUEST = "CONTENT_VERSION_GET_REQUEST",
     CONTENT_VERSION_GET_RESPONSE_SUCCESS = "CONTENT_VERSION_GET_RESPONSE_SUCCESS",
     CONTENT_VERSION_GET_RESPONSE_FAILURE = "CONTENT_VERSION_GET_RESPONSE_FAILURE",
@@ -339,6 +338,7 @@ export enum DOCUMENT_TYPE {
     QUESTION = "isaacQuestionPage",
     GENERIC = "page",
 }
+export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.GENERIC]: "pages",
@@ -355,7 +355,6 @@ export enum ContentVersionUpdatingStatus {
 export enum MEMBERSHIP_STATUS {
     ACTIVE = "ACTIVE",
     INACTIVE = "INACTIVE",
-    // DELETED = "DELETED", I believe this state should never arrive at the front-end
 }
 
 export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}

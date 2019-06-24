@@ -1,5 +1,5 @@
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE} from "../../services/constants";
+import {DOCUMENT_TYPE, SEARCH_RESULT_TYPE} from "../../services/constants";
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {Link} from "react-router-dom";
 import React from "react";
@@ -8,10 +8,14 @@ export const ContentSummaryListGroupItem = ({item, search}: {item: ContentSummar
     let linkDestination, icon;
     let itemClasses = "p-3 bg-transparent content-summary-link ";
     switch (item.type) {
+        case (SEARCH_RESULT_TYPE.SHORTCUT):
+            linkDestination = item.url;
+            icon = "▶"; //"🎯";
+            break;
         case (DOCUMENT_TYPE.QUESTION):
             itemClasses += "text-info";
             linkDestination = `/questions/${item.id}`;
-            icon = "Q "//<span className="h-question-mark"><span>?</span></span>//"❓";
+            icon = "Q ";
             break;
         case (DOCUMENT_TYPE.CONCEPT):
         default:
@@ -21,8 +25,9 @@ export const ContentSummaryListGroupItem = ({item, search}: {item: ContentSummar
     }
     return <ListGroupItem className={itemClasses} key={linkDestination}>
         <Link to={{pathname: linkDestination, search: search}}>
-            <span>{icon}</span>
-            <span>{item.title}</span>
+            <span className="content-summary-link-title">{icon}</span>
+            <span className="content-summary-link-title">{item.title}</span>
+            {item.summary && <span className="small pt-1 pl-4 d-none d-md-inline">{item.summary}</span>}
         </Link>
     </ListGroupItem>;
 };
