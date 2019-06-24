@@ -73,7 +73,7 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
 
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
-                                    title="Set an assignment" linkDestination="/assignments" linkText="Set Assignments"
+                                    title="Set an assignment" linkDestination="/set_assignments" linkText="Set Assignments"
                                     amountText={<>You have set <span>{numberOfAssignmentsSet}</span> assignments.</>}
                                 >
                                     Set more assignments from the set assignments page.
