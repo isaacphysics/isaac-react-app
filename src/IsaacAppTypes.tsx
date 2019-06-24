@@ -123,6 +123,7 @@ export type Action =
 
     | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
+    | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE; gameboardId: string | null}
 
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS}

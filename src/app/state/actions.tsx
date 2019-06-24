@@ -561,13 +561,16 @@ export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|Validat
 // Current Gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GAMEBOARD_REQUEST, gameboardId});
-    // TODO MT handle local storage load if gameboardId == null
-    // TODO MT handle requesting new gameboard if local storage is also null
-    if (gameboardId) {
-        const gameboardResponse = await api.gameboards.get(gameboardId);
-        dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS, gameboard: gameboardResponse.data});
+    try {
+        // TODO MT handle local storage load if gameboardId == null
+        // TODO MT handle requesting new gameboard if local storage is also null
+        if (gameboardId) {
+            const gameboardResponse = await api.gameboards.get(gameboardId);
+            dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS, gameboard: gameboardResponse.data});
+        }
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE, gameboardId});
     }
-    // TODO MT handle error case
 };
 
 // Assignments

@@ -238,13 +238,15 @@ export const assignments = (assignments: AssignmentsState = null, action: Action
     }
 };
 
-type CurrentGameboardState = GameboardDTO | null;
+type CurrentGameboardState = GameboardDTO | NOT_FOUND_TYPE | null;
 export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.GAMEBOARD_REQUEST:
             return null;
         case ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;
+        case ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE:
+            return NOT_FOUND;
         default:
             return currentGameboard;
     }
