@@ -66,8 +66,6 @@ let group = /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6}$/;
 export function shortcuts(term: string) {
     let lterm = term.toLowerCase();
     let response = [];
-    console.log(term);
-    console.log(group.test(term));
     if (group.test(term)) {
         response.push({
             id: "teacher_connections",
