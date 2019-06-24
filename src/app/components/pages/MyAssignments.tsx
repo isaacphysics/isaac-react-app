@@ -141,23 +141,25 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}:
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="My Assignments" intermediateCrumbs={[STUDENTS_CRUMB]} help={pageHelp} />
         <Card className="my-5">
-            <CardBody className="py-0">
-                <Nav className="mt-4 mb-3" tabs>
-                    {tabs.map(([tabTitle, tabItems], mapIndex) => {
-                        const tabIndex = mapIndex;
-                        const classes = activeTab === tabIndex ? "active" : "";
-                        return <NavItem key={tabIndex} className="px-3">
-                            <NavLink className={classes} onClick={() => setActiveTab(tabIndex)}>
-                                {tabTitle} ({tabItems.length || 0})
-                            </NavLink>
-                        </NavItem>;
-                    })}
-                </Nav>
-                <Row>
-                    <Col sm="12">
-                        <Assignments assignments={tabs[activeTab][1]} showOld={showOld} />
-                    </Col>
-                </Row>
+            <CardBody className="pt-0">
+                <ShowLoading until={assignments}>
+                    <Nav className="mt-4 mb-3" tabs>
+                        {tabs.map(([tabTitle, tabItems], mapIndex) => {
+                            const tabIndex = mapIndex;
+                            const classes = activeTab === tabIndex ? "active" : "";
+                            return <NavItem key={tabIndex} className="px-3">
+                                <NavLink className={classes} onClick={() => setActiveTab(tabIndex)}>
+                                    {tabTitle} ({tabItems.length || 0})
+                                </NavLink>
+                            </NavItem>;
+                        })}
+                    </Nav>
+                    <Row>
+                        <Col sm="12">
+                            <Assignments assignments={tabs[activeTab][1]} showOld={showOld} />
+                        </Col>
+                    </Row>
+                </ShowLoading>
             </CardBody>
         </Card>
     </Container>;
