@@ -20,14 +20,17 @@
 .assignment-progress-group {
   border: 1px solid $gray-118;
   margin: 1rem 0;
-  align-items: center;
   user-select: none;
   cursor: pointer;
+  display: flex;
+  align-items: stretch;
 }
 
-.assignment-progress-group .col {
-  flex-grow: 0;
-  white-space: nowrap;
+.assignment-progress-group > div {
+  display: inline-block;
+  flex: 0 0 auto;
+  align-self: baseline;
+  padding-right: 0.5rem;
 }
 
 .assignment-progress-group .group-name {
@@ -35,16 +38,16 @@
   align-self: stretch;
   display: flex;
   font-weight: bold;
-  font-size: 1.1rem;
-  max-width: 215px;
-  flex-basis: auto;
-  white-space: normal;
+  padding-left: 0.5rem;
+  flex-shrink: 1;
+  @include respond-above(sm) {
+    font-size: 1.1rem;
+  }
 }
 .assignment-progress-group .group-name span {
   margin: auto 0;
   & + span {
     padding-left: 1rem;
-    flex-basis: 165px;
   }
 }
 
@@ -275,9 +278,10 @@ $failed-bg-size: 25%;
   align-items: baseline;
   display: flex;
   padding-top: 2px;
+  margin-left: auto;
 }
 .gameboard-links > * {
-  margin-right: 0.5rem !important;
+  margin-right: 0.3rem !important;
 }
 
 .assignment-progress-progress {
@@ -289,18 +293,23 @@ $failed-bg-size: 25%;
 .progress-header {
   text-align: center;
   padding: 0.5rem 0;
-  font-size: 1.1rem;
+  @include respond-above(sm) {
+    font-size: 1.1rem;
+  }
 }
 
 .progress-questions {
   display: flex;
   justify-content: space-between;
-  font-size: 1.2rem;
+  @include respond-above(sm) {
+    font-size: 1.2rem;
+  }
   align-items: center;
   background: white;
 }
 
 .progress-questions button {
+  align-self: flex-end;
   min-width: 65px;
   border-radius: 0;
   padding: 0.5rem 0;
@@ -399,18 +408,20 @@ $failed-bg-size: 25%;
     padding: 0;
 
     position: absolute;
-    right: 1px;
+    right: 2px;
     font-size: 8px;
-    opacity: 0.5;
-    top: 50%;
+    top: 1px;
     z-index: 1;
 
     line-height: initial;
-    &.up {
-      transform: translateY(-22px);
+    span {
+      opacity: 0.5;
+      display: block;
+    }
+    .up {
       padding-top: 10px;
     }
-    &.down {
+    .down {
       padding-bottom: 10px;
     }
   }

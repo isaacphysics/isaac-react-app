@@ -221,15 +221,24 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
         }
     }
 
+    function toggleSort(itemOrder: SortOrder) {
+        setSortOrder(itemOrder);
+        if (sortOrder == itemOrder) {
+            setReverseOrder(!reverseOrder);
+        } else {
+            setReverseOrder(false);
+        }
+    }
+
     function sortItem(props: ComponentProps<"th"> & {itemOrder: SortOrder}) {
         const {itemOrder, ...rest} = props;
         const className = (props.className || "") + " " + sortClasses(itemOrder);
         const clickToSelect = typeof itemOrder === "number" ? (() => setSelectedQuestion(itemOrder)) : undefined;
         const sortArrows = (typeof itemOrder !== "number" || itemOrder == selectedQuestionNumber) ?
-            <React.Fragment>
-                <button className="up" onClick={() => {setSortOrder(itemOrder); setReverseOrder(false);}}>▲</button>
-                <button className="down" onClick={() => {setSortOrder(itemOrder); setReverseOrder(true);}}>▼</button>
-            </React.Fragment>
+            <button className="sort" onClick={() => {toggleSort(itemOrder);}}>
+                <span className="up" >▲</span>
+                <span className="down">▼</span>
+            </button>
             : undefined;
         return <th key={props.key} {...rest} className={className} onClick={clickToSelect}>{props.children}{sortArrows}</th>;
     }
@@ -318,7 +327,7 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
                 <Button color="tertiary" disabled={selectedQuestionNumber == 0}
                     onClick={() => setSelectedQuestion(selectedQuestionNumber - 1)}>◄</Button>
                 <div><Link
-                    to={`/questions/${selectedQuestion.id}?board=${assignment.gameboardId}`}><strong>Question: </strong>{selectedQuestion.title}
+                    to={`/questions/${selectedQuestion.id}?board=${assignment.gameboardId}`}><strong>Q<span className="d-none d-md-inline">uestion</span>: </strong>{selectedQuestion.title}
                 </Link></div>
                 <Button color="tertiary" disabled={selectedQuestionNumber == assignment.gameboard.questions.length - 1}
                     onClick={() => setSelectedQuestion(selectedQuestionNumber + 1)}>►</Button>
@@ -398,8 +407,8 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
             </div>
             <div className="gameboard-links">
                 <Button color="link">{isExpanded ? "Hide " : "View "} <span className="d-none d-md-inline">mark sheet</span></Button>
-                <span>or</span>
-                <Button color="link" tag="a" href={getCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+                <span className="d-none d-md-inline">or</span>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
             </div>
         </div>
         {isExpanded && <ProgressLoader {...props} />}
@@ -480,13 +489,13 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
     }
 
     return <React.Fragment>
-        <Row onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active" : "assignment-progress-group"}>
-            <Col className="group-name"><span className="icon-group"/><span>{group.groupName}</span></Col>
-            <Col className="flex-grow-1" />
-            <Col><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"} set</Col>
-            <Col className="d-none d-md-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" onClick={openGroupDownloadLink}>(Download Group CSV)</a></Col>
-            <Col><img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" /></Col>
-        </Row>
+        <div onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active" : "assignment-progress-group"}>
+            <div className="group-name"><span className="icon-group"/><span>{group.groupName}</span></div>
+            <div className="flex-grow-1" />
+            <div><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
+            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" onClick={openGroupDownloadLink}>(Download Group CSV)</a></div>
+            <div><img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" /></div>
+        </div>
         {isExpanded && <GroupDetails {...props} />}
     </React.Fragment>;
 };
