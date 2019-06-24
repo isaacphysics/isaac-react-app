@@ -1,5 +1,11 @@
 import * as ApiTypes from "./IsaacApiTypes";
-import {GameboardDTO, GroupMembershipDTO, UserGroupDTO, UserSummaryWithEmailAddressDTO} from "./IsaacApiTypes";
+import {
+    GameboardDTO, GameboardItemState,
+    GroupMembershipDTO,
+    UserGroupDTO,
+    UserSummaryDTO,
+    UserSummaryWithEmailAddressDTO
+} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 import React from "react";
 import {Content, ContentDTO} from "./IsaacApiTypes";
@@ -129,6 +135,13 @@ export type Action =
 
     | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
     | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
+
+    | {type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST}
+    | {type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
+
+    | {type: ACTION_TYPE.PROGRESS_REQUEST; assignment: ApiTypes.AssignmentDTO}
+    | {type: ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS; assignment: ApiTypes.AssignmentDTO; progress: AppAssignmentProgress[]}
+    | {type: ACTION_TYPE.PROGRESS_RESPONSE_FAILURE; assignment: ApiTypes.AssignmentDTO}
 
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST}
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS; liveVersion: string}
@@ -323,3 +336,15 @@ export interface ContentErrorsResponse {
 
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
+
+export interface AppAssignmentProgress {
+    user: UserSummaryDTO;
+    correctPartResults: number[];
+    incorrectPartResults: number[];
+    results: GameboardItemState[];
+
+    tickCount: number;
+    correctQuestionPartsCount: number;
+    incorrectQuestionPartsCount: number;
+    notAttemptedPartResults: number[];
+}

@@ -23,7 +23,6 @@ import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 import {Admin} from "../pages/Admin";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 import {history} from "../../services/history"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
@@ -44,6 +43,7 @@ import {Groups} from "../pages/Groups";
 import { Equality } from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
+import {AssignmentProgress} from "../pages/AssignmentProgress";
 import {Support} from "../pages/Support";
 import {ForStudents} from "../pages/ForStudents";
 import {ForTeachers} from "../pages/ForTeachers";
@@ -98,6 +98,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/teachers" component={ForTeachers} />
                         <TrackedRoute path="/groups" onlyFor={isTeacher} component={Groups} />
                         <TrackedRoute path="/set_assignments" onlyFor={isTeacher} component={SetAssignments} />
+                        <TrackedRoute path="/assignment_progress" onlyFor={isTeacher} component={AssignmentProgress} />
 
                         {/* Admin */}
                         <TrackedRoute exact path="/admin" onlyFor={isAdmin} component={Admin} />
