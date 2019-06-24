@@ -5,8 +5,7 @@ import {ContentDTO, IsaacTopicSummaryPageDTO} from "../../IsaacApiTypes";
 export const documentCache: {[documentType in DOCUMENT_TYPE]: {[id: string]: ContentDTO}} = {
     [DOCUMENT_TYPE.CONCEPT]: {},
     [DOCUMENT_TYPE.QUESTION]: {},
-    [DOCUMENT_TYPE.GENERIC]: {},
-    [DOCUMENT_TYPE.FRAGMENT]: {},
+    [DOCUMENT_TYPE.GENERIC]: {}
 };
 
 export const topicCache: {[tag: string]: IsaacTopicSummaryPageDTO} = {};

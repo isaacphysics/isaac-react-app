@@ -1,5 +1,11 @@
 import * as ApiTypes from "./IsaacApiTypes";
-import {GameboardDTO, GroupMembershipDTO, UserGroupDTO, UserSummaryWithEmailAddressDTO} from "./IsaacApiTypes";
+import {
+    GameboardDTO, GameboardItemState,
+    GroupMembershipDTO,
+    UserGroupDTO,
+    UserSummaryDTO,
+    UserSummaryWithEmailAddressDTO
+} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 import React from "react";
 import {Content, ContentDTO} from "./IsaacApiTypes";
@@ -104,6 +110,10 @@ export type Action =
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.FRAGMENT_REQUEST; id: string}
+    | {type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS; id: string; doc: ApiTypes.ContentDTO}
+    | {type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE; id: string}
+
     | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO}
     | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionId: string}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: ApiTypes.ChoiceDTO}
@@ -125,6 +135,13 @@ export type Action =
 
     | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
     | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
+
+    | {type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST}
+    | {type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
+
+    | {type: ACTION_TYPE.PROGRESS_REQUEST; assignment: ApiTypes.AssignmentDTO}
+    | {type: ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS; assignment: ApiTypes.AssignmentDTO; progress: AppAssignmentProgress[]}
+    | {type: ACTION_TYPE.PROGRESS_RESPONSE_FAILURE; assignment: ApiTypes.AssignmentDTO}
 
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST}
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS; liveVersion: string}
@@ -220,6 +237,15 @@ export interface AppGroupMembership extends ApiTypes.UserSummaryWithGroupMembers
     groupMembershipInformation: GroupMembershipDTO;
 }
 
+export interface ShortcutResponses {
+    id: string;
+    title: string;
+    terms: string[];
+    summary: string;
+    url: string;
+    type: string;
+}
+
 export interface UserEmailPreferences {
     NEWS_AND_UPDATES: boolean;
     ASSIGNMENTS: boolean;
@@ -262,17 +288,6 @@ export interface AppGroupTokenDTO {
     token: string;
     ownerUserId: number;
     groupId: number;
-}
-
-export interface LinkInfo {
-    title: string;
-    to: string;
-}
-
-export interface PageNavigation {
-    breadcrumbHistory: LinkInfo[];
-    backToTopic?: LinkInfo;
-    nextTopicContent?: LinkInfo;
 }
 
 export interface School {
@@ -330,3 +345,15 @@ export interface ContentErrorsResponse {
 
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
+
+export interface AppAssignmentProgress {
+    user: UserSummaryDTO;
+    correctPartResults: number[];
+    incorrectPartResults: number[];
+    results: GameboardItemState[];
+
+    tickCount: number;
+    correctQuestionPartsCount: number;
+    incorrectQuestionPartsCount: number;
+    notAttemptedPartResults: number[];
+}

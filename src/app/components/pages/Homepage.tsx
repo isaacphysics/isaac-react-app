@@ -19,7 +19,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
         <section id="call-to-action" className="homepageHero">
             <Container>
                 <Row>
-                    <Col lg="5" className="py-5">
+                    <Col lg="5" className="pb-5 pt-4 py-sm-5">
                         <Row>
                             <Col>
                                 <h1>{
@@ -54,7 +54,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                             </Col>
                         </Row>
                     </Col>
-                    <Col lg="7" className="p-sm-5 align-self-center text-center">
+                    <Col lg="7" className="p-sm-5 pb-5 pr-5 align-self-center text-center">
                         <img src="/assets/ics_hero.svg" className="img-fluid" alt="Students illustration"/>
                     </Col>
                 </Row>
@@ -65,8 +65,8 @@ export const HomepageComponent = ({user}: HomePageProps) => {
 
         {!(user && user.loggedIn) && <section id="why-sign-up" className="row sign-up-tabs">
             <Container>
-                <Col className="py-5 pattern-04">
-                    <h2 className="text-center mb-3">Why sign up?</h2>
+                <Col className="pb-5 pt-4 pattern-04">
+                    <h2 className="text-center mb-5">Why sign up?</h2>
                     <WhySignUpTabs />
                 </Col>
             </Container>
@@ -74,16 +74,16 @@ export const HomepageComponent = ({user}: HomePageProps) => {
 
         <section id="headline-content" className="row bg-primary pattern-05">
             <Container>
-                <Col className="py-5">
+                <Col className="py-5 pb-md-0">
                     <FeaturedContentTabs />
                 </Col>
             </Container>
         </section>
 
         <section id="events">
-            <Container className="py-5">
+            <Container className="pt-4 pb-5">
                 <div className="eventList pt-5 pattern-03">
-                    <h2 className="h-title text-center my-4">Your face-to-face events</h2>
+                    <h2 className="h-title text-center mb-4">Your face-to-face events</h2>
                     <p className="pt-4 pb-2 event-description text-center col-md-8 offset-md-2">
                         {"We offer free face-to-face events for students and teachers. Visit our "}
                         <a href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer">

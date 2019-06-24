@@ -26,7 +26,6 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
-
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
 
@@ -130,6 +129,10 @@ export enum ACTION_TYPE {
     DOCUMENT_RESPONSE_SUCCESS = "DOCUMENT_RESPONSE_SUCCESS",
     DOCUMENT_RESPONSE_FAILURE = "DOCUMENT_RESPONSE_FAILURE",
 
+    FRAGMENT_REQUEST = "FRAGMENT_REQUEST",
+    FRAGMENT_RESPONSE_SUCCESS = "FRAGMENT_RESPONSE_SUCCESS",
+    FRAGMENT_RESPONSE_FAILURE = "FRAGMENT_RESPONSE_FAILURE",
+
     QUESTION_REGISTRATION = "QUESTION_REGISTRATION",
     QUESTION_DEREGISTRATION = "QUESTION_DEREGISTRATION",
     QUESTION_ATTEMPT_REQUEST = "QUESTION_ATTEMPT_REQUEST",
@@ -151,6 +154,13 @@ export enum ACTION_TYPE {
 
     ASSIGNMENTS_REQUEST = "ASSIGNMENTS_REQUEST",
     ASSIGNMENTS_RESPONSE_SUCCESS = "ASSIGNMENTS_RESPONSE_SUCCESS",
+
+    ASSIGNMENTS_BY_ME_REQUEST = "ASSIGNMENTS_BY_ME_REQUEST",
+    ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS = "ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS",
+
+    PROGRESS_REQUEST = "PROGRESS_REQUEST",
+    PROGRESS_RESPONSE_SUCCESS = "PROGRESS_SUCCESS",
+    PROGRESS_RESPONSE_FAILURE = "PROGRESS_RESPONSE_FAILURE",
 
     CONTENT_VERSION_GET_REQUEST = "CONTENT_VERSION_GET_REQUEST",
     CONTENT_VERSION_GET_RESPONSE_SUCCESS = "CONTENT_VERSION_GET_RESPONSE_SUCCESS",
@@ -327,11 +337,10 @@ export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
     GENERIC = "page",
-    FRAGMENT = "isaacPageFragment",
 }
+export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
-    [DOCUMENT_TYPE.FRAGMENT]: "pages/fragments",
     [DOCUMENT_TYPE.GENERIC]: "pages",
     [DOCUMENT_TYPE.CONCEPT]: "concepts",
     [DOCUMENT_TYPE.QUESTION]: "questions"
@@ -346,8 +355,14 @@ export enum ContentVersionUpdatingStatus {
 export enum MEMBERSHIP_STATUS {
     ACTIVE = "ACTIVE",
     INACTIVE = "INACTIVE",
-    // DELETED = "DELETED", I believe this state should never arrive at the front-end
 }
 
 export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
+export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+export const HOME_CRUMB = {title: "Home", to: "/"};
+export const ALL_TOPICS_CRUMB = {title: "All Topics", to: "/topics"};
+export const STUDENTS_CRUMB = {title: "For Students", to: "/students"};
+export const TEACHERS_CRUMB = {title: "For Teachers", to: "/teachers"};
+export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};

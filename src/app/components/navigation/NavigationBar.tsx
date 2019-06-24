@@ -19,12 +19,8 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
 
     const DropdownItemComingSoon = ({children, className}: {children: React.ReactNode; className: string}) => (
         <DropdownItem tag={Link} to="/coming_soon" className={`${className}`} aria-disabled="true">
-            <Row className="w-100">
-                <Col>
-                    <span className="mr-2 text-muted">{children}</span>
-                    <Badge  color="light" className="border-secondary border bg-white ml-auto mr-1">Coming Soon</Badge>
-                </Col>
-            </Row>
+            <span className="mr-2 text-muted">{children}</span>
+            <Badge  color="light" className="border-secondary border bg-white ml-auto mr-1">Coming Soon</Badge>
         </DropdownItem>
     );
 
@@ -42,22 +38,13 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         About Us
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/about" className="pl-4 py-3 p-md-3">
                             What We Do
                         </DropdownItem>
-                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
-                        {/*    News*/}
-                        {/*</DropdownItemComingSoon>*/}
-                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
-                        {/*    Get Involved*/}
-                        {/*</DropdownItemComingSoon>*/}
                         <DropdownItem tag="a" href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer" className="pl-4 py-3 p-md-3">
                             Events (Eventbrite)
                         </DropdownItem>
-                        {/*<DropdownItem className="pl-4 py-3 p-md-3">*/}
-                        {/*    Isaac Physics*/}
-                        {/*</DropdownItem>*/}
                     </DropdownMenu>
                 </UncontrolledDropdown>
 
@@ -65,10 +52,10 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Students</p>
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={closeMenuIfMobile}>
-                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
-                        {/*    For Students*/}
-                        {/*</DropdownItemComingSoon>*/}
+                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
+                        <DropdownItem tag={Link} to="/students" className="pl-4 py-3 p-md-3">
+                            For Students
+                        </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             My Gameboards
                         </DropdownItemComingSoon>
@@ -88,26 +75,27 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Teachers</p>
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={closeMenuIfMobile}>
-                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
-                        {/*    <p>For Teachers</p>*/}
-                        {/*</DropdownItemComingSoon>*/}
+                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
+                        <DropdownItem tag={Link} to="/teachers" className="pl-4 py-3 p-md-3">
+                            For Teachers
+                        </DropdownItem>
                         <DropdownItem tag={Link} to="/set_assignments" className="pl-4 py-3 p-md-3">
                             Set Assignments
                         </DropdownItem>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        <DropdownItem tag={Link} to="/assignment_progress" className="pl-4 py-3 p-md-3">
                             Assignment Progress
-                        </DropdownItemComingSoon>
+                        </DropdownItem>
                         <DropdownItem tag={Link} to="/groups" className="pl-4 py-3 p-md-3">
                             Manage Groups
                         </DropdownItem>
                     </DropdownMenu>
                 </UncontrolledDropdown>
+
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         Topics
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/topics" className="pl-4 py-3 p-md-3">
                             All Topics
                         </DropdownItem>
@@ -119,20 +107,21 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         </DropdownItemComingSoon>
                     </DropdownMenu>
                 </UncontrolledDropdown>
+
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
-                        <p className="m-0"><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</p>
+                        <span className="m-0"><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</span>
                     </DropdownToggle>
-                    <DropdownMenu className="p-0 pb-3 pl-3 m-0" onClick={closeMenuIfMobile}>
-                        <DropdownItem className="pl-4 py-3 p-md-3">
-                            <Link to={"/contact"}>Contact Us</Link>
+                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
+                        <DropdownItem tag={Link} to="/contact" className="pl-4 py-3 p-md-3">
+                            Contact Us
                         </DropdownItem>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        <DropdownItem tag={Link} to="/support/teacher" className="pl-4 py-3 p-md-3">
                             Teacher Support
-                        </DropdownItemComingSoon>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        </DropdownItem>
+                        <DropdownItem tag={Link} to="/support/student"  className="pl-4 py-3 p-md-3">
                             Student Support
-                        </DropdownItemComingSoon>
+                        </DropdownItem>
                     </DropdownMenu>
                 </UncontrolledDropdown>
 

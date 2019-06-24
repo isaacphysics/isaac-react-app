@@ -67,6 +67,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./breadcrumbs";
 @import "./media";
 @import "./tabs";
+@import "./accordions";
 @import "./cards";
 @import "./list-groups";
 @import "./inequality-modal";
@@ -89,6 +90,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./search";
 @import "./my-assignments";
 @import "./gameboard";
+@import "./assignment-progress";
 
 a.disabled {
     color: $gray-600;

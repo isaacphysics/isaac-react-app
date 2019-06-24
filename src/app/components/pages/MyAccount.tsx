@@ -130,7 +130,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     };
 
     return <Container id="account-page" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle="My account" className="mb-4" />
+        <TitleAndBreadcrumb currentPageTitle="My Account" className="mb-4" />
         <h3 className="d-md-none text-center text-muted m-3">
             <small>
                 Update your Isaac Computer Science account, or <Link to="/logout" className="text-secondary">Log out</Link>

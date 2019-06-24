@@ -8,6 +8,7 @@ import {AdminUserSearchState, AppState} from "../../state/reducers";
 import {Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {ADMIN_CRUMB} from "../../services/constants";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -90,7 +91,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searc
     };
 
     return <RS.Container>
-        <TitleAndBreadcrumb intermediateCrumbs={[{title: "Admin", to: "/admin"}]} currentPageTitle="User manager"/>
+        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager"/>
 
         {/* Search */}
         <RS.Card className="mt-5">
