@@ -3,6 +3,7 @@ import {School, UserExamPreferences, ValidationUser} from "../../../IsaacAppType
 import {EXAM_BOARD} from "../../services/constants";
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {api} from "../../services/api";
+import {DateInput} from "./DateInput";
 
 interface UserDetailsProps {
     examPreferences: UserExamPreferences | null;
@@ -123,16 +124,16 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <Label htmlFor="dob-input">Date of Birth</Label>
-                    <Input
+                    <DateInput
                         invalid={!isDobValid && !!myUser.dateOfBirth}
                         id="dob-input"
-                        type="date"
                         name="date-of-birth"
                         defaultValue={myUser.dateOfBirth as unknown as string}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             setMyUser(Object.assign({}, myUser, {dateOfBirth: event.target.valueAsDate}))
                         }}
                         aria-describedby="ageValidationMessage"
+                        labelSuffix=" of birth"
                     />
                     {!isDobValid && !!myUser.dateOfBirth && <FormFeedback id="ageValidationMessage">
                         You must be over 13 years old
