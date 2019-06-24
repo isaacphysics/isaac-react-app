@@ -347,11 +347,13 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
             body: "You have granted access to your data."
         }) as any);
         const state = getState();
+        // TODO currently this is not necessary because we are not on the correct tab after being told to log in
         // user.firstLogin is set correctly using SSO, but not with Segue: check session storage too:
         if (state && state.user && state.user.loggedIn && state.user.firstLogin || persistance.session.load('firstLogin')) {
             // If we've just signed up and used a group code immediately, change back to the main settings page:
-            history.push("/account#account");
+            history.push("/account");
         }
+        // /TODO
         dispatch(closeActiveModal() as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_FAILURE});
