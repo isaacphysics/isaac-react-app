@@ -30,7 +30,9 @@ const CurrentGroupInviteModal = ({group, firstTime}: CurrentGroupInviteModalProp
         <RS.Jumbotron>
             <h2>Option 1: Share link</h2>
             <p>Share the following link with your students to have them join your group:</p>
-            <RS.NavLink className="text-center h4 overflow-auto" href={`${location.origin}/account?authToken=${group.token}`} target="_blank">{location.origin}/account?authToken={group.token}</RS.NavLink>
+            <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1">
+                {location.origin}/account?authToken={group.token}
+            </span>
         </RS.Jumbotron>
 
         <RS.Jumbotron>
