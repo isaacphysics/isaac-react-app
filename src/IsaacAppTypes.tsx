@@ -112,7 +112,8 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionId: string}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: ApiTypes.ChoiceDTO}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}
-    | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE; questionId: string; lock?: Date}
+    | {type: ACTION_TYPE.QUESTION_UNLOCK; questionId: string}
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>}
 
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
@@ -214,6 +215,7 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
     currentAttempt?: ApiTypes.ChoiceDTO;
     canSubmit?: boolean;
+    locked?: Date;
 }
 
 export interface AppGroup extends ApiTypes.UserGroupDTO {

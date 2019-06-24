@@ -527,10 +527,31 @@ export const deregisterQuestion = (questionId: string) => (dispatch: Dispatch<Ac
 };
 
 export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST, questionId, attempt});
-    const response = await api.questions.answer(questionId, attempt);
-    dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS, questionId, response: response.data});
-    // TODO MT handle response failure with a timed canSubmit
+    try {
+        dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST, questionId, attempt});
+        const response = await api.questions.answer(questionId, attempt);
+        dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS, questionId, response: response.data});
+    } catch (e) {
+        if (e.response.status == 429) {
+            const pause = 5 * 60 * 1000;
+            const lock = new Date((new Date()).getTime() + pause);
+
+            dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock});
+            dispatch(showToast({
+                color: "danger", title: "Too Many Attempts", timeout: 5000,
+                body: "You have entered too many attempts for this question. Please try again later!"
+            }) as any);
+            setTimeout( () => {
+                dispatch({type: ACTION_TYPE.QUESTION_UNLOCK, questionId});
+            }, pause);
+        } else {
+            dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId});
+            dispatch(showToast({
+                color: "danger", title: "Question Attempt Failed", timeout: 5000,
+                body: "Your submission could not be processed. Please try again."
+            }) as any);
+        }
+    }
 };
 
 export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|ValidatedChoice<ChoiceDTO>) => (dispatch: Dispatch<Action>) => {

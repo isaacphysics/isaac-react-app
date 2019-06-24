@@ -2,7 +2,6 @@ import {combineReducers} from "redux";
 import {
     Action,
     ActiveModal,
-    AppGameBoard,
     AppGroup,
     AppGroupMembership,
     AppQuestionDTO,
@@ -30,7 +29,7 @@ import {
     UserSummaryWithGroupMembershipDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, NOT_FOUND} from "../services/constants";
-import {unionWith, differenceBy, mapValues, union, difference, without} from "lodash";
+import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
 
 type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -187,8 +186,12 @@ export const question = (question: AppQuestionDTO, action: Action) => {
             return (!question.bestAttempt || !question.bestAttempt.correct) ?
                 {...question, validationResponse: action.response, bestAttempt: action.response} :
                 {...question, validationResponse: action.response};
+        case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE:
+            return {...question, locked: action.lock, canSubmit: true};
+        case ACTION_TYPE.QUESTION_UNLOCK:
+            return {...question, locked: undefined};
         default:
-            return question
+            return question;
     }
 };
 
@@ -210,6 +213,8 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
         // Delegate processing the question matching action.questionId to the question reducer
         case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
         case ACTION_TYPE.QUESTION_ATTEMPT_REQUEST:
+        case ACTION_TYPE.QUESTION_UNLOCK:
+        case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE:
         case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS: {
             return questions && questions.map((q) => q.id === action.questionId ? question(q, action) : q);
         }
