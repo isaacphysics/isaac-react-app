@@ -18,7 +18,7 @@ export const searchList = [
     }, {
         id: "logout",
         title: "Logout",
-        terms: ["logout"],
+        terms: ["logout", "log out", "sign out", "signout"],
         summary: "You can logout using the link in the header, or by clicking here.",
         url: "/logout",
         type: "shortcut"
