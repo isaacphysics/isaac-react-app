@@ -77,8 +77,8 @@ export function shortcuts(term: string) {
         });
     }
     else {
-        for (var i in searchList) {
-            for (var j in searchList[i].terms) {
+        for (let i in searchList) {
+            for (let j in searchList[i].terms) {
                 if (searchList[i].terms[j] === lterm) {
                     response.push(searchList[i]);
                 }
@@ -86,4 +86,4 @@ export function shortcuts(term: string) {
         }
     }
     return response;
-};
+}
