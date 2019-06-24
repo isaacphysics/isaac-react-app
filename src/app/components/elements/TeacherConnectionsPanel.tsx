@@ -19,10 +19,10 @@ import {
     GroupMembershipsState,
     OtherUserAuthorisationsState
 } from "../../state/reducers";
-import {extractTeacherName} from "../../services/role";
 import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
 import classnames from "classnames";
 import {MEMBERSHIP_STATUS} from "../../services/constants";
+import {extractTeacherName} from "../../services/user";
 
 const stateToProps = (state: AppState) => ({
     activeAuthorisations: state ? state.activeAuthorisations : null,

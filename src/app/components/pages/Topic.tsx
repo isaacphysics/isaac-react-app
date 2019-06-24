@@ -9,7 +9,7 @@ import {ContentSummaryDTO, IsaacTopicSummaryPageDTO} from "../../../IsaacApiType
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
 import {filterAndSeparateRelatedContent} from "../../services/topics";
 import {Button, Col, Container, Input, Label, Row} from "reactstrap";
-import {DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
+import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
 import {UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom} from "../../services/examBoard";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -43,13 +43,14 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
         [relatedConcepts, relatedQuestions] = topicPage && topicPage.relatedContent &&
             filterAndSeparateRelatedContent(topicPage.relatedContent, examBoardFilter);
     }
+    const searchQuery = `?topic=${topicName}`;
 
     return <ShowLoading until={topicPage}>
         {topicPage && <Container id="topic-page">
             <Row>
                 <Col>
                     <TitleAndBreadcrumb
-                        intermediateCrumbs={[{title: "All topics", to: "/topics"}]}
+                        intermediateCrumbs={[ALL_TOPICS_CRUMB]}
                         currentPageTitle={topicPage.title as string}
                     />
                 </Col>
@@ -60,8 +61,12 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                         <IsaacContent key={index} doc={child}/>)
                     }
 
-                    {relatedConcepts && <LinkToContentSummaryList items={relatedConcepts} className="my-4" />}
-                    {relatedQuestions && <LinkToContentSummaryList items={relatedQuestions} className="my-4" />}
+                    {relatedConcepts &&
+                        <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />
+                    }
+                    {relatedQuestions &&
+                        <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
+                    }
 
                     <Button tag={Link} to="/coming_soon" color="secondary" block size="lg" className="my-4">
                         More coming soon&hellip;

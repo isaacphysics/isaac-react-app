@@ -360,3 +360,10 @@ export enum MEMBERSHIP_STATUS {
 
 export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
+export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+export const HOME_CRUMB = {title: "Home", to: "/"};
+export const ALL_TOPICS_CRUMB = {title: "All Topics", to: "/topics"};
+export const STUDENTS_CRUMB = {title: "For Students", to: "/students"};
+export const TEACHERS_CRUMB = {title: "For Teachers", to: "/teachers"};
+export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};

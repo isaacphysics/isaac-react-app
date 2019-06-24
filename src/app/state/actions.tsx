@@ -253,8 +253,9 @@ export const requestEmailVerification = () => async (dispatch: any, getState: ()
 export const handleEmailAlter = (params: ({userid: string | null; token: string | null})) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST});
-        const response = await api.email.verify(params);
+        await api.email.verify(params);
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
+        dispatch(requestCurrentUser() as any);
     } catch(e) {
         dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
     }
@@ -507,13 +508,13 @@ export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatc
 };
 
 // Page fragments
-export const fetchFragment = (name: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.FRAGMENT_REQUEST, name});
+export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.FRAGMENT_REQUEST, id});
     try {
-        const response = await api.fragments.get(name);
-        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS, name, doc: response.data});
+        const response = await api.fragments.get(id);
+        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS, id, doc: response.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE, name});
+        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE, id});
     }
 };
 

@@ -57,6 +57,35 @@
   }
 }
 
+.teachers-page,
+.students-page {
+  .row:first-of-type {
+    ul {
+      background-color: $gray-107;
+      margin: 0 auto;
+      width: 100%;
+      @include respond-above(md) {
+        background-color: transparent;
+      }
+
+      &.list-group {
+        .list-group-item {
+          @include respond-above(sm) {
+            flex: 1 1 33%;
+          }
+          @include respond-above(md) {
+            flex: 0 1 33%;
+          }
+          @media screen and (-ms-high-contrast: active),
+          (-ms-high-contrast: none) {
+            flex: 0 1 27%;
+          }
+        }
+      }
+    }
+  }
+}
+
 // NOMENSA list-group-topic.scss
 .link-list {
   a {
