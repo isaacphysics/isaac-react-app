@@ -5,8 +5,9 @@ export enum KEY {
     AFTER_AUTH_PATH = "afterAuthPath",
     CURRENT_USER_ID = "currentUserId",
     FIRST_LOGIN = "firstLogin",
-    BANNER_SHOWN = "bannerShown",
 }
+
+export const LOADING_FAILURE_VALUE = null;
 
 export const save = function save(key: KEY, value: string) {
     try {
@@ -23,7 +24,7 @@ export const load = function load(key: KEY) {
         return $window.localStorage.getItem(key);
     } catch (e) {
         console.error("Failed to read from local storage. This might be a browser restriction.", e);
-        return null;
+        return LOADING_FAILURE_VALUE;
     }
 };
 
@@ -63,7 +64,7 @@ export const session = {
             return $window.sessionStorage.getItem(key);
         } catch (e) {
             console.error("Failed to read from session storage. This might be a browser restriction.", e);
-            return null;
+            return LOADING_FAILURE_VALUE;
         }
     },
 

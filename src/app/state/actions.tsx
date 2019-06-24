@@ -47,6 +47,7 @@ import {KEY} from "../services/localStorage";
 import {groupInvitationModal, groupManagersModal} from "../components/elements/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
 import {groups} from "./selectors";
+import {FIRST_LOGIN_STATE, isFirstLoginInPersistance} from "../services/firstLogin";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -136,7 +137,7 @@ export const updateCurrentUser = (
             params.registeredUser.email = currentUser.email; // TODO I don't think you can do this, or even if so probably shouldn't
         }
     } else {
-        const initialLogin = params.registeredUser.loggedIn && persistance.session.load(KEY.FIRST_LOGIN) == 'true' || false;
+        const initialLogin = params.registeredUser.loggedIn && isFirstLoginInPersistance() || false;
         try {
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
@@ -223,7 +224,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     const response = await api.authentication.checkProviderCallback(provider, parameters);
     dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
-    let initialLogin = response.data.loggedIn && persistance.session.load(KEY.FIRST_LOGIN) == 'true' || false;
+    let initialLogin = response.data.loggedIn && isFirstLoginInPersistance() || false;
     if (initialLogin) {
         history.push('/account')
     } else {
@@ -354,7 +355,7 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
         const state = getState();
         // TODO currently this is not necessary because we are not on the correct tab after being told to log in
         // user.firstLogin is set correctly using SSO, but not with Segue: check session storage too:
-        if (state && state.user && state.user.loggedIn && state.user.firstLogin || persistance.session.load(KEY.FIRST_LOGIN)) {
+        if (state && state.user && state.user.loggedIn && state.user.firstLogin || isFirstLoginInPersistance()) {
             // If we've just signed up and used a group code immediately, change back to the main settings page:
             history.push("/account");
         }

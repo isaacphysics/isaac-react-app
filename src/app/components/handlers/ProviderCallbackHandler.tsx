@@ -7,6 +7,7 @@ import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import * as persistance from "../../services/localStorage"
 import {KEY} from "../../services/localStorage"
+import {FIRST_LOGIN_STATE, isFirstLoginInPersistance} from "../../services/firstLogin";
 
 const stateToProps = (state: AppState) => (state && {user: state.user});
 const dispatchToProps = {handleProviderCallback: handleProviderCallback};
@@ -28,7 +29,10 @@ const ProviderCallbackHandlerComponent = (props: ProviderCallbackHandlerProps) =
     const nextPage = '/'; // TODO MT handle afterAuth in local storage
     return <React.Fragment>
         {user ?
-            (user.loggedIn && persistance.session.load(KEY.FIRST_LOGIN) == 'true' ? <Redirect to="/account" /> : <Redirect to={nextPage} />) :
+            (user.loggedIn && isFirstLoginInPersistance() ?
+                <Redirect to="/account" /> :
+                <Redirect to={nextPage} />)
+            :
             <div>Signing in...</div>
         }
     </React.Fragment>;

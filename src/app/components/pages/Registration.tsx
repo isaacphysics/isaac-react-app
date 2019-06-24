@@ -26,6 +26,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistance from "../../services/localStorage"
 import {KEY} from "../../services/localStorage"
 import {DateInput} from "../elements/DateInput";
+import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
@@ -88,8 +89,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         setAttemptedSignUp(true);
 
         if (passwordIsValid && emailIsValid && confirmedOverThirteen) {
-            persistance.session.save(KEY.FIRST_LOGIN, 'true');
-            persistance.session.save(KEY.BANNER_SHOWN, 'false');
+            persistance.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_NOT_SHOWN);
             Object.assign(registrationUser, {loggedIn: false});
             updateCurrentUser({
                 registeredUser: registrationUser,

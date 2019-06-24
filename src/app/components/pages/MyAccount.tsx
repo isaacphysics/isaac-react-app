@@ -32,6 +32,7 @@ import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistance from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
+import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -92,7 +93,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
 
     const [activeTab, setActiveTab] = useState(0);
-    const [bannerShown, _setBannerShown] = useState((persistance.session.load(KEY.BANNER_SHOWN) == 'true'));
+    const [bannerShown, _setBannerShown] = useState((persistance.session.load(KEY.FIRST_LOGIN) === FIRST_LOGIN_STATE.BANNER_SHOWN));
 
     useMemo(() => {
         // @ts-ignore
@@ -141,7 +142,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
             </Alert>
         }
         {
-            attemptedAccountUpdate && persistance.session.save(KEY.BANNER_SHOWN, 'true')
+            attemptedAccountUpdate && persistance.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_SHOWN)
         }
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
