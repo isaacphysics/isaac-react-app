@@ -23,7 +23,6 @@ import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 import {Admin} from "../pages/Admin";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 import {history} from "../../services/history"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
@@ -35,7 +34,7 @@ import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
 import {Header} from "./Header";
 import {Route} from "react-router";
-import {ScrollManager} from "../handlers/ScrollManager";
+import {ScrollManager} from "./ScrollManager";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {ActiveModal} from "../elements/ActiveModal";
@@ -44,6 +43,10 @@ import {Groups} from "../pages/Groups";
 import { Equality } from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
+import {AssignmentProgress} from "../pages/AssignmentProgress";
+import {Support} from "../pages/Support";
+import {ForStudents} from "../pages/ForStudents";
+import {ForTeachers} from "../pages/ForTeachers";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -57,7 +60,7 @@ interface IsaacAppProps {
 
 const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
 
-    useEffect(() => {requestCurrentUser();}, []); // run only once on mount
+    useEffect(() => {requestCurrentUser()}, [requestCurrentUser]);
 
     return <Router history={history}>
         <ScrollManager>
@@ -71,8 +74,9 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                     <Switch>
                         {/* Application pages */}
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
+                        <TrackedRoute path="/account" onlyFor={user => user.loggedIn} component={MyAccount} />
+
                         <TrackedRoute path="/search" component={Search} />
-                        <TrackedRoute path="/account" onlyFor={(user: LoggedInUser) => user.loggedIn} component={MyAccount} />
 
                         <TrackedRoute path="/questions/:questionId" component={Question} />
                         <TrackedRoute path="/concepts/:conceptId" component={Concept} />
@@ -82,14 +86,19 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/topics/:topicName" component={Topic} />
 
                         <TrackedRoute path="/gameboards" onlyFor={user => user.loggedIn} component={Gameboard} />
-                        <TrackedRoute path="/assignments" onlyFor={user => user.loggedIn} component={MyAssignments} />
                         <TrackedRoute path="/assignment/:gameboardId" onlyFor={user => user.loggedIn} component={RedirectToGameboard} />
 
                         <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
 
+                        {/* Student pages */}
+                        <TrackedRoute path="/students" component={ForStudents} />
+                        <TrackedRoute path="/assignments" onlyFor={user => user.loggedIn} component={MyAssignments} />
+
                         {/* Teacher pages */}
+                        <TrackedRoute path="/teachers" component={ForTeachers} />
                         <TrackedRoute path="/groups" onlyFor={isTeacher} component={Groups} />
                         <TrackedRoute path="/set_assignments" onlyFor={isTeacher} component={SetAssignments} />
+                        <TrackedRoute path="/assignment_progress" onlyFor={isTeacher} component={AssignmentProgress} />
 
                         {/* Admin */}
                         <TrackedRoute exact path="/admin" onlyFor={isAdmin} component={Admin} />
@@ -102,7 +111,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/register" component={Registration} />
                         <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                         <TrackedRoute path="/resetpassword/:token" component={ResetPasswordHandler}/>
-                        <TrackedRoute path="/verifyemail" component={EmailAlterHandler}/>
+                        <TrackedRoute path="/verifyemail" onlyFor={user => user.loggedIn} component={EmailAlterHandler}/>
 
                         {/* Static pages */}
                         <TrackedRoute path="/contact" component={Contact}/>
@@ -113,6 +122,9 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
                         <TrackedRoute path="/coming_soon" component={ComingSoon} />
                         <TrackedRoute path="/equality" component={Equality} />
+
+                        {/* Support pages */}
+                        <TrackedRoute path="/support/:type?/:category?" component={Support} />
 
                         {/* Error pages */}
                         <TrackedRoute path="/error" component={ServerError} />

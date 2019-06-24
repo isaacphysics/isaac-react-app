@@ -31,7 +31,7 @@ export const ServerError = () => {
                         contact
                     </Link>
                     {" or "}
-                    <a href="mailto:webmaster@isaacphysics.org">
+                    <a href="mailto:webmaster@isaaccomputerscience.org">
                         email
                     </a>
                     {" us if this keeps happening."}

@@ -31,7 +31,7 @@ export const SessionExpired = () => {
             <h3>
                 <small>
                     {"Please email "}
-                    <a href="mailto:webmaster@isaacphysics.org">webmaster@isaacphysics.org</a>
+                    <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a>
                     {" if this keeps happening."}
                 </small>
             </h3>

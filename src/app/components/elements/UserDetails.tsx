@@ -217,7 +217,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <FormGroup className="school">
                     <Label htmlFor="school-input">School</Label>
                     <Input
-                        id="school-input" type="text" name="school" placeholder="UK School" autocomplete="isaac-off"
+                        id="school-input" type="text" name="school" placeholder="Type a UK school name..." autocomplete="isaac-off"
                         value={
                             schoolQueryText !== null ?
                                 schoolQueryText :
@@ -239,7 +239,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                         )}
                     </ul>}
                     {!myUser.schoolId && <Input
-                        id="school-other-input" type="text" name="school-other" placeholder="Other School"
+                        id="school-other-input" type="text" name="school-other" placeholder="...or enter a non-UK school."
                         className="mt-2" maxLength={255}
                         defaultValue={myUser.schoolOther}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
