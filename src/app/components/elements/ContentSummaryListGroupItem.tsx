@@ -4,7 +4,7 @@ import {ListGroup, ListGroupItem} from "reactstrap";
 import {Link} from "react-router-dom";
 import React from "react";
 
-export const ContentSummaryListGroupItem = ({item}: {item: ContentSummaryDTO}) => {
+export const ContentSummaryListGroupItem = ({item, search}: {item: ContentSummaryDTO; search?: string}) => {
     let linkDestination, icon;
     let itemClasses = "p-3 bg-transparent content-summary-link ";
     switch (item.type) {
@@ -24,7 +24,7 @@ export const ContentSummaryListGroupItem = ({item}: {item: ContentSummaryDTO}) =
             icon = "📝";
     }
     return <ListGroupItem className={itemClasses} key={linkDestination}>
-        <Link to={linkDestination}>
+        <Link to={{pathname: linkDestination, search: search}}>
             <span className="content-summary-link-title">{icon}</span>
             <span className="content-summary-link-title">{item.title}</span>
             {item.summary && <span className="small pt-1 pl-4 d-none d-md-inline">{item.summary}</span>}
@@ -32,16 +32,19 @@ export const ContentSummaryListGroupItem = ({item}: {item: ContentSummaryDTO}) =
     </ListGroupItem>;
 };
 
-export const linkToContent = (item: ContentSummaryDTO) => {
-    return <ContentSummaryListGroupItem item={item} key={item.type + "/" + item.id} />
+export const linkToContent = (search: string | undefined, item: ContentSummaryDTO) => {
+    return <ContentSummaryListGroupItem item={item} search={search} key={item.type + "/" + item.id} />
 };
 
-export const LinkToContentSummaryList = ({items, ...rest}: {items: ContentSummaryDTO[];
+export const LinkToContentSummaryList = ({items, search, ...rest}: {
+    items: ContentSummaryDTO[];
+    search?: string;
     tag?: React.ElementType;
     flush?: boolean;
     className?: string;
-    cssModule?: any;}) => {
+    cssModule?: any;
+}) => {
     return <ListGroup {...rest} className="mb-3 link-list list-group-links">
-        {items.map(linkToContent)}
+        {items.map(linkToContent.bind(null, search))}
     </ListGroup>;
 };

@@ -80,7 +80,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
     };
 
     return <Container id="contact-page" className="pb-5">
-        <TitleAndBreadcrumb currentPageTitle="Contact us" subTitle="We'd love to hear from you"/>
+        <TitleAndBreadcrumb currentPageTitle="Contact us" />
         <div>
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">

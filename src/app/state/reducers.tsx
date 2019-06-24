@@ -2,6 +2,7 @@ import {combineReducers} from "redux";
 import {
     Action,
     ActiveModal,
+    AppAssignmentProgress,
     AppGameBoard,
     AppGroup,
     AppGroupMembership,
@@ -163,6 +164,16 @@ export const doc = (doc: DocState = null, action: Action) => {
     }
 };
 
+type FragmentsState = {[name: string]: (ContentDTO | NOT_FOUND_TYPE)} | null;
+export const fragments = (fragments: FragmentsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS:
+            return {...fragments, [action.id]: action.doc};
+        default:
+            return fragments;
+    }
+};
+
 export const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
@@ -218,6 +229,27 @@ export const assignments = (assignments: AssignmentsState = null, action: Action
             return action.assignments;
         default:
             return assignments;
+    }
+};
+
+export const assignmentsByMe = (assignments: AssignmentsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST:
+            return null;
+        case ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS:
+            return action.assignments;
+        default:
+            return assignments;
+    }
+};
+
+type ProgressState = {[assignmentId: number]: AppAssignmentProgress[]} | null;
+export const progress = (progress: ProgressState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS:
+            return {...progress, [action.assignment._id as number]: action.progress};
+        default:
+            return progress;
     }
 };
 
@@ -480,7 +512,7 @@ export type BoardsState = {boards?: Boards} & BoardAssignees | null;
 function mergeBoards(boards: Boards, additional: GameboardListDTO) {
     return {
         ...boards,
-        totalResults: additional.totalResults as number,
+        totalResults: additional.totalResults || boards.totalResults,
         boards: unionWith(boards.boards, additional.results, function(a, b) {return a.id == b.id})
     };
 }
@@ -564,7 +596,10 @@ const appReducer = combineReducers({
     toasts,
     activeModal,
     groups,
-    boards
+    boards,
+    assignmentsByMe,
+    progress,
+    fragments
 });
 
 export type AppState = undefined | {
@@ -589,6 +624,9 @@ export type AppState = undefined | {
     activeModal: ActiveModalState;
     groups: GroupsState;
     boards: BoardsState;
+    assignmentsByMe: AssignmentsState;
+    progress: ProgressState;
+    fragments: FragmentsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

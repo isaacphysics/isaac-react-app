@@ -10,6 +10,7 @@ import {history} from "../../services/history"
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import {EXAM_BOARD} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {DateInput} from "../elements/DateInput";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
@@ -90,6 +91,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
 
     // Convenience method
     const assignToRegistrationUser = (updates: {}) => {
+        console.log(updates);
         // Create new object to trigger re-render
         setRegistrationUser(Object.assign({}, registrationUser, updates));
     };
@@ -212,13 +214,14 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                 </Label>
                                 <Row>
                                     <Col lg={6}>
-                                        <Input
-                                            id="dob-input" name="date-of-birth" type="date"
+                                        <DateInput
+                                            id="dob-input" name="date-of-birth"
                                             invalid={!confirmedOverThirteen && attemptedSignUp}
                                             disabled={dobCheckboxChecked}
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                                 assignToRegistrationUser({dateOfBirth: event.target.valueAsDate});
                                             }}
+                                            labelSuffix=" of birth"
                                         />
                                     </Col>
                                     <Col lg={6} className="pt-2">

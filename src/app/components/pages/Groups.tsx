@@ -36,6 +36,7 @@ import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {groups} from "../../state/selectors";
 import {UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {TEACHERS_CRUMB} from "../../services/constants";
 
 const stateFromProps = (state: AppState) => (state && {groups: groups.groups(state), group: groups.current(state)});
 const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal};
@@ -317,7 +318,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage Groups" intermediateCrumbs={[{title: "Teachers", to: "#"}]} className="mb-4" help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="Manage Groups" intermediateCrumbs={[TEACHERS_CRUMB]} className="mb-4" help={pageHelp} />
         <Row>
             <Col md={5}>
                 <ShowLoading until={activeTab}>
