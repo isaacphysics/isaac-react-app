@@ -30,7 +30,7 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
         </RS.Row>
 
         {!(user && user.loggedIn) && <RS.Row>
-            <RS.Col md={{size: 8, offset: 2}} className="pb-4">
+            <RS.Col md={{size: 8, offset: 2}} className="pb-4 mb-5">
                 <React.Fragment>
                     <PageFragment fragmentId="for_students_logged_out"/>
                     {registrationButton}
@@ -38,6 +38,7 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
             </RS.Col>
         </RS.Row>}
 
+        {user && user.loggedIn &&
         <RS.Row>
             <RS.Col>
                 {user && user.loggedIn && <h2 className="h-secondary h-m">Pick up where you left off</h2>}
@@ -74,7 +75,7 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
                     </RS.Row>
                 </div>
             </RS.Col>
-        </RS.Row>
+        </RS.Row>}
     </RS.Container>;
 };
 

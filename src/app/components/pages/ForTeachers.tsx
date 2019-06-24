@@ -22,14 +22,9 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
 
     const pageTitle = user && isTeacher(user) ? "My Isaac teaching" : "How we help teachers";
 
-    const teacherUpgradeLink = <div className="text-muted mt-2">
-        Are you a teacher? {" "}
-        <a href="/pages/teacher_account_request" target="_blank" rel="noopener noreferrer">
-            <span className='sr-only'> Are you a teacher? </span> Let us know
-        </a> {" "}
-        and we&apos;ll convert your account to a teacher account.
+    const teacherUpgradeLink = <div className="text-center">
+        <RS.Button size="lg" tag={Link} to="/pages/teacher_account_request" color="primary" outline>Register as a Teacher</RS.Button>
     </div>;
-
     const registrationButton = <div className="text-center">
         <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>Sign up</RS.Button>
     </div>;
@@ -46,7 +41,7 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
         </RS.Row>
 
         {!(user && isTeacher(user)) && <RS.Row>
-            <RS.Col md={{size: 8, offset: 2}} className="pt-4 pb-5">
+            <RS.Col md={{size: 8, offset: 2}} className="pt-4 pb-5 mb-5">
                 <PageFragment fragmentId="for_teachers_logged_out" />
                 {(user && user.loggedIn) ?
                     !isTeacher(user) && teacherUpgradeLink :
@@ -55,6 +50,7 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
             </RS.Col>
         </RS.Row>}
 
+        {user && user.loggedIn && isTeacher(user) &&
         <RS.Row>
             <RS.Col>
                 {user && user.loggedIn && <h2 className="h-secondary h-m">Pick up where you left off</h2>}
@@ -125,7 +121,7 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
                     </RS.Row>
                 </div>
             </RS.Col>
-        </RS.Row>
+        </RS.Row>}
     </RS.Container>;
 };
 
