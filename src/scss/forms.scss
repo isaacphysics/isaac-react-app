@@ -40,9 +40,17 @@
   background: unset;
 }
 
+.date-input {
+  select.form-control {
+    padding: 0.5rem;
+  }
+}
+
 .date-input-month {
   flex-grow: 2 !important;
 }
+
+.date-input {}
 
 // NOMENSA forms.scss
 
@@ -180,14 +188,6 @@ label.label-radio > div {
   margin-right: 0.25rem;
   margin-left: 0;
 }
-
-// Override Nomensa's padding which does not compile properly
-//input[type="search"] {
-//  padding-top: initial;
-//  padding-right: 40px;
-//  padding-bottom: initial;
-//  padding-left: 1rem;
-//}
 
 // Remove spinner from date picker
 input[type=date]::-webkit-inner-spin-button,

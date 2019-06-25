@@ -211,7 +211,6 @@ export const DateInput = (props: DateInputProps) => {
     const yearRange = props.yearRange || range(currentYear, 1899, -1);
 
     return <InputGroup id={props.id} {...controlProps} className={inputGroupClasses}>
-        <input ref={hiddenRef} type="hidden" name={props.name} value={calculateHiddenValue()} />
         <Input type="select" {...controlProps} aria-label={`Day${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("day")} value={values.day.get() || ""}>
             {values.day.get() === undefined && <option />}
             {range(1, Math.max(lastInMonth(), values.day.get() || 0) + 1).map(day => <option key={day}>{day}</option>)}
@@ -224,6 +223,7 @@ export const DateInput = (props: DateInputProps) => {
             {values.year.get() === undefined && <option />}
             {yearRange.map(year => <option key={year}>{year}</option>)}
         </Input>
+        <input ref={hiddenRef} type="hidden" name={props.name} value={calculateHiddenValue()} />
         <Button close {...controlProps} className="mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />
     </InputGroup>;
 };
