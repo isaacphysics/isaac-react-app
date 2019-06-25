@@ -93,7 +93,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
             </div>}
 
             {locked && <Alert color="danger">
-                Please wait until {showTime(locked)} to resubmit your answer.
+                This question is locked until at least {showTime(locked)} to prevent repeated guessing.
             </Alert>}
 
             {((!validationResponse) || (validationResponse && !validationResponse.correct) || canSubmit) && (!locked) && <Row>
