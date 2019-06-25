@@ -553,24 +553,53 @@ export const deregisterQuestion = (questionId: string) => (dispatch: Dispatch<Ac
     dispatch({type: ACTION_TYPE.QUESTION_DEREGISTRATION, questionId});
 };
 
-export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async (dispatch: Dispatch<Action>) => {
+interface Attempt {
+    attempts: number;
+    timestamp: number;
+}
+const attempts: {[questionId: string]: Attempt} = {};
+
+export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    const isAnonymous = !(state && state.user && state.user.loggedIn);
+    const timePeriod = isAnonymous ? 5 * 60 * 1000 : 15 * 60 * 1000;
+
     try {
         dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST, questionId, attempt});
         const response = await api.questions.answer(questionId, attempt);
         dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS, questionId, response: response.data});
+
+        // This mirrors the soft limit checking on the server
+        let lastAttempt = attempts[questionId];
+        if (lastAttempt && lastAttempt.timestamp + timePeriod > Date.now()) {
+            lastAttempt.attempts++;
+            lastAttempt.timestamp = Date.now();
+        } else {
+            lastAttempt = {
+                attempts: 1,
+                timestamp: Date.now()
+            };
+            attempts[questionId] = lastAttempt;
+        }
+        const softLimit = isAnonymous ? 3 : 10;
+        if (lastAttempt.attempts >= softLimit && !response.data.correct) {
+            dispatch(showToast({
+                color: "warning", title: "Approaching Attempts Limit", timeout: 10000,
+                body: "You have entered several guesses for this question; soon it will be temporarily locked."
+            }) as any);
+        }
     } catch (e) {
         if (e.response.status == 429) {
-            const pause = 5 * 60 * 1000;
-            const lock = new Date((new Date()).getTime() + pause);
+            const lock = new Date((new Date()).getTime() + timePeriod);
 
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock});
             dispatch(showToast({
-                color: "danger", title: "Too Many Attempts", timeout: 5000,
+                color: "danger", title: "Too Many Attempts", timeout: 10000,
                 body: "You have entered too many attempts for this question. Please try again later!"
             }) as any);
             setTimeout( () => {
                 dispatch({type: ACTION_TYPE.QUESTION_UNLOCK, questionId});
-            }, pause);
+            }, timePeriod);
         } else {
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId});
             dispatch(showToast({
