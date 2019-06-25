@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FormEvent, useState} from "react";
+import React, {ChangeEvent, FormEvent, useRef, useState} from "react";
 import {SearchButton} from "./SearchButton";
 import {pushSearchToHistory} from "../../services/search";
 import {History} from "history";
@@ -13,9 +13,15 @@ const MainSearchComponent = ({history}: MainSearchProps) => {
     const [searchText, setSearchText] = useState("");
     const [showSearchBox, setShowSearchBox] = useState(false);
 
+    const searchInputRef = useRef<HTMLInputElement>(null);
+
     function doSearch(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        pushSearchToHistory(history, searchText, true, true);
+        if (searchText == "") {
+            if (searchInputRef.current) searchInputRef.current.focus();
+        } else {
+            pushSearchToHistory(history, searchText, true, true);
+        }
     }
 
     function setSearchTextAsValue(e: ChangeEvent<HTMLInputElement>) {
@@ -32,7 +38,7 @@ const MainSearchComponent = ({history}: MainSearchProps) => {
                             <Label for='search' className='sr-only'>Search</Label>
                             <Input
                                 type="search" name="query" placeholder="Search" aria-label="Search"
-                                value={searchText} onChange={setSearchTextAsValue}
+                                value={searchText} onChange={setSearchTextAsValue} innerRef={searchInputRef}
                             />
                             <SearchButton />
                             <input type="hidden" name="types" value="isaacQuestionPage,isaacConceptPage" />

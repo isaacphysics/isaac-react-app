@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {Button, Card, CardBody, Col, Container, Form, FormGroup, FormFeedback, Input, Row, Label} from "reactstrap";
 import {handleProviderLoginRedirect} from "../../state/actions";
@@ -25,12 +25,18 @@ interface LogInPageProps {
 }
 
 const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPassword, errorMessage}: LogInPageProps) => {
+    useEffect( () => {
+        document.title = "Login — Isaac Computer Science";
+    }, []);
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [logInAttempted, setLoginAttempted] = useState(false);
 
     const isValidEmail = email.length > 0 && email.includes("@");
     const isValidPassword = password.length > 5;
+
+    const [passwordResetAttempted, setPasswordResetAttempted] = useState(false);
     const [passwordResetRequest, setPasswordResetRequest] = useState(false);
 
     const validateAndLogIn = (event: React.FormEvent<HTMLFormElement>) => {
@@ -45,7 +51,8 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
         history.push("/register", {email: email, password: password});
     };
 
-    const resetPasswordIfValidEmail = () => {
+    const attemptPasswordReset = () => {
+        setPasswordResetAttempted(true);
         if (isValidEmail) {
             resetPassword({email: email});
             setPasswordResetRequest(!passwordResetRequest);
@@ -74,7 +81,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                                 <Input
                                     id="email-input" type="email" name="email" placeholder="Email address"
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
-                                    invalid={!!errorMessage || (!isValidEmail && (logInAttempted || passwordResetRequest))}
+                                    invalid={!!errorMessage || (!isValidEmail && (logInAttempted || passwordResetAttempted))}
                                     aria-describedby="emailValidationMessage"
                                     required
                                 />
@@ -103,7 +110,7 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
                                         {errorMessage}
                                     </h4>
                                     {!passwordResetRequest ?
-                                        <Button color="link" onClick={resetPasswordIfValidEmail}>
+                                        <Button color="link" onClick={attemptPasswordReset}>
                                             Forgotten your password?
                                         </Button> :
                                         <p>

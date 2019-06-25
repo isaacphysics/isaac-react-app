@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardDeck, CardImg, CardText, CardTitle, Col, Container, Row} from "reactstrap";
@@ -15,6 +15,9 @@ interface HomePageProps {
     user: LoggedInUser | null;
 }
 export const HomepageComponent = ({user}: HomePageProps) => {
+    useEffect( () => {
+        document.title = "Isaac Computer Science";
+    }, []);
     return <div id="homepage">
         <section id="call-to-action" className="homepageHero">
             <Container>

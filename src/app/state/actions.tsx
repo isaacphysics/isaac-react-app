@@ -222,9 +222,10 @@ export const verifyPasswordReset = (token: string | null) => async (dispatch: Di
 export const handlePasswordReset = (params: {token: string | null; password: string | null}) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
-        const response = await api.users.handlePasswordReset(params);
+        await api.users.handlePasswordReset(params);
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
-        history.push('/');
+        history.push('/login');
+        dispatch(showToast({color: "success", title: "Password Reset Successfully", body: "Please log in with your new password.", timeout: 5000}) as any);
     } catch(e) {
         dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: e.response.data.errorMessage});
     }

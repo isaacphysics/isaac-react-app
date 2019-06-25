@@ -62,6 +62,7 @@
 
   &.list-group {
     flex-direction: row;
+    flex-wrap: wrap;
 
     .list-group-item {
       background-color: transparent;

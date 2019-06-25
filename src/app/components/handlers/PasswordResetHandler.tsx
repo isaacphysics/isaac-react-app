@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {verifyPasswordReset, handlePasswordReset} from "../../state/actions";
-import {Button, Container, FormFeedback, Input, Label, Row, Card, CardBody, Form, FormGroup, CardFooter} from "reactstrap";
+import {Button, Container, FormFeedback, Input, Label, Card, CardBody, Form, FormGroup, CardFooter} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
 
 const stateToProps = (state: AppState, {match: {params: {token}}}: any) => ({
@@ -45,22 +45,18 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
             <Card>
                 <CardBody>
                     <Form name="passwordReset">
-                        <Row>
-                            <FormGroup>
-                                <Label htmlFor="password-input">New Password</Label>
-                                <Input id="password" type="password" name="password" required/>
-                            </FormGroup>
-                        </Row>
-                        <Row>
-                            <FormGroup>
-                                <Label htmlFor="password-confirm">Re-enter New Password</Label>
-                                <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password" onBlur={(e: any) => {
-                                    validateAndSetPassword(e);
-                                    (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ? setCurrentPassword(e.target.value) : null}
-                                } aria-describedby="invalidPassword" required/>
-                                <FormFeedback id="invalidPassword">{(!isValidPassword) ? "Passwords must match and be at least 6 characters long" : null}</FormFeedback>
-                            </FormGroup>
-                        </Row>
+                        <FormGroup>
+                            <Label htmlFor="password-input">New Password</Label>
+                            <Input id="password" type="password" name="password" required/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label htmlFor="password-confirm">Re-enter New Password</Label>
+                            <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password" onBlur={(e: any) => {
+                                validateAndSetPassword(e);
+                                (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ? setCurrentPassword(e.target.value) : null}
+                            } aria-describedby="invalidPassword" required/>
+                            <FormFeedback id="invalidPassword">{(!isValidPassword) ? "Passwords must match and be at least 6 characters long" : null}</FormFeedback>
+                        </FormGroup>
                     </Form>
                 </CardBody>
                 <CardFooter>
