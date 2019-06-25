@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -9,29 +9,52 @@ import {isTeacher} from "../../services/user";
 import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/ActionCard";
 import {LinkCard} from "../elements/LinkCard";
+import {loadAssignmentsOwnedByMe, loadGroups} from "../../state/actions";
 
-const stateToProps = (state: AppState) => ({
-    user: (state && state.user) || null
-});
+const stateToProps = (state: AppState) => {
+    let numberOfGroupsCreated = 0;
+    let numberOfAssignmentsSet = 0;
+    if (state) {
+        if (state.groups) {
+            if (state.groups.active) {numberOfGroupsCreated += state.groups.active.length;}
+            if (state.groups.archived) {numberOfGroupsCreated += state.groups.archived.length;}
+        }
+        if (state.assignmentsByMe) {
+            numberOfAssignmentsSet = state.assignmentsByMe.length;
+        }
+    }
+    return {user: (state && state.user) || null, numberOfAssignmentsSet, numberOfGroupsCreated}
+};
+
+const dispatchToProps = {loadAssignmentsOwnedByMe, loadGroups};
 
 interface ForTeachersProps {
     user: LoggedInUser | null;
+    loadAssignmentsOwnedByMe: () => void;
+    numberOfAssignmentsSet: number;
+    loadGroups: (b: boolean) => void;
+    numberOfGroupsCreated: number;
 }
 
-const ForTeachersComponent = ({user}: ForTeachersProps) => {
+const ForTeachersComponent = (props: ForTeachersProps) => {
+    const {user, loadAssignmentsOwnedByMe, numberOfAssignmentsSet, loadGroups, numberOfGroupsCreated} = props;
+    useEffect(() => {
+        loadAssignmentsOwnedByMe();
+        loadGroups(false);
+    }, [user, loadAssignmentsOwnedByMe, loadGroups]);
 
     const pageTitle = user && isTeacher(user) ? "My Isaac teaching" : "How we help teachers";
 
     const teacherUpgradeLink = <div className="text-center">
-        <RS.Button size="lg" tag={Link} to="/pages/teacher_account_request" color="primary" outline>Register as a Teacher</RS.Button>
+        <RS.Button size="lg" tag={Link} to="/pages/teacher_account_request" color="primary" outline>
+            Register as a Teacher
+        </RS.Button>
     </div>;
     const registrationButton = <div className="text-center">
-        <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>Sign up</RS.Button>
+        <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>
+            Sign up
+        </RS.Button>
     </div>;
-
-    // TODO
-    const numberOfGroupsCreated = 999; // need to merge pull to get access to loadAssignmentsOwnedByMe()
-    const numberOfAssignmentsSet = 999; // need to create action for hitting /groups/userid
 
     return <RS.Container className="teachers-page">
         <RS.Row className="pb-4">
@@ -61,7 +84,9 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
                                     title="Create a group" linkDestination="/groups" linkText="Manage Groups"
-                                    amountText={<>You have created <span>{numberOfGroupsCreated}</span> groups.</>}
+                                    amountText={<>
+                                        You have created <span>{numberOfGroupsCreated}</span> group{numberOfGroupsCreated !== 1 && "s"}.
+                                    </>}
                                 >
                                     Create and alter groups on the manage groups page.
                                 </ActionCard>
@@ -70,7 +95,9 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
                                     title="Set an assignment" linkDestination="/set_assignments" linkText="Set Assignments"
-                                    amountText={<>You have set <span>{numberOfAssignmentsSet}</span> assignments.</>}
+                                    amountText={<>
+                                        You have set <span>{numberOfAssignmentsSet}</span> assignment{numberOfAssignmentsSet !== 1 && "s"}.
+                                    </>}
                                 >
                                     Set more assignments from the set assignments page.
                                 </ActionCard>
@@ -125,4 +152,4 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
     </RS.Container>;
 };
 
-export const ForTeachers = connect(stateToProps)(ForTeachersComponent);
+export const ForTeachers = connect(stateToProps, dispatchToProps)(ForTeachersComponent);

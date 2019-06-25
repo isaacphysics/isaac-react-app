@@ -201,10 +201,10 @@ export const api = {
         }
     },
     schools: {
-        search: (query: string): AxiosPromise<Array<AppTypes.School>> => {
+        search: (query: string): AxiosPromise<AppTypes.School[]> => {
             return endpoint.get(`/schools/?query=${encodeURIComponent(query)}`);
         },
-        getByUrn: (urn: string): AxiosPromise<Array<AppTypes.School>> => {
+        getByUrn: (urn: string): AxiosPromise<AppTypes.School[]> => {
             return endpoint.get(`/schools/?urn=${encodeURIComponent(urn)}`);
         }
     },
