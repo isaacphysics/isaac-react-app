@@ -26,6 +26,7 @@ import {sortBy, range} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/DateInput";
 import {TEACHERS_CRUMB} from "../../services/constants";
+import {withRouter} from "react-router-dom";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -46,6 +47,8 @@ interface SetAssignmentsPageProps {
     assignBoard: (board: GameboardDTO, groupId?: number, dueDate?: Date) => Promise<boolean>;
     unassignBoard: (board: GameboardDTO, group: UserGroupDTO) => void;
     showToast: (toast: Toast) => void;
+    location: {hash: string};
+
 }
 
 function formatDate(date: number | Date | undefined) {
@@ -100,7 +103,8 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
 };
 
 const Board = (props: BoardProps) => {
-    const {user, board, loadGroupsForBoard, deleteBoard, unassignBoard} = props;
+    const {user, board, loadGroupsForBoard, deleteBoard, unassignBoard, location: {hash}} = props;
+    const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
 
     useEffect( () => {
         loadGroupsForBoard(board);
@@ -152,7 +156,7 @@ const Board = (props: BoardProps) => {
         }
     }
 
-    const [showAssignments, setShowAssignments] = useState(false);
+    const [showAssignments, setShowAssignments] = useState(board.id === hashAnchor);
 
     const hexagonId = `board-hex-${board.id}`;
 
@@ -223,7 +227,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     const [loading, setLoading] = useState(false);
 
     const [boardLimit, setBoardLimit] = useState<BoardLimit>(BoardLimit.six);
-    const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.created);
+    const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
 
     let [actualBoardLimit, setActualBoardLimit] = useState<ActualBoardLimit>(toActual(boardLimit));
 
@@ -301,4 +305,4 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     </Container>;
 };
 
-export const SetAssignments = connect(stateToProps, dispatchToProps)(SetAssignmentsPageComponent);
+export const SetAssignments = withRouter(connect(stateToProps, dispatchToProps)(SetAssignmentsPageComponent));
