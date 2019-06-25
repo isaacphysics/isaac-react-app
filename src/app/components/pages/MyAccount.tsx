@@ -117,8 +117,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const updateAccount = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedAccountUpdate(true);
-        Object.assign({}, myUserPreferences.EMAIL_PREFERENCE || {}, emailPreferences);
-        Object.assign({}, myUserPreferences.EXAM_BOARD || {}, examPreferences);
+        Object.assign(myUserPreferences.EMAIL_PREFERENCE || {}, emailPreferences);
+        Object.assign(myUserPreferences.EXAM_BOARD || {}, examPreferences);
         if (myUser.loggedIn && isEmailValid && (isDobValid || myUser.dateOfBirth == undefined) &&
             (!myUser.password || isNewPasswordConfirmed)) {
             updateCurrentUser({

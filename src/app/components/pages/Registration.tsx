@@ -108,7 +108,6 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
 
     // Convenience method
     const assignToRegistrationUser = (updates: {}) => {
-        console.log(updates);
         // Create new object to trigger re-render
         setRegistrationUser(Object.assign({}, registrationUser, updates));
     };
