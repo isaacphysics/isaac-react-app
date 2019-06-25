@@ -30,7 +30,7 @@ import {ACCOUNT_TAB, EXAM_BOARD} from "../../services/constants";
 import {history} from "../../services/history"
 import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import * as persistance from "../../services/localStorage";
+import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 
@@ -93,7 +93,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
 
     const [activeTab, setActiveTab] = useState(0);
-    const [bannerShown, _setBannerShown] = useState((persistance.session.load(KEY.FIRST_LOGIN) === FIRST_LOGIN_STATE.BANNER_SHOWN));
+    const [bannerShown, _setBannerShown] = useState((persistence.session.load(KEY.FIRST_LOGIN) === FIRST_LOGIN_STATE.BANNER_SHOWN));
 
     useMemo(() => {
         // @ts-ignore
@@ -142,7 +142,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
             </Alert>
         }
         {
-            attemptedAccountUpdate && persistance.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_SHOWN)
+            attemptedAccountUpdate && persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_SHOWN)
         }
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>

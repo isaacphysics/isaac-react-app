@@ -42,12 +42,12 @@ import {
     revocationConfirmationModal,
     tokenVerificationModal
 } from "../components/elements/TeacherConnectionModalCreators";
-import * as persistance from "../services/localStorage";
+import * as persistence from "../services/localStorage";
 import {KEY} from "../services/localStorage";
 import {groupInvitationModal, groupManagersModal} from "../components/elements/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
 import {groups} from "./selectors";
-import {FIRST_LOGIN_STATE, isFirstLoginInPersistance} from "../services/firstLogin";
+import {isFirstLoginInPersistence} from "../services/firstLogin";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -137,13 +137,13 @@ export const updateCurrentUser = (
             params.registeredUser.email = currentUser.email; // TODO I don't think you can do this, or even if so probably shouldn't
         }
     } else {
-        const initialLogin = params.registeredUser.loggedIn && isFirstLoginInPersistance() || false;
+        const initialLogin = params.registeredUser.loggedIn && isFirstLoginInPersistence() || false;
         try {
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
             if (initialLogin) {
-                const afterAuthPath = persistance.load(KEY.AFTER_AUTH_PATH) || '';
-                persistance.remove(KEY.AFTER_AUTH_PATH);
+                const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
+                persistence.remove(KEY.AFTER_AUTH_PATH);
                 if ((afterAuthPath).includes('account')) {
                     history.push(afterAuthPath, {firstLogin: initialLogin})
                 }
@@ -171,8 +171,8 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
 
 export const logInUser = (provider: AuthenticationProvider, params: {email: string; password: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
-    const afterAuthPath = persistance.load(KEY.AFTER_AUTH_PATH) || '/';
-    persistance.remove(KEY.AFTER_AUTH_PATH);
+    const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
+    persistence.remove(KEY.AFTER_AUTH_PATH);
     try {
         const response = await api.authentication.login(provider, params);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
@@ -223,14 +223,17 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider) =>
 export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     const response = await api.authentication.checkProviderCallback(provider, parameters);
-    dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
-    let initialLogin = response.data.loggedIn && isFirstLoginInPersistance() || false;
-    if (initialLogin) {
+    const user = response.data;
+    dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user});
+    if (user.firstLogin) {
         history.push('/account')
     } else {
-        const afterAuthPath = persistance.load(KEY.AFTER_AUTH_PATH) || '/';
-        persistance.remove(KEY.AFTER_AUTH_PATH);
-        history.push(afterAuthPath);
+        let nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
+        persistence.remove(KEY.AFTER_AUTH_PATH);
+        nextPage = nextPage || "/";
+        nextPage = nextPage.replace("#!", "");
+        persistence.remove(KEY.AFTER_AUTH_PATH);
+        history.push(nextPage);
     }
     // TODO MT handle error case
 };
@@ -355,7 +358,7 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
         const state = getState();
         // TODO currently this is not necessary because we are not on the correct tab after being told to log in
         // user.firstLogin is set correctly using SSO, but not with Segue: check session storage too:
-        if (state && state.user && state.user.loggedIn && state.user.firstLogin || isFirstLoginInPersistance()) {
+        if (state && state.user && state.user.loggedIn && state.user.firstLogin || isFirstLoginInPersistence()) {
             // If we've just signed up and used a group code immediately, change back to the main settings page:
             history.push("/account");
         }

@@ -23,7 +23,7 @@ import {history} from "../../services/history"
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import {EXAM_BOARD} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import * as persistance from "../../services/localStorage"
+import * as persistence from "../../services/localStorage"
 import {KEY} from "../../services/localStorage"
 import {DateInput} from "../elements/DateInput";
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
@@ -89,7 +89,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         setAttemptedSignUp(true);
 
         if (passwordIsValid && emailIsValid && confirmedOverThirteen) {
-            persistance.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_NOT_SHOWN);
+            persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_NOT_SHOWN);
             Object.assign(registrationUser, {loggedIn: false});
             updateCurrentUser({
                 registeredUser: registrationUser,

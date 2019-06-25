@@ -1,4 +1,4 @@
-import * as persistance from "./localStorage";
+import * as persistence from "./localStorage";
 import {KEY, LOADING_FAILURE_VALUE} from "./localStorage";
 
 export enum FIRST_LOGIN_STATE {
@@ -6,6 +6,6 @@ export enum FIRST_LOGIN_STATE {
     BANNER_SHOWN = "bannerShown"
 }
 
-export const isFirstLoginInPersistance = () => {
-    return persistance.session.load(KEY.FIRST_LOGIN) !== LOADING_FAILURE_VALUE;
+export const isFirstLoginInPersistence = () => {
+    return persistence.session.load(KEY.FIRST_LOGIN) !== LOADING_FAILURE_VALUE;
 };
