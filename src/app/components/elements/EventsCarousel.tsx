@@ -8,18 +8,6 @@ export const EventsCarousel = () => {
         <div className="events-carousel">
             <ResponsiveCarousel>
                 <EventCard
-                    eventImage={"/assets/student.svg"} eventTitle={"Discovery @ Cambridge University"}
-                    eventSubtitle={"Inspiring the next generation of Computer Scientists"}
-                    eventDate={"Mon 1 July 2019"} eventTime={"10:00 AM — 3:00 PM"} eventLocation={"Computer Laboratory, Cambridge"}
-                    eventUrl={"https://www.eventbrite.com/e/discovery-cambridge-university-tickets-60573636377"}
-                />
-                <EventCard
-                    eventImage={"/assets/teacher.svg"} eventTitle={"Teacher CPD @ The Engine Shed"}
-                    eventSubtitle={"A free CPD workshop for A-level teachers"}
-                    eventDate={"Wed 3 July 2019"} eventTime={"9:30 AM — 3:00 PM"} eventLocation={"The Engine Shed, Bristol"}
-                    eventUrl={"https://www.eventbrite.com/e/teacher-cpd-the-engine-shed-bristol-tickets-60919500867"}
-                />
-                <EventCard
                     eventImage={"/assets/teacher.svg"} eventTitle={"Teacher CPD - OOP @ University of Southampton"}
                     eventSubtitle={"A free CPD workshop for A-level teachers"}
                     eventDate={"Mon 8 July 2019"} eventTime={"10:00 AM — 4:00 PM"} eventLocation={"Computer Science Building, Southampton"}
@@ -42,6 +30,18 @@ export const EventsCarousel = () => {
                     eventSubtitle={"Smartwatch Project: free masterclass for A-level Computer Science students"}
                     eventDate={"Wed 10 July 2019"} eventTime={"10:00 AM — 4:00 PM"} eventLocation={"Computer Science Building, Southampton"}
                     eventUrl={"https://www.eventbrite.co.uk/e/student-a-level-masterclass-university-of-southampton-tickets-63640746185"}
+                />
+                <EventCard
+                    eventImage={"/assets/student.svg"} eventTitle={"Student A Level Masterclass @ Newcastle University"}
+                    eventSubtitle={"Free masterclass for A-Level Computer Science students."}
+                    eventDate={"Thu 11 July 2019"} eventTime={"10:00 AM — 3:00 PM"} eventLocation={"School of Computing, Newcastle"}
+                    eventUrl={"https://www.eventbrite.co.uk/e/student-a-level-masterclass-newcastle-university-tickets-60920082607"}
+                />
+                <EventCard
+                    eventImage={"/assets/teacher.svg"} eventTitle={"Teacher CPD @ Newcastle University"}
+                    eventSubtitle={"A free CPD workshop for A level teachers"}
+                    eventDate={"Tue 16 July 2019"} eventTime={"9:30 AM — 3:30 PM"} eventLocation={"School of Computing, Newcastle"}
+                    eventUrl={"https://www.eventbrite.co.uk/e/teacher-cpd-newcastle-university-tickets-60920301261"}
                 />
             </ResponsiveCarousel>
         </div>

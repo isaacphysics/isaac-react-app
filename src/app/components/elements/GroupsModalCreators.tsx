@@ -30,7 +30,9 @@ const CurrentGroupInviteModal = ({group, firstTime}: CurrentGroupInviteModalProp
         <RS.Jumbotron>
             <h2>Option 1: Share link</h2>
             <p>Share the following link with your students to have them join your group:</p>
-            <p>{location.origin}/account?authToken={group.token}</p>
+            <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1">
+                {location.origin}/account?authToken={group.token}
+            </span>
         </RS.Jumbotron>
 
         <RS.Jumbotron>
@@ -53,21 +55,29 @@ export const groupInvitationModal = (firstTime: boolean) => {
         title: firstTime ? "Group Created" : "Invite Users",
         body: <ConnectedCurrentGroupInviteModal firstTime={firstTime} />,
         buttons: [
-            <RS.Button key={1} color="secondary" onClick={() => {
-                store.dispatch(closeActiveModal());
-                store.dispatch(selectGroup(null));
-            }}>
-                Create another group
-            </RS.Button>,
-            <RS.Button key={0} color="secondary" tag={Link} to="/set_assignments">
-                Set an assignment
-            </RS.Button>,
-            <RS.Button key={2} color="secondary" onClick={() => {
-                store.dispatch(closeActiveModal());
-                store.dispatch(showGroupManagersModal());
-            }}>
-                {firstTime ? "Add group managers" : "Edit group managers"}
-            </RS.Button>,
+            <RS.Row>
+                <RS.Col>
+                    <RS.Button block key={2} color="secondary" onClick={() => {
+                        store.dispatch(closeActiveModal());
+                        store.dispatch(showGroupManagersModal());
+                    }}>
+                        {firstTime ? "Add group managers" : "Edit group managers"}
+                    </RS.Button>
+                </RS.Col>
+                <RS.Col>
+                    <RS.Button block key={0} color="secondary" tag={Link} to="/set_assignments">
+                        Set an assignment
+                    </RS.Button>
+                </RS.Col>
+                <RS.Col>
+                    <RS.Button block key={1} color="secondary" onClick={() => {
+                        store.dispatch(closeActiveModal());
+                        store.dispatch(selectGroup(null));
+                    }}>
+                        Create another group
+                    </RS.Button>
+                </RS.Col>
+            </RS.Row>
         ]
     }
 };

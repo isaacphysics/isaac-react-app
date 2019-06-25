@@ -1,8 +1,8 @@
 import React from "react";
 import {Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {Link} from "react-router-dom";
-import {LinkInfo} from "../../../IsaacAppTypes";
 import {HOME_CRUMB} from "../../services/constants";
+import {LinkInfo} from "../../services/navigation";
 
 export interface BreadcrumbTrailProps {
     currentPageTitle: string;

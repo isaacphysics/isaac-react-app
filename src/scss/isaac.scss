@@ -90,6 +90,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./search";
 @import "./my-assignments";
 @import "./gameboard";
+@import "./assignment-progress";
 
 a.disabled {
     color: $gray-600;

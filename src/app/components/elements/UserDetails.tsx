@@ -3,6 +3,7 @@ import {School, UserExamPreferences, ValidationUser} from "../../../IsaacAppType
 import {EXAM_BOARD} from "../../services/constants";
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {api} from "../../services/api";
+import {DateInput} from "./DateInput";
 
 interface UserDetailsProps {
     examPreferences: UserExamPreferences | null;
@@ -123,16 +124,16 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <Label htmlFor="dob-input">Date of Birth</Label>
-                    <Input
+                    <DateInput
                         invalid={!isDobValid && !!myUser.dateOfBirth}
                         id="dob-input"
-                        type="date"
                         name="date-of-birth"
                         defaultValue={myUser.dateOfBirth as unknown as string}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             setMyUser(Object.assign({}, myUser, {dateOfBirth: event.target.valueAsDate}))
                         }}
                         aria-describedby="ageValidationMessage"
+                        labelSuffix=" of birth"
                     />
                     {!isDobValid && !!myUser.dateOfBirth && <FormFeedback id="ageValidationMessage">
                         You must be over 13 years old
@@ -194,8 +195,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                         name="select"
                         id="examBoardSelect"
                         value={
-                            (examPreferences && examPreferences[EXAM_BOARD.OCR] && EXAM_BOARD.OCR) ||
-                            EXAM_BOARD.AQA
+                            (examPreferences && examPreferences[EXAM_BOARD.OCR]) ? EXAM_BOARD.OCR : EXAM_BOARD.AQA
                         }
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
                             setExamPreferences(
@@ -205,7 +205,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                             )
                         }
                     >
-                        <option></option>
+                        {/*<option></option> This was not an option although we should probably support it */}
                         <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>
@@ -216,7 +216,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <FormGroup className="school">
                     <Label htmlFor="school-input">School</Label>
                     <Input
-                        id="school-input" type="text" name="school" placeholder="UK School" autocomplete="isaac-off"
+                        id="school-input" type="text" name="school" placeholder="Type a UK school name..." autocomplete="isaac-off"
                         value={
                             schoolQueryText !== null ?
                                 schoolQueryText :
@@ -238,7 +238,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                         )}
                     </ul>}
                     {!myUser.schoolId && <Input
-                        id="school-other-input" type="text" name="school-other" placeholder="Other School"
+                        id="school-other-input" type="text" name="school-other" placeholder="...or enter a non-UK school."
                         className="mt-2" maxLength={255}
                         defaultValue={myUser.schoolOther}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -262,7 +262,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         {myUser && myUser.role == "STUDENT" && <Row>
             <Col className="text-muted text-center mt-2">
                 Are you a teacher? {" "}
-                <a href="/pages/teacher_account_request" target="_blank" rel="noopener noreferrer">
+                <a href="/pages/teacher_accounts" target="_blank" rel="noopener noreferrer">
                     <span className='sr-only'> Are you a teacher? </span>
                     Let us know
                 </a> {" "}

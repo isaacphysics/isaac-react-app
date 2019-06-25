@@ -25,6 +25,7 @@ import {
     ValidatedChoice,
 } from "../../IsaacAppTypes";
 import {
+    AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
     GameboardDTO,
@@ -41,10 +42,13 @@ import {
     revocationConfirmationModal,
     tokenVerificationModal
 } from "../components/elements/TeacherConnectionModalCreators";
-import * as persistance from "../services/localStorage";
+import * as persistence from "../services/localStorage";
+import {KEY} from "../services/localStorage";
 import {groupInvitationModal, groupManagersModal} from "../components/elements/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
 import {groups} from "./selectors";
+import {isFirstLoginInPersistence} from "../services/firstLogin";
+import {isTeacher} from "../services/user";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -90,7 +94,6 @@ function showErrorToastIfNeeded(error: string, e: any) {
     }
     return {type: ACTION_TYPE.TEST_ACTION};
 }
-
 
 // ActiveModal
 export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
@@ -154,11 +157,17 @@ export const updateCurrentUser = (
             params.registeredUser.email = currentUser.email; // TODO I don't think you can do this, or even if so probably shouldn't
         }
     } else {
-        const initialLogin = params.registeredUser.loggedIn && params.registeredUser.firstLogin || false;
+        const initialLogin = params.registeredUser.loggedIn && isFirstLoginInPersistence() || false;
         try {
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
+            dispatch(requestCurrentUser() as any);
             if (initialLogin) {
+                const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
+                persistence.remove(KEY.AFTER_AUTH_PATH);
+                if ((afterAuthPath).includes('account')) {
+                    history.push(afterAuthPath, {firstLogin: initialLogin})
+                }
                 history.push('/account', {firstLogin: initialLogin});
             }
             dispatch(showToast({
@@ -186,10 +195,12 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
 
 export const logInUser = (provider: AuthenticationProvider, params: {email: string; password: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
+    const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
+    persistence.remove(KEY.AFTER_AUTH_PATH);
     try {
         const response = await api.authentication.login(provider, params);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
-        history.push('/');
+        history.push(afterAuthPath);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
     }
@@ -219,9 +230,10 @@ export const verifyPasswordReset = (token: string | null) => async (dispatch: Di
 export const handlePasswordReset = (params: {token: string | null; password: string | null}) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
-        const response = await api.users.handlePasswordReset(params);
+        await api.users.handlePasswordReset(params);
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
-        history.push('/');
+        history.push('/login');
+        dispatch(showToast({color: "success", title: "Password Reset Successfully", body: "Please log in with your new password.", timeout: 5000}) as any);
     } catch(e) {
         dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: e.response.data.errorMessage});
     }
@@ -244,7 +256,17 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const response = await api.authentication.checkProviderCallback(provider, parameters);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
+        const user = response.data;
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user});
+        let nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
+        persistence.remove(KEY.AFTER_AUTH_PATH);
+        nextPage = nextPage || "/";
+        nextPage = nextPage.replace("#!", "");
+        if (user.firstLogin && !nextPage.includes("account")) {
+            history.push('/account')
+        } else {
+            history.push(nextPage);
+        }
     } catch (e) {
         dispatch(showErrorToastIfNeeded("Login Failed", e));
     }
@@ -370,11 +392,13 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
             body: "You have granted access to your data."
         }) as any);
         const state = getState();
+        // TODO currently this is not necessary because we are not on the correct tab after being told to log in
         // user.firstLogin is set correctly using SSO, but not with Segue: check session storage too:
-        if (state && state.user && state.user.loggedIn && state.user.firstLogin || persistance.load('firstLogin')) {
+        if (state && state.user && state.user.loggedIn && state.user.firstLogin || isFirstLoginInPersistence()) {
             // If we've just signed up and used a group code immediately, change back to the main settings page:
             history.push("/account");
         }
+        // /TODO
         dispatch(closeActiveModal() as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_FAILURE});
@@ -629,12 +653,54 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
     }
 };
 
+export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST});
+        await api.gameboards.save(gameboardId);
+        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS});
+        if (isTeacher(user)) {
+            history.push(`/set_assignments#${gameboardId}`);
+        } else {
+            history.push(`/boards/`);
+        }
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error("Error saving board.");
+        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Error saving board", e));
+    }
+};
+
 // Assignments
 export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_REQUEST});
     const assignmentsResponse = await api.assignments.getMyAssignments();
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
     // Generic error handling covers errors here
+};
+
+
+export const loadAssignmentsOwnedByMe = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST});
+    const assignmentsResponse = await api.assignments.getAssignmentsOwnedByMe();
+    dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
+};
+
+
+export const loadProgress = (assignment: AssignmentDTO) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    // Don't request this again if it has already been fetched successfully
+    const state = getState();
+    if (state && state.progress && (assignment._id as number) in state.progress) {
+        return;
+    }
+
+    dispatch({type: ACTION_TYPE.PROGRESS_REQUEST, assignment});
+    try {
+        const result = await api.assignments.getProgressForAssignment(assignment);
+        dispatch({type: ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS, assignment, progress: result.data});
+    } catch {
+        dispatch({type: ACTION_TYPE.PROGRESS_RESPONSE_FAILURE, assignment});
+    }
 };
 
 // Content version
@@ -943,6 +1009,24 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
         dispatch(showErrorToastIfNeeded("Gameboard Assignment Failed", e));
         return false;
     }
+};
+
+export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    if (state && state.boards && state.boards.boards && state.boards.boards.boards) {
+        if (state.boards.boards.boards.some(board => board.id == boardId)) {
+            // Don't load the board if it is already available
+            return;
+        }
+    }
+    const accumulate = true;
+    dispatch({type: ACTION_TYPE.BOARDS_REQUEST, accumulate});
+    const board = await api.boards.getById(boardId);
+    dispatch({
+        type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS,
+        boards: {totalResults: undefined, results: [board.data]},
+        accumulate
+    });
 };
 
 // Content Errors

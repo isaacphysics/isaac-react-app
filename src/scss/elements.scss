@@ -1,5 +1,5 @@
 // ISAAC
-.content-summary-link span {
+.content-summary-link .content-summary-link-title {
   background: none;
   border: 0;
   font-family: $secondary-font;
@@ -8,6 +8,11 @@
 
 .content-summary-link a {
   text-decoration: none;
+}
+
+.spinner-lg {
+  width: 3rem;
+  height: 3rem;
 }
 
 

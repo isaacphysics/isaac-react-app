@@ -1,3 +1,12 @@
+// ISAAC
+
+.accordion-part {
+  display: none;
+  .question-panel & {
+    display: inline;
+  }
+}
+
 // Nomensa accordions.scss
 .accordion {
   box-shadow: 0 2px 30px 0 $shadow-08;

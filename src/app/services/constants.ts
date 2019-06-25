@@ -26,7 +26,6 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
-
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
 
@@ -151,12 +150,23 @@ export enum ACTION_TYPE {
     GAMEBOARD_RESPONSE_SUCCESS = "GAMEBOARD_RESPONSE_SUCCESS",
     GAMEBOARD_RESPONSE_FAILURE = "GAMEBOARD_RESPONSE_FAILURE",
 
+    GAMEBOARD_ADD_REQUEST = "GAMEBOARD_ADD_REQUEST",
+    GAMEBOARD_ADD_RESPONSE_SUCCESS = "GAMEBOARD_ADD_RESPONSE_SUCCESS",
+    GAMEBOARD_ADD_RESPONSE_FAILURE = "GAMEBOARD_ADD_RESPONSE_FAILURE",
+
     CONTACT_FORM_SEND_REQUEST = "CONTACT_FORM_SEND_REQUEST",
     CONTACT_FORM_SEND_RESPONSE_SUCCESS = "CONTACT_FORM_SEND_RESPONSE_SUCCESS",
     CONTACT_FORM_SEND_RESPONSE_FAILURE = "CONTACT_FORM_SEND_RESPONSE_FAILURE",
 
     ASSIGNMENTS_REQUEST = "ASSIGNMENTS_REQUEST",
     ASSIGNMENTS_RESPONSE_SUCCESS = "ASSIGNMENTS_RESPONSE_SUCCESS",
+
+    ASSIGNMENTS_BY_ME_REQUEST = "ASSIGNMENTS_BY_ME_REQUEST",
+    ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS = "ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS",
+
+    PROGRESS_REQUEST = "PROGRESS_REQUEST",
+    PROGRESS_RESPONSE_SUCCESS = "PROGRESS_SUCCESS",
+    PROGRESS_RESPONSE_FAILURE = "PROGRESS_RESPONSE_FAILURE",
 
     CONTENT_VERSION_GET_REQUEST = "CONTENT_VERSION_GET_REQUEST",
     CONTENT_VERSION_GET_RESPONSE_SUCCESS = "CONTENT_VERSION_GET_RESPONSE_SUCCESS",
@@ -334,6 +344,7 @@ export enum DOCUMENT_TYPE {
     QUESTION = "isaacQuestionPage",
     GENERIC = "page",
 }
+export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.GENERIC]: "pages",
@@ -350,7 +361,6 @@ export enum ContentVersionUpdatingStatus {
 export enum MEMBERSHIP_STATUS {
     ACTIVE = "ACTIVE",
     INACTIVE = "INACTIVE",
-    // DELETED = "DELETED", I believe this state should never arrive at the front-end
 }
 
 export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
@@ -358,7 +368,7 @@ export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailprefer
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export const HOME_CRUMB = {title: "Home", to: "/"};
-export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
-export const STUDENTS_CRUMB = {title: "Students", to: "/students"};
-export const TEACHERS_CRUMB = {title: "Teachers", to: "/teachers"};
+export const ALL_TOPICS_CRUMB = {title: "All Topics", to: "/topics"};
+export const STUDENTS_CRUMB = {title: "For Students", to: "/students"};
+export const TEACHERS_CRUMB = {title: "For Teachers", to: "/teachers"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -9,44 +9,62 @@ import {isTeacher} from "../../services/user";
 import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/ActionCard";
 import {LinkCard} from "../elements/LinkCard";
+import {loadAssignmentsOwnedByMe, loadGroups} from "../../state/actions";
 
-const stateToProps = (state: AppState) => ({
-    user: (state && state.user) || null
-});
+const stateToProps = (state: AppState) => {
+    let numberOfGroupsCreated = 0;
+    let numberOfAssignmentsSet = 0;
+    if (state) {
+        if (state.groups) {
+            if (state.groups.active) {numberOfGroupsCreated += state.groups.active.length;}
+            if (state.groups.archived) {numberOfGroupsCreated += state.groups.archived.length;}
+        }
+        if (state.assignmentsByMe) {
+            numberOfAssignmentsSet = state.assignmentsByMe.length;
+        }
+    }
+    return {user: (state && state.user) || null, numberOfAssignmentsSet, numberOfGroupsCreated}
+};
+
+const dispatchToProps = {loadAssignmentsOwnedByMe, loadGroups};
 
 interface ForTeachersProps {
     user: LoggedInUser | null;
+    loadAssignmentsOwnedByMe: () => void;
+    numberOfAssignmentsSet: number;
+    loadGroups: (b: boolean) => void;
+    numberOfGroupsCreated: number;
 }
 
-const ForTeachersComponent = ({user}: ForTeachersProps) => {
+const ForTeachersComponent = (props: ForTeachersProps) => {
+    const {user, loadAssignmentsOwnedByMe, numberOfAssignmentsSet, loadGroups, numberOfGroupsCreated} = props;
+    useEffect(() => {
+        loadAssignmentsOwnedByMe();
+        loadGroups(false);
+    }, [user, loadAssignmentsOwnedByMe, loadGroups]);
 
     const pageTitle = user && isTeacher(user) ? "My Isaac teaching" : "How we help teachers";
 
-    const teacherUpgradeLink = <div className="text-muted mt-2">
-        Are you a teacher? {" "}
-        <a href="/pages/teacher_account_request" target="_blank" rel="noopener noreferrer">
-            <span className='sr-only'> Are you a teacher? </span> Let us know
-        </a> {" "}
-        and we&apos;ll convert your account to a teacher account.
+    const teacherUpgradeLink = <div className="text-center">
+        <RS.Button size="lg" tag={Link} to="/pages/teacher_accounts" color="primary" outline>
+            Register as a Teacher
+        </RS.Button>
     </div>;
-
     const registrationButton = <div className="text-center">
-        <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>Sign up</RS.Button>
+        <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>
+            Sign up
+        </RS.Button>
     </div>;
-
-    // TODO
-    const numberOfGroupsCreated = 999; // need to merge pull to get access to loadAssignmentsOwnedByMe()
-    const numberOfAssignmentsSet = 999; // need to create action for hitting /groups/userid
 
     return <RS.Container className="teachers-page">
         <RS.Row className="pb-4">
             <RS.Col>
-                <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="Teachers" />
+                <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="For Teachers" />
             </RS.Col>
         </RS.Row>
 
         {!(user && isTeacher(user)) && <RS.Row>
-            <RS.Col md={{size: 8, offset: 2}} className="pt-4 pb-5">
+            <RS.Col md={{size: 8, offset: 2}} className="pt-4 pb-5 mb-5">
                 <PageFragment fragmentId="for_teachers_logged_out" />
                 {(user && user.loggedIn) ?
                     !isTeacher(user) && teacherUpgradeLink :
@@ -55,6 +73,7 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
             </RS.Col>
         </RS.Row>}
 
+        {user && user.loggedIn && isTeacher(user) &&
         <RS.Row>
             <RS.Col>
                 {user && user.loggedIn && <h2 className="h-secondary h-m">Pick up where you left off</h2>}
@@ -65,7 +84,9 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
                                     title="Create a group" linkDestination="/groups" linkText="Manage Groups"
-                                    amountText={<>You have created <span>{numberOfGroupsCreated}</span> groups.</>}
+                                    amountText={<>
+                                        You have created <span>{numberOfGroupsCreated}</span> group{numberOfGroupsCreated !== 1 && "s"}.
+                                    </>}
                                 >
                                     Create and alter groups on the manage groups page.
                                 </ActionCard>
@@ -73,8 +94,10 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
 
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
-                                    title="Set an assignment" linkDestination="/assignments" linkText="Set Assignments"
-                                    amountText={<>You have set <span>{numberOfAssignmentsSet}</span> assignments.</>}
+                                    title="Set an assignment" linkDestination="/set_assignments" linkText="Set Assignments"
+                                    amountText={<>
+                                        You have set <span>{numberOfAssignmentsSet}</span> assignment{numberOfAssignmentsSet !== 1 && "s"}.
+                                    </>}
                                 >
                                     Set more assignments from the set assignments page.
                                 </ActionCard>
@@ -125,8 +148,8 @@ const ForTeachersComponent = ({user}: ForTeachersProps) => {
                     </RS.Row>
                 </div>
             </RS.Col>
-        </RS.Row>
+        </RS.Row>}
     </RS.Container>;
 };
 
-export const ForTeachers = connect(stateToProps)(ForTeachersComponent);
+export const ForTeachers = connect(stateToProps, dispatchToProps)(ForTeachersComponent);

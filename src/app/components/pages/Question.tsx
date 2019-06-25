@@ -1,38 +1,24 @@
 import React, {useEffect} from "react";
-import {withRouter, Link} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {Col, Container, Row} from "reactstrap";
-import queryString from "query-string";
 import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE} from "../../services/constants";
-import {determineNextTopicContentLink, determineTopicHistory, idIsPresent} from "../../services/topics";
-import {History} from "history";
 import {RelatedContent} from "../elements/RelatedContent";
-import {determineExamBoardFrom} from "../../services/examBoard";
-import {NOT_FOUND_TYPE, PageNavigation} from "../../../IsaacAppTypes";
+import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {useNavigation} from "../../services/navigation";
+import {NavigationLinks} from "../elements/NavigationLinks";
 
-const stateToProps = (state: AppState, {history, match: {params: {questionId}}, location: {search}}: any) => {
-    const navigation: PageNavigation = {
-        breadcrumbHistory: [],
-    };
-    if (state && state.currentTopic && idIsPresent(questionId, state.currentTopic.relatedContent)) {
-        navigation.breadcrumbHistory = determineTopicHistory(state.currentTopic);
-        navigation.backToTopic = navigation.breadcrumbHistory && navigation.breadcrumbHistory.slice(-1)[0];
-        navigation.nextTopicContent =
-            determineNextTopicContentLink(state.currentTopic, questionId, determineExamBoardFrom(state.userPreferences));
-        // TODO move navigation to also use query params
-    }
+const stateToProps = (state: AppState, {match: {params: {questionId}}}: any) => {
     return {
         doc: state ? state.doc : null,
         urlQuestionId: questionId,
-        queryParams: queryString.parse(search),
-        navigation: navigation
     };
 };
 const dispatchToProps = {fetchDoc};
@@ -40,23 +26,12 @@ const dispatchToProps = {fetchDoc};
 interface QuestionPageProps {
     doc: ContentDTO | NOT_FOUND_TYPE | null;
     urlQuestionId: string;
-    queryParams: {board?: string};
-    history: History;
-    navigation: PageNavigation;
     fetchDoc: (documentType: DOCUMENT_TYPE, questionId: string) => void;
 }
 
-const QuestionPageComponent = (props: QuestionPageProps) => {
-    const {doc, urlQuestionId, queryParams, history, navigation, fetchDoc} = props;
-
-    useEffect(
-        () => {fetchDoc(DOCUMENT_TYPE.QUESTION, urlQuestionId);},
-        [urlQuestionId]
-    );
-
-    const goBackToBoard = () => {
-        history.push(`/gameboards#${queryParams.board}`);
-    };
+const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc}: QuestionPageProps) => {
+    useEffect(() => {fetchDoc(DOCUMENT_TYPE.QUESTION, urlQuestionId)}, [urlQuestionId, fetchDoc]);
+    const navigation = useNavigation(urlQuestionId);
 
     return <ShowLoading until={doc} render={ (doc: ContentDTO) =>
         <div className="pattern-01">
@@ -64,14 +39,10 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
                 {/*FastTrack progress bar*/}
                 {/*Print options*/}
                 {/*High contrast option*/}
-                <Row>
-                    <Col>
-                        <TitleAndBreadcrumb
-                            intermediateCrumbs={navigation.breadcrumbHistory}
-                            currentPageTitle={doc.title as string}
-                        />
-                    </Col>
-                </Row>
+                <TitleAndBreadcrumb
+                    currentPageTitle={doc.title as string}
+                    intermediateCrumbs={navigation.breadcrumbHistory}
+                />
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
                         <WithFigureNumbering doc={doc}>
@@ -80,28 +51,11 @@ const QuestionPageComponent = (props: QuestionPageProps) => {
 
                         {/* Superseded notice */}
 
-                        <p>{doc.attribution}</p>
+                        <p className="text-muted">{doc.attribution}</p>
 
-                        {navigation.backToTopic && <div className="float-left">
-                            <Link to={navigation.backToTopic.to} className="text-decoration-none">
-                                Topic:
-                            </Link>
-                            <Link to={navigation.backToTopic.to} className="a-alt d-block lrg-text text-dark font-weight-bold mb-5">
-                                {navigation.backToTopic.title}
-                            </Link>
-                        </div>}
-                        {navigation.nextTopicContent && <React.Fragment>
-                            <Link to={navigation.nextTopicContent.to} className="a-alt lrg-text float-right font-weight-bold">
-                                {navigation.nextTopicContent.title}
-                            </Link>
-                            <Link to={navigation.nextTopicContent.to} className="mb-5 next-link float-right">
-                                Next
-                            </Link>
-                        </React.Fragment>}
+                        <NavigationLinks navigation={navigation} />
 
-                        {doc.relatedContent &&
-                        <RelatedContent content={doc.relatedContent} parentPage={doc} />
-                        }
+                        {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>

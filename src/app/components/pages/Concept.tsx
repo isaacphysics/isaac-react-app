@@ -1,69 +1,46 @@
 import React, {useEffect} from "react";
-import {Link, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, EXAM_BOARD} from "../../services/constants";
-import {determineNextTopicContentLink, determineTopicHistory, idIsPresent} from "../../services/topics";
-import {NOT_FOUND_TYPE, PageNavigation} from "../../../IsaacAppTypes";
-import history, {History} from "history";
+import {DOCUMENT_TYPE} from "../../services/constants";
+import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
-import {determineExamBoardFrom} from "../../services/examBoard";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {useNavigation} from "../../services/navigation";
+import {NavigationLinks} from "../elements/NavigationLinks";
 
-const stateToProps = (state: AppState, {history, match: {params: {conceptId}}}: any) => {
-    // TODO All of navigation should be moved into a service once it gets more complicated
-    const navigation: PageNavigation = {
-        breadcrumbHistory: [],
-    };
-    if (state && state.currentTopic && idIsPresent(conceptId, state.currentTopic.relatedContent)) {
-        navigation.breadcrumbHistory = determineTopicHistory(state.currentTopic);
-        navigation.backToTopic = navigation.breadcrumbHistory && navigation.breadcrumbHistory.slice(-1)[0];
-        navigation.nextTopicContent =
-            determineNextTopicContentLink(state.currentTopic, conceptId, determineExamBoardFrom(state.userPreferences));
-        // TODO Move navigation to also use query params
-    }
+const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
     return {
         urlConceptId: conceptId,
         doc: state && state.doc || null,
-        navigation: navigation,
-        history: history,
     };
 };
 const dispatchToProps = {fetchDoc};
 
 interface ConceptPageProps {
-    doc: ContentDTO | NOT_FOUND_TYPE | null;
     urlConceptId: string;
-    navigation: PageNavigation;
-    history: History;
+    doc: ContentDTO | NOT_FOUND_TYPE | null;
     fetchDoc: (documentType: DOCUMENT_TYPE, conceptId: string) => void;
 }
 
-const ConceptPageComponent = (props: ConceptPageProps) => {
-    const {doc, urlConceptId, navigation, fetchDoc, history} = props;
+const ConceptPageComponent = ({urlConceptId, doc, fetchDoc}: ConceptPageProps) => {
+    useEffect(() => {fetchDoc(DOCUMENT_TYPE.CONCEPT, urlConceptId)},[urlConceptId, fetchDoc]);
+    const navigation = useNavigation(urlConceptId);
 
-    useEffect(
-        () => {fetchDoc(DOCUMENT_TYPE.CONCEPT, urlConceptId);},
-        [urlConceptId]
-    );
 
     return <ShowLoading until={doc} render={(doc: ContentDTO) =>
         <div>
             <Container>
-                <Row>
-                    <Col>
-                        <TitleAndBreadcrumb
-                            intermediateCrumbs={navigation.breadcrumbHistory}
-                            currentPageTitle={doc.title as string}
-                        />
-                    </Col>
-                </Row>
+                <TitleAndBreadcrumb
+                    intermediateCrumbs={navigation.breadcrumbHistory}
+                    currentPageTitle={doc.title as string}
+                />
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4">
                         <WithFigureNumbering doc={doc}>
@@ -74,26 +51,9 @@ const ConceptPageComponent = (props: ConceptPageProps) => {
 
                         <p>{doc.attribution}</p>
 
-                        {navigation.backToTopic && <div className="float-left">
-                            <Link to={navigation.backToTopic.to} className="text-decoration-none">
-                                Topic:
-                            </Link>
-                            <Link to={navigation.backToTopic.to} className="a-alt d-block lrg-text text-dark font-weight-bold mb-5">
-                                {navigation.backToTopic.title}
-                            </Link>
-                        </div>}
-                        {navigation.nextTopicContent && <React.Fragment>
-                            <Link to={navigation.nextTopicContent.to} className="a-alt lrg-text float-right font-weight-bold">
-                                {navigation.nextTopicContent.title}
-                            </Link>
-                            <Link to={navigation.nextTopicContent.to} className="mb-5 next-link float-right">
-                                Next
-                            </Link>
-                        </React.Fragment>}
+                        <NavigationLinks navigation={navigation} />
 
-                        {doc.relatedContent &&
-                        <RelatedContent content={doc.relatedContent} parentPage={doc} />
-                        }
+                        {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>

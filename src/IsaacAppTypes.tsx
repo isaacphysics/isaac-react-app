@@ -1,5 +1,11 @@
 import * as ApiTypes from "./IsaacApiTypes";
-import {GameboardDTO, GroupMembershipDTO, UserGroupDTO, UserSummaryWithEmailAddressDTO} from "./IsaacApiTypes";
+import {
+    GameboardDTO, GameboardItemState,
+    GroupMembershipDTO,
+    UserGroupDTO,
+    UserSummaryDTO,
+    UserSummaryWithEmailAddressDTO
+} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 import React from "react";
 import {Content, ContentDTO} from "./IsaacApiTypes";
@@ -132,6 +138,13 @@ export type Action =
     | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
     | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
 
+    | {type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST}
+    | {type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
+
+    | {type: ACTION_TYPE.PROGRESS_REQUEST; assignment: ApiTypes.AssignmentDTO}
+    | {type: ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS; assignment: ApiTypes.AssignmentDTO; progress: AppAssignmentProgress[]}
+    | {type: ACTION_TYPE.PROGRESS_RESPONSE_FAILURE; assignment: ApiTypes.AssignmentDTO}
+
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST}
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS; liveVersion: string}
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_FAILURE}
@@ -193,6 +206,10 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
 
+    | {type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST}
+    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.BOARDS_GROUPS_REQUEST; board: ApiTypes.GameboardDTO}
     | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groups: {[key: string]: ApiTypes.UserGroupDTO[]}}
     | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
@@ -225,6 +242,15 @@ export interface AppGroup extends ApiTypes.UserGroupDTO {
 
 export interface AppGroupMembership extends ApiTypes.UserSummaryWithGroupMembershipDTO {
     groupMembershipInformation: GroupMembershipDTO;
+}
+
+export interface ShortcutResponses {
+    id: string;
+    title: string;
+    terms: string[];
+    summary: string;
+    url: string;
+    type: string;
 }
 
 export interface UserEmailPreferences {
@@ -269,17 +295,6 @@ export interface AppGroupTokenDTO {
     token: string;
     ownerUserId: number;
     groupId: number;
-}
-
-export interface LinkInfo {
-    title: string;
-    to: string;
-}
-
-export interface PageNavigation {
-    breadcrumbHistory: LinkInfo[];
-    backToTopic?: LinkInfo;
-    nextTopicContent?: LinkInfo;
 }
 
 export interface School {
@@ -337,3 +352,15 @@ export interface ContentErrorsResponse {
 
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
+
+export interface AppAssignmentProgress {
+    user: UserSummaryDTO;
+    correctPartResults: number[];
+    incorrectPartResults: number[];
+    results: GameboardItemState[];
+
+    tickCount: number;
+    correctQuestionPartsCount: number;
+    incorrectQuestionPartsCount: number;
+    notAttemptedPartResults: number[];
+}

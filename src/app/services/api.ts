@@ -171,11 +171,20 @@ export const api = {
     gameboards: {
         get: (gameboardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${gameboardId}`);
+        },
+        save: (gameboardId: string) => {
+            return endpoint.post(`gameboards/user_gameboards/${gameboardId}`, {});
         }
     },
     assignments: {
         getMyAssignments: (): AxiosPromise<ApiTypes.AssignmentDTO[]> => {
             return endpoint.get(`/assignments`);
+        },
+        getAssignmentsOwnedByMe: (): AxiosPromise<ApiTypes.AssignmentDTO[]> => {
+            return endpoint.get(`/assignments/assign`);
+        },
+        getProgressForAssignment: (assignment: ApiTypes.AssignmentDTO): AxiosPromise<AppTypes.AppAssignmentProgress[]> => {
+            return endpoint.get(`/assignments/assign/${assignment._id}/progress`);
         }
     },
     contentVersion: {
@@ -195,10 +204,10 @@ export const api = {
         }
     },
     schools: {
-        search: (query: string): AxiosPromise<Array<AppTypes.School>> => {
+        search: (query: string): AxiosPromise<AppTypes.School[]> => {
             return endpoint.get(`/schools/?query=${encodeURIComponent(query)}`);
         },
-        getByUrn: (urn: string): AxiosPromise<Array<AppTypes.School>> => {
+        getByUrn: (urn: string): AxiosPromise<AppTypes.School[]> => {
             return endpoint.get(`/schools/?urn=${encodeURIComponent(urn)}`);
         }
     },
@@ -255,6 +264,9 @@ export const api = {
         },
         assign: (board: ApiTypes.GameboardDTO, groupId: number, dueDate?: number) => {
             return endpoint.post(`/assignments/assign`, {dueDate, gameboardId: board.id, groupId})
+        },
+        getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
+            return endpoint.get(`/gameboards/${boardId}`);
         }
     },
     logger: {

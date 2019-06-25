@@ -1,10 +1,11 @@
 import React, {useEffect} from 'react';
 import {connect} from "react-redux";
-import {Redirect, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {handleProviderCallback} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {LoggedInUser} from "../../../IsaacAppTypes";
+import {Spinner} from "reactstrap";
 
 const stateToProps = (state: AppState) => (state && {user: state.user});
 const dispatchToProps = {handleProviderCallback: handleProviderCallback};
@@ -21,14 +22,13 @@ const ProviderCallbackHandlerComponent = (props: ProviderCallbackHandlerProps) =
 
     useEffect(() => {
         handleProviderCallback(provider, search);
-    }, []);
+    }, [handleProviderCallback, provider, search]);
 
-    const nextPage = '/'; // TODO MT handle afterAuth in local storage
     return <React.Fragment>
-        {user ?
-            (user.loggedIn && user.firstLogin ? <Redirect to="/account" /> : <Redirect to={nextPage} />) :
-            <div>Signing in...</div>
-        }
+        <div className="w-100 text-center">
+            <h2 className="pt-5 pb-2">Signing in...</h2>
+            <Spinner color="primary" />
+        </div>
     </React.Fragment>;
 };
 

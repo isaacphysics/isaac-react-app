@@ -38,7 +38,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         About Us
                     </DropdownToggle>
-                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/about" className="pl-4 py-3 p-md-3">
                             What We Do
                         </DropdownItem>
@@ -52,22 +52,22 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Students</p>
                     </DropdownToggle>
-                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/students" className="pl-4 py-3 p-md-3">
                             For Students
                         </DropdownItem>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
-                            My Gameboards
-                        </DropdownItemComingSoon>
                         <DropdownItem tag={Link} to="/assignments" className="pl-4 py-3 p-md-3">
                             My Assignments
                         </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
-                            My Progress
+                            My Gameboards
                         </DropdownItemComingSoon>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
-                            Problem Solving
+                            My Progress
                         </DropdownItemComingSoon>
+                        {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
+                        {/*    Problem Solving*/}
+                        {/*</DropdownItemComingSoon>*/}
                     </DropdownMenu>
                 </UncontrolledDropdown>
 
@@ -75,16 +75,16 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0"><span className="d-md-none d-lg-inline">{"For "}</span> Teachers</p>
                     </DropdownToggle>
-                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/teachers" className="pl-4 py-3 p-md-3">
                             For Teachers
                         </DropdownItem>
                         <DropdownItem tag={Link} to="/set_assignments" className="pl-4 py-3 p-md-3">
                             Set Assignments
                         </DropdownItem>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        <DropdownItem tag={Link} to="/assignment_progress" className="pl-4 py-3 p-md-3">
                             Assignment Progress
-                        </DropdownItemComingSoon>
+                        </DropdownItem>
                         <DropdownItem tag={Link} to="/groups" className="pl-4 py-3 p-md-3">
                             Manage Groups
                         </DropdownItem>
@@ -95,7 +95,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         Topics
                     </DropdownToggle>
-                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/topics" className="pl-4 py-3 p-md-3">
                             All Topics
                         </DropdownItem>
@@ -112,7 +112,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <span className="m-0"><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</span>
                     </DropdownToggle>
-                    <DropdownMenu className="p-3 pt-0 m-0" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/contact" className="pl-4 py-3 p-md-3">
                             Contact Us
                         </DropdownItem>

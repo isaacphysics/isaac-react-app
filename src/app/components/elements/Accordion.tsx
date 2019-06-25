@@ -53,7 +53,7 @@ export const Accordion = withRouter(({id, title, index, children, location: {has
                     }
                 }}
             >
-                <span className="text-secondary pr-2">
+                <span className="accordion-part text-secondary pr-2">
                     Part {ALPHABET[index % ALPHABET.length]}
                 </span> {" "}
                 {title}
