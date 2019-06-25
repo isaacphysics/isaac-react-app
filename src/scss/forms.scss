@@ -43,6 +43,9 @@
 .date-input {
   select.form-control {
     padding: 0.5rem;
+    .board-card & {
+      padding: 0.15rem;
+    }
   }
 }
 
