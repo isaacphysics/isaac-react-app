@@ -36,7 +36,7 @@ export const useNavigation = (currentDocId: string): PageNavigation => {
     const userPreferences = useSelector((state: AppState) => state && state.userPreferences);
 
     if (queryParams.board) {
-        const gameboardHistory = (currentGameboard && queryParams.board === currentGameboard.id) ?
+        const gameboardHistory = (currentGameboard && currentGameboard != 404 && queryParams.board === currentGameboard.id) ?
             determineGameboardHistory(currentGameboard) :
             makeAttemptAtGameboardHistory(queryParams.board as string);
         return {

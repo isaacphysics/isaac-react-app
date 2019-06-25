@@ -31,7 +31,7 @@ import {
     UserSummaryWithGroupMembershipDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, NOT_FOUND} from "../services/constants";
-import {unionWith, differenceBy, mapValues, union, difference, without} from "lodash";
+import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
 
 type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -169,6 +169,8 @@ export const fragments = (fragments: FragmentsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS:
             return {...fragments, [action.id]: action.doc};
+        case ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE:
+            return {...fragments, [action.id]: NOT_FOUND};
         default:
             return fragments;
     }
@@ -188,8 +190,12 @@ export const question = (question: AppQuestionDTO, action: Action) => {
             return (!question.bestAttempt || !question.bestAttempt.correct) ?
                 {...question, validationResponse: action.response, bestAttempt: action.response} :
                 {...question, validationResponse: action.response};
+        case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE:
+            return {...question, locked: action.lock, canSubmit: true};
+        case ACTION_TYPE.QUESTION_UNLOCK:
+            return {...question, locked: undefined};
         default:
-            return question
+            return question;
     }
 };
 
@@ -211,6 +217,8 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
         // Delegate processing the question matching action.questionId to the question reducer
         case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
         case ACTION_TYPE.QUESTION_ATTEMPT_REQUEST:
+        case ACTION_TYPE.QUESTION_UNLOCK:
+        case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE:
         case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS: {
             return questions && questions.map((q) => q.id === action.questionId ? question(q, action) : q);
         }
@@ -253,13 +261,15 @@ export const progress = (progress: ProgressState = null, action: Action) => {
     }
 };
 
-type CurrentGameboardState = GameboardDTO | null;
+export type CurrentGameboardState = GameboardDTO | NOT_FOUND_TYPE | null;
 export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.GAMEBOARD_REQUEST:
             return null;
         case ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;
+        case ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE:
+            return NOT_FOUND;
         default:
             return currentGameboard;
     }
