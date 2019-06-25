@@ -46,7 +46,7 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
     const pageTitle = user && isTeacher(user) ? "My Isaac teaching" : "How we help teachers";
 
     const teacherUpgradeLink = <div className="text-center">
-        <RS.Button size="lg" tag={Link} to="/pages/teacher_account_request" color="primary" outline>
+        <RS.Button size="lg" tag={Link} to="/pages/teacher_accounts" color="primary" outline>
             Register as a Teacher
         </RS.Button>
     </div>;

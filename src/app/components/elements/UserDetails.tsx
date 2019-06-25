@@ -263,7 +263,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         {myUser && myUser.role == "STUDENT" && <Row>
             <Col className="text-muted text-center mt-2">
                 Are you a teacher? {" "}
-                <a href="/pages/teacher_account_request" target="_blank" rel="noopener noreferrer">
+                <a href="/pages/teacher_accounts" target="_blank" rel="noopener noreferrer">
                     <span className='sr-only'> Are you a teacher? </span>
                     Let us know
                 </a> {" "}
