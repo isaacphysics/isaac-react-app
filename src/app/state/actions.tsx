@@ -48,6 +48,7 @@ import {groupInvitationModal, groupManagersModal} from "../components/elements/G
 import {ThunkDispatch} from "redux-thunk";
 import {groups} from "./selectors";
 import {isFirstLoginInPersistence} from "../services/firstLogin";
+import {AxiosError} from "axios";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -80,6 +81,19 @@ export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE
 
 export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
 
+function isAxiosError(e: Error): e is AxiosError {
+    return 'isAxiosError' in e && (e as AxiosError).isAxiosError;
+}
+
+function extractMessage(e: Error) {
+    if (isAxiosError(e)) {
+        if (e.response) {
+            return e.response.data.errorMessage;
+        }
+    }
+    return API_REQUEST_FAILURE_MESSAGE;
+}
+
 // User Authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST});
@@ -87,7 +101,7 @@ export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
         const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
         dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings: authenticationSettings.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
+        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
 
@@ -97,7 +111,7 @@ export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
         const userPreferenceSettings = await api.users.getPreferences();
         dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences: userPreferenceSettings.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
+        dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
 
@@ -131,7 +145,7 @@ export const updateCurrentUser = (
                 const changedUser = await api.users.updateCurrent(params);
                 dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: changedUser.data});
             } catch (e) {
-                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
+                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
             }
         } else {
             params.registeredUser.email = currentUser.email; // TODO I don't think you can do this, or even if so probably shouldn't
@@ -157,7 +171,7 @@ export const updateCurrentUser = (
                 closable: false,
             }) as any);
         } catch (e) {
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
+            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
         }
     }
 };
@@ -178,7 +192,7 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
         history.push(afterAuthPath);
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? extractMessage(e) : API_REQUEST_FAILURE_MESSAGE})
     }
     dispatch(requestCurrentUser() as any)
 };
@@ -195,7 +209,7 @@ export const verifyPasswordReset = (token: string | null) => async (dispatch: Di
         const response = await api.users.verifyPasswordReset(token);
         dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS});
     } catch(e) {
-        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: e.response.data.errorMessage});
+        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
     }
 };
 
@@ -206,7 +220,7 @@ export const handlePasswordReset = (params: {token: string | null; password: str
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
         history.push('/');
     } catch(e) {
-        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: e.response.data.errorMessage});
+        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
     }
 };
 
@@ -275,7 +289,7 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
         dispatch(requestCurrentUser() as any);
     } catch(e) {
-        dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: e.response.data.errorMessage});
+        dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
 
@@ -286,7 +300,7 @@ export const submitMessage = (extra: any, params: {firstName: string; lastName: 
         await api.contactForm.send(extra, params);
         dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS})
     } catch(e) {
-        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE, errorMessage: (e.response) ? e.response.data.errorMessage : API_REQUEST_FAILURE_MESSAGE})
+        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
     }
 };
 
@@ -651,7 +665,7 @@ export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Ac
         dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE});
         dispatch(showToast({
             color: "danger", title: "User search failed",
-            body: e.response.data.errorMessage || API_REQUEST_FAILURE_MESSAGE,
+            body: extractMessage(e),
             timeout: 10000, closable: true,
         }));
     }
@@ -666,7 +680,7 @@ export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (di
         dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE});
         dispatch(showToast({
             color: "danger", title: "User role modification failed",
-            body: e.response.data.errorMessage || API_REQUEST_FAILURE_MESSAGE,
+            body: extractMessage(e),
             timeout: 10000, closable: true,
         }));
     }
@@ -767,8 +781,7 @@ export const addGroupManager = (group: AppGroup, managerEmail: string) => async 
         return true;
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_FAILURE, group, managerEmail});
-        // TODO: Use e.response.data.errorMessage everywhere?
-        dispatch(showToast({color: "failure", title: "Group Manager Addition Failed", body: e.response.data.errorMessage, timeout: 5000}) as any);
+        dispatch(showToast({color: "failure", title: "Group Manager Addition Failed", body: extractMessage(e), timeout: 5000}) as any);
         return false;
     }
 };
@@ -780,7 +793,7 @@ export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmai
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS, group, manager});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE, group, manager});
-        dispatch(showToast({color: "failure", title: "Group Manager Removal Failed", body: e.response.data.errorMessage, timeout: 5000}) as any);
+        dispatch(showToast({color: "failure", title: "Group Manager Removal Failed", body: extractMessage(e), timeout: 5000}) as any);
     }
 };
 
@@ -854,7 +867,7 @@ export const deleteBoard = (board: GameboardDTO) => async (dispatch: Dispatch<Ac
         dispatch(showToast({color: "success", title: "Board Deleted", body: "You have deleted board " + board.title, timeout: 5000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE, board});
-        dispatch(showToast({color: "failure", title: "Couldn't delete board", body: e.response.data.errorMessage, timeout: 5000}) as any);
+        dispatch(showToast({color: "failure", title: "Couldn't delete board", body: extractMessage(e), timeout: 5000}) as any);
     }
 };
 
@@ -866,7 +879,7 @@ export const unassignBoard = (board: GameboardDTO, group: UserGroupDTO) => async
         dispatch(showToast({color: "success", title: "Assignment Deleted", body: "This assignment has been unset successfully.", timeout: 5000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE, board, group});
-        dispatch(showToast({color: "failure", title: "Board Unassignment Failed", body: e.response.data.errorMessage, timeout: 5000}) as any);
+        dispatch(showToast({color: "failure", title: "Board Unassignment Failed", body: extractMessage(e), timeout: 5000}) as any);
     }
 };
 
@@ -897,7 +910,7 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
         return true;
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, ...assignment});
-        dispatch(showToast({color: "failure", title: "Board Assignment Failed", body: e.response.data.errorMessage, timeout: 5000}) as any);
+        dispatch(showToast({color: "failure", title: "Board Assignment Failed", body: extractMessage(e), timeout: 5000}) as any);
         return false;
     }
 };
@@ -945,10 +958,8 @@ export const changePage = (path: string) => {
 
 export const handleServerError = () => {
     store.dispatch({type: ACTION_TYPE.API_SERVER_ERROR});
-    history.push("/error");
 };
 
 export const handleApiGoneAway = () => {
     store.dispatch({type: ACTION_TYPE.API_GONE_AWAY});
-    history.push("/error_stale");
 };

@@ -50,15 +50,19 @@ import {ForTeachers} from "../pages/ForTeachers";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
+    serverError: state && state.error && state.error.type == "serverError" || false,
+    goneAwayError: state && state.error && state.error.type == "serverError" || false,
 });
 const mapDispatchToProps = {requestCurrentUser};
 
 interface IsaacAppProps {
     consistencyError: boolean;
+    serverError: boolean;
+    goneAwayError: boolean;
     requestCurrentUser: () => void;
 }
 
-const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
+const IsaacApp = ({requestCurrentUser, consistencyError, serverError, goneAwayError}: IsaacAppProps) => {
 
     useEffect(() => {requestCurrentUser()}, [requestCurrentUser]);
 
@@ -72,6 +76,10 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                 <EmailVerificationBanner />
                 <main role="main" className="flex-fill content-body">
                     <Switch>
+                        {/* Errrors; these paths work but aren't really used */}
+                        <Route path={serverError ? undefined : "/error"} component={ServerError} />
+                        <Route path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
+
                         {/* Application pages */}
                         <TrackedRoute exact path="/(home)?" component={Homepage} />
                         <TrackedRoute path="/account" onlyFor={user => user.loggedIn} component={MyAccount} />
@@ -127,8 +135,6 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
                         <TrackedRoute path="/support/:type?/:category?" component={Support} />
 
                         {/* Error pages */}
-                        <TrackedRoute path="/error" component={ServerError} />
-                        <TrackedRoute path="/error_stale" component={SessionExpired} />
                         <TrackedRoute component={NotFound} />
                     </Switch>
                 </main>

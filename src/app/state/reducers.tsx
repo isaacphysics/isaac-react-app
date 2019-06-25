@@ -278,7 +278,7 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
     }
 };
 
-export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | null;
+export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const error = (error: ErrorState = null, action: Action): ErrorState => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE:
@@ -291,6 +291,10 @@ export const error = (error: ErrorState = null, action: Action): ErrorState => {
             return {type: "generalError", generalError: action.errorMessage};
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:
             return {type: "consistencyError"};
+        case ACTION_TYPE.API_SERVER_ERROR:
+            return {type: "serverError"};
+        case ACTION_TYPE.API_GONE_AWAY:
+            return {type: "goneAwayError"};
         case ACTION_TYPE.ROUTER_PAGE_CHANGE:
             return null;
         default:
