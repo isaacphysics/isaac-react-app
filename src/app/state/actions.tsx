@@ -225,14 +225,13 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     const response = await api.authentication.checkProviderCallback(provider, parameters);
     const user = response.data;
     dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user});
-    if (user.firstLogin) {
+    let nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
+    persistence.remove(KEY.AFTER_AUTH_PATH);
+    nextPage = nextPage || "/";
+    nextPage = nextPage.replace("#!", "");
+    if (user.firstLogin && !nextPage.includes("account")) {
         history.push('/account')
     } else {
-        let nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
-        persistence.remove(KEY.AFTER_AUTH_PATH);
-        nextPage = nextPage || "/";
-        nextPage = nextPage.replace("#!", "");
-        persistence.remove(KEY.AFTER_AUTH_PATH);
         history.push(nextPage);
     }
     // TODO MT handle error case

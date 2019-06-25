@@ -8,6 +8,7 @@ import {AppState} from "../../state/reducers";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {Unauthorised} from "../pages/Unauthorised";
+import {isTeacher} from "../../services/user";
 
 ReactGA.initialize("UA-137475074-1");
 ReactGA.set({ anonymizeIp: true });
@@ -46,10 +47,13 @@ const TrackedRouteComponent = function({component, trackingOptions, componentPro
                 return <ShowLoading until={user}>
                     {user && onlyFor(user) ?
                         <WrapperComponent component={component} trackingOptions={trackingOptions} {...propsWithUser} {...componentProps} /> :
-                        user && user.loggedIn && user.role == "STUDENT" && rest.onlyFor && rest.onlyFor.name == "isTeacher" ?
-                            <Redirect to="/pages/teacher_account_request"/> :
-                        user && user.loggedIn && !onlyFor(user) ?
-                            <Unauthorised/> : persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
+                        user && !isTeacher(user) && rest.onlyFor && rest.onlyFor.name === isTeacher.name ? // TODO we should try to find a more robust way than this
+                            <Redirect to="/pages/teacher_account_request"/>
+                            :
+                            user && user.loggedIn && !onlyFor(user) ?
+                                <Unauthorised/>
+                                :
+                                persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                     }
                 </ShowLoading>;
             }}/>;
