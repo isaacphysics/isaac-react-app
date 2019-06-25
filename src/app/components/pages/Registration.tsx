@@ -2,15 +2,31 @@ import React, {useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import ReactGA from "react-ga";
-import {Card, CardBody, CardTitle, Col, CustomInput, Form, FormGroup, Input, Row, Label, FormFeedback, Container} from "reactstrap";
-import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser} from "../../../IsaacAppTypes";
+import {
+    Card,
+    CardBody,
+    CardTitle,
+    Col,
+    Container,
+    CustomInput,
+    Form,
+    FormFeedback,
+    FormGroup,
+    Input,
+    Label,
+    Row
+} from "reactstrap";
+import {LoggedInUser, LoggedInValidationUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import {EXAM_BOARD} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import * as persistence from "../../services/localStorage"
+import {KEY} from "../../services/localStorage"
 import {DateInput} from "../elements/DateInput";
+import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
@@ -73,7 +89,8 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         setAttemptedSignUp(true);
 
         if (passwordIsValid && emailIsValid && confirmedOverThirteen) {
-            Object.assign(registrationUser, {firstLogin: true, loggedIn: false});
+            persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_NOT_SHOWN);
+            Object.assign(registrationUser, {loggedIn: false});
             updateCurrentUser({
                 registeredUser: registrationUser,
                 userPreferences: {EMAIL_PREFERENCE: defaultEmailPreferences, EXAM_BOARD: defaultExamPreferences},

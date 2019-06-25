@@ -1,36 +1,38 @@
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
     Alert,
-    Container,
-    TabContent,
-    TabPane,
-    Nav,
-    NavItem,
-    NavLink,
     Card,
     CardFooter,
     Col,
+    Container,
     Form,
     Input,
-    Row, CardBody,
+    Nav,
+    NavItem,
+    NavLink,
+    Row,
+    TabContent,
+    TabPane,
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
-import {updateCurrentUser, resetPassword} from "../../state/actions";
-import {LoggedInUser, UserPreferencesDTO, LoggedInValidationUser, Toast} from "../../../IsaacAppTypes";
+import {resetPassword, updateCurrentUser} from "../../state/actions";
+import {LoggedInUser, LoggedInValidationUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import queryString from "query-string";
-import {Link} from "react-router-dom";
-import {EXAM_BOARD, ACCOUNT_TAB} from "../../services/constants";
+import {Link, withRouter} from "react-router-dom";
+import {ACCOUNT_TAB, EXAM_BOARD} from "../../services/constants";
 import {history} from "../../services/history"
 import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
-import {withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import * as persistence from "../../services/localStorage";
+import {KEY} from "../../services/localStorage";
+import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -89,12 +91,18 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
     const [currentPassword, setCurrentPassword] = useState("");
 
-    // @ts-ignore
-    let initialTab: ACCOUNT_TAB =
-        (authToken && ACCOUNT_TAB.teacherconnections) ||
-        (hashAnchor && ACCOUNT_TAB[hashAnchor as any]) ||
-        ACCOUNT_TAB.account;
-    const [activeTab, setTab] = useState(initialTab);
+
+    const [activeTab, setActiveTab] = useState(0);
+    const [bannerShown, _setBannerShown] = useState((persistence.session.load(KEY.FIRST_LOGIN) === FIRST_LOGIN_STATE.BANNER_SHOWN));
+
+    useMemo(() => {
+        // @ts-ignore
+        let tab: ACCOUNT_TAB =
+            (authToken && ACCOUNT_TAB.teacherconnections) ||
+            (hashAnchor && ACCOUNT_TAB[hashAnchor as any]) ||
+            ACCOUNT_TAB.account;
+        setActiveTab(tab);
+    }, [hashAnchor, authToken]);
 
     useEffect(() => {
         setMyUser(Object.assign({}, user, {password: ""}))
@@ -128,10 +136,13 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 Update your Isaac Computer Science account, or <Link to="/logout" className="text-secondary">Log out</Link>
             </small>
         </h3>
-        {firstLogin &&
+        {firstLogin && bannerShown != true &&
             <Alert color="success">
                 Registration successful
             </Alert>
+        }
+        {
+            attemptedAccountUpdate && persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_SHOWN)
         }
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
@@ -139,7 +150,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <NavItem>
                         <NavLink
                             className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.account})}
-                            onClick={() => setTab(ACCOUNT_TAB.account)} tabIndex={0}
+                            onClick={() => setActiveTab(ACCOUNT_TAB.account)} tabIndex={0}
                         >
                             Profile
                         </NavLink>
@@ -147,7 +158,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <NavItem>
                         <NavLink
                             className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.passwordreset})}
-                            onClick={() => setTab(ACCOUNT_TAB.passwordreset)} tabIndex={0}
+                            onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block">Change Password</span>
                             <span className="d-block d-lg-none">Password</span>
@@ -156,7 +167,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <NavItem>
                         <NavLink
                             className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.teacherconnections})}
-                            onClick={() => setTab(ACCOUNT_TAB.teacherconnections)} tabIndex={0}
+                            onClick={() => setActiveTab(ACCOUNT_TAB.teacherconnections)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block d-md-block">Teacher Connections</span>
                             <span className="d-block d-md-none">Connections</span>
@@ -165,7 +176,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <NavItem>
                         <NavLink
                             className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.emailpreferences})}
-                            onClick={() => setTab(ACCOUNT_TAB.emailpreferences)} tabIndex={0}
+                            onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block">Email Preferences</span>
                             <span className="d-block d-lg-none">Emails</span>
