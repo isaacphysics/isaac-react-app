@@ -141,7 +141,7 @@ export const updateCurrentUser = (
         try {
             const currentUser = await api.users.updateCurrent(params);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-            dispatch(getUserPreferences() as any);
+            dispatch(requestCurrentUser() as any);
             if (initialLogin) {
                 const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
                 persistence.remove(KEY.AFTER_AUTH_PATH);
