@@ -69,32 +69,33 @@ interface AccountPageProps {
 const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, firstLogin, hashAnchor, authToken}: AccountPageProps) => {
     const editingSelf = true;
 
-    if (userPreferences && !userPreferences.EMAIL_PREFERENCE) {
-        userPreferences.EMAIL_PREFERENCE = { NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true };
-    }
-
     // Inputs which trigger re-render
     const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
-    const [myUser, setMyUser] = useState(
-        Object.assign({}, user, {password: ""})
-    );
-    const [myUserPreferences, setMyUserPreferences] = useState(
-        userPreferences && userPreferences.EXAM_BOARD && Object.assign({}, userPreferences) || Object.assign({}, userPreferences, {EXAM_BOARD: {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true}})
-    );
-    const [emailPreferences, setEmailPreferences] = useState(
-        Object.assign({}, userPreferences ? userPreferences.EMAIL_PREFERENCE : { NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true })
-    );
-    const [examPreferences, setExamPreferences] = useState(
-        Object.assign({}, userPreferences && userPreferences.EXAM_BOARD ? userPreferences.EXAM_BOARD : {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true})
-    );
+
+    // - Copy of user to store changes before saving
+    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
+    useMemo(() => {setMyUser(Object.assign({}, user, {password: ""}))}, [user]);
+
+    // - Passwords
     const [newPassword, setNewPassword] = useState("");
     const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
     const [currentPassword, setCurrentPassword] = useState("");
 
+    // - User preferences
+    const defaultEmailPreferences = {NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true};
+    const initialEmailPreferences = userPreferences ? userPreferences.EMAIL_PREFERENCE : defaultEmailPreferences;
+    const [emailPreferences, setEmailPreferences] = useState(Object.assign({}, initialEmailPreferences));
 
-    const [activeTab, setActiveTab] = useState(0);
-    const [bannerShown, _setBannerShown] = useState((persistence.session.load(KEY.FIRST_LOGIN) === FIRST_LOGIN_STATE.BANNER_SHOWN));
+    const defaultExamPreferences = {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true};
+    const initialExamPreferences = userPreferences ? userPreferences.EXAM_BOARD : defaultExamPreferences;
+    const [examPreferences, setExamPreferences] = useState(Object.assign({}, initialExamPreferences));
 
+    const defaultUserPreferences = {EMAIL_PREFERENCE: defaultEmailPreferences, EXAM_BOARD: defaultExamPreferences};
+    const initialUserPreferences = userPreferences || defaultUserPreferences;
+    const [myUserPreferences, setMyUserPreferences] = useState(Object.assign(initialUserPreferences));
+
+    // Set active tab using hash anchor
+    const [activeTab, setActiveTab] = useState(ACCOUNT_TAB.account);
     useMemo(() => {
         // @ts-ignore
         let tab: ACCOUNT_TAB =
@@ -104,9 +105,9 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         setActiveTab(tab);
     }, [hashAnchor, authToken]);
 
-    useEffect(() => {
-        setMyUser(Object.assign({}, user, {password: ""}))
-    }, [user]);
+    // Show registration successful banner once
+    const [bannerShown, _] = useState((persistence.session.load(KEY.FIRST_LOGIN) === FIRST_LOGIN_STATE.BANNER_SHOWN));
+    persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_SHOWN);
 
     // Values derived from inputs (props and state)
     const isEmailValid = myUser.loggedIn && myUser.email && validateEmail(myUser.email) || validateEmail("");
@@ -117,8 +118,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const updateAccount = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedAccountUpdate(true);
-        Object.assign(myUserPreferences.EMAIL_PREFERENCE || {}, emailPreferences);
-        Object.assign(myUserPreferences.EXAM_BOARD || {}, examPreferences);
+        Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
+        Object.assign(myUserPreferences.EXAM_BOARD, examPreferences);
         if (myUser.loggedIn && isEmailValid && (isDobValid || myUser.dateOfBirth == undefined) &&
             (!myUser.password || isNewPasswordConfirmed)) {
             updateCurrentUser({
@@ -136,14 +137,11 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 Update your Isaac Computer Science account, or <Link to="/logout" className="text-secondary">Log out</Link>
             </small>
         </h3>
-        {firstLogin && bannerShown != true &&
-            <Alert color="success">
-                Registration successful
-            </Alert>
-        }
-        {
-            attemptedAccountUpdate && persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_SHOWN)
-        }
+
+        {firstLogin && !bannerShown && <Alert color="success">
+            Registration successful
+        </Alert>}
+
         {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
                 <Nav tabs className="my-4 flex-wrap">
@@ -186,12 +184,14 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
                 <Form name="my-account" onSubmit={updateAccount}>
                     <TabContent activeTab={activeTab}>
+
                         <TabPane tabId={ACCOUNT_TAB.account}>
                             <UserDetails
                                 myUser={myUser} setMyUser={setMyUser} examPreferences={examPreferences} setExamPreferences={setExamPreferences}
                                 isDobValid={isDobValid} isEmailValid={isEmailValid} attemptedAccountUpdate={attemptedAccountUpdate}
                             />
                         </TabPane>
+
                         <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                             <UserPassword
                                 currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}
@@ -201,14 +201,17 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                 setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm}
                             />
                         </TabPane>
+
                         <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
                             {editingSelf && <TeacherConnectionsPanel user={user} authToken={authToken} />}
                         </TabPane>
+
                         <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                             <UserEmailPreference
                                 emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                             />
                         </TabPane>
+
                     </TabContent>
 
                     <CardFooter className="py-4">

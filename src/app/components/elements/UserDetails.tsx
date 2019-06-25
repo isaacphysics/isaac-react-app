@@ -195,8 +195,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                         name="select"
                         id="examBoardSelect"
                         value={
-                            (examPreferences && examPreferences[EXAM_BOARD.OCR] && EXAM_BOARD.OCR) ||
-                            EXAM_BOARD.AQA
+                            (examPreferences && examPreferences[EXAM_BOARD.OCR]) ? EXAM_BOARD.OCR : EXAM_BOARD.AQA
                         }
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
                             setExamPreferences(
@@ -206,7 +205,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                             )
                         }
                     >
-                        <option></option>
+                        {/*<option></option> This was not an option although we should probably support it */}
                         <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>
