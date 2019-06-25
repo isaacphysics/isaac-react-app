@@ -48,6 +48,7 @@ import {groupInvitationModal, groupManagersModal} from "../components/elements/G
 import {ThunkDispatch} from "redux-thunk";
 import {groups} from "./selectors";
 import {isFirstLoginInPersistence} from "../services/firstLogin";
+import {isTeacher} from "../services/user";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -74,6 +75,25 @@ export const showToast = (toast: Toast) => (dispatch: any) => {
     dispatch({type: ACTION_TYPE.TOASTS_SHOW, toast});
     return toastId;
 };
+
+function showErrorToastIfNeeded(error: string, e: any) {
+    if (e) {
+        if (e.response) {
+            if (e.response.status < 500) {
+                return showToast({
+                    color: "danger", title: error, timeout: 5000,
+                    body: e.response.data && e.response.data.errorMessage || API_REQUEST_FAILURE_MESSAGE
+                }) as any;
+            }
+        } else {
+            return showToast({
+                color: "danger", title: error, timeout: 5000,
+                body: API_REQUEST_FAILURE_MESSAGE
+            });
+        }
+    }
+    return {type: ACTION_TYPE.TEST_ACTION};
+}
 
 // ActiveModal
 export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
@@ -571,6 +591,24 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
         dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS, gameboard: gameboardResponse.data});
     }
     // TODO MT handle error case
+};
+
+export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST});
+        await api.gameboards.save(gameboardId);
+        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS});
+        if (isTeacher(user)) {
+            history.push(`/set_assignments#${gameboardId}`);
+        } else {
+            history.push(`/boards/`);
+        }
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error("Error saving board.");
+        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Error saving board", e));
+    }
 };
 
 // Assignments

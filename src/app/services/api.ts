@@ -171,6 +171,9 @@ export const api = {
     gameboards: {
         get: (gameboardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${gameboardId}`);
+        },
+        save: (gameboardId: string) => {
+            return endpoint.post(`gameboards/user_gameboards/${gameboardId}`, {});
         }
     },
     assignments: {

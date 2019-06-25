@@ -47,6 +47,7 @@ import {AssignmentProgress} from "../pages/AssignmentProgress";
 import {Support} from "../pages/Support";
 import {ForStudents} from "../pages/ForStudents";
 import {ForTeachers} from "../pages/ForTeachers";
+import {AddGameboard} from "../handlers/AddGameboard";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -87,6 +88,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError}: IsaacAppProps) => {
 
                         <TrackedRoute path="/gameboards" onlyFor={user => user.loggedIn} component={Gameboard} />
                         <TrackedRoute path="/assignment/:gameboardId" onlyFor={user => user.loggedIn} component={RedirectToGameboard} />
+                        <TrackedRoute path="/add-gameboard/:gameboardId" onlyFor={user => user.loggedIn} component={AddGameboard} />
 
                         <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
 

@@ -204,6 +204,10 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
 
+    | {type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST}
+    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.BOARDS_GROUPS_REQUEST; board: ApiTypes.GameboardDTO}
     | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groups: {[key: string]: ApiTypes.UserGroupDTO[]}}
     | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
