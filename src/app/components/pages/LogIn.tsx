@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {Button, Card, CardBody, Col, Container, Form, FormGroup, FormFeedback, Input, Row, Label} from "reactstrap";
 import {handleProviderLoginRedirect} from "../../state/actions";
@@ -25,6 +25,10 @@ interface LogInPageProps {
 }
 
 const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPassword, errorMessage}: LogInPageProps) => {
+    useEffect( () => {
+        document.title = "Login — Isaac Computer Science";
+    }, []);
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [logInAttempted, setLoginAttempted] = useState(false);

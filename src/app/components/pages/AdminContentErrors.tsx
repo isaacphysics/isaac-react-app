@@ -8,6 +8,7 @@ import {Col, Container, Row, Table} from "reactstrap";
 import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EDITOR_URL} from "../../services/constants";
 import {ContentErrorItem} from "../../../IsaacAppTypes";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -51,8 +52,7 @@ export const AdminContentErrorsPageComponent = ({errors, getAdminContentErrors}:
     return <Container>
         <Row>
             <Col>
-                <BreadcrumbTrail currentPageTitle="Content Errors" />
-                <h1 className="h-title">Content Errors</h1>
+                <TitleAndBreadcrumb currentPageTitle="Content Errors" />
             </Col>
         </Row>
         <ShowLoading until={errors}>
