@@ -427,7 +427,7 @@ describe("boards reducer", () => {
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
             const priorBoards = previousState && previousState.boards && previousState.boards.boards || [];
-            expect(selector.boards(actualNextState)).toEqual({totalResults: 40, boards: union(priorBoards, newBoards)});
+            expect(selector.boards(actualNextState)).toEqual({totalResults: 40, boards: union(newBoards, priorBoards)});
         });
     });
 
