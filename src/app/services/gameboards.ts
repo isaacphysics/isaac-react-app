@@ -1,7 +1,7 @@
 import {GameboardDTO} from "../../IsaacApiTypes";
 import {CurrentGameboardState} from "../state/reducers";
 
-const createGameabordLink = (gameboardId: string) => `/gameboards/#${gameboardId}`;
+const createGameabordLink = (gameboardId: string) => `/gameboards#${gameboardId}`;
 
 const createGameboardHistory = (title: string, gameboardId: string) => {
     return [
