@@ -13,9 +13,9 @@ export const ContentSummaryListGroupItem = ({item, search}: {item: ContentSummar
             icon = "▶"; //"🎯";
             break;
         case (DOCUMENT_TYPE.QUESTION):
-            itemClasses += "text-info";
+            itemClasses += item.correct ? "bg-success" : "text-info";
             linkDestination = `/questions/${item.id}`;
-            icon = "Q ";
+            icon = item.correct ? "✓" : "Q ";
             break;
         case (DOCUMENT_TYPE.CONCEPT):
         default:
@@ -25,7 +25,7 @@ export const ContentSummaryListGroupItem = ({item, search}: {item: ContentSummar
     }
     return <ListGroupItem className={itemClasses} key={linkDestination}>
         <Link to={{pathname: linkDestination, search: search}}>
-            <span className="content-summary-link-title">{icon}</span>
+            <span className="content-summary-link-title align-self-center">{icon}</span>
             <span className="content-summary-link-title">{item.title}</span>
             {item.summary && <span className="small pt-1 pl-4 d-none d-md-inline">{item.summary}</span>}
         </Link>
