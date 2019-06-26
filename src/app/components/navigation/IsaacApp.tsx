@@ -77,7 +77,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError, serverError, goneAwayEr
                 <EmailVerificationBanner />
                 <main role="main" className="flex-fill content-body">
                     <Switch>
-                        {/* Errrors; these paths work but aren't really used */}
+                        {/* Errors; these paths work but aren't really used */}
                         <Route path={serverError ? undefined : "/error"} component={ServerError} />
                         <Route path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
 

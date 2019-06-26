@@ -135,6 +135,10 @@ export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
+export const setAnonUserPreferences = (userPreferences: UserPreferencesDTO) => {
+    return {type: ACTION_TYPE.USER_PREFERENCES_SET_FOR_ANON, userPreferences};
+};
+
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_UPDATE_REQUEST});
     try {

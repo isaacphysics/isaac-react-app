@@ -1,18 +1,19 @@
-import React, {ChangeEvent, useEffect, useMemo, useState} from "react"
+import React, {useEffect, useMemo, useState} from "react"
 import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {AppState, user} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {ContentSummaryDTO, IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
 import {filterAndSeparateRelatedContent} from "../../services/topics";
-import {Button, Col, Container, Input, Label, Row} from "reactstrap";
-import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, EXAM_BOARD, TAG_ID} from "../../services/constants";
+import {Button, Col, Container, Row} from "reactstrap";
+import {ALL_TOPICS_CRUMB, TAG_ID} from "../../services/constants";
 import {UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom} from "../../services/examBoard";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {UserExamBoardPicker} from "../elements/UserExamBoardPicker";
 
 const stateToProps = (state: AppState, {match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => ({
     topicName: topicName,
@@ -47,19 +48,13 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
 
     return <ShowLoading until={topicPage}>
         {topicPage && <Container id="topic-page">
-            <Row>
-                <Col>
-                    <TitleAndBreadcrumb
-                        intermediateCrumbs={[ALL_TOPICS_CRUMB]}
-                        currentPageTitle={topicPage.title as string}
-                    />
-                </Col>
-            </Row>
+            <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string} />
             <Row className="pb-5">
                 <Col md={{size: 8, offset: 2}} className="py-3">
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }
+                    <UserExamBoardPicker anonOnly className="text-right" />
 
                     {relatedConcepts &&
                         <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />
