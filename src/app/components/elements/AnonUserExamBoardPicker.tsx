@@ -6,16 +6,16 @@ import {useDispatch, useSelector} from "react-redux";
 import {setAnonUserPreferences} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 
-interface AnonUserExamBoardPicker {className?: string; showLabel?: boolean}
+interface AnonUserExamBoardPicker {className?: string; hideLabel?: boolean}
 
-export const AnonUserExamBoardPicker = ({className, showLabel = true}: AnonUserExamBoardPicker) => {
+export const AnonUserExamBoardPicker = ({className, hideLabel = true}: AnonUserExamBoardPicker) => {
     const dispatch = useDispatch();
     const user = useSelector((state: AppState) => state && state.user || null);
     const userPreferences = useSelector((state: AppState) => state && state.userPreferences || null);
 
     return <React.Fragment>
         {!(user && user.loggedIn) && <FormGroup className={className}>
-            {showLabel && <Label className="d-inline-block pr-2" for="examBoardSelect">Exam Board</Label>}
+            {!hideLabel && <Label className="d-inline-block pr-2" for="examBoardSelect">Exam Board</Label>}
             <Input
                 className="w-auto d-inline-block pl-1 pr-0" type="select" name="select" id="examBoardSelect"
                 value={determineExamBoardFrom(userPreferences)}
