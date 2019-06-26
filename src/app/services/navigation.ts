@@ -10,8 +10,9 @@ import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopic
 import {determineExamBoardFrom} from "./examBoard";
 
 export interface LinkInfo {title: string; to: string}
+export type CollectionType = "Gameboard" | "Topic";
 export interface PageNavigation {
-    collectionType?: "Gameboard" | "Topic";
+    collectionType?: CollectionType;
     breadcrumbHistory: LinkInfo[];
     backToCollection?: LinkInfo;
     nextItem?: LinkInfo;
