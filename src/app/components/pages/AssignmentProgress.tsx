@@ -40,15 +40,19 @@ const stateFromProps = (state: AppState) => {
         const progress = state.progress;
         const assignments: { [id: number]: EnhancedAssignment[] } = {};
         if (state.assignmentsByMe) {
-            state.assignmentsByMe.forEach(a => {
-                const assignment = a as EnhancedAssignment;
-                const id = assignment.groupId as number;
-                assignment.gameboard = assignment.gameboard || gameboards[assignment.gameboardId as string];
-                assignment.progress = progress && progress[assignment._id as number] || undefined;
-                if (id in assignments) {
-                    assignments[id].push(assignment);
+            state.assignmentsByMe.forEach(assignment => {
+                const assignmentId = assignment._id as number;
+                const enhancedAssignment: EnhancedAssignment = {
+                    ...assignment,
+                    _id: assignmentId,
+                    gameboard: (assignment.gameboard || gameboards[assignment.gameboardId as string]) as EnhancedGameboard,
+                    progress: progress && progress[assignmentId] || undefined,
+                };
+                const groupId = assignment.groupId as number;
+                if (groupId in assignments) {
+                    assignments[groupId].push(enhancedAssignment);
                 } else {
-                    assignments[id] = [assignment];
+                    assignments[groupId] = [enhancedAssignment];
                 }
             });
         }
@@ -56,9 +60,10 @@ const stateFromProps = (state: AppState) => {
         const activeGroups = groups.active(state);
         if (activeGroups) {
             const activeGroupsWithAssignments = activeGroups.map(g => {
-                const gWithAssignments = g as AppGroupWithAssignments;
-                gWithAssignments.assignments = assignments[g.id as number] || [];
-                return gWithAssignments;
+                return {
+                    ...g,
+                    assignments: assignments[g.id as number] || []
+                };
             });
             return {
                 groups: activeGroupsWithAssignments
@@ -73,8 +78,12 @@ const stateFromProps = (state: AppState) => {
 const dispatchFromProps = {loadGroups, loadAssignmentsOwnedByMe, loadBoard, loadProgress, openActiveModal};
 
 
+type EnhancedGameboard = GameboardDTO & {
+    questions: (GameboardItem & { questionPartsTotal: number })[];
+};
+
 type EnhancedAssignment = AssignmentDTO & {
-    gameboard: GameboardDTO & {questions: (GameboardItem & {questionPartsTotal: number})[]};
+    gameboard: EnhancedGameboard;
     _id: number;
     progress?: AppAssignmentProgress[];
 };

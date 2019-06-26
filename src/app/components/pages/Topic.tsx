@@ -13,7 +13,7 @@ import {ALL_TOPICS_CRUMB, TAG_ID} from "../../services/constants";
 import {UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom} from "../../services/examBoard";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {UserExamBoardPicker} from "../elements/UserExamBoardPicker";
+import {AnonUserExamBoardPicker} from "../elements/AnonUserExamBoardPicker";
 
 const stateToProps = (state: AppState, {match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => ({
     topicName: topicName,
@@ -54,7 +54,7 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }
-                    <UserExamBoardPicker anonOnly className="text-right" />
+                    <AnonUserExamBoardPicker className="text-right" />
 
                     {relatedConcepts &&
                         <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />

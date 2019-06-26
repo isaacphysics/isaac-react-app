@@ -44,9 +44,9 @@ const defaultExamPreferences = {
 };
 
 const defaultEmailPreferences = {
-    NEWS_AND_UPDATES: true,
+    NEWS_AND_UPDATES: false,
     ASSIGNMENTS: true,
-    EVENTS: true
+    EVENTS: false
 };
 
 

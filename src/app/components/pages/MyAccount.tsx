@@ -82,7 +82,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [currentPassword, setCurrentPassword] = useState("");
 
     // - User preferences
-    const defaultEmailPreferences = {NEWS_AND_UPDATES: true, ASSIGNMENTS: true, EVENTS: true};
+    const defaultEmailPreferences = {NEWS_AND_UPDATES: false, ASSIGNMENTS: true, EVENTS: false};
     const initialEmailPreferences = userPreferences ? userPreferences.EMAIL_PREFERENCE : defaultEmailPreferences;
     const [emailPreferences, setEmailPreferences] = useState(Object.assign({}, initialEmailPreferences));
 
