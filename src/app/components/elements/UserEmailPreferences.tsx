@@ -20,19 +20,20 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences}: Use
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>News and Updates</td>
-                        <td>New content and website feature updates, as well as interesting news about Isaac.</td>
-                        <td>
-                            <CustomInput
-                                id="news" type="checkbox" name="news" color="$secondary"
-                                defaultChecked={emailPreferences ? emailPreferences.NEWS_AND_UPDATES : true}
-                                onChange={(e: any) => setEmailPreferences(
-                                    Object.assign({}, emailPreferences, {NEWS_AND_UPDATES: emailPreferences? !emailPreferences.NEWS_AND_UPDATES : true}))
-                                }
-                            />
-                        </td>
-                    </tr>
+                    {/*Commented out at the moment, to stop sending these emails*/}
+                    {/*<tr>*/}
+                        {/*<td>News and Updates</td>*/}
+                        {/*<td>New content and website feature updates, as well as interesting news about Isaac.</td>*/}
+                        {/*<td>*/}
+                            {/*<CustomInput*/}
+                                {/*id="news" type="checkbox" name="news" color="$secondary"*/}
+                                {/*defaultChecked={emailPreferences ? emailPreferences.NEWS_AND_UPDATES : true}*/}
+                                {/*onChange={(e: any) => setEmailPreferences(*/}
+                                    {/*Object.assign({}, emailPreferences, {NEWS_AND_UPDATES: emailPreferences? !emailPreferences.NEWS_AND_UPDATES : true}))*/}
+                                {/*}*/}
+                            {/*/>*/}
+                        {/*</td>*/}
+                    {/*</tr>*/}
                     <tr>
                         <td>Assignments</td>
                         <td>Get notified when your teacher gives your group a new assignment.</td>
@@ -46,19 +47,19 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences}: Use
                             />
                         </td>
                     </tr>
-                    <tr>
-                        <td>Events</td>
-                        <td>Information about our computer science events.</td>
-                        <td>
-                            <CustomInput
-                                className="CustomInput" id="events" type="checkbox" name="events"
-                                defaultChecked={emailPreferences ? emailPreferences.EVENTS : true}
-                                onChange={(e: any) => setEmailPreferences(
-                                    Object.assign({}, emailPreferences, {EVENTS: emailPreferences ? !emailPreferences.EVENTS : true})
-                                )}
-                            />
-                        </td>
-                    </tr>
+                    {/*<tr>*/}
+                        {/*<td>Events</td>*/}
+                        {/*<td>Information about our computer science events.</td>*/}
+                        {/*<td>*/}
+                            {/*<CustomInput*/}
+                                {/*className="CustomInput" id="events" type="checkbox" name="events"*/}
+                                {/*defaultChecked={emailPreferences ? emailPreferences.EVENTS : true}*/}
+                                {/*onChange={(e: any) => setEmailPreferences(*/}
+                                    {/*Object.assign({}, emailPreferences, {EVENTS: emailPreferences ? !emailPreferences.EVENTS : true})*/}
+                                {/*)}*/}
+                            {/*/>*/}
+                        {/*</td>*/}
+                    {/*</tr>*/}
                 </tbody>
             </Table>
         </FormGroup>
