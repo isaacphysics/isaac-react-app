@@ -16,10 +16,10 @@ export const FeaturedContentTabs = () => (
                             <span>?</span>
                             <div className="mt-2 mt-md-0">
                                 <IsaacContent doc={{
-                                "type": "content",
-                                "encoding": "markdown",
-                                "value": "Simplify this Boolean expression:\n\n$ \\or{\\or{\\or{\\bracketnot{\\not{(\\and{A}{B})}}}{A}}{B}}{C} $"
-                            }} />
+                                    "type": "content",
+                                    "encoding": "markdown",
+                                    "value": "Simplify this Boolean expression:\n\n$ \\or{\\or{\\or{\\bracketnot{\\not{(\\and{A}{B})}}}{A}}{B}}{C} $"
+                                }} />
                             </div>
                         </h2>
 
@@ -146,7 +146,7 @@ export const FeaturedContentTabs = () => (
                         </div>
                     </Col>
 
-                    <Col md={{size: 5, offset: 1}} className="feattab-image mt-md-5 text-center align-self-center" >
+                    <Col md={{size: 5, offset: 1}} className="feattab-image mt-md-5 text-center" >
                         <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
                         <Button tag={Link} to="/topics" color="primary" outline className="mt-4 d-none d-md-inline-block">
                             Explore by Topic
