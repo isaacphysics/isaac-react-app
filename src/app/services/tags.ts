@@ -33,7 +33,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.gcseBooleanLogic, title: "Boolean logic", parent: TAG_ID.gcseToALevel},
     {id: TAG_ID.gcseProgrammingConcepts, title: "Programming concepts", parent: TAG_ID.gcseToALevel},
     {id: TAG_ID.gcseNetworking, title: "Networking", parent: TAG_ID.gcseToALevel, comingSoon: true},
-    {id: TAG_ID.gcseDataRepresentation, title: "Data Representation", parent: TAG_ID.gcseToALevel},
+    {id: TAG_ID.gcseDataRepresentation, title: "Data representation", parent: TAG_ID.gcseToALevel},
     {id: TAG_ID.gcseSystems, title: "Systems", parent: TAG_ID.gcseToALevel, comingSoon: true},
     // Data structures and algorithms topics
     {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: true},
