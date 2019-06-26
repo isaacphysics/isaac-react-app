@@ -94,7 +94,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError, serverError, goneAwayEr
                         <TrackedRoute exact path="/topics" component={AllTopics} />
                         <TrackedRoute path="/topics/:topicName" component={Topic} />
 
-                        <TrackedRoute path="/gameboards" onlyFor={user => user.loggedIn} component={Gameboard} />
+                        <TrackedRoute path="/gameboards" component={Gameboard} />
                         <TrackedRoute path="/assignment/:gameboardId" onlyFor={user => user.loggedIn} component={RedirectToGameboard} />
                         <TrackedRoute path="/add-gameboard/:gameboardId" onlyFor={user => user.loggedIn} component={AddGameboard} />
 

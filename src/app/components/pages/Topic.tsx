@@ -34,15 +34,12 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
         [topicName]
     );
 
-    const [examBoardFilter, setExamBoardFilter] = useState(determineExamBoardFrom(userPreferences));
-    useMemo(() => {
-        setExamBoardFilter(determineExamBoardFrom(userPreferences));
-    }, [userPreferences]);
+    const examBoard = determineExamBoardFrom(userPreferences);
 
     let [relatedConcepts, relatedQuestions]: [ContentSummaryDTO[] | null, ContentSummaryDTO[] | null] = [null, null];
     if (topicPage && topicPage.relatedContent) {
         [relatedConcepts, relatedQuestions] = topicPage && topicPage.relatedContent &&
-            filterAndSeparateRelatedContent(topicPage.relatedContent, examBoardFilter);
+            filterAndSeparateRelatedContent(topicPage.relatedContent, examBoard);
     }
     const searchQuery = `?topic=${topicName}`;
 
@@ -63,9 +60,18 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                         <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
                     }
 
-                    <Button tag={Link} to="/coming_soon" color="secondary" block size="lg" className="my-4">
-                        More coming soon&hellip;
-                    </Button>
+                    <Row>
+                        <Col size={6} className="text-center">
+                            <Button tag={Link} to="/topics" color="primary" outline size="lg" className="my-4" block>
+                                <span className="d-none d-md-inline">Back to</span> {" "} All Topics
+                            </Button>
+                        </Col>
+                        <Col size={6} className="text-center">
+                            <Button tag={Link} to={`/gameboards#${topicName}_july19_${examBoard.toLowerCase()}`} color="secondary" size="lg" className="my-4" block>
+                                Topic Gameboard
+                            </Button>
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
         </Container>}
