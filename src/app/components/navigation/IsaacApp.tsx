@@ -103,6 +103,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError, serverError, goneAwayEr
                         {/* Student pages */}
                         <TrackedRoute path="/students" component={ForStudents} />
                         <TrackedRoute path="/assignments" onlyFor={user => user.loggedIn} component={MyAssignments} />
+                        <TrackedRoute path="/progress" component={ComingSoon} />
 
                         {/* Teacher pages */}
                         <TrackedRoute path="/teachers" component={ForTeachers} />
