@@ -906,8 +906,9 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
 export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const state = getState();
     if (state && state.boards && state.boards.boards && state.boards.boards.boards) {
-        if (state.boards.boards.boards.some(board => board.id == boardId)) {
-            // Don't load the board if it is already available
+        const board = state.boards.boards.boards.find(board => board.id == boardId);
+        if (board && board.questions && board.questions.every(q => q.questionPartsTotal !== undefined)) {
+            // Don't load the board if it is already available and questions have been loaded
             return;
         }
     }

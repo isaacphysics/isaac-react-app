@@ -12,7 +12,8 @@ const storeFactory = (initialState: object) => {
         userConsistencyCheckerMiddleware,
         thunk
     ];
-    if (process.env.NODE_ENV !== 'production') {
+    // @ts-ignore
+    if (process.env.NODE_ENV !== 'production' && !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
         middleware.push(reduxLogger.createLogger());
     }
 
