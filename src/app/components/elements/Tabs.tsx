@@ -47,7 +47,7 @@ export const Tabs = ({className = "", tabTitleClass = "", tabContentClass = "", 
             })}
         </Nav>}
 
-        {specialCaseExamBoardTab && <UserExamBoardPicker className="text-right mb-0" showLabel={false} />}
+        {specialCaseExamBoardTab && <UserExamBoardPicker className="text-right mb-0" hideLabel />}
 
         <TabContent activeTab={activeTab} className={tabContentClass}>
             {Object.entries(tabs).map(([tabTitle, tabBody], mapIndex) => {

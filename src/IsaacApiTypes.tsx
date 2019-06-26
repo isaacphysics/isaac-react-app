@@ -213,7 +213,7 @@ export interface ContentDTO extends ContentBaseDTO {
     subtitle?: string;
     encoding?: string;
     layout?: string;
-    children?: ContentBaseDTO[];
+    children?: any[];
     value?: string;
     attribution?: string;
     relatedContent?: ContentSummaryDTO[];
@@ -287,7 +287,7 @@ export interface QuantityDTO extends ChoiceDTO {
 }
 
 export interface QuestionDTO extends ContentDTO {
-    hints?: ContentBaseDTO[];
+    hints?: any[];
     bestAttempt?: QuestionValidationResponseDTO;
 }
 
