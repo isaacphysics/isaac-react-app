@@ -11,6 +11,7 @@ import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {NOT_FOUND} from "../../services/constants";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {isTeacher} from "../../services/user";
+import {Redirect} from "react-router";
 
 const stateFromProps = (state: AppState) => {
     return state && {
@@ -72,25 +73,28 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
         </RS.Button>
     </div>;
 
-    return <RS.Container>
-        <ShowLoading until={gameboard} render={gameboard =>
-            <React.Fragment>
-                <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
-                <div className="mb-5">
-                    <RS.Row>
-                        <RS.Col lg={{size: 10, offset: 1}}>
-                            <RS.ListGroup className="mt-4 mt-lg-5 link-list list-group-links list-gameboard">
-                                {gameboard && gameboard.questions && gameboard.questions.map(
-                                    gameboardItem.bind(null, gameboard)
-                                )}
-                            </RS.ListGroup>
-                        </RS.Col>
-                    </RS.Row>
-                    {setAssignmentButton}
-                </div>
-            </React.Fragment>
-        } />
-    </RS.Container>;
+    return gameboardId ?
+        <RS.Container>
+            <ShowLoading until={gameboard} render={gameboard =>
+                <React.Fragment>
+                    <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
+                    <div className="mb-5">
+                        <RS.Row>
+                            <RS.Col lg={{size: 10, offset: 1}}>
+                                <RS.ListGroup className="mt-4 mt-lg-5 link-list list-group-links list-gameboard">
+                                    {gameboard && gameboard.questions && gameboard.questions.map(
+                                        gameboardItem.bind(null, gameboard)
+                                    )}
+                                </RS.ListGroup>
+                            </RS.Col>
+                        </RS.Row>
+                        {setAssignmentButton}
+                    </div>
+                </React.Fragment>
+            } />
+        </RS.Container>
+        :
+        <Redirect to="/gameboards#example-gameboard" />
 };
 
 export const Gameboard = withRouter(connect(stateFromProps, dispatchFromProps)(GameboardPageComponent));
