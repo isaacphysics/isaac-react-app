@@ -79,7 +79,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         <Row>
             <Col className="pt-4 pb-5">
                 <Tabs
-                    defaultActiveTab={categoryIndex + 1} activeTabChanged={activeTabChanged}
+                    activeTabOverride={categoryIndex + 1} activeTabChanged={activeTabChanged}
                     tabTitleClass={tabTitleClass} tabContentClass="pt-4"
                 >
                     {fromPairs(Object.values(section.categories).map(category => {

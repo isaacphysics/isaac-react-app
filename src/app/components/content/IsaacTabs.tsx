@@ -29,13 +29,12 @@ const IsaacTabsComponent = (props: any) => {
         setExamBoardFilter(userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA ? EXAM_BOARD.AQA : EXAM_BOARD.OCR);
     }, [userPreferences]);
     const tabTitlesToContent: {[title: string]: ReactElement} = {};
-    let defaultTab = 1;
+    let activeTab = 1;
     children.forEach((child, index) => {
         const tabTitle = child.title || `Tab ${index + 1}`;
         if (examBoardFilter == tabTitle) {
-            defaultTab = index + 1;
+            activeTab = index + 1;
         }
-
 
         tabTitlesToContent[tabTitle] = <React.Fragment>
             {child.children && child.children.map((tabContentChild, index) => (
@@ -44,7 +43,7 @@ const IsaacTabsComponent = (props: any) => {
         </React.Fragment>;
     });
 
-    return <Tabs className="isaac-tab" tabContentClass="pt-4" defaultActiveTab={defaultTab}>
+    return <Tabs className="isaac-tab" tabContentClass="pt-4" activeTabOverride={activeTab}>
         {tabTitlesToContent}
     </Tabs>;
 };

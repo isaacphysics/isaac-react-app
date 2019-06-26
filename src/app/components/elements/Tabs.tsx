@@ -1,6 +1,5 @@
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
-import {UserExamBoardPicker} from "./UserExamBoardPicker";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
 
@@ -9,7 +8,7 @@ interface TabsProps {
     tabTitleClass?: StringOrTabFunction;
     tabContentClass?: string;
     children: {};
-    defaultActiveTab?: number;
+    activeTabOverride?: number;
     activeTabChanged?: (tabIndex: number) => void;
 }
 
@@ -18,8 +17,18 @@ function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string
     return stringOrTabFunction(tabTitle, tabIndex);
 }
 
-export const Tabs = ({className = "", tabTitleClass = "", tabContentClass = "", children, defaultActiveTab, activeTabChanged}: TabsProps) => {
-    const [activeTab, setActiveTab] = useState(defaultActiveTab || 1);
+export const Tabs = (props: TabsProps) => {
+    const {className = "", tabTitleClass = "", tabContentClass = "", children, activeTabOverride, activeTabChanged} = props;
+
+    const [activeTab, setActiveTab] = useState(1);
+    useMemo(
+        () => {
+            if (activeTabOverride) {
+                setActiveTab(activeTabOverride);
+            }
+        }, [activeTabOverride]
+    );
+
     const tabs = children;
 
     function changeTab(tabIndex: number) {
@@ -47,9 +56,7 @@ export const Tabs = ({className = "", tabTitleClass = "", tabContentClass = "", 
             })}
         </Nav>}
 
-        {specialCaseExamBoardTab && <UserExamBoardPicker className="text-right mb-0" showLabel={false} />}
-
-        <TabContent activeTab={activeTab} className={tabContentClass}>
+        <TabContent activeTab={activeTab} className={!specialCaseExamBoardTab ? tabContentClass : ""}>
             {Object.entries(tabs).map(([tabTitle, tabBody], mapIndex) => {
                 const tabIndex = mapIndex + 1;
                 return <TabPane key={tabTitle} tabId={tabIndex}>
