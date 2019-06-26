@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
+import {UserExamBoardPicker} from "./UserExamBoardPicker";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
 
@@ -28,8 +29,12 @@ export const Tabs = ({className = "", tabTitleClass = "", tabContentClass = "", 
         }
     }
 
+    const tabTitles = children && Object.keys(children);
+    const specialCaseExamBoardTab = tabTitles.length === 2 &&
+        tabTitles.includes("AQA") && tabTitles.includes("OCR");
+
     return <div className={className}>
-        <Nav tabs>
+        {!specialCaseExamBoardTab && <Nav tabs>
             {Object.keys(tabs).map((tabTitle, mapIndex) => {
                 const tabIndex = mapIndex + 1;
                 const c = callOrString(tabTitleClass, tabTitle, tabIndex);
@@ -40,7 +45,9 @@ export const Tabs = ({className = "", tabTitleClass = "", tabContentClass = "", 
                     </NavLink>
                 </NavItem>;
             })}
-        </Nav>
+        </Nav>}
+
+        {specialCaseExamBoardTab && <UserExamBoardPicker className="text-right mb-0" showLabel={false} />}
 
         <TabContent activeTab={activeTab} className={tabContentClass}>
             {Object.entries(tabs).map(([tabTitle, tabBody], mapIndex) => {

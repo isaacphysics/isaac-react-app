@@ -2,20 +2,30 @@ import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom"
 import {loadGameboard, logAction} from "../../state/actions";
-import {Col, Container, ListGroup, ListGroupItem, Row} from "reactstrap"
+import * as RS from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {NOT_FOUND} from "../../services/constants";
+import {LoggedInUser} from "../../../IsaacAppTypes";
+import {isTeacher} from "../../services/user";
 
-const stateFromProps = (state: AppState) => (state && {gameboard: state.currentGameboard});
+const stateFromProps = (state: AppState) => {
+    return state && {
+        gameboard: state.currentGameboard,
+        user: state.user,
+    };
+};
 const dispatchFromProps = {loadGameboard, logAction};
 
 interface GameboardPageProps {
     location: {hash: string};
-    gameboard: GameboardDTO | null;
+    gameboard: GameboardDTO | NOT_FOUND_TYPE | null;
     loadGameboard: (gameboardId: string | null) => void;
     logAction: (eventDetails: object) => void;
+    user: LoggedInUser | null;
 }
 
 const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
@@ -35,41 +45,52 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
             break;
     }
 
-    return <ListGroupItem key={question.id} className={itemClasses}>
+    return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`}>
             <span>{icon}</span>
             <span>{question.title}</span>
             {tryAgain && <span className="try-again">try again!</span>}
         </Link>
-    </ListGroupItem>;
+    </RS.ListGroupItem>;
 };
 
-const GameboardPageComponent = ({location: {hash}, gameboard, loadGameboard, logAction}: GameboardPageProps) => {
+const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboard, logAction}: GameboardPageProps) => {
     let gameboardId = hash ? hash.slice(1) : null;
 
     useEffect(() => {loadGameboard(gameboardId);}, [gameboardId]);
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
-        if (gameboard !== null) {
+        if (gameboard !== null && gameboard !== NOT_FOUND) {
             logAction({type: "VIEW_GAMEBOARD_BY_ID", gameboardId: gameboard.id});
         }
     }, [gameboard]);
 
-    return <Container>
-        <ShowLoading until={gameboard}>
-            <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"} />
-            <Row>
-                <Col lg={{size: 10, offset: 1}}>
-                    <ListGroup className="mt-4 mb-5 mt-lg-5 link-list list-group-links list-gameboard">
-                        {gameboard && gameboard.questions && gameboard.questions.map(
-                            gameboardItem.bind(null, gameboard)
-                        )}
-                    </ListGroup>
-                </Col>
-            </Row>
-        </ShowLoading>
-    </Container>;
+    const setAssignmentButton = user && isTeacher(user) && <div className="text-center mt-4">
+        <RS.Button tag={Link} to={`/add-gameboard/${gameboardId}`} color="primary" outline>
+            Set as Assignment
+        </RS.Button>
+    </div>;
+
+    return <RS.Container>
+        <ShowLoading until={gameboard} render={gameboard =>
+            <React.Fragment>
+                <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
+                <div className="mb-5">
+                    <RS.Row>
+                        <RS.Col lg={{size: 10, offset: 1}}>
+                            <RS.ListGroup className="mt-4 mt-lg-5 link-list list-group-links list-gameboard">
+                                {gameboard && gameboard.questions && gameboard.questions.map(
+                                    gameboardItem.bind(null, gameboard)
+                                )}
+                            </RS.ListGroup>
+                        </RS.Col>
+                    </RS.Row>
+                    {setAssignmentButton}
+                </div>
+            </React.Fragment>
+        } />
+    </RS.Container>;
 };
 
 export const Gameboard = withRouter(connect(stateFromProps, dispatchFromProps)(GameboardPageComponent));

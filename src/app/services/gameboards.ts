@@ -1,4 +1,5 @@
 import {GameboardDTO} from "../../IsaacApiTypes";
+import {CurrentGameboardState} from "../state/reducers";
 
 const createGameabordLink = (gameboardId: string) => `/gameboards/#${gameboardId}`;
 
@@ -15,8 +16,8 @@ export const makeAttemptAtGameboardHistory = (gamebaordId: string) => {
     return createGameboardHistory("Gameboard", gamebaordId);
 };
 
-export const determineNextGameboardItem = (currentGameboard: GameboardDTO | null | undefined, currentDocId: string) => {
-    if (currentGameboard && currentGameboard.questions) {
+export const determineNextGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
+    if (currentGameboard && currentGameboard !== 404 && currentGameboard.questions) {
         const gameboardContentIds = currentGameboard.questions.map(q => q.id);
         if (gameboardContentIds.includes(currentDocId)) {
             const nextIndex = gameboardContentIds.indexOf(currentDocId) + 1;

@@ -12,10 +12,10 @@ export const SessionExpired = () => {
             <h3>
                 <small>
                     {"You should try to "}
-                    {/* TODO accessibility of this anchor element can be improved */}
                     <a
                         role="button"
                         tabIndex={0}
+                        href={window.location.href}
                         onKeyPress={() => window.location.reload(true)}
                         onClick={() => window.location.reload(true)}
                     >

@@ -13,10 +13,10 @@ export const ServerError = () => {
             <h3>
                 <small>
                     {"You may want to "}
-                    {/* TODO accessibility of this anchor element can be improved */}
                     <a
                         role="button"
                         tabIndex={0}
+                        href={window.location.href}
                         onKeyPress={() => window.location.reload(true)}
                         onClick={() => window.location.reload(true)}
                     >

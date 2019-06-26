@@ -6,7 +6,7 @@ import {IsaacNumericQuestion} from "./IsaacNumericQuestion";
 import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
 import {IsaacStringMatchQuestion} from "./IsaacStringMatchQuestion";
 import {IsaacSymbolicLogicQuestion} from "./IsaacSymbolicLogicQuestion";
-import {Button, Col, Row} from "reactstrap";
+import {Alert, Button, Col, Row} from "reactstrap";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
 import * as ApiTypes from "../../../IsaacApiTypes";
@@ -21,7 +21,8 @@ const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     return indexedQuestion ? {
         validationResponse: indexedQuestion.question.validationResponse,
         currentAttempt: indexedQuestion.question.currentAttempt,
-        canSubmit: indexedQuestion.question.canSubmit,
+        canSubmit: indexedQuestion.question.canSubmit && !indexedQuestion.question.locked,
+        locked: indexedQuestion.question.locked,
         questionIndex: indexedQuestion.index
     } : {};
 };
@@ -31,6 +32,7 @@ interface IsaacQuestionTabsProps {
     doc: ApiTypes.IsaacQuestionBaseDTO;
     currentAttempt?: ApiTypes.ChoiceDTO;
     canSubmit?: boolean;
+    locked?: Date;
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
     questionIndex?: number;
     registerQuestion: (question: ApiTypes.QuestionDTO) => void;
@@ -38,8 +40,12 @@ interface IsaacQuestionTabsProps {
     attemptQuestion: (questionId: string, attempt: ApiTypes.ChoiceDTO) => void;
 }
 
+function showTime(date: Date) {
+    return date.toLocaleTimeString();
+}
+
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
-    const {doc, currentAttempt, validationResponse, questionIndex, canSubmit, registerQuestion, deregisterQuestion, attemptQuestion} = props;
+    const {doc, currentAttempt, validationResponse, questionIndex, canSubmit, locked, registerQuestion, deregisterQuestion, attemptQuestion} = props;
 
     useEffect((): (() => void) => {
         registerQuestion(doc);
@@ -86,7 +92,11 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
                 </div>
             </div>}
 
-            {((!validationResponse) || (validationResponse && !validationResponse.correct) || canSubmit) && <Row>
+            {locked && <Alert color="danger">
+                This question is locked until at least {showTime(locked)} to prevent repeated guessing.
+            </Alert>}
+
+            {((!validationResponse) || (validationResponse && !validationResponse.correct) || canSubmit) && (!locked) && <Row>
                 <Col className="text-center pt-3 pb-2">
                     <Button color="secondary" disabled={!canSubmit} onClick={submitCurrentAttempt}>
                         Check my answer
