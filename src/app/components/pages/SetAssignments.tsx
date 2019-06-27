@@ -5,6 +5,7 @@ import {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, un
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState, Boards} from "../../state/reducers";
 import {
+    Alert,
     Button,
     Card,
     CardBody,
@@ -220,7 +221,7 @@ function orderName(order: BoardOrder) {
 }
 
 const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
-    const {loadGroups, boards, loadBoards} = props;
+    const {groups, loadGroups, boards, loadBoards} = props;
 
     useEffect(() => {loadGroups(false);}, []);
 
@@ -271,8 +272,9 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Set Assignments" intermediateCrumbs={[TEACHERS_CRUMB]} help="Assign any of the gameboards you have selected to your groups." />
-        <p>Choose a gameboard from one of our <Link to="/pages/gameboards">pre-made gameboards</Link> or find one from the <Link to="/topics">Topics list</Link></p>
+        <p className="mt-3">Choose a gameboard from one of our <Link to="/pages/gameboards">pre-made gameboards</Link> or find one from the <Link to="/topics">Topics list</Link></p>
         <hr />
+        {groups && groups.length == 0 && <Alert color="warning">You have not created any groups to assign work to. Please <Link to="/groups">create a group here first.</Link></Alert>}
         {boards && boards.totalResults == 0 ? <h3 className="text-center mt-5 pt-5">You have no gameboards to assign; use one of the options above to find one.</h3> :
             <React.Fragment>
                 {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...</h4>}
