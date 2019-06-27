@@ -680,7 +680,8 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
         if (isTeacher(user)) {
             history.push(`/set_assignments#${gameboardId}`);
         } else {
-            history.push(`/boards/`);
+            // FIXME - update this to be correct when My Boards is launched!
+            history.push(`/gameboards#${gameboardId}`);
         }
     } catch (e) {
         // eslint-disable-next-line no-console
