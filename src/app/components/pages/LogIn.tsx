@@ -6,9 +6,12 @@ import {logInUser, resetPassword} from "../../state/actions";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {history} from "../../services/history";
+import {LoggedInUser} from "../../../IsaacAppTypes";
+import {Redirect} from "react-router";
 
 const stateToProps = (state: AppState) => ({
-    errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null
+    errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null,
+    user: state && state.user || null,
 });
 
 const dispatchToProps = {
@@ -18,13 +21,14 @@ const dispatchToProps = {
 };
 
 interface LogInPageProps {
+    user: LoggedInUser | null;
     handleProviderLoginRedirect: (provider: AuthenticationProvider) => void;
     logInUser: (provider: AuthenticationProvider, params: {email: string; password: string}) => void;
     resetPassword: (params: {email: string}) => void;
     errorMessage: string | null;
 }
 
-const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPassword, errorMessage}: LogInPageProps) => {
+const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, resetPassword, errorMessage}: LogInPageProps) => {
     useEffect( () => {
         document.title = "Login — Isaac Computer Science";
     }, []);
@@ -66,6 +70,10 @@ const LogInPageComponent = ({handleProviderLoginRedirect, logInUser, resetPasswo
     const attemptLogIn = () => {
         setLoginAttempted(true);
     };
+
+    if (user && user.loggedIn) {
+        return <Redirect to="/" />;
+    }
 
     return <Container id="login-page" className="my-4">
         <Row>

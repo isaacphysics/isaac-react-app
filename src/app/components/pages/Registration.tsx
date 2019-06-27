@@ -27,11 +27,13 @@ import * as persistence from "../../services/localStorage"
 import {KEY} from "../../services/localStorage"
 import {DateInput} from "../elements/DateInput";
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
+import {Redirect} from "react-router";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
     userEmail: (history.location && history.location.state && history.location.state.email) || undefined,
-    userPassword: (history.location && history.location.state && history.location.state.password) || undefined
+    userPassword: (history.location && history.location.state && history.location.state.password) || undefined,
+    user: state && state.user || null,
 });
 const dispatchToProps = {
     updateCurrentUser
@@ -51,7 +53,7 @@ const defaultEmailPreferences = {
 
 
 interface RegistrationPageProps {
-    user: LoggedInUser;
+    user: LoggedInUser | null;
     updateCurrentUser: (
         params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null},
         currentUser: LoggedInUser
@@ -112,6 +114,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         setRegistrationUser(Object.assign({}, registrationUser, updates));
     };
 
+    if (user && user.loggedIn) {
+        return <Redirect to="/" />;
+    }
 
     // Render
     return <Container id="registration-page" className="mb-5">
