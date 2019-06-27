@@ -96,7 +96,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError, serverError, goneAwayEr
 
                         <TrackedRoute path="/gameboards" component={Gameboard} />
                         <TrackedRoute path="/assignment/:gameboardId" onlyFor={user => user.loggedIn} component={RedirectToGameboard} />
-                        <TrackedRoute path="/add-gameboard/:gameboardId" onlyFor={user => user.loggedIn} component={AddGameboard} />
+                        <TrackedRoute path="/add_gameboard/:gameboardId" onlyFor={user => user.loggedIn} component={AddGameboard} />
 
                         <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
 

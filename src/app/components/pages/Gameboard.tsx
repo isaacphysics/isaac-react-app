@@ -68,7 +68,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
     }, [gameboard]);
 
     const setAssignmentButton = user && isTeacher(user) && <div className="text-center mt-4">
-        <RS.Button tag={Link} to={`/add-gameboard/${gameboardId}`} color="primary" outline>
+        <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline>
             Set as Assignment
         </RS.Button>
     </div>;

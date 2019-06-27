@@ -19,7 +19,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.programming, title: "Programming"},
 
     // Theory sub-categories
-    {id: TAG_ID.gcseToALevel, title: "GCSE to A-Level transition", parent: TAG_ID.theory},
+    {id: TAG_ID.gcseToALevel, title: "GCSE to A level transition", parent: TAG_ID.theory},
     {id: TAG_ID.dataStructuresAndAlgorithms, title: "Data structures and algorithms", parent: TAG_ID.theory},
     {id: TAG_ID.computerNetworks, title: "Computer networks", parent: TAG_ID.theory},
     {id: TAG_ID.computerSystems, title: "Computer systems", parent: TAG_ID.theory},
