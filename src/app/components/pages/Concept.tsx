@@ -41,6 +41,7 @@ const ConceptPageComponent = ({urlConceptId, doc, fetchDoc}: ConceptPageProps) =
                 <TitleAndBreadcrumb
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     currentPageTitle={doc.title as string}
+                    collectionType={navigation.collectionType}
                 />
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4">

@@ -103,7 +103,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
 };
 
 const Board = (props: BoardProps) => {
-    const {user, board, loadGroupsForBoard, deleteBoard, unassignBoard, location: {hash}} = props;
+    const {user, board, loadGroupsForBoard, deleteBoard, unassignBoard, showToast, location: {hash}} = props;
     const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
 
     useEffect( () => {

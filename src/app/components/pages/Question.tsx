@@ -43,6 +43,7 @@ const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc}: QuestionPageProps
                 <TitleAndBreadcrumb
                     currentPageTitle={doc.title as string}
                     intermediateCrumbs={navigation.breadcrumbHistory}
+                    collectionType={navigation.collectionType}
                 />
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
