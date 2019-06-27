@@ -88,18 +88,18 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     const yearRange = range(currentYear, currentYear + 5);
     const currentMonth = (new Date()).getMonth() + 1;
 
-    return <Container>
-        <Label className="w-100">Group:
+    return <Container className="py-2">
+        <Label className="w-100 pb-2">Group:
             <Input type="select" value={groupId} onChange={(e: ChangeEvent<HTMLInputElement>) => setGroupId(e.target.value ? parseInt(e.target.value, 10) : undefined)}>
                 <option key={undefined} value={undefined} />
                 {groups && sortBy(groups, group => group.groupName).map(group => <option key={group.id} value={group.id}>{group.groupName}</option>)}
             </Input>
         </Label>
-        <Label className="w-100">Due Date Reminder <span className="text-muted"> (optional)</span>
+        <Label className="w-100 pb-2">Due Date Reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate)} />
         </Label>
-        <Button block color="primary" onClick={assign} disabled={groupId === null}>Assign to group</Button>
+        <Button className="mt-3 mb-2" block color="primary" onClick={assign} disabled={groupId === null}>Assign to group</Button>
     </Container>;
 };
 
@@ -162,8 +162,8 @@ const Board = (props: BoardProps) => {
     const hexagonId = `board-hex-${board.id}`;
 
     return <Card className="board-card">
-        <CardBody>
-            <Button className="close" size="small" onClick={confirmDeleteBoard} aria-label="Delete board">X</Button>
+        <CardBody className="pb-4 pt-4">
+            <button className="close" onClick={confirmDeleteBoard} aria-label="Delete board">×</button>
             <button onClick={() => setShowAssignments(!showAssignments)} className="groups-assigned subject-compsci" id={hexagonId}>
                 <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
                 group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"} assigned
@@ -176,22 +176,28 @@ const Board = (props: BoardProps) => {
                 <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                 <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
             </aside>
-            <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{assignmentLink}</div></div>
-            <button className="ru_share" onClick={toggleShareLink}/>
-            <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
-            <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
+
+            <div className="my-4">
+                <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{assignmentLink}</div></div>
+                <button className="ru_share" onClick={toggleShareLink}/>
+                <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
+                <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
+            </div>
+
             {showAssignments && <React.Fragment>
-                <hr />
+                <hr className="text-center" />
                 <AssignGroup {...props} />
-                <hr />
-                <Label>Board currently assigned to:</Label>
-                {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
-                    <Row key={group.id}>
-                        <span className="flex-grow-1">{group.groupName}</span>
-                        <Button size="sm" color="tertiary" className="unassign" aria-label="Unassign group" onClick={() => confirmUnassignBoard(group)}>X</Button>
-                    </Row>
-                )}</Container>}
-                {!hasAssignedGroups && <p>No groups.</p>}
+                <hr className="text-center" />
+                <div className="py-2">
+                    <Label>Board currently assigned to:</Label>
+                    {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
+                        <Row key={group.id} className="px-1">
+                            <span className="flex-grow-1">{group.groupName}</span>
+                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(group)}>×</button>
+                        </Row>
+                    )}</Container>}
+                    {!hasAssignedGroups && <p>No groups.</p>}
+                </div>
             </React.Fragment>}
             <Button block color="tertiary" onClick={() => setShowAssignments(!showAssignments)}>{showAssignments ? "Close" : "Assign / Unassign"}</Button>
         </CardBody>
@@ -272,10 +278,11 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Set Assignments" intermediateCrumbs={[TEACHERS_CRUMB]} help="Assign any of the gameboards you have selected to your groups." />
-        <p className="mt-3">Choose a gameboard from one of our <Link to="/pages/gameboards">pre-made gameboards</Link> or find one from the <Link to="/topics">Topics list</Link></p>
-        <hr />
+        <p className="mt-4 mb-3">
+            Choose a gameboard from one of our <Link to="/pages/gameboards">pre-made gameboards</Link> or find one from the <Link to="/topics">Topics list</Link>.
+        </p>
         {groups && groups.length == 0 && <Alert color="warning">You have not created any groups to assign work to. Please <Link to="/groups">create a group here first.</Link></Alert>}
-        {boards && boards.totalResults == 0 ? <h3 className="text-center mt-5 pt-5">You have no gameboards to assign; use one of the options above to find one.</h3> :
+        {boards && boards.totalResults == 0 ? <h3 className="text-center mt-4 mb-5">You have no gameboards to assign; use one of the options above to find one.</h3> :
             <React.Fragment>
                 {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...</h4>}
                 {!boards && <h4>You have <Spinner size="sm" /> gameboards ready to assign...</h4>}
