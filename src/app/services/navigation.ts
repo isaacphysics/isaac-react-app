@@ -5,7 +5,7 @@ import {fetchTopicSummary, loadGameboard} from "../state/actions";
 import {useDispatch, useSelector} from 'react-redux'
 import {AppState} from "../state/reducers";
 import {determineGameboardHistory, determineNextGameboardItem, makeAttemptAtGameboardHistory} from "./gameboards";
-import {TAG_ID} from "./constants";
+import {NOT_FOUND, TAG_ID} from "./constants";
 import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopicHistory} from "./topics";
 import {determineExamBoardFrom} from "./examBoard";
 
@@ -51,7 +51,7 @@ export const useNavigation = (currentDocId: string): PageNavigation => {
 
     if (queryParams.topic) {
         const examBoard = determineExamBoardFrom(userPreferences);
-        const topicHistory = (currentTopic && currentTopic.id && queryParams.topic === currentTopic.id.slice("topic_summary_".length)) ?
+        const topicHistory = (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && queryParams.topic === currentTopic.id.slice("topic_summary_".length)) ?
             determineTopicHistory(currentTopic) :
             makeAttemptAtTopicHistory();
         return {

@@ -1,7 +1,7 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
 import {AppState} from "./reducers";
-import {history, redirectToPageNotFound} from "../services/history";
+import {history} from "../services/history";
 import {store} from "./store";
 import {documentCache, topicCache} from "../services/cache";
 import {
@@ -571,7 +571,6 @@ export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatc
             topicCache[topicName] = response.data;
         } catch (e) {
             dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE});
-            redirectToPageNotFound(); // FIXME: This could do with similar 404 handling to pages
         }
     }
 };

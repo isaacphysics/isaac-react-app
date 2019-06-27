@@ -1,7 +1,15 @@
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
-import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, documentTypePathPrefix, EXAM_BOARD, examBoardTagMap} from "./constants";
+import {
+    ALL_TOPICS_CRUMB,
+    DOCUMENT_TYPE,
+    documentTypePathPrefix,
+    EXAM_BOARD,
+    examBoardTagMap,
+    NOT_FOUND
+} from "./constants";
 import {CurrentTopicState} from "../state/reducers";
 import {LinkInfo} from "./navigation";
+import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 
 const filterOnExamBoard = (contents: ContentSummaryDTO[], examBoard: EXAM_BOARD) => {
     return contents.filter(content => content.tags && content.tags.includes(examBoardTagMap[examBoard]));
@@ -28,7 +36,7 @@ export const idIsPresent = (id: string, contents: {id?: string}[] | undefined) =
 
 export const determineTopicHistory = (currentTopic: CurrentTopicState) => {
     const result: LinkInfo[] = [];
-    if (currentTopic && currentTopic.id && currentTopic.title) {
+    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && currentTopic.title) {
         result.push(ALL_TOPICS_CRUMB);
         result.push({title: currentTopic.title, to: `/topics/${currentTopic.id.slice("topic_summary_".length)}`})
     }
@@ -41,7 +49,7 @@ export const makeAttemptAtTopicHistory = () => {
 
 
 export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, examBoard: EXAM_BOARD) => {
-    if (currentTopic && currentTopic.relatedContent) {
+    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
         const [relatedConcepts, relatedQuestions] = filterAndSeparateRelatedContent(currentTopic.relatedContent, examBoard);
         const orderedRelatedContent = relatedConcepts.concat(relatedQuestions);
         const relatedContentIds = orderedRelatedContent.map((content) => content.id);

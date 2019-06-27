@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react"
+import React, {useEffect} from "react"
 import {Link, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {AppState} from "../../state/reducers";
@@ -9,8 +9,8 @@ import {ContentSummaryDTO, IsaacTopicSummaryPageDTO} from "../../../IsaacApiType
 import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
 import {filterAndSeparateRelatedContent} from "../../services/topics";
 import {Button, Col, Container, Row} from "reactstrap";
-import {ALL_TOPICS_CRUMB, TAG_ID} from "../../services/constants";
-import {UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {ALL_TOPICS_CRUMB, NOT_FOUND, TAG_ID} from "../../services/constants";
+import {NOT_FOUND_TYPE, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom} from "../../services/examBoard";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AnonUserExamBoardPicker} from "../elements/AnonUserExamBoardPicker";
@@ -24,7 +24,7 @@ const actionsToProps = {fetchTopicSummary};
 
 interface TopicPageProps {
     topicName: TAG_ID;
-    topicPage: IsaacTopicSummaryPageDTO | null;
+    topicPage: IsaacTopicSummaryPageDTO | NOT_FOUND_TYPE | null;
     fetchTopicSummary: (topicId: TAG_ID) => void;
     userPreferences: UserPreferencesDTO | null;
 }
@@ -37,15 +37,15 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
     const examBoard = determineExamBoardFrom(userPreferences);
 
     let [relatedConcepts, relatedQuestions]: [ContentSummaryDTO[] | null, ContentSummaryDTO[] | null] = [null, null];
-    if (topicPage && topicPage.relatedContent) {
+    if (topicPage && topicPage != NOT_FOUND && topicPage.relatedContent) {
         [relatedConcepts, relatedQuestions] = topicPage && topicPage.relatedContent &&
             filterAndSeparateRelatedContent(topicPage.relatedContent, examBoard);
     }
     const searchQuery = `?topic=${topicName}`;
 
-    return <ShowLoading until={topicPage}>
-        {topicPage && <Container id="topic-page">
-            <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string} />
+    return <ShowLoading until={topicPage} render={topicPage =>
+        <Container id="topic-page">
+            <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
             <Row className="pb-5">
                 <Col md={{size: 8, offset: 2}} className="py-3">
                     {topicPage.children && topicPage.children.map((child, index) =>
@@ -74,8 +74,8 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                     </Row>
                 </Col>
             </Row>
-        </Container>}
-    </ShowLoading>;
+        </Container>
+    } />;
 };
 
 export const Topic = withRouter(connect(stateToProps, actionsToProps)(TopicPageComponent));
