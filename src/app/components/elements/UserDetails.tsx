@@ -135,9 +135,9 @@ export const UserDetails = (props: UserDetailsProps) => {
                         aria-describedby="ageValidationMessage"
                         labelSuffix=" of birth"
                     />
-                    {!isDobValid && !!myUser.dateOfBirth && <FormFeedback id="ageValidationMessage">
+                    <FormFeedback id="ageValidationMessage">
                         You must be over 13 years old
-                    </FormFeedback>}
+                    </FormFeedback>
                 </FormGroup>
             </Col>
         </Row>
