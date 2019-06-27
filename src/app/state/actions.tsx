@@ -315,7 +315,7 @@ export const requestEmailVerification = () => async (dispatch: any, getState: ()
         error = "You are not logged in or don't have an e-mail address to verify.";
     }
 
-    dispatch(showToast({color: "failure", title: "Email verification request failed.",
+    dispatch(showToast({color: "danger", title: "Email verification request failed.",
         body: "Sending an email to your address failed with error message: " + error
     }));
     dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE});
@@ -362,7 +362,8 @@ export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) 
 
 export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
     if (!userSubmittedAuthenticationToken) {
-        dispatch(showToast({color: "failure", title: "No Token Provided", body: "You have to enter a token!"}) as any);
+        dispatch(showToast({
+            color: "danger", title: "No Token Provided", body: "You have to enter a token!"}) as any);
         return;
     }
 
@@ -1001,7 +1002,7 @@ export const unassignBoard = (board: GameboardDTO, group: UserGroupDTO) => async
 
 export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Date) => async (dispatch: Dispatch<Action>) => {
     if (groupId == null) {
-        dispatch(showToast({color: "failure", title: "Board Assignment Failed", body: "Error: Please choose a group.", timeout: 5000}) as any);
+        dispatch(showToast({color: "danger", title: "Board Assignment Failed", body: "Error: Please choose a group.", timeout: 5000}) as any);
         return false;
     }
 
@@ -1011,7 +1012,7 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
         let today = new Date();
         today.setUTCHours(0, 0, 0, 0);
         if ((dueDateUTC - today.valueOf()) < 0) {
-            dispatch(showToast({color: "failure", title: "Board Assignment Failed", body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
+            dispatch(showToast({color: "danger", title: "Board Assignment Failed", body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
             return false;
         }
     }

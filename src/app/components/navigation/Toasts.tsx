@@ -22,7 +22,9 @@ const ToastsComponent = ({toasts, hideToast}: ToastProps) => {
     return <div className="toasts-container">{
         toasts.map((toast) => <RS.Toast key={toast.id} isOpen={toast.showing}>
             <RS.ToastHeader icon={toast.color}
-                toggle={toast.closable ? (() => toast.id && hideToast(toast.id)): undefined}>{toast.title}</RS.ToastHeader>
+                toggle={toast.closable ? (() => toast.id && hideToast(toast.id)): undefined}>
+                <span className={`toast-heading text-${toast.color}`}>{toast.title}</span>
+            </RS.ToastHeader>
             {toast.body && <RS.ToastBody>{toast.body}</RS.ToastBody>}
         </RS.Toast>)
     }</div>;

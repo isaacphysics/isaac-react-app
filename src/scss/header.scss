@@ -22,8 +22,8 @@
 
 .toasts-container {
   position: fixed;
-  top: 100px;
-  right: 30px;
+  top: 98px;
+  right: 98px;
   z-index: 10000;
 
   .fade {
@@ -35,6 +35,20 @@
     margin-bottom: 0;
     border: none;
   }
+}
+
+.toast {
+  max-width: unset;
+  background-color: rgba(255, 255, 255, 0.92);
+}
+.toast-header {
+  font-size: 1.6rem;
+}
+.toast-heading {
+  padding-right: 1rem;
+}
+.toast-body {
+  font-size: 1rem;
 }
 
 header {
