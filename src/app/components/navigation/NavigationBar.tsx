@@ -2,10 +2,9 @@ import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {Badge, Col, Collapse, DropdownItem, DropdownToggle, DropdownMenu, Row, Nav, Navbar, NavbarToggler, UncontrolledDropdown} from "reactstrap";
+import {Badge, Collapse, DropdownItem, DropdownToggle, DropdownMenu, Nav, Navbar, NavbarToggler, UncontrolledDropdown} from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router";
 import {LoggedInUser} from "../../../IsaacAppTypes";
-import {isMobile, isNotMobile} from "../../services/device";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
@@ -15,7 +14,7 @@ interface NavigationBarProps {
 }
 
 const NavigationBarComponent = ({user}: NavigationBarProps) => {
-    const [menuOpen, setMenuOpen] = useState(isNotMobile);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const DropdownItemComingSoon = ({children, className}: {children: React.ReactNode; className: string}) => (
         <DropdownItem tag={Link} to="/coming_soon" className={`${className}`} aria-disabled="true">
@@ -25,7 +24,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
     );
 
     const closeMenuIfMobile = () => {
-        setMenuOpen((isMobile()) ? !menuOpen : true);
+        setMenuOpen(false);
     };
 
     return <Navbar className="main-nav p-0" color="light" light expand="md">
