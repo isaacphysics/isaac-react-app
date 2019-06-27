@@ -172,7 +172,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                     Password
                                 </Label>
                                 <Input
-                                    id="password" type="password" name="password" required
+                                    id="password-input" type="password" name="password" required
                                     defaultValue={userPassword}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setUnverifiedPassword(e.target.value);
