@@ -83,15 +83,21 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
     // - User preferences
     const defaultEmailPreferences = {NEWS_AND_UPDATES: false, ASSIGNMENTS: true, EVENTS: false};
-    const initialEmailPreferences = userPreferences ? userPreferences.EMAIL_PREFERENCE : defaultEmailPreferences;
+    const initialEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ?
+        userPreferences.EMAIL_PREFERENCE :
+        defaultEmailPreferences;
     const [emailPreferences, setEmailPreferences] = useState(Object.assign({}, initialEmailPreferences));
 
     const defaultExamPreferences = {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true};
-    const initialExamPreferences = userPreferences ? userPreferences.EXAM_BOARD : defaultExamPreferences;
+    const initialExamPreferences = (userPreferences && userPreferences.EXAM_BOARD) ?
+        userPreferences.EXAM_BOARD :
+        defaultExamPreferences;
     const [examPreferences, setExamPreferences] = useState(Object.assign({}, initialExamPreferences));
 
     const defaultUserPreferences = {EMAIL_PREFERENCE: defaultEmailPreferences, EXAM_BOARD: defaultExamPreferences};
-    const initialUserPreferences = userPreferences || defaultUserPreferences;
+    const initialUserPreferences = (userPreferences && Object.keys(userPreferences).length !== 0) ?
+        userPreferences :
+        defaultUserPreferences;
     const [myUserPreferences, setMyUserPreferences] = useState(Object.assign(initialUserPreferences));
 
     // Set active tab using hash anchor
