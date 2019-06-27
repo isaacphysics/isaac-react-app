@@ -166,7 +166,7 @@ const Board = (props: BoardProps) => {
             <button className="close" onClick={confirmDeleteBoard} aria-label="Delete board">×</button>
             <button onClick={() => setShowAssignments(!showAssignments)} className="groups-assigned subject-compsci" id={hexagonId}>
                 <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
-                group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"} assigned
+                group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
                 {board.assignedGroups && <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length == 0 ?
                     "No groups have been assigned."
                     : ("Board assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}</UncontrolledTooltip>
