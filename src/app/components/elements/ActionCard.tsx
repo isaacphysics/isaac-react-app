@@ -18,8 +18,8 @@ export const ActionCard = ({title, amountText, linkDestination, linkText, coming
         This functionality is {" "}
         <Badge color="light" className="border-secondary border bg-white ml-auto mr-1">
             Coming Soon
-        </Badge>
-    </React.Fragment>
+        </Badge>.
+    </React.Fragment>;
 
     return (
         <div className="action-card my-0">

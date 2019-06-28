@@ -39,8 +39,10 @@ interface ForTeachersProps {
 const ForTeachersComponent = (props: ForTeachersProps) => {
     const {user, loadAssignmentsOwnedByMe, numberOfAssignmentsSet, loadGroups, numberOfGroupsCreated} = props;
     useEffect(() => {
-        loadAssignmentsOwnedByMe();
-        loadGroups(false);
+        if (user && isTeacher(user)) {
+            loadAssignmentsOwnedByMe();
+            loadGroups(false);
+        }
     }, [user, loadAssignmentsOwnedByMe, loadGroups]);
 
     const pageTitle = user && isTeacher(user) ? "My Isaac teaching" : "How we help teachers";
