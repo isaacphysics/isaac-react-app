@@ -196,7 +196,9 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                     </Button>
                     <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
                     <span className="d-inline-block d-md-none">&nbsp;</span>
-                    <Button size="sm" color="primary" outline onClick={() => showGroupInvitationModal(false)}>Invite Users</Button>
+                    <Button size="sm" color="secondary" className="text-white" onClick={() => showGroupInvitationModal(false)}>
+                        Invite Users
+                    </Button>
                 </Col>}
             </Row>
             <Form inline onSubmit={saveUpdatedGroup} className="pt-3">
