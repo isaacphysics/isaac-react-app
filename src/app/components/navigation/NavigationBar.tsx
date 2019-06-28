@@ -5,6 +5,7 @@ import {AppState} from "../../state/reducers";
 import {Badge, Collapse, DropdownItem, DropdownToggle, DropdownMenu, Nav, Navbar, NavbarToggler, UncontrolledDropdown} from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router";
 import {LoggedInUser} from "../../../IsaacAppTypes";
+import {isAdmin, isStaffUser} from "../../services/user";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
@@ -124,7 +125,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     </DropdownMenu>
                 </UncontrolledDropdown>
 
-                {user && user.loggedIn && user.role == "ADMIN" &&
+                {isStaffUser(user) &&
                     <UncontrolledDropdown nav inNavbar>
                         <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                             Admin
@@ -133,9 +134,9 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                             <DropdownItem tag={Link} to="/admin" className="pl-4 py-3 p-md-3">
                                 Admin Tools
                             </DropdownItem>
-                            <DropdownItem tag={Link} to="/admin/usermanager" className="pl-4 py-3 p-md-3">
+                            {isAdmin(user) && <DropdownItem tag={Link} to="/admin/usermanager" className="pl-4 py-3 p-md-3">
                                 User Manager
-                            </DropdownItem>
+                            </DropdownItem>}
                             <DropdownItem tag={Link} to="/admin/content_errors" className="pl-4 py-3 p-md-3">
                                 Content Errors
                             </DropdownItem>

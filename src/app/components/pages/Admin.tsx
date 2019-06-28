@@ -95,7 +95,7 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
                                             <RS.Button
                                                 type="button" className="p-0 border-dark"
                                                 onClick={startVersionUpdate}
-                                                disabled={displayVersion === contentVersion.liveVersion}
+                                                disabled={user.role != "ADMIN" || displayVersion === contentVersion.liveVersion}
                                             >
                                                 Set Version
                                             </RS.Button>

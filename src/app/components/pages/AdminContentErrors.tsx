@@ -5,7 +5,6 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {Col, Container, Row, Table} from "reactstrap";
-import {BreadcrumbTrail} from "../elements/BreadcrumbTrail";
 import {EDITOR_URL} from "../../services/constants";
 import {ContentErrorItem} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
