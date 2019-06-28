@@ -49,6 +49,7 @@ import {groups} from "./selectors";
 import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
 import {isTeacher} from "../services/user";
+import ReactGA from "react-ga";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -280,6 +281,11 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         nextPage = nextPage || "/";
         nextPage = nextPage.replace("#!", "");
         if (user.firstLogin && !nextPage.includes("account")) {
+            ReactGA.event({
+                category: 'user',
+                action: 'registration',
+                label: `Create Account (${provider})`,
+            });
             history.push('/account')
         } else {
             history.push(nextPage);
