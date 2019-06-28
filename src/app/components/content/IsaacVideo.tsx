@@ -57,10 +57,11 @@ const IsaacVideoComponent = (props: IsaacVideoProps) => {
     const {doc: {src, altText}, pageId, logAction} = props;
 
     const videoRef = useCallback( node => {
-        if (node !== null) {
-            (window as any).YT.ready(function() {
+        const $window: any = window;
+        if (node !== null && $window.YT) {
+            $window.YT.ready(function() {
                 const stateChangeCallback = (event: any) => onPlayerStateChange(event, logAction, pageId);
-                new (window as any).YT.Player(node, {events: {'onStateChange': stateChangeCallback}});
+                new $window.YT.Player(node, {events: {'onStateChange': stateChangeCallback}});
             });
         }
     }, [logAction, pageId]);
