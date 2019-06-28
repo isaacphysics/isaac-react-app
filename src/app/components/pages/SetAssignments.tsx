@@ -276,8 +276,14 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         }
     }, [boards]);
 
+    const pageHelp = <span>
+        Use this page to set assignments to your groups. You can assign any gameboard you have saved to your account.
+        <br />
+        Students in the group will be emailed when you set a new assignment.
+    </span>;
+
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Set Assignments" intermediateCrumbs={[TEACHERS_CRUMB]} help="Assign any of the gameboards you have selected to your groups." />
+        <TitleAndBreadcrumb currentPageTitle="Set Assignments" intermediateCrumbs={[TEACHERS_CRUMB]} help={pageHelp} />
         <p className="mt-4 mb-3">
             Choose a gameboard from one of our <Link to="/pages/gameboards">pre-made gameboards</Link> or find one from the <Link to="/topics">Topics list</Link>.
         </p>
