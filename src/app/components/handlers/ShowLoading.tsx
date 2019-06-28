@@ -17,14 +17,20 @@ const defaultPlaceholder = <div className="w-100 text-center">
 </div>;
 
 export const ShowLoading = < T extends {} >({until, children, render, placeholder = defaultPlaceholder}: ShowLoadingProps<T>) => {
-    const [loadingTimeout, setLoadingTimeout] = useState();
     const [duringLoad, setDuringLoad] = useState(false);
     useEffect( () => {
-        clearTimeout(loadingTimeout);
+        let timeout: NodeJS.Timeout;
         if (until == null) {
             setDuringLoad(true);
-            setLoadingTimeout(setTimeout(() => setDuringLoad(false), 200));
+            timeout = setTimeout(() => {
+                setDuringLoad(false);
+            }, 200);
         }
+        return () => {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+        };
     }, [until, children, render]);
 
     switch(until) {
