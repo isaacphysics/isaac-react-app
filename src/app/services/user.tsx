@@ -1,11 +1,11 @@
 import {LoggedInUser} from "../../IsaacAppTypes";
 
-export function isTeacher(user: LoggedInUser) {
-    return user.loggedIn && user.role != "STUDENT";
+export function isTeacher(user: LoggedInUser | null) {
+    return user ? user.loggedIn && user.role != "STUDENT" : false;
 }
 
-export function isAdmin(user: LoggedInUser) {
-    return user.loggedIn && user.role == "ADMIN";
+export function isAdmin(user: LoggedInUser | null) {
+    return user ? user.loggedIn && user.role == "ADMIN" : false;
 }
 
 export function isStaffUser(user: LoggedInUser | null) {
