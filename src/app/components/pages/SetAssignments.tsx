@@ -92,7 +92,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
         <Label className="w-100 pb-2">Group:
             <Input type="select" value={groupId} onChange={(e: ChangeEvent<HTMLInputElement>) => setGroupId(e.target.value ? parseInt(e.target.value, 10) : undefined)}>
                 <option key={undefined} value={undefined} />
-                {groups && sortBy(groups, group => group.groupName).map(group => <option key={group.id} value={group.id}>{group.groupName}</option>)}
+                {groups && sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(group => <option key={group.id} value={group.id}>{group.groupName}</option>)}
             </Input>
         </Label>
         <Label className="w-100 pb-2">Due Date Reminder <span className="text-muted"> (optional)</span>

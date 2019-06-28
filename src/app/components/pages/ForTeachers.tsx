@@ -123,7 +123,7 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
                             <RS.ListGroupItem className="bg-transparent">
                                 <LinkCard
                                     title="Group progress" imageSource="/assets/card03.svg"
-                                    linkDestination="/assignments" linkText="View assignment progress"
+                                    linkDestination="/assignment_progress" linkText="View assignment progress"
                                 >
                                     Review your groups&apos; progress on the work which you have assigned to them.
                                 </LinkCard>

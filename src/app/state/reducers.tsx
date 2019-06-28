@@ -271,6 +271,8 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
             return action.gameboard;
         case ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE:
             return NOT_FOUND;
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
+            return null;
         default:
             return currentGameboard;
     }
