@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {Alert, Card, CardTitle, CardBody, Container, Spinner} from "reactstrap";
+import * as RS from "reactstrap";
 import {AppState, ContentVersionState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {getContentVersion, requestConstantsSegueVersion, setContentVersion} from "../../state/actions";
@@ -36,42 +36,45 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
 
     const [newVersion, setNewVersion] = useState<string | null>(null);
 
-    const startVersionUpdate = function() {
-        if (newVersion != null) {
+    const displayVersion = newVersion || (contentVersion && contentVersion.liveVersion) || null;
+
+    const startVersionUpdate = function(event?: React.FormEvent) {
+        if (event) {
+            event.preventDefault();
+        }
+        if (contentVersion && displayVersion !== contentVersion.liveVersion && newVersion != null) {
             setContentVersion(newVersion);
         }
     };
 
-    const displayVersion = newVersion || (contentVersion && contentVersion.liveVersion) || null;
-
     const updateState = contentVersion && contentVersion.updateState || null;
 
-    return <Container id="admin-page">
+    return <RS.Container id="admin-page">
         <TitleAndBreadcrumb currentPageTitle="Isaac administration" breadcrumbTitleOverride="Admin tools" />
 
         <div className="py-4">
 
             Hi, {user.givenName}!
 
-            <Card className="p-3 my-3">
-                <CardTitle tag="h2">Useful links</CardTitle>
-                <CardBody>
+            <RS.Card className="p-3 my-3">
+                <RS.CardTitle tag="h2">Useful links</RS.CardTitle>
+                <RS.CardBody>
                     <Link to="/admin/usermanager">User Manager</Link>
-                </CardBody>
-            </Card>
+                </RS.CardBody>
+            </RS.Card>
 
-            <Card className="p-3 mb-3">
-                <CardTitle tag="h2">Admin Console</CardTitle>
-                <CardBody>
+            <RS.Card className="p-3 mb-3">
+                <RS.CardTitle tag="h2">Admin Console</RS.CardTitle>
+                <RS.CardBody>
                     <ul>
                         <li><strong>API Version:</strong> {segueVersion}</li>
                     </ul>
-                </CardBody>
-            </Card>
+                </RS.CardBody>
+            </RS.Card>
 
-            <Card className="p-3 mb-3">
-                <CardTitle tag="h2">Administrative tools</CardTitle>
-                <CardBody>
+            <RS.Card className="p-3 mb-3">
+                <RS.CardTitle tag="h2">Administrative tools</RS.CardTitle>
+                <RS.CardBody>
                     <h3>Manage site content</h3>
                     {contentVersion && <React.Fragment>
                         <div>
@@ -79,40 +82,50 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
                                 <strong>Live Content Version</strong>
                             </label>
                         </div>
-                        <ShowLoading until={displayVersion !== null}>
-                            {displayVersion !== null && updateState != ContentVersionUpdatingStatus.UPDATING && <form>
-                                <div>
-                                    <input type="text" value={displayVersion} onChange={e => setNewVersion(e.target.value)}
-                                        placeholder="Enter commit SHA" />
-                                </div>
-                                <div>
-                                    <button type="button" onClick={startVersionUpdate} disabled={displayVersion === contentVersion.liveVersion}>Set Version</button>
-                                </div>
-                            </form>}
-                        </ShowLoading>
+                        <ShowLoading until={displayVersion !== null} render={() => {
+                            return displayVersion !== null && updateState != ContentVersionUpdatingStatus.UPDATING &&
+                                <RS.Form onSubmit={startVersionUpdate}>
+                                    <RS.InputGroup>
+                                        <RS.Input
+                                            type="text" value={displayVersion}
+                                            onChange={e => setNewVersion(e.target.value)}
+                                            placeholder="Enter commit SHA"
+                                        />
+                                        <RS.InputGroupAddon addonType="append">
+                                            <RS.Button
+                                                type="button" className="p-0 border-dark"
+                                                onClick={startVersionUpdate}
+                                                disabled={displayVersion === contentVersion.liveVersion}
+                                            >
+                                                Set Version
+                                            </RS.Button>
+                                        </RS.InputGroupAddon>
+                                    </RS.InputGroup>
+                                </RS.Form>
+                        }} />
                         {updateState == ContentVersionUpdatingStatus.UPDATING &&
-                            <Alert color="info">
+                            <RS.Alert color="info">
                                 <h4>Updating...</h4>
                                 <p>Replacing version {contentVersion.liveVersion} with {contentVersion.updatingVersion}</p>
-                                <Spinner />
-                            </Alert>
+                                <RS.Spinner />
+                            </RS.Alert>
                         }
                         {updateState == ContentVersionUpdatingStatus.SUCCESS &&
-                            <Alert color="success">
+                            <RS.Alert color="success">
                                 <h4>Content version changed successfully.</h4>
-                            </Alert>
+                            </RS.Alert>
                         }
                         {updateState == ContentVersionUpdatingStatus.FAILURE &&
-                            <Alert color="danger">
+                            <RS.Alert color="danger">
                                 <h4>Error: Content version could not be changed.</h4>
-                            </Alert>
+                            </RS.Alert>
                         }
                     </React.Fragment>}
-                </CardBody>
-            </Card>
+                </RS.CardBody>
+            </RS.Card>
 
         </div>
-    </Container>;
+    </RS.Container>;
 };
 
 export const Admin = connect(stateToProps, dispatchToProps)(AdminPageComponent);
