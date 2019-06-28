@@ -208,7 +208,7 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
     const sortedProgress = orderBy(progress, (item) => {
         switch (sortOrder) {
             case "name":
-                return item.user.familyName + ", " + item.user.givenName;
+                return (item.user.familyName + ", " + item.user.givenName).toLowerCase();
             case "totalQuestionPartPercentage":
                 return -item.correctQuestionPartsCount;
             case "totalQuestionPercentage":

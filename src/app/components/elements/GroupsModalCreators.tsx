@@ -97,7 +97,7 @@ interface CurrentGroupManagersModalProps {
 }
 
 const CurrentGroupManagersModal = ({group, user, addGroupManager, deleteGroupManager, showGroupInvitationModal, userIsOwner}: CurrentGroupManagersModalProps) => {
-    const additionalManagers = group && sortBy(group.additionalManagers, manager => manager.familyName) || [];
+    const additionalManagers = group && sortBy(group.additionalManagers, manager => manager.familyName && manager.familyName.toLowerCase()) || [];
 
     const [newManagerEmail, setNewManagerEmail] = useState("");
 

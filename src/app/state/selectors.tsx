@@ -40,7 +40,7 @@ export const boards = {
         if (!state.boards) return null;
         if (!state.boards.boards) return null;
         function mapGroups(ids?: number[]) {
-            return ids && sortBy(ids.map(id => state && state.groups && state.groups.cache && state.groups.cache[id]), g => g && g.groupName);
+            return ids && sortBy(ids.map(id => state && state.groups && state.groups.cache && state.groups.cache[id]), g => g && g.groupName && g.groupName.toLowerCase());
         }
         return {
             totalResults: state.boards.boards.totalResults,
