@@ -286,13 +286,13 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
 
     const tabs = [
         {
-            name: <span>Active</span>,
+            name: "Active",
             data: groups && groups.active,
             active: () => !showArchived,
             activate: () => setShowArchived(false)
         },
         {
-            name: <span>Archived</span>,
+            name: "Archived",
             data: groups && groups.archived,
             active: () => showArchived,
             activate: () => setShowArchived(true)
