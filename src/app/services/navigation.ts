@@ -30,7 +30,7 @@ export const useNavigation = (currentDocId: string): PageNavigation => {
     useEffect(() => {
         if (queryParams.board) dispatch(loadGameboard(queryParams.board as string));
         if (queryParams.topic) dispatch(fetchTopicSummary(queryParams.topic as TAG_ID));
-    }, [queryParams.board, queryParams.topic, dispatch]);
+    }, [queryParams.board, queryParams.topic, currentDocId, dispatch]);
 
     const currentGameboard = useSelector((state: AppState) => state && state.currentGameboard);
     const currentTopic = useSelector((state: AppState) => state && state.currentTopic);
