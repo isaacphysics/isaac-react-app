@@ -34,7 +34,6 @@ import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
 import {Header} from "./Header";
 import {Route} from "react-router";
-import {ScrollManager} from "./ScrollManager";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {ActiveModal} from "../elements/ActiveModal";
@@ -48,6 +47,8 @@ import {Support} from "../pages/Support";
 import {ForStudents} from "../pages/ForStudents";
 import {ForTeachers} from "../pages/ForTeachers";
 import {AddGameboard} from "../handlers/AddGameboard";
+
+import "../../services/scrollManager";
 
 const mapStateToProps = (state: AppState) => ({
     consistencyError: state && state.error && state.error.type == "consistencyError" || false,
@@ -68,83 +69,81 @@ const IsaacApp = ({requestCurrentUser, consistencyError, serverError, goneAwayEr
     useEffect(() => {requestCurrentUser()}, [requestCurrentUser]);
 
     return <Router history={history}>
-        <ScrollManager>
-            <React.Fragment>
-                <Header />
-                <Toasts />
-                <ActiveModal />
-                <CookieBanner />
-                <EmailVerificationBanner />
-                <main role="main" className="flex-fill content-body">
-                    <Switch>
-                        {/* Errors; these paths work but aren't really used */}
-                        <Route path={serverError ? undefined : "/error"} component={ServerError} />
-                        <Route path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
+        <React.Fragment>
+            <Header />
+            <Toasts />
+            <ActiveModal />
+            <CookieBanner />
+            <EmailVerificationBanner />
+            <main role="main" className="flex-fill content-body">
+                <Switch>
+                    {/* Errors; these paths work but aren't really used */}
+                    <Route path={serverError ? undefined : "/error"} component={ServerError} />
+                    <Route path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
 
-                        {/* Application pages */}
-                        <TrackedRoute exact path="/(home)?" component={Homepage} />
-                        <TrackedRoute path="/account" onlyFor={user => user.loggedIn} component={MyAccount} />
+                    {/* Application pages */}
+                    <TrackedRoute exact path="/(home)?" component={Homepage} />
+                    <TrackedRoute path="/account" onlyFor={user => user.loggedIn} component={MyAccount} />
 
-                        <TrackedRoute path="/search" component={Search} />
+                    <TrackedRoute path="/search" component={Search} />
 
-                        <TrackedRoute path="/questions/:questionId" component={Question} />
-                        <TrackedRoute path="/concepts/:conceptId" component={Concept} />
-                        <TrackedRoute path="/pages/:pageId" component={Generic} />
+                    <TrackedRoute path="/questions/:questionId" component={Question} />
+                    <TrackedRoute path="/concepts/:conceptId" component={Concept} />
+                    <TrackedRoute path="/pages/:pageId" component={Generic} />
 
-                        <TrackedRoute exact path="/topics" component={AllTopics} />
-                        <TrackedRoute path="/topics/:topicName" component={Topic} />
+                    <TrackedRoute exact path="/topics" component={AllTopics} />
+                    <TrackedRoute path="/topics/:topicName" component={Topic} />
 
-                        <TrackedRoute path="/gameboards" component={Gameboard} />
-                        <TrackedRoute path="/assignment/:gameboardId" onlyFor={user => user.loggedIn} component={RedirectToGameboard} />
-                        <TrackedRoute path="/add_gameboard/:gameboardId" onlyFor={user => user.loggedIn} component={AddGameboard} />
+                    <TrackedRoute path="/gameboards" component={Gameboard} />
+                    <TrackedRoute path="/assignment/:gameboardId" onlyFor={user => user.loggedIn} component={RedirectToGameboard} />
+                    <TrackedRoute path="/add_gameboard/:gameboardId" onlyFor={user => user.loggedIn} component={AddGameboard} />
 
-                        <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
+                    <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
 
-                        {/* Student pages */}
-                        <TrackedRoute path="/students" component={ForStudents} />
-                        <TrackedRoute path="/assignments" onlyFor={user => user.loggedIn} component={MyAssignments} />
-                        <TrackedRoute path="/progress" component={ComingSoon} />
+                    {/* Student pages */}
+                    <TrackedRoute path="/students" component={ForStudents} />
+                    <TrackedRoute path="/assignments" onlyFor={user => user.loggedIn} component={MyAssignments} />
+                    <TrackedRoute path="/progress" component={ComingSoon} />
 
-                        {/* Teacher pages */}
-                        <TrackedRoute path="/teachers" component={ForTeachers} />
-                        <TrackedRoute path="/groups" onlyFor={isTeacher} component={Groups} />
-                        <TrackedRoute path="/set_assignments" onlyFor={isTeacher} component={SetAssignments} />
-                        <TrackedRoute path="/assignment_progress" onlyFor={isTeacher} component={AssignmentProgress} />
+                    {/* Teacher pages */}
+                    <TrackedRoute path="/teachers" component={ForTeachers} />
+                    <TrackedRoute path="/groups" onlyFor={isTeacher} component={Groups} />
+                    <TrackedRoute path="/set_assignments" onlyFor={isTeacher} component={SetAssignments} />
+                    <TrackedRoute path="/assignment_progress" onlyFor={isTeacher} component={AssignmentProgress} />
 
-                        {/* Admin */}
-                        <TrackedRoute exact path="/admin" onlyFor={isAdmin} component={Admin} />
-                        <TrackedRoute path="/admin/usermanager" onlyFor={isAdmin} component={AdminUserManager} />
-                        <TrackedRoute path="/admin/content_errors" onlyFor={isAdmin} component={AdminContentErrors} />
+                    {/* Admin */}
+                    <TrackedRoute exact path="/admin" onlyFor={isAdmin} component={Admin} />
+                    <TrackedRoute path="/admin/usermanager" onlyFor={isAdmin} component={AdminUserManager} />
+                    <TrackedRoute path="/admin/content_errors" onlyFor={isAdmin} component={AdminContentErrors} />
 
-                        {/* Authentication */}
-                        <TrackedRoute path="/login" component={LogIn} />
-                        <TrackedRoute path="/logout" component={LogOutHandler} />
-                        <TrackedRoute path="/register" component={Registration} />
-                        <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
-                        <TrackedRoute path="/resetpassword/:token" component={ResetPasswordHandler}/>
-                        <TrackedRoute path="/verifyemail" onlyFor={user => user.loggedIn} component={EmailAlterHandler}/>
+                    {/* Authentication */}
+                    <TrackedRoute path="/login" component={LogIn} />
+                    <TrackedRoute path="/logout" component={LogOutHandler} />
+                    <TrackedRoute path="/register" component={Registration} />
+                    <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
+                    <TrackedRoute path="/resetpassword/:token" component={ResetPasswordHandler}/>
+                    <TrackedRoute path="/verifyemail" onlyFor={user => user.loggedIn} component={EmailAlterHandler}/>
 
-                        {/* Static pages */}
-                        <TrackedRoute path="/contact" component={Contact}/>
-                        <TrackedRoute path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}} />
-                        <TrackedRoute path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}} />
-                        <TrackedRoute path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}} />
-                        <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}} />
-                        <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
-                        <TrackedRoute path="/coming_soon" component={ComingSoon} />
-                        <TrackedRoute path="/equality" component={Equality} />
+                    {/* Static pages */}
+                    <TrackedRoute path="/contact" component={Contact}/>
+                    <TrackedRoute path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}} />
+                    <TrackedRoute path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}} />
+                    <TrackedRoute path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}} />
+                    <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}} />
+                    <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
+                    <TrackedRoute path="/coming_soon" component={ComingSoon} />
+                    <TrackedRoute path="/equality" component={Equality} />
 
-                        {/* Support pages */}
-                        <TrackedRoute path="/support/:type?/:category?" component={Support} />
+                    {/* Support pages */}
+                    <TrackedRoute path="/support/:type?/:category?" component={Support} />
 
-                        {/* Error pages */}
-                        <TrackedRoute component={NotFound} />
-                    </Switch>
-                </main>
-                <Footer />
-                <ConsistencyErrorModal consistencyError={consistencyError} />
-            </React.Fragment>
-        </ScrollManager>
+                    {/* Error pages */}
+                    <TrackedRoute component={NotFound} />
+                </Switch>
+            </main>
+            <Footer />
+            <ConsistencyErrorModal consistencyError={consistencyError} />
+        </React.Fragment>
     </Router>;
 };
 
