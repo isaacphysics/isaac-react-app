@@ -38,7 +38,7 @@ import {ScrollManager} from "./ScrollManager";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {ActiveModal} from "../elements/ActiveModal";
-import {isAdmin, isTeacher} from "../../services/user";
+import {isAdmin, isStaffUser, isTeacher} from "../../services/user";
 import {Groups} from "../pages/Groups";
 import { Equality } from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
@@ -112,9 +112,9 @@ const IsaacApp = ({requestCurrentUser, consistencyError, serverError, goneAwayEr
                         <TrackedRoute path="/assignment_progress" onlyFor={isTeacher} component={AssignmentProgress} />
 
                         {/* Admin */}
-                        <TrackedRoute exact path="/admin" onlyFor={isAdmin} component={Admin} />
+                        <TrackedRoute exact path="/admin" onlyFor={isStaffUser} component={Admin} />
                         <TrackedRoute path="/admin/usermanager" onlyFor={isAdmin} component={AdminUserManager} />
-                        <TrackedRoute path="/admin/content_errors" onlyFor={isAdmin} component={AdminContentErrors} />
+                        <TrackedRoute path="/admin/content_errors" onlyFor={isStaffUser} component={AdminContentErrors} />
 
                         {/* Authentication */}
                         <TrackedRoute path="/login" component={LogIn} />
