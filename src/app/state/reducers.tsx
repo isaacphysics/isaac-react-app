@@ -154,7 +154,6 @@ export const doc = (doc: DocState = null, action: Action) => {
         case ACTION_TYPE.DOCUMENT_REQUEST:
             return null;
         case ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS:
-        case ACTION_TYPE.DOCUMENT_CACHE_SUCCESS:
             return {...action.doc};
         case ACTION_TYPE.ROUTER_PAGE_CHANGE:
             return null;
@@ -284,7 +283,6 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
         case ACTION_TYPE.TOPIC_REQUEST:
             return null;
         case ACTION_TYPE.TOPIC_RESPONSE_SUCCESS:
-        case ACTION_TYPE.TOPIC_CACHE_SUCCESS:
             return action.topic;
         case ACTION_TYPE.TOPIC_RESPONSE_FAILURE:
             return NOT_FOUND;

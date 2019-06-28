@@ -35,7 +35,7 @@ const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps)
 
             <ul>{doc.choices && doc.choices.map((choice, index) =>
                 <li key={choice.value} className="list-unstyled">
-                    <Label className="label-radio">
+                    <Label className="label-radio multichoice-option">
                         <CustomInput
                             id={`${questionId}${index}`}
                             color="secondary"

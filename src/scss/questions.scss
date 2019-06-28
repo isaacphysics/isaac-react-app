@@ -125,6 +125,10 @@
   border-bottom: solid 1px $gray-107;
 }
 
+.multichoice-option > .content-value {
+  width: calc(100% - 1rem);
+}
+
 // NOMENSA question.scss
 .question-component {
   background-color: white;
