@@ -619,7 +619,7 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
             }) as any);
         }
     } catch (e) {
-        if (e.response.status == 429) {
+        if (e.response && e.response.status == 429) {
             const lock = new Date((new Date()).getTime() + timePeriod);
 
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock});

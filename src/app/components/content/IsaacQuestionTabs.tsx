@@ -79,10 +79,10 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
             <QuestionComponent questionId={doc.id as string} doc={doc} />
 
             {validationResponse && !canSubmit && <div className="validation-response-panel">
-                <div className="mt-2">
+                <div className="my-3">
                     {validationResponse.correct ?
-                        <h1>Correct!</h1> :
-                        <h1>Incorrect</h1>
+                        <h1 className="m-0">Correct!</h1> :
+                        <h1 className="m-0">Incorrect</h1>
                     }
                 </div>
                 <div>
@@ -97,7 +97,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
             </Alert>}
 
             {((!validationResponse) || (validationResponse && !validationResponse.correct) || canSubmit) && (!locked) && <Row>
-                <Col className="text-center pt-3 pb-2">
+                <Col className="text-center pt-3 pb-1">
                     <Button color="secondary" disabled={!canSubmit} onClick={submitCurrentAttempt}>
                         Check my answer
                     </Button>
