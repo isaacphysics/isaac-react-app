@@ -276,7 +276,7 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
     }
 };
 
-export type CurrentTopicState = IsaacTopicSummaryPageDTO | null;
+export type CurrentTopicState = IsaacTopicSummaryPageDTO | NOT_FOUND_TYPE | null;
 export const currentTopic = (currentTopic: CurrentTopicState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.TOPIC_REQUEST:
@@ -284,6 +284,8 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
         case ACTION_TYPE.TOPIC_RESPONSE_SUCCESS:
         case ACTION_TYPE.TOPIC_CACHE_SUCCESS:
             return action.topic;
+        case ACTION_TYPE.TOPIC_RESPONSE_FAILURE:
+            return NOT_FOUND;
         default:
             return currentTopic;
     }
