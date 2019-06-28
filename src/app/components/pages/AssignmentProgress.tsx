@@ -555,7 +555,7 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
                 </Col>
             </Row>
         </Container>
-        <div className="assignment-progress-container">
+        <div className="assignment-progress-container mb-5">
             <ShowLoading until={data}>
                 {data && data.map(group => <GroupAssignmentProgress key={group.id} {...props} group={group} pageSettings={pageSettings} />)}
                 {data && data.length == 0 && <h3>You&apos;ll need to create a group using <Link to="/groups">Manage Groups</Link> to set an assignment.</h3>}
