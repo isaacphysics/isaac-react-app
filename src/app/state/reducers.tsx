@@ -286,6 +286,8 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
             return action.topic;
         case ACTION_TYPE.TOPIC_RESPONSE_FAILURE:
             return NOT_FOUND;
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
+            return null;
         default:
             return currentTopic;
     }
