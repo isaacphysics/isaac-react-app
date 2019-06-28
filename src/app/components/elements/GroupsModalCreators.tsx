@@ -38,7 +38,7 @@ const CurrentGroupInviteModal = ({group, firstTime}: CurrentGroupInviteModalProp
         <RS.Jumbotron>
             <h2>Option 2: Share token</h2>
             <p>Ask your students to enter the following code into the Teacher Connections tab on their My Account page:</p>
-            <h3 className="text-center">{group.token}</h3>
+            <h3 className="text-center user-select-all d-block border bg-light p-1">{group.token}</h3>
         </RS.Jumbotron>
 
         <p>
