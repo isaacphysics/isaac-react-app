@@ -188,8 +188,8 @@ export const updateCurrentUser = (
                 history.push('/account', {firstLogin: initialLogin});
             }
             dispatch(showToast({
-                title: "Preferences updated",
-                body: "Your user preferences were updated correctly.",
+                title: "Account settings updated",
+                body: "Your account settings were updated successfully.",
                 color: "success",
                 timeout: 5000,
                 closable: false,
