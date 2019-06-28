@@ -49,11 +49,17 @@
   }
 }
 
-.date-input-month {
-  flex-grow: 2 !important;
+.date-input-day {
+  flex-grow: 1.25 !important;
 }
 
-.date-input {}
+.date-input-month {
+  flex-grow: 3 !important;
+}
+
+.date-input-year {
+  flex-grow: 2 !important;
+}
 
 // NOMENSA forms.scss
 
