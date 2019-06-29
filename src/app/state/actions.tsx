@@ -779,6 +779,17 @@ export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (di
     }
 };
 
+export const getAdminSiteStats = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_STATS_REQUEST});
+    try {
+        const version = await api.admin.getSiteStats();
+        dispatch({type: ACTION_TYPE.ADMIN_STATS_RESPONSE_SUCCESS, stats: version.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_STATS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get Admin statistics", e));
+    }
+};
+
 // Groups
 
 export const loadGroups = (archivedGroupsOnly: boolean) => async (dispatch: Dispatch<Action>) => {

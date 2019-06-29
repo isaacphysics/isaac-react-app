@@ -2,10 +2,8 @@ import axios, {AxiosPromise} from "axios";
 import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
+import {ActualBoardLimit, BoardOrder, LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
-import {LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
-import {ActualBoardLimit} from "../../IsaacAppTypes";
-import {BoardOrder} from "../../IsaacAppTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -112,6 +110,9 @@ export const api = {
         },
         getContentErrors: (): AxiosPromise<AppTypes.ContentErrorsResponse> => {
             return endpoint.get(`/admin/content_problems`)
+        },
+        getSiteStats: (): AxiosPromise<AppTypes.AdminStatsResponse> => {
+            return endpoint.get(`/admin/stats`)
         }
     },
     authorisations: {
