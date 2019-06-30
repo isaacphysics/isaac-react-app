@@ -78,7 +78,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         <div className={`question-component p-md-5 ${extraClasses}`}>
             <QuestionComponent questionId={doc.id as string} doc={doc} />
 
-            {validationResponse && !canSubmit && <div className="validation-response-panel">
+            {validationResponse && !canSubmit && <div className={`validation-response-panel ${validationResponse.correct ? "correct" : ""}`}>
                 <div className="my-3">
                     {validationResponse.correct ?
                         <h1 className="m-0">Correct!</h1> :

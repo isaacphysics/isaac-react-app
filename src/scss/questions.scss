@@ -67,7 +67,7 @@
     &.empty {
       padding: 0.875em 0.5em;
     }
-    
+
     .parsons-item > pre {
       margin: 0.5rem 0;
       padding: 0.5em 1em;
@@ -123,6 +123,10 @@
   //margin-bottom: 1rem;
   border-top: solid 1px $gray-107;
   border-bottom: solid 1px $gray-107;
+  &.correct {
+    background: $purple;
+    color: white;
+  }
 }
 
 .multichoice-option > .content-value {
