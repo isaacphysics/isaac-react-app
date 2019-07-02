@@ -11,6 +11,11 @@ interface AccordionsProps {
     children: React.ReactChildren;
 }
 
+function scrollVerticallyIntoView(element: Element) {
+    const yPosition = element.getBoundingClientRect().top + pageYOffset;
+    window.scrollTo(0, yPosition);
+}
+
 export const Accordion = withRouter(({id, title, index, children, location: {hash}}: AccordionsProps) => {
     // Toggle
     const isFirst = index === 0;
@@ -31,7 +36,7 @@ export const Accordion = withRouter(({id, title, index, children, location: {has
             const element = document.getElementById(hashAnchor);
             if (element) { // exists on page
                 if (hashAnchor === anchorId) {
-                    element.scrollIntoView(true);
+                    scrollVerticallyIntoView(element);
                     setOpen(true);
                 } else {
                     setOpen(false);
@@ -49,7 +54,7 @@ export const Accordion = withRouter(({id, title, index, children, location: {has
                     const nextState = !open;
                     setOpen(nextState);
                     if (nextState) {
-                        event.target.scrollIntoView({behavior: "smooth"});
+                        scrollVerticallyIntoView(event.target);
                     }
                 }}
             >
