@@ -234,22 +234,25 @@ export function katexify(html: string, userPreferences: UserPreferencesDTO | nul
     return output;
 }
 
-// RegEx replacements to match Latex inspired Isaac Physics functionality
-function bootstrapify(html: string) {
-    // TODO does not work if class was added by content team
-    // TODO need to center table in parent element if possible
-    const regexRules = {
-        '<table class="table table-bordered w-100 text-center bg-white" ': /<table\s*?/g,
-    };
+function manipulateHtml(html: string) {
+    const htmlAsDom = document.createElement( 'html' );
+    htmlAsDom.innerHTML = html;
 
-    let bootstrappedHtml = html;
-    Object.entries(regexRules).forEach(([replacement, rule]) =>
-        bootstrappedHtml = bootstrappedHtml.replace(rule, replacement)
-    );
-    return bootstrappedHtml;
+    // Table manipulation - apply bootstrap classes and insert parent div to handle table overflow
+    const tableElements = htmlAsDom.getElementsByTagName("table");
+    const tableClasses = "table table-bordered w-100 text-center bg-white m-0";
+    for (let i = 0; i < tableElements.length; i++) {
+        const table = tableElements[i];
+        table.setAttribute("class", (table.getAttribute("class") || "") + tableClasses);
+        const parent = table.parentElement as HTMLElement;
+        const div = document.createElement("div");
+        div.setAttribute("class", "overflow-auto");
+        parent.insertBefore(div, table);
+        div.appendChild(parent.removeChild(table));
+    }
+
+    return htmlAsDom.innerHTML;
 }
-
-
 
 const stateToProps = (state: AppState) => ({
     userPreferences: state ? state.userPreferences : null
@@ -262,7 +265,7 @@ interface TrustedHtmlProps {
 }
 
 let TrustedHtmlComponent = ({html, span, userPreferences}: TrustedHtmlProps) => {
-    html = bootstrapify(katexify(html, userPreferences));
+    html = manipulateHtml(katexify(html, userPreferences));
     if (span) {
         return <span dangerouslySetInnerHTML={{__html: html}} />;
     } else {
