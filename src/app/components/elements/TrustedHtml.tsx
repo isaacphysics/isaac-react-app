@@ -239,12 +239,18 @@ function manipulateHtml(html: string) {
     // This can't be quick but it is more robust than writing regular expressions...
     htmlDom.innerHTML = html;
 
-    // Table manipulation - apply bootstrap classes and insert parent div to handle table overflow
+    // Table manipulation
     const tableElements = htmlDom.getElementsByTagName("table");
-    const tableClasses = "table table-bordered w-100 text-center bg-white m-0";
     for (let i = 0; i < tableElements.length; i++) {
         const table = tableElements[i];
-        table.setAttribute("class", (table.getAttribute("class") || "") + tableClasses);
+
+        // Add bootstrap classes
+        const currentTableClasses = (table.getAttribute("class") || "").split(" ");
+        const bootstrapTableClasses = ["table", "table-bordered", "w-100", "text-center", "bg-white", "m-0"];
+        const uniqueTableClasses = new Set([...currentTableClasses, ...bootstrapTableClasses]);
+        table.setAttribute("class", Array.from(uniqueTableClasses).join(" "));
+
+        // Insert parent div to handle table overflow
         const parent = table.parentElement as HTMLElement;
         const div = document.createElement("div");
         div.setAttribute("class", "overflow-auto mb-4");
