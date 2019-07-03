@@ -61,9 +61,9 @@ const AdminStatsPageComponent = ({adminStats, getAdminSiteStats}: AdminPageProps
                                 <strong>Users:</strong>
                                 <ul className="list-unstyled mb-5">
                                     <li>Active Last 6 Months:&nbsp;
-                                        <strong>{(adminStats.activeUsersOverPrevious.sixMonths.TOTAL | 0).toLocaleString()}</strong>
+                                        <strong>{(adminStats.activeUsersOverPrevious.sixMonths.TOTAL || 0).toLocaleString()}</strong>
                                     </li>
-                                    <li>Registered: <strong>{(adminStats.userGenders.TOTAL | 0).toLocaleString()}</strong></li>
+                                    <li>Registered: <strong>{(adminStats.userGenders.TOTAL || 0).toLocaleString()}</strong></li>
                                     <li className="mt-3">
                                         <strong>Gender</strong>
                                         <ul className="list-unstyled">
