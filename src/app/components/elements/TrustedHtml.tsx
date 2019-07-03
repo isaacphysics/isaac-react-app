@@ -247,8 +247,8 @@ function manipulateHtml(html: string) {
         // Add bootstrap classes
         const currentTableClasses = (table.getAttribute("class") || "").split(" ");
         const bootstrapTableClasses = ["table", "table-bordered", "w-100", "text-center", "bg-white", "m-0"];
-        const uniqueTableClasses = new Set([...currentTableClasses, ...bootstrapTableClasses]);
-        table.setAttribute("class", Array.from(uniqueTableClasses).join(" "));
+        const uniqueTableClasses = Array.from(new Set([...currentTableClasses, ...bootstrapTableClasses]));
+        table.setAttribute("class", uniqueTableClasses.join(" "));
 
         // Insert parent div to handle table overflow
         const parent = table.parentElement as HTMLElement;
