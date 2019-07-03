@@ -247,7 +247,7 @@ function manipulateHtml(html: string) {
         table.setAttribute("class", (table.getAttribute("class") || "") + tableClasses);
         const parent = table.parentElement as HTMLElement;
         const div = document.createElement("div");
-        div.setAttribute("class", "overflow-auto");
+        div.setAttribute("class", "overflow-auto mb-4");
         parent.insertBefore(div, table);
         div.appendChild(parent.removeChild(table));
     }
