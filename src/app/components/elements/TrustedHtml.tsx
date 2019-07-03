@@ -234,13 +234,13 @@ export function katexify(html: string, userPreferences: UserPreferencesDTO | nul
     return output;
 }
 
+const htmlDom = document.createElement("html");
 function manipulateHtml(html: string) {
     // This can't be quick but it is more robust than writing regular expressions...
-    const htmlAsDom = document.createElement("html");
-    htmlAsDom.innerHTML = html;
+    htmlDom.innerHTML = html;
 
     // Table manipulation - apply bootstrap classes and insert parent div to handle table overflow
-    const tableElements = htmlAsDom.getElementsByTagName("table");
+    const tableElements = htmlDom.getElementsByTagName("table");
     const tableClasses = "table table-bordered w-100 text-center bg-white m-0";
     for (let i = 0; i < tableElements.length; i++) {
         const table = tableElements[i];
@@ -252,7 +252,7 @@ function manipulateHtml(html: string) {
         div.appendChild(parent.removeChild(table));
     }
 
-    return htmlAsDom.innerHTML;
+    return htmlDom.innerHTML;
 }
 
 const stateToProps = (state: AppState) => ({
