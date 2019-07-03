@@ -25,7 +25,7 @@ import {groups} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {API_PATH} from "../../services/constants";
+import {API_PATH, DATE_FORMATTER} from "../../services/constants";
 import {downloadLinkModal} from "../elements/AssignmentProgressModalCreators";
 
 const stateFromProps = (state: AppState) => {
@@ -129,7 +129,7 @@ const passMark = 0.75;
 function formatDate(date: number | Date | undefined) {
     if (!date) return "Unknown";
     const dateObject = new Date(date);
-    return dateObject.toLocaleDateString();
+    return DATE_FORMATTER.format(dateObject);
 }
 
 function formatMark(numerator: number, denominator: number, formatAsPercentage: boolean) {

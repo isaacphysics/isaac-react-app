@@ -17,7 +17,7 @@ const AddGameboardComponent = (props: AddGameboardProps) => {
     useEffect(() => {dispatch(addGameboard(gameboardId, user))}, [gameboardId]);
 
     return <ShowLoading until={false}>
-        The Unreachable Dream
+        Something went wrong when attempting to add the gameboard.
     </ShowLoading>
 };
 

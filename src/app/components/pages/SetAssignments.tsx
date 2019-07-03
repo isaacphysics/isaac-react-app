@@ -26,7 +26,7 @@ import {boards, groups} from "../../state/selectors";
 import {sortBy, range} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/DateInput";
-import {TEACHERS_CRUMB} from "../../services/constants";
+import {DATE_FORMATTER, TEACHERS_CRUMB} from "../../services/constants";
 import {withRouter} from "react-router-dom";
 
 const stateToProps = (state: AppState) => ({
@@ -55,7 +55,7 @@ interface SetAssignmentsPageProps {
 function formatDate(date: number | Date | undefined) {
     if (!date) return "Unknown";
     const dateObject = new Date(date);
-    return dateObject.toLocaleDateString();
+    return DATE_FORMATTER.format(dateObject);
 }
 
 function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {

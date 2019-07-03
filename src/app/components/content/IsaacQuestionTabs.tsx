@@ -11,6 +11,7 @@ import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import { IsaacParsonsQuestion } from "./IsaacParsonsQuestion";
+import {DATE_TIME_FORMATTER} from "../../services/constants";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -41,7 +42,7 @@ interface IsaacQuestionTabsProps {
 }
 
 function showTime(date: Date) {
-    return date.toLocaleTimeString();
+    return DATE_TIME_FORMATTER.format(date);
 }
 
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {

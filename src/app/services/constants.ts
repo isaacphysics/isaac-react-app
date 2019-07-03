@@ -26,6 +26,12 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
+export const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB");
+export const DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
+    year: "numeric", month: "numeric", day: "numeric",
+    hour: "numeric", minute: "numeric", second: "numeric", hour12: false
+});
+
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
 
