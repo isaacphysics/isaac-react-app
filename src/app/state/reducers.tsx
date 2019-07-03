@@ -2,8 +2,8 @@ import {combineReducers} from "redux";
 import {
     Action,
     ActiveModal,
+    AdminStatsResponse,
     AppAssignmentProgress,
-    AppGameBoard,
     AppGroup,
     AppGroupMembership,
     AppQuestionDTO,
@@ -89,6 +89,18 @@ export const adminContentErrors = (adminContentErrors: AdminContentErrorsState =
             return action.errors;
         default:
             return adminContentErrors;
+    }
+};
+
+export type AdminStatsState = AdminStatsResponse | null;
+export const adminStats = (adminSiteStats: AdminStatsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.ADMIN_STATS_REQUEST:
+            return null;
+        case ACTION_TYPE.ADMIN_STATS_RESPONSE_SUCCESS:
+            return action.stats;
+        default:
+            return adminSiteStats;
     }
 };
 
@@ -600,6 +612,7 @@ const appReducer = combineReducers({
     userPreferences,
     adminUserSearch,
     adminContentErrors,
+    adminStats,
     activeAuthorisations,
     otherUserAuthorisations,
     groupMemberships,
@@ -627,6 +640,7 @@ export type AppState = undefined | {
     userPreferences: UserPreferencesState;
     adminUserSearch: AdminUserSearchState;
     adminContentErrors: AdminContentErrorsState;
+    adminStats: AdminStatsState;
     activeAuthorisations: ActiveAuthorisationsState;
     otherUserAuthorisations: OtherUserAuthorisationsState;
     groupMemberships: GroupMembershipsState;
