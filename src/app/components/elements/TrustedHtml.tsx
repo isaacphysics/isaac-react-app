@@ -235,7 +235,8 @@ export function katexify(html: string, userPreferences: UserPreferencesDTO | nul
 }
 
 function manipulateHtml(html: string) {
-    const htmlAsDom = document.createElement( 'html' );
+    // This can't be quick but it is more robust than writing regular expressions...
+    const htmlAsDom = document.createElement("html");
     htmlAsDom.innerHTML = html;
 
     // Table manipulation - apply bootstrap classes and insert parent div to handle table overflow
