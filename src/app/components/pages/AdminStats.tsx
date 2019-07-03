@@ -21,7 +21,7 @@ function asPercentage(value: number | undefined, total: number)  {
     return value !== undefined ? Math.round(100 * value / total) : 0;
 }
 
-function addTotalToMapOfCounts (counts: {[key: string]: number}) {
+function addTotalToMapOfCounts(counts: {[key: string]: number}) {
     counts['TOTAL'] = Object.values(counts).reduce((a, b) => a + b, 0);
 }
 
@@ -52,21 +52,21 @@ const AdminStatsPageComponent = ({adminStats, getAdminSiteStats}: AdminPageProps
         <TitleAndBreadcrumb currentPageTitle="Isaac statistics" breadcrumbTitleOverride="Admin statistics" />
 
         <ShowLoading until={adminStats}>
-            {adminStats && <div className={"mt-3"}>
-                <span>A high-level overview of the users and activity on the platform:</span>
-                <RS.Row className={"mt-1 mb-4"}>
-                    <RS.Col>
-                        <ul>
-                            <li>
+            {adminStats && <React.Fragment>
+                <div className="py-3">A high-level overview of the users and activity on the platform:</div>
+                <RS.Card className="mb-5 px-3 pt-1">
+                    <RS.CardBody>
+                        <RS.Row>
+                            <RS.Col>
                                 <strong>Users:</strong>
-                                <ul>
+                                <ul className="list-unstyled mb-5">
                                     <li>Active Last 6 Months:&nbsp;
                                         <strong>{(adminStats.activeUsersOverPrevious.sixMonths.TOTAL | 0).toLocaleString()}</strong>
                                     </li>
                                     <li>Registered: <strong>{(adminStats.userGenders.TOTAL | 0).toLocaleString()}</strong></li>
-                                    <li className={"mb-2"}>
+                                    <li className="mt-3">
                                         <strong>Gender</strong>
-                                        <ul>
+                                        <ul className="list-unstyled">
                                             <li>Male: {adminStats.userGenders.MALE || 0} ({
                                                 asPercentage(adminStats.userGenders.MALE, adminStats.userGenders.TOTAL)}%)
                                             </li>
@@ -81,9 +81,9 @@ const AdminStatsPageComponent = ({adminStats, getAdminSiteStats}: AdminPageProps
                                             </li>
                                         </ul>
                                     </li>
-                                    <li className={"mb-2"}>
+                                    <li className="mt-3">
                                         <strong>Role</strong>
-                                        <ul>
+                                        <ul className="list-unstyled">
                                             <li>Student: {adminStats.userRoles.STUDENT || 0}</li>
                                             <li>Teacher: {adminStats.userRoles.TEACHER || 0}</li>
                                             <li>Event Manager: {adminStats.userRoles.EVENT_MANAGER || 0}</li>
@@ -91,9 +91,9 @@ const AdminStatsPageComponent = ({adminStats, getAdminSiteStats}: AdminPageProps
                                             <li>Admin: {adminStats.userRoles.ADMIN || 0}</li>
                                         </ul>
                                     </li>
-                                    <li className={"mb-2"}>
+                                    <li className="mt-3">
                                         <strong>Profile Completion</strong>
-                                        <ul>
+                                        <ul className="list-unstyled">
                                             <li>UK/IE school provided: {
                                                 (adminStats.userSchoolInfo.PROVIDED || 0) + (adminStats.userSchoolInfo.BOTH_PROVIDED || 0)
                                             }
@@ -103,21 +103,17 @@ const AdminStatsPageComponent = ({adminStats, getAdminSiteStats}: AdminPageProps
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
-                            <li>
+
                                 <strong>Question Statistics</strong>
-                                <ul>
+                                <ul className="list-unstyled">
                                     <li>Question Page Views: {(adminStats.viewQuestionEvents || 0).toLocaleString()}</li>
                                     <li>Total Question Attempts: {(adminStats.answeredQuestionEvents || 0).toLocaleString()}</li>
                                 </ul>
-                            </li>
-                        </ul>
-                    </RS.Col>
-                    <RS.Col>
-                        <ul>
-                            <li className={"mb-2"}>
+
+                            </RS.Col>
+                            <RS.Col>
                                 <strong>Last Seen</strong>
-                                <ul>
+                                <ul className="list-unstyled">
                                     <li>Previous 7 days:
                                         <ul>
                                             <li>All: {adminStats.activeUsersOverPrevious.sevenDays.TOTAL || 0}</li>
@@ -140,10 +136,9 @@ const AdminStatsPageComponent = ({adminStats, getAdminSiteStats}: AdminPageProps
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
-                            <li>
+
                                 <strong>Answering Questions</strong>
-                                <ul>
+                                <ul className="list-unstyled">
                                     <li>Previous 7 days:
                                         <ul>
                                             <li>All: {adminStats.answeringUsersOverPrevious.sevenDays.TOTAL || 0}</li>
@@ -166,11 +161,11 @@ const AdminStatsPageComponent = ({adminStats, getAdminSiteStats}: AdminPageProps
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
-                        </ul>
-                    </RS.Col>
-                </RS.Row>
-            </div>}
+                            </RS.Col>
+                        </RS.Row>
+                    </RS.CardBody>
+                </RS.Card>
+            </React.Fragment>}
         </ShowLoading>
     </RS.Container>;
 };
