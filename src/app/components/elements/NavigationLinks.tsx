@@ -8,7 +8,7 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
         <Link to={navigation.backToCollection.to} className="text-decoration-none">
             {navigation.collectionType}:
         </Link>
-        <Link to={navigation.backToCollection.to} className="a-alt d-block lrg-text text-dark font-weight-bold mb-5">
+        <Link to={navigation.backToCollection.to} className="a-alt d-block lrg-text text-dark font-weight-bold mb-4">
             {navigation.backToCollection.title}
         </Link>
     </div>;
@@ -17,7 +17,7 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
         <Link to={{pathname: navigation.nextItem.to, search: navigation.queryParams}} className="a-alt lrg-text float-right font-weight-bold">
             {navigation.nextItem.title}
         </Link>
-        <Link to={{pathname: navigation.nextItem.to, search: navigation.queryParams}} className="mb-5 next-link float-right">
+        <Link to={{pathname: navigation.nextItem.to, search: navigation.queryParams}} className="next-link float-right mb-4">
             Next
         </Link>
     </div>;
