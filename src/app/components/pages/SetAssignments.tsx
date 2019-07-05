@@ -26,7 +26,7 @@ import {boards, groups} from "../../state/selectors";
 import {sortBy, range} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/DateInput";
-import {TEACHERS_CRUMB} from "../../services/constants";
+import {DATE_FORMATTER, TEACHERS_CRUMB} from "../../services/constants";
 import {withRouter} from "react-router-dom";
 
 const stateToProps = (state: AppState) => ({
@@ -55,7 +55,7 @@ interface SetAssignmentsPageProps {
 function formatDate(date: number | Date | undefined) {
     if (!date) return "Unknown";
     const dateObject = new Date(date);
-    return dateObject.toLocaleDateString();
+    return DATE_FORMATTER.format(dateObject);
 }
 
 function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
@@ -276,8 +276,14 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         }
     }, [boards]);
 
+    const pageHelp = <span>
+        Use this page to set assignments to your groups. You can assign any gameboard you have saved to your account.
+        <br />
+        Students in the group will be emailed when you set a new assignment.
+    </span>;
+
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Set Assignments" intermediateCrumbs={[TEACHERS_CRUMB]} help="Assign any of the gameboards you have selected to your groups." />
+        <TitleAndBreadcrumb currentPageTitle="Set Assignments" intermediateCrumbs={[TEACHERS_CRUMB]} help={pageHelp} />
         <p className="mt-4 mb-3">
             Choose a gameboard from one of our <Link to="/pages/gameboards">pre-made gameboards</Link> or find one from the <Link to="/topics">Topics list</Link>.
         </p>

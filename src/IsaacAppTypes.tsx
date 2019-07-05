@@ -1,6 +1,8 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {
-    GameboardDTO, GameboardItemState,
+    Content,
+    GameboardDTO,
+    GameboardItemState,
     GroupMembershipDTO,
     UserGroupDTO,
     UserSummaryDTO,
@@ -8,7 +10,6 @@ import {
 } from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 import React from "react";
-import {Content, ContentDTO} from "./IsaacApiTypes";
 
 
 export type Action =
@@ -68,6 +69,10 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST}
     | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS; errors: ContentErrorsResponse}
     | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.ADMIN_STATS_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_STATS_RESPONSE_SUCCESS; stats: AdminStatsResponse}
+    | {type: ACTION_TYPE.ADMIN_STATS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST}
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS; authorisations: ApiTypes.UserSummaryWithEmailAddressDTO[]}
@@ -348,6 +353,16 @@ export interface ContentErrorsResponse {
     errorsList: ContentErrorItem[];
     failedFiles: number;
     totalErrors: number;
+}
+
+export interface AdminStatsResponse {
+    activeUsersOverPrevious: any;
+    answeredQuestionEvents: number;
+    answeringUsersOverPrevious: any;
+    userGenders: any;
+    userRoles: any;
+    userSchoolInfo: any;
+    viewQuestionEvents: number;
 }
 
 export interface FigureNumbersById {[figureId: string]: number}

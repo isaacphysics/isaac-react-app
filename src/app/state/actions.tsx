@@ -49,6 +49,7 @@ import {groups} from "./selectors";
 import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
 import {isTeacher} from "../services/user";
+import ReactGA from "react-ga";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -280,6 +281,11 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         nextPage = nextPage || "/";
         nextPage = nextPage.replace("#!", "");
         if (user.firstLogin && !nextPage.includes("account")) {
+            ReactGA.event({
+                category: 'user',
+                action: 'registration',
+                label: `Create Account (${provider})`,
+            });
             history.push('/account')
         } else {
             history.push(nextPage);
@@ -619,7 +625,7 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
             }) as any);
         }
     } catch (e) {
-        if (e.response.status == 429) {
+        if (e.response && e.response.status == 429) {
             const lock = new Date((new Date()).getTime() + timePeriod);
 
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock});
@@ -770,6 +776,17 @@ export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (di
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("User Role Modification Failed", e));
+    }
+};
+
+export const getAdminSiteStats = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_STATS_REQUEST});
+    try {
+        const version = await api.admin.getSiteStats();
+        dispatch({type: ACTION_TYPE.ADMIN_STATS_RESPONSE_SUCCESS, stats: version.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_STATS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get Admin statistics", e));
     }
 };
 

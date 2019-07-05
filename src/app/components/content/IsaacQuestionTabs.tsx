@@ -11,6 +11,7 @@ import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import { IsaacParsonsQuestion } from "./IsaacParsonsQuestion";
+import {DATE_TIME_FORMATTER} from "../../services/constants";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -41,7 +42,7 @@ interface IsaacQuestionTabsProps {
 }
 
 function showTime(date: Date) {
-    return date.toLocaleTimeString();
+    return DATE_TIME_FORMATTER.format(date);
 }
 
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
@@ -79,10 +80,10 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
             <QuestionComponent questionId={doc.id as string} doc={doc} />
 
             {validationResponse && !canSubmit && <div className="validation-response-panel">
-                <div className="mt-2">
+                <div className="my-3">
                     {validationResponse.correct ?
-                        <h1>Correct!</h1> :
-                        <h1>Incorrect</h1>
+                        <h1 className="m-0">Correct!</h1> :
+                        <h1 className="m-0">Incorrect</h1>
                     }
                 </div>
                 <div>
@@ -97,7 +98,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
             </Alert>}
 
             {((!validationResponse) || (validationResponse && !validationResponse.correct) || canSubmit) && (!locked) && <Row>
-                <Col className="text-center pt-3 pb-2">
+                <Col className="text-center pt-3 pb-1">
                     <Button color="secondary" disabled={!canSubmit} onClick={submitCurrentAttempt}>
                         Check my answer
                     </Button>

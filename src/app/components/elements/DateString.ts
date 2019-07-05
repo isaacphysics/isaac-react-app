@@ -1,9 +1,8 @@
-import React from "react";
-
-export const DateString = ({children, defaultValue}: {children: any, defaultValue?: any}) => {
+export const DateString = ({children, defaultValue}: {children: any; defaultValue?: any}) => {
+    const fallback = defaultValue || "NOT A VALID DATE";
     try {
-        return children && new Date(children).toUTCString();
+        return (children && new Date(children).toUTCString()) || fallback;
     } catch (e) {
-        return defaultValue || "NOT A VALID DATE";
+        return fallback;
     }
 };

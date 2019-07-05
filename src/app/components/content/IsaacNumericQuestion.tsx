@@ -153,7 +153,7 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
                         Units
                         <br/>
                         <Dropdown isOpen={isOpen} toggle={() => {setIsOpen(!isOpen);}}>
-                            <DropdownToggle caret>
+                            <DropdownToggle caret className="px-2 py-1">
                                 <TrustedHtml span html={wrapUnitForSelect(currentAttemptUnits)}/>
                             </DropdownToggle>
                             <DropdownMenu right>

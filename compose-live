@@ -21,7 +21,7 @@ if [ $1 = "create" ] || [ $1 = "exec" ] || [ $1 = "pull" ] || [ $1 = "push" ] ||
   API_VERSION=`docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-cs-app:$APP_VERSION`
   docker pull docker.isaacscience.org/isaac-api:$API_VERSION
 else
-  API_VERSION=`docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-app:$APP_VERSION`
+  API_VERSION=`docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-cs-app:$APP_VERSION`
 fi
 
 API_NAME=cs-api-$ENV-$API_VERSION

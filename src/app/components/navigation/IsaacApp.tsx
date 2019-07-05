@@ -35,11 +35,12 @@ import {Toasts} from "./Toasts";
 import {Header} from "./Header";
 import {Route} from "react-router";
 import {AdminUserManager} from "../pages/AdminUserManager";
+import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {ActiveModal} from "../elements/ActiveModal";
 import {isAdmin, isStaffUser, isTeacher} from "../../services/user";
 import {Groups} from "../pages/Groups";
-import { Equality } from '../pages/Equality';
+import {Equality} from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
 import {AssignmentProgress} from "../pages/AssignmentProgress";
@@ -114,6 +115,7 @@ const IsaacApp = ({requestCurrentUser, consistencyError, serverError, goneAwayEr
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" onlyFor={isStaffUser} component={Admin} />
                     <TrackedRoute path="/admin/usermanager" onlyFor={isAdmin} component={AdminUserManager} />
+                    <TrackedRoute exact path="/admin/stats" onlyFor={isStaffUser} component={AdminStats} />
                     <TrackedRoute path="/admin/content_errors" onlyFor={isStaffUser} component={AdminContentErrors} />
 
                     {/* Authentication */}

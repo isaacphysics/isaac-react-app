@@ -9,7 +9,7 @@ import {Card, CardBody, Container, Row, Col, Nav, NavItem, NavLink} from 'reacts
 import {orderBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {extractTeacherName} from "../../services/user";
-import {STUDENTS_CRUMB} from "../../services/constants";
+import {DATE_FORMATTER, STUDENTS_CRUMB} from "../../services/constants";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments, logAction};
@@ -22,7 +22,7 @@ interface MyAssignmentsPageProps {
 
 function formatDate(date: number | Date) {
     const dateObject = new Date(date);
-    return dateObject.toLocaleDateString();
+    return DATE_FORMATTER.format(dateObject);
 }
 
 const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; showOld?: (event: MouseEvent) => void}) => {

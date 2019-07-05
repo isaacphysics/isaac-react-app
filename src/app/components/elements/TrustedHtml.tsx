@@ -234,22 +234,32 @@ export function katexify(html: string, userPreferences: UserPreferencesDTO | nul
     return output;
 }
 
-// RegEx replacements to match Latex inspired Isaac Physics functionality
-function bootstrapify(html: string) {
-    // TODO does not work if class was added by content team
-    // TODO need to center table in parent element if possible
-    const regexRules = {
-        '<table class="table table-bordered w-100 text-center bg-white" ': /<table\s*?/g,
-    };
+const htmlDom = document.createElement("html");
+function manipulateHtml(html: string) {
+    // This can't be quick but it is more robust than writing regular expressions...
+    htmlDom.innerHTML = html;
 
-    let bootstrappedHtml = html;
-    Object.entries(regexRules).forEach(([replacement, rule]) =>
-        bootstrappedHtml = bootstrappedHtml.replace(rule, replacement)
-    );
-    return bootstrappedHtml;
+    // Table manipulation
+    const tableElements = htmlDom.getElementsByTagName("table");
+    for (let i = 0; i < tableElements.length; i++) {
+        const table = tableElements[i];
+
+        // Add bootstrap classes
+        const currentTableClasses = (table.getAttribute("class") || "").split(" ");
+        const bootstrapTableClasses = ["table", "table-bordered", "w-100", "text-center", "bg-white", "m-0"];
+        const uniqueTableClasses = Array.from(new Set([...currentTableClasses, ...bootstrapTableClasses]));
+        table.setAttribute("class", uniqueTableClasses.join(" "));
+
+        // Insert parent div to handle table overflow
+        const parent = table.parentElement as HTMLElement;
+        const div = document.createElement("div");
+        div.setAttribute("class", "overflow-auto mb-4");
+        parent.insertBefore(div, table);
+        div.appendChild(parent.removeChild(table));
+    }
+
+    return htmlDom.innerHTML;
 }
-
-
 
 const stateToProps = (state: AppState) => ({
     userPreferences: state ? state.userPreferences : null
@@ -262,7 +272,7 @@ interface TrustedHtmlProps {
 }
 
 let TrustedHtmlComponent = ({html, span, userPreferences}: TrustedHtmlProps) => {
-    html = bootstrapify(katexify(html, userPreferences));
+    html = manipulateHtml(katexify(html, userPreferences));
     if (span) {
         return <span dangerouslySetInnerHTML={{__html: html}} />;
     } else {

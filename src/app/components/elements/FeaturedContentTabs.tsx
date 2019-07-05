@@ -11,8 +11,8 @@ export const FeaturedContentTabs = () => (
             {{
                 "Featured Question": <Row className="feattab-row">
 
-                    <Col md="6" className="feattab-info pl-md-4 pb-4">
-                        <h2 className="h-question-mark mb-2 mb-md-3">
+                    <Col md={6} className="feattab-info pl-md-4">
+                        <h2 className="h-question-mark mb-md-3">
                             <span>?</span>
                             <div className="mt-2 mt-md-0">
                                 <IsaacContent doc={{
@@ -22,7 +22,10 @@ export const FeaturedContentTabs = () => (
                                 }} />
                             </div>
                         </h2>
-
+                    </Col>
+                    <Col md={6}>
+                    </Col>
+                    <Col md={6}>
                         <AnonUserExamBoardPicker className="float-right pt-md-5 pr-md-5 pt-3 pr-3" hideLabel />
                         <div className="mb-5">
                             <IsaacContent doc={{
@@ -111,7 +114,7 @@ export const FeaturedContentTabs = () => (
                                         "children": [
 
                                         ],
-                                        "value": "$\\or{A}{\\or{B}{C}}$",
+                                        "value": "$\\or{(\\and{A}{B})}{C}$",
                                         "published": false
                                     },
                                     {
@@ -129,7 +132,7 @@ export const FeaturedContentTabs = () => (
                                         "children": [
 
                                         ],
-                                        "value": "$\\not{C}$",
+                                        "value": "$\\or{A}{\\or{B}{C}}$",
                                         "published": false
                                     },
                                     {
@@ -138,7 +141,7 @@ export const FeaturedContentTabs = () => (
                                         "children": [
 
                                         ],
-                                        "value": "$\\or{(\\and{A}{B})}{C}$",
+                                        "value": "$\\not{C}$",
                                         "published": false
                                     }
                                 ]
@@ -146,7 +149,7 @@ export const FeaturedContentTabs = () => (
                         </div>
                     </Col>
 
-                    <Col md={{size: 5, offset: 1}} className="feattab-image mt-md-5 text-center" >
+                    <Col md={{size: 5, offset: 1}} className="feattab-image text-center" >
                         <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
                         <Button tag={Link} to="/topics" color="primary" outline className="mt-4 d-none d-md-inline-block">
                             Explore by Topic
