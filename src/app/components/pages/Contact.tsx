@@ -81,11 +81,11 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
 
     return <Container id="contact-page" className="pb-5">
         <TitleAndBreadcrumb currentPageTitle="Contact us" />
-        <div>
+        <div className="pt-4">
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">
                     <h3>Upcoming events</h3>
-                    <p>If you'd like to find out more about our upcoming events visit our <a href="https://isaaccomputerscience.org/events">Events Page</a></p>
+                    <p>If you&apos;d like to find out more about our upcoming events visit our <a href="https://isaaccomputerscience.org/events">Events Page</a></p>
                     <h3>Problems with the site?</h3>
                     <p>We always want to improve so please report any issues to <a className="small" href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></p>
                     <h3>Follow us</h3>
