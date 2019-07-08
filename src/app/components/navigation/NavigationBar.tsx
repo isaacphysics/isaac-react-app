@@ -113,14 +113,14 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         <span className="m-0"><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</span>
                     </DropdownToggle>
                     <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
-                        <DropdownItem tag={Link} to="/contact" className="pl-4 py-3 p-md-3">
-                            Contact Us
-                        </DropdownItem>
                         <DropdownItem tag={Link} to="/support/teacher" className="pl-4 py-3 p-md-3">
                             Teacher Support
                         </DropdownItem>
                         <DropdownItem tag={Link} to="/support/student"  className="pl-4 py-3 p-md-3">
                             Student Support
+                        </DropdownItem>
+                        <DropdownItem tag={Link} to="/contact" className="pl-4 py-3 p-md-3">
+                            Contact Us
                         </DropdownItem>
                     </DropdownMenu>
                 </UncontrolledDropdown>
