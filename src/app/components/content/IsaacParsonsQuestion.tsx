@@ -78,7 +78,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         }
     }
 
-    onUpdateBeforeSortStart = (initial: DragStart) => {
+    onDragStart = (initial: DragStart) => {
         const draggedElement: HTMLElement | null = document.getElementById(`parsons-item-${initial.draggableId}`);
         const choiceElement: HTMLElement | null = document.getElementById("parsons-choice-area");
         this.setState({
@@ -175,7 +175,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             </div>
             {/* TODO Accessibility */}
             <Row className="my-md-3">
-                <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onUpdateBeforeSortStart}>
+                <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
                     <Col md={{size: 6}}>
                         <h4>Available items</h4>
                         <Droppable droppableId="availableItems">
