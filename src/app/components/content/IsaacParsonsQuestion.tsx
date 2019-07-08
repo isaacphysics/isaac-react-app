@@ -21,6 +21,7 @@ interface IsaacParsonsQuestionState {
     draggedElement?: HTMLElement | null;
     initialX?: number | null;
     currentIndent?: number | null;
+    lastKeyPressTimestamp: number;
 }
 
 class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestionProps> {
@@ -34,9 +35,11 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             draggedElement: null,
             initialX: null,
             currentIndent: null,
+            lastKeyPressTimestamp: 0,
         };
         window.addEventListener('mousemove', this.onMouseMove);
         window.addEventListener('touchmove', this.onMouseMove);
+        window.addEventListener('keyup', this.onKeyUp);
     }
 
     componentDidUpdate = (prevProps: IsaacParsonsQuestionProps, prevState: IsaacParsonsQuestionState) => {
@@ -102,6 +105,24 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         }
     }
 
+    onKeyUp = (e: KeyboardEvent) => {
+        // There's a bug somewhere that adds this event twice, but only one has a non-zero timestamp.
+        // The condition on draggedElement *might* be sufficient, but let's be explicit.
+        if (e.timeStamp > 0 && this.state.draggedElement) {
+            let className = this.state.draggedElement.className;
+            const matches = className.match(/indent-([0-3])/);
+            let currentIndent: number = this.state.currentIndent || (matches && parseInt(matches[1])) || 0;
+            let newIndent = currentIndent;
+            if (e.key === '[' || e.code === 'BracketLeft' || e.keyCode === 91) {
+                newIndent = Math.max(currentIndent - 1, 0);
+            } else if (e.key === ']' || e.code === 'BracketRight' || e.keyCode === 93) {
+                newIndent = Math.min(currentIndent + 1, 3);
+            }
+            this.setState({ currentIndent: newIndent });
+            this.state.draggedElement.className = className.replace((matches && matches[0]) || `indent-${currentIndent}`, `indent-${newIndent}`);
+        }
+    }
+
     moveItem = (src: ParsonsItemDTO[] | undefined, fromIndex: number, dst: ParsonsItemDTO[] | undefined, toIndex: number, indent: number) => {
         if (!src || !dst) return;
         const srcItem = src.splice(fromIndex, 1)[0];
@@ -156,7 +177,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             </div>
             {/* TODO Accessibility */}
             <Row className="my-md-3">
-                <DragDropContext onDragEnd={this.onDragEnd} onBeforeDragStart={this.onUpdateBeforeSortStart}>
+                <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onUpdateBeforeSortStart}>
                     <Col md={{size: 6}}>
                         <h4>Available items</h4>
                         <Droppable droppableId="availableItems">
