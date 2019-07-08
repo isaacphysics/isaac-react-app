@@ -21,7 +21,6 @@ interface IsaacParsonsQuestionState {
     draggedElement?: HTMLElement | null;
     initialX?: number | null;
     currentIndent?: number | null;
-    lastKeyPressTimestamp: number;
 }
 
 class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestionProps> {
@@ -35,7 +34,6 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             draggedElement: null,
             initialX: null,
             currentIndent: null,
-            lastKeyPressTimestamp: 0,
         };
         window.addEventListener('mousemove', this.onMouseMove);
         window.addEventListener('touchmove', this.onMouseMove);
