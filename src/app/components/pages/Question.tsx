@@ -7,7 +7,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
+import {DOCUMENT_TYPE, EDITOR_URL, ISAAC_ENV} from "../../services/constants";
 import {RelatedContent} from "../elements/RelatedContent";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -46,7 +46,7 @@ const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc}: QuestionPageProps
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     collectionType={navigation.collectionType}
                 />
-                <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as any)['canonicalSourceFile']} />
+                {ISAAC_ENV != "live" && <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as any)['canonicalSourceFile']} />}
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
                         <AnonUserExamBoardPicker className="text-right" />

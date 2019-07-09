@@ -6,7 +6,7 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {connect} from "react-redux";
-import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
+import {DOCUMENT_TYPE, EDITOR_URL, ISAAC_ENV} from "../../services/constants";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
@@ -41,7 +41,7 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
                 <Row>
                     <Col>
                         <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
-                        <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as any)['canonicalSourceFile']} />
+                        {ISAAC_ENV != "live" && <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as any)['canonicalSourceFile']} />}
                     </Col>
                 </Row>
                 {/* TODO add printing and sharing links */}
