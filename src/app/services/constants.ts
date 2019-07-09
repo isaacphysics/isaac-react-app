@@ -15,6 +15,14 @@ if (document.location.hostname === "localhost") {
 }
 export const API_PATH: string = apiPath;
 
+let isaacEnv: string = "dev";
+if (document.location.origin.indexOf("https://staging.isaaccomputerscience.org") > -1) {
+    isaacEnv = "staging";
+} else if (document.location.origin.indexOf("https://isaaccomputerscience.org/") > -1) {
+    isaacEnv = "live";
+}
+export const ISAAC_ENV: string = isaacEnv;
+
 export const EDITOR_URL = "https://editor.isaaccomputerscience.org/#!/edit/master/";
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
