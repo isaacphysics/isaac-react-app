@@ -25,6 +25,7 @@ import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import queryString from "query-string";
+import { Prompt } from 'react-router'
 import {Link, withRouter} from "react-router-dom";
 import {ACCOUNT_TAB, EXAM_BOARD} from "../../services/constants";
 import {history} from "../../services/history"
@@ -97,6 +98,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const initialUserPreferences = {EMAIL_PREFERENCE: initialEmailPreferences, EXAM_BOARD: initialExamPreferences};
     const [myUserPreferences, setMyUserPreferences] = useState(Object.assign(initialUserPreferences));
 
+    const [accountAltered, setAccountAltered] = useState(false);
+
     // Set active tab using hash anchor
     const [activeTab, setActiveTab] = useState(ACCOUNT_TAB.account);
     useMemo(() => {
@@ -107,6 +110,12 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
             ACCOUNT_TAB.account;
         setActiveTab(tab);
     }, [hashAnchor, authToken]);
+
+    useEffect(() => {
+        if (myUser != Object.assign({}, user, {password: ""})) {
+            setAccountAltered(true)
+        }
+    }, [myUser]);
 
     // Show registration successful banner once
     const [bannerShown, _] = useState((persistence.session.load(KEY.FIRST_LOGIN) === FIRST_LOGIN_STATE.BANNER_SHOWN));
@@ -134,6 +143,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     };
 
     return <Container id="account-page" className="mb-5">
+        <Prompt
+            when={accountAltered && !attemptedAccountUpdate}
+            message='You have unsaved changes to your account, are you sure you want to leave?'
+        />
         <TitleAndBreadcrumb currentPageTitle="My Account" className="mb-4" />
         <h3 className="d-md-none text-center text-muted m-3">
             <small>
