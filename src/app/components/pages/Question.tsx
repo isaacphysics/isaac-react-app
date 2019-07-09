@@ -7,7 +7,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE} from "../../services/constants";
+import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
 import {RelatedContent} from "../elements/RelatedContent";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -15,6 +15,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {AnonUserExamBoardPicker} from "../elements/AnonUserExamBoardPicker";
+import {EditContentButton} from "../elements/EditContentButton";
 
 const stateToProps = (state: AppState, {match: {params: {questionId}}}: any) => {
     return {
@@ -45,6 +46,7 @@ const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc}: QuestionPageProps
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     collectionType={navigation.collectionType}
                 />
+                <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as any)['canonicalSourceFile']} />
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
                         <AnonUserExamBoardPicker className="text-right" />

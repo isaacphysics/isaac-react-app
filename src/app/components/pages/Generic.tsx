@@ -6,11 +6,12 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {connect} from "react-redux";
-import {DOCUMENT_TYPE} from "../../services/constants";
+import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {EditContentButton} from "../elements/EditContentButton";
 
 const stateToProps = (state: AppState, {match: {params: {pageId}}}: any) => {
     return {
@@ -40,6 +41,7 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
                 <Row>
                     <Col>
                         <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
+                        <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as any)['canonicalSourceFile']} />
                     </Col>
                 </Row>
                 {/* TODO add printing and sharing links */}
