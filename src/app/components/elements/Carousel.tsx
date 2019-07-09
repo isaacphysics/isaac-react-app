@@ -15,6 +15,23 @@ const ControlledCarouselInstance = ({children, collectionTag}: any) => {
         }
     };
 
+    // next and previous to cycle through the carousel items.
+    const nextIndex = () => {
+        if (activeIndex + 1 < items.length) {
+            setActiveIndex(activeIndex + 1)
+        } else {
+            setActiveIndex(0)
+        }
+    };
+
+    const previousIndex = () => {
+        if (activeIndex - 1 >= 0) {
+            setActiveIndex(activeIndex - 1)
+        } else {
+            setActiveIndex(items.length)
+        }
+    };
+
     const gotoIndex = (newIndex: any) => {
         if (!animating) {
             setActiveIndex (newIndex);
@@ -25,7 +42,7 @@ const ControlledCarouselInstance = ({children, collectionTag}: any) => {
     const CollectionTag = collectionTag;
 
     return (
-        <Carousel activeIndex={activeIndex} ride="carousel" className="pb-5" next={keepIndex} previous={keepIndex}>
+        <Carousel activeIndex={activeIndex} ride="carousel" className="pb-5" next={nextIndex} previous={previousIndex}>
             {children.map ((child: any, index: number) => (
                 <CarouselItem key={index} onExiting={onExiting} onExited={onExited}>
                     <CollectionTag>
