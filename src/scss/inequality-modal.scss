@@ -133,12 +133,13 @@
                 background: darken(theme-color("primary"), 20%);
 
                 li {
+                    position: relative;
                     display: inline-block;
                     box-sizing: content-box;
                     padding: 8px;
                     text-indent: 0;
-                    width: 40px;
-                    height: 40px;
+                    width: 48px;
+                    height: 48px;
                     text-align: center;
                     font-size: 1.8em;
 
@@ -148,11 +149,45 @@
 
                     .katex {
                         display: block;
+                        padding-top: 5px;
+                    }
+                    
+                    svg {
+                        position: absolute;
+                        width: 48px;
+                        left: 8px;
+                        top: 4px;
+                        overflow: visible;
+
+                        .v-hexagon {
+                            fill: white;
+                            stroke: darken(theme-color("primary"), 10%);
+                            stroke-width: 8px;
+                        }
                     }
                 }
 
                 &.sub-menu {
                     background: theme-color("primary");
+                }
+            }
+
+            .sub-menu-tabs {
+                li {
+                    font-size: 1.4em;
+                    
+                    .katex {
+                        padding-top: 8px;
+                    }
+
+                    &.inactive {
+                        svg {
+                            .v-hexagon {
+                                fill: theme-color("primary");
+                                stroke-width: 0;
+                            }
+                        }    
+                    }
                 }
             }
         }
