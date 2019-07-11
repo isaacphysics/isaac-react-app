@@ -58,6 +58,13 @@ export const searchList = [
         summary: "Click here to view and edit your account details.",
         url: "/account",
         type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "competition",
+        title: "Launch Competition",
+        terms: ["competition"],
+        summary: "Get the chance to win one of ten Isaac Computer Science swag bags, each containing a Raspberry Pi 4!",
+        url: "/pages/july_launch_competition",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
     }
 
 ];
