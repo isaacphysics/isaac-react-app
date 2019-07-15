@@ -119,7 +119,7 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
 
                 <div className="pattern-06 pt-4 pb-5">
                     <RS.Row>
-                        <RS.ListGroup className="mb-4 d-block d-md-flex flex-row align-items-stretch link-list bg-transparent">
+                        <RS.ListGroup className="mt-5 mb-4 d-block d-md-flex flex-row align-items-stretch link-list bg-transparent">
                             <RS.ListGroupItem className="bg-transparent">
                                 <LinkCard
                                     title="Group progress" imageSource="/assets/card03.svg"

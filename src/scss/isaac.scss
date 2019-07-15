@@ -211,14 +211,15 @@ body {
 
 .pattern-06 {
     background-image: url('/assets/pattern06.svg');
-    background-position: 96.5% 65%;
     background-repeat: no-repeat;
+    top: 18em;
     margin: auto -15px;
     padding: 0 15px;
     @include respond-above(sm) {
-        background-position: 96.5% 87%;
+        background-position: 0.3rem 1.6rem;
         margin: 0;
-        padding: 0;
+        margin-top: -4em;
+        padding: 0 15px;
     }
 }
 .pattern-07 {
