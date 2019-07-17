@@ -1,5 +1,4 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import ResponsiveCarousel from "./Carousel";
 import {EventCard} from "./EventCard";
 
