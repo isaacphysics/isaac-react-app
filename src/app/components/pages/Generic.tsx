@@ -1,12 +1,12 @@
 import React, {useEffect} from "react";
 import {Col, Container, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
-import {fetchDoc} from "../../state/actions";
+import {fetchDoc, requestConstantsSegueEnvironment} from "../../state/actions";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {connect} from "react-redux";
-import {DOCUMENT_TYPE, EDITOR_URL, ISAAC_ENV} from "../../services/constants";
+import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
@@ -17,6 +17,7 @@ const stateToProps = (state: AppState, {match: {params: {pageId}}}: any) => {
     return {
         doc: state ? state.doc : null,
         urlPageId: pageId,
+        segueEnvironment: state && state.constants && state.constants.segueEnvironment || "unknown",
     };
 };
 const dispatchToProps = {fetchDoc};
@@ -26,14 +27,20 @@ interface GenericPageComponentProps {
     pageIdOverride?: string;
     urlPageId: string;
     fetchDoc: (documentType: DOCUMENT_TYPE, pageId: string) => void;
+    segueEnvironment: string;
+    requestConstantsSegueEnvironment: () => void;
 }
 
-export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}: GenericPageComponentProps) => {
+export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc, segueEnvironment, requestConstantsSegueEnvironment}: GenericPageComponentProps) => {
     const pageId = pageIdOverride || urlPageId;
     useEffect(
         () => {fetchDoc(DOCUMENT_TYPE.GENERIC, pageId);},
         [pageId]
     );
+
+    useEffect(() => {
+        requestConstantsSegueEnvironment();
+    }, []);
 
     return <ShowLoading until={doc} render={(doc: ContentDTO) =>
         <div>
@@ -41,7 +48,7 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
                 <Row>
                     <Col>
                         <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
-                        {ISAAC_ENV != "live" && <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as any)['canonicalSourceFile']} />}
+                        {segueEnvironment != "PROD" && <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as any)['canonicalSourceFile']} />}
                     </Col>
                 </Row>
                 {/* TODO add printing and sharing links */}

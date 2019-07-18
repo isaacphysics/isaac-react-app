@@ -15,14 +15,6 @@ if (document.location.hostname === "localhost") {
 }
 export const API_PATH: string = apiPath;
 
-let isaacEnv: string = "dev";
-if (document.location.origin.indexOf("https://staging.isaaccomputerscience.org") > -1) {
-    isaacEnv = "staging";
-} else if (document.location.origin.indexOf("https://isaaccomputerscience.org/") > -1) {
-    isaacEnv = "live";
-}
-export const ISAAC_ENV: string = isaacEnv;
-
 export const EDITOR_URL = "https://editor.isaaccomputerscience.org/#!/edit/master/";
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
@@ -142,6 +134,10 @@ export enum ACTION_TYPE {
     CONSTANTS_SEGUE_VERSION_REQUEST = "CONSTANTS_SEGUE_VERSION_REQUEST",
     CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS = "CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS",
     CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE = "CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE",
+
+    CONSTANTS_SEGUE_ENVIRONMENT_REQUEST = "CONSTANTS_SEGUE_ENVIRONMENT_REQUEST",
+    CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS = "CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS",
+    CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE = "CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE",
 
     DOCUMENT_REQUEST = "DOCUMENT_REQUEST",
     DOCUMENT_RESPONSE_SUCCESS = "DOCUMENT_RESPONSE_SUCCESS",
