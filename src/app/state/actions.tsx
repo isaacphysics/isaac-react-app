@@ -157,47 +157,48 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
 
 // TODO scope for pulling out a registerUser method from this
 export const updateCurrentUser = (
-    params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null},
+    updatedUser: LoggedInValidationUser,
+    updatedUserPreferences: UserPreferencesDTO,
+    passwordCurrent: string | null,
     currentUser: LoggedInUser
 ) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-    if (currentUser.loggedIn && params.registeredUser.loggedIn && currentUser.email !== params.registeredUser.email) {
-        let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
-        // TODO handle the alert with modal
-        if (emailChange) {
-            try {
-                const changedUser = await api.users.updateCurrent(params);
-                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: changedUser.data});
-            } catch (e) {
-                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-            }
-        } else {
-            params.registeredUser.email = currentUser.email; // TODO I don't think you can do this, or even if so probably shouldn't
+    // Confirm email change
+    if (currentUser.loggedIn && updatedUser.loggedIn && currentUser.email !== updatedUser.email) {
+        // TODO handle confirmation with a modal
+        const emailChangeConfirmed = window.confirm(
+            "You have edited your email address. Your current address will continue to work until you verify your " +
+            "new address by following the verification link sent to it via email. Continue?"
+        );
+        if (!emailChangeConfirmed) {
+            updatedUser.email = currentUser.email; // TODO I don't think you can do this, or even if so probably shouldn't
+            return; //early
         }
-    } else {
-        const initialLogin = params.registeredUser.loggedIn && isFirstLoginInPersistence() || false;
-        try {
-            const currentUser = await api.users.updateCurrent(params);
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-            dispatch(requestCurrentUser() as any);
-            if (initialLogin) {
-                const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
-                persistence.remove(KEY.AFTER_AUTH_PATH);
-                if ((afterAuthPath).includes('account')) {
-                    history.push(afterAuthPath, {firstLogin: initialLogin})
-                }
-                history.push('/account', {firstLogin: initialLogin});
+    }
+
+    try {
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
+        const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent);
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
+        dispatch(requestCurrentUser() as any);
+
+        const isFirstLogin = updatedUser.loggedIn && isFirstLoginInPersistence() || false;
+        if (isFirstLogin) {
+            const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
+            persistence.remove(KEY.AFTER_AUTH_PATH);
+            if ((afterAuthPath).includes('account')) {
+                history.push(afterAuthPath, {firstLogin: isFirstLogin})
             }
-            dispatch(showToast({
-                title: "Account settings updated",
-                body: "Your account settings were updated successfully.",
-                color: "success",
-                timeout: 5000,
-                closable: false,
-            }) as any);
-        } catch (e) {
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+            history.push('/account', {firstLogin: isFirstLogin});
         }
+        dispatch(showToast({
+            title: "Account settings updated",
+            body: "Your account settings were updated successfully.",
+            color: "success",
+            timeout: 5000,
+            closable: false,
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
 

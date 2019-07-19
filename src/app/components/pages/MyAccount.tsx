@@ -58,7 +58,9 @@ interface AccountPageProps {
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     userPreferences: UserPreferencesDTO | null;
     updateCurrentUser: (
-        params: { registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
+        updatedUser: LoggedInValidationUser,
+        updatedUserPreferences: UserPreferencesDTO,
+        passwordCurrent: string | null,
         currentUser: LoggedInUser
     ) => void;
     firstLogin: boolean;
@@ -73,8 +75,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
 
     // - Copy of user to store changes before saving
-    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
-    useMemo(() => {setMyUser(Object.assign({}, user, {password: ""}))}, [user]);
+    const [updatedUser, setUpdatedUser] = useState(Object.assign({}, user, {password: ""}));
+    useMemo(() => {setUpdatedUser(Object.assign({}, user, {password: ""}))}, [user]);
 
     // - Passwords
     const [newPassword, setNewPassword] = useState("");
@@ -113,8 +115,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_SHOWN);
 
     // Values derived from inputs (props and state)
-    const isEmailValid = myUser.loggedIn && myUser.email && validateEmail(myUser.email) || validateEmail("");
-    const isDobValid = myUser.loggedIn && myUser.dateOfBirth && isDobOverThirteen(new Date(myUser.dateOfBirth)) || false;
+    const isEmailValid = updatedUser.loggedIn && updatedUser.email && validateEmail(updatedUser.email) || validateEmail("");
+    const isDobValid = updatedUser.loggedIn && updatedUser.dateOfBirth && isDobOverThirteen(new Date(updatedUser.dateOfBirth)) || false;
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
     //Form's submission method
@@ -123,13 +125,9 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         setAttemptedAccountUpdate(true);
         Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
         Object.assign(myUserPreferences.EXAM_BOARD, examPreferences);
-        if (myUser.loggedIn && isEmailValid && (isDobValid || myUser.dateOfBirth == undefined) &&
-            (!myUser.password || isNewPasswordConfirmed)) {
-            updateCurrentUser({
-                registeredUser: myUser,
-                userPreferences: myUserPreferences,
-                passwordCurrent: currentPassword
-            }, user);
+        if (updatedUser.loggedIn && isEmailValid && (isDobValid || updatedUser.dateOfBirth == undefined) &&
+            (!updatedUser.password || isNewPasswordConfirmed)) {
+            updateCurrentUser(updatedUser, myUserPreferences, currentPassword, user);
         }
     };
 
@@ -145,7 +143,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
             Registration successful
         </Alert>}
 
-        {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
+        {user.loggedIn && updatedUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
                 <Nav tabs className="my-4 flex-wrap">
                     <NavItem>
@@ -190,7 +188,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
                         <TabPane tabId={ACCOUNT_TAB.account}>
                             <UserDetails
-                                myUser={myUser} setMyUser={setMyUser} examPreferences={examPreferences} setExamPreferences={setExamPreferences}
+                                myUser={updatedUser} setMyUser={setUpdatedUser} examPreferences={examPreferences} setExamPreferences={setExamPreferences}
                                 isDobValid={isDobValid} isEmailValid={isEmailValid} attemptedAccountUpdate={attemptedAccountUpdate}
                             />
                         </TabPane>
@@ -198,7 +196,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                         <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                             <UserPassword
                                 currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}
-                                myUser={myUser} setMyUser={setMyUser}
+                                myUser={updatedUser} setMyUser={setUpdatedUser}
                                 setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
                                 isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
                                 setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm}
