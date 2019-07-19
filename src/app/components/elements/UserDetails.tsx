@@ -6,7 +6,7 @@ import {api} from "../../services/api";
 import {DateInput} from "./DateInput";
 
 interface UserDetailsProps {
-    examPreferences: UserExamPreferences | null;
+    examPreferences: UserExamPreferences;
     setExamPreferences: (e: any) => void;
     myUser: ValidationUser;
     setMyUser: (user: any) => void;

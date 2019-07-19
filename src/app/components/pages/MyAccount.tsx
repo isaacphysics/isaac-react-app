@@ -84,16 +84,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [currentPassword, setCurrentPassword] = useState("");
 
     // - User preferences
-    const defaultEmailPreferences = {NEWS_AND_UPDATES: false, ASSIGNMENTS: true, EVENTS: false};
-    const initialEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ?
-        userPreferences.EMAIL_PREFERENCE :
-        defaultEmailPreferences;
+    const initialEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
     const [emailPreferences, setEmailPreferences] = useState(Object.assign({}, initialEmailPreferences));
 
-    const defaultExamPreferences = {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true};
-    const initialExamPreferences = (userPreferences && userPreferences.EXAM_BOARD) ?
-        userPreferences.EXAM_BOARD :
-        defaultExamPreferences;
+    const initialExamPreferences = (userPreferences && userPreferences.EXAM_BOARD) ? userPreferences.EXAM_BOARD : {};
     const [examPreferences, setExamPreferences] = useState(Object.assign({}, initialExamPreferences));
 
     const initialUserPreferences = {EMAIL_PREFERENCE: initialEmailPreferences, EXAM_BOARD: initialExamPreferences};
@@ -208,9 +202,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                         </TabPane>
 
                         <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
-                            <UserEmailPreference
-                                emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
-                            />
+                            <UserEmailPreference emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences} />
                         </TabPane>
 
                     </TabContent>
