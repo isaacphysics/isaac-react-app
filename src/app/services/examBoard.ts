@@ -11,6 +11,5 @@ export const determineExamBoardFrom = (userPreferences?: UserPreferencesDTO | nu
 };
 
 export const filterOnExamBoard = (contents: ContentSummaryDTO[], examBoard: EXAM_BOARD) => {
-    console.log(examBoard);
     return contents.filter(content => content.tags && content.tags.includes(examBoardTagMap[examBoard]));
 };
