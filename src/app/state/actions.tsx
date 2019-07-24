@@ -50,6 +50,7 @@ import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
 import {isTeacher} from "../services/user";
 import ReactGA from "react-ga";
+import {userPreferencesModal} from "../components/elements/UserPreferencesModal";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -155,7 +156,7 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-// TODO scope for pulling out a registerUser method from this
+// TODO scope for pulling out a separate registerUser method from this
 export const updateCurrentUser = (
     updatedUser: LoggedInValidationUser,
     updatedUserPreferences: UserPreferencesDTO,
@@ -164,13 +165,14 @@ export const updateCurrentUser = (
 ) => async (dispatch: Dispatch<Action>) => {
     // Confirm email change
     if (currentUser.loggedIn && updatedUser.loggedIn && currentUser.email !== updatedUser.email) {
-        // TODO handle confirmation with a modal
         const emailChangeConfirmed = window.confirm(
             "You have edited your email address. Your current address will continue to work until you verify your " +
             "new address by following the verification link sent to it via email. Continue?"
         );
         if (!emailChangeConfirmed) {
-            updatedUser.email = currentUser.email; // TODO I don't think you can do this, or even if so probably shouldn't
+            dispatch(showToast({
+                title: "Account settings not updated", body: "Your account settings update was cancelled.", color: "danger", timeout: 5000, closable: false,
+            }) as any);
             return; //early
         }
     }
@@ -179,7 +181,7 @@ export const updateCurrentUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
         const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent);
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-        dispatch(requestCurrentUser() as any);
+        await dispatch(requestCurrentUser() as any);
 
         const isFirstLogin = updatedUser.loggedIn && isFirstLoginInPersistence() || false;
         if (isFirstLogin) {

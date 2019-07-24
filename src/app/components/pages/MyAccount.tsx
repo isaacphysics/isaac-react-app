@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -19,14 +19,20 @@ import {
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
 import {resetPassword, updateCurrentUser} from "../../state/actions";
-import {LoggedInUser, LoggedInValidationUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {
+    LoggedInUser,
+    LoggedInValidationUser,
+    UserEmailPreferences,
+    UserExamPreferences,
+    UserPreferencesDTO
+} from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
-import {ACCOUNT_TAB, EXAM_BOARD} from "../../services/constants";
+import {ACCOUNT_TAB} from "../../services/constants";
 import {history} from "../../services/history"
 import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -84,14 +90,20 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [currentPassword, setCurrentPassword] = useState("");
 
     // - User preferences
-    const initialEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
-    const [emailPreferences, setEmailPreferences] = useState(Object.assign({}, initialEmailPreferences));
+    const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
+    const [examPreferences, setExamPreferences] = useState<UserExamPreferences>({});
+    const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
 
-    const initialExamPreferences = (userPreferences && userPreferences.EXAM_BOARD) ? userPreferences.EXAM_BOARD : {};
-    const [examPreferences, setExamPreferences] = useState(Object.assign({}, initialExamPreferences));
+    useMemo(() => {
+        const currentEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
+        const currentExamPreferences = (userPreferences && userPreferences.EXAM_BOARD) ? userPreferences.EXAM_BOARD : {};
+        const currentUserPreferences = {EMAIL_PREFERENCE: currentEmailPreferences, EXAM_BOARD: currentExamPreferences};
 
-    const initialUserPreferences = {EMAIL_PREFERENCE: initialEmailPreferences, EXAM_BOARD: initialExamPreferences};
-    const [myUserPreferences, setMyUserPreferences] = useState(Object.assign(initialUserPreferences));
+        setEmailPreferences(currentEmailPreferences);
+        setExamPreferences(currentExamPreferences);
+        setMyUserPreferences(currentUserPreferences);
+    }, [userPreferences]);
+
 
     // Set active tab using hash anchor
     const [activeTab, setActiveTab] = useState(ACCOUNT_TAB.account);
@@ -113,7 +125,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const isDobValid = updatedUser.loggedIn && updatedUser.dateOfBirth && isDobOverThirteen(new Date(updatedUser.dateOfBirth)) || false;
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
-    //Form's submission method
+    // Form's submission method
     const updateAccount = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedAccountUpdate(true);

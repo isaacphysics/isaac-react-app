@@ -373,6 +373,7 @@ export enum MEMBERSHIP_STATUS {
 }
 
 export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
+export const DEFAULT_EMAIL_PREFERENCES = {NEWS_AND_UPDATES: false, ASSIGNMENTS: true, EVENTS: false};
 
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 

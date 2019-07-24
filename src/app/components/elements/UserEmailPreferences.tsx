@@ -1,48 +1,48 @@
-import {CardBody, CustomInput, Form, FormGroup, Table} from "reactstrap";
-import React from "react";
+import {CardBody, CustomInput, FormGroup, Table} from "reactstrap";
+import React, {useMemo} from "react";
 import {UserEmailPreferences} from "../../../IsaacAppTypes";
+import {DEFAULT_EMAIL_PREFERENCES} from "../../services/constants";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences | null;
     setEmailPreferences: (e: any) => void;
+    idPrefix?: string;
 }
 
-export const UserEmailPreference = ({emailPreferences, setEmailPreferences}: UserEmailPreferencesProps) => {
+export const UserEmailPreference = ({emailPreferences, setEmailPreferences, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
+    const emailPreferencesToSet = Object.assign(DEFAULT_EMAIL_PREFERENCES, emailPreferences);
+
     return <CardBody>
         <p>Tell us which emails you would like to receive. These settings can be changed at any time.</p>
         <FormGroup>
             <Table>
                 <thead>
-                    <tr>
-                        <th>Email Type</th>
-                        <th>Description</th>
-                        <th>Preference</th>
-                    </tr>
+                    <tr><th>Email Type</th><th>Description</th><th>Preference</th></tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Assignments</td>
-                        <td>Get notified when your teacher gives your group a new assignment.</td>
-                        <td>
-                            <CustomInput
-                                id="assignments" type="checkbox" name="assignments"
-                                defaultChecked={emailPreferences ? emailPreferences.ASSIGNMENTS : true}
-                                onChange={(e: any) => setEmailPreferences(
-                                    Object.assign({}, emailPreferences, {ASSIGNMENTS: emailPreferences ? !emailPreferences.ASSIGNMENTS : true})
-                                )}
-                            />
-                        </td>
-                    </tr>
                     <tr>
                         <td>News and Updates</td>
                         <td>New content and website feature updates, as well as interesting news about Isaac.</td>
                         <td>
                             <CustomInput
-                                id="news" type="checkbox" name="news" color="$secondary"
-                                defaultChecked={emailPreferences ? emailPreferences.NEWS_AND_UPDATES : true}
-                                onChange={(e: any) => setEmailPreferences(
-                                    Object.assign({}, emailPreferences, {NEWS_AND_UPDATES: emailPreferences? !emailPreferences.NEWS_AND_UPDATES : true}))
+                                id={`${idPrefix}news`} type="checkbox" name="news" color="$secondary"
+                                checked={emailPreferencesToSet.NEWS_AND_UPDATES}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmailPreferences(
+                                    Object.assign(emailPreferencesToSet, {NEWS_AND_UPDATES: e.target.checked}))
                                 }
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Assignments</td>
+                        <td>Get notified when your teacher gives your group a new assignment.</td>
+                        <td>
+                            <CustomInput
+                                id={`${idPrefix}assignments`} type="checkbox" name="assignments"
+                                checked={emailPreferencesToSet.ASSIGNMENTS}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmailPreferences(
+                                    Object.assign(emailPreferencesToSet, {ASSIGNMENTS: e.target.checked})
+                                )}
                             />
                         </td>
                     </tr>
@@ -51,10 +51,10 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences}: Use
                         <td>Information about our computer science events.</td>
                         <td>
                             <CustomInput
-                                className="CustomInput" id="events" type="checkbox" name="events"
-                                defaultChecked={emailPreferences ? emailPreferences.EVENTS : true}
-                                onChange={(e: any) => setEmailPreferences(
-                                    Object.assign({}, emailPreferences, {EVENTS: emailPreferences ? !emailPreferences.EVENTS : true})
+                                id={`${idPrefix}events`} className="CustomInput" type="checkbox" name="events"
+                                checked={emailPreferencesToSet.EVENTS}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmailPreferences(
+                                    Object.assign(emailPreferencesToSet, {EVENTS: e.target.checked})
                                 )}
                             />
                         </td>
