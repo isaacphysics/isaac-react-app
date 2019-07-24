@@ -216,7 +216,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <FormGroup className="school">
                     <Label htmlFor="school-input">School</Label>
                     <Input
-                        id="school-input" type="text" name="school" placeholder="Type a UK school name..." autocomplete="isaac-off"
+                        id="school-input" type="text" name="school" placeholder="Type a UK school name..." autoComplete="isaac-off"
                         value={
                             schoolQueryText !== null ?
                                 schoolQueryText :
