@@ -208,14 +208,33 @@
                     padding: 0px 8px;
                     text-indent: 0;
                     width: 60px;
+                    height: 36px;
                     text-align: center;
                     font-size: 1.8em;
                     background: black;
                     color: white;
+                    position: relative;
 
                     &.active {
                         color: black;
                         background: theme-color("primary");
+
+                        svg .tab-triangle {
+                            fill: theme-color("primary");
+                        }
+                    }
+
+                    svg {
+                        position: absolute;
+                        width: 76px;
+                        height: 23px;
+                        left: 0;
+                        top: 36px;
+                        overflow: visible;
+
+                        .tab-triangle {
+                            fill: black;
+                        }
                     }
                 }
             }
