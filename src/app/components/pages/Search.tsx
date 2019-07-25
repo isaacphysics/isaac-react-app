@@ -102,9 +102,9 @@ const SearchPageComponent = (props: SearchPageProps) => {
         return keepElement || isStaffUser;
     };
 
-    const filteredSearchResults = searchResults && searchResults.results && searchResults.results.filter(filterResult);
+    const filteredSearchResults = searchResults && searchResults.results && filterOnExamBoard(searchResults.results.filter(filterResult), examBoard);
 
-    const shortcutSearchResults = filterOnExamBoard(((shortcutResponse || []).concat(filteredSearchResults || [])), examBoard);
+    const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
 
     return (
         <Container id="search-page">
@@ -131,7 +131,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
                         <RS.CardHeader className="search-header">
                             <Col md={5} xs={12}>
                                 <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutSearchResults ? <RS.Badge color="primary">{shortcutSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
+                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
                                 </h3>
                             </Col>
                             <Col md={7} xs={12}>
@@ -144,9 +144,9 @@ const SearchPageComponent = (props: SearchPageProps) => {
                             </Col>
                         </RS.CardHeader>
                         {query != "" && <RS.CardBody>
-                            <ShowLoading until={shortcutSearchResults}>
-                                {shortcutSearchResults && shortcutSearchResults.length > 0 ?
-                                    <LinkToContentSummaryList items={shortcutSearchResults}/>
+                            <ShowLoading until={shortcutAndFilteredSearchResults}>
+                                {shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0 ?
+                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults}/>
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </RS.CardBody>}
