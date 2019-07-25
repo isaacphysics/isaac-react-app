@@ -233,8 +233,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                         {errorMessage.generalError}
                                     </h3>
                                 }
-                                {/* TODO only show Save on relevant pages? */}
-                                <Input type="submit" value="Save" className="btn btn-block btn-secondary border-0" />
+                                {/* Teacher connections does not have a save */}
+                                <Input type="submit" value="Save" className="btn btn-block btn-secondary border-0" disabled={activeTab === ACCOUNT_TAB.teacherconnections}/>
                             </Col>
                         </Row>
                     </CardFooter>
