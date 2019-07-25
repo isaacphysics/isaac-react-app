@@ -1,16 +1,18 @@
 import {CardBody, CustomInput, FormGroup, Table} from "reactstrap";
 import React, {useMemo} from "react";
 import {UserEmailPreferences} from "../../../IsaacAppTypes";
-import {DEFAULT_EMAIL_PREFERENCES} from "../../services/constants";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences | null;
-    setEmailPreferences: (e: any) => void;
+    setEmailPreferences: (e: UserEmailPreferences) => void;
     idPrefix?: string;
 }
 
 export const UserEmailPreference = ({emailPreferences, setEmailPreferences, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
-    const emailPreferencesToSet = Object.assign(DEFAULT_EMAIL_PREFERENCES, emailPreferences);
+    const defaultEmailPreferences = {NEWS_AND_UPDATES: false, ASSIGNMENTS: true, EVENTS: false};
+    const emailPreferencesToSet = Object.assign(defaultEmailPreferences, emailPreferences);
+    // initially set email preferences to default value
+    useMemo(() => {setEmailPreferences(emailPreferencesToSet)}, []);
 
     return <CardBody>
         <p>Tell us which emails you would like to receive. These settings can be changed at any time.</p>

@@ -4,15 +4,12 @@ import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "./UserEmailPreferences";
 import {UserEmailPreferences, UserPreferencesDTO} from "../../../IsaacAppTypes";
-import {DEFAULT_EMAIL_PREFERENCES} from "../../services/constants";
 
 export const userPreferencesModal = (userPreferences: UserPreferencesDTO | null) => {
     const user = store.getState().user;
 
     // ModalScopedEmailPreferences allow the sharing of the values between the body and the buttons
-    const modalScopedEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ?
-        Object.assign(DEFAULT_EMAIL_PREFERENCES, userPreferences.EMAIL_PREFERENCE) :
-        DEFAULT_EMAIL_PREFERENCES;
+    const modalScopedEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
 
     const UserPreferencesModalBody = () => {
         // Need to use state here so that <UserEmailPreferences ... /> re-renders on emailPreference change
