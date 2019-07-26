@@ -326,7 +326,7 @@ export interface ActiveModal {
     closeAction: () => void;
     title: string;
     body: any;
-    buttons: any[];
+    buttons?: any[];
 }
 
 export enum BoardOrder {

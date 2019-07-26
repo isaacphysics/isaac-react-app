@@ -1,3 +1,5 @@
+import {EmailTemplateDTO} from "../../IsaacApiTypes";
+import {UserEmailPreferences} from "../../IsaacAppTypes";
 
 
 export const validateEmail = (email: string) => {
@@ -14,4 +16,12 @@ export const isDobOverThirteen = (dateOfBirth: Date | null) => {
 export const MINIMUM_PASSWORD_LENGTH = 6;
 export const validatePassword = (password: string) => {
     return password.length >= MINIMUM_PASSWORD_LENGTH;
+};
+
+export const validateEmailPreferences = (emailPreferences: UserEmailPreferences | null) => {
+    return emailPreferences !== null && [
+        emailPreferences.ASSIGNMENTS,
+        emailPreferences.EVENTS,
+        emailPreferences.NEWS_AND_UPDATES
+    ].reduce((prev, next) => prev && (next === true || next === false), true); // Make sure all expected values are either true or false
 };

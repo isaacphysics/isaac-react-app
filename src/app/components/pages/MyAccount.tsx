@@ -29,7 +29,7 @@ import {
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
-import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
+import {isDobOverThirteen, validateEmail, validateEmailPreferences, validatePassword} from "../../services/validation";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
 import {ACCOUNT_TAB} from "../../services/constants";
@@ -132,7 +132,11 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
         // Only update email preferences on the email preferences tab
         if (activeTab == ACCOUNT_TAB.emailpreferences) {
-            Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
+            if (validateEmailPreferences(emailPreferences)) {
+                Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
+            } else {
+                return; // early exit
+            }
         }
         Object.assign(myUserPreferences.EXAM_BOARD, examPreferences);
 
@@ -220,7 +224,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                         </TabPane>
 
                         <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
-                            <UserEmailPreference emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences} />
+                            <UserEmailPreference
+                                emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
+                                submissionAttempted={attemptedAccountUpdate}
+                            />
                         </TabPane>
 
                     </TabContent>
