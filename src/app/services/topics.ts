@@ -10,10 +10,7 @@ import {
 import {CurrentTopicState} from "../state/reducers";
 import {LinkInfo} from "./navigation";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-
-const filterOnExamBoard = (contents: ContentSummaryDTO[], examBoard: EXAM_BOARD) => {
-    return contents.filter(content => content.tags && content.tags.includes(examBoardTagMap[examBoard]));
-};
+import {filterOnExamBoard} from "./examBoard";
 
 const filterForConcepts = (contents: ContentSummaryDTO[]) => {
     return contents.filter(content => content.type === DOCUMENT_TYPE.CONCEPT);

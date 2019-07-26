@@ -14,12 +14,15 @@ import {DOCUMENT_TYPE} from "../../services/constants";
 import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
-import {ShortcutResponses} from "../../../IsaacAppTypes";
+import {ShortcutResponses, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {determineExamBoardFrom, filterOnExamBoard} from "../../services/examBoard";
+import {AnonUserExamBoardPicker} from "../elements/AnonUserExamBoardPicker";
 
 const stateToProps = (state: AppState) => {
     return {
         searchResults: state && state.search && state.search.searchResults || null,
-        userRole: state && state.user && state.user.loggedIn && state.user.role || null
+        userRole: state && state.user && state.user.loggedIn && state.user.role || null,
+        userPreferences: state ? state.userPreferences : null
     };
 };
 const dispatchToProps = {fetchSearch};
@@ -27,6 +30,7 @@ const dispatchToProps = {fetchSearch};
 
 interface SearchPageProps {
     searchResults: ResultsWrapper<ContentSummaryDTO> | null;
+    userPreferences: UserPreferencesDTO | null;
     userRole: Role | null;
     queryParams: {query?: string; types?: string};
     history: History;
@@ -35,9 +39,11 @@ interface SearchPageProps {
 }
 
 const SearchPageComponent = (props: SearchPageProps) => {
-    const {searchResults, userRole, location, history, fetchSearch} = props;
+    const {searchResults, userRole, location, history, fetchSearch, userPreferences} = props;
 
     const searchParsed = queryString.parse(location.search);
+
+    const examBoard = determineExamBoardFrom(userPreferences);
 
     const queryParsed = searchParsed.query || "";
     const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
@@ -96,10 +102,9 @@ const SearchPageComponent = (props: SearchPageProps) => {
         return keepElement || isStaffUser;
     };
 
-    const filteredSearchResults = searchResults && searchResults.results && searchResults.results.filter(filterResult);
+    const filteredSearchResults = searchResults && searchResults.results && filterOnExamBoard(searchResults.results.filter(filterResult), examBoard);
 
-    // const shortcutSearchResults = Object.assign([], shortcutResponse, filteredSearchResults);
-    const shortcutSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
+    const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
 
     return (
         <Container id="search-page">
@@ -126,7 +131,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
                         <RS.CardHeader className="search-header">
                             <Col md={5} xs={12}>
                                 <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutSearchResults ? <RS.Badge color="primary">{shortcutSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
+                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
                                 </h3>
                             </Col>
                             <Col md={7} xs={12}>
@@ -134,13 +139,14 @@ const SearchPageComponent = (props: SearchPageProps) => {
                                     <Label className="d-none d-sm-inline-block">Filter</Label>
                                     <Label><CustomInput id="problem-search" type="checkbox" defaultChecked={searchFilterProblems} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterProblems(e.target.checked)} />Search problems</Label>
                                     <Label><CustomInput id="concept-search" type="checkbox" defaultChecked={searchFilterConcepts} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterConcepts(e.target.checked)} />Search concepts</Label>
+                                    <Label><AnonUserExamBoardPicker className="text-right" /></Label>
                                 </Form>
                             </Col>
                         </RS.CardHeader>
                         {query != "" && <RS.CardBody>
-                            <ShowLoading until={shortcutSearchResults}>
-                                {shortcutSearchResults && shortcutSearchResults.length > 0 ?
-                                    <LinkToContentSummaryList items={shortcutSearchResults}/>
+                            <ShowLoading until={shortcutAndFilteredSearchResults}>
+                                {shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0 ?
+                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults}/>
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </RS.CardBody>}
