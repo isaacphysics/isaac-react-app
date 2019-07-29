@@ -284,7 +284,7 @@ export enum TAG_ID {
     objectOrientedProgramming = "object_oriented_programming",
     proceduralProgramming = "procedural_programming",
 
-    // GCSE to A-Level transition topics
+    // GCSE to A level transition topics
     gcseBooleanLogic = "gcse_boolean_logic",
     gcseProgrammingConcepts = "gcse_programming_concepts",
     gcseNetworking = "gcse_networking",
@@ -323,7 +323,7 @@ export enum TAG_ID {
     functions = "functions",
     lists = "lists",
     higherOrderFunctions = "higher_order_functions",
-    // Object oriented programming topics
+    // Object-oriented programming topics
     creatingObjects = "creating_objects",
     oopConcepts = "oop_concepts",
     classDiagrams = "class_diagrams",

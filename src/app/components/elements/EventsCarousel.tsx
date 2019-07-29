@@ -8,7 +8,7 @@ export const EventsCarousel = () => {
             <ResponsiveCarousel>
                 <EventCard
                     eventImage={"/assets/teacher.svg"} eventTitle={"Teacher CPD - OOP @ University of Southampton"}
-                    eventSubtitle={"A free CPD workshop for A-level teachers"}
+                    eventSubtitle={"A free CPD workshop for A level teachers"}
                     eventDate={"Mon 8 July 2019"} eventTime={"10:00 AM — 4:00 PM"} eventLocation={"Computer Science Building, Southampton"}
                     eventUrl={"https://www.eventbrite.com/e/teacher-cpd-object-oriented-programming-university-of-southampton-tickets-62039047461"}
                 />
@@ -26,13 +26,13 @@ export const EventsCarousel = () => {
                 />
                 <EventCard
                     eventImage={"/assets/student.svg"} eventTitle={"Student A Level Masterclass @ University of Southampton"}
-                    eventSubtitle={"Smartwatch Project: free masterclass for A-level Computer Science students"}
+                    eventSubtitle={"Smartwatch Project: free masterclass for A level Computer Science students"}
                     eventDate={"Wed 10 July 2019"} eventTime={"10:00 AM — 4:00 PM"} eventLocation={"Computer Science Building, Southampton"}
                     eventUrl={"https://www.eventbrite.co.uk/e/student-a-level-masterclass-university-of-southampton-tickets-63640746185"}
                 />
                 <EventCard
                     eventImage={"/assets/student.svg"} eventTitle={"Student A Level Masterclass @ Newcastle University"}
-                    eventSubtitle={"Free masterclass for A-Level Computer Science students."}
+                    eventSubtitle={"Free masterclass for A Level Computer Science students."}
                     eventDate={"Thu 11 July 2019"} eventTime={"10:00 AM — 3:00 PM"} eventLocation={"School of Computing, Newcastle"}
                     eventUrl={"https://www.eventbrite.co.uk/e/student-a-level-masterclass-newcastle-university-tickets-60920082607"}
                 />

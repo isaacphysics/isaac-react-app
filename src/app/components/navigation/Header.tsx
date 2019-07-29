@@ -34,7 +34,7 @@ const HeaderComponent = ({user}: HeaderProps) => {
                                     <React.Fragment>
                                         <div className="login mx-5 mx-sm-2">
                                             <Link to="/login">
-                                                <span>LOGIN</span>
+                                                <span>LOG IN</span>
                                             </Link>
                                         </div>
                                         <div className="signup m-0 mr-md-4 ml-md-3">

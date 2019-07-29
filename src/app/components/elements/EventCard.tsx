@@ -40,7 +40,7 @@ const EventCardComponent = function (props: EventCardProps) {
             </CardText>
             <CardText>
                 <a className="focus-target" href={props.eventUrl} target="_blank" rel="noopener noreferrer">
-                    View Details
+                    View details
                     <span className='sr-only'> of the event: {props.eventTitle} {" - "} {props.eventDate}</span>
                 </a>
             </CardText>

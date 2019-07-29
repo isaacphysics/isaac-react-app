@@ -9,7 +9,7 @@ export const FeaturedContentTabs = () => (
     <div className="tabs-featured-question">
         <Tabs tabTitleClass="mb-3 mb-md-4">
             {{
-                "Featured Question": <Row className="feattab-row">
+                "Featured question": <Row className="feattab-row">
 
                     <Col md={6} className="feattab-info pl-md-4">
                         <h2 className="h-question-mark mb-md-3">
