@@ -24,7 +24,7 @@ const stateToProps = (state: AppState, {match: {params: {questionId}}}: any) => 
         segueEnvironment: state && state.constants && state.constants.segueEnvironment || "unknown",
     };
 };
-const dispatchToProps = {fetchDoc};
+const dispatchToProps = {fetchDoc, requestConstantsSegueEnvironment};
 
 interface QuestionPageProps {
     doc: ContentDTO | NOT_FOUND_TYPE | null;
