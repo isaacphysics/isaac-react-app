@@ -56,7 +56,7 @@ const AccordionComponent = ({id, title, index, children, location: {hash}}: Acco
                 className={open ? 'active p-3 pr-5 text-left' : 'p-3 pr-5 text-left'}
                 onClick={(event: any) => {
                     const nextState = !open;
-                    if (nextState == true) {
+                    if (nextState) {
                         switch (store.getState().doc.type) {
                             case "isaacQuestionPage":
                                 logAction({type: "QUESTION_PART_OPEN", conceptPageId: id, conceptSectionIndex: index});
