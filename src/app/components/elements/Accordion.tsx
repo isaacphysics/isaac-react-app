@@ -56,13 +56,14 @@ const AccordionComponent = ({id, title, index, children, location: {hash}}: Acco
                 className={open ? 'active p-3 pr-5 text-left' : 'p-3 pr-5 text-left'}
                 onClick={(event: any) => {
                     const nextState = !open;
+                    const page = store.getState().doc;
                     if (nextState) {
-                        switch (store.getState().doc.type) {
+                        switch (page.type) {
                             case "isaacQuestionPage":
-                                logAction({type: "QUESTION_PART_OPEN", conceptPageId: id, conceptSectionIndex: index});
+                                logAction({type: "QUESTION_PART_OPEN", questionPageId: page.id, questionPartIndex: index, questionPartId: id});
                                 break;
                             case "isaacConceptPage":
-                                logAction({type: "CONCEPT_SECTION_OPEN", conceptPageId: id, conceptSectionIndex: index, conceptSectionLevel: null});
+                                logAction({type: "CONCEPT_SECTION_OPEN", conceptPageId: page.id, conceptSectionIndex: index, conceptSectionLevel: null, conceptSectionId: id});
                                 // TODO for IP add doc.level for conceptSectionLevel event
                                 break;
                         }
