@@ -83,8 +83,11 @@ export interface IsaacNumericQuestionDTO extends IsaacQuestionBaseDTO {
     knownUnits?: string[];
 }
 
-export interface IsaacParsonsQuestionDTO extends IsaacQuestionBaseDTO {
-    items?: ParsonsItemDTO[];
+export interface IsaacItemQuestionDTO extends IsaacQuestionBaseDTO {
+    items?: ItemDTO[];
+}
+
+export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
     disableIndentation?: boolean;
 }
 
@@ -274,11 +277,18 @@ export interface NotificationDTO extends ContentDTO {
     expiry?: Date;
 }
 
-export interface ParsonsChoiceDTO extends ChoiceDTO {
+export interface ItemChoiceDTO extends ChoiceDTO {
+    items?: ItemDTO[];
+}
+
+export interface ParsonsChoiceDTO extends ItemChoiceDTO {
     items?: ParsonsItemDTO[];
 }
 
-export interface ParsonsItemDTO extends ContentDTO {
+export interface ItemDTO extends ContentDTO {
+}
+
+export interface ParsonsItemDTO extends ItemDTO {
     indentation?: number;
 }
 
