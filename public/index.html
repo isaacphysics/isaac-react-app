@@ -40,25 +40,27 @@
     <title>Isaac Computer Science</title>
   </head>
   <body>
-    <noscript>
-      <div class="fixed-top bg-primary">
-        <img src="/assets/logo.svg" alt="Isaac Computer Science Logo" class="p-3" />
-      </div>
-      <div class="my-5 py-5"></div>
-      <div class="container">
-        <div class="row">
-          <div class="col-8 offset-2">
-            <div class="card">
-              <div class="card-body text-center">
-                <h1>Isaac Computer Science</h1>
-                <p class="pt-3">You need to enable JavaScript to access Isaac Computer Science.</p>
+    <div id="root" class="d-flex flex-column overflow-hidden min-vh-100">
+      <!-- root element's children are cleared on first react render -->
+      <noscript>
+        <div class="fixed-top bg-primary">
+          <img src="/assets/logo.svg" alt="Isaac Computer Science Logo" class="p-3" />
+        </div>
+        <div class="my-5 py-5"></div>
+        <div class="container">
+          <div class="row">
+            <div class="col-8 offset-2">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h1>Isaac Computer Science</h1>
+                  <p class="pt-3">You need to enable JavaScript to access Isaac Computer Science.</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </noscript>
-    <div id="root" class="d-flex flex-column overflow-hidden"></div>
+      </noscript>
+    </div>
     <script src="https://cdn.isaaccomputerscience.org/vendor/youtube/iframe_api.js" async></script>
   </body>
 </html>
