@@ -56,7 +56,7 @@ const IsaacItemQuestionComponent = (props: IsaacItemQuestionProps) => {
                             id={`${questionId}|${item.id}`}
                             color="secondary"
                             type="checkbox"
-                            checked={itemChoice && itemChoice.items && itemChoice.items.filter(i => i.id == item.id).length == 1}
+                            checked={!!(currentAttempt && currentAttempt.items && currentAttempt.items.filter(i => i.id == item.id).length == 1)}
                             onChange={(changeEvent: ChangeEvent<HTMLInputElement>) => updateItems(changeEvent, item)}
                         />
                         <IsaacContentValueOrChildren value={item.value} encoding={doc.encoding} />
