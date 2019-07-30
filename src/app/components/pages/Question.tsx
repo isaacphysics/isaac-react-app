@@ -2,11 +2,11 @@ import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {Col, Container, Row} from "reactstrap";
-import {fetchDoc, requestConstantsSegueEnvironment} from "../../state/actions";
+import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
-import {ContentDTO} from "../../../IsaacApiTypes";
+import {ContentBase, ContentDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
 import {RelatedContent} from "../elements/RelatedContent";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
@@ -24,24 +24,19 @@ const stateToProps = (state: AppState, {match: {params: {questionId}}}: any) => 
         segueEnvironment: state && state.constants && state.constants.segueEnvironment || "unknown",
     };
 };
-const dispatchToProps = {fetchDoc, requestConstantsSegueEnvironment};
+const dispatchToProps = {fetchDoc};
 
 interface QuestionPageProps {
     doc: ContentDTO | NOT_FOUND_TYPE | null;
     urlQuestionId: string;
     fetchDoc: (documentType: DOCUMENT_TYPE, questionId: string) => void;
     segueEnvironment: string;
-    requestConstantsSegueEnvironment: () => void;
 }
 
-const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc, segueEnvironment, requestConstantsSegueEnvironment}: QuestionPageProps) => {
+const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc, segueEnvironment}: QuestionPageProps) => {
     useEffect(() => {
         fetchDoc(DOCUMENT_TYPE.QUESTION, urlQuestionId)
     }, [urlQuestionId, fetchDoc]);
-
-    useEffect(() => {
-        requestConstantsSegueEnvironment();
-    }, []);
 
     const navigation = useNavigation(urlQuestionId);
 
@@ -56,7 +51,10 @@ const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc, segueEnvironment, 
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     collectionType={navigation.collectionType}
                 />
-                {segueEnvironment != "PROD" && <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as any)['canonicalSourceFile']} />}
+                {segueEnvironment != "PROD" && (doc as ContentBase).canonicalSourceFile &&
+                    <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
+                }
+
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
                         <AnonUserExamBoardPicker className="text-right" />

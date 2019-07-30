@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Router, Switch} from "react-router-dom";
 import {Footer} from "./Footer";
 import {Homepage} from "../pages/Homepage";
@@ -18,7 +18,7 @@ import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
 import {NotFound} from "../pages/NotFound";
-import {requestCurrentUser} from "../../state/actions";
+import {requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
@@ -51,24 +51,20 @@ import {AddGameboard} from "../handlers/AddGameboard";
 
 import "../../services/scrollManager";
 
-const mapStateToProps = (state: AppState) => ({
-    consistencyError: state && state.error && state.error.type == "consistencyError" || false,
-    serverError: state && state.error && state.error.type == "serverError" || false,
-    goneAwayError: state && state.error && state.error.type == "serverError" || false,
-});
-const mapDispatchToProps = {requestCurrentUser};
+export const IsaacApp = () => {
+    // Redux state and dispatch
+    const dispatch = useDispatch();
+    const consistencyError = useSelector((state: AppState) => state && state.error && state.error.type == "consistencyError" || false);
+    const serverError = useSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
+    const goneAwayError = useSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
 
-interface IsaacAppProps {
-    consistencyError: boolean;
-    serverError: boolean;
-    goneAwayError: boolean;
-    requestCurrentUser: () => void;
-}
+    // Run once on component mount
+    useEffect(() => {
+        dispatch(requestCurrentUser());
+        dispatch(requestConstantsSegueEnvironment());
+    }, []);
 
-const IsaacApp = ({requestCurrentUser, consistencyError, serverError, goneAwayError}: IsaacAppProps) => {
-
-    useEffect(() => {requestCurrentUser()}, [requestCurrentUser]);
-
+    // Render
     return <Router history={history}>
         <React.Fragment>
             <Header />
@@ -148,5 +144,3 @@ const IsaacApp = ({requestCurrentUser, consistencyError, serverError, goneAwayEr
         </React.Fragment>
     </Router>;
 };
-
-export default connect(mapStateToProps, mapDispatchToProps)(IsaacApp);
