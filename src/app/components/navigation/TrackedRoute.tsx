@@ -22,7 +22,7 @@ const mapStateToProps = (state: AppState) => ({user: state ? state.user : null})
 
 interface UserFilterProps {
     user: LoggedInUser | null;
-    onlyFor?: (user: LoggedInUser) => boolean;
+    ifUser?: (user: LoggedInUser) => boolean;
 }
 
 type TrackedRouteProps = RouteProps & {trackingOptions?: FieldsObject; componentProps?: FieldsObject} & UserFilterProps;
@@ -40,20 +40,20 @@ const WrapperComponent = function({component: Component, trackingOptions, ...pro
 
 const TrackedRouteComponent = function({component, trackingOptions, componentProps, ...rest}: TrackedRouteProps) {
     if (component) {
-        if (rest.onlyFor !== undefined) {
-            const {onlyFor, user, ...rest$} = rest;
+        if (rest.ifUser !== undefined) {
+            const {ifUser, user, ...rest$} = rest;
             return <Route {...rest$} render={props => {
                 const propsWithUser = {user, ...props};
                 return <ShowLoading until={user}>
-                    {user && onlyFor(user) ?
+                    {user && ifUser(user) ?
                         <WrapperComponent component={component} trackingOptions={trackingOptions} {...propsWithUser} {...componentProps} /> :
-                        user && !user.loggedIn && !isTeacher(user) && rest.onlyFor && rest.onlyFor.name === isTeacher.name ? // TODO we should try to find a more robust way than this
+                        user && !user.loggedIn && !isTeacher(user) && rest.ifUser && rest.ifUser.name === isTeacher.name ? // TODO we should try to find a more robust way than this
                             persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                             :
-                            user && !isTeacher(user) && rest.onlyFor && rest.onlyFor.name === isTeacher.name ? // TODO we should try to find a more robust way than this
+                            user && !isTeacher(user) && rest.ifUser && rest.ifUser.name === isTeacher.name ? // TODO we should try to find a more robust way than this
                                 <Redirect to="/pages/teacher_accounts"/>
                                 :
-                                user && user.loggedIn && !onlyFor(user) ?
+                                user && user.loggedIn && !ifUser(user) ?
                                     <Unauthorised/>
                                     :
                                     persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>

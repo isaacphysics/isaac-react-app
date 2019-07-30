@@ -5,7 +5,7 @@ import {AppState} from "../../state/reducers";
 import {Badge, Collapse, DropdownItem, DropdownToggle, DropdownMenu, Nav, Navbar, NavbarToggler, UncontrolledDropdown} from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router";
 import {LoggedInUser} from "../../../IsaacAppTypes";
-import {isAdmin, isStaffUser} from "../../services/user";
+import {isAdmin, isStaff} from "../../services/user";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
@@ -125,7 +125,7 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                     </DropdownMenu>
                 </UncontrolledDropdown>
 
-                {isStaffUser(user) &&
+                {isStaff(user) &&
                     <UncontrolledDropdown nav inNavbar>
                         <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                             Admin

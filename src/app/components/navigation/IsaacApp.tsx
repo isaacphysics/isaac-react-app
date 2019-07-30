@@ -38,7 +38,7 @@ import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {ActiveModal} from "../elements/ActiveModal";
-import {isAdmin, isStaffUser, isTeacher} from "../../services/user";
+import {isAdmin, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {Groups} from "../pages/Groups";
 import {Equality} from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
@@ -50,6 +50,7 @@ import {ForTeachers} from "../pages/ForTeachers";
 import {AddGameboard} from "../handlers/AddGameboard";
 
 import "../../services/scrollManager";
+import {isTest} from "../../services/constants";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -57,6 +58,7 @@ export const IsaacApp = () => {
     const consistencyError = useSelector((state: AppState) => state && state.error && state.error.type == "consistencyError" || false);
     const serverError = useSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
     const goneAwayError = useSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
+    const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
 
     // Run once on component mount
     useEffect(() => {
@@ -75,12 +77,14 @@ export const IsaacApp = () => {
             <main role="main" className="flex-fill content-body">
                 <Switch>
                     {/* Errors; these paths work but aren't really used */}
-                    <Route path={serverError ? undefined : "/error"} component={ServerError} />
-                    <Route path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
+                    <TrackedRoute path={serverError ? undefined : "/error"} component={ServerError} />
+                    <TrackedRoute path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
+                    {/* Special case */}
+                    <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
 
                     {/* Application pages */}
                     <TrackedRoute exact path="/(home)?" component={Homepage} />
-                    <TrackedRoute path="/account" onlyFor={user => user.loggedIn} component={MyAccount} />
+                    <TrackedRoute path="/account" ifUser={isLoggedIn} component={MyAccount} />
 
                     <TrackedRoute path="/search" component={Search} />
 
@@ -92,27 +96,27 @@ export const IsaacApp = () => {
                     <TrackedRoute path="/topics/:topicName" component={Topic} />
 
                     <TrackedRoute path="/gameboards" component={Gameboard} />
-                    <TrackedRoute path="/assignment/:gameboardId" onlyFor={user => user.loggedIn} component={RedirectToGameboard} />
-                    <TrackedRoute path="/add_gameboard/:gameboardId" onlyFor={user => user.loggedIn} component={AddGameboard} />
+                    <TrackedRoute path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
+                    <TrackedRoute path="/add_gameboard/:gameboardId" ifUser={isLoggedIn} component={AddGameboard} />
 
                     <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
 
                     {/* Student pages */}
                     <TrackedRoute path="/students" component={ForStudents} />
-                    <TrackedRoute path="/assignments" onlyFor={user => user.loggedIn} component={MyAssignments} />
+                    <TrackedRoute path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
                     <TrackedRoute path="/progress" component={ComingSoon} />
 
                     {/* Teacher pages */}
                     <TrackedRoute path="/teachers" component={ForTeachers} />
-                    <TrackedRoute path="/groups" onlyFor={isTeacher} component={Groups} />
-                    <TrackedRoute path="/set_assignments" onlyFor={isTeacher} component={SetAssignments} />
-                    <TrackedRoute path="/assignment_progress" onlyFor={isTeacher} component={AssignmentProgress} />
+                    <TrackedRoute path="/groups" ifUser={isTeacher} component={Groups} />
+                    <TrackedRoute path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
+                    <TrackedRoute path="/assignment_progress" ifUser={isTeacher} component={AssignmentProgress} />
 
                     {/* Admin */}
-                    <TrackedRoute exact path="/admin" onlyFor={isStaffUser} component={Admin} />
-                    <TrackedRoute path="/admin/usermanager" onlyFor={isAdmin} component={AdminUserManager} />
-                    <TrackedRoute exact path="/admin/stats" onlyFor={isStaffUser} component={AdminStats} />
-                    <TrackedRoute path="/admin/content_errors" onlyFor={isStaffUser} component={AdminContentErrors} />
+                    <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
+                    <TrackedRoute path="/admin/usermanager" ifUser={isAdmin} component={AdminUserManager} />
+                    <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
+                    <TrackedRoute path="/admin/content_errors" ifUser={isStaff} component={AdminContentErrors} />
 
                     {/* Authentication */}
                     <TrackedRoute path="/login" component={LogIn} />
@@ -120,7 +124,7 @@ export const IsaacApp = () => {
                     <TrackedRoute path="/register" component={Registration} />
                     <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                     <TrackedRoute path="/resetpassword/:token" component={ResetPasswordHandler}/>
-                    <TrackedRoute path="/verifyemail" onlyFor={user => user.loggedIn} component={EmailAlterHandler}/>
+                    <TrackedRoute path="/verifyemail" ifUser={isLoggedIn} component={EmailAlterHandler}/>
 
                     {/* Static pages */}
                     <TrackedRoute path="/contact" component={Contact}/>
