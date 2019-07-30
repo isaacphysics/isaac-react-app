@@ -10,14 +10,14 @@ import {CustomInput, Label} from "reactstrap";
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
     const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
-    return question ? {currentAttempt: question.currentAttempt} : {};
+    return question ? {currentAttempt: (question.currentAttempt as ItemChoiceDTO)} : {};
 };
 const dispatchToProps = {setCurrentAttempt};
 
 interface IsaacItemQuestionProps {
     doc: IsaacItemQuestionDTO;
     questionId: string;
-    currentAttempt?: ChoiceDTO;
+    currentAttempt?: ItemChoiceDTO;
     setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => void;
 }
 
@@ -26,8 +26,8 @@ const IsaacItemQuestionComponent = (props: IsaacItemQuestionProps) => {
 
     function updateItems(changeEvent: ChangeEvent<HTMLInputElement>, item: ItemDTO) {
         let selected = changeEvent.target.checked;
-        let currentItems = (currentAttempt as ItemChoiceDTO).items || [];
-        let itemChoice = {type: "itemChoice", items: currentItems} as ItemChoiceDTO;
+        let currentItems = currentAttempt && currentAttempt.items || [];
+        let itemChoice: ItemChoiceDTO = {type: "itemChoice", items: currentItems};
 
         if (selected) {
             if (!itemChoice.items) {
@@ -38,12 +38,8 @@ const IsaacItemQuestionComponent = (props: IsaacItemQuestionProps) => {
         } else if (itemChoice.items) {
             itemChoice.items = itemChoice.items.filter(i => i.id !== item.id);
         }
-        console.log("ONCHANGE", itemChoice);
         setCurrentAttempt(questionId, itemChoice);
     }
-
-    let itemChoice = currentAttempt as ItemChoiceDTO;
-    console.log("INIT", itemChoice);
 
     return (
         <div className="multichoice-question">
