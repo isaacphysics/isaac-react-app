@@ -94,9 +94,9 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         {" to see what’s happening in your area, and sign up today!"}
                     </p>
                     <EventsCarousel />
-                    <a href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer">
-                        See all Events on Eventbrite
-                    </a>
+                    <Link to="/events">
+                        See all Events
+                    </Link>
                 </div>
             </Container>
         </section>

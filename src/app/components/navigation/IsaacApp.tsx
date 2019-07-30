@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import "../../services/scrollManager"; // important
 import {useDispatch, useSelector} from "react-redux";
 import {Router, Switch} from "react-router-dom";
 import {Footer} from "./Footer";
@@ -33,7 +34,6 @@ import {CookieBanner} from "./CookieBanner";
 import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
 import {Header} from "./Header";
-import {Route} from "react-router";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
@@ -48,9 +48,8 @@ import {Support} from "../pages/Support";
 import {ForStudents} from "../pages/ForStudents";
 import {ForTeachers} from "../pages/ForTeachers";
 import {AddGameboard} from "../handlers/AddGameboard";
-
-import "../../services/scrollManager";
 import {isTest} from "../../services/constants";
+import {Events} from "../pages/Events";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -99,7 +98,7 @@ export const IsaacApp = () => {
                     <TrackedRoute path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
                     <TrackedRoute path="/add_gameboard/:gameboardId" ifUser={isLoggedIn} component={AddGameboard} />
 
-                    <Route path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
+                    <TrackedRoute path='/events' component={Events}/>
 
                     {/* Student pages */}
                     <TrackedRoute path="/students" component={ForStudents} />

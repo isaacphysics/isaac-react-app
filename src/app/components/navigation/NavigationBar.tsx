@@ -42,8 +42,8 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         <DropdownItem tag={Link} to="/about" className="pl-4 py-3 p-md-3">
                             What we do
                         </DropdownItem>
-                        <DropdownItem tag="a" href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer" className="pl-4 py-3 p-md-3">
-                            Events (Eventbrite)
+                        <DropdownItem tag={Link} to="/events" className="pl-4 py-3 p-md-3">
+                            Events
                         </DropdownItem>
                     </DropdownMenu>
                 </UncontrolledDropdown>
