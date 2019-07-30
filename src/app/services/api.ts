@@ -198,10 +198,13 @@ export const api = {
     },
     constants: {
         getUnits: (): AxiosPromise<string[]> => {
-            return endpoint.get(`/content/units`)
+            return endpoint.get(`/content/units`);
         },
         getSegueVersion: (): AxiosPromise<{segueVersion: string}> => {
-            return endpoint.get(`/info/segue_version`)
+            return endpoint.get(`/info/segue_version`);
+        },
+        getSegueEnvironment: (): AxiosPromise<{segueEnvironment: string}> => {
+            return endpoint.get(`/info/segue_environment`);
         }
     },
     schools: {
