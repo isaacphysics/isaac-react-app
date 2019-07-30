@@ -14,7 +14,7 @@ const ExternalLink = ({href, children}: {href: string; children: any}) => (
 
 export const Footer = () => (
     <footer>
-        <div className="footerTop">
+        <div className="footerTop d-print-none">
             <Container>
                 <Row className="pt-5 px-3 px-sm-0 pb-3 pb-md-5">
                     <Col md='4' lg='3' className="logo-col">

@@ -22,11 +22,30 @@
       }
     }
   }
-  > a {
+  > a[class^='carousel-control-'] {
     display: block;
-    font-family: $primary-font;
-    font-size: 1.125rem;
-    font-weight: bold;
-    padding: 0 1rem;
+    cursor: pointer;
+    width: 16px;
+    &:focus {
+      background-image: none;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position-y: center;
+    }
+    span {
+      opacity: 0;
+    }
+  }
+  > a[class*='next'] {
+    right: 3px;
+    &:focus {
+      background-image: url('/assets/chevron_right.svg');
+    }
+  }
+  > a[class*='prev'] {
+    left: 3px;
+    &:focus {
+      background-image: url('/assets/chevron_left.svg');
+    }
   }
 }

@@ -22,6 +22,7 @@ function asPercentage(value: number | undefined, total: number)  {
 }
 
 function addTotalToMapOfCounts(counts: {[key: string]: number}) {
+    counts['TOTAL'] = 0;
     counts['TOTAL'] = Object.values(counts).reduce((a, b) => a + b, 0);
 }
 

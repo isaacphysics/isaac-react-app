@@ -1,33 +1,48 @@
 import React, {useState} from 'react';
-import {Carousel, CarouselItem, CarouselIndicators} from 'reactstrap';
+import {Carousel, CarouselControl, CarouselItem, CarouselIndicators} from 'reactstrap';
 
-
-// TODO should be possible to make this more generic
 const ControlledCarouselInstance = ({children, collectionTag}: any) => {
     const items = children;
-    const [activeIndex, setActiveIndex] = useState (0);
-    const [animating, setAnimating] = useState (false);
-
-    // To fulfill mandatory prop
-    const keepIndex = () => {
-        if (!animating) {
-            setActiveIndex (activeIndex);
-        }
-    };
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [animating, setAnimating] = useState(false);
 
     const gotoIndex = (newIndex: any) => {
         if (!animating) {
-            setActiveIndex (newIndex);
+            setActiveIndex(newIndex);
         }
     };
-    const onExiting = () => setAnimating (true);
-    const onExited = () => setAnimating (false);
+
+    const next = () => {
+        if (!animating) {
+            const nextIndex = activeIndex === items.length - 1 ? 0 : activeIndex + 1;
+            setActiveIndex(nextIndex);
+        }
+    };
+
+    const previous = () => {
+        if (!animating) {
+            const nextIndex = activeIndex === 0 ? items.length - 1 : activeIndex - 1;
+            setActiveIndex(nextIndex);
+        }
+    };
+
+    const onExiting = () => setAnimating(true);
+    const onExited = () => setAnimating(false);
+    const onEntered = (element: HTMLElement) => {
+        const focusTargets = element.getElementsByClassName('focus-target');
+        if (focusTargets.length > 0) {
+            // @ts-ignore we should only mark focusable elements with the focus-target class
+            focusTargets[0].focus();
+        }
+    };
+
     const CollectionTag = collectionTag;
 
     return (
-        <Carousel activeIndex={activeIndex} ride="carousel" className="pb-5" next={keepIndex} previous={keepIndex}>
+        <Carousel activeIndex={activeIndex} ride="carousel" className="pb-5" next={next} previous={previous} interval={false}>
+            <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
             {children.map ((child: any, index: number) => (
-                <CarouselItem key={index} onExiting={onExiting} onExited={onExited}>
+                <CarouselItem key={index} onEntered={onEntered as any} onExiting={onExiting} onExited={onExited}>
                     <CollectionTag>
                         {child}
                     </CollectionTag>
@@ -38,6 +53,7 @@ const ControlledCarouselInstance = ({children, collectionTag}: any) => {
                 activeIndex={activeIndex}
                 onClickHandler={gotoIndex}
             />
+            <CarouselControl direction="next" directionText="Next" onClickHandler={next} />
         </Carousel>
     );
 };

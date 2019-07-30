@@ -28,13 +28,13 @@ const HeaderComponent = ({user}: HeaderProps) => {
                             <div id="beta-banner">beta</div>
                         </div>
 
-                        <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center">
+                        <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none">
                             {user &&
                                 (!user.loggedIn ?
                                     <React.Fragment>
                                         <div className="login mx-5 mx-sm-2">
                                             <Link to="/login">
-                                                <span>LOGIN</span>
+                                                <span>LOG IN</span>
                                             </Link>
                                         </div>
                                         <div className="signup m-0 mr-md-4 ml-md-3">
@@ -60,7 +60,7 @@ const HeaderComponent = ({user}: HeaderProps) => {
                             }
                         </div>
 
-                        <div className="header-search m-md-0 ml-md-auto align-items-center">
+                        <div className="header-search m-md-0 ml-md-auto align-items-center d-print-none">
                             <MainSearch />
                         </div>
                     </div>

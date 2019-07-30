@@ -81,11 +81,11 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
 
     return <Container id="contact-page" className="pb-5">
         <TitleAndBreadcrumb currentPageTitle="Contact us" />
-        <div>
+        <div className="pt-4">
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">
                     <h3>Upcoming events</h3>
-                    <p>If you'd like to find out more about our upcoming events visit our <a href="https://isaaccomputerscience.org/events">Events Page</a></p>
+                    <p>If you&apos;d like to find out more about our upcoming events, visit our <a href="https://isaaccomputerscience.org/events">Events Page</a></p>
                     <h3>Problems with the site?</h3>
                     <p>We always want to improve so please report any issues to <a className="small" href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></p>
                     <h3>Follow us</h3>
@@ -119,30 +119,30 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup>
-                                                <Label htmlFor="first-name-input" className="form-required">First Name</Label>
+                                                <Label htmlFor="first-name-input" className="form-required">First name</Label>
                                                 <Input id="first-name-input" type="text" name="first-name"
-                                                       defaultValue={user && user.loggedIn ? user.givenName : ""}
-                                                       onChange={(e: any) => setFirstName(e.target.value)} required/>
+                                                    defaultValue={user && user.loggedIn ? user.givenName : ""}
+                                                    onChange={(e: any) => setFirstName(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup>
-                                                <Label htmlFor="last-name-input" className="form-required">Last Name</Label>
+                                                <Label htmlFor="last-name-input" className="form-required">Last name</Label>
                                                 <Input id="last-name-input" type="text" name="last-name"
-                                                       defaultValue={user && user.loggedIn ? user.familyName : ""}
-                                                       onChange={(e: any) => setLastName(e.target.value)} required/>
+                                                    defaultValue={user && user.loggedIn ? user.familyName : ""}
+                                                    onChange={(e: any) => setLastName(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                     </Row>
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup>
-                                                <Label htmlFor="email-input" className="form-required">Your Email Address</Label>
+                                                <Label htmlFor="email-input" className="form-required">Email address</Label>
                                                 <Input invalid={messageSendAttempt && !isValidEmail} id="email-input"
-                                                       type="email" name="email"
-                                                       defaultValue={user && user.loggedIn ? user.email : ""}
-                                                       onChange={(e: any) => setEmail(e.target.value)}
-                                                       aria-describedby="emailValidationMessage" required/>
+                                                    type="email" name="email"
+                                                    defaultValue={user && user.loggedIn ? user.email : ""}
+                                                    onChange={(e: any) => setEmail(e.target.value)}
+                                                    aria-describedby="emailValidationMessage" required/>
                                                 <FormFeedback id="emailValidationMessage">
                                                     {!isValidEmail && "Please enter a valid email address"}
                                                 </FormFeedback>
@@ -150,9 +150,9 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup>
-                                                <Label htmlFor="subject-input" className="form-required">Message Subject</Label>
+                                                <Label htmlFor="subject-input" className="form-required">Message subject</Label>
                                                 <Input id="subject-input" type="text" name="subject" defaultValue={subject}
-                                                       onChange={(e: any) => setSubject(e.target.value)} required/>
+                                                    onChange={(e: any) => setSubject(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -161,7 +161,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                             <FormGroup>
                                                 <Label htmlFor="message-input" className="form-required">Message</Label>
                                                 <Input id="message-input" type="textarea" name="message" rows={7} value={message}
-                                                       onChange={(e: any) => setMessage(e.target.value)} required/>
+                                                    onChange={(e: any) => setMessage(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                     </Row>

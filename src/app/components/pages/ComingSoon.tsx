@@ -22,7 +22,7 @@ export const ComingSoon = () => <Container>
             <div className="pl-4">
                 <div className="mb-3">
                     <strong>July 2019</strong>
-                    <p>Progress tracker, assignments, and game board features.</p>
+                    <p>Progress tracker, assignments, and gameboard features.</p>
                 </div>
                 <div className="mb-3">
                     <strong>September 2019</strong>
@@ -36,7 +36,7 @@ export const ComingSoon = () => <Container>
                 <div className="mb-3">
                     <strong>November 2019</strong>
                     <p>
-                        More platform features; all topic and question content available, providing full coverage of
+                        More platform features; all topic and question content will be available, providing full coverage of
                         OCR and AQA A level specifications.
                     </p>
                 </div>

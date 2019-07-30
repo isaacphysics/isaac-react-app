@@ -20,7 +20,7 @@ export const ListGroupFooterBottom = () => (
                 </p>
             </ListGroupItem>
 
-            <ListGroupItem className='footer-bottom-logos border-0 px-0 py-0 pb-4 pb-md-1 bg-transparent d-flex justify-content-between'>
+            <ListGroupItem className='footer-bottom-logos border-0 px-0 py-0 pb-4 pb-md-1 bg-transparent d-flex justify-content-between d-print-none'>
                 <ExternalLink href="https://teachcomputing.org/">
                     <img src="/assets/logos/ncce.png" alt='National Centre for Computing Education website' className='logo-mr' height="57px" />
                 </ExternalLink>

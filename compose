@@ -29,7 +29,7 @@ APP_NAME=cs-app-$ENV-$APP_VERSION
 
 # Define the Postgres YML. Note that when ENV is "test" an additional volume line is appended to the end!
 read -r -d '' PG_SERVICE << EOM
-pg-$ENV:
+cs-pg-$ENV:
     container_name: cs-pg-$ENV
     restart: unless-stopped
     image: postgres:9.6
@@ -80,7 +80,7 @@ services:
     extra_hosts:
       - local-smtp:$LOCAL_SMTP
     links:
-      - pg-$ENV:postgres
+      - cs-pg-$ENV:postgres
     external_links:
       - cs-elasticsearch-live:elasticsearch
     volumes:

@@ -43,6 +43,13 @@
       }
     }
   }
+
+  &.disabled {
+    img {
+      filter: grayscale(100%);
+      -webkit-filter: grayscale(100%);
+    }
+  }
 }
 
 .sign-up-tabs {

@@ -35,7 +35,7 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
 
     const show = user != null && user.loggedIn && status != "VERIFIED" && !hidden;
 
-    return show ? <div className="banner">
+    return show ? <div className="banner d-print-none">
         <RS.Container className="py-3">
 
             <RS.Row style={{alignItems: "center"}}>

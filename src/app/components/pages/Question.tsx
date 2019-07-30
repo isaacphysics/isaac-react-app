@@ -6,8 +6,8 @@ import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
-import {ContentDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE} from "../../services/constants";
+import {ContentBase, ContentDTO} from "../../../IsaacApiTypes";
+import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
 import {RelatedContent} from "../elements/RelatedContent";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -15,11 +15,13 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {AnonUserExamBoardPicker} from "../elements/AnonUserExamBoardPicker";
+import {EditContentButton} from "../elements/EditContentButton";
 
 const stateToProps = (state: AppState, {match: {params: {questionId}}}: any) => {
     return {
         doc: state ? state.doc : null,
         urlQuestionId: questionId,
+        segueEnvironment: state && state.constants && state.constants.segueEnvironment || "unknown",
     };
 };
 const dispatchToProps = {fetchDoc};
@@ -28,10 +30,14 @@ interface QuestionPageProps {
     doc: ContentDTO | NOT_FOUND_TYPE | null;
     urlQuestionId: string;
     fetchDoc: (documentType: DOCUMENT_TYPE, questionId: string) => void;
+    segueEnvironment: string;
 }
 
-const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc}: QuestionPageProps) => {
-    useEffect(() => {fetchDoc(DOCUMENT_TYPE.QUESTION, urlQuestionId)}, [urlQuestionId, fetchDoc]);
+const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc, segueEnvironment}: QuestionPageProps) => {
+    useEffect(() => {
+        fetchDoc(DOCUMENT_TYPE.QUESTION, urlQuestionId)
+    }, [urlQuestionId, fetchDoc]);
+
     const navigation = useNavigation(urlQuestionId);
 
     return <ShowLoading until={doc} render={ (doc: ContentDTO) =>
@@ -45,6 +51,10 @@ const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc}: QuestionPageProps
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     collectionType={navigation.collectionType}
                 />
+                {segueEnvironment != "PROD" && (doc as ContentBase).canonicalSourceFile &&
+                    <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
+                }
+
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
                         <AnonUserExamBoardPicker className="text-right" />

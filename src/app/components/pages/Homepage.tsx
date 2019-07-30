@@ -36,12 +36,11 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                                     <li>Use it for <strong>homework</strong></li>
                                     <li>Use it for <strong>revision</strong></li>
                                 </ul>
-                                <p>{
-                                    "Isaac Computer Science will provide full coverage of every A level " +
-                                    "Computer Science topic, and a vast bank of self-marking questions — " +
-                                    "all mapped to the AQA and OCR specifications, and all created by our team of " +
-                                    "experienced teachers."
-                                }</p>
+                                <p> Isaac Computer Science will provide full coverage of every A&nbsp;level
+                                    Computer Science topic, and a vast bank of self-marking questions —
+                                    all mapped to the AQA and OCR specifications, and all created by our team of
+                                    experienced teachers.
+                                </p>
                             </Col>
                         </Row>
                         <Row>
@@ -90,7 +89,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     <p className="pt-4 pb-2 event-description text-center col-md-8 offset-md-2">
                         {"We offer free face-to-face events for students and teachers. Visit our "}
                         <a href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer">
-                            events page
+                            Events page
                         </a>
                         {" to see what’s happening in your area, and sign up today!"}
                     </p>
@@ -110,7 +109,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         Sign up to track your progress
                     </h3>
                     <Button tag={Link} size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-xl" to={"/register"}>
-                        Sign Up
+                        Sign up
                     </Button>
                 </Col>
             </Container>
