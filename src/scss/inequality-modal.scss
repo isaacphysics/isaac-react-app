@@ -12,8 +12,8 @@
 #inequality-modal {
     .beta-badge {
         position: absolute;
-        bottom: 0px;
-        right: 55px;
+        bottom: 15px;
+        right: 40px;
         transform: rotate(30deg);
         background: theme-color("secondary");
         color: white;
@@ -34,7 +34,7 @@
             animation: inequality-swing 1s infinite ease-in-out;
         }
     }
-    
+
     .inequality-ui {
         position: absolute;
         width: 100%;
@@ -49,8 +49,8 @@
             &.confirm {
                 width: 90px;
                 height: 90px;
-                bottom: 10px;
-                right: 10px;
+                bottom: 25px;
+                right: 5px;
                 background-color: transparent;
                 background-image: url('/assets/inequality-confirm.svg');
                 background-size: contain;
@@ -61,9 +61,9 @@
 
             &.centre {
                 width: 90px;
-                height: 90px;    
-                bottom: 10px;
-                left: 10px;
+                height: 90px;
+                bottom: 25px;
+                left: 5px;
                 background-color: transparent;
                 background-image: url('/assets/inequality-centre.svg');
                 background-size: contain;
@@ -75,7 +75,7 @@
                 width: 90px;
                 height: 90px;
                 bottom: 45%;
-                right: 10px;
+                right: 5px;
                 background-color: transparent;
                 background-image: url('/assets/inequality-trash.svg');
                 background-size: contain;
@@ -87,7 +87,7 @@
                 &:hover, &.active {
                     opacity: 1.0;
                 }
-            }    
+            }
         }
 
         &.katex-preview {
@@ -95,8 +95,8 @@
             border-right: 0;
             border-top-left-radius: 45px;
             border-bottom-left-radius: 45px;
-            bottom: 20px;
-            right: 65px;
+            bottom: 25px;
+            right: 50px;
             height: 90px;
             padding: 0 60px 0 30px;
             width: fit-content; // This is contentious with browsers
@@ -153,7 +153,7 @@
                         display: block;
                         padding-top: 5px;
                     }
-                    
+
                     svg {
                         position: absolute;
                         width: 48px;
@@ -177,7 +177,7 @@
             .sub-menu-tabs {
                 li {
                     font-size: 1.4em;
-                    
+
                     .katex {
                         padding-top: 8px;
                     }
@@ -188,7 +188,7 @@
                                 fill: theme-color("primary");
                                 stroke-width: 0;
                             }
-                        }    
+                        }
                     }
                 }
             }
