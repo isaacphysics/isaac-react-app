@@ -10,8 +10,9 @@ import {Alert, Button, Col, Row} from "reactstrap";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
 import * as ApiTypes from "../../../IsaacApiTypes";
-import { IsaacParsonsQuestion } from "./IsaacParsonsQuestion";
+import {IsaacParsonsQuestion} from "./IsaacParsonsQuestion";
 import {DATE_TIME_FORMATTER} from "../../services/constants";
+import {IsaacItemQuestion} from "./IsaacItemQuestion";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -61,6 +62,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         case 'isaacNumericQuestion': QuestionComponent = IsaacNumericQuestion; break;
         case 'isaacSymbolicLogicQuestion': QuestionComponent = IsaacSymbolicLogicQuestion; break;
         case 'isaacStringMatchQuestion': QuestionComponent = IsaacStringMatchQuestion; break;
+        case 'isaacItemQuestion': QuestionComponent = IsaacItemQuestion; break;
         case 'isaacParsonsQuestion': QuestionComponent = IsaacParsonsQuestion; break;
         case 'isaacMultiChoiceQuestion': default: QuestionComponent = IsaacMultiChoiceQuestion; break;
     }

@@ -93,6 +93,9 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./assignment-progress";
 @import "./groups";
 
+// Print
+@import "./print";
+
 a.disabled {
     color: $gray-600;
     pointer-events: none;

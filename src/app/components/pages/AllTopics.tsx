@@ -21,7 +21,7 @@ export const AllTopics = () => {
             </Link>
             {" "}
             {topic.comingSoon ?
-                <Badge color="light" className="border bg-white">Coming Soon</Badge> :
+                <Badge color="light" className="border bg-white">Coming soon</Badge> :
                 <Badge color="secondary">New</Badge>
             }
         </React.Fragment>;

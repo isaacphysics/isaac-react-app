@@ -31,6 +31,14 @@
     font-weight: 100;
     line-height: 1.6;
   }
+
+  .custom-control-label {
+    &:before, &:after {
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-top: -0.25rem;
+    }
+  }
 }
 
 .numeric-question .unit-selection {
@@ -74,10 +82,13 @@
       cursor: grab; // Doesn't work?
     }
 
+    // REMINDER: If you change the PARSONS_MAX_INDENT and PARSONS_INDENT_STEP
+    // constants, you also have to change these two in here.
+    $parsons-max-indent: 3;
     $parsons-step: 45;
 
     .parsons-item {
-      @for $i from 1 through 3 { // Melius est abundare quam deficere
+      @for $i from 1 through $parsons-max-indent {
         &.indent-#{$i} {
           margin-left: #{$i * $parsons-step}px;
         }
@@ -85,7 +96,7 @@
     }
 
     &#parsons-choice-area {
-      @for $i from 1 through 3 {
+      @for $i from 1 through $parsons-max-indent {
         &.ghost-indent-#{$i} {
           background: linear-gradient(to right,
             white #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 7}px, white #{$i * $parsons-step + 7}px

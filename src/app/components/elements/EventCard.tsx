@@ -1,6 +1,7 @@
 import {Card, CardBody, CardImg, CardText, CardTitle} from "reactstrap";
 import React from "react";
 import {connect} from "react-redux";
+import classnames from "classnames";
 
 interface EventCardProps {
     eventImage: string;
@@ -10,10 +11,11 @@ interface EventCardProps {
     eventTime: string;
     eventLocation: string;
     eventUrl: string;
+    pastEvent?: boolean;
 }
 
 const EventCardComponent = function (props: EventCardProps) {
-    return <Card className='card-neat m-4'>
+    return <Card className={classnames({'card-neat m-4': true, 'disabled text-muted': props.pastEvent})}>
         <div className='card-image text-center mt-3'>
             <CardImg
                 className='m-auto rounded-circle'
@@ -40,7 +42,7 @@ const EventCardComponent = function (props: EventCardProps) {
             </CardText>
             <CardText>
                 <a className="focus-target" href={props.eventUrl} target="_blank" rel="noopener noreferrer">
-                    View Details
+                    View details
                     <span className='sr-only'> of the event: {props.eventTitle} {" - "} {props.eventDate}</span>
                 </a>
             </CardText>

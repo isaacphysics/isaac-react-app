@@ -23,6 +23,10 @@ interface IsaacParsonsQuestionState {
     currentIndent?: number | null;
 }
 
+// REMINDER: If you change this, you also have to change $parsons-step in questions.scss
+const PARSONS_MAX_INDENT = 3;
+const PARSONS_INDENT_STEP = 45;
+
 class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestionProps> {
     state: IsaacParsonsQuestionState;
 
@@ -93,7 +97,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             const x = this.state.draggedElement.getBoundingClientRect().left;
             if (this.state.initialX && x) {
                 const d = Math.max(0, x - this.state.initialX);
-                const i = Math.min(Math.floor(d/45), 3); // REMINDER: If you change this, you also have to change $parsons-step in questions.scss
+                const i = Math.min(Math.floor(d/PARSONS_INDENT_STEP), PARSONS_MAX_INDENT);
                 if (i != this.state.currentIndent) {
                     this.setState({
                         currentIndent: i,
@@ -114,7 +118,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             if (e.key === '[' || e.code === 'BracketLeft' || e.keyCode === 91) {
                 newIndent = Math.max(currentIndent - 1, 0);
             } else if (e.key === ']' || e.code === 'BracketRight' || e.keyCode === 93) {
-                newIndent = Math.min(currentIndent + 1, 3);
+                newIndent = Math.min(currentIndent + 1, PARSONS_MAX_INDENT);
             }
             this.setState({ currentIndent: newIndent });
             this.state.draggedElement.className = className.replace((matches && matches[0]) || `indent-${currentIndent}`, `indent-${newIndent}`);

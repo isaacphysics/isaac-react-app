@@ -2,6 +2,9 @@ import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {ALPHABET} from "../../services/constants";
+import {store} from "../../state/store";
+import {connect} from "react-redux";
+import {logAction} from "../../state/actions";
 
 interface AccordionsProps {
     id?: string;
@@ -9,6 +12,7 @@ interface AccordionsProps {
     index: number;
     location: {hash: string};
     children: React.ReactChildren;
+    logAction: (eventDetails: object) => void;
 }
 
 function scrollVerticallyIntoView(element: Element) {
@@ -16,7 +20,7 @@ function scrollVerticallyIntoView(element: Element) {
     window.scrollTo(0, yPosition);
 }
 
-export const Accordion = withRouter(({id, title, index, children, location: {hash}}: AccordionsProps) => {
+const AccordionComponent = ({id, title, index, children, location: {hash}}: AccordionsProps) => {
     // Toggle
     const isFirst = index === 0;
     const [open, setOpen] = useState(isFirst);
@@ -52,6 +56,18 @@ export const Accordion = withRouter(({id, title, index, children, location: {has
                 className={open ? 'active p-3 pr-5 text-left' : 'p-3 pr-5 text-left'}
                 onClick={(event: any) => {
                     const nextState = !open;
+                    const page = store.getState().doc;
+                    if (nextState) {
+                        switch (page.type) {
+                            case "isaacQuestionPage":
+                                logAction({type: "QUESTION_PART_OPEN", questionPageId: page.id, questionPartIndex: index, questionPartId: id});
+                                break;
+                            case "isaacConceptPage":
+                                logAction({type: "CONCEPT_SECTION_OPEN", conceptPageId: page.id, conceptSectionIndex: index, conceptSectionLevel: null, conceptSectionId: id});
+                                // TODO for IP add doc.level for conceptSectionLevel event
+                                break;
+                        }
+                    }
                     setOpen(nextState);
                     if (nextState) {
                         scrollVerticallyIntoView(event.target);
@@ -72,4 +88,6 @@ export const Accordion = withRouter(({id, title, index, children, location: {has
             </RS.Card>
         </RS.Collapse>
     </div>;
-});
+};
+
+export const Accordion = withRouter(connect(null, {logAction: logAction})(AccordionComponent));
