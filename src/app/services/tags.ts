@@ -26,10 +26,10 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.dataAndInformation, title: "Data and information", parent: TAG_ID.theory},
     // Programming sub-categories
     {id: TAG_ID.functionalProgramming, title: "Functional programming", parent: TAG_ID.programming},
-    {id: TAG_ID.objectOrientedProgramming, title: "Object oriented programming", parent: TAG_ID.programming},
+    {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programming},
     {id: TAG_ID.proceduralProgramming, title: "Procedural programming", parent: TAG_ID.programming},
 
-    // GCSE to A-Level transition topics
+    // GCSE to A level transition topics
     {id: TAG_ID.gcseBooleanLogic, title: "Boolean logic", parent: TAG_ID.gcseToALevel},
     {id: TAG_ID.gcseProgrammingConcepts, title: "Programming concepts", parent: TAG_ID.gcseToALevel},
     {id: TAG_ID.gcseNetworking, title: "Networking", parent: TAG_ID.gcseToALevel, comingSoon: true},
@@ -68,7 +68,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.functions, title: "Functions", parent: TAG_ID.functionalProgramming, comingSoon: true},
     {id: TAG_ID.lists, title: "Lists", parent: TAG_ID.functionalProgramming, comingSoon: true},
     {id: TAG_ID.higherOrderFunctions, title: "Higher order functions", parent: TAG_ID.functionalProgramming, comingSoon: true},
-    // Object oriented programming topics
+    // Object-oriented programming topics
     {id: TAG_ID.creatingObjects, title: "Creating objects", parent: TAG_ID.objectOrientedProgramming, comingSoon: true},
     {id: TAG_ID.oopConcepts, title: "OOP concepts", parent: TAG_ID.objectOrientedProgramming, comingSoon: true},
     {id: TAG_ID.classDiagrams, title: "Class diagrams", parent: TAG_ID.objectOrientedProgramming, comingSoon: true},

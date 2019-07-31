@@ -17,7 +17,7 @@ export const ActionCard = ({title, amountText, linkDestination, linkText, coming
     const comingSoonMessage = <React.Fragment>
         This functionality is {" "}
         <Badge color="light" className="border-secondary border bg-white ml-auto mr-1">
-            Coming Soon
+            Coming soon
         </Badge>.
     </React.Fragment>;
 

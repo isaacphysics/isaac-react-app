@@ -85,7 +85,7 @@ const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, reset
                             <h2 className="h-title mb-4">Log&nbsp;in or sign&nbsp;up:</h2>
 
                             <FormGroup>
-                                <Label htmlFor="email-input">Email</Label>
+                                <Label htmlFor="email-input">Email address</Label>
                                 <Input
                                     id="email-input" type="email" name="email" placeholder="Email address"
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
@@ -140,7 +140,7 @@ const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, reset
                                 </Col>
                                 <Col sm={6}>
                                     <Button id="sign-up" color="primary" className="mb-2" onClick={(e: any) => signUp(e)} outline block>
-                                        Sign Up
+                                        Sign up
                                     </Button>
                                 </Col>
                             </Row>

@@ -7,12 +7,14 @@ export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
  * Configure the api provider with the server running the API:
  * No need if we want to use the same server as the static content.
  */
-let apiPath: string = `${document.location.origin}/api/${API_VERSION}/api`;
+let apiPath = `${document.location.origin}/api/${API_VERSION}/api`;
 if (document.location.hostname === "localhost") {
     apiPath = "http://localhost:8080/isaac-api/api";
 } else if (document.location.hostname.indexOf(".eu.ngrok.io") > -1) {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
 }
+export const isTest = document.location.hostname.startsWith("test.");
+
 export const API_PATH: string = apiPath;
 
 export const EDITOR_URL = "https://editor.isaaccomputerscience.org/#!/edit/master/";
@@ -134,6 +136,10 @@ export enum ACTION_TYPE {
     CONSTANTS_SEGUE_VERSION_REQUEST = "CONSTANTS_SEGUE_VERSION_REQUEST",
     CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS = "CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS",
     CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE = "CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE",
+
+    CONSTANTS_SEGUE_ENVIRONMENT_REQUEST = "CONSTANTS_SEGUE_ENVIRONMENT_REQUEST",
+    CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS = "CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS",
+    CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE = "CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE",
 
     DOCUMENT_REQUEST = "DOCUMENT_REQUEST",
     DOCUMENT_RESPONSE_SUCCESS = "DOCUMENT_RESPONSE_SUCCESS",
@@ -284,7 +290,7 @@ export enum TAG_ID {
     objectOrientedProgramming = "object_oriented_programming",
     proceduralProgramming = "procedural_programming",
 
-    // GCSE to A-Level transition topics
+    // GCSE to A level transition topics
     gcseBooleanLogic = "gcse_boolean_logic",
     gcseProgrammingConcepts = "gcse_programming_concepts",
     gcseNetworking = "gcse_networking",
@@ -323,7 +329,7 @@ export enum TAG_ID {
     functions = "functions",
     lists = "lists",
     higherOrderFunctions = "higher_order_functions",
-    // Object oriented programming topics
+    // Object-oriented programming topics
     creatingObjects = "creating_objects",
     oopConcepts = "oop_concepts",
     classDiagrams = "class_diagrams",

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from "react-redux";
 import {store} from "../../app/state/store";
-import IsaacApp from '../../app/components/navigation/IsaacApp';
+import {IsaacApp} from '../../app/components/navigation/IsaacApp';
 
 jest.mock("react-ga"); // Google Analytics requires a DOM.window which doesn't exist in test
 

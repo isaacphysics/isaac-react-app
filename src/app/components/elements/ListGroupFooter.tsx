@@ -9,7 +9,7 @@ export const ListGroupFooter = () => (
             <ListGroup className="w-50 mb-3 link-list">
 
                 <ListGroupItem className="border-0 px-0 py-0 bg-transparent">
-                    <Link className="footerLink py-2" to="/about">About Us</Link>
+                    <Link className="footerLink py-2" to="/about">About us</Link>
                 </ListGroupItem>
                 <ListGroupItem className="border-0 px-0 py-0 bg-transparent align-items-stretch">
                     <Link className="footerLink py-2" to="/contact">Contact us</Link>

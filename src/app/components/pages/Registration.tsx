@@ -126,7 +126,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="first-name-input" className="form-required">
-                                    First Name
+                                    First name
                                 </Label>
                                 <Input
                                     id="first-name-input" type="text" name="givenName"
@@ -140,7 +140,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="last-name-input" className="form-required">
-                                    Last Name
+                                    Last name
                                 </Label>
                                 <Input
                                     id="last-name-input" type="text" name="familyName"
@@ -172,7 +172,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="password-confirm" className="form-required">
-                                    Re-enter Password
+                                    Re-enter password
                                 </Label>
                                 <Input
                                     id="password-confirm" name="password" type="password"
@@ -196,7 +196,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="email-input" className="form-required">
-                                    Email
+                                    Email address
                                 </Label>
                                 <Input
                                     id="email-input" name="email" type="email"
@@ -215,7 +215,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                         <Col md={6}>
                             <FormGroup>
                                 <Label htmlFor="dob-input">
-                                    Date of Birth
+                                    Date of birth
                                 </Label>
                                 <Row>
                                     <Col lg={6}>
@@ -261,7 +261,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     {/* Submit */}
                     <Row className="mt-1 mb-2">
                         <Col md={{size: 6, offset: 3}}>
-                            <Input type="submit" value="Register Now" className="btn btn-block btn-secondary border-0"/>
+                            <Input type="submit" value="Register now" className="btn btn-block btn-secondary border-0"/>
                         </Col>
                     </Row>
 
