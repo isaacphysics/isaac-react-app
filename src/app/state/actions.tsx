@@ -783,10 +783,10 @@ export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Ac
 };
 
 export const adminUserDelete = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST});
     try {
         let confirmDeletion = window.confirm("Are you sure you want to delete this user?");
         if (confirmDeletion) {
+            dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST});
             await api.admin.userDelete.delete(userid);
             dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS});
             dispatch(showToast({

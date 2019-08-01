@@ -94,7 +94,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
     const deleteUser = async (userid: number | undefined) => {
         await adminUserDelete(userid);
         adminUserSearch(searchQuery);
-    }
+    };
 
     return <RS.Container>
         <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager"/>
@@ -252,8 +252,9 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                                     />
                                                 </td>
                                                 <td>
-                                                    {/*View*/} {/*Edit*/} <RS.Input type="button" value="Delete" onClick={() => deleteUser(user.id)} className="btn btn-block btn-secondary border-0"/>
-                                                    {/*<button onClick={() => window.confirm("hi")}>Delete</button>*/}
+                                                    {/*View*/}
+                                                    {/*Edit*/}
+                                                    <RS.Input type="button" value="Delete" onClick={() => deleteUser(user.id)} className="btn btn-sm btn-secondary border-0 p-0"/>
                                                 </td>
                                                 <td>{user.familyName}, {user.givenName}</td>
                                                 <td>{user.email}</td>
