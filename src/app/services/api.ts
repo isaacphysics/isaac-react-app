@@ -103,6 +103,11 @@ export const api = {
                 return endpoint.get(`/admin/users/`, {params: queryParams});
             }
         },
+        userDelete: {
+            delete: (userid: number | undefined): AxiosPromise => {
+                return endpoint.delete(`/admin/users/${userid}`);
+            }
+        },
         modifyUserRoles: {
             post: (role: ApiTypes.Role, userIds: number[]) => {
                 return endpoint.post(`/admin/users/change_role/${role}`, userIds);

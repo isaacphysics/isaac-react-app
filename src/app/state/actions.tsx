@@ -782,6 +782,27 @@ export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Ac
     }
 };
 
+export const adminUserDelete = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST});
+    try {
+        let confirmDeletion = window.confirm("Are you sure you want to delete this user?");
+        if (confirmDeletion) {
+            await api.admin.userDelete.delete(userid);
+            dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS});
+            dispatch(showToast({
+                title: "User Deleted",
+                body: "The selected user was successfully deleted.",
+                color: "success",
+                timeout: 5000,
+                closable: false,
+            }) as any);
+        }
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("User Deletion Failed", e));
+    }
+};
+
 export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST});
     try {

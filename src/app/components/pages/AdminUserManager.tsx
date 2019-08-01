@@ -3,7 +3,7 @@ import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {connect} from "react-redux";
-import {adminModifyUserRoles, adminUserSearch} from "../../state/actions";
+import {adminModifyUserRoles, adminUserSearch, adminUserDelete} from "../../state/actions";
 import {AdminUserSearchState, AppState} from "../../state/reducers";
 import {Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
@@ -15,16 +15,17 @@ const stateToProps = (state: AppState) => {
         searchResults: state && state.adminUserSearch || null
     };
 };
-const dispatchToProps = {adminUserSearch, adminModifyUserRoles};
+const dispatchToProps = {adminUserSearch, adminModifyUserRoles, adminUserDelete};
 
 interface AdminUserMangerProps {
     user: LoggedInUser;
     adminUserSearch: (query: {}) => void;
+    adminUserDelete: (userid: number | undefined) => void;
     searchResults: AdminUserSearchState;
     adminModifyUserRoles: (role: Role, userIds: number[]) => void;
 }
 
-const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searchResults}: AdminUserMangerProps) => {
+const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, adminUserDelete, searchResults}: AdminUserMangerProps) => {
     const [searchRequested, setSearchRequested] = useState(false);
     const [searchQuery, setSearchQuery] = useState({
         familyName: null,
@@ -89,6 +90,11 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searc
         setSearchRequested(true);
         adminUserSearch(searchQuery);
     };
+
+    const deleteUser = async (userid: number | undefined) => {
+        await adminUserDelete(userid);
+        adminUserSearch(searchQuery);
+    }
 
     return <RS.Container>
         <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager"/>
@@ -246,7 +252,8 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, searc
                                                     />
                                                 </td>
                                                 <td>
-                                                    {/*View*/} {/*Edit*/} {/*Delete*/}
+                                                    {/*View*/} {/*Edit*/} <RS.Input type="button" value="Delete" onClick={() => deleteUser(user.id)} className="btn btn-block btn-secondary border-0"/>
+                                                    {/*<button onClick={() => window.confirm("hi")}>Delete</button>*/}
                                                 </td>
                                                 <td>{user.familyName}, {user.givenName}</td>
                                                 <td>{user.email}</td>
