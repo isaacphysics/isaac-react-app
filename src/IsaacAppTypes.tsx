@@ -263,14 +263,14 @@ export interface ShortcutResponses {
 }
 
 export interface UserEmailPreferences {
-    NEWS_AND_UPDATES: boolean;
-    ASSIGNMENTS: boolean;
-    EVENTS: boolean;
+    NEWS_AND_UPDATES?: boolean;
+    ASSIGNMENTS?: boolean;
+    EVENTS?: boolean;
 }
 
 export interface UserExamPreferences {
-    [EXAM_BOARD.AQA]: boolean;
-    [EXAM_BOARD.OCR]: boolean;
+    [EXAM_BOARD.AQA]?: boolean;
+    [EXAM_BOARD.OCR]?: boolean;
 }
 
 export interface UserPreferencesDTO {
@@ -330,7 +330,7 @@ export interface ActiveModal {
     closeAction: () => void;
     title: string;
     body: any;
-    buttons: any[];
+    buttons?: any[];
 }
 
 export enum BoardOrder {

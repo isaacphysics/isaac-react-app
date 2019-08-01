@@ -21,7 +21,6 @@ import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
-import {EXAM_BOARD} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistence from "../../services/localStorage"
 import {KEY} from "../../services/localStorage"
@@ -39,23 +38,12 @@ const dispatchToProps = {
     updateCurrentUser
 };
 
-
-const defaultExamPreferences = {
-    [EXAM_BOARD.OCR]: false,
-    [EXAM_BOARD.AQA]: false
-};
-
-const defaultEmailPreferences = {
-    NEWS_AND_UPDATES: false,
-    ASSIGNMENTS: true,
-    EVENTS: false
-};
-
-
 interface RegistrationPageProps {
     user: LoggedInUser | null;
     updateCurrentUser: (
-        params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null},
+        registeredUser: LoggedInValidationUser,
+        userPreferences: UserPreferencesDTO,
+        passwordCurrent: string | null,
         currentUser: LoggedInUser
     ) => void;
     errorMessage: string | undefined;
@@ -93,11 +81,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         if (passwordIsValid && emailIsValid && confirmedOverThirteen) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_NOT_SHOWN);
             Object.assign(registrationUser, {loggedIn: false});
-            updateCurrentUser({
-                registeredUser: registrationUser,
-                userPreferences: {EMAIL_PREFERENCE: defaultEmailPreferences, EXAM_BOARD: defaultExamPreferences},
-                passwordCurrent: null
-            }, (Object.assign(registrationUser, {loggedIn: true})));
+            updateCurrentUser(registrationUser, {}, null, (Object.assign(registrationUser, {loggedIn: true})));
             // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
             ReactGA.event({
                 category: 'user',
