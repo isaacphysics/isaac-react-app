@@ -18,8 +18,8 @@ export const validatePassword = (password: string) => {
     return password.length >= MINIMUM_PASSWORD_LENGTH;
 };
 
-export const validateEmailPreferences = (emailPreferences: UserEmailPreferences | null) => {
-    return emailPreferences !== null && [
+export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences | null) => {
+    return emailPreferences && [
         emailPreferences.ASSIGNMENTS,
         emailPreferences.EVENTS,
         emailPreferences.NEWS_AND_UPDATES

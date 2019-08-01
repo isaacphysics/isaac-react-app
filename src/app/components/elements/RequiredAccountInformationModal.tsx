@@ -35,12 +35,12 @@ const UserPreferencesModalBody = () => {
     }
 
     return <RS.Form onSubmit={formSubmission}>
-        <UserEmailPreference
+        {!validateEmailPreferences(emailPreferences) && <UserEmailPreference
             emailPreferences={emailPreferences}
             setEmailPreferences={updateEmailPreferencesInModalScope}
             idPrefix="modal-"
             submissionAttempted={submissionAttempted}
-        />
+        />}
 
         <RS.Row className="text-center border-top p-5">
             <RS.Col>
@@ -53,7 +53,7 @@ const UserPreferencesModalBody = () => {
     </RS.Form>
 };
 
-export const userPreferencesModal = {
+export const requiredAccountInformationModal = {
     title: "Required account information",
     body: <UserPreferencesModalBody />,
     closeAction: () => store.dispatch(closeActiveModal())

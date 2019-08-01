@@ -1,13 +1,14 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {ACTION_TYPE} from "./constants";
-import {UserPreferencesDTO} from "../../IsaacAppTypes";
+import {LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
 import {openActiveModal} from "../state/actions";
-import {userPreferencesModal} from "../components/elements/UserPreferencesModal";
+import {requiredAccountInformationModal} from "../components/elements/RequiredAccountInformationModal";
 import {validateEmailPreferences} from "./validation";
+import {isLoggedIn} from "./user";
 
-function emailPreferencesAreNotSet(userPreferences: UserPreferencesDTO | null) {
-    const emailPreferencesOrNull = userPreferences && userPreferences.EMAIL_PREFERENCE || null;
-    return !validateEmailPreferences(emailPreferencesOrNull);
+
+function requiredInformationIsPresent(user: LoggedInUser, userPreferences: UserPreferencesDTO) {
+    return validateEmailPreferences(userPreferences.EMAIL_PREFERENCE);
 }
 
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async action => {
@@ -15,9 +16,9 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
 
     const state = middlewareApi.getState();
     if([ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type)) {
-        // User email preferences check - runs after dispatching the action as we clear the modal on page change
-        if (state.user && state.user.loggedIn === true && emailPreferencesAreNotSet(state.userPreferences)) {
-            dispatch(openActiveModal(userPreferencesModal));
+        // Required account information check - runs after dispatching the action as we clear the modal on page change
+        if (isLoggedIn(state.user) && !requiredInformationIsPresent(state.user, state.userPreferences)) {
+            dispatch(openActiveModal(requiredAccountInformationModal));
         }
     }
 };

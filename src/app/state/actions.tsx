@@ -50,7 +50,7 @@ import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
 import {isTeacher} from "../services/user";
 import ReactGA from "react-ga";
-import {userPreferencesModal} from "../components/elements/UserPreferencesModal";
+import {requiredAccountInformationModal} from "../components/elements/RequiredAccountInformationModal";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
