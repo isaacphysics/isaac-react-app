@@ -5,7 +5,7 @@ import katex from "katex";
 class MenuItem {
     constructor(public type: string,
                 public properties: any,
-                public menu: { label: string, texLabel: boolean }) {}
+                public menu: { label: string, texLabel: boolean, className: string }) {}
 }
 
 interface InequalityModalProps {
@@ -31,11 +31,19 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         defaultMenu: boolean,
     };
 
-    // Available symbols if any are specified
-    availableSymbols?: Array<string> = [];
-
     // Drag ghost "image" thing
     private _ghost?: HTMLElement;
+
+    private _vHexagon = `
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 173.5 200" style="enable-background:new 0 0 173.5 200;" xml:space="preserve">
+            <polygon class="v-hexagon" points="0.7,50 0.7,150 87.3,200 173.9,150 173.9,50 87.3,0 " />
+        </svg>
+    `;
+    private _tabTriangle = `
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 76 23" style="enable-background:new 0 0 76 23;" xml:space="preserve">
+            <polygon points="0,0 76,0 38,23" class="tab-triangle"/>
+        </svg>
+    `
 
     // Call this to close the editor
     close: () => void;
@@ -62,11 +70,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
         if (props.availableSymbols && props.availableSymbols.length > 0) {
             // Assuming these are only letters... might become more complicated in the future.
-            this.state.menuItems.letters = props.availableSymbols.map( l => new MenuItem("Symbol", { letter: l.trim() }, { label: l.trim(), texLabel: true }) );
+            this.state.menuItems.letters = props.availableSymbols.map( l => new MenuItem("Symbol", { letter: l.trim() }, { label: l.trim(), texLabel: true, className: `symbol-${l.trim()}` }) );
             this.state.defaultMenu = false;
         } else {
-            this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true }) );
-            this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true }) );
+            this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true, className: `symbol-${l}` }) );
+            this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true, className: `symbol-${l}` }) );
         }
         this.close = props.close;
     }
@@ -131,13 +139,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             binary: { and: "\\cdot", or: "+", not: "\\overline{x}", equiv: "\\equiv", True: "1", False: "0" }
         };
         return [
-            new MenuItem("LogicBinaryOperation", { operation: "and" }, { label: labels[syntax]['and'], texLabel: true }),
-            new MenuItem("LogicBinaryOperation", { operation: "or" }, { label: labels[syntax]['or'], texLabel: true }),
-            new MenuItem("LogicNot", {}, { label: labels[syntax]['not'], texLabel: true }),
-            new MenuItem("Relation", { relation: "equiv" }, { label: labels[syntax]['equiv'], texLabel: true }),
-            new MenuItem("LogicLiteral", { value: true }, { label: labels[syntax]['True'], texLabel: true }),
-            new MenuItem("LogicLiteral", { value: false }, { label: labels[syntax]['False'], texLabel: true }),
-            new MenuItem("Brackets", { type: "round" }, { label: "(x)", texLabel: true })
+            new MenuItem("LogicBinaryOperation", { operation: "and" }, { label: labels[syntax]['and'], texLabel: true, className: 'and' }),
+            new MenuItem("LogicBinaryOperation", { operation: "or" }, { label: labels[syntax]['or'], texLabel: true, className: 'or' }),
+            new MenuItem("LogicNot", {}, { label: labels[syntax]['not'], texLabel: true, className: 'not' }),
+            new MenuItem("Relation", { relation: "equiv" }, { label: labels[syntax]['equiv'], texLabel: true, className: 'equiv' }),
+            new MenuItem("LogicLiteral", { value: true }, { label: labels[syntax]['True'], texLabel: true, className: 'true' }),
+            new MenuItem("LogicLiteral", { value: false }, { label: labels[syntax]['False'], texLabel: true, className: 'false' }),
+            new MenuItem("Brackets", { type: "round" }, { label: "\\small{(x)}", texLabel: true, className: 'brackets' })
         ];
     }
 
@@ -169,11 +177,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     // Fat arrow form for correct "this" binding (?!)
     private menuItem = (item: MenuItem, index: number) => {
         return <li key={index}
-            dangerouslySetInnerHTML={{ __html: katex.renderToString(item.menu.label) }}
+            dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(item.menu.label) }}
             draggable
             onDragStart={ event => this.onMenuItemDragStart(item, event) }
             onDrag={ event => this.onMenuItemDrag(item, event) }
             onDragEnd={ event => this.onMenuItemDragEnd(event) }
+            className={ item.menu.className }
             />;
     }
 
@@ -191,8 +200,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             lettersMenu =
             <div className="top-menu letters">
                 <ul className="sub-menu-tabs">
-                    <li className={this.state.activeSubMenu == "upperCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A") }} onClick={() => this.setState({ activeSubMenu: "upperCaseLetters" })} />
-                    <li className={this.state.activeSubMenu == "lowerCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("a") }} onClick={() => this.setState({ activeSubMenu: "lowerCaseLetters"})} />
+                    <li className={this.state.activeSubMenu == "upperCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("AB") }} onClick={() => this.setState({ menuOpen: true, activeSubMenu: "upperCaseLetters" })} />
+                    <li className={this.state.activeSubMenu == "lowerCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("ab") }} onClick={() => this.setState({ menuOpen: true, activeSubMenu: "lowerCaseLetters"})} />
                 </ul>
                 {(this.state.activeSubMenu == "upperCaseLetters") && <ul className="sub-menu uppercaseletters">{
                     this.state.menuItems.upperCaseLetters.map(this.menuItem)
@@ -221,8 +230,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             </div>
             <div className="menu-tabs">
                 <ul>
-                    <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString("A\\ b") }} onClick={() => this.onMenuTabClick("letters")} />
-                    <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: katex.renderToString(this.props.syntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }} onClick={() => this.onMenuTabClick("functions")} />
+                    <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString("A\\ b") }} onClick={() => this.onMenuTabClick("letters")} />
+                    <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(this.props.syntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }} onClick={() => this.onMenuTabClick("functions")} />
                 </ul>
             </div>
         </nav>
