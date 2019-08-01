@@ -7,6 +7,7 @@ import {UserEmailPreferences} from "../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {validateEmailPreferences} from "../../services/validation";
+import {isMobile} from "../../services/device";
 
 const UserPreferencesModalBody = () => {
     const dispatch = useDispatch();
@@ -42,12 +43,12 @@ const UserPreferencesModalBody = () => {
             submissionAttempted={submissionAttempted}
         />
 
-        <RS.Row className="text-center border-top p-5">
-            <RS.Col>
-                <RS.Input value="Ignore for now" type="button" className="btn btn-block btn-primary-outline px-2" onClick={() => dispatch(closeActiveModal())} />
+        <RS.Row className="text-center border-top p-3 p-sm-4">
+            <RS.Col size={6}>
+                <RS.Input value={isMobile() ? "Dismiss" : "Dismiss for now"} type="button" className="btn btn-block btn-primary-outline px-0 px-md-2 my-1" onClick={() => dispatch(closeActiveModal())} />
             </RS.Col>
-            <RS.Col>
-                <RS.Input value="Update account" type="submit" className="btn btn-block btn-secondary border-0 px-2" />
+            <RS.Col size={6}>
+                <RS.Input value={isMobile() ? "Update" : "Update account"} type="submit" className="btn btn-block btn-secondary border-0 px-0 px-md-2 my-1" />
             </RS.Col>
         </RS.Row>
     </RS.Form>
