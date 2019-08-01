@@ -1,6 +1,7 @@
 import React from "react";
 import { Inequality, makeInequality } from "inequality";
 import katex from "katex";
+import { number } from "prop-types";
 
 class MenuItem {
     constructor(public type: string,
@@ -19,7 +20,7 @@ interface InequalityModalProps {
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
     state: {
-        sketch?: Inequality,
+        sketch?: Inequality | null,
         activeMenu: string,
         activeSubMenu: string,
         trashActive: boolean,
@@ -28,7 +29,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         menuOpen: boolean,
         editorState: any,
         menuItems: { [key: string]: Array<MenuItem> },
-        defaultMenu: boolean,
+        defaultMenu: boolean
     };
 
     // Drag ghost "image" thing
@@ -80,7 +81,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     componentDidMount() {
-        const inequalityElement = document.getElementById('inequality-modal');
+        const inequalityElement = document.getElementById('inequality-modal') as Node;
         const { sketch, p } = makeInequality(
             inequalityElement,
             window.innerWidth * Math.ceil(window.devicePixelRatio),
@@ -113,24 +114,62 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         sketch.onNotifySymbolDrag = () => { }; // This is probably irrelevant now
         sketch.isTrashActive = () => this.state.trashActive;
 
-        this.setState({ sketch });
+        this.state.sketch = sketch;
 
         // Firefox does not report coordinates correctly on drag, so we supplement them here.
-        document.onmousemove = (event) => {
-            this.state.mouseX = event.clientX;
-            this.state.mouseY = event.clientY;
-        }
-        document.ondragover = (event) => {
-            this.state.mouseX = event.clientX;
-            this.state.mouseY = event.clientY;
-        }
+        document.body.addEventListener('mousemove', this.documentOnMouseMove.bind(this));
+        document.body.addEventListener('dragover', this.documentOnDragOver.bind(this));
+        document.body.addEventListener('touchmove', this.freezeScrolling.bind(this), false);
+
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+        debugger;
+        document.documentElement.style.height = window.innerHeight.toString() + "px";
+        document.body.style.height = window.innerHeight.toString() + "px";
 
         this._ghost = document.createElement('div');
         this._ghost.style.opacity = "0";
         this._ghost.innerHTML = '_';
         this._ghost.id = 'the-ghost-of-inequality';
         document.body.appendChild(this._ghost);
-        document.body.style.overflow = "hidden";
+    }
+
+    componentWillUnmount() {
+        document.body.removeEventListener('mousemove', this.documentOnMouseMove.bind(this));
+        document.body.removeEventListener('dragover', this.documentOnDragOver.bind(this));
+        document.body.removeEventListener('touchmove', this.freezeScrolling.bind(this), false);
+        if (this.state.sketch) {
+            this.state.sketch.onNewEditorState = (s: any) => null;
+            this.state.sketch.onCloseMenus = () => null;
+            this.state.sketch.isUserPrivileged = () => false; // TODO Integrate with currentUser object
+            this.state.sketch.onNotifySymbolDrag = () => null; // This is probably irrelevant now
+            this.state.sketch.isTrashActive = () => false;
+            this.state.sketch = null;
+        }
+        const inequalityElement = document.getElementById('inequality-modal');
+        if (inequalityElement) {
+            inequalityElement.removeChild(document.getElementsByTagName('canvas')[0]);
+        }
+        document.documentElement.style.height = null;
+        document.documentElement.style.overflow = null;
+        document.body.style.height = null;
+        document.body.style.overflow = null;
+    }
+
+    private freezeScrolling(event: TouchEvent) {
+        event.preventDefault();
+    }
+
+    private documentOnMouseMove = (event: MouseEvent) => {
+        this.state.mouseX = event.clientX;
+        this.state.mouseY = event.clientY;
+        // event.preventDefault();
+    }
+
+    private documentOnDragOver = (event: DragEvent) => {
+        this.state.mouseX = event.clientX;
+        this.state.mouseY = event.clientY;
+        // event.preventDefault();
     }
 
     private generateLogicFunctionsItems(syntax = 'logic'): Array<MenuItem> {
@@ -150,6 +189,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onMenuItemDragStart(spec: MenuItem, event: React.DragEvent) {
+        debugger;
         event.dataTransfer.setData('text/plain', ''); // Somehow, Firefox needs some data to be set on the drag start event to continue firing drag events.
         event.dataTransfer.setDragImage(this._ghost as Element, event.clientX, event.clientY);
         if (this.state.sketch) {
@@ -178,8 +218,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private menuItem = (item: MenuItem, index: number) => {
         return <li key={index}
             dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(item.menu.label) }}
-            draggable
-            onDragStart={ event => this.onMenuItemDragStart(item, event) }
+            draggable={ true }
+            onDragStart={ event => { debugger; this.onMenuItemDragStart(item, event) } }
             onDrag={ event => this.onMenuItemDrag(item, event) }
             onDragEnd={ event => this.onMenuItemDragEnd(event) }
             className={ item.menu.className }
