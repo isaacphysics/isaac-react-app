@@ -118,7 +118,7 @@
             display: block;
             right: 0;
             left: 0;
-            overflow: auto;
+            overflow: visible;
             background: theme-color("primary");
 
             &.closed {

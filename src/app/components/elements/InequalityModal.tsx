@@ -24,8 +24,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         activeMenu: string,
         activeSubMenu: string,
         trashActive: boolean,
-        mouseX: number,
-        mouseY: number,
+        previousCursorX: number,
+        previousCursorY: number,
         menuOpen: boolean,
         editorState: any,
         menuItems: { [key: string]: Array<MenuItem> },
@@ -56,8 +56,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             activeMenu: "letters",
             activeSubMenu: "upperCaseLetters",
             trashActive: false,
-            mouseX: -1,
-            mouseY: -1,
+            previousCursorX: NaN,
+            previousCursorY: NaN,
             menuOpen: false,
             editorState: {},
             menuItems: {
@@ -71,11 +71,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
         if (props.availableSymbols && props.availableSymbols.length > 0) {
             // Assuming these are only letters... might become more complicated in the future.
-            this.state.menuItems.letters = props.availableSymbols.map( l => new MenuItem("Symbol", { letter: l.trim() }, { label: l.trim(), texLabel: true, className: `symbol-${l.trim()}` }) );
+            this.state.menuItems.letters = props.availableSymbols.map( l => new MenuItem("Symbol", { letter: l.trim() }, { label: l.trim(), texLabel: true, className: `symbol-${l.trim()} menu-item` }) );
             this.state.defaultMenu = false;
         } else {
-            this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true, className: `symbol-${l}` }) );
-            this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true, className: `symbol-${l}` }) );
+            this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true, className: `symbol-${l} menu-item` }) );
+            this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true, className: `symbol-${l} menu-item` }) );
         }
         this.close = props.close;
     }
@@ -116,14 +116,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
         this.state.sketch = sketch;
 
-        // Firefox does not report coordinates correctly on drag, so we supplement them here.
-        document.body.addEventListener('mousemove', this.documentOnMouseMove.bind(this));
-        document.body.addEventListener('dragover', this.documentOnDragOver.bind(this));
-        document.body.addEventListener('touchmove', this.freezeScrolling.bind(this), false);
-
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
-        debugger;
         document.documentElement.style.height = window.innerHeight.toString() + "px";
         document.body.style.height = window.innerHeight.toString() + "px";
 
@@ -132,12 +126,23 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         this._ghost.innerHTML = '_';
         this._ghost.id = 'the-ghost-of-inequality';
         document.body.appendChild(this._ghost);
+
+        document.addEventListener('mousedown', this.onMouseDown.bind(this), false);
+        document.addEventListener('touchstart', this.onTouchStart.bind(this), false);
+        document.addEventListener('mouseup', this.onCursorMoveEnd.bind(this), false);
+        document.addEventListener('touchend', this.onCursorMoveEnd.bind(this), false);
+        document.addEventListener('mousemove', this.onMouseMove.bind(this), false);
+        document.addEventListener('touchmove', this.onTouchMove.bind(this), false);
     }
 
     componentWillUnmount() {
-        document.body.removeEventListener('mousemove', this.documentOnMouseMove.bind(this));
-        document.body.removeEventListener('dragover', this.documentOnDragOver.bind(this));
-        document.body.removeEventListener('touchmove', this.freezeScrolling.bind(this), false);
+        document.removeEventListener('mousedown', this.onMouseDown.bind(this), false);
+        document.removeEventListener('touchstart', this.onTouchStart.bind(this), false);
+        document.removeEventListener('mouseup', this.onCursorMoveEnd.bind(this), false);
+        document.removeEventListener('touchend', this.onCursorMoveEnd.bind(this), false);
+        document.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
+        document.removeEventListener('touchmove', this.onTouchMove.bind(this), false);
+
         if (this.state.sketch) {
             this.state.sketch.onNewEditorState = (s: any) => null;
             this.state.sketch.onCloseMenus = () => null;
@@ -156,21 +161,31 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.body.style.overflow = null;
     }
 
-    private freezeScrolling(event: TouchEvent) {
-        event.preventDefault();
+    private onMouseDown(e: MouseEvent) {
+        this.state.previousCursorX = e.clientX;
+        this.state.previousCursorY = e.clientY;
     }
 
-    private documentOnMouseMove = (event: MouseEvent) => {
-        this.state.mouseX = event.clientX;
-        this.state.mouseY = event.clientY;
-        // event.preventDefault();
+    private onTouchStart(e: TouchEvent) {
+        this.state.previousCursorX = e.touches[0].clientX;
+        this.state.previousCursorY = e.touches[0].clientY;
     }
 
-    private documentOnDragOver = (event: DragEvent) => {
-        this.state.mouseX = event.clientX;
-        this.state.mouseY = event.clientY;
-        // event.preventDefault();
+    private onCursorMoveEnd(e: MouseEvent | TouchEvent) {
+        this.state.previousCursorX = NaN;
+        this.state.previousCursorY = NaN;
     }
+
+    private onMouseMove(e: MouseEvent) {
+        e.preventDefault();
+        this.handleMove(e.target as HTMLElement, e.clientX, e.clientY);
+    }
+
+    private onTouchMove(e: TouchEvent) {
+        e.preventDefault();
+        this.handleMove(e.target as HTMLElement, e.touches[0].clientX, e.touches[0].clientY);
+    }
+
 
     private generateLogicFunctionsItems(syntax = 'logic'): Array<MenuItem> {
         let labels: any = {
@@ -178,39 +193,31 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             binary: { and: "\\cdot", or: "+", not: "\\overline{x}", equiv: "\\equiv", True: "1", False: "0" }
         };
         return [
-            new MenuItem("LogicBinaryOperation", { operation: "and" }, { label: labels[syntax]['and'], texLabel: true, className: 'and' }),
-            new MenuItem("LogicBinaryOperation", { operation: "or" }, { label: labels[syntax]['or'], texLabel: true, className: 'or' }),
-            new MenuItem("LogicNot", {}, { label: labels[syntax]['not'], texLabel: true, className: 'not' }),
-            new MenuItem("Relation", { relation: "equiv" }, { label: labels[syntax]['equiv'], texLabel: true, className: 'equiv' }),
-            new MenuItem("LogicLiteral", { value: true }, { label: labels[syntax]['True'], texLabel: true, className: 'true' }),
-            new MenuItem("LogicLiteral", { value: false }, { label: labels[syntax]['False'], texLabel: true, className: 'false' }),
-            new MenuItem("Brackets", { type: "round" }, { label: "\\small{(x)}", texLabel: true, className: 'brackets' })
+            new MenuItem("LogicBinaryOperation", { operation: "and" }, { label: labels[syntax]['and'], texLabel: true, className: 'and menu-item' }),
+            new MenuItem("LogicBinaryOperation", { operation: "or" }, { label: labels[syntax]['or'], texLabel: true, className: 'or menu-item' }),
+            new MenuItem("LogicNot", {}, { label: labels[syntax]['not'], texLabel: true, className: 'not menu-item' }),
+            new MenuItem("Relation", { relation: "equiv" }, { label: labels[syntax]['equiv'], texLabel: true, className: 'equiv menu-item' }),
+            new MenuItem("LogicLiteral", { value: true }, { label: labels[syntax]['True'], texLabel: true, className: 'true menu-item' }),
+            new MenuItem("LogicLiteral", { value: false }, { label: labels[syntax]['False'], texLabel: true, className: 'false menu-item' }),
+            new MenuItem("Brackets", { type: "round" }, { label: "\\small{(x)}", texLabel: true, className: 'brackets menu-item' })
         ];
     }
 
-    private onMenuItemDragStart(spec: MenuItem, event: React.DragEvent) {
-        debugger;
-        event.dataTransfer.setData('text/plain', ''); // Somehow, Firefox needs some data to be set on the drag start event to continue firing drag events.
-        event.dataTransfer.setDragImage(this._ghost as Element, event.clientX, event.clientY);
-        if (this.state.sketch) {
-            this.state.sketch.updatePotentialSymbol(spec, event.clientX, event.clientY);
-        }
-    }
+    private handleMove(target: HTMLElement, x: number, y: number) {
+        if (!isNaN(this.state.previousCursorX) && !isNaN(this.state.previousCursorY)) {
+            const dx = x - this.state.previousCursorX;
+            const dy = - y + this.state.previousCursorY;
+            const ul = target.closest('.sub-menu') as HTMLElement;
+            if (parent) {
+                const newLeft = Math.min(0, parseInt((ul.style.marginLeft || '0').replace(/[^-\d]/g, '')) + dx);
+                ul.style.marginLeft = `${newLeft}px`;
 
-    private onMenuItemDrag(spec: MenuItem, _event: React.DragEvent) {
-        if (this.state.sketch) {
-            this.state.sketch.updatePotentialSymbol(spec, this.state.mouseX, this.state.mouseY);
-        }
-    }
-
-    private onMenuItemDragEnd(_event: React.DragEvent) {
-        if (this.state.sketch) {
-            const rect = document.getElementById("inequality-trash")!.getBoundingClientRect();
-            if (rect && rect.left <= this.state.mouseX && rect.right >= this.state.mouseX && rect.top <= this.state.mouseY && rect.bottom >= this.state.mouseY) {
-                this.state.sketch.abortPotentialSymbol();
-            } else {
-                this.state.sketch.commitPotentialSymbol();
+                const li = target.closest('li') as HTMLElement;
+                const newTop = parseInt((li.style.top || '0').replace(/[^-\d]/g, '')) - dy;
+                li.style.top = `${newTop}px`;
             }
+            this.state.previousCursorX = x;
+            this.state.previousCursorY = y;
         }
     }
 
@@ -218,10 +225,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private menuItem = (item: MenuItem, index: number) => {
         return <li key={index}
             dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(item.menu.label) }}
-            draggable={ true }
-            onDragStart={ event => { debugger; this.onMenuItemDragStart(item, event) } }
-            onDrag={ event => this.onMenuItemDrag(item, event) }
-            onDragEnd={ event => this.onMenuItemDragEnd(event) }
             className={ item.menu.className }
             />;
     }
