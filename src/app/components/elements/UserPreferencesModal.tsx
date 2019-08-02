@@ -44,18 +44,15 @@ const UserPreferencesModalBody = () => {
         />
 
         <RS.Row className="text-center border-top p-3 p-sm-4">
-            <RS.Col size={6}>
-                <RS.Input value={isMobile() ? "Dismiss" : "Dismiss for now"} type="button" className="btn btn-block btn-primary-outline px-0 px-md-2 my-1" onClick={() => dispatch(closeActiveModal())} />
-            </RS.Col>
-            <RS.Col size={6}>
-                <RS.Input value={isMobile() ? "Update" : "Update account"} type="submit" className="btn btn-block btn-secondary border-0 px-0 px-md-2 my-1" />
+            <RS.Col md={{size: 6, offset: 3}}>
+                <RS.Input value={isMobile() ? "Update" : "Update account"} type="submit" className="btn btn-secondary border-0 px-0 px-md-2 my-1" />
             </RS.Col>
         </RS.Row>
     </RS.Form>
 };
 
 export const userPreferencesModal = {
-    title: "Required account information",
+    title: "Please confirm your email preferences",
     body: <UserPreferencesModalBody />,
     closeAction: () => store.dispatch(closeActiveModal())
 };

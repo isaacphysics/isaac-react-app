@@ -27,7 +27,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
     }
 
     return <CardBody className="pb-0">
-        <p>Tell us which emails you would like to receive. These settings can be changed at any time.</p>
+        <p>We know people don’t like getting unwanted spam, so we’ve made it easy to personalise and control the updates you receive from us.</p>
         <FormGroup className="overflow-auto">
             <Table className="mb-0">
                 <thead>
@@ -39,8 +39,10 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                 </thead>
                 <tbody>
                     <tr>
-                        <td className="form-required">News and Updates</td>
-                        <td className="d-none d-sm-table-cell">New content and website feature updates, as well as interesting news about Isaac.</td>
+                        <td className="form-required">News</td>
+                        <td className="d-none d-sm-table-cell">
+                            Content updates, new website features, and other interesting news as it happens.
+                        </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}news`} stateObject={emailPreferences}
@@ -50,8 +52,10 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                         </td>
                     </tr>
                     <tr>
-                        <td className="form-required">Assignments</td>
-                        <td className="d-none d-sm-table-cell">Get notified when your teacher gives your group a new assignment.</td>
+                        <td className="form-required">Tour assignments</td>
+                        <td className="d-none d-sm-table-cell">
+                            A notification when your teacher sets a new group assignment.
+                        </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}assignments`} stateObject={emailPreferences}
@@ -62,7 +66,9 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     </tr>
                     <tr>
                         <td className="form-required">Events</td>
-                        <td className="d-none d-sm-table-cell">Information about our computer science events.</td>
+                        <td className="d-none d-sm-table-cell">
+                            Information about our live events around England.
+                        </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}events`} stateObject={emailPreferences}
