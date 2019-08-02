@@ -49,7 +49,7 @@ describe("requestCurrentUser action", () => {
             {type: ACTION_TYPE.USER_PREFERENCES_REQUEST},
             {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences}
         ];
-        const expectedFinalActions = [{type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: dameShirley}];
+        const expectedFinalActions = [{type: ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, user: dameShirley}];
 
         const actualActions = store.getActions();
         expect(actualActions.length)

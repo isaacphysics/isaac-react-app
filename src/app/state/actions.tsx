@@ -150,7 +150,7 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
             dispatch(getUserAuthSettings() as any),
             dispatch(getUserPreferences() as any)
         ]);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: currentUser.data});
+        dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE});
     }
@@ -219,8 +219,9 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
     persistence.remove(KEY.AFTER_AUTH_PATH);
     try {
-        const response = await api.authentication.login(provider, params);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
+        const result = await api.authentication.login(provider, params);
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+        await dispatch(requestCurrentUser() as any); // Request user preferences
         history.push(afterAuthPath);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? extractMessage(e) : API_REQUEST_FAILURE_MESSAGE})
@@ -276,14 +277,14 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider) =>
 export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
-        const response = await api.authentication.checkProviderCallback(provider, parameters);
-        const user = response.data;
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user});
+        const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
+        await dispatch(requestCurrentUser() as any); // Request user preferences
         let nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
         persistence.remove(KEY.AFTER_AUTH_PATH);
         nextPage = nextPage || "/";
         nextPage = nextPage.replace("#!", "");
-        if (user.firstLogin && !nextPage.includes("account")) {
+        if (providerResponse.data.firstLogin && !nextPage.includes("account")) {
             ReactGA.event({
                 category: 'user',
                 action: 'registration',

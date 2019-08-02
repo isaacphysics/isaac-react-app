@@ -14,7 +14,7 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
     await dispatch(action);
 
     const state = middlewareApi.getState();
-    if([ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type)) {
+    if([ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type)) {
         // User email preferences check - runs after dispatching the action as we clear the modal on page change
         if (state.user && state.user.loggedIn === true && emailPreferencesAreNotSet(state.userPreferences)) {
             dispatch(openActiveModal(userPreferencesModal));
