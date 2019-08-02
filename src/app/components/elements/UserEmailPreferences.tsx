@@ -52,7 +52,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                         </td>
                     </tr>
                     <tr>
-                        <td className="form-required">Tour assignments</td>
+                        <td className="form-required">Assignments</td>
                         <td className="d-none d-sm-table-cell">
                             A notification when your teacher sets a new group assignment.
                         </td>
