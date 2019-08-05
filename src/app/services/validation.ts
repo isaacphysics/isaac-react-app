@@ -1,4 +1,3 @@
-import {EmailTemplateDTO} from "../../IsaacApiTypes";
 import {UserEmailPreferences} from "../../IsaacAppTypes";
 
 
@@ -25,3 +24,17 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
         emailPreferences.NEWS_AND_UPDATES
     ].reduce((prev, next) => prev && (next === true || next === false), true); // Make sure all expected values are either true or false
 };
+
+const withinLastNMinutes = (n: number, dateOfAction: string | null) => {
+    if (dateOfAction) {
+        const interval = n * 60 * 1000;
+        const now = new Date();
+        const actionTime = new Date(dateOfAction);
+        const nMinutesAgo = new Date(now.getTime() - interval);
+        return nMinutesAgo <= actionTime && actionTime <= now;
+    } else {
+        return false;
+    }
+};
+
+export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);

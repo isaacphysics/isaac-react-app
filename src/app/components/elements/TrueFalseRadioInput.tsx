@@ -19,7 +19,7 @@ export const TrueFalseRadioInput = (props: TrueFalseRadioProps<any>) => {
             {trueLabel}<span className='sr-only'> for {propertyName}</span>
         </RS.Label>
         <RS.CustomInput
-            id={`${id}-t`} type="checkbox" name="id" color="$secondary" className="w-50 d-inline"
+            id={`${id}-t`} type="radio" name={id} color="$secondary" className="w-50 d-inline"
             checked={stateObject[propertyName] === true} invalid={invalid}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 if (e.target.checked) {
@@ -35,7 +35,7 @@ export const TrueFalseRadioInput = (props: TrueFalseRadioProps<any>) => {
             {falseLabel}<span className='sr-only'> for {propertyName}</span>
         </RS.Label>
         <RS.CustomInput
-            id={`${id}-f`} type="checkbox" name="id" color="$secondary" className="w-50 d-inline"
+            id={`${id}-f`} type="radio" name={id} color="$secondary" className="w-50 d-inline"
             checked={stateObject[propertyName] === false} invalid={invalid}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 if (e.target.checked) {

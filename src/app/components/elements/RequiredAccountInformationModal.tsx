@@ -7,8 +7,9 @@ import {UserEmailPreferences} from "../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {validateEmailPreferences} from "../../services/validation";
+import {isMobile} from "../../services/device";
 
-const UserPreferencesModalBody = () => {
+const RequiredAccountInfoBody = () => {
     const dispatch = useDispatch();
     const user = useSelector((state: AppState) => state && state.user);
     const userPreferences = useSelector((state: AppState) => state && state.userPreferences);
@@ -22,7 +23,7 @@ const UserPreferencesModalBody = () => {
         setEmailPreferences(Object.assign({}, emailPreferences, newEmailPreferences));
     }
 
-    const emailPreferencesAreValid = validateEmailPreferences(emailPreferences)
+    const emailPreferencesAreValid = validateEmailPreferences(emailPreferences);
 
     function formSubmission(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -35,19 +36,16 @@ const UserPreferencesModalBody = () => {
     }
 
     return <RS.Form onSubmit={formSubmission}>
-        {!validateEmailPreferences(emailPreferences) && <UserEmailPreference
+        {!emailPreferencesAreValid && <UserEmailPreference
             emailPreferences={emailPreferences}
             setEmailPreferences={updateEmailPreferencesInModalScope}
             idPrefix="modal-"
             submissionAttempted={submissionAttempted}
         />}
 
-        <RS.Row className="text-center border-top p-5">
-            <RS.Col>
-                <RS.Input value="Ignore for now" type="button" className="btn btn-block btn-primary-outline px-2" onClick={() => dispatch(closeActiveModal())} />
-            </RS.Col>
-            <RS.Col>
-                <RS.Input value="Update account" type="submit" className="btn btn-block btn-secondary border-0 px-2" />
+        <RS.Row className="text-center border-top p-3 p-sm-4">
+            <RS.Col md={{size: 6, offset: 3}}>
+                <RS.Input value={isMobile() ? "Update" : "Update account"} type="submit" className="btn btn-secondary border-0 px-0 px-md-2 my-1" />
             </RS.Col>
         </RS.Row>
     </RS.Form>
@@ -55,6 +53,5 @@ const UserPreferencesModalBody = () => {
 
 export const requiredAccountInformationModal = {
     title: "Required account information",
-    body: <UserPreferencesModalBody />,
-    closeAction: () => store.dispatch(closeActiveModal())
+    body: <RequiredAccountInfoBody />,
 };

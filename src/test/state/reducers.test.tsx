@@ -48,9 +48,6 @@ describe("root reducer", () => {
             expect(actualNextState).toEqual(actualInitialState);
         });
     });
-
-    // TODO MT add a test with redux-undo to assert logging out also removes history...
-    // I don't think "history" is preserved unless done explicitly with redux-logger/redux-undo anyway
 });
 
 describe("user reducer", () => {

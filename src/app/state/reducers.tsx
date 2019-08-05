@@ -37,6 +37,7 @@ type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
+        case ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS:
             return {loggedIn: true, ...action.user};
         case ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE:
@@ -382,7 +383,6 @@ export const activeModal = (activeModal: ActiveModalState = null, action: Action
         case ACTION_TYPE.ACTIVE_MODAL_OPEN:
             return action.activeModal;
         case ACTION_TYPE.ACTIVE_MODAL_CLOSE:
-        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
             return null;
         default:
             return activeModal;

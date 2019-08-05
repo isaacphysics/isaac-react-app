@@ -50,7 +50,6 @@ import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
 import {isTeacher} from "../services/user";
 import ReactGA from "react-ga";
-import {requiredAccountInformationModal} from "../components/elements/RequiredAccountInformationModal";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -150,7 +149,7 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
             dispatch(getUserAuthSettings() as any),
             dispatch(getUserPreferences() as any)
         ]);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: currentUser.data});
+        dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE});
     }
@@ -219,8 +218,9 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
     persistence.remove(KEY.AFTER_AUTH_PATH);
     try {
-        const response = await api.authentication.login(provider, params);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
+        const result = await api.authentication.login(provider, params);
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+        await dispatch(requestCurrentUser() as any); // Request user preferences
         history.push(afterAuthPath);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? extractMessage(e) : API_REQUEST_FAILURE_MESSAGE})
@@ -276,14 +276,14 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider) =>
 export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
-        const response = await api.authentication.checkProviderCallback(provider, parameters);
-        const user = response.data;
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user});
+        const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
+        await dispatch(requestCurrentUser() as any); // Request user preferences
         let nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
         persistence.remove(KEY.AFTER_AUTH_PATH);
         nextPage = nextPage || "/";
         nextPage = nextPage.replace("#!", "");
-        if (user.firstLogin && !nextPage.includes("account")) {
+        if (providerResponse.data.firstLogin && !nextPage.includes("account")) {
             ReactGA.event({
                 category: 'user',
                 action: 'registration',
@@ -782,6 +782,27 @@ export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Ac
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("User Search Failed", e));
+    }
+};
+
+export const adminUserDelete = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+    try {
+        let confirmDeletion = window.confirm("Are you sure you want to delete this user?");
+        if (confirmDeletion) {
+            dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST});
+            await api.admin.userDelete.delete(userid);
+            dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS});
+            dispatch(showToast({
+                title: "User Deleted",
+                body: "The selected user was successfully deleted.",
+                color: "success",
+                timeout: 5000,
+                closable: false,
+            }) as any);
+        }
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("User Deletion Failed", e));
     }
 };
 

@@ -17,7 +17,9 @@ const ActiveModalComponent = ({activeModal}: ActiveModalProps) => (
         {activeModal && <React.Fragment>
             <RS.ModalHeader
                 className="h-title pb-5 mb-4"
-                close={<button className="close" onClick={activeModal.closeAction}>Close</button>}
+                close={
+                    activeModal.closeAction ? <button className="close" onClick={activeModal.closeAction}>Close</button> : null
+                }
             >
                 {activeModal.title}
             </RS.ModalHeader>
