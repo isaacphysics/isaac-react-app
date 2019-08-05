@@ -1,67 +1,87 @@
-import {CardBody, CustomInput, Form, FormGroup, Table} from "reactstrap";
-import React from "react";
+import {CardBody, Col, FormGroup, Row, default as RS, Table} from "reactstrap";
+import React, {useMemo} from "react";
 import {UserEmailPreferences} from "../../../IsaacAppTypes";
+import {TrueFalseRadioInput} from "./TrueFalseRadioInput";
+import {useSelector} from "react-redux";
+import {AppState} from "../../state/reducers";
+import {validateEmailPreferences} from "../../services/validation";
 
 interface UserEmailPreferencesProps {
-    emailPreferences: UserEmailPreferences | null;
-    setEmailPreferences: (e: any) => void;
+    emailPreferences: UserEmailPreferences;
+    setEmailPreferences: (e: UserEmailPreferences) => void;
+    submissionAttempted: boolean;
+    idPrefix?: string;
 }
+export const UserEmailPreference = ({emailPreferences, setEmailPreferences, submissionAttempted, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
+    const error = useSelector((state: AppState) => state && state.error);
+    const defaultEmailPreferences = {ASSIGNMENTS: true};
 
-export const UserEmailPreference = ({emailPreferences, setEmailPreferences}: UserEmailPreferencesProps) => {
-    return <CardBody>
-        <p>Tell us which emails you would like to receive. These settings can be changed at any time.</p>
-        <FormGroup>
-            <Table>
+    // initially set email preferences to default value
+    useMemo(() => {setEmailPreferences(Object.assign(defaultEmailPreferences, emailPreferences))}, []);
+
+    let errorMessage = null;
+    if (error && error.type === "generalError") {
+        errorMessage = error.generalError;
+    } else  if (submissionAttempted && !validateEmailPreferences(emailPreferences)) {
+        errorMessage = "Please specify all email preferences"
+    }
+
+    return <CardBody className="pb-0">
+        <p>We know people don’t like getting unwanted spam, so we’ve made it easy to personalise and control the updates you receive from us.</p>
+        <FormGroup className="overflow-auto">
+            <Table className="mb-0">
                 <thead>
                     <tr>
                         <th>Email Type</th>
-                        <th>Description</th>
-                        <th>Preference</th>
+                        <th className="d-none d-sm-table-cell">Description</th>
+                        <th className="text-center">Preference</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {/*Commented out at the moment, to stop sending these emails*/}
-                    {/*<tr>*/}
-                        {/*<td>News and Updates</td>*/}
-                        {/*<td>New content and website feature updates, as well as interesting news about Isaac.</td>*/}
-                        {/*<td>*/}
-                            {/*<CustomInput*/}
-                                {/*id="news" type="checkbox" name="news" color="$secondary"*/}
-                                {/*defaultChecked={emailPreferences ? emailPreferences.NEWS_AND_UPDATES : true}*/}
-                                {/*onChange={(e: any) => setEmailPreferences(*/}
-                                    {/*Object.assign({}, emailPreferences, {NEWS_AND_UPDATES: emailPreferences? !emailPreferences.NEWS_AND_UPDATES : true}))*/}
-                                {/*}*/}
-                            {/*/>*/}
-                        {/*</td>*/}
-                    {/*</tr>*/}
                     <tr>
-                        <td>Assignments</td>
-                        <td>Get notified when your teacher gives your group a new assignment.</td>
-                        <td>
-                            <CustomInput
-                                id="assignments" type="checkbox" name="assignments"
-                                defaultChecked={emailPreferences ? emailPreferences.ASSIGNMENTS : true}
-                                onChange={(e: any) => setEmailPreferences(
-                                    Object.assign({}, emailPreferences, {ASSIGNMENTS: emailPreferences ? !emailPreferences.ASSIGNMENTS : true})
-                                )}
+                        <td className="form-required">News</td>
+                        <td className="d-none d-sm-table-cell">
+                            Content updates, new website features, and other interesting news as it happens.
+                        </td>
+                        <td className="text-center">
+                            <TrueFalseRadioInput
+                                id={`${idPrefix}news`} stateObject={emailPreferences}
+                                propertyName="NEWS_AND_UPDATES" setStateFunction={setEmailPreferences}
+                                submissionAttempted={submissionAttempted}
                             />
                         </td>
                     </tr>
-                    {/*<tr>*/}
-                        {/*<td>Events</td>*/}
-                        {/*<td>Information about our computer science events.</td>*/}
-                        {/*<td>*/}
-                            {/*<CustomInput*/}
-                                {/*className="CustomInput" id="events" type="checkbox" name="events"*/}
-                                {/*defaultChecked={emailPreferences ? emailPreferences.EVENTS : true}*/}
-                                {/*onChange={(e: any) => setEmailPreferences(*/}
-                                    {/*Object.assign({}, emailPreferences, {EVENTS: emailPreferences ? !emailPreferences.EVENTS : true})*/}
-                                {/*)}*/}
-                            {/*/>*/}
-                        {/*</td>*/}
-                    {/*</tr>*/}
+                    <tr>
+                        <td className="form-required">Assignments</td>
+                        <td className="d-none d-sm-table-cell">
+                            A notification when your teacher sets a new group assignment.
+                        </td>
+                        <td className="text-center">
+                            <TrueFalseRadioInput
+                                id={`${idPrefix}assignments`} stateObject={emailPreferences}
+                                propertyName="ASSIGNMENTS" setStateFunction={setEmailPreferences}
+                                submissionAttempted={submissionAttempted}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="form-required">Events</td>
+                        <td className="d-none d-sm-table-cell">
+                            Information about our live events around England.
+                        </td>
+                        <td className="text-center">
+                            <TrueFalseRadioInput
+                                id={`${idPrefix}events`} stateObject={emailPreferences}
+                                propertyName="EVENTS" setStateFunction={setEmailPreferences}
+                                submissionAttempted={submissionAttempted}
+                            />
+                        </td>
+                    </tr>
                 </tbody>
             </Table>
+            {errorMessage && <h4 role="alert" className="text-danger text-center mb-4">
+                {errorMessage}
+            </h4>}
         </FormGroup>
     </CardBody>
 };
