@@ -356,7 +356,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage Groups" intermediateCrumbs={[TEACHERS_CRUMB]} className="mb-4" help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="Manage groups" intermediateCrumbs={[TEACHERS_CRUMB]} className="mb-4" help={pageHelp} />
         <Row className="mb-5">
             <Col md={4}>
                 <ShowLoading until={activeTab}>
