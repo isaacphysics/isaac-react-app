@@ -383,7 +383,6 @@ export const activeModal = (activeModal: ActiveModalState = null, action: Action
         case ACTION_TYPE.ACTIVE_MODAL_OPEN:
             return action.activeModal;
         case ACTION_TYPE.ACTIVE_MODAL_CLOSE:
-        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
             return null;
         default:
             return activeModal;

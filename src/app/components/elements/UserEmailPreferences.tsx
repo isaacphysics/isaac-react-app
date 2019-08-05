@@ -67,7 +67,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     <tr>
                         <td className="form-required">Events</td>
                         <td className="d-none d-sm-table-cell">
-                            Information about our live events around England.
+                            Information about our events around England.
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
