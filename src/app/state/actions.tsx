@@ -219,8 +219,8 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
     persistence.remove(KEY.AFTER_AUTH_PATH);
     try {
         const result = await api.authentication.login(provider, params);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         await dispatch(requestCurrentUser() as any); // Request user preferences
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         history.push(afterAuthPath);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? extractMessage(e) : API_REQUEST_FAILURE_MESSAGE})
@@ -277,8 +277,8 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         await dispatch(requestCurrentUser() as any); // Request user preferences
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         let nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
         persistence.remove(KEY.AFTER_AUTH_PATH);
         nextPage = nextPage || "/";
