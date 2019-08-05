@@ -243,3 +243,39 @@
         }
     }
 }
+
+// TODO: Find a better way to unify this and the identical above (around line 137)
+li#moving-menu-item {
+    position: relative; // this will become absolute in InequalityModal.tsx
+    display: inline-block;
+    box-sizing: content-box;
+    padding: 8px;
+    text-indent: 0;
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    font-size: 1.8em;
+
+    &.active {
+        background: theme-color("primary");
+    }
+
+    .katex {
+        display: block;
+        padding-top: 5px;
+    }
+
+    svg {
+        position: absolute;
+        width: 48px;
+        left: 8px;
+        top: 4px;
+        overflow: visible;
+
+        .v-hexagon {
+            fill: white;
+            stroke: darken(theme-color("primary"), 10%);
+            stroke-width: 8px;
+        }
+    }
+}

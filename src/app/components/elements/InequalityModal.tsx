@@ -1,5 +1,5 @@
 import React from "react";
-import { Inequality, makeInequality } from "inequality";
+import { Inequality, makeInequality, WidgetSpec } from "inequality";
 import katex from "katex";
 import { number } from "prop-types";
 
@@ -24,16 +24,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         activeMenu: string,
         activeSubMenu: string,
         trashActive: boolean,
-        previousCursorX: number,
-        previousCursorY: number,
         menuOpen: boolean,
         editorState: any,
         menuItems: { [key: string]: Array<MenuItem> },
         defaultMenu: boolean
     };
-
-    // Drag ghost "image" thing
-    private _ghost?: HTMLElement;
 
     private _vHexagon = `
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 173.5 200" style="enable-background:new 0 0 173.5 200;" xml:space="preserve">
@@ -46,6 +41,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         </svg>
     `
 
+    private _previousCursor?: { x: number, y: number } | null = null;
+
+    private _disappearingMenuItem?: HTMLElement | null = null;
+    private _movingMenuItem?: HTMLElement | null = null;
+    private _movingMenuBar?: HTMLElement | null = null;
+    private _potentialSymbolSpec?: MenuItem | null = null;
+
     // Call this to close the editor
     close: () => void;
 
@@ -56,8 +58,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             activeMenu: "letters",
             activeSubMenu: "upperCaseLetters",
             trashActive: false,
-            previousCursorX: NaN,
-            previousCursorY: NaN,
             menuOpen: false,
             editorState: {},
             menuItems: {
@@ -121,13 +121,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.documentElement.style.height = window.innerHeight.toString() + "px";
         document.body.style.height = window.innerHeight.toString() + "px";
 
-        this._ghost = document.createElement('div');
-        this._ghost.style.opacity = "0";
-        this._ghost.innerHTML = '_';
-        this._ghost.id = 'the-ghost-of-inequality';
-        document.body.appendChild(this._ghost);
-
-        document.addEventListener('mousedown', this.onMouseDown.bind(this), false);
+        document.addEventListener('mousedown', this.onMouseDown.bind(this), true);
         document.addEventListener('touchstart', this.onTouchStart.bind(this), false);
         document.addEventListener('mouseup', this.onCursorMoveEnd.bind(this), false);
         document.addEventListener('touchend', this.onCursorMoveEnd.bind(this), false);
@@ -161,31 +155,128 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.body.style.overflow = null;
     }
 
+    private prepareAbsoluteElement(element?: Element | null) {
+        if (element) {
+            const menuItem = element.closest('li.menu-item');
+            if (menuItem) {
+                this._potentialSymbolSpec = JSON.parse(menuItem.getAttribute('data-item') || '');
+                this._movingMenuItem = (menuItem.cloneNode(true) as HTMLElement);
+                this._movingMenuItem.id = 'moving-menu-item';
+                this._movingMenuItem.style.position = 'absolute';
+                this._movingMenuItem.style.opacity = '0.5';
+                this._movingMenuItem.style.zIndex = '255';
+                document.body.appendChild(this._movingMenuItem);
+
+                this._disappearingMenuItem = menuItem as HTMLElement;
+                this._disappearingMenuItem.style.opacity = '0';
+
+                this._movingMenuBar = menuItem.closest('.sub-menu') as HTMLElement;
+            }
+        }
+    }
+
     private onMouseDown(e: MouseEvent) {
-        this.state.previousCursorX = e.clientX;
-        this.state.previousCursorY = e.clientY;
+        e.preventDefault();
+        this._previousCursor = { x: e.pageX, y: e.pageY };
+        const element = document.elementFromPoint(this._previousCursor.x, this._previousCursor.y);
+        this.prepareAbsoluteElement(element);
+        if (this._potentialSymbolSpec && this.state.sketch) {
+            this.state.sketch.updatePotentialSymbol(this._potentialSymbolSpec as WidgetSpec, this._previousCursor.x, this._previousCursor.y);
+        }
     }
 
     private onTouchStart(e: TouchEvent) {
-        this.state.previousCursorX = e.touches[0].clientX;
-        this.state.previousCursorY = e.touches[0].clientY;
+        e.preventDefault();
+        this._previousCursor = { x: e.touches[0].pageX, y: e.touches[0].pageY };
+        const element = document.elementFromPoint(this._previousCursor.x, this._previousCursor.y);
+        this.prepareAbsoluteElement(element);
+        if (this._potentialSymbolSpec && this.state.sketch) {
+            this.state.sketch.updatePotentialSymbol(this._potentialSymbolSpec as WidgetSpec, this._previousCursor.x, this._previousCursor.y);
+        }
     }
 
     private onCursorMoveEnd(e: MouseEvent | TouchEvent) {
-        this.state.previousCursorX = NaN;
-        this.state.previousCursorY = NaN;
+        e.preventDefault();
+        // No need to run if we are not dealing with a menu item.
+        if (!this._movingMenuItem) {
+            return;
+        }
+
+        const menuTabs = document.getElementById('inequality-menu-tabs') as Element;
+        const menuTabsRect = menuTabs ? menuTabs.getBoundingClientRect() : null;
+
+        const trashCan = document.getElementById('inequality-trash') as Element;
+        const trashCanRect = trashCan ? trashCan.getBoundingClientRect() : null;
+
+        if (this._previousCursor && this.state.sketch) {
+            if (menuTabsRect && this._previousCursor.y <= menuTabsRect.top) {
+                this.state.sketch.abortPotentialSymbol();
+            } else if (trashCanRect &&
+                this._previousCursor.x >= trashCanRect.left &&
+                this._previousCursor.x <= trashCanRect.right &&
+                this._previousCursor.y >= trashCanRect.top &&
+                this._previousCursor.y <= trashCanRect.bottom) {
+                this.state.sketch.abortPotentialSymbol();
+            } else {
+                this.state.sketch.commitPotentialSymbol();
+            }
+        }
+
+        this._previousCursor = null;
+        if (this._movingMenuItem) {
+            document.body.removeChild(this._movingMenuItem);
+        }
+        if (this._disappearingMenuItem) {
+            this._disappearingMenuItem.style.opacity = '1';
+            this._disappearingMenuItem = null;
+        }
+        this._movingMenuItem = null;
+        this._movingMenuBar = null;
+        this._potentialSymbolSpec = null;
     }
 
     private onMouseMove(e: MouseEvent) {
         e.preventDefault();
-        this.handleMove(e.target as HTMLElement, e.clientX, e.clientY);
+        this.handleMove(e.target as HTMLElement, e.pageX, e.pageY);
     }
 
     private onTouchMove(e: TouchEvent) {
         e.preventDefault();
-        this.handleMove(e.target as HTMLElement, e.touches[0].clientX, e.touches[0].clientY);
+        this.handleMove(e.target as HTMLElement, e.touches[0].pageX, e.touches[0].pageY);
     }
 
+    private handleMove(_target: HTMLElement, x: number, y: number) {
+        const trashCan = document.getElementById('inequality-trash') as Element;
+        const trashCanRect = trashCan ? trashCan.getBoundingClientRect() : null;
+        if (trashCanRect && x >= trashCanRect.left && x <= trashCanRect.right && y >= trashCanRect.top && y <= trashCanRect.bottom) {
+            trashCan.classList.add('active');
+            this.state.trashActive = true;
+        } else {
+            trashCan.classList.remove('active');
+            this.state.trashActive = false;
+        }
+
+        // No need to run any further if we are not dealing with a menu item.
+        if (!this._movingMenuItem) {
+            return;
+        }
+
+        if (this._previousCursor) {
+            const dx =  x - this._previousCursor.x;
+            const dy = -y + this._previousCursor.y;
+            if (this._movingMenuBar) {
+                const newUlLeft = Math.min(0, parseInt((this._movingMenuBar.style.marginLeft || '0').replace(/[^-\d]/g, '')) + dx);
+                this._movingMenuBar.style.marginLeft = `${newUlLeft}px`;
+            }
+            this._movingMenuItem.style.top = `${y}px`;
+            this._movingMenuItem.style.left = `${x}px`;
+        }
+        if (this._potentialSymbolSpec && this.state.sketch) {
+            this.state.sketch.updatePotentialSymbol(this._potentialSymbolSpec as WidgetSpec, x, y);
+        }
+
+        this._previousCursor = { x, y };
+    }
 
     private generateLogicFunctionsItems(syntax = 'logic'): Array<MenuItem> {
         let labels: any = {
@@ -203,27 +294,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         ];
     }
 
-    private handleMove(target: HTMLElement, x: number, y: number) {
-        if (!isNaN(this.state.previousCursorX) && !isNaN(this.state.previousCursorY)) {
-            const dx = x - this.state.previousCursorX;
-            const dy = - y + this.state.previousCursorY;
-            const ul = target.closest('.sub-menu') as HTMLElement;
-            if (parent) {
-                const newLeft = Math.min(0, parseInt((ul.style.marginLeft || '0').replace(/[^-\d]/g, '')) + dx);
-                ul.style.marginLeft = `${newLeft}px`;
-
-                const li = target.closest('li') as HTMLElement;
-                const newTop = parseInt((li.style.top || '0').replace(/[^-\d]/g, '')) - dy;
-                li.style.top = `${newTop}px`;
-            }
-            this.state.previousCursorX = x;
-            this.state.previousCursorY = y;
-        }
-    }
-
     // Fat arrow form for correct "this" binding (?!)
     private menuItem = (item: MenuItem, index: number) => {
         return <li key={index}
+            data-item={JSON.stringify(item)} // TODO Come up with a better way than this.
             dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(item.menu.label) }}
             className={ item.menu.className }
             />;
@@ -271,7 +345,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                     }</ul>
                 </div>}
             </div>
-            <div className="menu-tabs">
+            <div id="inequality-menu-tabs" className="menu-tabs">
                 <ul>
                     <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString("A\\ b") }} onClick={() => this.onMenuTabClick("letters")} />
                     <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(this.props.syntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }} onClick={() => this.onMenuTabClick("functions")} />
@@ -285,12 +359,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             <div className="inequality-ui confirm button" onClick={this.close}>OK</div>
             <div className={`inequality-ui katex-preview ${previewTexString === "" ? "empty" : ""}`} dangerouslySetInnerHTML={{ __html: katex.renderToString(previewTexString) }}></div>
             <div className="inequality-ui centre button" onClick={() => { if (this.state.sketch) this.state.sketch.centre() }}>Centre</div>
-            <div id="inequality-trash" className={"inequality-ui trash button" + (this.state.trashActive ? " active" : " inactive")}
-                 onDragEnter={() => { this.setState({ trashActive: true }) }}
-                 onDragLeave={() => { this.setState({ trashActive: false }) }}
-                 onMouseEnter={() => { this.setState({ trashActive: true }) }}
-                 onMouseLeave={() => { this.setState({ trashActive: false }) }} // This is a bit ridiculous but hey...
-            >Trash</div>
+            <div id="inequality-trash" className="inequality-ui trash button">Trash</div>
             <div className="beta-badge">beta</div>
             { menu }
         </div>;

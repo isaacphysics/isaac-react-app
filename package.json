@@ -138,6 +138,7 @@
   "devDependencies": {
     "@types/axios-mock-adapter": "^1.10.0",
     "@types/katex": "^0.10.1",
+    "@types/lodash": "^4.14.136",
     "@types/react-beautiful-dnd": "^11.0.2",
     "@types/redux-mock-store": "^1.0.0",
     "axios-mock-adapter": "^1.16.0",
