@@ -120,27 +120,29 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         this.state.sketch = sketch;
 
         document.documentElement.style.overflow = "hidden";
-        document.body.style.overflow = "hidden";
         document.documentElement.style.width = '100vw';
-        document.documentElement.style.height = '0';
+        document.documentElement.style.height = '100vh';
+        document.documentElement.style.touchAction = 'none';
+        document.body.style.overflow = "hidden";
         document.body.style.width = '100vw';
-        document.body.style.height = '0';
+        document.body.style.height = '100vh';
+        document.body.style.touchAction = 'none';
         
-        document.addEventListener('mousedown', this.onMouseDown.bind(this), true);
-        document.addEventListener('touchstart', this.onTouchStart.bind(this), false);
-        document.addEventListener('mouseup', this.onCursorMoveEnd.bind(this), false);
-        document.addEventListener('touchend', this.onCursorMoveEnd.bind(this), false);
-        document.addEventListener('mousemove', this.onMouseMove.bind(this), false);
-        document.addEventListener('touchmove', this.onTouchMove.bind(this), false);
+        document.body.addEventListener('mousedown', this.onMouseDown.bind(this));
+        document.body.addEventListener('touchstart', this.onTouchStart.bind(this));
+        document.body.addEventListener('mouseup', this.onCursorMoveEnd.bind(this));
+        document.body.addEventListener('touchend', this.onCursorMoveEnd.bind(this));
+        document.body.addEventListener('mousemove', this.onMouseMove.bind(this));
+        document.body.addEventListener('touchmove', this.onTouchMove.bind(this));
     }
 
     componentWillUnmount() {
-        document.removeEventListener('mousedown', this.onMouseDown.bind(this), false);
-        document.removeEventListener('touchstart', this.onTouchStart.bind(this), false);
-        document.removeEventListener('mouseup', this.onCursorMoveEnd.bind(this), false);
-        document.removeEventListener('touchend', this.onCursorMoveEnd.bind(this), false);
-        document.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
-        document.removeEventListener('touchmove', this.onTouchMove.bind(this), false);
+        document.body.removeEventListener('mousedown', this.onMouseDown.bind(this));
+        document.body.removeEventListener('touchstart', this.onTouchStart.bind(this));
+        document.body.removeEventListener('mouseup', this.onCursorMoveEnd.bind(this));
+        document.body.removeEventListener('touchend', this.onCursorMoveEnd.bind(this));
+        document.body.removeEventListener('mousemove', this.onMouseMove.bind(this));
+        document.body.removeEventListener('touchmove', this.onTouchMove.bind(this));
 
         if (this.state.sketch) {
             this.state.sketch.onNewEditorState = (s: any) => null;
@@ -152,15 +154,17 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
         const inequalityElement = document.getElementById('inequality-modal');
         if (inequalityElement) {
-            inequalityElement.removeChild(document.getElementsByTagName('canvas')[0]);
+            inequalityElement.removeChild(inequalityElement.getElementsByTagName('canvas')[0]);
         }
 
         document.documentElement.style.width = null;
         document.documentElement.style.height = null;
         document.documentElement.style.overflow = null;
+        document.documentElement.style.touchAction = 'auto';
         document.body.style.width = null;
         document.body.style.height = null;
         document.body.style.overflow = null;
+        document.body.style.touchAction = 'auto';
     }
 
     private prepareAbsoluteElement(element?: Element | null) {
@@ -185,7 +189,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
     private onMouseDown(e: MouseEvent) {
         // e.preventDefault();
-        this._previousCursor = { x: e.pageX, y: e.pageY };
+        if (!this.state.sketch) {
+            return;
+        }
+        this._previousCursor = { x: e.clientX, y: e.clientY };
         const element = document.elementFromPoint(this._previousCursor.x, this._previousCursor.y);
         this.prepareAbsoluteElement(element);
         if (this._potentialSymbolSpec && this.state.sketch) {
@@ -195,7 +202,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
     private onTouchStart(e: TouchEvent) {
         // e.preventDefault();
-        this._previousCursor = { x: e.touches[0].pageX, y: e.touches[0].pageY };
+        if (!this.state.sketch) {
+            return;
+        }
+        this._previousCursor = { x: e.touches[0].clientX, y: e.touches[0].clientY };
         const element = document.elementFromPoint(this._previousCursor.x, this._previousCursor.y);
         this.prepareAbsoluteElement(element);
         if (this._potentialSymbolSpec && this.state.sketch) {
@@ -204,19 +214,25 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onMouseMove(e: MouseEvent) {
-        e.preventDefault();
-        this.handleMove(e.target as HTMLElement, e.pageX, e.pageY);
+        // e.preventDefault();
+        if (!this.state.sketch) {
+            return;
+        }
+        this.handleMove(e.target as HTMLElement, e.clientX, e.clientY);
     }
 
     private onTouchMove(e: TouchEvent) {
-        e.preventDefault();
-        this.handleMove(e.target as HTMLElement, e.touches[0].pageX, e.touches[0].pageY);
+        // e.preventDefault();
+        if (!this.state.sketch) {
+            return;
+        }
+        this.handleMove(e.target as HTMLElement, e.touches[0].clientX, e.touches[0].clientY);
     }
 
     private onCursorMoveEnd(e: MouseEvent | TouchEvent) {
         // e.preventDefault();
         // No need to run if we are not dealing with a menu item.
-        if (!this._movingMenuItem) {
+        if (!this.state.sketch || !this._movingMenuItem) {
             return;
         }
 
@@ -255,13 +271,15 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
     private handleMove(_target: HTMLElement, x: number, y: number) {
         const trashCan = document.getElementById('inequality-trash') as Element;
-        const trashCanRect = trashCan ? trashCan.getBoundingClientRect() : null;
-        if (trashCanRect && x >= trashCanRect.left && x <= trashCanRect.right && y >= trashCanRect.top && y <= trashCanRect.bottom) {
-            trashCan.classList.add('active');
-            this.state.trashActive = true;
-        } else {
-            trashCan.classList.remove('active');
-            this.state.trashActive = false;
+        if (trashCan) {
+            const trashCanRect = trashCan.getBoundingClientRect();
+            if (trashCanRect && x >= trashCanRect.left && x <= trashCanRect.right && y >= trashCanRect.top && y <= trashCanRect.bottom) {
+                trashCan.classList.add('active');
+                this.state.trashActive = true;
+            } else {
+                trashCan.classList.remove('active');
+                this.state.trashActive = false;
+            }
         }
 
         // No need to run any further if we are not dealing with a menu item.
