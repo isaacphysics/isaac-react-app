@@ -16,7 +16,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {LoggedInUser, LoggedInValidationUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {LoggedInUser, LoggedInValidationUser, UserPreferencesDTO, ZxcvbnResult} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
@@ -36,6 +36,16 @@ const stateToProps = (state: AppState) => ({
 });
 const dispatchToProps = {
     updateCurrentUser
+};
+
+let timer: any = null;
+
+const passwordStrengthText: {[score: number]: string} = {
+    0: "Very Weak",
+    1: "Weak",
+    2: "Fair",
+    3: "Strong",
+    4: "Very Strong"
 };
 
 interface RegistrationPageProps {
@@ -60,9 +70,19 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
             password: null,
         })
     );
+
+    // Hack to only load zxcvbn.js for Registration:
+    let zxcvbnScript;
+    zxcvbnScript = document.createElement('script');
+    zxcvbnScript.src = 'https://cdn.isaaccomputerscience.org/vendor/dropbox/zxcvbn.js';
+    zxcvbnScript.type = 'text/javascript';
+    zxcvbnScript.async = true;
+    document.head.appendChild(zxcvbnScript);
+
     const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword);
     const [dobCheckboxChecked, setDobCheckboxChecked] = useState(false);
     const [attemptedSignUp, setAttemptedSignUp] = useState(false);
+    const [passwordFeedback, setPasswordFeedback] = useState<ZxcvbnResult | null>(null);
 
 
     // Values derived from inputs (props and state)
@@ -100,6 +120,24 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
 
     if (user && user.loggedIn) {
         return <Redirect to="/" />;
+    }
+
+    function calculatePasswordStrength(password: string) {
+        if ('zxcvbn' in window && unverifiedPassword) {
+            let feedback: ZxcvbnResult = (window as any)['zxcvbn'](password);
+            setPasswordFeedback(feedback);
+            //console.log(feedback)
+        } else {
+            setPasswordFeedback(null);
+        }
+    }
+
+    function passwordDebounce(password: string) {
+        if (timer !== null) {
+            clearTimeout(timer);
+        }
+        //console.log("set TIMEOUT");
+        timer = setTimeout(() => calculatePasswordStrength(password), 300);
     }
 
     // Render
@@ -165,8 +203,20 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                     defaultValue={userPassword}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setUnverifiedPassword(e.target.value);
+                                        passwordDebounce(e.target.value);
+                                    }}
+                                    onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        passwordDebounce(e.target.value);
                                     }}
                                 />
+                                {passwordFeedback &&
+                                    <span className='float-right small mt-1'>
+                                        <strong>Password Strength: </strong>
+                                        <span id="password-strength-feedback">
+                                            {passwordStrengthText[(passwordFeedback as ZxcvbnResult).score]}
+                                        </span>
+                                    </span>
+                                }
                             </FormGroup>
                         </Col>
                         <Col md={6}>
