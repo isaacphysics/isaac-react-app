@@ -77,11 +77,14 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true, className: `symbol-${l} menu-item` }) );
             this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true, className: `symbol-${l} menu-item` }) );
         }
-        this.close = props.close;
+        this.close = () => {
+            console.log(this._previousCursor);
+            props.close();
+        }
     }
 
     componentDidMount() {
-        const inequalityElement = document.getElementById('inequality-modal') as Node;
+        const inequalityElement = document.getElementById('inequality-modal') as HTMLElement;
         const { sketch, p } = makeInequality(
             inequalityElement,
             window.innerWidth * Math.ceil(window.devicePixelRatio),
@@ -109,7 +112,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 this.props.onEditorStateChange(s);
             }
         };
-        sketch.onCloseMenus = () => { this.setState({ menuOpen: false }) }; // TODO Maybe nice to have
+        sketch.onCloseMenus = () => { /*this.setState({ menuOpen: false })*/ }; // TODO Maybe nice to have
         sketch.isUserPrivileged = () => true; // TODO Integrate with currentUser object
         sketch.onNotifySymbolDrag = () => { }; // This is probably irrelevant now
         sketch.isTrashActive = () => this.state.trashActive;
@@ -118,9 +121,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
-        document.documentElement.style.height = window.innerHeight.toString() + "px";
-        document.body.style.height = window.innerHeight.toString() + "px";
-
+        document.documentElement.style.width = '100vw';
+        document.documentElement.style.height = '0';
+        document.body.style.width = '100vw';
+        document.body.style.height = '0';
+        
         document.addEventListener('mousedown', this.onMouseDown.bind(this), true);
         document.addEventListener('touchstart', this.onTouchStart.bind(this), false);
         document.addEventListener('mouseup', this.onCursorMoveEnd.bind(this), false);
@@ -149,8 +154,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         if (inequalityElement) {
             inequalityElement.removeChild(document.getElementsByTagName('canvas')[0]);
         }
+
+        document.documentElement.style.width = null;
         document.documentElement.style.height = null;
         document.documentElement.style.overflow = null;
+        document.body.style.width = null;
         document.body.style.height = null;
         document.body.style.overflow = null;
     }
@@ -176,7 +184,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onMouseDown(e: MouseEvent) {
-        e.preventDefault();
+        // e.preventDefault();
         this._previousCursor = { x: e.pageX, y: e.pageY };
         const element = document.elementFromPoint(this._previousCursor.x, this._previousCursor.y);
         this.prepareAbsoluteElement(element);
@@ -186,7 +194,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onTouchStart(e: TouchEvent) {
-        e.preventDefault();
+        // e.preventDefault();
         this._previousCursor = { x: e.touches[0].pageX, y: e.touches[0].pageY };
         const element = document.elementFromPoint(this._previousCursor.x, this._previousCursor.y);
         this.prepareAbsoluteElement(element);
@@ -195,8 +203,18 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
     }
 
-    private onCursorMoveEnd(e: MouseEvent | TouchEvent) {
+    private onMouseMove(e: MouseEvent) {
         e.preventDefault();
+        this.handleMove(e.target as HTMLElement, e.pageX, e.pageY);
+    }
+
+    private onTouchMove(e: TouchEvent) {
+        e.preventDefault();
+        this.handleMove(e.target as HTMLElement, e.touches[0].pageX, e.touches[0].pageY);
+    }
+
+    private onCursorMoveEnd(e: MouseEvent | TouchEvent) {
+        // e.preventDefault();
         // No need to run if we are not dealing with a menu item.
         if (!this._movingMenuItem) {
             return;
@@ -233,16 +251,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         this._movingMenuItem = null;
         this._movingMenuBar = null;
         this._potentialSymbolSpec = null;
-    }
-
-    private onMouseMove(e: MouseEvent) {
-        e.preventDefault();
-        this.handleMove(e.target as HTMLElement, e.pageX, e.pageY);
-    }
-
-    private onTouchMove(e: TouchEvent) {
-        e.preventDefault();
-        this.handleMove(e.target as HTMLElement, e.touches[0].pageX, e.touches[0].pageY);
     }
 
     private handleMove(_target: HTMLElement, x: number, y: number) {
@@ -317,8 +325,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             lettersMenu =
             <div className="top-menu letters">
                 <ul className="sub-menu-tabs">
-                    <li className={this.state.activeSubMenu == "upperCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("AB") }} onClick={() => this.setState({ menuOpen: true, activeSubMenu: "upperCaseLetters" })} />
-                    <li className={this.state.activeSubMenu == "lowerCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("ab") }} onClick={() => this.setState({ menuOpen: true, activeSubMenu: "lowerCaseLetters"})} />
+                    <li className={this.state.activeSubMenu == "upperCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("AB") }} onClick={(e) => { e.preventDefault(); this.setState({ menuOpen: true, activeSubMenu: "upperCaseLetters" }) }} />
+                    <li className={this.state.activeSubMenu == "lowerCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("ab") }} onClick={(e) => { e.preventDefault(); this.setState({ menuOpen: true, activeSubMenu: "lowerCaseLetters" }) }} />
                 </ul>
                 {(this.state.activeSubMenu == "upperCaseLetters") && <ul className="sub-menu uppercaseletters">{
                     this.state.menuItems.upperCaseLetters.map(this.menuItem)
@@ -348,7 +356,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             <div id="inequality-menu-tabs" className="menu-tabs">
                 <ul>
                     <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString("A\\ b") }} onClick={() => this.onMenuTabClick("letters")} />
-                    <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(this.props.syntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }} onClick={() => this.onMenuTabClick("functions")} />
+                    <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(this.props.syntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }} onClick={(e) => { e.preventDefault(); this.onMenuTabClick("functions") } } />
                 </ul>
             </div>
         </nav>
