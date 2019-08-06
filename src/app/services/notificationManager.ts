@@ -1,17 +1,11 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {ACTION_TYPE} from "./constants";
-import {LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
 import {openActiveModal} from "../state/actions";
-import {validateEmailPreferences, withinLast50Minutes} from "./validation";
+import {allRequiredInformationIsPresent, withinLast50Minutes} from "./validation";
 import {isLoggedIn} from "./user";
 import * as persistence from "./localStorage";
 import {KEY} from "./localStorage";
 import {requiredAccountInformationModal} from "../components/elements/RequiredAccountInformationModal";
-
-
-function allRequiredInformationIsPresent(user: LoggedInUser, userPreferences: UserPreferencesDTO) {
-    return validateEmailPreferences(userPreferences.EMAIL_PREFERENCE);
-}
 
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async action => {
     await dispatch(action);

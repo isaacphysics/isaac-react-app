@@ -1,4 +1,4 @@
-import {UserEmailPreferences} from "../../IsaacAppTypes";
+import {LoggedInUser, KpiDemographic, UserEmailPreferences, UserPreferencesDTO} from "../../IsaacAppTypes";
 
 
 export const validateEmail = (email: string) => {
@@ -25,16 +25,25 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
     ].reduce((prev, next) => prev && (next === true || next === false), true); // Make sure all expected values are either true or false
 };
 
-const withinLastNMinutes = (n: number, dateOfAction: string | null) => {
+export const validateKpiDemographic = (kpiDemographic?: KpiDemographic | null) => {
+    return kpiDemographic && Object.values(kpiDemographic).length > 0 &&
+        (kpiDemographic.CS_ALEVEL_STUDY_OR_PREP === true || kpiDemographic.CS_ALEVEL_STUDY_OR_PREP === false);
+};
+
+const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
     if (dateOfAction) {
-        const interval = n * 60 * 1000;
         const now = new Date();
+        const nMinutesAgo = new Date(now.getTime() - nMinutes * 60 * 1000);
         const actionTime = new Date(dateOfAction);
-        const nMinutesAgo = new Date(now.getTime() - interval);
         return nMinutesAgo <= actionTime && actionTime <= now;
     } else {
         return false;
     }
 };
-
 export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
+
+export function allRequiredInformationIsPresent(user?: LoggedInUser | null, userPreferences?: UserPreferencesDTO | null) {
+    return user && userPreferences &&
+        validateEmailPreferences(userPreferences.EMAIL_PREFERENCE) &&
+        validateKpiDemographic(userPreferences.KPI_DEMOGRAPHIC);
+}

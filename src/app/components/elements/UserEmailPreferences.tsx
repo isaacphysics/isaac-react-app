@@ -79,7 +79,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     </tr>
                 </tbody>
             </Table>
-            {errorMessage && <h4 role="alert" className="text-danger text-center mb-4">
+            {errorMessage && <h4 role="alert" className="text-danger text-center">
                 {errorMessage}
             </h4>}
         </FormGroup>
