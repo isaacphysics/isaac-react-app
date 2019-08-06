@@ -277,15 +277,15 @@ export interface UserExamPreferences {
     [EXAM_BOARD.OCR]?: boolean;
 }
 
-export interface KpiDemographic {
-    CS_ALEVEL_STUDY_OR_PREP?: boolean;
+export interface SubjectInterest {
+    CS_ALEVEL?: boolean;
 }
 
 export interface UserPreferencesDTO {
     BETA_FEATURE?: string;
     EMAIL_PREFERENCE?: UserEmailPreferences;
     EXAM_BOARD?: UserExamPreferences;
-    KPI_DEMOGRAPHIC?: KpiDemographic;
+    SUBJECT_INTEREST?: SubjectInterest;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {

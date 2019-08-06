@@ -2,18 +2,17 @@ import {closeActiveModal, updateCurrentUser} from "../../state/actions";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "./UserEmailPreferences";
-import {KpiDemographic, UserEmailPreferences} from "../../../IsaacAppTypes";
+import {SubjectInterest, UserEmailPreferences} from "../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {
     allRequiredInformationIsPresent,
     validateEmailPreferences,
-    validateKpiDemographic
+    validateSubjectInterest
 } from "../../services/validation";
 import {isMobile} from "../../services/device";
 import {isLoggedIn} from "../../services/user";
 import {TrueFalseRadioInput} from "./TrueFalseRadioInput";
-import {FormGroup} from "reactstrap";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -27,12 +26,12 @@ const RequiredAccountInfoBody = () => {
     const initialEmailPreferencesValue = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);
 
-    const initialKpiDemographicValue = (userPreferences && userPreferences.KPI_DEMOGRAPHIC) ? userPreferences.KPI_DEMOGRAPHIC : {};
-    const [kpiDemographic, setKpiDemographic] = useState<KpiDemographic>(initialKpiDemographicValue);
+    const initialSubjectPreferenceValue = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST : {};
+    const [subjectInterest, setSubjectInterest] = useState<SubjectInterest>(initialSubjectPreferenceValue);
 
     const updatedUserPreferences = {
         EMAIL_PREFERENCE: emailPreferences,
-        KPI_DEMOGRAPHIC: kpiDemographic
+        SUBJECT_INTEREST: subjectInterest
     };
 
     // Form submission
@@ -50,29 +49,30 @@ const RequiredAccountInfoBody = () => {
     return <RS.Form onSubmit={formSubmission}>
         <RS.CardBody className="py-0">
             Please answer a few quick questions to help us with our reporting to the Department for Education.
-            {!validateKpiDemographic(initialKpiDemographicValue) && <div>
-                <div className="d-flex justify-content-between mt-4">
-                    <RS.Label htmlFor="kpiDemographicModal-t">
-                        Are you studying or preparing for Computer Science A level?
-                    </RS.Label>
-                    <TrueFalseRadioInput
-                        id="kpiDemographicModal" submissionAttempted={submissionAttempted}
-                        stateObject={kpiDemographic} propertyName="CS_ALEVEL_STUDY_OR_PREP" setStateFunction={setKpiDemographic}
-                    />
-                </div>
+
+            {!validateSubjectInterest(initialSubjectPreferenceValue) && <div className="d-flex justify-content-between mt-4">
+                <RS.Label htmlFor="subjectInterestModal-t">
+                    Are you studying or preparing for Computer Science A level?
+                </RS.Label>
+                <TrueFalseRadioInput
+                    id="subjectInterestModal" submissionAttempted={submissionAttempted}
+                    stateObject={subjectInterest} propertyName="CS_ALEVEL" setStateFunction={setSubjectInterest}
+                />
             </div>}
         </RS.CardBody>
 
-        {!validateEmailPreferences(initialEmailPreferencesValue) && <UserEmailPreference
-            emailPreferences={emailPreferences}
-            setEmailPreferences={setEmailPreferences}
-            idPrefix="modal-"
-            submissionAttempted={submissionAttempted}
-        />}
+        {!validateEmailPreferences(initialEmailPreferencesValue) &&
+            <UserEmailPreference
+                emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
+                idPrefix="modal-" submissionAttempted={submissionAttempted}
+            />
+        }
 
-        {submissionAttempted && !allRequiredInformationIsPresent(user, updatedUserPreferences) && <h4 role="alert" className="text-danger text-center mb-4">
-            Some required information is not set
-        </h4>}
+        {submissionAttempted && !allRequiredInformationIsPresent(user, updatedUserPreferences) &&
+            <h4 role="alert" className="text-danger text-center mb-4">
+                Some required information is not set
+            </h4>
+        }
 
         <RS.Row className="text-center border-top p-3 p-sm-4">
             <RS.Col md={{size: 6, offset: 3}}>

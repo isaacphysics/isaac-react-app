@@ -1,4 +1,4 @@
-import {LoggedInUser, KpiDemographic, UserEmailPreferences, UserPreferencesDTO} from "../../IsaacAppTypes";
+import {LoggedInUser, SubjectInterest, UserEmailPreferences, UserPreferencesDTO} from "../../IsaacAppTypes";
 
 
 export const validateEmail = (email: string) => {
@@ -25,9 +25,9 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
     ].reduce((prev, next) => prev && (next === true || next === false), true); // Make sure all expected values are either true or false
 };
 
-export const validateKpiDemographic = (kpiDemographic?: KpiDemographic | null) => {
-    return kpiDemographic && Object.values(kpiDemographic).length > 0 &&
-        (kpiDemographic.CS_ALEVEL_STUDY_OR_PREP === true || kpiDemographic.CS_ALEVEL_STUDY_OR_PREP === false);
+export const validateSubjectInterest = (subjectInterest?: SubjectInterest | null) => {
+    return subjectInterest && Object.values(subjectInterest).length > 0 &&
+        (subjectInterest.CS_ALEVEL === true || subjectInterest.CS_ALEVEL === false);
 };
 
 const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
@@ -45,5 +45,5 @@ export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 export function allRequiredInformationIsPresent(user?: LoggedInUser | null, userPreferences?: UserPreferencesDTO | null) {
     return user && userPreferences &&
         validateEmailPreferences(userPreferences.EMAIL_PREFERENCE) &&
-        validateKpiDemographic(userPreferences.KPI_DEMOGRAPHIC);
+        validateSubjectInterest(userPreferences.SUBJECT_INTEREST);
 }
