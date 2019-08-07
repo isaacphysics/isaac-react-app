@@ -1,15 +1,19 @@
 import {LoggedInUser, SubjectInterest, UserEmailPreferences, UserPreferencesDTO} from "../../IsaacAppTypes";
 
 
-export const validateEmail = (email: string) => {
-    return (email.length > 0 && email.includes("@"));
+export const validateEmail = (email?: string) => {
+    return email && email.length > 0 && email.includes("@");
 };
 
-export const isDobOverThirteen = (dateOfBirth: Date | null) => {
-    const today = new Date();
-    const thirteenYearsAgo = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
-    const hundredAndTwentyYearsAgo = new Date(today.getFullYear() - 120, today.getMonth(), today.getDate());
-    return !!dateOfBirth && dateOfBirth <= thirteenYearsAgo && dateOfBirth >= hundredAndTwentyYearsAgo;
+export const isDobOverThirteen = (dateOfBirth?: Date) => {
+    if (dateOfBirth) {
+        const today = new Date();
+        const thirteenYearsAgo = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+        const hundredAndTwentyYearsAgo = new Date(today.getFullYear() - 120, today.getMonth(), today.getDate());
+        return hundredAndTwentyYearsAgo <= dateOfBirth && dateOfBirth <= thirteenYearsAgo;
+    } else {
+        return false;
+    }
 };
 
 export const MINIMUM_PASSWORD_LENGTH = 6;
@@ -22,11 +26,15 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
         emailPreferences.ASSIGNMENTS,
         emailPreferences.EVENTS,
         emailPreferences.NEWS_AND_UPDATES
-    ].reduce((prev, next) => prev && (next === true || next === false), true); // Make sure all expected values are either true or false
+    ].reduce(
+        (prev, next) => prev && (next === true || next === false), // Make sure all expected values are either true or false
+        true
+    );
 };
 
 export const validateSubjectInterest = (subjectInterest?: SubjectInterest | null) => {
-    return subjectInterest && Object.values(subjectInterest).length > 0 &&
+    return subjectInterest &&
+        Object.values(subjectInterest).length > 0 &&
         (subjectInterest.CS_ALEVEL === true || subjectInterest.CS_ALEVEL === false);
 };
 

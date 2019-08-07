@@ -56,7 +56,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     const [registrationUser, setRegistrationUser] = useState(
         Object.assign({}, user,{
             email: userEmail,
-            dateOfBirth: null,
+            dateOfBirth: undefined,
             password: null,
         })
     );
@@ -69,8 +69,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     const emailIsValid = registrationUser.email && validateEmail(registrationUser.email);
     const passwordIsValid =
         (registrationUser.password == unverifiedPassword) && validatePassword(registrationUser.password || "");
-    const dobIsOverThirteen = isDobOverThirteen(registrationUser.dateOfBirth);
-    const confirmedOverThirteen = dobCheckboxChecked || dobIsOverThirteen;
+    const confirmedOverThirteen = dobCheckboxChecked || isDobOverThirteen(registrationUser.dateOfBirth);
 
 
     // Form's submission method

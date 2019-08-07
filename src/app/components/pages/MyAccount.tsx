@@ -121,8 +121,6 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_SHOWN);
 
     // Values derived from inputs (props and state)
-    const isEmailValid = updatedUser.loggedIn && updatedUser.email && validateEmail(updatedUser.email) || validateEmail("");
-    const isDobValid = updatedUser.loggedIn && updatedUser.dateOfBirth && isDobOverThirteen(new Date(updatedUser.dateOfBirth)) || false;
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
     // Form's submission method
@@ -140,8 +138,9 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         }
         Object.assign(myUserPreferences.EXAM_BOARD, examPreferences);
 
-        if (updatedUser.loggedIn && isEmailValid &&
-            (isDobValid || updatedUser.dateOfBirth == undefined) &&
+        if (updatedUser.loggedIn &&
+            validateEmail(updatedUser.email) &&
+            (isDobOverThirteen(updatedUser.dateOfBirth) || updatedUser.dateOfBirth === undefined) &&
             (!updatedUser.password || isNewPasswordConfirmed)) {
             updateCurrentUser(updatedUser, myUserPreferences, currentPassword, user);
         }
@@ -164,7 +163,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 <Nav tabs className="my-4 flex-wrap">
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.account})}
+                            className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.account})}
                             onClick={() => setActiveTab(ACCOUNT_TAB.account)} tabIndex={0}
                         >
                             Profile
@@ -172,7 +171,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     </NavItem>
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.passwordreset})}
+                            className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.passwordreset})}
                             onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block">Change Password</span>
@@ -181,7 +180,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     </NavItem>
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.teacherconnections})}
+                            className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.teacherconnections})}
                             onClick={() => setActiveTab(ACCOUNT_TAB.teacherconnections)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block d-md-block">Teacher Connections</span>
@@ -190,7 +189,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     </NavItem>
                     <NavItem>
                         <NavLink
-                            className={"mx-2 " + classnames({active: activeTab === ACCOUNT_TAB.emailpreferences})}
+                            className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.emailpreferences})}
                             onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} tabIndex={0}
                         >
                             <span className="d-none d-lg-block">Email Preferences</span>
@@ -204,8 +203,9 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
                         <TabPane tabId={ACCOUNT_TAB.account}>
                             <UserDetails
-                                myUser={updatedUser} setMyUser={setUpdatedUser} examPreferences={examPreferences} setExamPreferences={setExamPreferences}
-                                isDobValid={isDobValid} isEmailValid={isEmailValid} attemptedAccountUpdate={attemptedAccountUpdate}
+                                myUser={updatedUser} setMyUser={setUpdatedUser}
+                                examPreferences={examPreferences} setExamPreferences={setExamPreferences}
+                                attemptedAccountUpdate={attemptedAccountUpdate}
                             />
                         </TabPane>
 
@@ -241,7 +241,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                     </h3>
                                 }
                                 {/* Teacher connections does not have a save */}
-                                <Input type="submit" value="Save" className="btn btn-block btn-secondary border-0" disabled={activeTab === ACCOUNT_TAB.teacherconnections}/>
+                                <Input
+                                    type="submit" value="Save" className="btn btn-block btn-secondary border-0"
+                                    disabled={activeTab === ACCOUNT_TAB.teacherconnections}
+                                />
                             </Col>
                         </Row>
                     </CardFooter>

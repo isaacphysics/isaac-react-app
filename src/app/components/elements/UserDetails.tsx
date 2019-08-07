@@ -4,6 +4,7 @@ import {EXAM_BOARD} from "../../services/constants";
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {api} from "../../services/api";
 import {DateInput} from "./DateInput";
+import {isDobOverThirteen, validateEmail} from "../../services/validation";
 
 interface UserDetailsProps {
     examPreferences: UserExamPreferences;
@@ -11,12 +12,10 @@ interface UserDetailsProps {
     myUser: ValidationUser;
     setMyUser: (user: any) => void;
     attemptedAccountUpdate: boolean;
-    isEmailValid: boolean;
-    isDobValid: boolean;
 }
 
 export const UserDetails = (props: UserDetailsProps) => {
-    const {myUser, setMyUser, isEmailValid, isDobValid, examPreferences, setExamPreferences, attemptedAccountUpdate} = props;
+    const {myUser, setMyUser, examPreferences, setExamPreferences, attemptedAccountUpdate} = props;
     let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
     let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
@@ -109,7 +108,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <FormGroup>
                     <Label htmlFor="email-input" className="form-required">Email</Label>
                     <Input
-                        invalid={!isEmailValid} id="email-input" type="email"
+                        invalid={!validateEmail(myUser.email)} id="email-input" type="email"
                         name="email" defaultValue={myUser.email}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             setMyUser(Object.assign({}, myUser, {email: event.target.value}))
@@ -117,7 +116,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                         aria-describedby="emailValidationMessage" required
                     />
                     <FormFeedback id="emailValidationMessage">
-                        {(!isEmailValid) ? "Enter a valid email address" : null}
+                        {(!validateEmail(myUser.email)) ? "Enter a valid email address" : null}
                     </FormFeedback>
                 </FormGroup>
             </Col>
@@ -125,7 +124,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <FormGroup>
                     <Label htmlFor="dob-input">Date of Birth</Label>
                     <DateInput
-                        invalid={!isDobValid && !!myUser.dateOfBirth}
+                        invalid={!isDobOverThirteen(myUser.dateOfBirth) && !!myUser.dateOfBirth}
                         id="dob-input"
                         name="date-of-birth"
                         defaultValue={myUser.dateOfBirth as unknown as string}
