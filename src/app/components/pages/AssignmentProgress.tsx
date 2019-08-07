@@ -558,7 +558,11 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
         <div className="assignment-progress-container mb-5">
             <ShowLoading until={data}>
                 {data && data.map(group => <GroupAssignmentProgress key={group.id} {...props} group={group} pageSettings={pageSettings} />)}
-                {data && data.length == 0 && <h3>You&apos;ll need to create a group using <Link to="/groups">Manage Groups</Link> to set an assignment.</h3>}
+                {data && data.length == 0 && <Container className="py-5">
+                    <h3 className="text-center">
+                        You&apos;ll need to create a group using <Link to="/groups">Manage Groups</Link> to set an assignment.
+                    </h3>
+                </Container>}
             </ShowLoading>
         </div>
     </React.Fragment>;
