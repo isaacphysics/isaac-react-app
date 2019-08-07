@@ -78,7 +78,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( l => new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true, className: `symbol-${l} menu-item` }) );
         }
         this.close = () => {
-            console.log(this._previousCursor);
             props.close();
         }
     }
@@ -127,22 +126,27 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.body.style.width = '100vw';
         document.body.style.height = '100vh';
         document.body.style.touchAction = 'none';
-        
-        document.body.addEventListener('mousedown', this.onMouseDown.bind(this));
-        document.body.addEventListener('touchstart', this.onTouchStart.bind(this));
-        document.body.addEventListener('mouseup', this.onCursorMoveEnd.bind(this));
-        document.body.addEventListener('touchend', this.onCursorMoveEnd.bind(this));
-        document.body.addEventListener('mousemove', this.onMouseMove.bind(this));
-        document.body.addEventListener('touchmove', this.onTouchMove.bind(this));
+
+        inequalityElement.addEventListener('mousedown', this.onMouseDown.bind(this), { passive: false } );
+        inequalityElement.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: false } );
+        inequalityElement.addEventListener('mousemove', this.onMouseMove.bind(this), { passive: false } );
+        inequalityElement.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: false } );
+        // MouseUp and TouchEnd on body because they are not intercepted by inequalityElement (I blame dark magic)
+        document.body.addEventListener('mouseup', this.onCursorMoveEnd.bind(this), { passive: true } );
+        document.body.addEventListener('touchend', this.onCursorMoveEnd.bind(this), { passive: true } );
     }
 
+    private nop(e: MouseEvent | TouchEvent) { e.preventDefault(); }
+
     componentWillUnmount() {
-        document.body.removeEventListener('mousedown', this.onMouseDown.bind(this));
-        document.body.removeEventListener('touchstart', this.onTouchStart.bind(this));
+        const inequalityElement = document.getElementById('inequality-modal') as HTMLElement;
+        inequalityElement.removeEventListener('mousedown', this.onMouseDown.bind(this));
+        inequalityElement.removeEventListener('touchstart', this.onTouchStart.bind(this));
+        inequalityElement.removeEventListener('mousemove', this.onMouseMove.bind(this));
+        inequalityElement.removeEventListener('touchmove', this.onTouchMove.bind(this));
+        // MouseUp and TouchEnd on body because they are not intercepted by inequalityElement (I blame dark magic)
         document.body.removeEventListener('mouseup', this.onCursorMoveEnd.bind(this));
         document.body.removeEventListener('touchend', this.onCursorMoveEnd.bind(this));
-        document.body.removeEventListener('mousemove', this.onMouseMove.bind(this));
-        document.body.removeEventListener('touchmove', this.onTouchMove.bind(this));
 
         if (this.state.sketch) {
             this.state.sketch.onNewEditorState = (s: any) => null;
@@ -152,7 +156,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             this.state.sketch.isTrashActive = () => false;
             this.state.sketch = null;
         }
-        const inequalityElement = document.getElementById('inequality-modal');
         if (inequalityElement) {
             inequalityElement.removeChild(inequalityElement.getElementsByTagName('canvas')[0]);
         }
@@ -187,7 +190,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
     }
 
+    // WARNING Cursor coordinates on mobile are floating point and this makes math sad, therefore ROUND EVERYTHING OR FACE MADNESS
+
     private onMouseDown(e: MouseEvent) {
+        // preventDefault here to stop selection on desktop
         e.preventDefault();
         if (!this.state.sketch) {
             return;
@@ -201,7 +207,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onTouchStart(e: TouchEvent) {
-        e.preventDefault();
+        // DO NOT preventDefault here
         if (!this.state.sketch) {
             return;
         }
@@ -221,6 +227,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onTouchMove(e: TouchEvent) {
+        // preventDefault here to stop iOS' elastic-banding while moving around (messes with coordinates)
+        e.preventDefault();
         if (!this.state.sketch) {
             return;
         }
@@ -287,7 +295,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         if (this._previousCursor) {
             const dx =  x - this._previousCursor.x;
             const dy = -y + this._previousCursor.y;
-            console.log(this._previousCursor, x, y, dx, dy);
             if (this._movingMenuBar) {
                 const newUlLeft = Math.min(0, parseInt((this._movingMenuBar.style.left || '0').replace(/[^-\d]/g, '')) + dx);
                 this._movingMenuBar.style.left = `${newUlLeft}px`;
