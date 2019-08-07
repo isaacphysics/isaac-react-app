@@ -25,7 +25,7 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
     return <RS.Container className="students-page">
         <RS.Row className="pb-4">
             <RS.Col>
-                <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="For Students" />
+                <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="For students" />
             </RS.Col>
         </RS.Row>
 

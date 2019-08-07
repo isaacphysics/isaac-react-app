@@ -54,5 +54,4 @@ const UserPreferencesModalBody = () => {
 export const userPreferencesModal = {
     title: "Please confirm your email preferences",
     body: <UserPreferencesModalBody />,
-    closeAction: () => store.dispatch(closeActiveModal())
 };

@@ -283,7 +283,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Set Assignments" intermediateCrumbs={[TEACHERS_CRUMB]} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="Set assignments" intermediateCrumbs={[TEACHERS_CRUMB]} help={pageHelp} />
         <p className="mt-4 mb-3">
             Choose a gameboard from one of our <Link to="/pages/gameboards">pre-made gameboards</Link> or find one from the <Link to="/topics">Topics list</Link>.
         </p>

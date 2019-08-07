@@ -44,6 +44,12 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         window.addEventListener('keyup', this.onKeyUp);
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('mousemove', this.onMouseMove);
+        window.removeEventListener('touchmove', this.onMouseMove);
+        window.removeEventListener('keyup', this.onKeyUp);
+    }
+
     componentDidUpdate = (prevProps: IsaacParsonsQuestionProps, prevState: IsaacParsonsQuestionState) => {
         if (!prevProps.currentAttempt && !this.props.currentAttempt) {
             const defaultAttempt: ParsonsChoiceDTO = {

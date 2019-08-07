@@ -331,7 +331,7 @@ export interface Toast {
 }
 
 export interface ActiveModal {
-    closeAction: () => void;
+    closeAction?: () => void;
     title: string;
     body: any;
     buttons?: any[];

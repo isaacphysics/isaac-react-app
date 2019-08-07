@@ -387,7 +387,7 @@ export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailprefer
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export const HOME_CRUMB = {title: "Home", to: "/"};
-export const ALL_TOPICS_CRUMB = {title: "All Topics", to: "/topics"};
-export const STUDENTS_CRUMB = {title: "For Students", to: "/students"};
-export const TEACHERS_CRUMB = {title: "For Teachers", to: "/teachers"};
+export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
+export const STUDENTS_CRUMB = {title: "For students", to: "/students"};
+export const TEACHERS_CRUMB = {title: "For teachers", to: "/teachers"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};

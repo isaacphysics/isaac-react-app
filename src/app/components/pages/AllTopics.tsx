@@ -29,7 +29,7 @@ export const AllTopics = () => {
 
     return <div className="pattern-02">
         <Container>
-            <TitleAndBreadcrumb currentPageTitle="All Topics"/>
+            <TitleAndBreadcrumb currentPageTitle="All topics"/>
 
             {/* Search topics TODO MT */}
 
