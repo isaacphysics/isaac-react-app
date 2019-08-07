@@ -81,8 +81,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
 
     // - Copy of user to store changes before saving
-    const [updatedUser, setUpdatedUser] = useState(Object.assign({}, user, {password: ""}));
-    useMemo(() => {setUpdatedUser(Object.assign({}, user, {password: ""}))}, [user]);
+    const [userToUpdate, setUserToUpdate] = useState(Object.assign({}, user, {password: ""}));
+    useMemo(() => {setUserToUpdate(Object.assign({}, user, {password: ""}))}, [user]);
 
     // - Passwords
     const [newPassword, setNewPassword] = useState("");
@@ -138,11 +138,11 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         }
         Object.assign(myUserPreferences.EXAM_BOARD, examPreferences);
 
-        if (updatedUser.loggedIn &&
-            validateEmail(updatedUser.email) &&
-            (isDobOverThirteen(updatedUser.dateOfBirth) || updatedUser.dateOfBirth === undefined) &&
-            (!updatedUser.password || isNewPasswordConfirmed)) {
-            updateCurrentUser(updatedUser, myUserPreferences, currentPassword, user);
+        if (userToUpdate.loggedIn &&
+            validateEmail(userToUpdate.email) &&
+            (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
+            (!userToUpdate.password || isNewPasswordConfirmed)) {
+            updateCurrentUser(userToUpdate, myUserPreferences, currentPassword, user);
         }
     };
 
@@ -158,7 +158,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
             Registration successful
         </Alert>}
 
-        {user.loggedIn && updatedUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
+        {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
                 <Nav tabs className="my-4 flex-wrap">
                     <NavItem>
@@ -203,7 +203,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
                         <TabPane tabId={ACCOUNT_TAB.account}>
                             <UserDetails
-                                myUser={updatedUser} setMyUser={setUpdatedUser}
+                                userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                 examPreferences={examPreferences} setExamPreferences={setExamPreferences}
                                 attemptedAccountUpdate={attemptedAccountUpdate}
                             />
@@ -212,7 +212,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                         <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                             <UserPassword
                                 currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}
-                                myUser={updatedUser} setMyUser={setUpdatedUser}
+                                myUser={userToUpdate} setMyUser={setUserToUpdate}
                                 setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
                                 isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
                                 setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm}
