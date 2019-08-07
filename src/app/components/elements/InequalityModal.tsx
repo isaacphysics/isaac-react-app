@@ -188,7 +188,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onMouseDown(e: MouseEvent) {
-        // e.preventDefault();
+        e.preventDefault();
         if (!this.state.sketch) {
             return;
         }
@@ -201,7 +201,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onTouchStart(e: TouchEvent) {
-        // e.preventDefault();
+        e.preventDefault();
         if (!this.state.sketch) {
             return;
         }

@@ -6,10 +6,14 @@
     width: 100%;
     height: 100%;
     background: #ffffff;
-    z-index: 254;
+    z-index: 250;
 }
 
 #inequality-modal {
+    * {
+        cursor: default;
+    }
+
     .beta-badge {
         position: absolute;
         bottom: 15px;
@@ -103,7 +107,7 @@
             vertical-align: middle;
             line-height: 90px;
             font-size: 2em;
-            z-index: 255;
+            z-index: 254;
 
             &.empty {
                 padding: 0;
