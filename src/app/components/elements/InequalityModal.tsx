@@ -192,7 +192,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         if (!this.state.sketch) {
             return;
         }
-        this._previousCursor = { x: e.clientX, y: e.clientY };
+        this._previousCursor = { x: Math.round(e.clientX), y: Math.round(e.clientY) };
         const element = document.elementFromPoint(this._previousCursor.x, this._previousCursor.y);
         this.prepareAbsoluteElement(element);
         if (this._potentialSymbolSpec && this.state.sketch) {
@@ -205,7 +205,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         if (!this.state.sketch) {
             return;
         }
-        this._previousCursor = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        this._previousCursor = { x: Math.round(e.touches[0].clientX), y: Math.round(e.touches[0].clientY) };
         const element = document.elementFromPoint(this._previousCursor.x, this._previousCursor.y);
         this.prepareAbsoluteElement(element);
         if (this._potentialSymbolSpec && this.state.sketch) {
@@ -214,23 +214,20 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onMouseMove(e: MouseEvent) {
-        // e.preventDefault();
         if (!this.state.sketch) {
             return;
         }
-        this.handleMove(e.target as HTMLElement, e.clientX, e.clientY);
+        this.handleMove(e.target as HTMLElement, Math.round(e.clientX), Math.round(e.clientY));
     }
 
     private onTouchMove(e: TouchEvent) {
-        // e.preventDefault();
         if (!this.state.sketch) {
             return;
         }
-        this.handleMove(e.target as HTMLElement, e.touches[0].clientX, e.touches[0].clientY);
+        this.handleMove(e.target as HTMLElement, Math.round(e.touches[0].clientX), Math.round(e.touches[0].clientY));
     }
 
     private onCursorMoveEnd(e: MouseEvent | TouchEvent) {
-        // e.preventDefault();
         // No need to run if we are not dealing with a menu item.
         if (!this.state.sketch || !this._movingMenuItem) {
             return;
@@ -290,9 +287,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         if (this._previousCursor) {
             const dx =  x - this._previousCursor.x;
             const dy = -y + this._previousCursor.y;
+            console.log(this._previousCursor, x, y, dx, dy);
             if (this._movingMenuBar) {
-                const newUlLeft = Math.min(0, parseInt((this._movingMenuBar.style.marginLeft || '0').replace(/[^-\d]/g, '')) + dx);
-                this._movingMenuBar.style.marginLeft = `${newUlLeft}px`;
+                const newUlLeft = Math.min(0, parseInt((this._movingMenuBar.style.left || '0').replace(/[^-\d]/g, '')) + dx);
+                this._movingMenuBar.style.left = `${newUlLeft}px`;
             }
             this._movingMenuItem.style.top = `${y}px`;
             this._movingMenuItem.style.left = `${x}px`;
