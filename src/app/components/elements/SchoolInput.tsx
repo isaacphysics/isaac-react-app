@@ -58,10 +58,10 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate}: SchoolInputProps) =
         setSchoolSearchResults([]);
     }
 
-    return <React.Fragment>
+    return <RS.FormGroup className="school">
         <RS.Label htmlFor="school-input">School</RS.Label>
         <RS.Input
-            id="school-input" type="text" name="school" placeholder="Type a UK school name..." autoComplete="isaac-off"
+            className="school-input" type="text" name="school" placeholder="Type a UK school name..." autoComplete="isaac-off"
             value={
                 schoolQueryText !== null ?
                     schoolQueryText :
@@ -75,7 +75,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate}: SchoolInputProps) =
                 }
             }}
         />
-        {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results">
+        {schoolSearchResults && schoolSearchResults.length > 0 && <ul className="school-search-results">
             {schoolSearchResults.map((item: any) =>
                 <li key={item.urn} onClick={() => { setUserSchool(item) }}>
                     {item.name + ", " + item.postcode}
@@ -83,12 +83,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate}: SchoolInputProps) =
             )}
         </ul>}
         {!userToUpdate.schoolId && <RS.Input
-            id="school-other-input" type="text" name="school-other" placeholder="...or enter a non-UK school."
-            className="mt-2" maxLength={255}
+            type="text" name="school-other" placeholder="...or enter a non-UK school."
+            className="school-other-input mt-2" maxLength={255}
             defaultValue={userToUpdate.schoolOther}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setUserToUpdate(Object.assign({}, userToUpdate, { schoolOther: e.target.value }))
             }
         />}
-    </React.Fragment>
+    </RS.FormGroup>
 };

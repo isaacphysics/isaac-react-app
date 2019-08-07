@@ -13,6 +13,7 @@ import {
 import {isMobile} from "../../services/device";
 import {isLoggedIn} from "../../services/user";
 import {TrueFalseRadioInput} from "./TrueFalseRadioInput";
+import {SchoolInput} from "./SchoolInput";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -22,6 +23,8 @@ const RequiredAccountInfoBody = () => {
 
     // Local state
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
+
+    const [userToUpdate, setUserToUpdate] = useState(Object.assign({}, user, {password: null}));
 
     const initialEmailPreferencesValue = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);
@@ -40,8 +43,7 @@ const RequiredAccountInfoBody = () => {
         setSubmissionAttempted(true);
 
         if (user && isLoggedIn(user) && allRequiredInformationIsPresent(user, updatedUserPreferences)) {
-            const password = null;
-            dispatch(updateCurrentUser(Object.assign(user, {password}), updatedUserPreferences, password, user));
+            dispatch(updateCurrentUser(userToUpdate, updatedUserPreferences, null, user));
             dispatch(closeActiveModal());
         }
     }
@@ -59,6 +61,8 @@ const RequiredAccountInfoBody = () => {
                     stateObject={subjectInterest} propertyName="CS_ALEVEL" setStateFunction={setSubjectInterest}
                 />
             </div>}
+
+            <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} />
         </RS.CardBody>
 
         {!validateEmailPreferences(initialEmailPreferencesValue) &&

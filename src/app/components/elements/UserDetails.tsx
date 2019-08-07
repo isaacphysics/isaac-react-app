@@ -1,8 +1,7 @@
-import {CardBody, CardFooter, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import {School, UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
+import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../services/constants";
-import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
-import {api} from "../../services/api";
+import React, {ChangeEvent} from "react";
 import {DateInput} from "./DateInput";
 import {isDobOverThirteen, validateEmail} from "../../services/validation";
 import {SchoolInput} from "./SchoolInput";
@@ -164,9 +163,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             </Col>
 
             <Col md={6}>
-                <FormGroup className="school">
-                    <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} />
-                </FormGroup>
+                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} />
             </Col>
         </Row>
 
