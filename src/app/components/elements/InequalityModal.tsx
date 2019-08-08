@@ -190,7 +190,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
     }
 
-    // WARNING Cursor coordinates on mobile are floating point and this makes math sad, therefore ROUND EVERYTHING OR FACE MADNESS
+    // WARNING Cursor coordinates on mobile are floating point and this makes
+    // math sad, therefore ROUND EVERYTHING OR FACE MADNESS
 
     private onMouseDown(e: MouseEvent) {
         // preventDefault here to stop selection on desktop
