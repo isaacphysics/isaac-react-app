@@ -9,9 +9,10 @@ interface SchoolInputProps {
     setUserToUpdate: (user: any) => void;
     attemptedAccountUpdate: boolean;
     className?: string;
+    idPrefix?: string;
 }
 const NOT_APPLICABLE = "N/A";
-export const SchoolInput = ({userToUpdate, setUserToUpdate, attemptedAccountUpdate, className}: SchoolInputProps) => {
+export const SchoolInput = ({userToUpdate, setUserToUpdate, attemptedAccountUpdate, className, idPrefix="school"}: SchoolInputProps) => {
     let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
     let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
@@ -108,7 +109,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, attemptedAccountUpda
 
         {!schoolSpecified && <div className="d-flex">
             <RS.CustomInput
-                type="checkbox" id="not-associated-with-school"
+                type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
                 onChange={(e => {
                     setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : ""}));

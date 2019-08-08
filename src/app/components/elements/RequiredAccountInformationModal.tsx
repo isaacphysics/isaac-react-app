@@ -14,6 +14,10 @@ import {isMobile} from "../../services/device";
 import {isLoggedIn} from "../../services/user";
 import {TrueFalseRadioInput} from "./TrueFalseRadioInput";
 import {SchoolInput} from "./SchoolInput";
+import {DobInput} from "./DobInput";
+import {Row} from "reactstrap";
+import {Col} from "reactstrap";
+import {CardBody} from "reactstrap";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -50,18 +54,16 @@ const RequiredAccountInfoBody = () => {
 
     return <RS.Form onSubmit={formSubmission}>
         <RS.CardBody className="py-0">
-            Please answer a few quick questions to help us with our reporting to the Department for Education.
+            Providing a few extra pieces of information will help us, and the Department for Education,
+            judge the efficacy of this platform.
 
-            <RS.Row>
+            <div className="pb-0 text-right text-muted required-before">
+                Required
+            </div>
+
+            <RS.Row className="d-flex flex-wrap mt-2 mb-2">
                 <RS.Col>
-                    <SchoolInput
-                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                        attemptedAccountUpdate={submissionAttempted} className="mt-4"
-                    />
-                </RS.Col>
-
-                {!validateSubjectInterest(initialSubjectPreferenceValue) && <RS.Col>
-                    <div className="d-flex mt-4">
+                    {!validateSubjectInterest(initialSubjectPreferenceValue) && <div className="d-flex">
                         <RS.Label htmlFor="subjectInterestModal-t" className="form-required">
                             Are you studying or preparing for Computer Science A level?
                         </RS.Label>
@@ -69,8 +71,12 @@ const RequiredAccountInfoBody = () => {
                             id="subjectInterestModal" submissionAttempted={submissionAttempted}
                             stateObject={subjectInterest} propertyName="CS_ALEVEL" setStateFunction={setSubjectInterest}
                         />
-                    </div>
-                </RS.Col>}
+                    </div>}
+                    <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                </RS.Col>
+                <RS.Col>
+                    <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} attemptedAccountUpdate={submissionAttempted} idPrefix="modal" />
+                </RS.Col>
             </RS.Row>
         </RS.CardBody>
 

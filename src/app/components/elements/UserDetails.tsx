@@ -5,6 +5,7 @@ import React, {ChangeEvent} from "react";
 import {DateInput} from "./DateInput";
 import {isDobOverThirteen, validateEmail} from "../../services/validation";
 import {SchoolInput} from "./SchoolInput";
+import {DobInput} from "./DobInput";
 
 interface UserDetailsProps {
     examPreferences: UserExamPreferences;
@@ -72,23 +73,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </FormGroup>
             </Col>
             <Col md={6}>
-                <FormGroup>
-                    <Label htmlFor="dob-input">Date of Birth</Label>
-                    <DateInput
-                        invalid={!isDobOverThirteen(userToUpdate.dateOfBirth) && !!userToUpdate.dateOfBirth}
-                        id="dob-input"
-                        name="date-of-birth"
-                        defaultValue={userToUpdate.dateOfBirth as unknown as string}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            setUserToUpdate(Object.assign({}, userToUpdate, {dateOfBirth: event.target.valueAsDate}))
-                        }}
-                        aria-describedby="ageValidationMessage"
-                        labelSuffix=" of birth"
-                    />
-                    <FormFeedback id="ageValidationMessage">
-                        You must be over 13 years old
-                    </FormFeedback>
-                </FormGroup>
+                <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={attemptedAccountUpdate} />
             </Col>
         </Row>
 
