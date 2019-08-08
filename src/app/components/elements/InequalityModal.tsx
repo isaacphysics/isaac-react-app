@@ -297,8 +297,16 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             const dx =  x - this._previousCursor.x;
             const dy = -y + this._previousCursor.y;
             if (this._movingMenuBar) {
-                const newUlLeft = Math.min(0, parseInt((this._movingMenuBar.style.left || '0').replace(/[^-\d]/g, '')) + dx);
-                this._movingMenuBar.style.left = `${newUlLeft}px`;
+                const menuBarRect = this._movingMenuBar.getBoundingClientRect();
+                const menuItems = this._movingMenuBar.getElementsByClassName('menu-item');
+                const lastMenuItem = menuItems.item(menuItems.length-1);
+                if (lastMenuItem) {
+                    const newUlLeft = Math.min(0, menuBarRect.left + dx);
+                    const lastMenuItemRect = lastMenuItem.getBoundingClientRect();
+                    if (lastMenuItemRect.right > window.innerWidth || dx >= 0) {
+                        this._movingMenuBar.style.left = `${newUlLeft}px`;
+                    }    
+                }
             }
             this._movingMenuItem.style.top = `${y}px`;
             this._movingMenuItem.style.left = `${x}px`;
