@@ -29,7 +29,13 @@ import {
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
-import {isDobOverThirteen, validateEmail, validateEmailPreferences, validatePassword} from "../../services/validation";
+import {
+    isDobOverThirteen,
+    validateEmail,
+    validateEmailPreferences,
+    validatePassword,
+    validateUserSchool
+} from "../../services/validation";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
 import {ACCOUNT_TAB} from "../../services/constants";
@@ -140,6 +146,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
+            validateUserSchool(userToUpdate) &&
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
             (!userToUpdate.password || isNewPasswordConfirmed)) {
             updateCurrentUser(userToUpdate, myUserPreferences, currentPassword, user);

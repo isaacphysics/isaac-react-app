@@ -1,4 +1,9 @@
-import {LoggedInUser, SubjectInterest, UserEmailPreferences, UserPreferencesDTO} from "../../IsaacAppTypes";
+import {
+    SubjectInterest,
+    UserEmailPreferences,
+    UserPreferencesDTO,
+    ValidationUser
+} from "../../IsaacAppTypes";
 
 
 export const validateEmail = (email?: string) => {
@@ -38,6 +43,13 @@ export const validateSubjectInterest = (subjectInterest?: SubjectInterest | null
         (subjectInterest.CS_ALEVEL === true || subjectInterest.CS_ALEVEL === false);
 };
 
+export const validateUserSchool = (user?: ValidationUser | null) => {
+    return !!user && (
+        (user.schoolId !== null && user.schoolId !== undefined) ||
+        (!!user.schoolOther && user.schoolOther.length > 0)
+    );
+};
+
 const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
     if (dateOfAction) {
         const now = new Date();
@@ -50,8 +62,9 @@ const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
 };
 export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 
-export function allRequiredInformationIsPresent(user?: LoggedInUser | null, userPreferences?: UserPreferencesDTO | null) {
+export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null) {
     return user && userPreferences &&
+        validateUserSchool(user) &&
         validateEmailPreferences(userPreferences.EMAIL_PREFERENCE) &&
         validateSubjectInterest(userPreferences.SUBJECT_INTEREST);
 }

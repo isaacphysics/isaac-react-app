@@ -2,12 +2,16 @@ import React, {MutableRefObject, useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../IsaacAppTypes";
 import {api} from "../../services/api";
+import {validateUserSchool} from "../../services/validation";
 
 interface SchoolInputProps {
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
+    attemptedAccountUpdate: boolean;
+    className?: string;
 }
-export const SchoolInput = ({userToUpdate, setUserToUpdate}: SchoolInputProps) => {
+const NOT_APPLICABLE = "N/A";
+export const SchoolInput = ({userToUpdate, setUserToUpdate, attemptedAccountUpdate, className}: SchoolInputProps) => {
     let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
     let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
@@ -58,37 +62,65 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate}: SchoolInputProps) =
         setSchoolSearchResults([]);
     }
 
-    return <RS.FormGroup className="school">
-        <RS.Label htmlFor="school-input">School</RS.Label>
-        <RS.Input
-            className="school-input" type="text" name="school" placeholder="Type a UK school name..." autoComplete="isaac-off"
-            value={
-                schoolQueryText !== null ?
-                    schoolQueryText :
-                    (selectedSchoolObject && (selectedSchoolObject.name + ", " + selectedSchoolObject.postcode) || "")
-            }
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                const queryValue = e.target.value;
-                setSchoolQueryText(queryValue);
-                if (queryValue === "") {
-                    setUserSchool(undefined);
+    const schoolSpecified = (
+        userToUpdate.schoolId !== undefined ||
+        (userToUpdate.schoolOther !== undefined && userToUpdate.schoolOther !== "" && userToUpdate.schoolOther !== NOT_APPLICABLE)
+    );
+
+    return <RS.FormGroup className={`school ${className}`}>
+        <RS.Label htmlFor="school-input" className="form-required">School</RS.Label>
+        {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
+            <RS.Input
+                id="school-input" type="text" name="school" placeholder="Type a UK school name..." autoComplete="isaac-off"
+                invalid={attemptedAccountUpdate && !validateUserSchool(userToUpdate)}
+                value={
+                    schoolQueryText !== null ?
+                        schoolQueryText :
+                        (selectedSchoolObject && (selectedSchoolObject.name + ", " + selectedSchoolObject.postcode) || "")
                 }
-            }}
-        />
-        {schoolSearchResults && schoolSearchResults.length > 0 && <ul className="school-search-results">
-            {schoolSearchResults.map((item: any) =>
-                <li key={item.urn} onClick={() => { setUserSchool(item) }}>
-                    {item.name + ", " + item.postcode}
-                </li>
-            )}
-        </ul>}
-        {!userToUpdate.schoolId && <RS.Input
-            type="text" name="school-other" placeholder="...or enter a non-UK school."
-            className="school-other-input mt-2" maxLength={255}
-            defaultValue={userToUpdate.schoolOther}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setUserToUpdate(Object.assign({}, userToUpdate, { schoolOther: e.target.value }))
-            }
-        />}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const queryValue = e.target.value;
+                    setSchoolQueryText(queryValue);
+                    if (queryValue === "") {
+                        setUserSchool(undefined);
+                    }
+                }}
+            />
+            {schoolSearchResults && schoolSearchResults.length > 0 && <ul className="school-search-results">
+                {schoolSearchResults.map((item: any) =>
+                    <li key={item.urn} onClick={() => {
+                        setUserSchool(item)
+                    }}>
+                        {item.name + ", " + item.postcode}
+                    </li>
+                )}
+            </ul>}
+            {!userToUpdate.schoolId && <RS.Input
+                type="text" name="school-other" placeholder="...or enter a non-UK school."
+                id="school-other-input" className="my-2" maxLength={255}
+                value={userToUpdate.schoolOther || ""}
+                invalid={attemptedAccountUpdate && !validateUserSchool(userToUpdate)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.value}))
+                }
+            />}
+        </React.Fragment>}
+
+        {!schoolSpecified && <div className="d-flex">
+            <RS.CustomInput
+                type="checkbox" id="not-associated-with-school"
+                checked={userToUpdate.schoolOther === NOT_APPLICABLE}
+                onChange={(e => {
+                    setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : ""}));
+                })}
+            />
+            <RS.Label htmlFor="not-associated-with-school">
+                Not associated with a school
+            </RS.Label>
+        </div>}
+
+        <RS.FormFeedback id="school-input">
+            Please specify your school association
+        </RS.FormFeedback>
     </RS.FormGroup>
 };

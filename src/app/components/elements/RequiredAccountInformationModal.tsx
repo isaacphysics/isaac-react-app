@@ -42,7 +42,7 @@ const RequiredAccountInfoBody = () => {
         event.preventDefault();
         setSubmissionAttempted(true);
 
-        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(user, updatedUserPreferences)) {
+        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, updatedUserPreferences)) {
             dispatch(updateCurrentUser(userToUpdate, updatedUserPreferences, null, user));
             dispatch(closeActiveModal());
         }
@@ -52,17 +52,26 @@ const RequiredAccountInfoBody = () => {
         <RS.CardBody className="py-0">
             Please answer a few quick questions to help us with our reporting to the Department for Education.
 
-            {!validateSubjectInterest(initialSubjectPreferenceValue) && <div className="d-flex justify-content-between mt-4">
-                <RS.Label htmlFor="subjectInterestModal-t">
-                    Are you studying or preparing for Computer Science A level?
-                </RS.Label>
-                <TrueFalseRadioInput
-                    id="subjectInterestModal" submissionAttempted={submissionAttempted}
-                    stateObject={subjectInterest} propertyName="CS_ALEVEL" setStateFunction={setSubjectInterest}
-                />
-            </div>}
+            <RS.Row>
+                <RS.Col>
+                    <SchoolInput
+                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                        attemptedAccountUpdate={submissionAttempted} className="mt-4"
+                    />
+                </RS.Col>
 
-            <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} />
+                {!validateSubjectInterest(initialSubjectPreferenceValue) && <RS.Col>
+                    <div className="d-flex mt-4">
+                        <RS.Label htmlFor="subjectInterestModal-t" className="form-required">
+                            Are you studying or preparing for Computer Science A level?
+                        </RS.Label>
+                        <TrueFalseRadioInput
+                            id="subjectInterestModal" submissionAttempted={submissionAttempted}
+                            stateObject={subjectInterest} propertyName="CS_ALEVEL" setStateFunction={setSubjectInterest}
+                        />
+                    </div>
+                </RS.Col>}
+            </RS.Row>
         </RS.CardBody>
 
         {!validateEmailPreferences(initialEmailPreferencesValue) &&
@@ -72,7 +81,7 @@ const RequiredAccountInfoBody = () => {
             />
         }
 
-        {submissionAttempted && !allRequiredInformationIsPresent(user, updatedUserPreferences) &&
+        {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, updatedUserPreferences) &&
             <h4 role="alert" className="text-danger text-center mb-4">
                 Some required information is not set
             </h4>
@@ -87,6 +96,6 @@ const RequiredAccountInfoBody = () => {
 };
 
 export const requiredAccountInformationModal = {
-    title: "Required account information",
+    title: "Account information",
     body: <RequiredAccountInfoBody />,
 };
