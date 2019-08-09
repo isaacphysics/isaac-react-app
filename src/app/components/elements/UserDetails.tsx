@@ -148,7 +148,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             </Col>
 
             <Col md={6}>
-                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} attemptedAccountUpdate={attemptedAccountUpdate} />
+                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={attemptedAccountUpdate} />
             </Col>
         </Row>
 

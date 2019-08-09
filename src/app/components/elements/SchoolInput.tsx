@@ -7,12 +7,12 @@ import {validateUserSchool} from "../../services/validation";
 interface SchoolInputProps {
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
-    attemptedAccountUpdate: boolean;
+    submissionAttempted: boolean;
     className?: string;
     idPrefix?: string;
 }
 const NOT_APPLICABLE = "N/A";
-export const SchoolInput = ({userToUpdate, setUserToUpdate, attemptedAccountUpdate, className, idPrefix="school"}: SchoolInputProps) => {
+export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school"}: SchoolInputProps) => {
     let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
     let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
@@ -73,7 +73,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, attemptedAccountUpda
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <RS.Input
                 id="school-input" type="text" name="school" placeholder="Type a UK school name..." autoComplete="isaac-off"
-                invalid={attemptedAccountUpdate && !validateUserSchool(userToUpdate)}
+                invalid={submissionAttempted && !validateUserSchool(userToUpdate)}
                 value={
                     schoolQueryText !== null ?
                         schoolQueryText :
@@ -100,7 +100,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, attemptedAccountUpda
                 type="text" name="school-other" placeholder="...or enter a non-UK school."
                 id="school-other-input" className="my-2" maxLength={255}
                 value={userToUpdate.schoolOther || ""}
-                invalid={attemptedAccountUpdate && !validateUserSchool(userToUpdate)}
+                invalid={submissionAttempted && !validateUserSchool(userToUpdate)}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.value}))
                 }

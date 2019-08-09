@@ -8,7 +8,7 @@ import {AppState} from "../../state/reducers";
 import {
     allRequiredInformationIsPresent,
     validateEmailPreferences,
-    validateSubjectInterest
+    validateSubjectInterest, validateUserSchool
 } from "../../services/validation";
 import {isMobile} from "../../services/device";
 import {isLoggedIn} from "../../services/user";
@@ -18,6 +18,7 @@ import {DobInput} from "./DobInput";
 import {Row} from "reactstrap";
 import {Col} from "reactstrap";
 import {CardBody} from "reactstrap";
+import {StudyingCsInput} from "./StudyingCsInput";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -28,7 +29,8 @@ const RequiredAccountInfoBody = () => {
     // Local state
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
-    const [userToUpdate, setUserToUpdate] = useState(Object.assign({}, user, {password: null}));
+    const initialUserValue = Object.assign({}, user, {password: null});
+    const [userToUpdate, setUserToUpdate] = useState(initialUserValue);
 
     const initialEmailPreferencesValue = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);
@@ -36,7 +38,7 @@ const RequiredAccountInfoBody = () => {
     const initialSubjectPreferenceValue = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST : {};
     const [subjectInterest, setSubjectInterest] = useState<SubjectInterest>(initialSubjectPreferenceValue);
 
-    const updatedUserPreferences = {
+    const userPreferencesToUpdate = {
         EMAIL_PREFERENCE: emailPreferences,
         SUBJECT_INTEREST: subjectInterest
     };
@@ -46,8 +48,8 @@ const RequiredAccountInfoBody = () => {
         event.preventDefault();
         setSubmissionAttempted(true);
 
-        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, updatedUserPreferences)) {
-            dispatch(updateCurrentUser(userToUpdate, updatedUserPreferences, null, user));
+        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate)) {
+            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, null, user));
             dispatch(closeActiveModal());
         }
     }
@@ -63,19 +65,20 @@ const RequiredAccountInfoBody = () => {
 
             <RS.Row className="d-flex flex-wrap mt-2 mb-2">
                 <RS.Col>
-                    {!validateSubjectInterest(initialSubjectPreferenceValue) && <div className="d-flex">
-                        <RS.Label htmlFor="subjectInterestModal-t" className="form-required">
-                            Are you studying or preparing for Computer Science A level?
-                        </RS.Label>
-                        <TrueFalseRadioInput
-                            id="subjectInterestModal" submissionAttempted={submissionAttempted}
-                            stateObject={subjectInterest} propertyName="CS_ALEVEL" setStateFunction={setSubjectInterest}
-                        />
-                    </div>}
-                    <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                    {!validateSubjectInterest(initialSubjectPreferenceValue) && <StudyingCsInput
+                        subjectInterest={subjectInterest} setSubjectInterest={setSubjectInterest}
+                        submissionAttempted={submissionAttempted} idPrefix="modal-"
+                    />}
+                    <DobInput
+                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                        submissionAttempted={submissionAttempted}
+                    />
                 </RS.Col>
                 <RS.Col>
-                    <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} attemptedAccountUpdate={submissionAttempted} idPrefix="modal" />
+                    {!validateUserSchool(initialUserValue) && <SchoolInput
+                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                        submissionAttempted={submissionAttempted} idPrefix="modal"
+                    />}
                 </RS.Col>
             </RS.Row>
         </RS.CardBody>
@@ -83,11 +86,11 @@ const RequiredAccountInfoBody = () => {
         {!validateEmailPreferences(initialEmailPreferencesValue) &&
             <UserEmailPreference
                 emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
-                idPrefix="modal-" submissionAttempted={submissionAttempted}
+                submissionAttempted={submissionAttempted} idPrefix="modal-"
             />
         }
 
-        {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, updatedUserPreferences) &&
+        {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate) &&
             <h4 role="alert" className="text-danger text-center mb-4">
                 Some required information is not set
             </h4>
