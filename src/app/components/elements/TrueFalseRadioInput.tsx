@@ -14,9 +14,9 @@ interface TrueFalseRadioProps<T> {
 export const TrueFalseRadioInput = (props: TrueFalseRadioProps<any>) => {
     const {id, stateObject, propertyName, setStateFunction, submissionAttempted, trueLabel="Yes", falseLabel="No"} = props;
     const invalid = submissionAttempted && ![true, false].includes(stateObject[propertyName]);
-    return <RS.FormGroup className="mx-2">
+    return <RS.FormGroup className="">
         <div className="d-flex flex-nowrap">
-            <RS.Label htmlFor={`${id}-t`} className="w-50 text-right pr-2">
+            <RS.Label htmlFor={`${id}-t`} className="w-50 text-right text-nowrap pr-2">
                 {trueLabel}<span className='sr-only'> for {propertyName}</span>
             </RS.Label>
             <RS.CustomInput
@@ -32,7 +32,7 @@ export const TrueFalseRadioInput = (props: TrueFalseRadioProps<any>) => {
             />
         </div>
         <div className="d-flex flex-nowrap">
-            <RS.Label htmlFor={`${id}-f`} className="w-50 text-right pr-2">
+            <RS.Label htmlFor={`${id}-f`} className="w-50 text-right text-nowrap pr-2">
                 {falseLabel}<span className='sr-only'> for {propertyName}</span>
             </RS.Label>
             <RS.CustomInput

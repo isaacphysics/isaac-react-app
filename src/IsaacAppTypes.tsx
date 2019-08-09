@@ -277,7 +277,7 @@ export interface UserExamPreferences {
     [EXAM_BOARD.OCR]?: boolean;
 }
 
-export interface SubjectInterest {
+export interface SubjectInterests {
     CS_ALEVEL?: boolean;
 }
 
@@ -285,7 +285,7 @@ export interface UserPreferencesDTO {
     BETA_FEATURE?: string;
     EMAIL_PREFERENCE?: UserEmailPreferences;
     EXAM_BOARD?: UserExamPreferences;
-    SUBJECT_INTEREST?: SubjectInterest;
+    SUBJECT_INTEREST?: SubjectInterests;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {

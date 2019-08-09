@@ -2,13 +2,13 @@ import {closeActiveModal, updateCurrentUser} from "../../state/actions";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "./UserEmailPreferences";
-import {SubjectInterest, UserEmailPreferences} from "../../../IsaacAppTypes";
+import {SubjectInterests, UserEmailPreferences} from "../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {
     allRequiredInformationIsPresent,
     validateEmailPreferences,
-    validateSubjectInterest, validateUserSchool
+    validateSubjectInterests, validateUserSchool
 } from "../../services/validation";
 import {isMobile} from "../../services/device";
 import {isLoggedIn} from "../../services/user";
@@ -35,12 +35,12 @@ const RequiredAccountInfoBody = () => {
     const initialEmailPreferencesValue = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);
 
-    const initialSubjectPreferenceValue = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST : {};
-    const [subjectInterest, setSubjectInterest] = useState<SubjectInterest>(initialSubjectPreferenceValue);
+    const initialSubjectInterestsValue = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST : {};
+    const [subjectInterests, setSubjectInterests] = useState<SubjectInterests>(initialSubjectInterestsValue);
 
     const userPreferencesToUpdate = {
         EMAIL_PREFERENCE: emailPreferences,
-        SUBJECT_INTEREST: subjectInterest
+        SUBJECT_INTEREST: subjectInterests
     };
 
     // Form submission
@@ -63,16 +63,16 @@ const RequiredAccountInfoBody = () => {
                 Required
             </div>
 
-            <RS.Row className="d-flex flex-wrap mt-2 mb-2">
+            <RS.Row className="d-flex flex-wrap my-2">
                 {!validateUserSchool(initialUserValue) && <RS.Col>
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
                     />
                 </RS.Col>}
-                {!validateSubjectInterest(initialSubjectPreferenceValue) && <RS.Col className="mt-4">
+                {!validateSubjectInterests(initialSubjectInterestsValue) && <RS.Col className="mt-4 pt-1">
                     <StudyingCsInput
-                        subjectInterest={subjectInterest} setSubjectInterest={setSubjectInterest}
+                        subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
                         submissionAttempted={submissionAttempted} idPrefix="modal-"
                     />
                 </RS.Col>}

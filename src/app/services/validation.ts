@@ -1,5 +1,5 @@
 import {
-    SubjectInterest,
+    SubjectInterests,
     UserEmailPreferences,
     UserPreferencesDTO,
     ValidationUser
@@ -37,10 +37,10 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
     );
 };
 
-export const validateSubjectInterest = (subjectInterest?: SubjectInterest | null) => {
-    return subjectInterest &&
-        Object.values(subjectInterest).length > 0 &&
-        (subjectInterest.CS_ALEVEL === true || subjectInterest.CS_ALEVEL === false);
+export const validateSubjectInterests = (subjectInterests?: SubjectInterests | null) => {
+    return subjectInterests &&
+        Object.values(subjectInterests).length > 0 &&
+        (subjectInterests.CS_ALEVEL === true || subjectInterests.CS_ALEVEL === false);
 };
 
 export const validateUserSchool = (user?: ValidationUser | null) => {
@@ -66,5 +66,5 @@ export function allRequiredInformationIsPresent(user?: ValidationUser | null, us
     return user && userPreferences &&
         validateUserSchool(user) &&
         validateEmailPreferences(userPreferences.EMAIL_PREFERENCE) &&
-        validateSubjectInterest(userPreferences.SUBJECT_INTEREST);
+        validateSubjectInterests(userPreferences.SUBJECT_INTEREST);
 }
