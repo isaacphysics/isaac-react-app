@@ -11,7 +11,7 @@ interface StudyingCsInputProps {
 }
 export const StudyingCsInput = ({subjectInterest, setSubjectInterest, submissionAttempted, idPrefix="account"}: StudyingCsInputProps) => {
     return <div className="d-flex">
-        <RS.Label htmlFor={`${idPrefix}-subject-interest-t`} className="form-required">
+        <RS.Label htmlFor={`${idPrefix}-subject-interest-t`} className="form-required mr-auto">
             Are you studying or preparing for Computer Science A level?
         </RS.Label>
         <TrueFalseRadioInput

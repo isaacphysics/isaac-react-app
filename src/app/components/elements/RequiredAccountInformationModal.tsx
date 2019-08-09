@@ -64,22 +64,18 @@ const RequiredAccountInfoBody = () => {
             </div>
 
             <RS.Row className="d-flex flex-wrap mt-2 mb-2">
-                <RS.Col>
-                    {!validateSubjectInterest(initialSubjectPreferenceValue) && <StudyingCsInput
-                        subjectInterest={subjectInterest} setSubjectInterest={setSubjectInterest}
-                        submissionAttempted={submissionAttempted} idPrefix="modal-"
-                    />}
-                    <DobInput
-                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                        submissionAttempted={submissionAttempted}
-                    />
-                </RS.Col>
-                <RS.Col>
-                    {!validateUserSchool(initialUserValue) && <SchoolInput
+                {!validateUserSchool(initialUserValue) && <RS.Col>
+                    <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
-                    />}
-                </RS.Col>
+                    />
+                </RS.Col>}
+                {!validateSubjectInterest(initialSubjectPreferenceValue) && <RS.Col className="mt-4">
+                    <StudyingCsInput
+                        subjectInterest={subjectInterest} setSubjectInterest={setSubjectInterest}
+                        submissionAttempted={submissionAttempted} idPrefix="modal-"
+                    />
+                </RS.Col>}
             </RS.Row>
         </RS.CardBody>
 
@@ -105,6 +101,6 @@ const RequiredAccountInfoBody = () => {
 };
 
 export const requiredAccountInformationModal = {
-    title: "Account information",
+    title: "Required account information",
     body: <RequiredAccountInfoBody />,
 };
