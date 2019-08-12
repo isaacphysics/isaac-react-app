@@ -13,7 +13,7 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted}: D
     return <RS.FormGroup>
         <RS.Label htmlFor="dob-input">Date of Birth</RS.Label>
         <DateInput
-            invalid={!isDobOverThirteen(userToUpdate.dateOfBirth) && !!userToUpdate.dateOfBirth}
+            invalid={(!isDobOverThirteen(userToUpdate.dateOfBirth) && !!userToUpdate.dateOfBirth) || undefined}
             id="dob-input"
             name="date-of-birth"
             defaultValue={userToUpdate.dateOfBirth as unknown as string}

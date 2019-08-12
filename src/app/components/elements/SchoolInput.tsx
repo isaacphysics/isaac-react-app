@@ -111,6 +111,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             <RS.CustomInput
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
+                invalid={submissionAttempted && !validateUserSchool(userToUpdate)}
                 onChange={(e => {
                     setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : ""}));
                 })}
