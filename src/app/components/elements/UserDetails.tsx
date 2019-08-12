@@ -155,7 +155,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                     </Input>
                 </FormGroup>
             </Col>
-            <Col md={6} className="mt-4">
+            <Col md={6} className="mt-4 pt-1">
                 <StudyingCsInput
                     subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
                     submissionAttempted={submissionAttempted}
