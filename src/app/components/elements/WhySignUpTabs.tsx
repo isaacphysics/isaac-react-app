@@ -16,7 +16,7 @@ export const WhySignUpTabs = () => (
                             <CardTitle tag="h3" className="mb-auto">
                                 Benefits for students
                             </CardTitle>
-                            <CardText className="mb-auto">
+                            <CardText className="mb-auto" tag="div">
                                 <strong>Isaac Computer Science allows you to:</strong>
                                 <ul>
                                     <li>Study and revise at your own pace</li>
@@ -46,7 +46,7 @@ export const WhySignUpTabs = () => (
                             <CardTitle tag="h3" className="mb-auto">
                                 Benefits for teachers
                             </CardTitle>
-                            <CardText className="mb-auto">
+                            <CardText className="mb-auto" tag="div">
                                 <strong>Isaac Computer Science allows you to:</strong>
                                 <ul>
                                     <li>Select and set self-marking homework questions</li>

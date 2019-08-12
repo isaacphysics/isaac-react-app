@@ -538,7 +538,7 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
 
     return <React.Fragment>
         <Container>
-            <TitleAndBreadcrumb currentPageTitle="Assignment Progress" subTitle="Track your class performance" intermediateCrumbs={[{title: "For Teachers", to: "#"}]} help="Click on your groups to see the assignments you have set. View your students' progress by question." />
+            <TitleAndBreadcrumb currentPageTitle="Assignment progress" subTitle="Track your class performance" intermediateCrumbs={[{title: "For teachers", to: "#"}]} help="Click on your groups to see the assignments you have set. View your students' progress by question." />
             <Row className="align-items-center d-none d-md-flex">
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
@@ -558,7 +558,11 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
         <div className="assignment-progress-container mb-5">
             <ShowLoading until={data}>
                 {data && data.map(group => <GroupAssignmentProgress key={group.id} {...props} group={group} pageSettings={pageSettings} />)}
-                {data && data.length == 0 && <h3>You&apos;ll need to create a group using <Link to="/groups">Manage Groups</Link> to set an assignment.</h3>}
+                {data && data.length == 0 && <Container className="py-5">
+                    <h3 className="text-center">
+                        You&apos;ll need to create a group using <Link to="/groups">Manage Groups</Link> to set an assignment.
+                    </h3>
+                </Container>}
             </ShowLoading>
         </div>
     </React.Fragment>;

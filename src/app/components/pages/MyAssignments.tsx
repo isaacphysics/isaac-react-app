@@ -139,7 +139,7 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}:
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My Assignments" intermediateCrumbs={[STUDENTS_CRUMB]} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="My assignments" intermediateCrumbs={[STUDENTS_CRUMB]} help={pageHelp} />
         <Card className="my-5">
             <CardBody className="pt-0">
                 <ShowLoading until={assignments}>

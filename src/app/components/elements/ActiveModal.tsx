@@ -17,16 +17,20 @@ const ActiveModalComponent = ({activeModal}: ActiveModalProps) => (
         {activeModal && <React.Fragment>
             <RS.ModalHeader
                 className="h-title pb-5 mb-4"
-                close={<button className="close" onClick={activeModal.closeAction}>Close</button>}
+                close={
+                    activeModal.closeAction ? <button className="close" onClick={activeModal.closeAction}>Close</button> : null
+                }
             >
                 {activeModal.title}
             </RS.ModalHeader>
             <RS.ModalBody className="px-0 pb-2 mx-4">
                 {activeModal.body}
             </RS.ModalBody>
-            <RS.ModalFooter className="mb-4 mx-2 align-self-center">
-                {activeModal.buttons}
-            </RS.ModalFooter>
+            {activeModal.buttons &&
+                <RS.ModalFooter className="mb-4 mx-2 align-self-center">
+                    {activeModal.buttons}
+                </RS.ModalFooter>
+            }
         </React.Fragment>}
     </RS.Modal>
 );

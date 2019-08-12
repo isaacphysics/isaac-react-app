@@ -21,6 +21,7 @@ export type Action =
     | {type: ACTION_TYPE.API_GONE_AWAY}
 
     | {type: ACTION_TYPE.USER_UPDATE_REQUEST}
+    | {type: ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
     | {type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
@@ -62,6 +63,9 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST}
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS; users: {}[]}
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE}
@@ -263,14 +267,14 @@ export interface ShortcutResponses {
 }
 
 export interface UserEmailPreferences {
-    NEWS_AND_UPDATES: boolean;
-    ASSIGNMENTS: boolean;
-    EVENTS: boolean;
+    NEWS_AND_UPDATES?: boolean;
+    ASSIGNMENTS?: boolean;
+    EVENTS?: boolean;
 }
 
 export interface UserExamPreferences {
-    [EXAM_BOARD.AQA]: boolean;
-    [EXAM_BOARD.OCR]: boolean;
+    [EXAM_BOARD.AQA]?: boolean;
+    [EXAM_BOARD.OCR]?: boolean;
 }
 
 export interface UserPreferencesDTO {
@@ -327,10 +331,10 @@ export interface Toast {
 }
 
 export interface ActiveModal {
-    closeAction: () => void;
+    closeAction?: () => void;
     title: string;
     body: any;
-    buttons: any[];
+    buttons?: any[];
 }
 
 export enum BoardOrder {

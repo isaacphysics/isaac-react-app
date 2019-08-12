@@ -28,18 +28,18 @@ interface SupportCategories {
 
 const support: {student: SupportCategories; teacher: SupportCategories} = {
     student: {
-        title: "Student Support",
+        title: "Student support",
         categories: {
-            general: {category: "general", title: "General Questions", icon: "faq"},
-            homework: {category: "homework", title: "Finding Homework", icon: "faq"},
+            general: {category: "general", title: "General questions", icon: "faq"},
+            homework: {category: "homework", title: "Finding homework", icon: "faq"},
         }
     },
     teacher: {
-        title: "Teacher Support",
+        title: "Teacher support",
         categories: {
-            general: { category: "general", title: "General Questions", icon: "faq" },
-            assignments: { category: "assignments", title: "Assigning Work", icon: "faq" },
-            progress: { category: "progress", title: "Viewing Student Progress", icon: "faq" },
+            general: { category: "general", title: "General questions", icon: "faq" },
+            assignments: { category: "assignments", title: "Assigning work", icon: "faq" },
+            progress: { category: "progress", title: "Viewing student progress", icon: "faq" },
         }
     }
 };

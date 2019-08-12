@@ -149,55 +149,57 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
             dispatch(getUserAuthSettings() as any),
             dispatch(getUserPreferences() as any)
         ]);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: currentUser.data});
+        dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE});
     }
 };
 
-// TODO scope for pulling out a registerUser method from this
+// TODO scope for pulling out a separate registerUser method from this
 export const updateCurrentUser = (
-    params: {registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string | null},
+    updatedUser: LoggedInValidationUser,
+    updatedUserPreferences: UserPreferencesDTO,
+    passwordCurrent: string | null,
     currentUser: LoggedInUser
 ) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-    if (currentUser.loggedIn && params.registeredUser.loggedIn && currentUser.email !== params.registeredUser.email) {
-        let emailChange = window.confirm("You have edited your email address. Your current address will continue to work until you verify your new address by following the verification link sent to it via email. Continue?");
-        // TODO handle the alert with modal
-        if (emailChange) {
-            try {
-                const changedUser = await api.users.updateCurrent(params);
-                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: changedUser.data});
-            } catch (e) {
-                dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-            }
-        } else {
-            params.registeredUser.email = currentUser.email; // TODO I don't think you can do this, or even if so probably shouldn't
-        }
-    } else {
-        const initialLogin = params.registeredUser.loggedIn && isFirstLoginInPersistence() || false;
-        try {
-            const currentUser = await api.users.updateCurrent(params);
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-            dispatch(requestCurrentUser() as any);
-            if (initialLogin) {
-                const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
-                persistence.remove(KEY.AFTER_AUTH_PATH);
-                if ((afterAuthPath).includes('account')) {
-                    history.push(afterAuthPath, {firstLogin: initialLogin})
-                }
-                history.push('/account', {firstLogin: initialLogin});
-            }
+    // Confirm email change
+    if (currentUser.loggedIn && updatedUser.loggedIn && currentUser.email !== updatedUser.email) {
+        const emailChangeConfirmed = window.confirm(
+            "You have edited your email address. Your current address will continue to work until you verify your " +
+            "new address by following the verification link sent to it via email. Continue?"
+        );
+        if (!emailChangeConfirmed) {
             dispatch(showToast({
-                title: "Account settings updated",
-                body: "Your account settings were updated successfully.",
-                color: "success",
-                timeout: 5000,
-                closable: false,
+                title: "Account settings not updated", body: "Your account settings update was cancelled.", color: "danger", timeout: 5000, closable: false,
             }) as any);
-        } catch (e) {
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+            return; //early
         }
+    }
+
+    try {
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
+        const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent);
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
+        await dispatch(requestCurrentUser() as any);
+
+        const isFirstLogin = updatedUser.loggedIn && isFirstLoginInPersistence() || false;
+        if (isFirstLogin) {
+            const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
+            persistence.remove(KEY.AFTER_AUTH_PATH);
+            if ((afterAuthPath).includes('account')) {
+                history.push(afterAuthPath, {firstLogin: isFirstLogin})
+            }
+            history.push('/account', {firstLogin: isFirstLogin});
+        }
+        dispatch(showToast({
+            title: "Account settings updated",
+            body: "Your account settings were updated successfully.",
+            color: "success",
+            timeout: 5000,
+            closable: false,
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
 
@@ -216,8 +218,9 @@ export const logInUser = (provider: AuthenticationProvider, params: {email: stri
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
     persistence.remove(KEY.AFTER_AUTH_PATH);
     try {
-        const response = await api.authentication.login(provider, params);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: response.data});
+        const result = await api.authentication.login(provider, params);
+        await dispatch(requestCurrentUser() as any); // Request user preferences
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         history.push(afterAuthPath);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? extractMessage(e) : API_REQUEST_FAILURE_MESSAGE})
@@ -273,14 +276,14 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider) =>
 export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
-        const response = await api.authentication.checkProviderCallback(provider, parameters);
-        const user = response.data;
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user});
+        const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
+        await dispatch(requestCurrentUser() as any); // Request user preferences
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         let nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
         persistence.remove(KEY.AFTER_AUTH_PATH);
         nextPage = nextPage || "/";
         nextPage = nextPage.replace("#!", "");
-        if (user.firstLogin && !nextPage.includes("account")) {
+        if (providerResponse.data.firstLogin && !nextPage.includes("account")) {
             ReactGA.event({
                 category: 'user',
                 action: 'registration',
@@ -779,6 +782,27 @@ export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Ac
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("User Search Failed", e));
+    }
+};
+
+export const adminUserDelete = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+    try {
+        let confirmDeletion = window.confirm("Are you sure you want to delete this user?");
+        if (confirmDeletion) {
+            dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST});
+            await api.admin.userDelete.delete(userid);
+            dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS});
+            dispatch(showToast({
+                title: "User Deleted",
+                body: "The selected user was successfully deleted.",
+                color: "success",
+                timeout: 5000,
+                closable: false,
+            }) as any);
+        }
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("User Deletion Failed", e));
     }
 };
 

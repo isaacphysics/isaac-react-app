@@ -177,7 +177,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                             </span>
                                         </Col>
                                         <Col size={12} md={6} className="text-right">
-                                            <Input type="submit" value="Submit" className="btn btn-block btn-secondary border-0" block/>
+                                            <Input type="submit" value="Submit" className="btn btn-block btn-secondary border-0" />
                                         </Col>
                                     </Row>
                                 </CardFooter>

@@ -1,10 +1,11 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {ALPHABET} from "../../services/constants";
-import {store} from "../../state/store";
-import {connect} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
+import {AppState, fragments} from "../../state/reducers";
+import {ContentDTO} from "../../../IsaacApiTypes";
 
 interface AccordionsProps {
     id?: string;
@@ -24,6 +25,7 @@ const AccordionComponent = ({id, title, index, children, location: {hash}}: Acco
     // Toggle
     const isFirst = index === 0;
     const [open, setOpen] = useState(isFirst);
+    const page = useSelector((state: AppState) => (state && state.doc) || null);
 
     // Hash anchoring
     let anchorId: string | null = null;
@@ -49,6 +51,39 @@ const AccordionComponent = ({id, title, index, children, location: {hash}}: Acco
         }
     }, [hash, anchorId]);
 
+    function logAccordionOpen() {
+        if (page && page != 404) {
+            switch (page.type) {
+                case "isaacQuestionPage":
+                    logAction({
+                        type: "QUESTION_PART_OPEN",
+                        questionPageId: page.id,
+                        questionPartIndex: index,
+                        questionPartId: id
+                    });
+                    break;
+                case "isaacConceptPage":
+                    logAction({
+                        type: "CONCEPT_SECTION_OPEN",
+                        conceptPageId: page.id,
+                        conceptSectionIndex: index,
+                        conceptSectionLevel: null,
+                        conceptSectionId: id
+                    });
+                    // TODO for IP add doc.level for conceptSectionLevel event
+                    break;
+                default:
+                    logAction({
+                        type: "ACCORDION_SECTION_OPEN",
+                        pageId: page.id,
+                        accordionId: id,
+                        accordionTitle: title,
+                        accordionIndex: index
+                    })
+            }
+        }
+    }
+
     return <div className="accordion">
         <div className="accordion-header">
             <RS.Button
@@ -56,17 +91,8 @@ const AccordionComponent = ({id, title, index, children, location: {hash}}: Acco
                 className={open ? 'active p-3 pr-5 text-left' : 'p-3 pr-5 text-left'}
                 onClick={(event: any) => {
                     const nextState = !open;
-                    const page = store.getState().doc;
                     if (nextState) {
-                        switch (page.type) {
-                            case "isaacQuestionPage":
-                                logAction({type: "QUESTION_PART_OPEN", questionPageId: page.id, questionPartIndex: index, questionPartId: id});
-                                break;
-                            case "isaacConceptPage":
-                                logAction({type: "CONCEPT_SECTION_OPEN", conceptPageId: page.id, conceptSectionIndex: index, conceptSectionLevel: null, conceptSectionId: id});
-                                // TODO for IP add doc.level for conceptSectionLevel event
-                                break;
-                        }
+                        logAccordionOpen();
                     }
                     setOpen(nextState);
                     if (nextState) {

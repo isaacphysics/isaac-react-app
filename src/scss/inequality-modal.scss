@@ -12,8 +12,8 @@
 #inequality-modal {
     .beta-badge {
         position: absolute;
-        bottom: 5.25rem;
-        right: 0.2rem;
+        bottom: 15px;
+        right: 40px;
         transform: rotate(30deg);
         background: theme-color("secondary");
         color: white;
@@ -27,14 +27,14 @@
 
         @keyframes inequality-swing {
             0%, 100% { transform: rotate(30deg); }
-            50% { transform: rotate(45deg); }
+            50% { transform: rotate(15deg); }
         }
 
         &:hover {
             animation: inequality-swing 1s infinite ease-in-out;
         }
     }
-    
+
     .inequality-ui {
         position: absolute;
         width: 100%;
@@ -44,64 +44,66 @@
             background: theme-color("primary");
             text-indent: -1000px;
             overflow: hidden;
+            cursor: pointer;
 
             &.confirm {
-                width: 80px;
-                height: 80px;
-                bottom: 20px;
-                right: 20px;
-                background-color: darkgreen;
-                background-image: url('/assets/inequality-confirm.png');
+                width: 90px;
+                height: 90px;
+                bottom: 25px;
+                right: 5px;
+                background-color: transparent;
+                background-image: url('/assets/inequality-confirm.svg');
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position-y: center;
-                border-radius: 6px;
+                z-index: 255;
             }
 
             &.centre {
-                width: 60px;
-                height: 60px;    
-                bottom: 20px;
-                left: 20px;
-                background-color: dodgerblue;
-                background-image: url('/assets/inequality-centre.png');
+                width: 90px;
+                height: 90px;
+                bottom: 25px;
+                left: 5px;
+                background-color: transparent;
+                background-image: url('/assets/inequality-centre.svg');
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position-y: center;
-                border-radius: 6px;
             }
 
             &.trash {
-                width: 80px;
-                height: 100px;
-                bottom: 120px;
-                right: 20px;
-                background-color: black;
-                background-image: url('/assets/inequality-trash.png');
+                width: 90px;
+                height: 90px;
+                bottom: 45%;
+                right: 5px;
+                background-color: transparent;
+                background-image: url('/assets/inequality-trash.svg');
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position-y: center;
                 opacity: 0.5;
-                border-radius: 6px;
+                cursor: default;
 
                 &:hover, &.active {
                     opacity: 1.0;
                 }
-            }    
+            }
         }
 
         &.katex-preview {
-            border: 1px solid darkgreen;
-            border-top-left-radius: 6px;
-            border-bottom-left-radius: 6px;
-            bottom: 20px;
-            right: 96px;
-            height: 80px;
-            padding: 0 24px 0 20px;
+            border: 1px solid #208838;
+            border-right: 0;
+            border-top-left-radius: 45px;
+            border-bottom-left-radius: 45px;
+            bottom: 25px;
+            right: 50px;
+            height: 90px;
+            padding: 0 60px 0 30px;
             width: fit-content; // This is contentious with browsers
             vertical-align: middle;
-            line-height: 80px;
+            line-height: 90px;
             font-size: 2em;
+            z-index: 255;
 
             &.empty {
                 padding: 0;
@@ -133,12 +135,13 @@
                 background: darken(theme-color("primary"), 20%);
 
                 li {
+                    position: relative;
                     display: inline-block;
                     box-sizing: content-box;
                     padding: 8px;
                     text-indent: 0;
-                    width: 40px;
-                    height: 40px;
+                    width: 48px;
+                    height: 48px;
                     text-align: center;
                     font-size: 1.8em;
 
@@ -148,11 +151,45 @@
 
                     .katex {
                         display: block;
+                        padding-top: 5px;
+                    }
+
+                    svg {
+                        position: absolute;
+                        width: 48px;
+                        left: 8px;
+                        top: 4px;
+                        overflow: visible;
+
+                        .v-hexagon {
+                            fill: white;
+                            stroke: darken(theme-color("primary"), 10%);
+                            stroke-width: 8px;
+                        }
                     }
                 }
 
                 &.sub-menu {
                     background: theme-color("primary");
+                }
+            }
+
+            .sub-menu-tabs {
+                li {
+                    font-size: 1.4em;
+
+                    .katex {
+                        padding-top: 8px;
+                    }
+
+                    &.inactive {
+                        svg {
+                            .v-hexagon {
+                                fill: theme-color("primary");
+                                stroke-width: 0;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -173,14 +210,33 @@
                     padding: 0px 8px;
                     text-indent: 0;
                     width: 60px;
+                    height: 36px;
                     text-align: center;
                     font-size: 1.8em;
                     background: black;
                     color: white;
+                    position: relative;
 
                     &.active {
                         color: black;
                         background: theme-color("primary");
+
+                        svg .tab-triangle {
+                            fill: theme-color("primary");
+                        }
+                    }
+
+                    svg {
+                        position: absolute;
+                        width: 76px;
+                        height: 23px;
+                        left: 0;
+                        top: 36px;
+                        overflow: visible;
+
+                        .tab-triangle {
+                            fill: black;
+                        }
                     }
                 }
             }

@@ -3,6 +3,7 @@ export enum KEY {
     AFTER_AUTH_PATH = "afterAuthPath",
     CURRENT_USER_ID = "currentUserId",
     FIRST_LOGIN = "firstLogin",
+    REQUIRED_MODAL_SHOWN_TIME = "requiredModalShownTime",
 }
 
 export const LOADING_FAILURE_VALUE = null;

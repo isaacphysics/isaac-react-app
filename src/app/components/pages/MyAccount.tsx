@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -19,14 +19,20 @@ import {
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState, ErrorState} from "../../state/reducers";
 import {resetPassword, updateCurrentUser} from "../../state/actions";
-import {LoggedInUser, LoggedInValidationUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {
+    LoggedInUser,
+    LoggedInValidationUser,
+    UserEmailPreferences,
+    UserExamPreferences,
+    UserPreferencesDTO
+} from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/UserDetails";
 import {UserPassword} from "../elements/UserPassword";
 import {UserEmailPreference} from "../elements/UserEmailPreferences";
-import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
+import {isDobOverThirteen, validateEmail, validateEmailPreferences, validatePassword} from "../../services/validation";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
-import {ACCOUNT_TAB, EXAM_BOARD} from "../../services/constants";
+import {ACCOUNT_TAB} from "../../services/constants";
 import {history} from "../../services/history"
 import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -58,7 +64,9 @@ interface AccountPageProps {
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     userPreferences: UserPreferencesDTO | null;
     updateCurrentUser: (
-        params: { registeredUser: LoggedInValidationUser; userPreferences: UserPreferencesDTO; passwordCurrent: string },
+        updatedUser: LoggedInValidationUser,
+        updatedUserPreferences: UserPreferencesDTO,
+        passwordCurrent: string | null,
         currentUser: LoggedInUser
     ) => void;
     firstLogin: boolean;
@@ -73,8 +81,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
 
     // - Copy of user to store changes before saving
-    const [myUser, setMyUser] = useState(Object.assign({}, user, {password: ""}));
-    useMemo(() => {setMyUser(Object.assign({}, user, {password: ""}))}, [user]);
+    const [updatedUser, setUpdatedUser] = useState(Object.assign({}, user, {password: ""}));
+    useMemo(() => {setUpdatedUser(Object.assign({}, user, {password: ""}))}, [user]);
 
     // - Passwords
     const [newPassword, setNewPassword] = useState("");
@@ -82,20 +90,20 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [currentPassword, setCurrentPassword] = useState("");
 
     // - User preferences
-    const defaultEmailPreferences = {NEWS_AND_UPDATES: false, ASSIGNMENTS: true, EVENTS: false};
-    const initialEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ?
-        userPreferences.EMAIL_PREFERENCE :
-        defaultEmailPreferences;
-    const [emailPreferences, setEmailPreferences] = useState(Object.assign({}, initialEmailPreferences));
+    const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
+    const [examPreferences, setExamPreferences] = useState<UserExamPreferences>({});
+    const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
 
-    const defaultExamPreferences = {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true};
-    const initialExamPreferences = (userPreferences && userPreferences.EXAM_BOARD) ?
-        userPreferences.EXAM_BOARD :
-        defaultExamPreferences;
-    const [examPreferences, setExamPreferences] = useState(Object.assign({}, initialExamPreferences));
+    useMemo(() => {
+        const currentEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
+        const currentExamPreferences = (userPreferences && userPreferences.EXAM_BOARD) ? userPreferences.EXAM_BOARD : {};
+        const currentUserPreferences = {EMAIL_PREFERENCE: currentEmailPreferences, EXAM_BOARD: currentExamPreferences};
 
-    const initialUserPreferences = {EMAIL_PREFERENCE: initialEmailPreferences, EXAM_BOARD: initialExamPreferences};
-    const [myUserPreferences, setMyUserPreferences] = useState(Object.assign(initialUserPreferences));
+        setEmailPreferences(currentEmailPreferences);
+        setExamPreferences(currentExamPreferences);
+        setMyUserPreferences(currentUserPreferences);
+    }, [userPreferences]);
+
 
     // Set active tab using hash anchor
     const [activeTab, setActiveTab] = useState(ACCOUNT_TAB.account);
@@ -113,28 +121,34 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_SHOWN);
 
     // Values derived from inputs (props and state)
-    const isEmailValid = myUser.loggedIn && myUser.email && validateEmail(myUser.email) || validateEmail("");
-    const isDobValid = myUser.loggedIn && myUser.dateOfBirth && isDobOverThirteen(new Date(myUser.dateOfBirth)) || false;
+    const isEmailValid = updatedUser.loggedIn && updatedUser.email && validateEmail(updatedUser.email) || validateEmail("");
+    const isDobValid = updatedUser.loggedIn && updatedUser.dateOfBirth && isDobOverThirteen(new Date(updatedUser.dateOfBirth)) || false;
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
-    //Form's submission method
+    // Form's submission method
     const updateAccount = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedAccountUpdate(true);
-        Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
+
+        // Only update email preferences on the email preferences tab
+        if (activeTab == ACCOUNT_TAB.emailpreferences) {
+            if (validateEmailPreferences(emailPreferences)) {
+                Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
+            } else {
+                return; // early exit
+            }
+        }
         Object.assign(myUserPreferences.EXAM_BOARD, examPreferences);
-        if (myUser.loggedIn && isEmailValid && (isDobValid || myUser.dateOfBirth == undefined) &&
-            (!myUser.password || isNewPasswordConfirmed)) {
-            updateCurrentUser({
-                registeredUser: myUser,
-                userPreferences: myUserPreferences,
-                passwordCurrent: currentPassword
-            }, user);
+
+        if (updatedUser.loggedIn && isEmailValid &&
+            (isDobValid || updatedUser.dateOfBirth == undefined) &&
+            (!updatedUser.password || isNewPasswordConfirmed)) {
+            updateCurrentUser(updatedUser, myUserPreferences, currentPassword, user);
         }
     };
 
     return <Container id="account-page" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle="My Account" className="mb-4" />
+        <TitleAndBreadcrumb currentPageTitle="My account" className="mb-4" />
         <h3 className="d-md-none text-center text-muted m-3">
             <small>
                 Update your Isaac Computer Science account, or <Link to="/logout" className="text-secondary">Log out</Link>
@@ -145,7 +159,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
             Registration successful
         </Alert>}
 
-        {user.loggedIn && myUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
+        {user.loggedIn && updatedUser.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
                 <Nav tabs className="my-4 flex-wrap">
                     <NavItem>
@@ -190,7 +204,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
                         <TabPane tabId={ACCOUNT_TAB.account}>
                             <UserDetails
-                                myUser={myUser} setMyUser={setMyUser} examPreferences={examPreferences} setExamPreferences={setExamPreferences}
+                                myUser={updatedUser} setMyUser={setUpdatedUser} examPreferences={examPreferences} setExamPreferences={setExamPreferences}
                                 isDobValid={isDobValid} isEmailValid={isEmailValid} attemptedAccountUpdate={attemptedAccountUpdate}
                             />
                         </TabPane>
@@ -198,7 +212,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                         <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                             <UserPassword
                                 currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}
-                                myUser={myUser} setMyUser={setMyUser}
+                                myUser={updatedUser} setMyUser={setUpdatedUser}
                                 setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
                                 isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
                                 setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm}
@@ -212,6 +226,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                         <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                             <UserEmailPreference
                                 emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
+                                submissionAttempted={attemptedAccountUpdate}
                             />
                         </TabPane>
 
@@ -225,8 +240,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                         {errorMessage.generalError}
                                     </h3>
                                 }
-                                {/* TODO only show Save on relevant pages? */}
-                                <Input type="submit" value="Save" className="btn btn-block btn-secondary border-0" />
+                                {/* Teacher connections does not have a save */}
+                                <Input type="submit" value="Save" className="btn btn-block btn-secondary border-0" disabled={activeTab === ACCOUNT_TAB.teacherconnections}/>
                             </Col>
                         </Row>
                     </CardFooter>
