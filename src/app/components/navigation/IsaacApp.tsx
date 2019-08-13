@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import "../../services/scrollManager"; // important
+import "../../services/polyfills"; // important
 import {useDispatch, useSelector} from "react-redux";
 import {Router, Switch} from "react-router-dom";
 import {Footer} from "./Footer";
@@ -50,6 +51,7 @@ import {ForTeachers} from "../pages/ForTeachers";
 import {AddGameboard} from "../handlers/AddGameboard";
 import {isTest} from "../../services/constants";
 import {Events} from "../pages/Events";
+
 
 export const IsaacApp = () => {
     // Redux state and dispatch

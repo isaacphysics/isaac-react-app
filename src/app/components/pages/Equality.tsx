@@ -47,8 +47,7 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
     }
 
     const closeModal = () => {
-        document.body.removeChild(document.getElementById('the-ghost-of-inequality') as Node);
-        document.body.style.overflow = "initial";
+        document.body.style.overflow = "auto";
         setModalVisible(false);
     };
 
