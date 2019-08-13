@@ -37,7 +37,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         <Row>
             <Col md={6}>
                 <FormGroup>
-                    <Label htmlFor="first-name-input" className="form-required">First Name</Label>
+                    <Label htmlFor="first-name-input" className="form-required">First name</Label>
                     <Input
                         id="first-name-input" type="text" name="givenName" maxLength={255}
                         defaultValue={userToUpdate.givenName}
@@ -50,7 +50,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             </Col>
             <Col md={6}>
                 <FormGroup>
-                    <Label htmlFor="last-name-input" className="form-required">Last Name</Label>
+                    <Label htmlFor="last-name-input" className="form-required">Last name</Label>
                     <Input
                         id="last-name-input" type="text" name="last-name" maxLength={255}
                         defaultValue={userToUpdate.familyName}
@@ -65,7 +65,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         <Row>
             <Col md={6}>
                 <FormGroup>
-                    <Label htmlFor="email-input" className="form-required">Email</Label>
+                    <Label htmlFor="email-input" className="form-required">Email address</Label>
                     <Input
                         invalid={!validateEmail(userToUpdate.email)} id="email-input" type="email"
                         name="email" defaultValue={userToUpdate.email}
@@ -135,7 +135,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         <Row>
             <Col md={6}>
                 <FormGroup>
-                    <Label className="d-inline-block pr-2" for="examBoardSelect">Exam Board</Label>
+                    <Label className="d-inline-block pr-2" for="examBoardSelect">Exam board</Label>
                     <Input
                         type="select" name="select" id="examBoardSelect"
                         value={
