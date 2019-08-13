@@ -50,6 +50,7 @@ import {ForTeachers} from "../pages/ForTeachers";
 import {AddGameboard} from "../handlers/AddGameboard";
 
 import "../../services/scrollManager";
+import "../../services/polyfills";
 import {isTest} from "../../services/constants";
 
 export const IsaacApp = () => {
