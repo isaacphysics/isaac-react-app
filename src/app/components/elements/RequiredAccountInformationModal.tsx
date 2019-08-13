@@ -32,11 +32,12 @@ const RequiredAccountInfoBody = () => {
     const initialUserValue = Object.assign({}, user, {password: null});
     const [userToUpdate, setUserToUpdate] = useState(initialUserValue);
 
-    const initialEmailPreferencesValue = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
-    const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);
+    // We clone the initial value otherwise userPreferences.SUBJECT_INTEREST becomes the local state subjectInterests which gets updated by setSubjectInterests(...)
+    const initialSubjectInterestsValue = (userPreferences && userPreferences.SUBJECT_INTEREST) ? Object.assign({}, userPreferences.SUBJECT_INTEREST) : {};
+    const [subjectInterests, setSubjectInterests] = useState(initialSubjectInterestsValue);
 
-    const initialSubjectInterestsValue = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST : {};
-    const [subjectInterests, setSubjectInterests] = useState<SubjectInterests>(initialSubjectInterestsValue);
+    const initialEmailPreferencesValue = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? Object.assign({}, userPreferences.EMAIL_PREFERENCE): {};
+    const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);
 
     const userPreferencesToUpdate = {
         EMAIL_PREFERENCE: emailPreferences,
