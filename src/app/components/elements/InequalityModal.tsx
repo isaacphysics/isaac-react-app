@@ -180,6 +180,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 this._movingMenuItem.style.position = 'absolute';
                 this._movingMenuItem.style.opacity = '0.5';
                 this._movingMenuItem.style.zIndex = '255';
+                this._movingMenuItem.style.pointerEvents = 'none';
                 document.body.appendChild(this._movingMenuItem);
 
                 this._disappearingMenuItem = menuItem as HTMLElement;
