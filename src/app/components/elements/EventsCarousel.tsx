@@ -1,6 +1,6 @@
 import React from "react";
 import ResponsiveCarousel from "./Carousel";
-import {EventCard} from "./EventCard";
+import {EventCard} from "./cards/EventCard";
 
 export const EventsCarousel = () => {
     return (

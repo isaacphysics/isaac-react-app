@@ -7,8 +7,8 @@ import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {isTeacher} from "../../services/user";
 import {Link} from "react-router-dom";
-import {ActionCard} from "../elements/ActionCard";
-import {LinkCard} from "../elements/LinkCard";
+import {ActionCard} from "../elements/cards/ActionCard";
+import {LinkCard} from "../elements/cards/LinkCard";
 import {loadAssignmentsOwnedByMe, loadGroups} from "../../state/actions";
 
 const stateToProps = (state: AppState) => {

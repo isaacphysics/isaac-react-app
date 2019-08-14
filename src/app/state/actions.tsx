@@ -40,10 +40,10 @@ import {
     releaseConfirmationModal,
     revocationConfirmationModal,
     tokenVerificationModal
-} from "../components/elements/TeacherConnectionModalCreators";
+} from "../components/elements/modals/TeacherConnectionModalCreators";
 import * as persistence from "../services/localStorage";
 import {KEY} from "../services/localStorage";
-import {groupInvitationModal, groupManagersModal} from "../components/elements/GroupsModalCreators";
+import {groupInvitationModal, groupManagersModal} from "../components/elements/modals/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
 import {groups} from "./selectors";
 import {isFirstLoginInPersistence} from "../services/firstLogin";

@@ -6,7 +6,7 @@ import {PageFragment} from "../elements/PageFragment";
 import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {Link} from "react-router-dom";
-import {LinkCard} from "../elements/LinkCard";
+import {LinkCard} from "../elements/cards/LinkCard";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) || null

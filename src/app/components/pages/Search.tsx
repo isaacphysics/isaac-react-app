@@ -9,7 +9,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {ContentSummaryDTO, ResultsWrapper, Role} from "../../../IsaacApiTypes";
 import {History} from "history";
-import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
+import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";

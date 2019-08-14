@@ -37,7 +37,7 @@ import {Route} from "react-router";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
-import {ActiveModal} from "../elements/ActiveModal";
+import {ActiveModal} from "../elements/modals/ActiveModal";
 import {isAdmin, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {Groups} from "../pages/Groups";
 import {Equality} from '../pages/Equality';

@@ -5,7 +5,7 @@ import {allRequiredInformationIsPresent, withinLast50Minutes} from "./validation
 import {isLoggedIn} from "./user";
 import * as persistence from "./localStorage";
 import {KEY} from "./localStorage";
-import {requiredAccountInformationModal} from "../components/elements/RequiredAccountInformationModal";
+import {requiredAccountInformationModal} from "../components/elements/modals/RequiredAccountInformationModal";
 
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async action => {
     await dispatch(action);

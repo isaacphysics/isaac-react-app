@@ -1,25 +1,25 @@
-import {closeActiveModal, updateCurrentUser} from "../../state/actions";
+import {closeActiveModal, updateCurrentUser} from "../../../state/actions";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
-import {UserEmailPreference} from "./UserEmailPreferences";
-import {SubjectInterests, UserEmailPreferences} from "../../../IsaacAppTypes";
+import {UserEmailPreference} from "../UserEmailPreferences";
+import {SubjectInterests, UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../state/reducers";
+import {AppState} from "../../../state/reducers";
 import {
     allRequiredInformationIsPresent,
     validateEmailPreferences,
     validateSubjectInterests, validateUserGender, validateUserSchool
-} from "../../services/validation";
-import {isMobile} from "../../services/device";
-import {isLoggedIn} from "../../services/user";
-import {TrueFalseRadioInput} from "./inputs/TrueFalseRadioInput";
-import {SchoolInput} from "./inputs/SchoolInput";
-import {DobInput} from "./inputs/DobInput";
+} from "../../../services/validation";
+import {isMobile} from "../../../services/device";
+import {isLoggedIn} from "../../../services/user";
+import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
+import {SchoolInput} from "../inputs/SchoolInput";
+import {DobInput} from "../inputs/DobInput";
 import {Row} from "reactstrap";
 import {Col} from "reactstrap";
 import {CardBody} from "reactstrap";
-import {StudyingCsInput} from "./inputs/StudyingCsInput";
-import {GenderInput} from "./inputs/GenderInput";
+import {StudyingCsInput} from "../inputs/StudyingCsInput";
+import {GenderInput} from "../inputs/GenderInput";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
