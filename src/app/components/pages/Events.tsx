@@ -8,6 +8,7 @@ import queryString from "query-string";
 import {withRouter} from "react-router-dom";
 import {History} from "history";
 import {getEventsList} from "../../state/actions";
+import {EventCard} from "../elements/EventCard";
 
 /* eslint-disable @typescript-eslint/camelcase */
 
@@ -30,8 +31,8 @@ export enum TypeFilter {
 }
 const eventsPerPage = 6;
 
-// Events get augmented, probably in an events service
 // Events get displayed nicely
+// Events get augmented, probably in an events service
 // A call for more events is provided when appropriate
 
 export const Events = withRouter(({history, location}: {history: History; location: Location}) => {
@@ -89,7 +90,11 @@ export const Events = withRouter(({history, location}: {history: History; locati
                 {/* Map */}
 
                 {/* Event Cards */}
-                Events: {events.length} of {total}
+                <RS.Row>
+                    {events.map(event => <div key={event.id} className="col-xs-12 col-sm-6 col-md-4">
+                        <EventCard event={event} />
+                    </div>)}
+                </RS.Row>
 
                 {/* Load More Button */}
                 {events.length < total && <div className="text-center">

@@ -2,52 +2,49 @@ import {Card, CardBody, CardImg, CardText, CardTitle} from "reactstrap";
 import React from "react";
 import {connect} from "react-redux";
 import classnames from "classnames";
+import {ImageDTO, IsaacEventPageDTO} from "../../../IsaacApiTypes";
 
 interface EventCardProps {
-    eventImage: string;
-    eventTitle: string;
-    eventSubtitle: string;
-    eventDate: string;
-    eventTime: string;
-    eventLocation: string;
-    eventUrl: string;
+    event?: IsaacEventPageDTO;
+    eventImage?: ImageDTO;
+    eventTitle?: string;
+    eventSubtitle?: string;
+    eventStartDate?: string;
+    eventEndDate?: string;
+    eventLocation?: string;
+    eventUrl?: string;
     pastEvent?: boolean;
 }
 
-const EventCardComponent = function (props: EventCardProps) {
+export const EventCard = (props: EventCardProps) => {
     return <Card className={classnames({'card-neat m-4': true, 'disabled text-muted': props.pastEvent})}>
-        <div className='card-image text-center mt-3'>
+        {props.eventImage && <div className='card-image text-center mt-3'>
             <CardImg
-                className='m-auto rounded-circle'
-                top
-                src={props.eventImage}
-                alt={`Illustration for ${props.eventTitle}`}
+                className='m-auto rounded-circle' top
+                src={props.eventImage.src} alt={props.eventImage.altText || `Illustration for ${props.eventTitle}`}
             />
-        </div>
+        </div>}
         <CardBody className="d-flex flex-column">
-            <CardTitle tag="h3">{props.eventTitle}</CardTitle>
-            <CardText className='m-0 my-auto card-date-time'>
-                {props.eventSubtitle}
-            </CardText>
+            {props.eventTitle && <CardTitle tag="h3">{props.eventTitle}</CardTitle>}
+            {props.eventSubtitle && <CardText className='m-0 my-auto card-date-time'>{props.eventSubtitle}</CardText>}
             <CardText className="m-0 my-auto card-date-time">
                 <span className="d-block my-2">
-                    <span className="font-weight-bold">When:</span> {" "} {props.eventDate}
+                    <span className="font-weight-bold">When:</span> {" "} {props.eventStartDate}
                 </span>
                 <span className='d-block my-2'>
-                    {props.eventTime}
+                    {props.eventEndDate}
                 </span>
-                <span className='d-block my-2'>
+                {props.eventLocation && <span className='d-block my-2'>
                     <span className="font-weight-bold">Location:</span> {" "} {props.eventLocation}
-                </span>
+                </span>}
             </CardText>
             <CardText>
-                <a className="focus-target" href={props.eventUrl} target="_blank" rel="noopener noreferrer">
+                {props.eventUrl && <a className="focus-target" href={props.eventUrl} target="_blank" rel="noopener noreferrer">
                     View details
-                    <span className='sr-only'> of the event: {props.eventTitle} {" - "} {props.eventDate}</span>
-                </a>
+                    <span className='sr-only'> of the event: {props.eventTitle} {" - "} {props.eventStartDate}</span>
+                </a>}
+                {!props.eventUrl && <h1>TODO Generated local event url</h1>}
             </CardText>
         </CardBody>
     </Card>
 };
-
-export const EventCard = connect()(EventCardComponent);
