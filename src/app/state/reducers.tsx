@@ -20,7 +20,7 @@ import {
     ContentDTO,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardListDTO,
+    GameboardListDTO, IsaacEventPageDTO,
     IsaacTopicSummaryPageDTO,
     ResultsWrapper,
     UserAuthenticationSettingsDTO,
@@ -305,6 +305,16 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
             return null;
         default:
             return currentTopic;
+    }
+};
+
+type EventsState = {events: IsaacEventPageDTO[]; total: number} | null;
+export const events = (events: EventsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENTS_RESPONSE_SUCCESS:
+            return {events: action.events, total: action.total};
+        default:
+            return events;
     }
 };
 
@@ -633,6 +643,7 @@ const appReducer = combineReducers({
     boards,
     assignmentsByMe,
     progress,
+    events,
     fragments
 });
 
@@ -661,6 +672,7 @@ export type AppState = undefined | {
     boards: BoardsState;
     assignmentsByMe: AssignmentsState;
     progress: ProgressState;
+    events: EventsState;
     fragments: FragmentsState;
 }
 

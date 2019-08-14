@@ -32,7 +32,6 @@ interface SearchPageProps {
     searchResults: ResultsWrapper<ContentSummaryDTO> | null;
     userPreferences: UserPreferencesDTO | null;
     userRole: Role | null;
-    queryParams: {query?: string; types?: string};
     history: History;
     location: Location;
     fetchSearch: (query: string, types: string) => void;

@@ -216,6 +216,10 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
 
+    | {type: ACTION_TYPE.EVENTS_REQUEST}
+    | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; events: ApiTypes.IsaacEventPageDTO[]; total: number}
+    | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
 

@@ -50,6 +50,7 @@ import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
 import {isTeacher} from "../services/user";
 import ReactGA from "react-ga";
+import {TypeFilter} from "../components/pages/Events";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -585,7 +586,7 @@ export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatc
     }
 };
 
-// Page fragments
+// Page Fragments
 export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.FRAGMENT_REQUEST, id});
     try {
@@ -595,7 +596,6 @@ export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) 
         dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE, id});
     }
 };
-
 
 // Questions
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
@@ -709,13 +709,11 @@ export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     // Generic error handling covers errors here
 };
 
-
 export const loadAssignmentsOwnedByMe = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST});
     const assignmentsResponse = await api.assignments.getAssignmentsOwnedByMe();
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
 };
-
 
 export const loadProgress = (assignment: AssignmentDTO) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     // Don't request this again if it has already been fetched successfully
@@ -829,7 +827,6 @@ export const getAdminSiteStats = () => async (dispatch: Dispatch<Action>) => {
 };
 
 // Groups
-
 export const loadGroups = (archivedGroupsOnly: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_REQUEST});
     try {
@@ -993,8 +990,7 @@ export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_
     }
 };
 
-// boards
-
+// Gameboards
 export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => async (dispatch: Dispatch<Action>) => {
     const accumulate = startIndex != 0;
     dispatch({type: ACTION_TYPE.BOARDS_REQUEST, accumulate});
@@ -1090,6 +1086,21 @@ export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>,
         boards: {totalResults: undefined, results: [board.data]},
         accumulate
     });
+};
+
+// Events
+export const getEventsList = (
+    startIndex: number, eventsPerPage: number, filterEventsByType: TypeFilter | null,
+    showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
+) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
+        const response = await api.events.get(startIndex, eventsPerPage, filterEventsByType, showActiveOnly, showInactiveOnly, showBookedOnly);
+        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, events: response.data.results, total: response.data.totalResults});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Events request failed", e));
+    }
 };
 
 // Content Errors

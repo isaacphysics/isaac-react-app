@@ -4,6 +4,7 @@ import * as ApiTypes from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {ActualBoardLimit, BoardOrder, LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
+import {TypeFilter} from "../components/pages/Events";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -276,6 +277,19 @@ export const api = {
         },
         getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${boardId}`);
+        }
+    },
+    events: {
+        get: (
+            startIndex: number, eventsPerPage: number, filterEventsByType: TypeFilter | null,
+            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
+        ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
+            /* eslint-disable @typescript-eslint/camelcase */
+            return endpoint.get(`/events`, {params: {
+                start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
+                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
+            }});
+            /* eslint-enable @typescript-eslint/camelcase */
         }
     },
     logger: {
