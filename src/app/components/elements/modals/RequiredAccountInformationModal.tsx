@@ -20,6 +20,7 @@ import {Col} from "reactstrap";
 import {CardBody} from "reactstrap";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
+import {Link} from "react-router-dom";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -56,24 +57,23 @@ const RequiredAccountInfoBody = () => {
         }
     }
 
-    return <RS.Form onSubmit={formSubmission}>
-        <RS.CardBody className="py-0">
-            Providing a few extra pieces of information will help us, and the Department for Education,
-            judge the efficacy of this platform.
+    const allUserFieldsAreValid = validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserSchool(initialUserValue);
 
-            <div className="pb-0 text-right text-muted required-before">
+    return <RS.Form onSubmit={formSubmission}>
+        {!allUserFieldsAreValid && <RS.CardBody className="py-0">
+            <div className="text-right text-muted required-before">
                 Required
             </div>
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {!validateUserSchool(initialUserValue) && !validateUserGender(initialUserValue) && <RS.Col>
+                {!(validateUserSchool(initialUserValue) && validateUserGender(initialUserValue)) && <RS.Col>
                     {!validateUserGender(initialUserValue) && <div>
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                             submissionAttempted={submissionAttempted} idPrefix="modal"
                         />
                     </div>}
-                    {!validateSubjectInterests(initialSubjectInterestsValue) && <div className="">
+                    {!validateSubjectInterests(initialSubjectInterestsValue) && <div>
                         <StudyingCsInput
                             subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
                             submissionAttempted={submissionAttempted} idPrefix="modal-"
@@ -87,14 +87,19 @@ const RequiredAccountInfoBody = () => {
                     />
                 </RS.Col>}
             </RS.Row>
-        </RS.CardBody>
+            <div className="text-muted pb-4">
+                To find out how the data you provide is used, please read our <a target="_" href="/privacy">privacy policy</a>.
+            </div>
+        </RS.CardBody>}
 
-        {!validateEmailPreferences(initialEmailPreferencesValue) &&
+        {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <hr className="text-center" />}
+
+        {!validateEmailPreferences(initialEmailPreferencesValue) && <div>
             <UserEmailPreference
                 emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                 submissionAttempted={submissionAttempted} idPrefix="modal-"
             />
-        }
+        </div>}
 
         {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate) && <div>
             <h4 role="alert" className="text-danger text-center mb-4">
