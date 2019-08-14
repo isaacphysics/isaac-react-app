@@ -2,7 +2,12 @@ import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row, 
 import {SubjectInterests, UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../services/constants";
 import React, {ChangeEvent} from "react";
-import {validateEmail, validateSubjectInterests, validateUserSchool} from "../../services/validation";
+import {
+    validateEmail,
+    validateSubjectInterests,
+    validateUserGender,
+    validateUserSchool
+} from "../../services/validation";
 import {SchoolInput} from "./inputs/SchoolInput";
 import {DobInput} from "./inputs/DobInput";
 import {StudyingCsInput} from "./inputs/StudyingCsInput";
@@ -25,6 +30,12 @@ export const UserDetails = (props: UserDetailsProps) => {
         subjectInterests, setSubjectInterests,
         submissionAttempted
     } = props;
+
+    const allRequiredFieldsValid = userToUpdate && subjectInterests &&
+        validateEmail(userToUpdate.email) &&
+        validateUserGender(userToUpdate) &&
+        validateUserSchool(userToUpdate) &&
+        validateSubjectInterests(subjectInterests);
 
     return <CardBody className="pt-0">
         <Row>
@@ -144,10 +155,8 @@ export const UserDetails = (props: UserDetailsProps) => {
             </Col>
         </Row>}
 
-        {submissionAttempted && !(validateEmail(userToUpdate.email) && validateUserSchool(userToUpdate) && validateSubjectInterests(subjectInterests)) &&
-            <h4 role="alert" className="text-danger text-center mt-4 mb-3">
-                Required information in this form is not set
-            </h4>
-        }
+        {submissionAttempted && !allRequiredFieldsValid && <h4 role="alert" className="text-danger text-center mt-4 mb-3">
+            Required information in this form is not set
+        </h4>}
     </CardBody>
 };

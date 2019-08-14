@@ -33,7 +33,7 @@ import {
     isDobOverThirteen,
     validateEmail,
     validateEmailPreferences,
-    validatePassword, validateSubjectInterests,
+    validatePassword, validateSubjectInterests, validateUserGender,
     validateUserSchool
 } from "../../services/validation";
 import queryString from "query-string";
@@ -154,6 +154,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
             validateUserSchool(userToUpdate) &&
+            validateUserGender(userToUpdate) &&
             validateSubjectInterests(subjectInterests) &&
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
             (!userToUpdate.password || isNewPasswordConfirmed)) {

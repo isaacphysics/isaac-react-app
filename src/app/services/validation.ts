@@ -50,6 +50,10 @@ export const validateUserSchool = (user?: ValidationUser | null) => {
     );
 };
 
+export const validateUserGender = (user?: ValidationUser | null) => {
+    return !!(user && user.gender);
+};
+
 const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
     if (dateOfAction) {
         const now = new Date();
@@ -65,6 +69,7 @@ export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null) {
     return user && userPreferences &&
         validateUserSchool(user) &&
+        validateUserGender(user) &&
         validateEmailPreferences(userPreferences.EMAIL_PREFERENCE) &&
         validateSubjectInterests(userPreferences.SUBJECT_INTEREST);
 }
