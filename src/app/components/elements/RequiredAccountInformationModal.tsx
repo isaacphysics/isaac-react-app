@@ -12,13 +12,13 @@ import {
 } from "../../services/validation";
 import {isMobile} from "../../services/device";
 import {isLoggedIn} from "../../services/user";
-import {TrueFalseRadioInput} from "./TrueFalseRadioInput";
-import {SchoolInput} from "./SchoolInput";
-import {DobInput} from "./DobInput";
+import {TrueFalseRadioInput} from "./inputs/TrueFalseRadioInput";
+import {SchoolInput} from "./inputs/SchoolInput";
+import {DobInput} from "./inputs/DobInput";
 import {Row} from "reactstrap";
 import {Col} from "reactstrap";
 import {CardBody} from "reactstrap";
-import {StudyingCsInput} from "./StudyingCsInput";
+import {StudyingCsInput} from "./inputs/StudyingCsInput";
 
 const RequiredAccountInfoBody = () => {
     // Redux state

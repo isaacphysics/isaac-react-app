@@ -24,7 +24,7 @@ import {isDobOverThirteen, validateEmail, validatePassword} from "../../services
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistence from "../../services/localStorage"
 import {KEY} from "../../services/localStorage"
-import {DateInput} from "../elements/DateInput";
+import {DateInput} from "../elements/inputs/DateInput";
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {Redirect} from "react-router";
 

@@ -1,6 +1,6 @@
 import React from "react";
 import * as RS from "reactstrap";
-import {SubjectInterests} from "../../../IsaacAppTypes";
+import {SubjectInterests} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "./TrueFalseRadioInput";
 
 interface StudyingCsInputProps {

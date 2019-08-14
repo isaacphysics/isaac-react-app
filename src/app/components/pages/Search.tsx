@@ -16,7 +16,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
 import {ShortcutResponses, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom, filterOnExamBoard} from "../../services/examBoard";
-import {AnonUserExamBoardPicker} from "../elements/AnonUserExamBoardPicker";
+import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
 
 const stateToProps = (state: AppState) => {
     return {

@@ -1,8 +1,8 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
-import {School, ValidationUser} from "../../../IsaacAppTypes";
-import {api} from "../../services/api";
-import {validateUserSchool} from "../../services/validation";
+import {School, ValidationUser} from "../../../../IsaacAppTypes";
+import {api} from "../../../services/api";
+import {validateUserSchool} from "../../../services/validation";
 
 interface SchoolInputProps {
     userToUpdate: ValidationUser;

@@ -3,9 +3,9 @@ import {SubjectInterests, UserExamPreferences, ValidationUser} from "../../../Is
 import {EXAM_BOARD} from "../../services/constants";
 import React, {ChangeEvent} from "react";
 import {validateEmail, validateSubjectInterests, validateUserSchool} from "../../services/validation";
-import {SchoolInput} from "./SchoolInput";
-import {DobInput} from "./DobInput";
-import {StudyingCsInput} from "./StudyingCsInput";
+import {SchoolInput} from "./inputs/SchoolInput";
+import {DobInput} from "./inputs/DobInput";
+import {StudyingCsInput} from "./inputs/StudyingCsInput";
 
 interface UserDetailsProps {
     examPreferences: UserExamPreferences;
