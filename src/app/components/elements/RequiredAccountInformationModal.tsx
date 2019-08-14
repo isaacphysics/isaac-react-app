@@ -8,7 +8,7 @@ import {AppState} from "../../state/reducers";
 import {
     allRequiredInformationIsPresent,
     validateEmailPreferences,
-    validateSubjectInterests, validateUserSchool
+    validateSubjectInterests, validateUserGender, validateUserSchool
 } from "../../services/validation";
 import {isMobile} from "../../services/device";
 import {isLoggedIn} from "../../services/user";
@@ -19,6 +19,7 @@ import {Row} from "reactstrap";
 import {Col} from "reactstrap";
 import {CardBody} from "reactstrap";
 import {StudyingCsInput} from "./inputs/StudyingCsInput";
+import {GenderInput} from "./inputs/GenderInput";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -65,16 +66,24 @@ const RequiredAccountInfoBody = () => {
             </div>
 
             <RS.Row className="d-flex flex-wrap my-2">
+                {!validateUserSchool(initialUserValue) && !validateUserGender(initialUserValue) && <RS.Col>
+                    {!validateUserGender(initialUserValue) && <div>
+                        <GenderInput
+                            userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                            submissionAttempted={submissionAttempted} idPrefix="modal"
+                        />
+                    </div>}
+                    {!validateSubjectInterests(initialSubjectInterestsValue) && <div className="">
+                        <StudyingCsInput
+                            subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
+                            submissionAttempted={submissionAttempted} idPrefix="modal-"
+                        />
+                    </div>}
+                </RS.Col>}
                 {!validateUserSchool(initialUserValue) && <RS.Col>
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
-                    />
-                </RS.Col>}
-                {!validateSubjectInterests(initialSubjectInterestsValue) && <RS.Col className="mt-4 pt-1">
-                    <StudyingCsInput
-                        subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
-                        submissionAttempted={submissionAttempted} idPrefix="modal-"
                     />
                 </RS.Col>}
             </RS.Row>

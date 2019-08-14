@@ -97,14 +97,9 @@ export const UserDetails = (props: UserDetailsProps) => {
         </Row>
         <Row>
             <Col md={6}>
+                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
                 <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
-            <Col md={6}>
-                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
-            </Col>
-        </Row>
-
-        <Row>
             <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2" htmlFor="exam-board-select">
@@ -128,12 +123,9 @@ export const UserDetails = (props: UserDetailsProps) => {
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>
                 </FormGroup>
-            </Col>
-            <Col md={6} className="mt-4 pt-1">
-                <StudyingCsInput
-                    subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
-                    submissionAttempted={submissionAttempted}
-                />
+                <div className="mt-5 pt-1">
+                    <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
+                </div>
             </Col>
         </Row>
 
