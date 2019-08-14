@@ -87,11 +87,11 @@ const RequiredAccountInfoBody = () => {
             />
         }
 
-        {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate) &&
+        {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate) && <div>
             <h4 role="alert" className="text-danger text-center mb-4">
-                Some required information is not set
+                Required information in this form is not set
             </h4>
-        }
+        </div>}
 
         <RS.Row className="text-center border-top p-3 p-sm-4">
             <RS.Col md={{size: 6, offset: 3}}>

@@ -5,7 +5,6 @@ import {
     ValidationUser
 } from "../../IsaacAppTypes";
 
-
 export const validateEmail = (email?: string) => {
     return email && email.length > 0 && email.includes("@");
 };
@@ -51,7 +50,7 @@ export const validateUserSchool = (user?: ValidationUser | null) => {
 };
 
 export const validateUserGender = (user?: ValidationUser | null) => {
-    return !!(user && user.gender);
+    return user && user.gender && user.gender !== "UNKNOWN";
 };
 
 const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {

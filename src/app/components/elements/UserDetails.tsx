@@ -107,9 +107,11 @@ export const UserDetails = (props: UserDetailsProps) => {
         <Row>
             <Col md={6}>
                 <FormGroup>
-                    <Label className="d-inline-block pr-2" for="examBoardSelect">Exam board</Label>
+                    <Label className="d-inline-block pr-2" htmlFor="exam-board-select">
+                        Exam board
+                    </Label>
                     <Input
-                        type="select" name="select" id="examBoardSelect"
+                        type="select" name="select" id="exam-board-select"
                         value={
                             (examPreferences && examPreferences[EXAM_BOARD.OCR]) ? EXAM_BOARD.OCR : EXAM_BOARD.AQA
                         }
