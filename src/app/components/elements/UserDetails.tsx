@@ -6,6 +6,7 @@ import {validateEmail, validateSubjectInterests, validateUserSchool} from "../..
 import {SchoolInput} from "./inputs/SchoolInput";
 import {DobInput} from "./inputs/DobInput";
 import {StudyingCsInput} from "./inputs/StudyingCsInput";
+import {GenderInput} from "./inputs/GenderInput";
 
 interface UserDetailsProps {
     examPreferences: UserExamPreferences;
@@ -88,47 +89,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
             <Col md={6}>
-                <FormGroup>
-                    <fieldset>
-                        <legend>Gender</legend>
-                        <Row>
-                            <Col size={6} lg={4}>
-                                <CustomInput
-                                    id="gender-female" type="radio"
-                                    name="gender" label="Female"
-                                    defaultChecked={userToUpdate.gender === 'FEMALE'}
-                                    onChange={
-                                        (e: React.ChangeEvent<HTMLInputElement>) => {
-                                            setUserToUpdate(Object.assign({}, userToUpdate, {gender: 'FEMALE'}))
-                                        }
-                                    }
-                                />
-                            </Col>
-                            <Col size={6} lg={4}>
-                                <CustomInput
-                                    id="gender-male" type="radio"
-                                    name="gender" label="Male"
-                                    defaultChecked={userToUpdate.gender === 'MALE'}
-                                    onChange={
-                                        (e: React.ChangeEvent<HTMLInputElement>) => {
-                                            setUserToUpdate(Object.assign({}, userToUpdate, {gender: 'MALE'}))
-                                        }
-                                    }/>
-                            </Col>
-                            <Col size={6} lg={4}>
-                                <CustomInput
-                                    id="gender-other" type="radio"
-                                    name="gender" label="Other"
-                                    defaultChecked={userToUpdate.gender === 'OTHER'}
-                                    onChange={
-                                        (e: React.ChangeEvent<HTMLInputElement>) => {
-                                            setUserToUpdate(Object.assign({}, userToUpdate, {gender: 'OTHER'}))
-                                        }
-                                    }/>
-                            </Col>
-                        </Row>
-                    </fieldset>
-                </FormGroup>
+                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
         </Row>
 
