@@ -15,7 +15,7 @@ function emailPreferencesAreNotSet(userPreferences: UserPreferencesDTO | null) {
 }
 
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async action => {
-    await dispatch(action);
+    const dispatchResult = await dispatch(action);
 
     const state: AppState = middlewareApi.getState();
     if([ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type)) {
@@ -27,4 +27,6 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
             await dispatch(openActiveModal(userPreferencesModal) as any);
         }
     }
+
+    return dispatchResult;
 };
