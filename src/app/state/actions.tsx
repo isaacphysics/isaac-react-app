@@ -695,9 +695,9 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
         }
     } catch (e) {
         // eslint-disable-next-line no-console
-        console.error("Error saving board.");
+        console.error("Error saving gameboard.");
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Error saving board", e));
+        dispatch(showErrorToastIfNeeded("Error saving gameboard", e));
     }
 };
 

@@ -107,10 +107,10 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
 
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
-                                    title="Create a board" comingSoon linkDestination="/assignments" linkText="Create Boards"
+                                    title="Create a gameboard" comingSoon linkDestination="/assignments" linkText="Create Boards"
                                     amountText={<>You have created <span>-999</span> gameboards.</>}
                                 >
-                                    Create custom boards to set as assignments to your groups.
+                                    Create custom gameboards to set as assignments to your groups.
                                 </ActionCard>
                             </RS.ListGroupItem>
                         </RS.ListGroup>
