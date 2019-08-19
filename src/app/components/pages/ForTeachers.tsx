@@ -85,7 +85,7 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
                         <RS.ListGroup className="my-3 d-block d-md-flex flex-row flex-wrap align-items-stretch link-list bg-transparent">
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
-                                    title="Create a group" linkDestination="/groups" linkText="Manage Groups"
+                                    title="Create a group" linkDestination="/groups" linkText="Manage groups"
                                     amountText={<>
                                         You have created <span>{numberOfGroupsCreated}</span> group{numberOfGroupsCreated !== 1 && "s"}.
                                     </>}
@@ -96,7 +96,7 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
 
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
-                                    title="Set an assignment" linkDestination="/set_assignments" linkText="Set Assignments"
+                                    title="Set an assignment" linkDestination="/set_assignments" linkText="Set assignments"
                                     amountText={<>
                                         You have set <span>{numberOfAssignmentsSet}</span> assignment{numberOfAssignmentsSet !== 1 && "s"}.
                                     </>}
@@ -107,7 +107,7 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
 
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
-                                    title="Create a gameboard" comingSoon linkDestination="/assignments" linkText="Create Boards"
+                                    title="Create a gameboard" comingSoon linkDestination="/assignments" linkText="Create gameboards"
                                     amountText={<>You have created <span>-999</span> gameboards.</>}
                                 >
                                     Create custom gameboards to set as assignments to your groups.
