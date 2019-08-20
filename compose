@@ -55,7 +55,7 @@ elif [ "$ENV" == "live" ]; then
   exit 1
 elif [ "$ENV" == "test" ]; then
   # Need to add the SQL script that loads the test data to pg-test:
-  TEST_INIT_DATA="      - /local/data/test-db-schema.sql:/docker-entrypoint-initdb.d/test-db-schema.sql"
+  TEST_INIT_DATA="      - /local/data/test-cs-db-schema.sql:/docker-entrypoint-initdb.d/test-db-schema.sql"
   PG_SERVICE="$PG_SERVICE"$'\n'"$TEST_INIT_DATA"
 else
   echo "Must set environment to alpha, dev, staging or test"
