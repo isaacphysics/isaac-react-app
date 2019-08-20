@@ -32,7 +32,7 @@ read -r -d '' PG_SERVICE << EOM
 cs-pg-$ENV:
     container_name: cs-pg-$ENV
     restart: unless-stopped
-    image: postgres:9.6
+    image: postgres:11
     environment:
       POSTGRES_USER: rutherford
       POSTGRES_PASSWORD: rutherf0rd
