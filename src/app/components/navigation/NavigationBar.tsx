@@ -110,7 +110,10 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
 
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
-                        <span className="m-0"><span className="d-md-none d-lg-inline">{"Help and "}</span> Support</span>
+                        <span className="m-0">
+                            <span className="d-md-none d-lg-inline">Help and support</span>
+                            <span className="d-none d-md-inline d-lg-none">Support</span>
+                        </span>
                     </DropdownToggle>
                     <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/support/teacher" className="pl-4 py-3 p-md-3">
