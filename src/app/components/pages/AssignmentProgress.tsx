@@ -452,7 +452,8 @@ const GroupDetails = (props: GroupDetailsProps) => {
                     <div className="key-cell"><span className="passed">&nbsp;</span>
                     </div>
                     <div className="key-description">&ge;{passMark * 100}% correct
-                        <span className="d-none d-xl-inline"> (or Mastery)</span></div>
+                        {/*<span className="d-none d-xl-inline"> (or Mastery)</span>*/}
+                    </div>
                 </li>
                 <li className="d-flex flex-wrap">
                     <div className="key-cell"><span className="in-progress">&nbsp;</span>
