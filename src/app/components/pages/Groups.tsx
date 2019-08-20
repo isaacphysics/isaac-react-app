@@ -192,12 +192,12 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                 <Col xs={5} sm={6} md={5} lg={4}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
                 {group && <Col xs={7} sm={6} md={7} lg={8} className="text-right">
                     <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => showGroupManagersModal()}>
-                        Edit<span className="d-none d-xl-inline">{" "}Group</span>{" "}Managers
+                        Edit<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
                     </Button>
                     <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
                     <span className="d-inline-block d-md-none">&nbsp;</span>
                     <Button size="sm" color="secondary" className="text-white" onClick={() => showGroupInvitationModal(false)}>
-                        Invite Users
+                        Invite users
                     </Button>
                 </Col>}
             </Row>
@@ -350,9 +350,9 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     const groupNameRef = useRef<HTMLInputElement>(null);
 
     const pageHelp = <span>
-        Use this page to manage groups. You can add users to a group by giving them the group token and asking them paste it into their account settings page.
+        Use this page to manage groups. You can add users to a group by giving them the group code and asking them paste it into their account settings page.
         <br />
-        You can find the token for an existing group by selecting the group and clicking <i>Invite Users</i>.
+        You can find the code for an existing group by selecting the group and clicking <i>Invite Users</i>.
     </span>;
 
     return <Container>

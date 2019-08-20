@@ -211,7 +211,7 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
         await api.authentication.logout();
         dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Logout Failed", e));
+        dispatch(showErrorToastIfNeeded("Logout failed", e));
     }
 };
 
@@ -236,7 +236,7 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
         await api.users.passwordReset(params);
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Reset Password Failed", e));
+        dispatch(showErrorToastIfNeeded("Password reset failed", e));
     }
 };
 
@@ -256,7 +256,7 @@ export const handlePasswordReset = (params: {token: string | null; password: str
         await api.users.handlePasswordReset(params);
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
         history.push('/login');
-        dispatch(showToast({color: "success", title: "Password Reset Successfully", body: "Please log in with your new password.", timeout: 5000}) as any);
+        dispatch(showToast({color: "success", title: "Password reset successful", body: "Please log in with your new password.", timeout: 5000}) as any);
     } catch(e) {
         dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
     }
@@ -270,7 +270,7 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider) =>
         dispatch({type: ACTION_TYPE.AUTHENTICATION_REDIRECT, provider, redirectUrl: redirectUrl});
         window.location.href = redirectUrl;
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Login Redirect Failed", e));
+        dispatch(showErrorToastIfNeeded("Login redirect failed", e));
     }
     // TODO MT handle case when user is already logged in
 };
@@ -366,14 +366,14 @@ export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) 
         });
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Loading Authorised Teachers Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading authorised teachers failed", e));
     }
 };
 
 export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
     if (!userSubmittedAuthenticationToken) {
         dispatch(showToast({
-            color: "danger", title: "No Token Provided", body: "You have to enter a token!"}) as any);
+            color: "danger", title: "No group code provided", body: "You have to enter a group code!"}) as any);
         return;
     }
 
@@ -399,12 +399,12 @@ export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToke
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_FAILURE});
         if (e.status == 429) {
             dispatch(showToast({
-                color: "danger", title: "Too Many Attempts", timeout: 5000,
-                body: "You have entered too many tokens. Please check your code with your teacher and try again later!"
+                color: "danger", title: "Too many attempts", timeout: 5000,
+                body: "You have entered too many group codes. Please check your code with your teacher and try again later!"
             }) as any);
         } else {
             dispatch(showToast({
-                color: "danger", title: "Teacher Connection Failed", timeout: 5000,
+                color: "danger", title: "Teacher connection failed", timeout: 5000,
                 body: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
             }) as any);
         }
@@ -418,7 +418,7 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
         dispatch(getActiveAuthorisations() as any);
         dispatch(getMyGroupMemberships() as any);
         dispatch(showToast({
-            color: "success", title: "Granted Access", timeout: 5000,
+            color: "success", title: "Granted access", timeout: 5000,
             body: "You have granted access to your data."
         }) as any);
         const state = getState();
@@ -433,7 +433,7 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_FAILURE});
         dispatch(showToast({
-            color: "danger", title: "Teacher Connection Failed", timeout: 5000,
+            color: "danger", title: "Teacher connection failed", timeout: 5000,
             body: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
         }) as any);
     }
@@ -448,14 +448,14 @@ export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO
         await api.authorisations.revoke(userToRevoke.id as number);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_SUCCESS});
         dispatch(showToast({
-            color: "success", title: "Access Revoked", timeout: 5000,
+            color: "success", title: "Access revoked", timeout: 5000,
             body: "You have revoked access to your data."
         }) as any)
         dispatch(getActiveAuthorisations() as any);
         dispatch(closeActiveModal() as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Revoke Operation Failed", e));
+        dispatch(showErrorToastIfNeeded("Revoke operation failed", e));
     }
 };
 
@@ -470,7 +470,7 @@ export const getStudentAuthorisations = () => async (dispatch: Dispatch<Action>)
         });
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Loading Authorised Students Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading authorised students failed", e));
     }
 };
 
@@ -485,12 +485,12 @@ export const releaseAuthorisation = (student: UserSummaryDTO) => async (dispatch
         dispatch(getStudentAuthorisations() as any);
         dispatch(closeActiveModal() as any);
         dispatch(showToast({
-            color: "success", title: "Access Removed", timeout: 5000,
+            color: "success", title: "Access removed", timeout: 5000,
             body: "You have ended your access to your student's data."
         }) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Revoke Operation Failed", e));
+        dispatch(showErrorToastIfNeeded("Revoke operation failed", e));
     }
 };
 
@@ -505,12 +505,12 @@ export const releaseAllAuthorisations = () => async (dispatch: Dispatch<Action>)
         dispatch(getStudentAuthorisations() as any);
         dispatch(closeActiveModal() as any);
         dispatch(showToast({
-            color: "success", title: "Access Removed", timeout: 5000,
+            color: "success", title: "Access removed", timeout: 5000,
             body: "You have ended your access to all of your students' data."
         }) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Revoke Operation Failed", e));
+        dispatch(showErrorToastIfNeeded("Revoke operation failed", e));
     }
 };
 
@@ -638,7 +638,7 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
         const softLimit = isAnonymous ? 3 : 10;
         if (lastAttempt.attempts >= softLimit && !response.data.correct) {
             dispatch(showToast({
-                color: "warning", title: "Approaching Attempts Limit", timeout: 10000,
+                color: "warning", title: "Approaching attempts limit", timeout: 10000,
                 body: "You have entered several guesses for this question; soon it will be temporarily locked."
             }) as any);
         }
@@ -648,8 +648,8 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
 
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock});
             dispatch(showToast({
-                color: "danger", title: "Too Many Attempts", timeout: 10000,
-                body: "You have entered too many attempts for this question. Please try again later!"
+                color: "danger", title: "Too many attempts", timeout: 10000,
+                body: "You have made too many attempts at this question. Please try again later!"
             }) as any);
             setTimeout( () => {
                 dispatch({type: ACTION_TYPE.QUESTION_UNLOCK, questionId});
@@ -657,8 +657,8 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
         } else {
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId});
             dispatch(showToast({
-                color: "danger", title: "Question Attempt Failed", timeout: 5000,
-                body: "Your submission could not be processed. Please try again."
+                color: "danger", title: "Question attempt failed", timeout: 5000,
+                body: "Your answer could not be checked. Please try again."
             }) as any);
         }
     }
@@ -696,9 +696,9 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
         }
     } catch (e) {
         // eslint-disable-next-line no-console
-        console.error("Error saving board.");
+        console.error("Error saving gameboard.");
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Error saving board", e));
+        dispatch(showErrorToastIfNeeded("Error saving gameboard", e));
     }
 };
 

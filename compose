@@ -2,7 +2,7 @@
 
 if [ $# -eq 0 ]
   then
-    echo "Usage: compose [alpha|dev|staging|test] VERSION"
+    echo "Usage: compose [dev|staging|test] VERSION"
     exit 1
 fi
 
@@ -11,7 +11,7 @@ APP_VERSION=$2
 
 if [ $2 = "dev" ] || [ $2 = "staging" ] || [ $2 = "test" ] || [ $2 = "live" ]; then
   echo "Environment is now first argument to this script. Sorry James."
-  echo "Usage: compose [alpha|dev|staging|test] VERSION"
+  echo "Usage: compose [dev|staging|test] VERSION"
   exit 1
 fi
 shift 2
@@ -32,7 +32,7 @@ read -r -d '' PG_SERVICE << EOM
 cs-pg-$ENV:
     container_name: cs-pg-$ENV
     restart: unless-stopped
-    image: postgres:9.6
+    image: postgres:11
     environment:
       POSTGRES_USER: rutherford
       POSTGRES_PASSWORD: rutherf0rd
@@ -44,9 +44,7 @@ cs-pg-$ENV:
 EOM
 
 
-if [ "$ENV" == "alpha" ]; then
-  : # Continue
-elif [ "$ENV" == "dev" ]; then
+if [ "$ENV" == "dev" ]; then
   : # Continue
 elif [ "$ENV" == "staging" ]; then
   : # Continue
@@ -55,10 +53,10 @@ elif [ "$ENV" == "live" ]; then
   exit 1
 elif [ "$ENV" == "test" ]; then
   # Need to add the SQL script that loads the test data to pg-test:
-  TEST_INIT_DATA="      - /local/data/test-db-schema.sql:/docker-entrypoint-initdb.d/test-db-schema.sql"
+  TEST_INIT_DATA="      - /local/data/test-cs-db-schema.sql:/docker-entrypoint-initdb.d/test-db-schema.sql"
   PG_SERVICE="$PG_SERVICE"$'\n'"$TEST_INIT_DATA"
 else
-  echo "Must set environment to alpha, dev, staging or test"
+  echo "Must set environment to dev, staging or test"
   exit 1
 fi
 

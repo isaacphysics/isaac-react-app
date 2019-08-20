@@ -452,7 +452,8 @@ const GroupDetails = (props: GroupDetailsProps) => {
                     <div className="key-cell"><span className="passed">&nbsp;</span>
                     </div>
                     <div className="key-description">&ge;{passMark * 100}% correct
-                        <span className="d-none d-xl-inline"> (or Mastery)</span></div>
+                        {/*<span className="d-none d-xl-inline"> (or Mastery)</span>*/}
+                    </div>
                 </li>
                 <li className="d-flex flex-wrap">
                     <div className="key-cell"><span className="in-progress">&nbsp;</span>
@@ -561,7 +562,7 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
                 {data && data.map(group => <GroupAssignmentProgress key={group.id} {...props} group={group} pageSettings={pageSettings} />)}
                 {data && data.length == 0 && <Container className="py-5">
                     <h3 className="text-center">
-                        You&apos;ll need to create a group using <Link to="/groups">Manage Groups</Link> to set an assignment.
+                        You&apos;ll need to create a group using <Link to="/groups">Manage groups</Link> to set an assignment.
                     </h3>
                 </Container>}
             </ShowLoading>
