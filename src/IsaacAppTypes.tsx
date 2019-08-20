@@ -217,7 +217,7 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
 
     | {type: ACTION_TYPE.EVENTS_REQUEST}
-    | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; events: ApiTypes.IsaacEventPageDTO[]; total: number}
+    | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
@@ -390,4 +390,15 @@ export interface AppAssignmentProgress {
     correctQuestionPartsCount: number;
     incorrectQuestionPartsCount: number;
     notAttemptedPartResults: number[];
+}
+
+export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
+    multiDay?: boolean;
+    expired?: boolean;
+    withinBookingDeadline?: boolean;
+    inProgress?: boolean;
+    teacher?: boolean;
+    student?: boolean;
+    virtual?: boolean;
+    field?: "physics" | "maths";
 }
