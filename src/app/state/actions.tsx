@@ -371,7 +371,7 @@ export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) 
 export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
     if (!userSubmittedAuthenticationToken) {
         dispatch(showToast({
-            color: "danger", title: "No Token Provided", body: "You have to enter a token!"}) as any);
+            color: "danger", title: "No group code provided", body: "You have to enter a group code!"}) as any);
         return;
     }
 
@@ -397,8 +397,8 @@ export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToke
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_FAILURE});
         if (e.status == 429) {
             dispatch(showToast({
-                color: "danger", title: "Too Many Attempts", timeout: 5000,
-                body: "You have entered too many tokens. Please check your code with your teacher and try again later!"
+                color: "danger", title: "Too many attempts", timeout: 5000,
+                body: "You have entered too many group codes. Please check your code with your teacher and try again later!"
             }) as any);
         } else {
             dispatch(showToast({

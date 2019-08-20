@@ -350,9 +350,9 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     const groupNameRef = useRef<HTMLInputElement>(null);
 
     const pageHelp = <span>
-        Use this page to manage groups. You can add users to a group by giving them the group token and asking them paste it into their account settings page.
+        Use this page to manage groups. You can add users to a group by giving them the group code and asking them paste it into their account settings page.
         <br />
-        You can find the token for an existing group by selecting the group and clicking <i>Invite Users</i>.
+        You can find the code for an existing group by selecting the group and clicking <i>Invite Users</i>.
     </span>;
 
     return <Container>
