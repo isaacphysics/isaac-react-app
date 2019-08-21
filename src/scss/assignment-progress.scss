@@ -38,8 +38,8 @@
   align-self: stretch;
   display: flex;
   font-weight: bold;
-  padding-left: 0.5rem;
   flex-shrink: 1;
+  padding: 0.5rem 1.5rem;
   @include respond-above(sm) {
     font-size: 1.1rem;
   }
@@ -183,10 +183,6 @@ $failed-bg-size: 25%;
     }
   }
 
-  .key-cell {
-    float: left;
-  }
-
   .key-cell span {
     border: 1px solid black;
     display: inline-block;
@@ -195,10 +191,13 @@ $failed-bg-size: 25%;
   }
 
   .key-description {
-    text-align: center;
+    text-align: left;
     font-weight: 400;
     margin: 0;
     padding: 0;
+    @include respond-above(sm) {
+      margin-left: 0.75rem;
+    }
   }
 }
 
@@ -261,11 +260,11 @@ $failed-bg-size: 25%;
   counter-increment: board-count;
   content: counter(board-count) ". ";
   display: inline-block;
-  padding: 3px 0.5rem 0;
+  padding: 0.5rem 1rem;
   font-weight: bold;
 }
 .assignment-progress-gameboard .gameboard-title span {
-  padding-left: 0.5rem;
+  padding-left: 0.75rem;
   font-size: 1.2rem;
 }
 .gameboard-due-date {
@@ -277,7 +276,7 @@ $failed-bg-size: 25%;
 .gameboard-links {
   align-items: baseline;
   display: flex;
-  padding-top: 2px;
+  padding-right: 0.5rem;
   margin-left: auto;
 }
 .gameboard-links > * {
@@ -299,6 +298,7 @@ $failed-bg-size: 25%;
 }
 
 .progress-questions {
+  border-top: 1px solid $gray-118;
   display: flex;
   justify-content: space-between;
   @include respond-above(sm) {
@@ -339,7 +339,7 @@ $failed-bg-size: 25%;
 
 .progress-table {
 
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: visible;
   padding-bottom: 1px; // Fixes odd broswer bugs around the magic :after borders
 
@@ -460,6 +460,7 @@ $failed-bg-size: 25%;
     @include table-sticky;
     left: 0;
     top: 0;
+    width: 195px;
 
     &:after {
       @include after-border;

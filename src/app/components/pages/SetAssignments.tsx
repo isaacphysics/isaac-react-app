@@ -139,20 +139,20 @@ const Board = (props: BoardProps) => {
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
             if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
-                alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your Assigned Boards or My boards page.");
+                alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.");
             } else {
-                showToast({color: "failure", title: "Board Deletion Not Allowed", body: "You have groups assigned to this gameboard. To delete this board, you must unassign all groups.", timeout: 5000});
+                showToast({color: "failure", title: "Gameboard Deletion Not Allowed", body: "You have groups assigned to this gameboard. To delete this gameboard, you must unassign all groups.", timeout: 5000});
                 return;
             }
         }
 
-        if (confirm(`You are about to delete ${board.title} board?`)) {
+        if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
             deleteBoard(board);
         }
     }
 
     function confirmUnassignBoard(group: UserGroupDTO) {
-        if (confirm("Are you sure you want to unassign this board from this group?")) {
+        if (confirm("Are you sure you want to unassign this gameboard from this group?")) {
             unassignBoard(board, group);
         }
     }
@@ -163,13 +163,13 @@ const Board = (props: BoardProps) => {
 
     return <Card className="board-card">
         <CardBody className="pb-4 pt-4">
-            <button className="close" onClick={confirmDeleteBoard} aria-label="Delete board">×</button>
+            <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
             <button onClick={() => setShowAssignments(!showAssignments)} className="groups-assigned subject-compsci" id={hexagonId}>
                 <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
                 group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
                 {board.assignedGroups && <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length == 0 ?
                     "No groups have been assigned."
-                    : ("Board assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}</UncontrolledTooltip>
+                    : ("Gameboard assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}</UncontrolledTooltip>
                 }
             </button>
             <aside>

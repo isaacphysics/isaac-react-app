@@ -50,6 +50,7 @@ import {ForTeachers} from "../pages/ForTeachers";
 import {AddGameboard} from "../handlers/AddGameboard";
 
 import "../../services/scrollManager";
+import "../../services/polyfills";
 import {isTest} from "../../services/constants";
 
 export const IsaacApp = () => {
@@ -134,6 +135,7 @@ export const IsaacApp = () => {
                     <TrackedRoute path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}} />
                     <TrackedRoute path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
                     <TrackedRoute path="/coming_soon" component={ComingSoon} />
+                    <TrackedRoute path="/teaching_order" component={Generic} componentProps={{pageIdOverride: "teaching_order"}} />
                     <TrackedRoute path="/equality" component={Equality} />
 
                     {/* Support pages */}

@@ -14,35 +14,37 @@ export const ComingSoon = () => <Container>
                 <Link to="/contact?subject=Beta%20Feedback">hear your feedback</Link>
                 {", so please get in touch."}
             </p>
+            <p>
+                {"We will publish multiple new topics at the start of each term, so you will have Isaac Computer Science " +
+                "materials available to support your teaching throughout the year." +
+                " Take a look at the "}
+                <a href="/teaching_order">suggested teaching order page</a>
+                {" to see when new topics will be released."}
+            </p>
         </Col>
     </Row>
     <Row className="pb-4">
-        <Col md="6">
-            <p>You can look forward to the following features:</p>
-            <div className="pl-4">
-                <div className="mb-3">
-                    <strong>July 2019</strong>
-                    <p>Progress tracker, assignments, and gameboard features.</p>
-                </div>
-                <div className="mb-3">
-                    <strong>September 2019</strong>
-                    <p>A wider variety of programming, theory topics, and questions, including new question types:</p>
-                    <ul>
-                        <li>Parsons problems</li>
-                        <li>Natural language</li>
-                        <li>Boolean logic equation editor</li>
-                    </ul>
-                </div>
-                <div className="mb-3">
-                    <strong>November 2019</strong>
-                    <p>
-                        More platform features; all topic and question content will be available, providing full coverage of
-                        OCR and AQA A level specifications.
-                    </p>
-                </div>
-            </div>
+        <Col md="7">
+            <p>
+                {"In addition to publishing new content, we will also be adding new features to the platform. " +
+                "This will include a progress tracker, assignments, and question gameboards. " +
+                "We will also launch some new question types:"}
+            </p>
+            <ul>
+                <li>Parsons problems</li>
+                <li>Short answer natural language</li>
+                <li>Boolean logic equation editor</li>
+            </ul>
+            <p>
+                {"We intend to add the following features later in the year:"}
+            </p>
+            <ul>
+                <li>Integrated event booking: book onto our events using your Isaac Computer Science account (Autumn 2019)</li>
+                <li>The ability for teachers to build custom assignments (late 2019 – early 2020)</li>
+                <li>A &lsquo;My progress&rsquo; page for students to track their completion of the resources (late 2019 – early 2020)</li>
+            </ul>
         </Col>
-        <Col md="6">
+        <Col md="5">
             <div className="text-center pt-4">
                 <img src="/assets/ics_spot.svg" className="align-self-center img-fluid" alt="Student illustration" />
             </div>

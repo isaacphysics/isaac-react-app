@@ -21,10 +21,19 @@ import {
 } from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
 import {Action} from "../../IsaacAppTypes";
+import {middleware} from "../../app/state/store";
 
-const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
 const axiosMock = new MockAdapter(endpoint);
+
+describe("middleware",  () => {
+    it("returns any value that the action returns", async () => {
+        const store = mockStore();
+        const expectedResult = 1;
+        const actualResult = await store.dispatch((() => expectedResult) as any);
+        expect(actualResult).toEqual(expectedResult);
+    });
+});
 
 describe("requestCurrentUser action", () => {
     afterEach(() => {
