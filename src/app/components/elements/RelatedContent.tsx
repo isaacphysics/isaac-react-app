@@ -48,22 +48,36 @@ function getURLForContent(content: ContentSummaryDTO) {
 }
 
 export const RelatedContentComponent = ({content, parentPage, logAction}: RelatedContentProps) => {
-    return <div className="simple-card my-3 my-md-5 p-3 p-md-5 text-wrap">
-        <h2 className="mb-4">Related Content</h2>
-        <div className="d-lg-flex">
-            <ListGroup className="w-100 mb-lg-3 mr-lg-3 w-lg-50">
-                {content.map((contentSummary) => (
-                    <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mb-lg-3 mr-lg-3 w-lg-50">
-                        <Link
-                            to={getURLForContent(contentSummary)}
-                            className="lrg-text font-weight-bold"
-                            onClick={() => {logAction(getEventDetails(contentSummary, parentPage))}}
-                        >
-                            {contentSummary.title}
-                        </Link>
-                    </ListGroupItem>
-                ))}
-            </ListGroup>
+    let makeListGroupItem = (contentSummary: ContentSummaryDTO) => (
+        <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mb-lg-3 mr-lg-3">
+            <Link
+                to={getURLForContent(contentSummary)}
+                className="lrg-text font-weight-bold"
+                onClick={() => {logAction(getEventDetails(contentSummary, parentPage))}}
+            >
+                {contentSummary.title}
+            </Link>
+        </ListGroupItem>
+    )
+    return <div className="row">
+        <div className="simple-card my-3 p-3 text-wrap col-lg-5">
+            <h2 className="mb-4">Related questions</h2>
+            <div className="d-lg-flex">
+                <ListGroup className="w-100 mb-lg-3 mr-lg-3 w-lg-50">
+                    {content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION).sort((a, b) => {
+                        if (a.level === b.level) return (a.title || '').localeCompare(b.title || '');
+                        return parseInt(a.level || '-1') > parseInt(b.level || '-1') ? 1 : -1;
+                    }).map((contentSummary) => makeListGroupItem(contentSummary))}
+                </ListGroup>
+            </div>
+        </div>
+        <div className="simple-card my-3 p-3 text-wrap col-lg-5 offset-lg-2">
+            <h2 className="mb-4">Related concepts</h2>
+            <div className="d-lg-flex">
+                <ListGroup className="w-100 mb-lg-3 mr-lg-3 w-lg-50">
+                    {content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT).map((contentSummary) => makeListGroupItem(contentSummary))}
+                </ListGroup>
+            </div>
         </div>
     </div>
 };
