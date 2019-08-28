@@ -25,7 +25,6 @@ const HeaderComponent = ({user}: HeaderProps) => {
                             <Link to="/home">
                                 <img src="/assets/logo.svg" alt="Isaac Computer Science" />
                             </Link>
-                            <div id="beta-banner">beta</div>
                         </div>
 
                         <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none">
