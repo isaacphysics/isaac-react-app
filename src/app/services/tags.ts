@@ -1,4 +1,4 @@
-import {EXAM_BOARD, TAG_HIERARCHY, TAG_ID, TAG_LEVEL} from "./constants";
+import {TAG_HIERARCHY, TAG_ID, TAG_LEVEL} from "./constants";
 
 // TODO this file would benefit from refactoring to being more OO. Many of its contents are lifted form Isaac Physics
 
@@ -7,6 +7,7 @@ interface BaseTag {
     title: string;
     parent?: TAG_ID;
     comingSoon?: boolean;
+    new?: boolean;
 }
 export interface Tag extends BaseTag {
     type: TAG_LEVEL;
@@ -34,9 +35,9 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.gcseProgrammingConcepts, title: "Programming concepts", parent: TAG_ID.gcseToALevel},
     {id: TAG_ID.gcseNetworking, title: "Networking", parent: TAG_ID.gcseToALevel, comingSoon: true},
     {id: TAG_ID.gcseDataRepresentation, title: "Data representation", parent: TAG_ID.gcseToALevel},
-    {id: TAG_ID.gcseSystems, title: "Systems", parent: TAG_ID.gcseToALevel, comingSoon: true},
+    {id: TAG_ID.gcseSystems, title: "Systems", parent: TAG_ID.gcseToALevel, new: true},
     // Data structures and algorithms topics
-    {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: true},
+    {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
     {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: true},
     {id: TAG_ID.modelsOfComputation, title: "Models of computation", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: true},
     {id: TAG_ID.planningAndDebugging, title: "Planning and debugging", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: true},
@@ -51,7 +52,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems},
     {id: TAG_ID.architecture, title: "Architecture", parent: TAG_ID.computerSystems, comingSoon: true},
     {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems, comingSoon: true},
-    {id: TAG_ID.operatingSystemsAndSoftware, title: "Operating systems and software", parent: TAG_ID.computerSystems, comingSoon: true},
+    {id: TAG_ID.operatingSystemsAndSoftware, title: "Operating systems and software", parent: TAG_ID.computerSystems, new: true},
     {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems, comingSoon: true},
     {id: TAG_ID.programmingLanguages, title: "Programming languages", parent: TAG_ID.computerSystems, comingSoon: true},
     // Data and information topics
@@ -79,7 +80,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.structureAndRobustness, title: "Structure & robustness", parent: TAG_ID.proceduralProgramming, comingSoon: true},
     {id: TAG_ID.dataStructuresImplementation, title: "Data structures (implementation)", parent: TAG_ID.proceduralProgramming, comingSoon: true},
     {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.proceduralProgramming, comingSoon: true},
-    {id: TAG_ID.stringManipulation, title: "String manipulation", parent: TAG_ID.proceduralProgramming, comingSoon: true},
+    {id: TAG_ID.stringManipulation, title: "String manipulation", parent: TAG_ID.proceduralProgramming, new: true},
     {id: TAG_ID.guis, title: "GUIs", parent: TAG_ID.proceduralProgramming, comingSoon: true},
     {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.proceduralProgramming, comingSoon: true},
     {id: TAG_ID.softwareProject, title: "Software project", parent: TAG_ID.proceduralProgramming, comingSoon: true},
