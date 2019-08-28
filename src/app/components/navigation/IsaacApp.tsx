@@ -78,8 +78,8 @@ export const IsaacApp = () => {
             <main role="main" className="flex-fill content-body">
                 <Switch>
                     {/* Errors; these paths work but aren't really used */}
-                    <TrackedRoute path={serverError ? undefined : "/error"} component={ServerError} />
-                    <TrackedRoute path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
+                    <TrackedRoute exact path={serverError ? undefined : "/error"} component={ServerError} />
+                    <TrackedRoute exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
                     {/* Special case */}
                     <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
 
@@ -89,16 +89,16 @@ export const IsaacApp = () => {
 
                     <TrackedRoute exact path="/search" component={Search} />
 
-                    <TrackedRoute path="/questions/:questionId" component={Question} />
-                    <TrackedRoute path="/concepts/:conceptId" component={Concept} />
-                    <TrackedRoute path="/pages/:pageId" component={Generic} />
+                    <TrackedRoute exact path="/questions/:questionId" component={Question} />
+                    <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
+                    <TrackedRoute exact path="/pages/:pageId" component={Generic} />
 
                     <TrackedRoute exact path="/topics" component={AllTopics} />
-                    <TrackedRoute path="/topics/:topicName" component={Topic} />
+                    <TrackedRoute exact path="/topics/:topicName" component={Topic} />
 
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
-                    <TrackedRoute path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
-                    <TrackedRoute path="/add_gameboard/:gameboardId" ifUser={isLoggedIn} component={AddGameboard} />
+                    <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
+                    <TrackedRoute exact path="/add_gameboard/:gameboardId" ifUser={isLoggedIn} component={AddGameboard} />
 
                     <Route exact path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
 
@@ -123,8 +123,8 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/login" component={LogIn} />
                     <TrackedRoute exact path="/logout" component={LogOutHandler} />
                     <TrackedRoute exact path="/register" component={Registration} />
-                    <TrackedRoute path="/auth/:provider/callback" component={ProviderCallbackHandler} />
-                    <TrackedRoute path="/resetpassword/:token" component={ResetPasswordHandler}/>
+                    <TrackedRoute exact path="/auth/:provider/callback" component={ProviderCallbackHandler} />
+                    <TrackedRoute exact path="/resetpassword/:token" component={ResetPasswordHandler}/>
                     <TrackedRoute exact path="/verifyemail" ifUser={isLoggedIn} component={EmailAlterHandler}/>
 
                     {/* Static pages */}
@@ -139,7 +139,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/equality" component={Equality} />
 
                     {/* Support pages */}
-                    <TrackedRoute path="/support/:type?/:category?" component={Support} />
+                    <TrackedRoute exact path="/support/:type?/:category?" component={Support} />
 
                     {/* Error pages */}
                     <TrackedRoute component={NotFound} />
