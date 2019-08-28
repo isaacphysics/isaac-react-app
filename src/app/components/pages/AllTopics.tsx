@@ -20,7 +20,7 @@ export const AllTopics = () => {
                 </TextTag>
             </Link>
             {" "}
-            {topic.comingSoon && !topic.new && <Badge color="light" className="border bg-white">Coming soon</Badge>}
+            {topic.comingSoon && !topic.new && <Badge color="light" className="border bg-white">Coming {topic.comingSoon}</Badge>}
             {topic.new && !topic.comingSoon && <Badge color="secondary">New</Badge>}
         </React.Fragment>;
     };
