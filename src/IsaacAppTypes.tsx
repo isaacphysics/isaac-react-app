@@ -387,3 +387,15 @@ export interface AppAssignmentProgress {
     incorrectQuestionPartsCount: number;
     notAttemptedPartResults: number[];
 }
+
+export interface ZxcvbnResult {
+    calc_time: number;
+    crack_times_display: { [key: string]: string };
+    crack_times_seconds: { [key: string]: number };
+    feedback: { [key: string]: any };
+    guesses: number;
+    guesses_log10: number;
+    password: string;
+    score: number;
+    sequence: any;
+}

@@ -16,7 +16,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {LoggedInUser, LoggedInValidationUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {LoggedInUser, LoggedInValidationUser, UserPreferencesDTO, ZxcvbnResult} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
@@ -24,6 +24,7 @@ import {isDobOverThirteen, validateEmail, validatePassword} from "../../services
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistence from "../../services/localStorage"
 import {KEY} from "../../services/localStorage"
+import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../services/passwordStrength"
 import {DateInput} from "../elements/DateInput";
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {Redirect} from "react-router";
@@ -60,9 +61,13 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
             password: null,
         })
     );
+
+    loadZxcvbnIfNotPresent();
+
     const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword);
     const [dobCheckboxChecked, setDobCheckboxChecked] = useState(false);
     const [attemptedSignUp, setAttemptedSignUp] = useState(false);
+    const [passwordFeedback, setPasswordFeedback] = useState<ZxcvbnResult | null>(null);
 
 
     // Values derived from inputs (props and state)
@@ -165,8 +170,20 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                     defaultValue={userPassword}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setUnverifiedPassword(e.target.value);
+                                        passwordDebounce(e.target.value, setPasswordFeedback);
+                                    }}
+                                    onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        passwordDebounce(e.target.value, setPasswordFeedback);
                                     }}
                                 />
+                                {passwordFeedback &&
+                                    <span className='float-right small mt-1'>
+                                        <strong>Password strength: </strong>
+                                        <span id="password-strength-feedback">
+                                            {passwordStrengthText[(passwordFeedback as ZxcvbnResult).score]}
+                                        </span>
+                                    </span>
+                                }
                             </FormGroup>
                         </Col>
                         <Col md={6}>

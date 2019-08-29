@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
-import {verifyPasswordReset, handlePasswordReset} from "../../state/actions";
-import {Button, Container, FormFeedback, Input, Label, Card, CardBody, Form, FormGroup, CardFooter} from "reactstrap";
+import {handlePasswordReset, verifyPasswordReset} from "../../state/actions";
+import {Button, Card, CardBody, CardFooter, Container, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
+import {ZxcvbnResult} from "../../../IsaacAppTypes";
+import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../services/passwordStrength";
 
 const stateToProps = (state: AppState, {match: {params: {token}}}: any) => ({
     errorMessage: state ? state.error : null,
@@ -25,6 +27,9 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
 
     const [isValidPassword, setValidPassword] = useState(true);
     const [currentPassword, setCurrentPassword] = useState("");
+    const [passwordFeedback, setPasswordFeedback] = useState<ZxcvbnResult | null>(null);
+
+    loadZxcvbnIfNotPresent();
 
     const validateAndSetPassword = (event: any) => {
         setValidPassword(
@@ -41,16 +46,31 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
 
     return <Container id="email-verification">
         <div>
-            <h3>Password Change</h3>
+            <h3>Password change</h3>
             <Card>
                 <CardBody>
                     <Form name="passwordReset">
                         <FormGroup>
-                            <Label htmlFor="password-input">New Password</Label>
-                            <Input id="password" type="password" name="password" required/>
+                            <Label htmlFor="password-input">New password</Label>
+                            <Input id="password" type="password" name="password"
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    passwordDebounce(e.target.value, setPasswordFeedback);
+                                }}
+                                onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    passwordDebounce(e.target.value, setPasswordFeedback);
+                                }}
+                                required/>
+                            {passwordFeedback &&
+                            <span className='float-right small mt-1'>
+                                <strong>Password strength: </strong>
+                                <span id="password-strength-feedback">
+                                    {passwordStrengthText[(passwordFeedback as ZxcvbnResult).score]}
+                                </span>
+                            </span>
+                            }
                         </FormGroup>
                         <FormGroup>
-                            <Label htmlFor="password-confirm">Re-enter New Password</Label>
+                            <Label htmlFor="password-confirm">Re-enter new password</Label>
                             <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password" onBlur={(e: any) => {
                                 validateAndSetPassword(e);
                                 (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ? setCurrentPassword(e.target.value) : null}
