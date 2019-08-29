@@ -168,6 +168,10 @@ export interface QuantityValidationResponseDTO extends QuestionValidationRespons
     correctUnits?: boolean;
 }
 
+export interface ItemQuestionValidationResponseDTO extends QuestionValidationResponseDTO {
+    incorrectItemIds: [string];
+}
+
 export interface QuestionValidationResponseDTO {
     questionId?: string;
     answer?: ChoiceDTO;

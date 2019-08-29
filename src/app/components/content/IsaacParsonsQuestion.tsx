@@ -1,9 +1,15 @@
 import React from "react";
 import {connect} from "react-redux";
+import classnames from "classnames";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {IsaacParsonsQuestionDTO, ParsonsChoiceDTO, ParsonsItemDTO} from "../../../IsaacApiTypes";
+import {
+    IsaacParsonsQuestionDTO,
+    ItemQuestionValidationResponseDTO,
+    ParsonsChoiceDTO,
+    ParsonsItemDTO
+} from "../../../IsaacApiTypes";
 import {IsaacHints} from "./IsaacHints";
 import {Col, Row} from "reactstrap";
 import {DragDropContext, Droppable, Draggable, DragStart, DropResult, ResponderProvided, DroppableProvided, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot} from "react-beautiful-dnd";
@@ -14,6 +20,7 @@ interface IsaacParsonsQuestionProps {
     questionId: string;
     currentAttempt?: ParsonsChoiceDTO;
     setCurrentAttempt: (questionId: string, attempt: ParsonsChoiceDTO) => void;
+    validationResponse?: ItemQuestionValidationResponseDTO;
 }
 
 interface IsaacParsonsQuestionState {
@@ -177,6 +184,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
     }
 
     render() {
+        const {validationResponse} = this.props;
         return <div className="parsons-question">
             <div className="question-content">
                 <IsaacContentValueOrChildren value={this.props.doc.value} encoding={this.props.doc.encoding}>
@@ -228,7 +236,9 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                             {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
                                                 return <div
                                                     id={`parsons-item-${item.id}`}
-                                                    className={`parsons-item indent-${item.indentation}`}
+                                                    className={`parsons-item indent-${item.indentation} ` + classnames({
+                                                        "incorrect-item": item.id && validationResponse && validationResponse.incorrectItemIds && validationResponse.incorrectItemIds.indexOf(item.id) > -1
+                                                    })}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
@@ -252,7 +262,10 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
     const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
-    return question ? {currentAttempt: question.currentAttempt} : {};
+    return question ? {
+        currentAttempt: question.currentAttempt,
+        validationResponse: (question.validationResponse as ItemQuestionValidationResponseDTO)
+    } : {};
 };
 const dispatchToProps = {setCurrentAttempt};
 
