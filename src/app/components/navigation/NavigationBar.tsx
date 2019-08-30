@@ -12,7 +12,7 @@ import {loadMyAssignments} from "../../state/actions";
 const stateToProps = (state: AppState, _: RouteComponentProps) => (
     state && {
         user: state.user,
-        assignmentCount: (state.assignments && state.assignments.length) || 10 // TODO is this the best way
+        assignmentCount: (state.assignments && state.assignments.length) || 0 // TODO is this the best way
     }
 );
 
