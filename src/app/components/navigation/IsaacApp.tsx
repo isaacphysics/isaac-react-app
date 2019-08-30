@@ -52,6 +52,7 @@ import {AddGameboard} from "../handlers/AddGameboard";
 import "../../services/scrollManager";
 import "../../services/polyfills";
 import {isTest} from "../../services/constants";
+import classNames from "classnames";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -75,7 +76,7 @@ export const IsaacApp = () => {
             <ActiveModal />
             <CookieBanner />
             <EmailVerificationBanner />
-            <main role="main" className="flex-fill content-body">
+            <main role="main" className={"flex-fill content-body " + classNames({"ie-footer-fix": navigator.userAgent.indexOf("Trident") != -1})}>
                 <Switch>
                     {/* Errors; these paths work but aren't really used */}
                     <TrackedRoute exact path={serverError ? undefined : "/error"} component={ServerError} />
