@@ -41,7 +41,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Apr 2020'},
     {id: TAG_ID.modelsOfComputation, title: "Models of computation", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Jan 2020'},
     {id: TAG_ID.planningAndDebugging, title: "Planning and debugging", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Sept 2019'},
     // Computer networks topics
     {id: TAG_ID.security, title: "Security", parent: TAG_ID.computerNetworks, comingSoon: 'Apr 2020'},
     {id: TAG_ID.networkStructure, title: "Network structure", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
