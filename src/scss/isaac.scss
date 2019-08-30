@@ -124,14 +124,13 @@ body {
     color: $black;
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
     line-height: 1.625;
+    display: -ms-flexbox;
+    -ms-flex-direction: column;
+    flex-direction: column;
 }
 
 .content-body {
     background-color: rgba($gray-107, 0.4);
-
-    &.ie-footer-fix {
-        min-height: 58vh;
-    }
 }
 .pattern-01 {
     background-image: url('/assets/pattern_sm.svg');
