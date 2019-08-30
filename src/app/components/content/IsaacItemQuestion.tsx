@@ -1,26 +1,16 @@
 import React, {ChangeEvent, FormEvent, useMemo} from "react";
 import {connect} from "react-redux";
-import classnames from "classnames";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {
-    ChoiceDTO,
-    IsaacItemQuestionDTO,
-    ItemChoiceDTO,
-    ItemDTO,
-    ItemQuestionValidationResponseDTO,
-} from "../../../IsaacApiTypes";
+import {ChoiceDTO, IsaacItemQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
 import {IsaacHints} from "./IsaacHints";
 import {CustomInput, Label} from "reactstrap";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
     const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
-    return question ? {
-        currentAttempt: (question.currentAttempt as ItemChoiceDTO),
-        validationResponse: (question.validationResponse as ItemQuestionValidationResponseDTO),
-    } : {};
+    return question ? {currentAttempt: (question.currentAttempt as ItemChoiceDTO)} : {};
 };
 const dispatchToProps = {setCurrentAttempt};
 
@@ -29,11 +19,10 @@ interface IsaacItemQuestionProps {
     questionId: string;
     currentAttempt?: ItemChoiceDTO;
     setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => void;
-    validationResponse?: ItemQuestionValidationResponseDTO;
 }
 
 const IsaacItemQuestionComponent = (props: IsaacItemQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt, validationResponse} = props;
+    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
 
     function updateItems(changeEvent: ChangeEvent<HTMLInputElement>, item: ItemDTO) {
         let selected = changeEvent.target.checked;
@@ -62,14 +51,12 @@ const IsaacItemQuestionComponent = (props: IsaacItemQuestionProps) => {
 
             <ul>{doc.items && doc.items.map((item) =>
                 <li key={item.value} className="list-unstyled">
-                    <Label className={"label-radio multichoice-option " + classnames({
-                        'incorrect-item': item.id && validationResponse && validationResponse.incorrectItemIds && validationResponse.incorrectItemIds.indexOf(item.id) > -1
-                    })}>
+                    <Label className="label-radio multichoice-option">
                         <CustomInput
                             id={`${questionId}|${item.id}`}
                             color="secondary"
                             type="checkbox"
-                            checked={(currentAttempt && currentAttempt.items && currentAttempt.items.filter(i => i.id == item.id).length == 1)}
+                            checked={!!(currentAttempt && currentAttempt.items && currentAttempt.items.filter(i => i.id == item.id).length == 1)}
                             onChange={(changeEvent: ChangeEvent<HTMLInputElement>) => updateItems(changeEvent, item)}
                         />
                         <IsaacContentValueOrChildren value={item.value} encoding={doc.encoding} />
