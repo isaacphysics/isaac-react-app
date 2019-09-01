@@ -290,6 +290,14 @@ export const api = {
                 show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
             }});
             /* eslint-enable @typescript-eslint/camelcase */
+        },
+        getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
+            /* eslint-disable @typescript-eslint/camelcase */
+            return endpoint.get(`/events`, {params: {
+                start_index: 0, limit: numberOfActiveEvents, show_active_only: active,
+                show_inactive_only: !active, show_booked_only: false, tags: null
+            }});
+            /* eslint-enable @typescript-eslint/camelcase */
         }
     },
     logger: {

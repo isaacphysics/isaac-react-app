@@ -313,6 +313,8 @@ export const events = (events: EventsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.EVENTS_RESPONSE_SUCCESS:
             return {events: action.augmentedEvents, total: action.total};
+        case ACTION_TYPE.EVENT_PODS_CLEAR:
+            return null;
         default:
             return events;
     }

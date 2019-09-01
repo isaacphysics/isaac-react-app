@@ -1105,6 +1105,26 @@ export const getEventsList = (
     }
 };
 
+export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
+        const getActive = true;
+        const eventsResponse = await api.events.getFirstN(numberOfEvents, getActive);
+        if (eventsResponse.data.totalResults < numberOfEvents) {
+            const numberOfRemainingEvents = numberOfEvents - eventsResponse.data.totalResults;
+            const inactiveEventsResponse = await api.events.getFirstN(numberOfRemainingEvents, !getActive);
+            eventsResponse.data.results.push(...inactiveEventsResponse.data.results);
+        }
+        const augmentedEvents = eventsResponse.data.results.map(event => augmentEvent(event));
+        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: augmentedEvents.length});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Unable to display events", e));
+    }
+};
+
+export const clearEventsPodList = {type: ACTION_TYPE.EVENT_PODS_CLEAR};
+
 // Content Errors
 export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST});

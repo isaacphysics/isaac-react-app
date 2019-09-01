@@ -31,9 +31,6 @@ export enum TypeFilter {
 }
 const eventsPerPage = 6;
 
-// Events get displayed nicely
-// Events get augmented, probably in an augmentedEvents service
-// A call for more augmentedEvents is provided when appropriate
 
 export const Events = withRouter(({history, location}: {history: History; location: Location}) => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
@@ -111,7 +108,6 @@ export const Events = withRouter(({history, location}: {history: History; locati
                         confirmation you are booked.
                     </p>}
                 </div>}
-
             </div>
             } />
         </div>

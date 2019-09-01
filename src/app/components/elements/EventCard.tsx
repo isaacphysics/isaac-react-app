@@ -5,10 +5,10 @@ import {AugmentedEvent} from "../../../IsaacAppTypes";
 import {DateString} from "./DateString";
 import {Link} from "react-router-dom";
 
-export const EventCard = ({event}: {event: AugmentedEvent}) => {
+export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolean}) => {
     const {id, title, subtitle, eventThumbnail, location, expired, date, endDate} = event;
 
-    return <RS.Card className={classnames({'card-neat mb-4': true, 'disabled text-muted': expired})}>
+    return <RS.Card className={classnames({'card-neat': true, 'disabled text-muted': expired, 'm-4': pod, 'mb-4': !pod})}>
         {eventThumbnail && <div className='card-image text-center mt-3'>
             <RS.CardImg
                 className='m-auto rounded-circle' top
