@@ -310,10 +310,11 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
 
 type EventsState = {events: AugmentedEvent[]; total: number} | null;
 export const events = (events: EventsState = null, action: Action) => {
+    const currentEvents = events ? events.events : [];
     switch (action.type) {
         case ACTION_TYPE.EVENTS_RESPONSE_SUCCESS:
-            return {events: action.augmentedEvents, total: action.total};
-        case ACTION_TYPE.EVENT_PODS_CLEAR:
+            return {events: [...currentEvents, ...action.augmentedEvents], total: action.total};
+        case ACTION_TYPE.EVENTS_CLEAR:
             return null;
         default:
             return events;

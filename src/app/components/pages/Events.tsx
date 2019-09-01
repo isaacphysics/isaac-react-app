@@ -7,7 +7,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
 import {withRouter} from "react-router-dom";
 import {History} from "history";
-import {getEventsList} from "../../state/actions";
+import {clearEventsList, getEventsList} from "../../state/actions";
 import {EventCard} from "../elements/EventCard";
 
 /* eslint-disable @typescript-eslint/camelcase */
@@ -50,6 +50,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
         const showActiveOnly = statusFilter === StatusFilter["Upcoming Events"];
         const showBookedOnly = statusFilter === StatusFilter["My Booked Events"];
         const showInactiveOnly = false;
+        dispatch(clearEventsList);
         dispatch(getEventsList(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly));
     }, [typeFilter, statusFilter]);
 

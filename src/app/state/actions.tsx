@@ -1123,7 +1123,7 @@ export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dis
     }
 };
 
-export const clearEventsPodList = {type: ACTION_TYPE.EVENT_PODS_CLEAR};
+export const clearEventsList = {type: ACTION_TYPE.EVENTS_CLEAR};
 
 // Content Errors
 export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) => {

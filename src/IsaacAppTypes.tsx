@@ -219,7 +219,7 @@ export type Action =
     | {type: ACTION_TYPE.EVENTS_REQUEST}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.EVENT_PODS_CLEAR}
+    | {type: ACTION_TYPE.EVENTS_CLEAR}
 
     | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
