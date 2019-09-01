@@ -28,9 +28,9 @@ export const EventCard = ({event}: {event: AugmentedEvent}) => {
                 </span>
                 {location && location.address && <span className='d-block my-2'>
                     <span className="font-weight-bold">Location:</span> {" "}
-                    {event.virtual ?
-                        <>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</> :
-                        <>Online</>
+                    {!event.virtual ?
+                        <span>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</span> :
+                        <span>Online</span>
                     }
                 </span>}
             </RS.CardText>
