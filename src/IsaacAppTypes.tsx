@@ -402,3 +402,15 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     virtual?: boolean;
     field?: "physics" | "maths";
 }
+
+export interface ZxcvbnResult {
+    calc_time: number;
+    crack_times_display: { [key: string]: string };
+    crack_times_seconds: { [key: string]: number };
+    feedback: { [key: string]: any };
+    guesses: number;
+    guesses_log10: number;
+    password: string;
+    score: number;
+    sequence: any;
+}

@@ -309,7 +309,7 @@ export enum TAG_ID {
     complexity = "complexity",
     modelsOfComputation = "models_of_computation",
     planningAndDebugging = "planning_and_debugging",
-    dataStructuresTheory = "data_structures_theory",
+    dataStructures = "data_structures",
     // Computer networks topics
     security = "security",
     networkStructure = "network_structure",
@@ -346,7 +346,6 @@ export enum TAG_ID {
     subroutines = "subroutines",
     files = "files",
     structureAndRobustness = "structure_and_robustness",
-    dataStructuresImplementation = "data_structures_implementation",
     recursion = "recursion",
     stringManipulation = "string_manipulation",
     guis = "guis",
