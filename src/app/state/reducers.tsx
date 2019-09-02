@@ -321,6 +321,21 @@ export const events = (events: EventsState = null, action: Action) => {
     }
 };
 
+export type CurrentEventState = AugmentedEvent | NOT_FOUND_TYPE | null;
+export const currentEvent = (currentEvent: CurrentEventState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_RESPONSE_SUCCESS:
+            return {...action.augmentedEvent};
+        case ACTION_TYPE.EVENT_RESPONSE_FAILURE:
+            return NOT_FOUND;
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
+        case ACTION_TYPE.EVENT_REQUEST:
+            return null;
+        default:
+            return currentEvent;
+    }
+};
+
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const error = (error: ErrorState = null, action: Action): ErrorState => {
     switch (action.type) {
@@ -647,6 +662,7 @@ const appReducer = combineReducers({
     assignmentsByMe,
     progress,
     events,
+    currentEvent,
     fragments
 });
 
@@ -676,6 +692,7 @@ export type AppState = undefined | {
     assignmentsByMe: AssignmentsState;
     progress: ProgressState;
     events: EventsState;
+    currentEvent: CurrentEventState;
     fragments: FragmentsState;
 }
 

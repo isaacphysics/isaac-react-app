@@ -280,7 +280,10 @@ export const api = {
         }
     },
     events: {
-        get: (
+        get: (eventId: string): AxiosPromise<ApiTypes.IsaacEventPageDTO> => {
+            return endpoint.get(`/events/${eventId}`);
+        },
+        getEvents: (
             startIndex: number, eventsPerPage: number, filterEventsByType: TypeFilter | null,
             showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {

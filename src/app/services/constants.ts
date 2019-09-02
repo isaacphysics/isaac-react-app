@@ -154,6 +154,10 @@ export enum ACTION_TYPE {
     EVENTS_RESPONSE_FAILURE = "EVENTS_RESPONSE_FAILURE",
     EVENTS_CLEAR = "EVENT_PODS_CLEAR",
 
+    EVENT_REQUEST = "EVENT_REQUEST",
+    EVENT_RESPONSE_SUCCESS = "EVENT_RESPONSE_SUCCESS",
+    EVENT_RESPONSE_FAILURE = "EVENT_RESPONSE_FAILURE",
+
     FRAGMENT_REQUEST = "FRAGMENT_REQUEST",
     FRAGMENT_RESPONSE_SUCCESS = "FRAGMENT_RESPONSE_SUCCESS",
     FRAGMENT_RESPONSE_FAILURE = "FRAGMENT_RESPONSE_FAILURE",
@@ -395,3 +399,4 @@ export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
 export const STUDENTS_CRUMB = {title: "For students", to: "/students"};
 export const TEACHERS_CRUMB = {title: "For teachers", to: "/teachers"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
+export const EVENTS_CRUMB = {title: "Events", to: "/events"};

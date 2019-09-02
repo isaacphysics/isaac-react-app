@@ -1090,6 +1090,21 @@ export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>,
 };
 
 // Events
+export const getEvent = (eventId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_REQUEST});
+        const event =
+            // check if event is already loaded in events
+            (state && state.events && state.events.events.filter(e => e.id === eventId).pop()) ||
+            // else request it then augment it
+            augmentEvent((await api.events.get(eventId)).data);
+        dispatch({type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS, augmentedEvent: event});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.EVENT_RESPONSE_FAILURE});
+    }
+};
+
 export const getEventsList = (startIndex: number, eventsPerPage: number, typeFilter: TypeFilter, statusFilter: StatusFilter) => async (dispatch: Dispatch<Action>) => {
     const filterTags = typeFilter !== TypeFilter["All Events"] ? typeFilter : null;
     const showActiveOnly = statusFilter === StatusFilter["Upcoming Events"];
@@ -1097,7 +1112,7 @@ export const getEventsList = (startIndex: number, eventsPerPage: number, typeFil
     const showInactiveOnly = false;
     try {
         dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
-        const response = await api.events.get(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly);
+        const response = await api.events.getEvents(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly);
         const augmentedEvents = response.data.results.map(event => augmentEvent(event));
         dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: response.data.totalResults});
     } catch (e) {
