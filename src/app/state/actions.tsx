@@ -50,7 +50,7 @@ import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
 import {isTeacher} from "../services/user";
 import ReactGA from "react-ga";
-import {TypeFilter} from "../components/pages/Events";
+import {StatusFilter, TypeFilter} from "../components/pages/Events";
 import {augmentEvent} from "../services/events";
 
 // Toasts
@@ -1090,13 +1090,14 @@ export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>,
 };
 
 // Events
-export const getEventsList = (
-    startIndex: number, eventsPerPage: number, filterEventsByType: TypeFilter | null,
-    showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
-) => async (dispatch: Dispatch<Action>) => {
+export const getEventsList = (startIndex: number, eventsPerPage: number, typeFilter: TypeFilter, statusFilter: StatusFilter) => async (dispatch: Dispatch<Action>) => {
+    const filterTags = typeFilter !== TypeFilter["All Events"] ? typeFilter : null;
+    const showActiveOnly = statusFilter === StatusFilter["Upcoming Events"];
+    const showBookedOnly = statusFilter === StatusFilter["My Booked Events"];
+    const showInactiveOnly = false;
     try {
         dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
-        const response = await api.events.get(startIndex, eventsPerPage, filterEventsByType, showActiveOnly, showInactiveOnly, showBookedOnly);
+        const response = await api.events.get(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly);
         const augmentedEvents = response.data.results.map(event => augmentEvent(event));
         dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: response.data.totalResults});
     } catch (e) {

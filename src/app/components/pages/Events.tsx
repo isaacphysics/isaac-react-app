@@ -29,14 +29,14 @@ export enum TypeFilter {
     "Teacher Events" = "teacher",
     "Online Tutorials" = "virtual",
 }
-const eventsPerPage = 6;
-
+const EVENTS_PER_PAGE = 6;
 
 export const Events = withRouter(({history, location}: {history: History; location: Location}) => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
     const dispatch = useDispatch();
     const eventsState = useSelector((state: AppState) => state && state.events);
+    const numberOfLoadedEvents = eventsState ? eventsState.events.length : 0;
 
     const statusFilter =
         (query.show_booked_only && StatusFilter["My Booked Events"]) ||
@@ -46,12 +46,8 @@ export const Events = withRouter(({history, location}: {history: History; locati
 
     useEffect(() => {
         const startIndex = 0;
-        const filterTags = typeFilter !== TypeFilter["All Events"] ? typeFilter : null;
-        const showActiveOnly = statusFilter === StatusFilter["Upcoming Events"];
-        const showBookedOnly = statusFilter === StatusFilter["My Booked Events"];
-        const showInactiveOnly = false;
         dispatch(clearEventsList);
-        dispatch(getEventsList(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly));
+        dispatch(getEventsList(startIndex, EVENTS_PER_PAGE, typeFilter, statusFilter));
     }, [typeFilter, statusFilter]);
 
     return <RS.Container>
@@ -95,8 +91,10 @@ export const Events = withRouter(({history, location}: {history: History; locati
                 </RS.Row>
 
                 {/* Load More Button */}
-                {events.length < total && <div className="text-center">
-                    <RS.Button>
+                {numberOfLoadedEvents < total && <div className="text-center mb-5">
+                    <RS.Button onClick={() => {
+                        dispatch(getEventsList(numberOfLoadedEvents, EVENTS_PER_PAGE, typeFilter, statusFilter));
+                    }}>
                         Load more events
                     </RS.Button>
                 </div>}
