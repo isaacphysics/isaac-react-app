@@ -1,8 +1,18 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {connect, useDispatch} from "react-redux";
+import {connect} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {Badge, Collapse, DropdownItem, DropdownToggle, DropdownMenu, Nav, Navbar, NavbarToggler, UncontrolledDropdown} from "reactstrap";
+import {
+    Badge,
+    Collapse,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Nav,
+    Navbar,
+    NavbarToggler,
+    UncontrolledDropdown
+} from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {isAdmin, isStaff} from "../../services/user";
@@ -23,15 +33,17 @@ const mapDispatchToProps = {
 interface NavigationBarProps {
     user: LoggedInUser | null;
     assignmentCount: number;
+    loadMyAssignments: () => void
 }
 
-const NavigationBarComponent = ({user, assignmentCount}: NavigationBarProps) => {
+const NavigationBarComponent = ({user, assignmentCount, loadMyAssignments}: NavigationBarProps) => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(loadMyAssignments());
-    }, []);
+        if (user && user.loggedIn) {
+            loadMyAssignments();
+        }
+    }, [user]);
 
     const DropdownItemComingSoon = ({children, className}: {children: React.ReactNode; className: string}) => (
         <DropdownItem tag={Link} to="/coming_soon" className={`${className}`} aria-disabled="true">
