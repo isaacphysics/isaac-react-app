@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {
     Badge,
@@ -13,35 +13,18 @@ import {
     NavbarToggler,
     UncontrolledDropdown
 } from "reactstrap";
-import {RouteComponentProps, withRouter} from "react-router";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 import {isAdmin, isStaff} from "../../services/user";
 import {loadMyAssignments} from "../../state/actions";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const stateToProps = (state: AppState, _: RouteComponentProps) => (
-    state && {
-        user: state.user,
-        assignmentCount: (state.assignments && state.assignments.length) || 0 // TODO is this the best way
-    }
-);
-
-const mapDispatchToProps = {
-    loadMyAssignments
-};
-
-interface NavigationBarProps {
-    user: LoggedInUser | null;
-    assignmentCount: number;
-    loadMyAssignments: () => void
-}
-
-const NavigationBarComponent = ({user, assignmentCount, loadMyAssignments}: NavigationBarProps) => {
+export const NavigationBar = () => {
+    const dispatch = useDispatch();
     const [menuOpen, setMenuOpen] = useState(false);
+    const user = useSelector((state: AppState) => (state && state.user) || null);
+    const assignmentCount = useSelector((state: AppState) => (state && state.assignments && state.assignments.length) || 0);
 
     useEffect(() => {
         if (user && user.loggedIn) {
-            loadMyAssignments();
+            dispatch(loadMyAssignments());
         }
     }, [user]);
 
@@ -80,7 +63,7 @@ const NavigationBarComponent = ({user, assignmentCount, loadMyAssignments}: Navi
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0">
                             For students
-                            {assignmentCount > 0 && <span className="badge badge-pill badge-warning mx-1">!</span>}
+                            {assignmentCount > 0 && <span className="badge badge-pill badge-warning ml-2">!</span>}
                             {assignmentCount > 0 && <span className="sr-only">Incomplete assignments</span>}
                         </p>
                     </DropdownToggle>
@@ -90,7 +73,7 @@ const NavigationBarComponent = ({user, assignmentCount, loadMyAssignments}: Navi
                         </DropdownItem>
                         <DropdownItem tag={Link} to="/assignments" className="pl-4 py-3 p-md-3">
                             My assignments
-                            {assignmentCount > 0 && <span className="badge badge-pill badge-warning mx-1">{assignmentCount}</span>}
+                            {assignmentCount > 0 && <span className="badge badge-pill badge-warning ml-2">{assignmentCount}</span>}
                             {assignmentCount > 0 && <span className="sr-only">Incomplete assignments</span>}
                         </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
@@ -187,5 +170,3 @@ const NavigationBarComponent = ({user, assignmentCount, loadMyAssignments}: Navi
         </Collapse>
     </Navbar>;
 };
-
-export const NavigationBar = withRouter(connect(stateToProps, mapDispatchToProps)(NavigationBarComponent));
