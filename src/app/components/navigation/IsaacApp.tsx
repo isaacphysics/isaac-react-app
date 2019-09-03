@@ -53,6 +53,7 @@ import "../../services/scrollManager";
 import "../../services/polyfills";
 import {isTest} from "../../services/constants";
 import {AuthError} from "../pages/AuthError";
+import {AdminEmail} from "../pages/AdminEmail";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -121,6 +122,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/admin/usermanager" ifUser={isAdmin} component={AdminUserManager} />
                     <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
                     <TrackedRoute exact path="/admin/content_errors" ifUser={isStaff} component={AdminContentErrors} />
+                    <TrackedRoute exact path="/admin/email" ifUser={isAdmin} component={AdminEmail} />
 
                     {/* Authentication */}
                     <TrackedRoute exact path="/login" component={LogIn} />
