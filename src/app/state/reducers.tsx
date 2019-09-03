@@ -18,7 +18,7 @@ import {
 import {
     AssignmentDTO,
     ContentDTO,
-    ContentSummaryDTO,
+    ContentSummaryDTO, EmailTemplateDTO,
     GameboardDTO,
     GameboardListDTO,
     IsaacTopicSummaryPageDTO,
@@ -102,6 +102,18 @@ export const adminStats = (adminSiteStats: AdminStatsState = null, action: Actio
             return action.stats;
         default:
             return adminSiteStats;
+    }
+};
+
+export type AdminEmailTemplateState = EmailTemplateDTO | null;
+export const adminEmailTemplate = (adminEmailTemplate: AdminEmailTemplateState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST:
+            return null;
+        case ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST_SUCCESS:
+            return action.email;
+        default:
+            return adminEmailTemplate;
     }
 };
 
@@ -615,6 +627,7 @@ const appReducer = combineReducers({
     adminUserSearch,
     adminContentErrors,
     adminStats,
+    adminEmailTemplate,
     activeAuthorisations,
     otherUserAuthorisations,
     groupMemberships,
@@ -643,6 +656,7 @@ export type AppState = undefined | {
     adminUserSearch: AdminUserSearchState;
     adminContentErrors: AdminContentErrorsState;
     adminStats: AdminStatsState;
+    adminEmailTemplate: AdminEmailTemplateState;
     activeAuthorisations: ActiveAuthorisationsState;
     otherUserAuthorisations: OtherUserAuthorisationsState;
     groupMemberships: GroupMembershipsState;

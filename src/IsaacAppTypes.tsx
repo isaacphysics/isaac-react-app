@@ -1,6 +1,6 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {
-    Content,
+    Content, EmailTemplateDTO,
     GameboardDTO,
     GameboardItemState,
     GroupMembershipDTO,
@@ -77,6 +77,10 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_STATS_REQUEST}
     | {type: ACTION_TYPE.ADMIN_STATS_RESPONSE_SUCCESS; stats: AdminStatsResponse}
     | {type: ACTION_TYPE.ADMIN_STATS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST_SUCCESS, email: EmailTemplateDTO}
+    | {type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST_FAILURE}
 
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST}
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS; authorisations: ApiTypes.UserSummaryWithEmailAddressDTO[]}

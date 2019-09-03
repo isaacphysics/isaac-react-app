@@ -829,6 +829,17 @@ export const getAdminSiteStats = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
+export const getEmail = (contentid: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST});
+    try {
+        const email = await api.email.getTemplateEmail(contentid);
+        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST_SUCCESS, email: email.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get email template", e));
+    }
+};
+
 // Groups
 
 export const loadGroups = (archivedGroupsOnly: boolean) => async (dispatch: Dispatch<Action>) => {

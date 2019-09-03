@@ -238,8 +238,8 @@ export interface ContentSummaryDTO {
 
 export interface EmailTemplateDTO extends ContentDTO {
     subject?: string;
-    plainTextContent?: string;
-    htmlContent?: string;
+    plainText?: string;
+    html?: string;
     replyToEmailAddress?: string;
     replyToName?: string;
 }
