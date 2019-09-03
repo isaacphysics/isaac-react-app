@@ -236,7 +236,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                             {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
                                                 return <div
                                                     id={`parsons-item-${item.id}`}
-                                                    className={`parsons-item indent-${item.indentation} ` + classnames({
+                                                    className={`parsons-item indent-${(item as ParsonsItemDTO).indentation} ` + classnames({
                                                         "incorrect-item": item.id && validationResponse && validationResponse.incorrectItemIds && validationResponse.incorrectItemIds.indexOf(item.id) > -1
                                                     })}
                                                     ref={provided.innerRef}

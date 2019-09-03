@@ -4,6 +4,7 @@ import {Col, Row, Button} from "reactstrap";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
 import {AnonUserExamBoardPicker} from "./AnonUserExamBoardPicker";
+import {ContentBaseDTO} from "../../../IsaacApiTypes";
 
 export const FeaturedContentTabs = () => (
     <div className="tabs-featured-question">
@@ -145,7 +146,7 @@ export const FeaturedContentTabs = () => (
                                         "published": false
                                     }
                                 ]
-                            }} />
+                            } as ContentBaseDTO} />
                         </div>
                     </Col>
 

@@ -1,5 +1,5 @@
 /* tslint:disable */
-// Generated using typescript-generator version 2.12.476 on 2019-05-15 20:09:01.
+// Generated using typescript-generator version 2.12.476 on 2019-09-03 11:12:29.
 
 export interface AssignmentDTO {
     gameboardId?: string;
@@ -41,7 +41,6 @@ export interface IsaacAnvilQuestionDTO extends IsaacQuestionBaseDTO {
 }
 
 export interface IsaacConceptPageDTO extends SeguePageDTO {
-    canonicalSourceFile?: string;
 }
 
 export interface IsaacEventPageDTO extends ContentDTO {
@@ -53,9 +52,9 @@ export interface IsaacEventPageDTO extends ContentDTO {
     numberOfPlaces?: number;
     eventStatus?: EventStatus;
     placesAvailable?: number;
-    userOnWaitList?: boolean;
     endDate?: Date;
     userBooked?: boolean;
+    userOnWaitList?: boolean;
 }
 
 export interface IsaacFastTrackQuestionPageDTO extends IsaacQuestionPageDTO {
@@ -73,6 +72,10 @@ export interface IsaacFreeTextQuestionDTO extends IsaacQuestionBaseDTO {
 export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
 }
 
+export interface IsaacItemQuestionDTO extends IsaacQuestionBaseDTO {
+    items?: ItemDTO[];
+}
+
 export interface IsaacMultiChoiceQuestionDTO extends IsaacQuestionBaseDTO {
     choices?: ChoiceDTO[];
 }
@@ -81,10 +84,6 @@ export interface IsaacNumericQuestionDTO extends IsaacQuestionBaseDTO {
     requireUnits?: boolean;
     availableUnits?: string[];
     knownUnits?: string[];
-}
-
-export interface IsaacItemQuestionDTO extends IsaacQuestionBaseDTO {
-    items?: ItemDTO[];
 }
 
 export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
@@ -100,7 +99,7 @@ export interface IsaacQuestionBaseDTO extends ChoiceQuestionDTO {
 }
 
 export interface IsaacQuestionPageDTO extends SeguePageDTO {
-    canonicalSourceFile?: string;
+    difficulty?: number;
     passMark?: number;
     supersededBy?: string;
 }
@@ -163,13 +162,13 @@ export interface FormulaValidationResponseDTO extends QuestionValidationResponse
     correctNumeric?: boolean;
 }
 
+export interface ItemQuestionValidationResponseDTO extends QuestionValidationResponseDTO {
+    incorrectItemIds?: string[];
+}
+
 export interface QuantityValidationResponseDTO extends QuestionValidationResponseDTO {
     correctValue?: boolean;
     correctUnits?: boolean;
-}
-
-export interface ItemQuestionValidationResponseDTO extends QuestionValidationResponseDTO {
-    incorrectItemIds: [string];
 }
 
 export interface QuestionValidationResponseDTO {
@@ -220,7 +219,7 @@ export interface ContentDTO extends ContentBaseDTO {
     subtitle?: string;
     encoding?: string;
     layout?: string;
-    children?: any[];
+    children?: ContentBaseDTO[];
     value?: string;
     attribution?: string;
     relatedContent?: ContentSummaryDTO[];
@@ -238,12 +237,15 @@ export interface ContentSummaryDTO {
     url?: string;
     correct?: boolean;
     supersededBy?: string;
+    difficulty?: string;
 }
 
 export interface EmailTemplateDTO extends ContentDTO {
     subject?: string;
     plainTextContent?: string;
     htmlContent?: string;
+    overrideFromAddress?: string;
+    overrideFromName?: string;
     replyToEmailAddress?: string;
     replyToName?: string;
 }
@@ -267,6 +269,13 @@ export interface ImageDTO extends MediaDTO {
     clickTarget?: string;
 }
 
+export interface ItemChoiceDTO extends ChoiceDTO {
+    items?: ItemDTO[];
+}
+
+export interface ItemDTO extends ContentDTO {
+}
+
 export interface LogicFormulaDTO extends ChoiceDTO {
     pythonExpression?: string;
 }
@@ -281,15 +290,7 @@ export interface NotificationDTO extends ContentDTO {
     expiry?: Date;
 }
 
-export interface ItemChoiceDTO extends ChoiceDTO {
-    items?: ItemDTO[];
-}
-
 export interface ParsonsChoiceDTO extends ItemChoiceDTO {
-    items?: ParsonsItemDTO[];
-}
-
-export interface ItemDTO extends ContentDTO {
 }
 
 export interface ParsonsItemDTO extends ItemDTO {
@@ -301,11 +302,12 @@ export interface QuantityDTO extends ChoiceDTO {
 }
 
 export interface QuestionDTO extends ContentDTO {
-    hints?: any[];
+    hints?: ContentBaseDTO[];
     bestAttempt?: QuestionValidationResponseDTO;
 }
 
 export interface SeguePageDTO extends ContentDTO {
+    canonicalSourceFile?: string;
     summary?: string;
 }
 
@@ -393,6 +395,7 @@ export interface GameboardItem {
     uri?: string;
     tags?: string[];
     level?: number;
+    difficulty?: number;
     questionPartsCorrect?: number;
     questionPartsIncorrect?: number;
     questionPartsNotAttempted?: number;
@@ -478,7 +481,7 @@ export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FA
 
 export type GroupMembershipStatus = "ACTIVE" | "INACTIVE" | "DELETED";
 
-export type Gender = "MALE" | "FEMALE" | "OTHER" | "UNKNOWN";
+export type Gender = "MALE" | "FEMALE" | "OTHER" | "PREFER_NOT_TO_SAY" | "UNKNOWN";
 
 export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE";
 
