@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {AppState} from "../../state/reducers";
-import {getAdminSiteStats, getEmailTemplate, sendAdminEmail} from "../../state/actions";
+import {getAdminSiteStats, getEmailTemplate, sendAdminEmail, sendAdminEmailWithIds} from "../../state/actions";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {EmailUserRoles} from "../../../IsaacApiTypes";
 import {UserRole} from "../../services/constants";
@@ -19,6 +19,7 @@ export const AdminEmail = () => {
         STAFF: false,
         STUDENT: false
     } as EmailUserRoles);
+    const [csvIDInput, setCSVIDInput] = useState("");
     const [emailType, setEmailType] = useState("null");
     const [contentObjectID, setContentObjectID] = useState("");
     const userRolesSelector = useSelector((state: AppState) => state && state.adminStats && state.adminStats.userRoles);
@@ -79,9 +80,12 @@ export const AdminEmail = () => {
                 </RS.Table>
                 }
 
-                {selectionMode == "CSV_USER_ID_LIST" && <RS.Input type = "textarea">
-
-                </RS.Input>
+                {selectionMode == "CSV_USER_ID_LIST" && <RS.Input
+                    type = "textarea"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                        return setCSVIDInput(event.target.value);
+                    }}
+                />
                 }
             </RS.CardBody>
         </RS.Card>
@@ -154,9 +158,10 @@ export const AdminEmail = () => {
                 <RS.Input type="button" value="Send emails" className="btn btn-block btn-secondary border-0"
                           onClick={() => {
                               if (selectionMode == "USER_FILTER") {
-                                  sendAdminEmail(contentObjectID, emailType, selectedRoles);
+                                  dispatch(sendAdminEmail(contentObjectID, emailType, selectedRoles));
                               } else {
-                                  // sendAdminEmail(contentObjectID, emailType, undefiend);
+                                  const userIDs = csvIDInput.split(/[\s,]+/).map((e) => {return parseInt(e)}).filter((num) => !isNaN(num));
+                                  dispatch(sendAdminEmailWithIds(contentObjectID, emailType, userIDs));
                               }}
                           }/>
             </RS.CardBody>

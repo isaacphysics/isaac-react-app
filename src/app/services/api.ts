@@ -102,7 +102,10 @@ export const api = {
         },
         sendAdminEmail: (contentid: string, emailType: string, roles: EmailUserRoles): AxiosPromise => {
             return endpoint.post(`/email/sendemail/${contentid}/${emailType}`, roles);
-        }
+        },
+        sendAdminEmailWithIds: (contentid: string, emailType: string, ids: number[]): AxiosPromise => {
+            return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
+        },
     },
     admin: {
         userSearch: {

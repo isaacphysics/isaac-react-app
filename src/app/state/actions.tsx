@@ -26,7 +26,8 @@ import {
 import {
     AssignmentDTO,
     AuthenticationProvider,
-    ChoiceDTO, EmailUserRoles,
+    ChoiceDTO,
+    EmailUserRoles,
     GameboardDTO,
     QuestionDTO,
     RegisteredUserDTO,
@@ -849,7 +850,18 @@ export const sendAdminEmail = (contentid: string, emailType: string, roles: Emai
         dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST_FAILURE});
         dispatch(showErrorToastIfNeeded("Sending mail failed", e));
     }
-}
+};
+
+export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids: number[]) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST});
+    try {
+        await api.email.sendAdminEmailWithIds(contentid, emailType, ids);
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST_SUCCESS});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST_FAILURE});
+        dispatch(showErrorToastIfNeeded("Sending mail with ids failed", e));
+    }
+};
 
 // Groups
 
