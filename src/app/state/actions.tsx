@@ -26,7 +26,7 @@ import {
 import {
     AssignmentDTO,
     AuthenticationProvider,
-    ChoiceDTO,
+    ChoiceDTO, EmailUserRoles,
     GameboardDTO,
     QuestionDTO,
     RegisteredUserDTO,
@@ -829,7 +829,7 @@ export const getAdminSiteStats = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const getEmail = (contentid: string) => async (dispatch: Dispatch<Action>) => {
+export const getEmailTemplate = (contentid: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST});
     try {
         const email = await api.email.getTemplateEmail(contentid);
@@ -839,6 +839,17 @@ export const getEmail = (contentid: string) => async (dispatch: Dispatch<Action>
         dispatch(showErrorToastIfNeeded("Failed to get email template", e));
     }
 };
+
+export const sendAdminEmail = (contentid: string, emailType: string, roles: EmailUserRoles) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST});
+    try {
+        await api.email.sendAdminEmail(contentid, emailType, roles);
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST_SUCCESS});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST_FAILURE});
+        dispatch(showErrorToastIfNeeded("Sending mail failed", e));
+    }
+}
 
 // Groups
 

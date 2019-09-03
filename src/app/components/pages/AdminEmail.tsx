@@ -1,24 +1,24 @@
 import React, {useEffect, useState} from 'react';
-import {connect, useDispatch, useSelector} from "react-redux";
-import {Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
-import {AppState, ContentVersionState} from "../../state/reducers";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {
-    getAdminSiteStats,
-    getContentVersion, getEmail,
-    requestConstantsSegueVersion,
-    setContentVersion
-} from "../../state/actions";
-import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentVersionUpdatingStatus} from "../../services/constants";
+import {AppState} from "../../state/reducers";
+import {getAdminSiteStats, getEmailTemplate, sendAdminEmail} from "../../state/actions";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {DateString} from "../elements/DateString";
+import {EmailUserRoles} from "../../../IsaacApiTypes";
+import {UserRole} from "../../services/constants";
 
 export const AdminEmail = () => {
     const dispatch = useDispatch();
     const [selectionMode, setSelectionMode] = useState("USER_FILTER")
-    const [selectedRoles, setSelectedRoles] = useState(new Set());
+    const [selectedRoles, setSelectedRoles] = useState({
+        ADMIN: false,
+        EVENT_MANAGER: false,
+        CONTENT_EDITOR: false,
+        TEACHER: false,
+        TESTER: false,
+        STAFF: false,
+        STUDENT: false
+    } as EmailUserRoles);
     const [emailType, setEmailType] = useState("null");
     const [contentObjectID, setContentObjectID] = useState("");
     const userRolesSelector = useSelector((state: AppState) => state && state.adminStats && state.adminStats.userRoles);
@@ -30,22 +30,6 @@ export const AdminEmail = () => {
             dispatch(getAdminSiteStats());
         }
     }, []);
-
-    // useEffect(() => {
-    //     dispatch(getEmail(contentObjectID));
-    // }, []);
-
-    const updateSelectedRoles = (role: string, selected: boolean) => {
-        // const newSelectedRoles = Set.from(selectedRoles);
-        const included = selectedRoles.has(role);
-        if (included && !selected) {
-            selectedRoles.delete(role);
-        } else if (!included && selected) {
-            selectedRoles.add(role);
-        }
-
-        setSelectedRoles(selectedRoles);
-    };
 
     return <RS.Container id="admin-stats-page">
         <TitleAndBreadcrumb currentPageTitle="Admin email" />
@@ -73,17 +57,18 @@ export const AdminEmail = () => {
                     </thead>
                     <tbody>
                     {
-                        userRolesSelector && Object.keys(userRolesSelector).sort().map((role: string) =>
+                        userRolesSelector && Object.keys(selectedRoles).map((role: string) =>
                             <tr key={role}>
                                 <td>
-                                    {role + "(" + userRolesSelector[role] + ")"}
+                                    {role + "(" + (userRolesSelector[role] || 0) + ")"}
                                 </td>
                                 <td>
                                     <RS.Input
                                         type="checkbox" className="m-0 position-relative"
-                                        // checked={userRolesSelector[role] as string && selectedRoles.includes(userRolesSelector[role]) || undefined}
                                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                            updateSelectedRoles(role, event.target.checked)
+                                            const newSelectedRoles = {...selectedRoles}
+                                            newSelectedRoles[role as UserRole] = event.target.checked;
+                                            setSelectedRoles(newSelectedRoles);
                                         }}
                                     />
                                 </td>
@@ -125,7 +110,7 @@ export const AdminEmail = () => {
                 <RS.Row>
                     <RS.Col>
                         <RS.Input
-                            id="" type="text" placeholder="Enter email content object ID"
+                            id="content-object-id-input" type="text" placeholder="Enter email content object ID"
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setContentObjectID(e.target.value);
                             }}
@@ -134,7 +119,7 @@ export const AdminEmail = () => {
                     </RS.Col>
                     <RS.Col>
                         <RS.Input
-                            type="submit" value="Load template" className="btn btn-block btn-secondary border-0" onClick={() => dispatch(getEmail(contentObjectID))}
+                            type="submit" value="Load template" className="btn btn-block btn-secondary border-0" onClick={() => dispatch(getEmailTemplate(contentObjectID))}
                         />
                     </RS.Col>
                 </RS.Row>
@@ -150,6 +135,7 @@ export const AdminEmail = () => {
 
         <RS.Card className="p-3 my-3">
             <RS.CardTitle tag="h2">HTML preview</RS.CardTitle>
+            <RS.Label>The preview below uses fields taken from your account (e.g. givenname and familyname).</RS.Label>
             <RS.CardBody>
                 {emailTemplateSelector && emailTemplateSelector.html && <div dangerouslySetInnerHTML={{__html: emailTemplateSelector.html}} />}
             </RS.CardBody>
@@ -157,6 +143,7 @@ export const AdminEmail = () => {
 
         <RS.Card className="p-3 my-3">
             <RS.CardTitle tag="h2">Plain text preview</RS.CardTitle>
+            <RS.Label>The preview below uses fields taken from your account (e.g. givenname and familyname).</RS.Label>
             <RS.CardBody>
                 {emailTemplateSelector && emailTemplateSelector.plainText}
             </RS.CardBody>
@@ -164,8 +151,15 @@ export const AdminEmail = () => {
 
         <RS.Card className="p-3 my-3">
             <RS.CardBody>
-                <RS.Input type="button" value="Send emails" className="btn btn-block btn-secondary border-0"/>
+                <RS.Input type="button" value="Send emails" className="btn btn-block btn-secondary border-0"
+                          onClick={() => {
+                              if (selectionMode == "USER_FILTER") {
+                                  sendAdminEmail(contentObjectID, emailType, selectedRoles);
+                              } else {
+                                  // sendAdminEmail(contentObjectID, emailType, undefiend);
+                              }}
+                          }/>
             </RS.CardBody>
         </RS.Card>
     </RS.Container>
-}
+};

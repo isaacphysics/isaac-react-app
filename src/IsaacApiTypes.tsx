@@ -460,6 +460,16 @@ export interface Address {
     country?: string;
 }
 
+export interface EmailUserRoles {
+    ADMIN: boolean;
+    EVENT_MANAGER: boolean;
+    CONTENT_EDITOR: boolean;
+    TEACHER: boolean;
+    TESTER: boolean;
+    STAFF: boolean;
+    STUDENT: boolean;
+}
+
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
 
 export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY";
