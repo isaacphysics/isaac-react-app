@@ -63,7 +63,7 @@ export const NavigationBar = () => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0">
                             For students
-                            {assignmentCount > 0 && <span className="badge badge-pill badge-warning ml-2">!</span>}
+                            {assignmentCount > 0 && <span className="badge badge-pill bg-grey ml-2">{assignmentCount}</span>}
                             {assignmentCount > 0 && <span className="sr-only">Incomplete assignments</span>}
                         </p>
                     </DropdownToggle>
@@ -73,7 +73,7 @@ export const NavigationBar = () => {
                         </DropdownItem>
                         <DropdownItem tag={Link} to="/assignments" className="pl-4 py-3 p-md-3">
                             My assignments
-                            {assignmentCount > 0 && <span className="badge badge-pill badge-warning ml-2">{assignmentCount}</span>}
+                            {assignmentCount > 0 && <span className="badge badge-pill bg-grey ml-2">{assignmentCount}</span>}
                             {assignmentCount > 0 && <span className="sr-only">Incomplete assignments</span>}
                         </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
