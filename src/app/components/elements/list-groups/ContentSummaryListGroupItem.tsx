@@ -1,5 +1,5 @@
-import {ContentSummaryDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, SEARCH_RESULT_TYPE} from "../../services/constants";
+import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
+import {DOCUMENT_TYPE, SEARCH_RESULT_TYPE} from "../../../services/constants";
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {Link} from "react-router-dom";
 import React from "react";

@@ -26,7 +26,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH, DATE_FORMATTER} from "../../services/constants";
-import {downloadLinkModal} from "../elements/AssignmentProgressModalCreators";
+import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 
 const stateFromProps = (state: AppState) => {
     if (state != null) {

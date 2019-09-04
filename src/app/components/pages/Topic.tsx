@@ -6,14 +6,14 @@ import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {ContentSummaryDTO, IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
-import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
+import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {filterAndSeparateRelatedContent} from "../../services/topics";
 import {Button, Col, Container, Row} from "reactstrap";
 import {ALL_TOPICS_CRUMB, NOT_FOUND, TAG_ID} from "../../services/constants";
 import {NOT_FOUND_TYPE, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom} from "../../services/examBoard";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AnonUserExamBoardPicker} from "../elements/AnonUserExamBoardPicker";
+import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
 
 const stateToProps = (state: AppState, {match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => ({
     topicName: topicName,

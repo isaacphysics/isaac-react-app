@@ -6,7 +6,6 @@ import {AugmentedEvent, LoggedInUser} from "../../../IsaacAppTypes";
 interface AdditionalInformation {
     yearGroup?: string;
 }
-
 interface EventBookingFormProps {
     event: AugmentedEvent;
     user: LoggedInUser;
@@ -15,7 +14,6 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
     const [additionalInformation, setAdditionalInformation] = useState<AdditionalInformation>({});
     const targetUser = user; // For a future feature
     const editingSelf = true;
-
 
     return <React.Fragment>
         {targetUser.loggedIn && <RS.Card className="mb-4">

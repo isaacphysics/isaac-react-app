@@ -1,71 +1,41 @@
-import {CardBody, CardFooter, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import {School, UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
+import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row, default as RS} from "reactstrap";
+import {SubjectInterests, UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../services/constants";
-import React, {ChangeEvent, MutableRefObject, useEffect, useRef, useState} from "react";
-import {api} from "../../services/api";
-import {DateInput} from "./DateInput";
+import React, {ChangeEvent} from "react";
+import {
+    validateEmail,
+    validateSubjectInterests,
+    validateUserGender,
+    validateUserSchool
+} from "../../services/validation";
+import {SchoolInput} from "./inputs/SchoolInput";
+import {DobInput} from "./inputs/DobInput";
+import {StudyingCsInput} from "./inputs/StudyingCsInput";
+import {GenderInput} from "./inputs/GenderInput";
 
 interface UserDetailsProps {
     examPreferences: UserExamPreferences;
     setExamPreferences: (e: any) => void;
-    myUser: ValidationUser;
-    setMyUser: (user: any) => void;
-    attemptedAccountUpdate: boolean;
-    isEmailValid: boolean;
-    isDobValid: boolean;
+    userToUpdate: ValidationUser;
+    setUserToUpdate: (user: any) => void;
+    subjectInterests: SubjectInterests;
+    setSubjectInterests: (si: SubjectInterests) => void;
+    submissionAttempted: boolean;
 }
 
 export const UserDetails = (props: UserDetailsProps) => {
-    const {myUser, setMyUser, isEmailValid, isDobValid, examPreferences, setExamPreferences, attemptedAccountUpdate} = props;
-    let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
-    let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
-    let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
+    const {
+        userToUpdate, setUserToUpdate,
+        examPreferences, setExamPreferences,
+        subjectInterests, setSubjectInterests,
+        submissionAttempted
+    } = props;
 
-    function searchSchool(e?: Event) {
-        if (e) {
-            e.preventDefault();
-        }
-        if (schoolQueryText) {
-            api.schools.search(schoolQueryText).then(({data}) => {
-                setSchoolSearchResults(data);
-            }).catch((response) => {
-                console.error("Error searching for schools. ", response);
-            });
-        } else {
-            setSchoolSearchResults([]);
-        }
-    }
-
-    function fetchSchool(urn: string) {
-        if (urn != "") {
-            api.schools.getByUrn(urn).then(({data}) => {
-                setSelectedSchoolObject(data[0]);
-            });
-        } else {
-            setSelectedSchoolObject(null);
-        }
-    }
-
-    useEffect(() => {
-        fetchSchool(myUser.schoolId || "");
-    }, [myUser]);
-
-    const timer: MutableRefObject<number | undefined> = useRef();
-    useEffect(() => {
-        timer.current = window.setTimeout(() => {
-            searchSchool();
-        }, 800);
-        return () => {
-            clearTimeout(timer.current);
-        }
-    }, [schoolQueryText]);
-
-    function setUserSchool(school: any) {
-        setMyUser(Object.assign({}, myUser, {schoolId: school && school.urn}));
-        setSchoolQueryText(null);
-        setSelectedSchoolObject(school);
-        setSchoolSearchResults([]);
-    }
+    const allRequiredFieldsValid = userToUpdate && subjectInterests &&
+        validateEmail(userToUpdate.email) &&
+        validateUserGender(userToUpdate) &&
+        validateUserSchool(userToUpdate) &&
+        validateSubjectInterests(subjectInterests);
 
     return <CardBody className="pt-0">
         <Row>
@@ -79,12 +49,12 @@ export const UserDetails = (props: UserDetailsProps) => {
         <Row>
             <Col md={6}>
                 <FormGroup>
-                    <Label htmlFor="first-name-input" className="form-required">First Name</Label>
+                    <Label htmlFor="first-name-input" className="form-required">First name</Label>
                     <Input
                         id="first-name-input" type="text" name="givenName" maxLength={255}
-                        defaultValue={myUser.givenName}
+                        defaultValue={userToUpdate.givenName}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setMyUser(Object.assign({}, myUser, {givenName: e.target.value}))
+                            setUserToUpdate(Object.assign({}, userToUpdate, {givenName: e.target.value}))
                         }}
                         required
                     />
@@ -92,12 +62,12 @@ export const UserDetails = (props: UserDetailsProps) => {
             </Col>
             <Col md={6}>
                 <FormGroup>
-                    <Label htmlFor="last-name-input" className="form-required">Last Name</Label>
+                    <Label htmlFor="last-name-input" className="form-required">Last name</Label>
                     <Input
                         id="last-name-input" type="text" name="last-name" maxLength={255}
-                        defaultValue={myUser.familyName}
+                        defaultValue={userToUpdate.familyName}
                         onChange={(e:  React.ChangeEvent<HTMLInputElement>) => {
-                            setMyUser(Object.assign({}, myUser, {familyName: e.target.value}))
+                            setUserToUpdate(Object.assign({}, userToUpdate, {familyName: e.target.value}))
                         }}
                         required
                     />
@@ -107,93 +77,36 @@ export const UserDetails = (props: UserDetailsProps) => {
         <Row>
             <Col md={6}>
                 <FormGroup>
-                    <Label htmlFor="email-input" className="form-required">Email</Label>
+                    <Label htmlFor="email-input" className="form-required">Email address</Label>
                     <Input
-                        invalid={!isEmailValid} id="email-input" type="email"
-                        name="email" defaultValue={myUser.email}
+                        invalid={!validateEmail(userToUpdate.email)} id="email-input" type="email"
+                        name="email" defaultValue={userToUpdate.email}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            setMyUser(Object.assign({}, myUser, {email: event.target.value}))
+                            setUserToUpdate(Object.assign({}, userToUpdate, {email: event.target.value}))
                         }}
                         aria-describedby="emailValidationMessage" required
                     />
                     <FormFeedback id="emailValidationMessage">
-                        {(!isEmailValid) ? "Enter a valid email address" : null}
+                        {(!validateEmail(userToUpdate.email)) ? "Enter a valid email address" : null}
                     </FormFeedback>
                 </FormGroup>
             </Col>
             <Col md={6}>
-                <FormGroup>
-                    <Label htmlFor="dob-input">Date of Birth</Label>
-                    <DateInput
-                        invalid={!isDobValid && !!myUser.dateOfBirth}
-                        id="dob-input"
-                        name="date-of-birth"
-                        defaultValue={myUser.dateOfBirth as unknown as string}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            setMyUser(Object.assign({}, myUser, {dateOfBirth: event.target.valueAsDate}))
-                        }}
-                        aria-describedby="ageValidationMessage"
-                        labelSuffix=" of birth"
-                    />
-                    <FormFeedback id="ageValidationMessage">
-                        You must be over 13 years old
-                    </FormFeedback>
-                </FormGroup>
+                <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
         </Row>
-
         <Row>
-            <Col xs={6} md={3}>
-                <FormGroup>
-                    <fieldset>
-                        <legend>Gender</legend>
-                        <Row>
-                            <Col size={6} lg={4}>
-                                <CustomInput
-                                    id="gender-female" type="radio"
-                                    name="gender" label="Female"
-                                    defaultChecked={myUser.gender === 'FEMALE'}
-                                    onChange={
-                                        (e: React.ChangeEvent<HTMLInputElement>) => {
-                                            setMyUser(Object.assign({}, myUser, {gender: 'FEMALE'}))
-                                        }
-                                    }/>
-                            </Col>
-                            <Col size={6} lg={4}>
-                                <CustomInput
-                                    id="gender-male" type="radio"
-                                    name="gender" label="Male"
-                                    defaultChecked={myUser.gender === 'MALE'}
-                                    onChange={
-                                        (e: React.ChangeEvent<HTMLInputElement>) => {
-                                            setMyUser(Object.assign({}, myUser, {gender: 'MALE'}))
-                                        }
-                                    }/>
-                            </Col>
-                            <Col size={6} lg={4}>
-                                <CustomInput
-                                    id="gender-other" type="radio"
-                                    name="gender" label="Other"
-                                    defaultChecked={myUser.gender === 'OTHER'}
-                                    onChange={
-                                        (e: React.ChangeEvent<HTMLInputElement>) => {
-                                            setMyUser(Object.assign({}, myUser, {gender: 'OTHER'}))
-                                        }
-                                    }/>
-                            </Col>
-                        </Row>
-                    </fieldset>
-                </FormGroup>
+            <Col md={6}>
+                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
-
-            <Col xs={6} md={3} className="align-self-center text-center">
+            <Col md={6}>
                 <FormGroup>
-                    <Label className="d-inline-block pr-2" for="examBoardSelect">Exam Board</Label>
+                    <Label className="d-inline-block pr-2" htmlFor="exam-board-select">
+                        Exam board
+                    </Label>
                     <Input
-                        className="w-auto d-inline-block pl-1 pr-0"
-                        type="select"
-                        name="select"
-                        id="examBoardSelect"
+                        type="select" name="select" id="exam-board-select"
                         value={
                             (examPreferences && examPreferences[EXAM_BOARD.OCR]) ? EXAM_BOARD.OCR : EXAM_BOARD.AQA
                         }
@@ -210,42 +123,9 @@ export const UserDetails = (props: UserDetailsProps) => {
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>
                 </FormGroup>
-            </Col>
-
-            <Col md={6}>
-                <FormGroup className="school">
-                    <Label htmlFor="school-input">School</Label>
-                    <Input
-                        id="school-input" type="text" name="school" placeholder="Type a UK school name..." autoComplete="isaac-off"
-                        value={
-                            schoolQueryText !== null ?
-                                schoolQueryText :
-                                (selectedSchoolObject && (selectedSchoolObject.name + ", " + selectedSchoolObject.postcode) || "")
-                        }
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                            const queryValue = e.target.value;
-                            setSchoolQueryText(queryValue);
-                            if (queryValue === "") {
-                                setUserSchool(undefined);
-                            }
-                        }}
-                    />
-                    {schoolSearchResults && schoolSearchResults.length > 0 && <ul id="school-search-results">
-                        {schoolSearchResults.map((item: any) =>
-                            <li key={item.urn} onClick={() => { setUserSchool(item) }}>
-                                {item.name + ", " + item.postcode}
-                            </li>
-                        )}
-                    </ul>}
-                    {!myUser.schoolId && <Input
-                        id="school-other-input" type="text" name="school-other" placeholder="...or enter a non-UK school."
-                        className="mt-2" maxLength={255}
-                        defaultValue={myUser.schoolOther}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setMyUser(Object.assign({}, myUser, { schoolOther: e.target.value }))
-                        }
-                    />}
-                </FormGroup>
+                <div className="mt-5 pt-1">
+                    <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
+                </div>
             </Col>
         </Row>
 
@@ -258,8 +138,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         {/*    </Col>*/}
         {/*</Row>*/}
 
-
-        {myUser && myUser.role == "STUDENT" && <Row>
+        {userToUpdate && userToUpdate.role == "STUDENT" && <Row>
             <Col className="text-muted text-center mt-2">
                 Are you a teacher? {" "}
                 <a href="/pages/teacher_accounts" target="_blank" rel="noopener noreferrer">
@@ -269,5 +148,9 @@ export const UserDetails = (props: UserDetailsProps) => {
                 and we&apos;ll convert your account to a teacher account.
             </Col>
         </Row>}
+
+        {submissionAttempted && !allRequiredFieldsValid && <h4 role="alert" className="text-danger text-center mt-4 mb-3">
+            Required information in this form is not set
+        </h4>}
     </CardBody>
 };

@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {clearEventsList, getEventsPodList} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {EventCard} from "./EventCard";
+import {EventCard} from "./cards/EventCard";
 
 const NUMBER_OF_EVENTS_IN_CAROUSEL = 6;
 

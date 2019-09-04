@@ -8,7 +8,7 @@ import queryString from "query-string";
 import {withRouter} from "react-router-dom";
 import {History} from "history";
 import {clearEventsList, getEventsList} from "../../state/actions";
-import {EventCard} from "../elements/EventCard";
+import {EventCard} from "../elements/cards/EventCard";
 
 /* eslint-disable @typescript-eslint/camelcase */
 

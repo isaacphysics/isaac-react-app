@@ -1,9 +1,9 @@
 import React from "react";
 import * as RS from "reactstrap";
 import classnames from "classnames";
-import {AugmentedEvent} from "../../../IsaacAppTypes";
-import {DateString} from "./DateString";
 import {Link} from "react-router-dom";
+import {AugmentedEvent} from "../../../../IsaacAppTypes";
+import {DateString} from "../DateString";
 
 export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolean}) => {
     const {id, title, subtitle, eventThumbnail, location, expired, date, endDate} = event;

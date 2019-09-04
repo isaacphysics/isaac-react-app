@@ -14,7 +14,7 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {NavigationLinks} from "../elements/NavigationLinks";
-import {AnonUserExamBoardPicker} from "../elements/AnonUserExamBoardPicker";
+import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
 import {EditContentButton} from "../elements/EditContentButton";
 
 const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
