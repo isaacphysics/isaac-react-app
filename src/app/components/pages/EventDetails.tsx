@@ -10,6 +10,7 @@ import {getEvent} from "../../state/actions";
 import {DateString} from "../elements/DateString";
 import {IsaacContent} from "../content/IsaacContent";
 import {Link} from "react-router-dom";
+import {EventBookingForm} from "../elements/EventBookingForm";
 
 export const EventDetails = ({match: {params: {eventId}}}: {match: {params: {eventId: string}}}) => {
     const dispatch = useDispatch();
@@ -19,7 +20,7 @@ export const EventDetails = ({match: {params: {eventId}}}: {match: {params: {eve
 
     useEffect(() => {dispatch(getEvent(eventId))}, [eventId]);
 
-    return <ShowLoading until={currentEvent} render={(event: AugmentedEvent) => <RS.Container className="mb-5">
+    return <ShowLoading until={currentEvent} render={(event: AugmentedEvent) => <RS.Container className="events mb-5">
         <TitleAndBreadcrumb
             currentPageTitle={event.title as string} subTitle={event.subtitle}
             breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
@@ -31,7 +32,7 @@ export const EventDetails = ({match: {params: {eventId}}}: {match: {params: {eve
                 <RS.Row>
                     <RS.Col lg={8} className={event.expired ? "expired" : ""}>
                         {/* TODO Student/Teacher/Virtual icon */}
-                        {/* TODO add to calendar if staff user - <a ng-click="googleCalendarTemplate()" ng-if="isStaffUser"><span className="calendar-img" alt="Add to Google Calendar">Add to Calendar</span></a>*/}
+                        {/* TODO add to calendar import if staff user - <a ng-click="googleCalendarTemplate()" ng-if="isStaffUser"><span className="calendar-img" alt="Add to Google Calendar">Add to Calendar</span></a>*/}
 
                         {/* Key event info */}
                         <RS.Table borderless className="event-key-info mb-4">
@@ -76,39 +77,13 @@ export const EventDetails = ({match: {params: {eventId}}}: {match: {params: {eve
                         </RS.Table>
 
                         {/* Event body copy */}
-                        <IsaacContent doc={event} />
+                        <div className="mb-3">
+                            <IsaacContent doc={event} />
+                        </div>
 
                         {/* Booking form */}
                         {user && user.loggedIn && event.eventStatus != 'CLOSED' && !event.expired && bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <span>
-                            {/* TODO Booking form component */}
-                            <h1>BOOKING FORM COMPONENT</h1>
-
-                            <div>
-                                {event.numberOfPlaces && event.numberOfPlaces > 0 && !event.userBooked && event.withinBookingDeadline &&
-                                (event.placesAvailable && event.placesAvailable > 0 || (event.tags && event.tags.indexOf('student') != -1 && user.role != 'STUDENT')) && <p>
-                                    <small>
-                                        By requesting to book on this event, you are granting event organisers access to the information provided in the form above.
-                                        You are also giving them permission to set you pre-event work and view your progress. You can manage access to your progress data in your
-                                        <Link to="/account#teacherconnections">account settings</Link>.
-                                    </small>
-                                </p>}
-
-                                {event.numberOfPlaces && event.numberOfPlaces > 0 && !event.userBooked && event.withinBookingDeadline && event.eventStatus != 'WAITING_LIST_ONLY' &&
-                                (event.placesAvailable && event.placesAvailable > 0 || (event.tags && event.tags.indexOf('student') != -1 && user.role != 'STUDENT')) && <RS.Button
-                                    onClick={() => {/* TODO requestBooking() */}}
-                                >
-                                    Book now
-                                </RS.Button>}
-
-                                {user && user.loggedIn && event.numberOfPlaces && event.numberOfPlaces > 0 && !event.userBooked && !event.userOnWaitList &&
-                                (event.eventStatus == 'WAITING_LIST_ONLY' || (event.placesAvailable && event.placesAvailable <= 0) || !event.withinBookingDeadline) &&
-                                !(event.tags && event.tags.indexOf('student') != -1 && user.role != 'STUDENT') &&
-                                <RS.Button
-                                    onClick={() => {/* TODO addToWaitingList() */}}
-                                >
-                                    Apply {!event.withinBookingDeadline && <> - deadline past</>}
-                                </RS.Button>}
-                            </div>
+                            <EventBookingForm event={event} user={user} />
                         </span>}
 
                         {/* Options for un-logged-in users */}
@@ -145,7 +120,8 @@ export const EventDetails = ({match: {params: {eventId}}}: {match: {params: {eve
                             </RS.Button>}
                         </span>}
 
-                        <RS.Button tag={Link} to="/events">Back to events</RS.Button>
+                        {/* TODO button colors */}
+                        <RS.Button tag={Link} to="/events" color="primary" outline>Back to events</RS.Button>
                     </RS.Col>
                 </RS.Row>
 
