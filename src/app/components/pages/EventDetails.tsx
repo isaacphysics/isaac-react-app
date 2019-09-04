@@ -11,14 +11,28 @@ import {DateString} from "../elements/DateString";
 import {IsaacContent} from "../content/IsaacContent";
 import {Link} from "react-router-dom";
 import {EventBookingForm} from "../elements/EventBookingForm";
+import * as persistence from "../../services/localStorage";
+import {KEY} from "../../services/localStorage";
+import {history} from "../../services/history";
 
-export const EventDetails = ({match: {params: {eventId}}}: {match: {params: {eventId: string}}}) => {
+
+interface EventDetailsProps {
+    match: {params: {eventId: string}};
+    location: {pathname: string};
+}
+export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventDetailsProps) => {
     const dispatch = useDispatch();
     const currentEvent = useSelector((state: AppState) => state && state.currentEvent);
     const user = useSelector((state: AppState) => state && state.user);
     const [bookingFormOpen, setBookingFormOpen] = useState(false);
 
     useEffect(() => {dispatch(getEvent(eventId))}, [eventId]);
+
+
+    function loginAndReturn() {
+        persistence.save(KEY.AFTER_AUTH_PATH, pathname);
+        history.push("/login");
+    }
 
     return <ShowLoading until={currentEvent} render={(event: AugmentedEvent) => <RS.Container className="events mb-5">
         <TitleAndBreadcrumb
@@ -88,14 +102,10 @@ export const EventDetails = ({match: {params: {eventId}}}: {match: {params: {eve
 
                         {/* Options for un-logged-in users */}
                         {!(user && user.loggedIn) && event.eventStatus != 'CLOSED' && !event.expired && <span>
-                            {event.numberOfPlaces && event.numberOfPlaces > 0 && event.withinBookingDeadline && <RS.Button
-                                onClick={() => {/* TODO login({target: $root.relativeCanonicalUrl=='/' ? null : $root.relativeCanonicalUrl}) */}}
-                            >
+                            {event.numberOfPlaces && event.numberOfPlaces > 0 && event.withinBookingDeadline && <RS.Button onClick={loginAndReturn}>
                                 Login to book
                             </RS.Button>}
-                            {(event.numberOfPlaces && event.numberOfPlaces <= 0 || !event.withinBookingDeadline) && <RS.Button
-                                onClick={() => {/* TODO login({target: $root.relativeCanonicalUrl=='/' ? null : $root.relativeCanonicalUrl}) */}}
-                            >
+                            {(event.numberOfPlaces && event.numberOfPlaces <= 0 || !event.withinBookingDeadline) && <RS.Button onClick={loginAndReturn}>
                                 Login to apply
                             </RS.Button>}
                         </span>}
@@ -115,7 +125,7 @@ export const EventDetails = ({match: {params: {eventId}}}: {match: {params: {eve
                             {event.userBooked && !event.expired && <RS.Button onClick={() => {/* TODO cancelEventBooking() */}}>
                                 Cancel your booking
                             </RS.Button>}
-                            {event.userOnWaitList && !event.expired && <RS.Button onClick={() => {/* cancelEventBooking()*/}}>
+                            {event.userOnWaitList && !event.expired && <RS.Button onClick={() => {/* TODO cancelEventBooking()*/}}>
                                 Remove from waiting list
                             </RS.Button>}
                         </span>}

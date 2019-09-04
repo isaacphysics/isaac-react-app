@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
 import {AugmentedEvent, LoggedInUser} from "../../../IsaacAppTypes";
+import {SchoolInput} from "./inputs/SchoolInput";
 
 interface AdditionalInformation {
     yearGroup?: string;
@@ -91,6 +92,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                                     <span className="ru-form-required" />
                                 </RS.Label>
                                 {/* TODO school input */}
+                                {/*<SchoolInput userToUpdate={} setUserToUpdate={} submissionAttempted={} /> */}
                             </RS.Col>
                         </RS.Row>}
 
