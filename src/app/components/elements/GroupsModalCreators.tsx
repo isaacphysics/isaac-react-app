@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {connect, ResolveThunks} from "react-redux";
-import {Link} from "react-router-dom";
 import {sortBy} from "lodash";
+import {history} from "../../services/history";
 import * as RS from "reactstrap";
 
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
@@ -65,7 +65,10 @@ export const groupInvitationModal = (firstTime: boolean) => {
                     </RS.Button>
                 </RS.Col>
                 <RS.Col>
-                    <RS.Button block key={0} color="secondary" tag={Link} to="/set_assignments">
+                    <RS.Button block key={0} color="secondary" onClick={() => {
+                        store.dispatch(closeActiveModal());
+                        history.push("/set_assignments");
+                    }}>
                         Set an assignment
                     </RS.Button>
                 </RS.Col>
