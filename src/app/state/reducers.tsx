@@ -18,7 +18,8 @@ import {
 import {
     AssignmentDTO,
     ContentDTO,
-    ContentSummaryDTO, EmailTemplateDTO,
+    ContentSummaryDTO,
+    EmailTemplateDTO,
     GameboardDTO,
     GameboardListDTO,
     IsaacTopicSummaryPageDTO,

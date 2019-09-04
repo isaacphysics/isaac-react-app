@@ -6,8 +6,10 @@ import {getAdminSiteStats, getEmailTemplate, sendAdminEmail, sendAdminEmailWithI
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {EmailUserRoles} from "../../../IsaacApiTypes";
 import {UserRole} from "../../services/constants";
+import classnames from "classnames";
+import {debounce} from 'lodash';
 
-export const AdminEmail = () => {
+export const AdminEmails = () => {
     const dispatch = useDispatch();
     const [selectionMode, setSelectionMode] = useState("USER_FILTER")
     const [selectedRoles, setSelectedRoles] = useState({
@@ -19,12 +21,25 @@ export const AdminEmail = () => {
         STAFF: false,
         STUDENT: false
     } as EmailUserRoles);
-    const [csvIDInput, setCSVIDInput] = useState("");
+    const [csvIDs, setCSVIDs] = useState([] as number[]);
     const [emailType, setEmailType] = useState("null");
     const [contentObjectID, setContentObjectID] = useState("");
     const userRolesSelector = useSelector((state: AppState) => state && state.adminStats && state.adminStats.userRoles);
     const emailTemplateSelector = useSelector((state: AppState) => state && state.adminEmailTemplate && state.adminEmailTemplate);
 
+    const numberOfUsers = () => {
+        if (selectionMode == "USER_FILTER") {
+            if (userRolesSelector) {
+                return Object.entries(selectedRoles).map(([role, enabled]) => enabled ? userRolesSelector[role] || 0 : 0).reduce((x, y) => x + y, 0);
+            } else {
+                return 0;
+            }
+        } else {
+            return csvIDs.length;
+        }
+    };
+    const canSubmit = () => emailTemplateSelector && emailType != "null" && numberOfUsers() > 0;
+    const csvInputDebounce = debounce((value: string) => setCSVIDs(value.split(/[\s,]+/).map((e) => {return parseInt(e)}).filter((num) => !isNaN(num))), 250);
 
     useEffect(() => {
         if (!userRolesSelector) {
@@ -32,8 +47,8 @@ export const AdminEmail = () => {
         }
     }, []);
 
-    return <RS.Container id="admin-stats-page">
-        <TitleAndBreadcrumb currentPageTitle="Admin email" />
+    return <RS.Container id="admin-emails-page">
+        <TitleAndBreadcrumb currentPageTitle="Admin emails" />
 
         <RS.Card className="p-3 my-3">
             <RS.CardTitle tag="h2">User selection</RS.CardTitle>
@@ -48,7 +63,6 @@ export const AdminEmail = () => {
                     <option value="CSV_USER_ID_LIST">CSV User ID list</option>
                 </RS.Input>
 
-
                 {selectionMode == "USER_FILTER" && <RS.Table bordered>
                     <thead>
                         <tr>
@@ -61,13 +75,13 @@ export const AdminEmail = () => {
                         userRolesSelector && Object.keys(selectedRoles).map((role: string) =>
                             <tr key={role}>
                                 <td>
-                                    {role + "(" + (userRolesSelector[role] || 0) + ")"}
+                                    {`${role}(${(userRolesSelector[role] || 0)})`}
                                 </td>
                                 <td>
                                     <RS.Input
                                         type="checkbox" className="m-0 position-relative"
                                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                            const newSelectedRoles = {...selectedRoles}
+                                            const newSelectedRoles = {...selectedRoles};
                                             newSelectedRoles[role as UserRole] = event.target.checked;
                                             setSelectedRoles(newSelectedRoles);
                                         }}
@@ -83,7 +97,7 @@ export const AdminEmail = () => {
                 {selectionMode == "CSV_USER_ID_LIST" && <RS.Input
                     type = "textarea"
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        return setCSVIDInput(event.target.value);
+                        csvInputDebounce(event.target.value);
                     }}
                 />
                 }
@@ -123,7 +137,10 @@ export const AdminEmail = () => {
                     </RS.Col>
                     <RS.Col>
                         <RS.Input
-                            type="submit" value="Load template" className="btn btn-block btn-secondary border-0" onClick={() => dispatch(getEmailTemplate(contentObjectID))}
+                            type="submit" value="Load template"
+                            className={"btn btn-block btn-secondary border-0 " + classnames({disabled: contentObjectID.length == 0})}
+                            disabled={contentObjectID.length == 0}
+                            onClick={() => dispatch(getEmailTemplate(contentObjectID))}
                         />
                     </RS.Col>
                 </RS.Row>
@@ -141,7 +158,7 @@ export const AdminEmail = () => {
             <RS.CardTitle tag="h2">HTML preview</RS.CardTitle>
             <RS.Label>The preview below uses fields taken from your account (e.g. givenname and familyname).</RS.Label>
             <RS.CardBody>
-                {emailTemplateSelector && emailTemplateSelector.html && <div dangerouslySetInnerHTML={{__html: emailTemplateSelector.html}} />}
+                {emailTemplateSelector && emailTemplateSelector.html && <iframe className="email-preview-frame" srcDoc={emailTemplateSelector.html}/>}
             </RS.CardBody>
         </RS.Card>
 
@@ -155,13 +172,14 @@ export const AdminEmail = () => {
 
         <RS.Card className="p-3 my-3">
             <RS.CardBody>
-                <RS.Input type="button" value="Send emails" className="btn btn-block btn-secondary border-0"
+                <RS.Input type="button" value="Send emails"
+                          className={"btn btn-block btn-secondary border-0 " + classnames({disabled: !canSubmit()})}
+                          disabled={!canSubmit()}
                           onClick={() => {
                               if (selectionMode == "USER_FILTER") {
                                   dispatch(sendAdminEmail(contentObjectID, emailType, selectedRoles));
                               } else {
-                                  const userIDs = csvIDInput.split(/[\s,]+/).map((e) => {return parseInt(e)}).filter((num) => !isNaN(num));
-                                  dispatch(sendAdminEmailWithIds(contentObjectID, emailType, userIDs));
+                                  dispatch(sendAdminEmailWithIds(contentObjectID, emailType, csvIDs));
                               }}
                           }/>
             </RS.CardBody>

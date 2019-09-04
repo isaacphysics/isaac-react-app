@@ -1,6 +1,7 @@
 import * as ApiTypes from "./IsaacApiTypes";
 import {
-    Content, EmailTemplateDTO,
+    Content,
+    EmailTemplateDTO,
     GameboardDTO,
     GameboardItemState,
     GroupMembershipDTO,

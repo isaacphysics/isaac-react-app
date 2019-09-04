@@ -59,7 +59,10 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
             <RS.Card className="p-3 my-3">
                 <RS.CardTitle tag="h2">Useful links</RS.CardTitle>
                 <RS.CardBody>
-                    <Link to="/admin/usermanager">User Manager</Link>
+                    <ul>
+                        <li><Link to="/admin/usermanager">User Manager</Link></li>
+                        <li><Link to="/admin/emails">Admin emails</Link></li>
+                    </ul>
                 </RS.CardBody>
             </RS.Card>
 
