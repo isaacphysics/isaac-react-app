@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import "../../services/scrollManager"; // important
 import "../../services/polyfills"; // important
 import {useDispatch, useSelector} from "react-redux";
-import {Router, Switch} from "react-router-dom";
+import {Router, Switch, Route} from "react-router-dom";
 import {Footer} from "./Footer";
 import {Homepage} from "../pages/Homepage";
 import {Question} from "../pages/Question";
@@ -79,8 +79,9 @@ export const IsaacApp = () => {
             <main role="main" className="flex-fill content-body">
                 <Switch>
                     {/* Errors; these paths work but aren't really used */}
-                    <TrackedRoute exact path={serverError ? undefined : "/error"} component={ServerError} />
-                    <TrackedRoute exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
+                    <Route exact path={serverError ? undefined : "/error"} component={ServerError} />
+                    <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
+
                     {/* Special case */}
                     <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
 
@@ -144,7 +145,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/support/:type?/:category?" component={Support} />
 
                     {/* Error pages */}
-                    <TrackedRoute component={NotFound} />
+                    <Route component={NotFound} />
                 </Switch>
             </main>
             <Footer />

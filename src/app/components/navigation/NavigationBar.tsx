@@ -1,21 +1,32 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {Badge, Collapse, DropdownItem, DropdownToggle, DropdownMenu, Nav, Navbar, NavbarToggler, UncontrolledDropdown} from "reactstrap";
-import {RouteComponentProps, withRouter} from "react-router";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {
+    Badge,
+    Collapse,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Nav,
+    Navbar,
+    NavbarToggler,
+    UncontrolledDropdown
+} from "reactstrap";
 import {isAdmin, isStaff} from "../../services/user";
+import {loadMyAssignments} from "../../state/actions";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
-
-interface NavigationBarProps {
-    user: LoggedInUser | null;
-}
-
-const NavigationBarComponent = ({user}: NavigationBarProps) => {
+export const NavigationBar = () => {
+    const dispatch = useDispatch();
     const [menuOpen, setMenuOpen] = useState(false);
+    const user = useSelector((state: AppState) => (state && state.user) || null);
+    const assignmentCount = useSelector((state: AppState) => (state && state.assignments && state.assignments.length) || 0);
+
+    useEffect(() => {
+        if (user && user.loggedIn) {
+            dispatch(loadMyAssignments());
+        }
+    }, [user]);
 
     const DropdownItemComingSoon = ({children, className}: {children: React.ReactNode; className: string}) => (
         <DropdownItem tag={Link} to="/coming_soon" className={`${className}`} aria-disabled="true">
@@ -50,7 +61,11 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
 
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
-                        <p className="m-0">For students</p>
+                        <p className="m-0">
+                            For students
+                            {assignmentCount > 0 && <span className="badge badge-pill bg-grey ml-2">{assignmentCount}</span>}
+                            {assignmentCount > 0 && <span className="sr-only">Incomplete assignments</span>}
+                        </p>
                     </DropdownToggle>
                     <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/students" className="pl-4 py-3 p-md-3">
@@ -58,6 +73,8 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
                         </DropdownItem>
                         <DropdownItem tag={Link} to="/assignments" className="pl-4 py-3 p-md-3">
                             My assignments
+                            {assignmentCount > 0 && <span className="badge badge-pill bg-grey ml-2">{assignmentCount}</span>}
+                            {assignmentCount > 0 && <span className="sr-only">Incomplete assignments</span>}
                         </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             My gameboards
@@ -153,5 +170,3 @@ const NavigationBarComponent = ({user}: NavigationBarProps) => {
         </Collapse>
     </Navbar>;
 };
-
-export const NavigationBar = withRouter(connect(stateToProps)(NavigationBarComponent));

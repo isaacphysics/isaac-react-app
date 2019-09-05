@@ -2,25 +2,21 @@ import {closeActiveModal, updateCurrentUser} from "../../../state/actions";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "../UserEmailPreferences";
-import {SubjectInterests, UserEmailPreferences} from "../../../../IsaacAppTypes";
+import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {
     allRequiredInformationIsPresent,
     validateEmailPreferences,
-    validateSubjectInterests, validateUserGender, validateUserSchool
+    validateSubjectInterests,
+    validateUserGender,
+    validateUserSchool
 } from "../../../services/validation";
 import {isMobile} from "../../../services/device";
 import {isLoggedIn} from "../../../services/user";
-import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {SchoolInput} from "../inputs/SchoolInput";
-import {DobInput} from "../inputs/DobInput";
-import {Row} from "reactstrap";
-import {Col} from "reactstrap";
-import {CardBody} from "reactstrap";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
-import {Link} from "react-router-dom";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -57,16 +53,20 @@ const RequiredAccountInfoBody = () => {
         }
     }
 
-    const allUserFieldsAreValid = validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserSchool(initialUserValue);
+    const allUserFieldsAreValid = validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateSubjectInterests(initialSubjectInterestsValue);
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
+            <div className="text-muted small pb-2">
+                Providing a few extra pieces of information helps us understand the usage of Isaac Computer Science across the UK and beyond.
+                Full details on how we use your personal information can be found in our <a target="_" href="/privacy">Privacy Policy</a>.
+            </div>
             <div className="text-right text-muted required-before">
                 Required
             </div>
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {!(validateUserSchool(initialUserValue) && validateUserGender(initialUserValue)) && <RS.Col>
+                {!(validateSubjectInterests(initialSubjectInterestsValue) && validateUserGender(initialUserValue)) && <RS.Col>
                     {!validateUserGender(initialUserValue) && <div>
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
@@ -87,9 +87,6 @@ const RequiredAccountInfoBody = () => {
                     />
                 </RS.Col>}
             </RS.Row>
-            <div className="text-muted pb-4">
-                To find out how the data you provide is used, please read our <a target="_" href="/privacy">privacy policy</a>.
-            </div>
         </RS.CardBody>}
 
         {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <hr className="text-center" />}
