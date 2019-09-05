@@ -1091,6 +1091,8 @@ export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>,
 };
 
 // Events
+export const clearEventsList = {type: ACTION_TYPE.EVENTS_CLEAR};
+
 export const getEvent = (eventId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const state = getState();
     try {
@@ -1124,6 +1126,7 @@ export const getEventsList = (startIndex: number, eventsPerPage: number, typeFil
 
 export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dispatch<Action>) => {
     try {
+        dispatch(clearEventsList as any);
         dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
         const getActive = true;
         const eventsResponse = await api.events.getFirstN(numberOfEvents, getActive);
@@ -1139,8 +1142,6 @@ export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dis
         dispatch(showErrorToastIfNeeded("Unable to display events", e));
     }
 };
-
-export const clearEventsList = {type: ACTION_TYPE.EVENTS_CLEAR};
 
 export const makeEventBookingRequest = (eventId: string, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
     try {
