@@ -114,9 +114,9 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                             </RS.Row>
 
                             <div>
-                                <RS.Label htmlFor="account-email" className="form-required">
-                                    Email address
-                                    <RS.Input id="account-email" name="email" type="email" disabled value={targetUser.email} valid={targetUser.emailVerificationStatus != 'VERIFIED'} />
+                                <RS.Label>
+                                    <span className="form-required">Email address</span>
+                                    <RS.Input id="account-email" name="email" type="email" disabled value={targetUser.email} invalid={targetUser.emailVerificationStatus != 'VERIFIED'} />
                                     <RS.FormFeedback>You must verify your email address to book on events. This is so we can send you details about the event.</RS.FormFeedback>
                                 </RS.Label>
                                 {targetUser.emailVerificationStatus != 'VERIFIED' && !verifyEmailRequestSent && <RS.Button
@@ -135,7 +135,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                                 <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} submissionAttempted />
                             </div>
                             <div className="text-center alert-warning p-1">
-                                If this information is not correct, please update it on your <Link to="/account">account page</Link>.
+                                If this information is incorrect, please update it from your <Link to="/account">account page</Link>.
                             </div>
                         </RS.CardBody>
                     </RS.Card>

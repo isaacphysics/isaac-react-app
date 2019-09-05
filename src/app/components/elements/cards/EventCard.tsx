@@ -9,9 +9,9 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
     const {id, title, subtitle, eventThumbnail, location, expired, date, endDate} = event;
 
     return <RS.Card className={classnames({'card-neat': true, 'disabled text-muted': expired, 'm-4': pod, 'mb-4': !pod})}>
-        {eventThumbnail && <div className='card-image text-center mt-3'>
+        {eventThumbnail && <div className={pod ? 'card-image text-center mt-3' : 'card-image text-center'}>
             <RS.CardImg
-                className='m-auto rounded-circle' top
+                className={pod ? 'm-auto rounded-circle' : 'm-auto'} top
                 src={eventThumbnail.src} alt={eventThumbnail.altText || `Illustration for ${title}`}
             />
         </div>}

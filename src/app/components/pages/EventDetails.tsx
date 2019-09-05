@@ -45,6 +45,17 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
             <RS.CardBody>
                 {/* Detail Main */}
                 <RS.Row>
+                    <RS.Col lg={4}>
+                        {event.eventThumbnail && <>
+                            <RS.CardImg
+                                alt={event.eventThumbnail.altText || `Illustration for ${event.title}`}
+                                className='m-auto' top src={event.eventThumbnail.src}
+                            />
+                            <div className="border px-2 py-1 mb-3 bg-light">
+                                <strong>{event.title}</strong>
+                            </div>
+                        </>}
+                    </RS.Col>
                     <RS.Col lg={8} className={event.expired ? "expired" : ""}>
                         {/* TODO Student/Teacher/Virtual icon */}
                         {/* TODO add to calendar import if staff user - <a ng-click="googleCalendarTemplate()" ng-if="isStaffUser"><span className="calendar-img" alt="Add to Google Calendar">Add to Calendar</span></a>*/}
