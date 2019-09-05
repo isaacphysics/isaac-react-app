@@ -93,29 +93,19 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                 <h3>Event booking form</h3>
                 <RS.Form onSubmit={submitBooking}>
                     {/* Account Information */}
-                    <RS.Card className="mb-3">
+                    <RS.Card className="mb-3 bg-light">
                         <RS.CardBody>
                             <legend>Your account information (<Link to="/account" className="text-secondary">update</Link>)</legend>
                             <RS.Row>
                                 <RS.Col md={6}>
                                     <RS.Label htmlFor="account-firstname" className="form-required">
                                         First name
-                                        {/* TODO */}
-                                        {/*{<span className="ru-error-message"*/}
-                                        {/*      ng-if="account.firstname.$invalid && account.firstname.$dirty">*/}
-                                        {/*  Required*/}
-                                        {/*</span>}*/}
                                     </RS.Label>
                                     <RS.Input id="account-firstname" name="firstname" type="text" disabled value={targetUser.givenName}/>
                                 </RS.Col>
                                 <RS.Col md={6}>
                                     <RS.Label htmlFor="account-lastname" className="form-required">
                                         Last name
-                                        {/* TODO */}
-                                        {/*<span className="ru-error-message"*/}
-                                        {/*      ng-if="account.secondname.$invalid && account.secondname.$dirty">*/}
-                                        {/*    Required*/}
-                                        {/*</span>*/}
                                     </RS.Label>
                                     <RS.Input id="account-lastname" name="secondname" type="text" disabled value={targetUser.familyName} />
                                 </RS.Col>
@@ -146,6 +136,9 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                             </div>
                             <div>
                                 <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} submissionAttempted />
+                            </div>
+                            <div className="text-center alert-warning p-1">
+                                If this information is not correct, please update it on your <Link to="/account">account page</Link>.
                             </div>
                         </RS.CardBody>
                     </RS.Card>
