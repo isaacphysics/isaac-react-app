@@ -95,7 +95,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                     {/* Account Information */}
                     <RS.Card className="mb-3 bg-light">
                         <RS.CardBody>
-                            <legend>Your account information (<Link to="/account" className="text-secondary">update</Link>)</legend>
+                            <legend>Your account information (<a href="/account" target="_blank" className="text-secondary">update</a>)</legend>
                             <RS.Row>
                                 <RS.Col md={6}>
                                     {/* Should be impossible to not have a first name */}
@@ -135,7 +135,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                                 <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} submissionAttempted />
                             </div>
                             <div className="text-center alert-warning p-1">
-                                If this information is incorrect, please update it from your <Link to="/account">account page</Link>.
+                                If this information is incorrect, please update it from your <a href="/account" target="_blank">account page</a>.
                             </div>
                         </RS.CardBody>
                     </RS.Card>
@@ -171,7 +171,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                                         <option value="OTHER">N/A - Other</option>
                                     </RS.Input>
                                     {event.teacher && additionalInformation.yearGroup == 'TEACHER' && <div className="mt-2 text-right">
-                                        <Link to="/pages/contact_us_teacher">Click to upgrade to a teacher account</Link> for free!
+                                        <a href="/pages/contact_us_teacher" target="_blank">Click to upgrade to a teacher account</a> for free!
                                     </div>}
                                 </React.Fragment>}
                             </div>
@@ -238,7 +238,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                             <small>
                                 By requesting to book on this event, you are granting event organisers access to the information provided in the form above.
                                 You are also giving them permission to set you pre-event work and view your progress.
-                                You can manage access to your progress data in your <Link to="/account#teacherconnections">account settings</Link>.
+                                You can manage access to your progress data in your <a href="/account#teacherconnections" target="_blank">account settings</a>.
                             </small>
                         </p>}
 

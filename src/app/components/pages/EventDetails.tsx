@@ -61,44 +61,46 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
                         {/* Key event info */}
                         <RS.Table borderless className="event-key-info mb-4">
-                            {event.field && <tr>
-                                <td>Field:</td>
-                                <td>event.field</td>
-                            </tr>}
-                            <tr>
-                                <td>When:</td>
-                                <td>
-                                    <><DateString>{event.date}</DateString> {event.date != event.endDate && <span> &#8212; </span>}</>
-                                    {event.date != event.endDate && <><DateString>{event.endDate}</DateString></>}{/* TODO short dates if not multiDay would be nice here */}
-                                    {event.expired && <div className="alert-danger text-center">This event is in the past.</div>}
-                                </td>
-                            </tr>
-                            {event.location && event.location.address && event.location.address.addressLine1 && <tr>
-                                <td>Location:</td>
-                                <td>
-                                    {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
-                                </td>
-                            </tr>}
-                            {event.eventStatus != 'CLOSED' && !event.expired && <tr>
-                                <td>Availability:</td>
-                                <td>
-                                    {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
-                                    {zeroOrLess(event.placesAvailable) && <div>
-                                        <strong className="text-danger">FULL</strong>
-                                        {event.tags && !event.tags.includes('student') && user && user.loggedIn && user.role != 'STUDENT' && <span> - for student bookings</span>}
-                                    </div>}
-                                    {user && user.loggedIn && user.email && event.userBooked && <span> - <span className="text-success">You are booked on this event!</span></span>}
-                                    {!event.userBooked && !event.userOnWaitList && zeroOrLess(event.placesAvailable) && !(event.tags && event.tags.indexOf('student') != -1 && user && isTeacher(user)) && <span> - Waiting list booking is available!</span>}
-                                    {user && user.loggedIn && user.email && event.userOnWaitList && <span> - You are on the waiting list for this event.</span>}
-                                </td>
-                            </tr>}
-                            {event.bookingDeadline && <tr>
-                                <td>Booking Deadline:</td>
-                                <td>
-                                    <DateString>{event.bookingDeadline}</DateString>
-                                    {!event.withinBookingDeadline && <div className="alert-danger text-center">The booking deadline for this event has passed.</div>}
-                                </td>
-                            </tr>}
+                            <tbody>
+                                {event.field && <tr>
+                                    <td>Field:</td>
+                                    <td>event.field</td>
+                                </tr>}
+                                <tr>
+                                    <td>When:</td>
+                                    <td>
+                                        <><DateString>{event.date}</DateString> {event.date != event.endDate && <span> &#8212; </span>}</>
+                                        {event.date != event.endDate && <><DateString>{event.endDate}</DateString></>}{/* TODO short dates if not multiDay would be nice here */}
+                                        {event.expired && <div className="alert-danger text-center">This event is in the past.</div>}
+                                    </td>
+                                </tr>
+                                {event.location && event.location.address && event.location.address.addressLine1 && <tr>
+                                    <td>Location:</td>
+                                    <td>
+                                        {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
+                                    </td>
+                                </tr>}
+                                {event.eventStatus != 'CLOSED' && !event.expired && <tr>
+                                    <td>Availability:</td>
+                                    <td>
+                                        {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
+                                        {zeroOrLess(event.placesAvailable) && <div>
+                                            <strong className="text-danger">FULL</strong>
+                                            {event.tags && !event.tags.includes('student') && user && user.loggedIn && user.role != 'STUDENT' && <span> - for student bookings</span>}
+                                        </div>}
+                                        {user && user.loggedIn && user.email && event.userBooked && <span> - <span className="text-success">You are booked on this event!</span></span>}
+                                        {!event.userBooked && !event.userOnWaitList && zeroOrLess(event.placesAvailable) && !(event.tags && event.tags.indexOf('student') != -1 && user && isTeacher(user)) && <span> - Waiting list booking is available!</span>}
+                                        {user && user.loggedIn && user.email && event.userOnWaitList && <span> - You are on the waiting list for this event.</span>}
+                                    </td>
+                                </tr>}
+                                {event.bookingDeadline && <tr>
+                                    <td>Booking Deadline:</td>
+                                    <td>
+                                        <DateString>{event.bookingDeadline}</DateString>
+                                        {!event.withinBookingDeadline && <div className="alert-danger text-center">The booking deadline for this event has passed.</div>}
+                                    </td>
+                                </tr>}
+                            </tbody>
                         </RS.Table>
 
                         {/* Event body copy */}
@@ -125,7 +127,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                             {/* Options for logged-in users */}
                             {user && user.loggedIn && <span>
                                 {event.eventStatus != 'CLOSED' && !event.expired && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && event.withinBookingDeadline && <RS.Button
-                                    color="primary" outline onClick={() => {setBookingFormOpen(true)}}
+                                    onClick={() => {setBookingFormOpen(true)}}
                                 >
                                     Open booking form
                                 </RS.Button>}
