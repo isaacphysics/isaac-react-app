@@ -1,12 +1,13 @@
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
-import {AdditionalInformation, AugmentedEvent, LoggedInUser} from "../../../IsaacAppTypes";
+import {AdditionalInformation, AugmentedEvent, LoggedInUser, Toast} from "../../../IsaacAppTypes";
 import {SchoolInput} from "./inputs/SchoolInput";
-import {atLeastOne, zeroOrLess} from "../../services/validation";
+import {atLeastOne, validateUserSchool, zeroOrLess} from "../../services/validation";
 import {isTeacher} from "../../services/user";
 import {useDispatch} from "react-redux";
-import {addToEventWaitingList, makeEventBookingRequest} from "../../state/actions";
+import {addToEventWaitingList, makeEventBookingRequest, showToast} from "../../state/actions";
+import {API_REQUEST_FAILURE_MESSAGE} from "../../services/constants";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
@@ -29,6 +30,47 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
     }
 
     function validateSubmission(user: LoggedInUser, additionalInformation: AdditionalInformation) {
+        const failureToast: Toast = {color: "danger", title: "Validation error", timeout: 5000, body: "Required information is not present."};
+        if (!user.loggedIn) {
+            return false
+        }
+
+        if (!validateUserSchool(Object.assign({password: null}, user))) {
+            dispatch(showToast(Object.assign({}, failureToast, {
+                title: "School information required", body: "You must enter a school in order to book on to this event."
+            })));
+            return false;
+        }
+
+        // validation for users / forms that indicate the booker is not a teacher
+        if (user.role == 'STUDENT' && !(additionalInformation.yearGroup == 'TEACHER' || additionalInformation.yearGroup == 'OTHER')) {
+            if (!additionalInformation.yearGroup) {
+                dispatch(showToast(Object.assign({}, failureToast, {
+                    title:"Year group required", body: "You must enter a year group to proceed."
+                })));
+                return false;
+            }
+
+            if (!event.virtual) {
+                if (!additionalInformation.emergencyName || !additionalInformation.emergencyNumber){
+                    dispatch(showToast(Object.assign({}, failureToast, {
+                        title: "Emergency contact details required", body: "You must enter a emergency contact details in order to book on to this event."
+                    })));
+                    return false;
+                }
+            }
+        }
+
+        // validation for users that are teachers
+        if (user.role != 'STUDENT') {
+            if (!additionalInformation.jobTitle) {
+                dispatch(showToast(Object.assign({}, failureToast, {
+                    title: "Job title required", body: "You must enter a job title to proceed."
+                })));
+                return false;
+            }
+        }
+
         return true;
     }
 
