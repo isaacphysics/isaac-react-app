@@ -6,8 +6,7 @@ import {SchoolInput} from "./inputs/SchoolInput";
 import {atLeastOne, validateUserSchool, zeroOrLess} from "../../services/validation";
 import {isTeacher} from "../../services/user";
 import {useDispatch} from "react-redux";
-import {addToEventWaitingList, makeEventBookingRequest, showToast} from "../../state/actions";
-import {API_REQUEST_FAILURE_MESSAGE} from "../../services/constants";
+import {addToEventWaitingList, makeEventBookingRequest, requestEmailVerification, showToast} from "../../state/actions";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
@@ -18,6 +17,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
     const dispatch = useDispatch();
 
     const [additionalInformation, setAdditionalInformation] = useState<AdditionalInformation>({});
+    const [verifyEmailRequestSent, setVerifyEmailRequestSent] = useState(false);
     const targetUser = user; // For a future feature
 
     const isStudentEvent = event.tags !== undefined && event.tags.indexOf('student') != -1;
@@ -98,12 +98,14 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                             <legend>Your account information (<Link to="/account" className="text-secondary">update</Link>)</legend>
                             <RS.Row>
                                 <RS.Col md={6}>
+                                    {/* Should be impossible to not have a first name */}
                                     <RS.Label htmlFor="account-firstname" className="form-required">
                                         First name
                                     </RS.Label>
-                                    <RS.Input id="account-firstname" name="firstname" type="text" disabled value={targetUser.givenName}/>
+                                    <RS.Input id="account-firstname" name="firstname" type="text" disabled value={targetUser.givenName} />
                                 </RS.Col>
                                 <RS.Col md={6}>
+                                    {/* Should be impossible to not have a last name */}
                                     <RS.Label htmlFor="account-lastname" className="form-required">
                                         Last name
                                     </RS.Label>
@@ -114,25 +116,20 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                             <div>
                                 <RS.Label htmlFor="account-email" className="form-required">
                                     Email address
-                                    {/* TODO */}
-                                    {targetUser.emailVerificationStatus != 'VERIFIED' && <span
-                                        data-ot="You must verify your email address to book on events. This is so we can send you details about the event."
-                                        className="dl-alert warning hide-for-small-only field-marker"
-                                        aria-haspopup="true"
-                                    >!</span>}
-                                    {/*<div className="ru-error-message" ng-if="account.email.$invalid && account.email.$dirty">*/}
-                                    {/*    Enter a valid email*/}
-                                    {/*</div>*/}
+                                    <RS.Input id="account-email" name="email" type="email" disabled value={targetUser.email} valid={targetUser.emailVerificationStatus != 'VERIFIED'} />
+                                    <RS.FormFeedback>You must verify your email address to book on events. This is so we can send you details about the event.</RS.FormFeedback>
                                 </RS.Label>
-                                <RS.Input id="account-email" name="email" type="email" disabled value={targetUser.email} />
-                                {/* TODO */}
-                                {/*<a ng-show="targetUser.emailVerificationStatus != 'VERIFIED' && !verifyEmailRequestSent"*/}
-                                {/*   ng-click="requestEmailVerification(); verifyEmailRequestSent=true">Verify*/}
-                                {/*    your email before booking</a>*/}
-                                {/*<span ng-show="targetUser.emailVerificationStatus != 'VERIFIED' && verifyEmailRequestSent">We have sent an email to {{*/}
-                                {/*    targetUser*/}
-                                {/*    .email*/}
-                                {/*}}. Please follow the instructions in the email prior to booking.</span>*/}
+                                {targetUser.emailVerificationStatus != 'VERIFIED' && !verifyEmailRequestSent && <RS.Button
+                                    color="link" onClick={() => {
+                                        dispatch(requestEmailVerification());
+                                        setVerifyEmailRequestSent(true);
+                                    }}
+                                >
+                                    Verify your email before booking
+                                </RS.Button>}
+                                {targetUser.emailVerificationStatus != 'VERIFIED' && verifyEmailRequestSent && <span>
+                                    We have sent an email to {targetUser.email}. Please follow the instructions in the email prior to booking.
+                                </span>}
                             </div>
                             <div>
                                 <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} submissionAttempted />
@@ -183,8 +180,10 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                                 <div>
                                     <RS.Label htmlFor="medical-reqs">
                                         Dietary requirements or relevant medical conditions
-                                        <span aria-haspopup="true" className="icon-help has-tip"
-                                            data-ot="For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy..." />
+                                        <span id="dietary-reqs-help" aria-haspopup="true" className="icon-help has-tip" />
+                                        <RS.UncontrolledPopover trigger="click" placement="bottom" target="dietary-reqs-help">
+                                            <RS.PopoverBody>For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy...</RS.PopoverBody>
+                                        </RS.UncontrolledPopover>
                                     </RS.Label>
                                     <RS.Input
                                         id="medical-reqs" name="medical-reqs" type="text" value={additionalInformation.medicalRequirements}
@@ -195,8 +194,10 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                                 <div>
                                     <RS.Label htmlFor="access-reqs">
                                         Accessibility requirements
-                                        <span aria-haspopup="true" className="icon-help has-tip"
-                                            data-ot="For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments." />
+                                        <span id="access-reqs-help" aria-haspopup="true" className="icon-help has-tip" />
+                                        <RS.UncontrolledPopover trigger="click" placement="bottom" target="access-reqs-help">
+                                            <RS.PopoverBody>For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.</RS.PopoverBody>
+                                        </RS.UncontrolledPopover>
                                     </RS.Label>
                                     <RS.Input
                                         id="access-reqs" name="access-reqs" type="text" value={additionalInformation.accessibilityRequirements}
