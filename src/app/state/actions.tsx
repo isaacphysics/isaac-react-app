@@ -295,8 +295,9 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         } else {
             history.push(nextPage);
         }
-    } catch (e) {
-        dispatch(showErrorToastIfNeeded("Login Failed", e));
+    } catch (error) {
+        history.push({pathname: "/auth_error", state: {errorMessage: isAxiosError(error) ? extractMessage(error) : API_REQUEST_FAILURE_MESSAGE}});
+        dispatch(showErrorToastIfNeeded("Login Failed", error));
     }
 };
 

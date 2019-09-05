@@ -28,6 +28,7 @@ import {Admin} from "../pages/Admin";
 import {history} from "../../services/history"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
+import {AuthError} from "../pages/AuthError";
 import {SessionExpired} from "../pages/SessionExpired";
 import {ConsistencyErrorModal} from "./ConsistencyErrorModal";
 import {Search} from "../pages/Search";
@@ -52,7 +53,6 @@ import {AddGameboard} from "../handlers/AddGameboard";
 import {isTest} from "../../services/constants";
 import {Events} from "../pages/Events";
 import {EventDetails} from "../pages/EventDetails";
-
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -81,6 +81,7 @@ export const IsaacApp = () => {
                     {/* Errors; these paths work but aren't really used */}
                     <Route exact path={serverError ? undefined : "/error"} component={ServerError} />
                     <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
+                    <TrackedRoute exact path={"/auth_error"} component={AuthError} />
 
                     {/* Special case */}
                     <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
