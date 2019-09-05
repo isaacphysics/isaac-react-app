@@ -53,7 +53,7 @@ const RequiredAccountInfoBody = () => {
         }
     }
 
-    const allUserFieldsAreValid = validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserSchool(initialUserValue);
+    const allUserFieldsAreValid = validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateSubjectInterests(initialSubjectInterestsValue);
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
@@ -66,7 +66,7 @@ const RequiredAccountInfoBody = () => {
             </div>
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {!(validateUserSchool(initialUserValue) && validateUserGender(initialUserValue)) && <RS.Col>
+                {!(validateSubjectInterests(initialSubjectInterestsValue) && validateUserGender(initialUserValue)) && <RS.Col>
                     {!validateUserGender(initialUserValue) && <div>
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
