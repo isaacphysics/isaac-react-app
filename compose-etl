@@ -9,7 +9,7 @@ fi
 
 
 APP_VERSION=$1
-ENV=alpha # Yes, we'll want to change this later
+ENV=live
 
 # We're done with the first argument. The remainder will be passed to docker-compose
 shift 1
@@ -36,8 +36,8 @@ services:
     volumes:
       - /local/data/m2:/root/.m2:rw
       - /local/data/isaac-config/cs/segue-config.$ENV.properties:/local/data/conf/segue-config.properties:ro
-      - /local/data/cs-content:/local/data/cs-content:rw
       - /local/data/isaac-config/cs/content_indices.properties:/local/data/conf/content_indices.properties:rw
+      - /local/data/cs-content:/local/data/cs-content:rw
       - /local/data/keys:/local/data/keys:ro
       - /local/data/school_list_2019.csv:/local/data/school_list_2019.csv:ro
       - /var/log/isaac/cs-etl:/isaac-logs:rw

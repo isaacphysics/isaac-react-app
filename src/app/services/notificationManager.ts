@@ -8,7 +8,7 @@ import {KEY} from "./localStorage";
 import {requiredAccountInformationModal} from "../components/elements/modals/RequiredAccountInformationModal";
 
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async action => {
-    await dispatch(action);
+    const dispatchedActionsResult = await dispatch(action);
 
     const state = middlewareApi.getState();
     if([ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type)) {
@@ -21,4 +21,6 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
             await dispatch(openActiveModal(requiredAccountInformationModal) as any);
         }
     }
+
+    return dispatchedActionsResult;
 };

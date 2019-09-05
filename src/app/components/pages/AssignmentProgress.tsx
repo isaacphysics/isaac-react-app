@@ -411,10 +411,10 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
 
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
         <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
-            <div className="gameboard-title">
+            <div className="gameboard-title align-items-center">
                 <span>{assignment.gameboard.title}{assignment.dueDate && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(assignment.dueDate)})</span>}</span>
             </div>
-            <div className="gameboard-links">
+            <div className="gameboard-links align-items-center">
                 <Button color="link">{isExpanded ? "Hide " : "View "} <span className="d-none d-md-inline">mark sheet</span></Button>
                 <span className="d-none d-md-inline">or</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
@@ -442,29 +442,31 @@ const GroupDetails = (props: GroupDetailsProps) => {
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <div className="p-4"><div className="assignment-progress-legend">
             <ul className="block-grid-xs-5">
-                <li>
-                    <div className="key-cell"><span className="completed">&nbsp;</span>
+                <li className="d-flex flex-wrap">
+                    <div className="key-cell">
+                        <span className="completed"></span>
                     </div>
                     <div className="key-description">100% correct</div>
                 </li>
-                <li>
+                <li className="d-flex flex-wrap">
                     <div className="key-cell"><span className="passed">&nbsp;</span>
                     </div>
                     <div className="key-description">&ge;{passMark * 100}% correct
-                        <span className="d-none d-md-inline"> (or Mastery)</span></div>
+                        {/*<span className="d-none d-xl-inline"> (or Mastery)</span>*/}
+                    </div>
                 </li>
-                <li>
+                <li className="d-flex flex-wrap">
                     <div className="key-cell"><span className="in-progress">&nbsp;</span>
                     </div>
                     <div className="key-description">&lt;{passMark * 100}% correct</div>
                 </li>
-                <li>
+                <li className="d-flex flex-wrap">
                     <div className="key-cell"><span>&nbsp;</span>
                     </div>
                     <div className="key-description"><span className="d-none d-md-inline">Not attempted</span><span
                         className="d-inline d-md-none">No attempt</span></div>
                 </li>
-                <li>
+                <li className="d-flex flex-wrap">
                     <div className="key-cell"><span className="failed">&nbsp;</span>
                     </div>
                     <div className="key-description">&gt;{100 -(passMark * 100)}% incorrect</div>
@@ -498,12 +500,12 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
     }
 
     return <React.Fragment>
-        <div onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active" : "assignment-progress-group"}>
+        <div onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
             <div className="group-name"><span className="icon-group"/><span>{group.groupName}</span></div>
             <div className="flex-grow-1" />
-            <div><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
+            <div className="py-2"><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
             <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" onClick={openGroupDownloadLink}>(Download Group CSV)</a></div>
-            <div><img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" /></div>
+            <div className="pr-2 pl-3"><img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" /></div>
         </div>
         {isExpanded && <GroupDetails {...props} />}
     </React.Fragment>;
@@ -538,7 +540,7 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
 
     return <React.Fragment>
         <Container>
-            <TitleAndBreadcrumb currentPageTitle="Assignment Progress" subTitle="Track your class performance" intermediateCrumbs={[{title: "For Teachers", to: "#"}]} help="Click on your groups to see the assignments you have set. View your students' progress by question." />
+            <TitleAndBreadcrumb currentPageTitle="Assignment progress" subTitle="Track your class performance" intermediateCrumbs={[{title: "For teachers", to: "#"}]} help="Click on your groups to see the assignments you have set. View your students' progress by question." />
             <Row className="align-items-center d-none d-md-flex">
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
@@ -558,7 +560,11 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
         <div className="assignment-progress-container mb-5">
             <ShowLoading until={data}>
                 {data && data.map(group => <GroupAssignmentProgress key={group.id} {...props} group={group} pageSettings={pageSettings} />)}
-                {data && data.length == 0 && <h3>You&apos;ll need to create a group using <Link to="/groups">Manage Groups</Link> to set an assignment.</h3>}
+                {data && data.length == 0 && <Container className="py-5">
+                    <h3 className="text-center">
+                        You&apos;ll need to create a group using <Link to="/groups">Manage groups</Link> to set an assignment.
+                    </h3>
+                </Container>}
             </ShowLoading>
         </div>
     </React.Fragment>;

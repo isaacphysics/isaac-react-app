@@ -63,12 +63,12 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                     <Row>
                         <Col size={6} className="text-center">
                             <Button tag={Link} to="/topics" color="primary" outline size="lg" className="my-4" block>
-                                <span className="d-none d-md-inline">Back to</span> {" "} All Topics
+                                <span className="d-none d-md-inline">Back to</span> {" "} All topics
                             </Button>
                         </Col>
                         <Col size={6} className="text-center">
                             <Button tag={Link} to={`/gameboards#${topicName}_july19_${examBoard.toLowerCase()}`} color="secondary" size="lg" className="my-4" block>
-                                Topic Gameboard
+                                Topic gameboard
                             </Button>
                         </Col>
                     </Row>

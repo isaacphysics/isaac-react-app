@@ -64,6 +64,7 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
             clearCurrentUser();
             break;
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
+        case ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS:
             setCurrentUser(action.user, api);
             break;
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:

@@ -25,6 +25,12 @@ const BaseMacros: {[key: string]: MathJaxMacro} = {
     "units": ["\\rm{#1}", 1],
     // Chemistry:
     "standardstate": ["\\mathbin{\u29B5}", 0],
+    // Set theory:
+    "N": "\\mathbb{N}",
+    "Z": "\\mathbb{Z}",
+    "Q": "\\mathbb{Q}",
+    "R": "\\mathbb{R}",
+    "C": "\\mathbb{C}"
 };
 const BooleanLogicMathsMacros: {[key: string]: MathJaxMacro} = {
     "true": "\\boldsymbol{\\rm{T}}",
