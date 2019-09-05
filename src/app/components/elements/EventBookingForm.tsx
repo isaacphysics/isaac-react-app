@@ -22,7 +22,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
 
     const isStudentEvent = event.tags !== undefined && event.tags.indexOf('student') != -1;
     const bookable = event.withinBookingDeadline && event.eventStatus != 'WAITING_LIST_ONLY' && (atLeastOne(event.placesAvailable) || (isStudentEvent && isTeacher(targetUser)));
-    const applyable = !event.userOnWaitList && (event.eventStatus == 'WAITING_LIST_ONLY' || zeroOrLess(event.placesAvailable) || !event.withinBookingDeadline) && !(isStudentEvent && isTeacher(targetUser)) ;
+    const applyable = !event.userOnWaitList && (event.eventStatus == 'WAITING_LIST_ONLY' || zeroOrLess(event.placesAvailable) || !event.withinBookingDeadline) && !(isStudentEvent && isTeacher(targetUser));
     const submissionTitle = bookable? "Book now" : event.withinBookingDeadline ? "Apply" : "Apply -deadline past";
 
     function updateAdditionalInformation(update: AdditionalInformation) {
@@ -149,7 +149,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                                 {targetUser.role != 'STUDENT' && <React.Fragment>
                                     <RS.Label htmlFor="job-title" className="form-required">Job title</RS.Label>
                                     <RS.Input
-                                        id="job-title" name="job-title" type="text" value={additionalInformation.jobTitle}
+                                        id="job-title" name="job-title" type="text" value={additionalInformation.jobTitle || ''}
                                         onChange={event => updateAdditionalInformation({jobTitle: event.target.value})}
                                     />
                                 </React.Fragment>}
@@ -186,7 +186,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                                         </RS.UncontrolledPopover>
                                     </RS.Label>
                                     <RS.Input
-                                        id="medical-reqs" name="medical-reqs" type="text" value={additionalInformation.medicalRequirements}
+                                        id="medical-reqs" name="medical-reqs" type="text" value={additionalInformation.medicalRequirements || ''}
                                         onChange={event => updateAdditionalInformation({medicalRequirements: event.target.value})}
                                     />
                                 </div>
@@ -200,12 +200,12 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                                         </RS.UncontrolledPopover>
                                     </RS.Label>
                                     <RS.Input
-                                        id="access-reqs" name="access-reqs" type="text" value={additionalInformation.accessibilityRequirements}
+                                        id="access-reqs" name="access-reqs" type="text" value={additionalInformation.accessibilityRequirements || ''}
                                         onChange={event => updateAdditionalInformation({accessibilityRequirements: event.target.value})}
                                     />
                                 </div>
 
-                                {additionalInformation.yearGroup != 'TEACHER' && additionalInformation.yearGroup != 'OTHER' && <RS.Row>
+                                {additionalInformation.yearGroup != 'TEACHER' && additionalInformation.yearGroup != 'OTHER' && <RS.Row className="mt-4">
                                     <RS.Col xs={12}>
                                         <h3>Emergency contact details</h3>
                                     </RS.Col>
@@ -214,7 +214,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                                             Contact name
                                         </RS.Label>
                                         <RS.Input
-                                            id="emergency-name" name="emergency-name" type="text" value={additionalInformation.emergencyName}
+                                            id="emergency-name" name="emergency-name" type="text" value={additionalInformation.emergencyName || ''}
                                             onChange={event => updateAdditionalInformation({emergencyName: event.target.value})}
                                         />
                                     </RS.Col>
@@ -223,7 +223,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                                             Contact telephone number
                                         </RS.Label>
                                         <RS.Input
-                                            id="emergency-number" name="emergency-number" type="text" value={additionalInformation.emergencyNumber}
+                                            id="emergency-number" name="emergency-number" type="text" value={additionalInformation.emergencyNumber || ''}
                                             onChange={event => updateAdditionalInformation({emergencyNumber: event.target.value})}
                                         />
                                     </RS.Col>
