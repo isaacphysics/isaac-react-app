@@ -1,6 +1,9 @@
 .events {
-  button, a {
+  button, a.btn {
     margin-right: 0.5rem;
+  }
+  legend {
+    margin-bottom: 0;
   }
 }
 .event-key-info {

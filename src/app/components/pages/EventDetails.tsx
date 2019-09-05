@@ -14,6 +14,8 @@ import {EventBookingForm} from "../elements/EventBookingForm";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
+import {atLeastOne, zeroOrLess} from "../../services/validation";
+import {isTeacher} from "../../services/user";
 
 
 interface EventDetailsProps {
@@ -27,7 +29,6 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
     const [bookingFormOpen, setBookingFormOpen] = useState(false);
 
     useEffect(() => {dispatch(getEvent(eventId))}, [eventId]);
-
 
     function loginAndReturn() {
         persistence.save(KEY.AFTER_AUTH_PATH, pathname);
@@ -68,16 +69,16 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
                                 </td>
                             </tr>}
-                            {event.numberOfPlaces && event.placesAvailable && event.eventStatus != 'CLOSED' && !event.expired && <tr>
+                            {event.eventStatus != 'CLOSED' && !event.expired && <tr>
                                 <td>Availability:</td>
                                 <td>
-                                    {event.placesAvailable > 0 && <div>{event.placesAvailable} spaces</div>}
-                                    {event.placesAvailable <= 0 && <div>
+                                    {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
+                                    {zeroOrLess(event.placesAvailable) && <div>
                                         <strong className="text-danger">FULL</strong>
                                         {event.tags && !event.tags.includes('student') && user && user.loggedIn && user.role != 'STUDENT' && <span> - for student bookings</span>}
                                     </div>}
                                     {user && user.loggedIn && user.email && event.userBooked && <span> - <span className="text-success">You are booked on this event!</span></span>}
-                                    {!event.userBooked && !event.userOnWaitList && event.placesAvailable <= 0 && !(event.tags && event.tags.indexOf('student') != -1 && user && user.loggedIn && user.role != 'STUDENT') && <span> - Waiting list booking is available!</span>}
+                                    {!event.userBooked && !event.userOnWaitList && zeroOrLess(event.placesAvailable) && !(event.tags && event.tags.indexOf('student') != -1 && user && isTeacher(user)) && <span> - Waiting list booking is available!</span>}
                                     {user && user.loggedIn && user.email && event.userOnWaitList && <span> - You are on the waiting list for this event.</span>}
                                 </td>
                             </tr>}
@@ -100,38 +101,40 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                             <EventBookingForm event={event} user={user} />
                         </span>}
 
-                        {/* Options for un-logged-in users */}
-                        {!(user && user.loggedIn) && event.eventStatus != 'CLOSED' && !event.expired && <span>
-                            {event.numberOfPlaces && event.numberOfPlaces > 0 && event.withinBookingDeadline && <RS.Button onClick={loginAndReturn}>
-                                Login to book
-                            </RS.Button>}
-                            {(event.numberOfPlaces && event.numberOfPlaces <= 0 || !event.withinBookingDeadline) && <RS.Button onClick={loginAndReturn}>
-                                Login to apply
-                            </RS.Button>}
-                        </span>}
+                        <div className="text-center">
+                            {/* Options for un-logged-in users */}
+                            {!(user && user.loggedIn) && event.eventStatus != 'CLOSED' && !event.expired && <span>
+                                {atLeastOne(event.numberOfPlaces) && event.withinBookingDeadline && <RS.Button onClick={loginAndReturn}>
+                                    Login to book
+                                </RS.Button>}
+                                {(zeroOrLess(event.numberOfPlaces) || !event.withinBookingDeadline) && <RS.Button onClick={loginAndReturn}>
+                                    Login to apply
+                                </RS.Button>}
+                            </span>}
 
-                        {/* Options for logged-in users */}
-                        {user && user.loggedIn && <span>
-                            {event.eventStatus != 'CLOSED' && !event.expired && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && event.withinBookingDeadline && <RS.Button
-                                onClick={() => {setBookingFormOpen(true)}}
-                            >
-                                Open booking form
-                            </RS.Button>}
-                            {bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
-                                onClick={() => {setBookingFormOpen(false)}}
-                            >
-                                Close booking form
-                            </RS.Button>}
-                            {event.userBooked && !event.expired && <RS.Button onClick={() => {/* TODO cancelEventBooking() */}}>
-                                Cancel your booking
-                            </RS.Button>}
-                            {event.userOnWaitList && !event.expired && <RS.Button onClick={() => {/* TODO cancelEventBooking()*/}}>
-                                Remove from waiting list
-                            </RS.Button>}
-                        </span>}
+                            {/* Options for logged-in users */}
+                            {user && user.loggedIn && <span>
+                                {event.eventStatus != 'CLOSED' && !event.expired && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && event.withinBookingDeadline && <RS.Button
+                                    onClick={() => {setBookingFormOpen(true)}}
+                                >
+                                    Open booking form
+                                </RS.Button>}
+                                {bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
+                                    onClick={() => {setBookingFormOpen(false)}}
+                                >
+                                    Close booking form
+                                </RS.Button>}
+                                {event.userBooked && !event.expired && <RS.Button onClick={() => {/* TODO cancelEventBooking() */}}>
+                                    Cancel your booking
+                                </RS.Button>}
+                                {event.userOnWaitList && !event.expired && <RS.Button onClick={() => {/* TODO cancelEventBooking()*/}}>
+                                    Remove from waiting list
+                                </RS.Button>}
+                            </span>}
 
-                        {/* TODO button colors */}
-                        <RS.Button tag={Link} to="/events" color="primary" outline>Back to events</RS.Button>
+                            {/* TODO button colors */}
+                            <RS.Button tag={Link} to="/events" color="primary" outline>Back to events</RS.Button>
+                        </div>
                     </RS.Col>
                 </RS.Row>
 

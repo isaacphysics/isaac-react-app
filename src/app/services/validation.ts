@@ -5,6 +5,9 @@ import {
     ValidationUser
 } from "../../IsaacAppTypes";
 
+export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
+export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
+
 export const validateEmail = (email?: string) => {
     return email && email.length > 0 && email.includes("@");
 };

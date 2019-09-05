@@ -6,7 +6,7 @@ import {validateUserSchool} from "../../../services/validation";
 
 interface SchoolInputProps {
     userToUpdate: ValidationUser;
-    setUserToUpdate: (user: any) => void;
+    setUserToUpdate?: (user: any) => void;
     submissionAttempted: boolean;
     className?: string;
     idPrefix?: string;
@@ -57,10 +57,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     }, [schoolQueryText]);
 
     function setUserSchool(school: any) {
-        setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school && school.urn}));
-        setSchoolQueryText(null);
-        setSelectedSchoolObject(school);
-        setSchoolSearchResults([]);
+        if (setUserToUpdate) {
+            setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school && school.urn}));
+            setSchoolQueryText(null);
+            setSelectedSchoolObject(school);
+            setSchoolSearchResults([]);
+        }
     }
 
     const schoolSpecified = (
@@ -74,6 +76,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             <RS.Input
                 id="school-input" type="text" name="school" placeholder="Type a UK school name..." autoComplete="isaac-off"
                 invalid={submissionAttempted && !validateUserSchool(userToUpdate)}
+                disabled={!setUserToUpdate}
                 value={
                     schoolQueryText !== null ?
                         schoolQueryText :
@@ -99,11 +102,13 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             {!userToUpdate.schoolId && <RS.Input
                 type="text" name="school-other" placeholder="...or enter a non-UK school."
                 id="school-other-input" className="my-2" maxLength={255}
-                value={userToUpdate.schoolOther || ""}
+                value={userToUpdate.schoolOther || ""} disabled={!setUserToUpdate}
                 invalid={submissionAttempted && !validateUserSchool(userToUpdate)}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.value}))
-                }
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    if (setUserToUpdate) {
+                        setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.value}));
+                    }
+                }}
             />}
         </React.Fragment>}
 
@@ -112,8 +117,11 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
                 invalid={submissionAttempted && !validateUserSchool(userToUpdate)}
+                disabled={!setUserToUpdate}
                 onChange={(e => {
-                    setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : ""}));
+                    if (setUserToUpdate) {
+                        setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : ""}));
+                    }
                 })}
             />
             <RS.Label htmlFor={`${idPrefix}-not-associated-with-school`}>
