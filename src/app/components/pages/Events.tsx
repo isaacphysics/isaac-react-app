@@ -36,10 +36,11 @@ export const Events = withRouter(({history, location}: {history: History; locati
 
     const dispatch = useDispatch();
     const eventsState = useSelector((state: AppState) => state && state.events);
+    const user = useSelector((state: AppState) => state && state.user);
     const numberOfLoadedEvents = eventsState ? eventsState.events.length : 0;
 
     const statusFilter =
-        (query.show_booked_only && StatusFilter["My Booked Events"]) ||
+        (user && user.loggedIn && query.show_booked_only && StatusFilter["My Booked Events"]) ||
         (query.event_status === "all" && StatusFilter["All Events"]) ||
         StatusFilter["Upcoming Events"];
     const typeFilter = query.types || TypeFilter["All Events"];
@@ -63,9 +64,12 @@ export const Events = withRouter(({history, location}: {history: History; locati
                         query.event_status = selectedFilter == StatusFilter["All Events"] ? "all" : undefined;
                         history.push({pathname: location.pathname, search: queryString.stringify(query)});
                     }}>
-                        {Object.entries(StatusFilter).map(([statusLabel, statusValue]) =>
-                            <option key={statusValue} value={statusValue}>{statusLabel}</option>
-                        )}
+                        {Object.entries(StatusFilter)
+                            .filter(([statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== StatusFilter["My Booked Events"])
+                            .map(([statusLabel, statusValue]) =>
+                                <option key={statusValue} value={statusValue}>{statusLabel}</option>
+                            )
+                        }
                     </RS.Input>
                     <RS.Input className="ml-2" type="select" value={typeFilter} onChange={e => {
                         const selectedType = e.target.value as TypeFilter;
