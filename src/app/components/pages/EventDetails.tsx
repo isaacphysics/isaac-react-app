@@ -17,7 +17,6 @@ import {history} from "../../services/history";
 import {atLeastOne, zeroOrLess} from "../../services/validation";
 import {isTeacher} from "../../services/user";
 
-
 interface EventDetailsProps {
     match: {params: {eventId: string}};
     location: {pathname: string};
@@ -46,15 +45,15 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                 {/* Detail Main */}
                 <RS.Row>
                     <RS.Col lg={4}>
-                        {event.eventThumbnail && <>
+                        {event.eventThumbnail && <div className="mt-2">
                             <RS.CardImg
                                 alt={event.eventThumbnail.altText || `Illustration for ${event.title}`}
-                                className='m-auto' top src={event.eventThumbnail.src}
+                                className='m-auto restrict-height' top src={event.eventThumbnail.src}
                             />
-                            <div className="border px-2 py-1 mb-3 bg-light">
+                            <div className="border px-2 py-1 mt-3 bg-light">
                                 <strong>{event.title}</strong>
                             </div>
-                        </>}
+                        </div>}
                     </RS.Col>
                     <RS.Col lg={8} className={event.expired ? "expired" : ""}>
                         {/* TODO Student/Teacher/Virtual icon */}

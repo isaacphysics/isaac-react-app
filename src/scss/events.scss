@@ -9,6 +9,9 @@
   label {
     margin-top: 1rem; // this would ideally be more specific
   }
+  .restrict-height {
+    height: 150px;
+  }
 }
 .event-key-info {
   tr {
