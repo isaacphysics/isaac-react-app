@@ -52,6 +52,7 @@ import {AddGameboard} from "../handlers/AddGameboard";
 import "../../services/scrollManager";
 import "../../services/polyfills";
 import {isTest} from "../../services/constants";
+import {AuthError} from "../pages/AuthError";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -80,6 +81,7 @@ export const IsaacApp = () => {
                     {/* Errors; these paths work but aren't really used */}
                     <Route exact path={serverError ? undefined : "/error"} component={ServerError} />
                     <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
+                    <TrackedRoute exact path={"/auth_error"} component={AuthError} />
 
                     {/* Special case */}
                     <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
