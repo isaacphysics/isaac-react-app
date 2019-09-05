@@ -6,7 +6,7 @@ import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {EVENTS_CRUMB} from "../../services/constants";
 import {AugmentedEvent} from "../../../IsaacAppTypes";
-import {getEvent} from "../../state/actions";
+import {cancelEventBooking, getEvent} from "../../state/actions";
 import {DateString} from "../elements/DateString";
 import {IsaacContent} from "../content/IsaacContent";
 import {Link} from "react-router-dom";
@@ -101,7 +101,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                             <EventBookingForm event={event} user={user} />
                         </span>}
 
-                        <div className="text-center">
+                        <div>
                             {/* Options for un-logged-in users */}
                             {!(user && user.loggedIn) && event.eventStatus != 'CLOSED' && !event.expired && <span>
                                 {atLeastOne(event.numberOfPlaces) && event.withinBookingDeadline && <RS.Button onClick={loginAndReturn}>
@@ -115,24 +115,27 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                             {/* Options for logged-in users */}
                             {user && user.loggedIn && <span>
                                 {event.eventStatus != 'CLOSED' && !event.expired && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && event.withinBookingDeadline && <RS.Button
-                                    onClick={() => {setBookingFormOpen(true)}}
+                                    color="primary" outline onClick={() => {setBookingFormOpen(true)}}
                                 >
                                     Open booking form
                                 </RS.Button>}
                                 {bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
-                                    onClick={() => {setBookingFormOpen(false)}}
+                                    color="primary" outline onClick={() => {setBookingFormOpen(false)}}
                                 >
                                     Close booking form
                                 </RS.Button>}
-                                {event.userBooked && !event.expired && <RS.Button onClick={() => {/* TODO cancelEventBooking() */}}>
+                                {event.userBooked && !event.expired && <RS.Button
+                                    color="primary" outline onClick={() => {dispatch(cancelEventBooking(eventId))}}
+                                >
                                     Cancel your booking
                                 </RS.Button>}
-                                {event.userOnWaitList && !event.expired && <RS.Button onClick={() => {/* TODO cancelEventBooking()*/}}>
+                                {event.userOnWaitList && !event.expired && <RS.Button
+                                    color="primary" outline onClick={() => {dispatch(cancelEventBooking(eventId))}}
+                                >
                                     Remove from waiting list
                                 </RS.Button>}
                             </span>}
 
-                            {/* TODO button colors */}
                             <RS.Button tag={Link} to="/events" color="primary" outline>Back to events</RS.Button>
                         </div>
                     </RS.Col>

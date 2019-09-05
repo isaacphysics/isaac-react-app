@@ -5,6 +5,7 @@ import * as AppTypes from "../../IsaacAppTypes";
 import {ActualBoardLimit, BoardOrder, LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {TypeFilter} from "../components/pages/Events";
+import {AdditionalInformation} from "../../IsaacAppTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -301,6 +302,17 @@ export const api = {
                 show_inactive_only: !active, show_booked_only: false, tags: null
             }});
             /* eslint-enable @typescript-eslint/camelcase */
+        }
+    },
+    eventBookings: {
+        requestBooking: (eventId: string, additionalInformation: AdditionalInformation) => {
+            return endpoint.post(`/events/${eventId}/bookings`, additionalInformation);
+        },
+        addToWaitingList: (eventId: string, additionalInformation: AdditionalInformation) => {
+            return endpoint.post(`/events/${eventId}/waiting_list`, additionalInformation);
+        },
+        cancelBooking: (eventId: string) => {
+            return endpoint.delete(`/events/${eventId}/bookings/cancel`);
         }
     },
     logger: {

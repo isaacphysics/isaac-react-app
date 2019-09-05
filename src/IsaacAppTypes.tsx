@@ -215,6 +215,18 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS; augmentedEvent: AugmentedEvent}
     | {type: ACTION_TYPE.EVENT_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.EVENT_BOOKING_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_WAITING_LIST_REQUEST}
+    | {type: ACTION_TYPE.EVENT_WAITING_LIST_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_WAITING_LIST_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_CANCELLATION_REQUEST}
+    | {type: ACTION_TYPE.EVENT_CANCELLATION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_CANCELLATION_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
 
@@ -401,6 +413,15 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     student?: boolean;
     virtual?: boolean;
     field?: "physics" | "maths";
+}
+
+export interface AdditionalInformation {
+    jobTitle?: string;
+    yearGroup?: string;
+    medicalRequirements?: string;
+    accessibilityRequirements?: string;
+    emergencyName?: string;
+    emergencyNumber?: string;
 }
 
 export interface ZxcvbnResult {

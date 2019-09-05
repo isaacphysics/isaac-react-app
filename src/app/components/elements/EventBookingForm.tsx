@@ -1,25 +1,21 @@
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
-import {AugmentedEvent, LoggedInUser} from "../../../IsaacAppTypes";
+import {AdditionalInformation, AugmentedEvent, LoggedInUser} from "../../../IsaacAppTypes";
 import {SchoolInput} from "./inputs/SchoolInput";
 import {atLeastOne, zeroOrLess} from "../../services/validation";
 import {isTeacher} from "../../services/user";
-import {Input} from "reactstrap";
+import {useDispatch} from "react-redux";
+import {addToEventWaitingList, makeEventBookingRequest} from "../../state/actions";
 
-interface AdditionalInformation {
-    jobTitle?: string;
-    yearGroup?: string;
-    medicalRequirements?: string;
-    accessibilityRequirements?: string;
-    emergencyName?: string;
-    emergencyNumber?: string;
-}
 interface EventBookingFormProps {
     event: AugmentedEvent;
     user: LoggedInUser;
 }
+
 export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
+    const dispatch = useDispatch();
+
     const [additionalInformation, setAdditionalInformation] = useState<AdditionalInformation>({});
     const targetUser = user; // For a future feature
 
@@ -32,20 +28,20 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
         setAdditionalInformation(Object.assign({}, additionalInformation, update));
     }
 
-    function validateSubmission(user: LoggedInUser, ) {
-
+    function validateSubmission(user: LoggedInUser, additionalInformation: AdditionalInformation) {
+        return true;
     }
 
-    function submitBooking(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        // check for requirements
-        if (bookable) {
-            // make booking request
-
-        } else if (applyable) {
-            // make application request
-        } else {
-            // should not reach here
+    function submitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
+        formEvent.preventDefault();
+        if (validateSubmission(targetUser, additionalInformation)) {
+            if (bookable) {
+                dispatch(makeEventBookingRequest(event.id as string, additionalInformation));
+            } else if (applyable) {
+                dispatch(addToEventWaitingList(event.id as string, additionalInformation));
+            } else {
+                // should never reach here
+            }
         }
     }
 
@@ -210,7 +206,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                             </small>
                         </p>}
 
-                        {atLeastOne(event.numberOfPlaces) && !event.userBooked && (bookable || applyable) && <div className="text-center">
+                        {atLeastOne(event.numberOfPlaces) && !event.userBooked && (bookable || applyable) && <div>
                             <RS.Input type="submit" value={submissionTitle} className="btn btn-secondary btn-xl border-0 w-auto" />
                         </div>}
                     </div>
