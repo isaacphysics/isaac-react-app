@@ -3,12 +3,13 @@ import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {connect} from "react-redux";
-import {adminModifyUserRoles, adminUserSearch, adminUserDelete} from "../../state/actions";
+import {adminModifyUserRoles, adminUserDelete, adminUserSearch} from "../../state/actions";
 import {AdminUserSearchState, AppState} from "../../state/reducers";
 import {Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
+import {Link} from "react-router-dom";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -215,6 +216,14 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                 )}
                             </RS.DropdownMenu>
                         </RS.UncontrolledButtonDropdown>
+                    </RS.Col>
+                    <RS.Col>
+                        <Link className="btn float-right btn-secondary border-0" to={{
+                            pathname: "/admin/emails",
+                            state: {
+                                csvIDs: selectedUserIds
+                            }
+                        }}>Email</Link>
                     </RS.Col>
                 </RS.Row>
 

@@ -9,7 +9,15 @@ import {UserRole} from "../../services/constants";
 import classnames from "classnames";
 import {debounce} from 'lodash';
 
-export const AdminEmails = () => {
+interface AdminEmailsProps {
+    location: {
+        state?: {
+            csvIDs?: number[];
+        }
+    };
+}
+
+export const AdminEmails = (props: AdminEmailsProps) => {
     const dispatch = useDispatch();
     const [selectionMode, setSelectionMode] = useState("USER_FILTER")
     const [selectedRoles, setSelectedRoles] = useState({
@@ -42,6 +50,10 @@ export const AdminEmails = () => {
     const csvInputDebounce = debounce((value: string) => setCSVIDs(value.split(/[\s,]+/).map((e) => {return parseInt(e)}).filter((num) => !isNaN(num))), 250);
 
     useEffect(() => {
+        if (props.location.state && props.location.state.csvIDs) {
+            setCSVIDs(props.location.state.csvIDs);
+            setSelectionMode("CSV_USER_ID_LIST");
+        }
         if (!userRolesSelector) {
             dispatch(getAdminSiteStats());
         }
@@ -96,6 +108,7 @@ export const AdminEmails = () => {
 
                 {selectionMode == "CSV_USER_ID_LIST" && <RS.Input
                     type = "textarea"
+                    defaultValue={csvIDs.join(", ")}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         csvInputDebounce(event.target.value);
                     }}
