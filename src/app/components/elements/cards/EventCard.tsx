@@ -20,11 +20,11 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
             {subtitle && <RS.CardText className='m-0 my-auto card-date-time'>{subtitle}</RS.CardText>}
             <RS.CardText className="m-0 my-auto card-date-time">
                 <span className="d-block my-2">
-                    <span className="font-weight-bold">When:</span> {" "}
-                    <DateString>{date}</DateString>
-                </span>
-                <span className='d-block my-2'>
-                    <DateString>{endDate}</DateString>
+                    <span className="font-weight-bold">When:</span>
+                    <div>
+                        <DateString>{date}</DateString><br />
+                        <DateString>{endDate}</DateString>
+                    </div>
                 </span>
                 {location && location.address && <span className='d-block my-2'>
                     <span className="font-weight-bold">Location:</span> {" "}
