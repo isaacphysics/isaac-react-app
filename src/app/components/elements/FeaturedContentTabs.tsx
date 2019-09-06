@@ -3,7 +3,7 @@ import {Tabs} from "./Tabs";
 import {Col, Row, Button} from "reactstrap";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
-import {AnonUserExamBoardPicker} from "./AnonUserExamBoardPicker";
+import {AnonUserExamBoardPicker} from "./inputs/AnonUserExamBoardPicker";
 
 export const FeaturedContentTabs = () => (
     <div className="tabs-featured-question">

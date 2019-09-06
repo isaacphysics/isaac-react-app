@@ -13,7 +13,7 @@ import {
 import {
     Action,
     ActiveModal,
-    ActualBoardLimit,
+    ActualBoardLimit, AdditionalInformation,
     AppGroup,
     AppGroupMembership,
     BoardOrder,
@@ -40,16 +40,18 @@ import {
     releaseConfirmationModal,
     revocationConfirmationModal,
     tokenVerificationModal
-} from "../components/elements/TeacherConnectionModalCreators";
+} from "../components/elements/modals/TeacherConnectionModalCreators";
 import * as persistence from "../services/localStorage";
 import {KEY} from "../services/localStorage";
-import {groupInvitationModal, groupManagersModal} from "../components/elements/GroupsModalCreators";
+import {groupInvitationModal, groupManagersModal} from "../components/elements/modals/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
 import {groups} from "./selectors";
 import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
 import {isTeacher} from "../services/user";
 import ReactGA from "react-ga";
+import {StatusFilter, TypeFilter} from "../components/pages/Events";
+import {augmentEvent} from "../services/events";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -586,7 +588,7 @@ export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatc
     }
 };
 
-// Page fragments
+// Page Fragments
 export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.FRAGMENT_REQUEST, id});
     try {
@@ -596,7 +598,6 @@ export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) 
         dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE, id});
     }
 };
-
 
 // Questions
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
@@ -710,13 +711,11 @@ export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     // Generic error handling covers errors here
 };
 
-
 export const loadAssignmentsOwnedByMe = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST});
     const assignmentsResponse = await api.assignments.getAssignmentsOwnedByMe();
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
 };
-
 
 export const loadProgress = (assignment: AssignmentDTO) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     // Don't request this again if it has already been fetched successfully
@@ -830,7 +829,6 @@ export const getAdminSiteStats = () => async (dispatch: Dispatch<Action>) => {
 };
 
 // Groups
-
 export const loadGroups = (archivedGroupsOnly: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_REQUEST});
     try {
@@ -994,8 +992,7 @@ export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_
     }
 };
 
-// boards
-
+// Gameboards
 export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => async (dispatch: Dispatch<Action>) => {
     const accumulate = startIndex != 0;
     dispatch({type: ACTION_TYPE.BOARDS_REQUEST, accumulate});
@@ -1091,6 +1088,110 @@ export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>,
         boards: {totalResults: undefined, results: [board.data]},
         accumulate
     });
+};
+
+// Events
+export const clearEventsList = {type: ACTION_TYPE.EVENTS_CLEAR};
+
+export const getEvent = (eventId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_REQUEST});
+        const augmentedEvent =
+            // check if event is already loaded in events
+            (state && state.events && state.events.events.filter(e => e.id === eventId)[0]) ||
+            // else request it then augment it
+            augmentEvent((await api.events.get(eventId)).data);
+        dispatch({type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS, augmentedEvent});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.EVENT_RESPONSE_FAILURE});
+    }
+};
+
+export const getEventsList = (startIndex: number, eventsPerPage: number, typeFilter: TypeFilter, statusFilter: StatusFilter) => async (dispatch: Dispatch<Action>) => {
+    const filterTags = typeFilter !== TypeFilter["All Events"] ? typeFilter : null;
+    const showActiveOnly = statusFilter === StatusFilter["Upcoming Events"];
+    const showBookedOnly = statusFilter === StatusFilter["My Booked Events"];
+    const showInactiveOnly = false;
+    try {
+        dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
+        const response = await api.events.getEvents(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly);
+        const augmentedEvents = response.data.results.map(event => augmentEvent(event));
+        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: response.data.totalResults});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Events request failed", e));
+    }
+};
+
+export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch(clearEventsList as any);
+        dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
+        const getActive = true;
+        const eventsResponse = await api.events.getFirstN(numberOfEvents, getActive);
+        if (eventsResponse.data.totalResults < numberOfEvents) {
+            const numberOfRemainingEvents = numberOfEvents - eventsResponse.data.totalResults;
+            const inactiveEventsResponse = await api.events.getFirstN(numberOfRemainingEvents, !getActive);
+            eventsResponse.data.results.push(...inactiveEventsResponse.data.results);
+        }
+        const augmentedEvents = eventsResponse.data.results.map(event => augmentEvent(event));
+        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: augmentedEvents.length});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Unable to display events", e));
+    }
+};
+
+export const makeEventBookingRequest = (eventId: string, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_REQUEST});
+        await api.eventBookings.requestBooking(eventId, additionalInformation);
+        await dispatch(getEvent(eventId) as any);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            title: "Event booking confirmed", body: "You have been successfully booked on to this event.",
+            color: "success", timeout: 5000, closable: false,
+        }) as any);
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
+    }
+};
+
+export const addToEventWaitingList = (eventId: string, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_WAITING_LIST_REQUEST});
+        await api.eventBookings.addToWaitingList(eventId, additionalInformation);
+        await dispatch(getEvent(eventId) as any);
+        dispatch({type: ACTION_TYPE.EVENT_WAITING_LIST_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            title: "Waiting list booking confirmed", body: "You have been successfully added to the waiting list for this event.",
+            color: "success", timeout: 5000, closable: false,
+        }) as any);
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_WAITING_LIST_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
+    }
+};
+
+export const cancelEventBooking = (eventId: string) => async (dispatch: Dispatch<Action>) => {
+    let cancel = window.confirm('Are you sure you want to cancel your booking on this event. You may not be able to re-book, especially if there is a waiting list.');
+    if (cancel) {
+        try {
+            dispatch({type: ACTION_TYPE.EVENT_CANCELLATION_REQUEST});
+            await api.eventBookings.cancelBooking(eventId);
+            await dispatch(getEvent(eventId) as any);
+            dispatch({type: ACTION_TYPE.EVENT_CANCELLATION_RESPONSE_SUCCESS});
+            dispatch(showToast({
+                title: "Your booking has been cancelled", body: "Your booking has successfully been cancelled.",
+                color: "success", timeout: 5000, closable: false,
+            }) as any);
+        } catch (error) {
+            dispatch({type: ACTION_TYPE.EVENT_CANCELLATION_RESPONSE_FAILURE});
+            dispatch(showErrorToastIfNeeded("Event booking cancellation failed", error) as any);
+        }
+    }
 };
 
 // Content Errors

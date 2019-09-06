@@ -1,8 +1,8 @@
 import React from "react";
 import {Container, Col, Row} from "reactstrap";
-import {ListGroupFooter} from "../elements/ListGroupFooter";
-import {ListGroupSocial} from "../elements/ListGroupSocial";
-import {ListGroupFooterBottom} from "../elements/ListGroupFooterBottom";
+import {ListGroupFooter} from "../elements/list-groups/ListGroupFooter";
+import {ListGroupSocial} from "../elements/list-groups/ListGroupSocial";
+import {ListGroupFooterBottom} from "../elements/list-groups/ListGroupFooterBottom";
 import {Link} from "react-router-dom";
 
 const ExternalLink = ({href, children}: {href: string; children: any}) => (

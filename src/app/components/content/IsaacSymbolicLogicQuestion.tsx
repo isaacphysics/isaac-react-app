@@ -4,7 +4,7 @@ import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiTypes";
-import { InequalityModal } from "../elements/InequalityModal";
+import { InequalityModal } from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {IsaacHints} from "./IsaacHints";
 import { determineExamBoardFrom } from "../../services/examBoard";

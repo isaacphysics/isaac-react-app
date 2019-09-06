@@ -4,6 +4,8 @@ import * as ApiTypes from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {ActualBoardLimit, BoardOrder, LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
+import {TypeFilter} from "../components/pages/Events";
+import {AdditionalInformation} from "../../IsaacAppTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -276,6 +278,41 @@ export const api = {
         },
         getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${boardId}`);
+        }
+    },
+    events: {
+        get: (eventId: string): AxiosPromise<ApiTypes.IsaacEventPageDTO> => {
+            return endpoint.get(`/events/${eventId}`);
+        },
+        getEvents: (
+            startIndex: number, eventsPerPage: number, filterEventsByType: TypeFilter | null,
+            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
+        ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
+            /* eslint-disable @typescript-eslint/camelcase */
+            return endpoint.get(`/events`, {params: {
+                start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
+                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
+            }});
+            /* eslint-enable @typescript-eslint/camelcase */
+        },
+        getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
+            /* eslint-disable @typescript-eslint/camelcase */
+            return endpoint.get(`/events`, {params: {
+                start_index: 0, limit: numberOfActiveEvents, show_active_only: active,
+                show_inactive_only: !active, show_booked_only: false, tags: null
+            }});
+            /* eslint-enable @typescript-eslint/camelcase */
+        }
+    },
+    eventBookings: {
+        requestBooking: (eventId: string, additionalInformation: AdditionalInformation) => {
+            return endpoint.post(`/events/${eventId}/bookings`, additionalInformation);
+        },
+        addToWaitingList: (eventId: string, additionalInformation: AdditionalInformation) => {
+            return endpoint.post(`/events/${eventId}/waiting_list`, additionalInformation);
+        },
+        cancelBooking: (eventId: string) => {
+            return endpoint.delete(`/events/${eventId}/bookings/cancel`);
         }
     },
     logger: {

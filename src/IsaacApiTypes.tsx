@@ -474,7 +474,7 @@ export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FA
 
 export type GroupMembershipStatus = "ACTIVE" | "INACTIVE" | "DELETED";
 
-export type Gender = "MALE" | "FEMALE" | "OTHER" | "UNKNOWN";
+export type Gender = "MALE" | "FEMALE" | "OTHER" | "PREFER_NOT_TO_SAY" | "UNKNOWN";
 
 export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE";
 
