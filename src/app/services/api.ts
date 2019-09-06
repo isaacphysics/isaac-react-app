@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {EventBookingDTO} from "../../IsaacApiTypes";
+import {EventBookingDTO, GameboardDTO, QuestionSearchResponse} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
@@ -9,6 +9,7 @@ import {
     ATTENDANCE,
     BoardOrder,
     LoggedInUser,
+    QuestionSearchQuery,
     UserPreferencesDTO
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
@@ -163,6 +164,11 @@ export const api = {
         get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
             return endpoint.get(`/pages/questions/${id}`);
         },
+        search: (query: QuestionSearchQuery): AxiosPromise<QuestionSearchResponse> => {
+            return endpoint.get("/pages/questions/", {
+                params: query,
+            });
+        },
         answer: (id: string, answer: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
         }
@@ -193,6 +199,9 @@ export const api = {
         },
         save: (gameboardId: string) => {
             return endpoint.post(`gameboards/user_gameboards/${gameboardId}`, {});
+        },
+        create: (gameboard: GameboardDTO) => {
+            return endpoint.post(`gameboards`, gameboard);
         }
     },
     assignments: {

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import "../../services/scrollManager"; // important
 import "../../services/polyfills"; // important
 import {useDispatch, useSelector} from "react-redux";
-import {Router, Switch, Route} from "react-router-dom";
+import {Route, Router, Switch} from "react-router-dom";
 import {Footer} from "./Footer";
 import {Homepage} from "../pages/Homepage";
 import {Question} from "../pages/Question";
@@ -54,6 +54,7 @@ import {isTest} from "../../services/constants";
 import {Events} from "../pages/Events";
 import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
+import {GameboardBuilder} from "../pages/GameboardBuilder";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -101,6 +102,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/topics/:topicName" component={Topic} />
 
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
+                    <TrackedRoute exact path="/gameboards/builder" component={GameboardBuilder} />
                     <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
                     <TrackedRoute exact path="/add_gameboard/:gameboardId" ifUser={isLoggedIn} component={AddGameboard} />
 

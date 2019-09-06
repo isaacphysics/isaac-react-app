@@ -24,6 +24,7 @@ import {
     ContentSummaryDTO,
     EventBookingDTO,
     GameboardDTO,
+    GameboardItem,
     GameboardListDTO,
     IsaacTopicSummaryPageDTO,
     ResultsWrapper,
@@ -255,6 +256,23 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
         }
         default: {
             return questions;
+        }
+    }
+};
+
+type GameboardEditorQuestionsState = GameboardItem[] | null;
+export const gameboardEditorQuestions = (gameboardEditorQuestions: GameboardEditorQuestionsState = null, action: Action) => {
+    switch(action.type) {
+        case ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS: {
+            return action.questions.map((question) => {
+                return {...question, url: question.url && question.url.replace("/isaac-api/api/pages","")}
+            });
+        }
+        case ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE: {
+            return null;
+        }
+        default: {
+            return gameboardEditorQuestions;
         }
     }
 };
@@ -693,6 +711,7 @@ const appReducer = combineReducers({
     questions,
     currentTopic,
     currentGameboard,
+    gameboardEditorQuestions,
     assignments,
     contentVersion,
     search,
@@ -725,6 +744,7 @@ export type AppState = undefined | {
     questions: QuestionsState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
+    gameboardEditorQuestions: GameboardEditorQuestionsState,
     assignments: AssignmentsState;
     contentVersion: ContentVersionState;
     search: SearchState;

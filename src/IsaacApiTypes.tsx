@@ -386,9 +386,10 @@ export interface GameboardItem {
     id?: string;
     title?: string;
     description?: string;
-    uri?: string;
+    url?: string;
     tags?: string[];
     level?: number;
+    type?: string;
     questionPartsCorrect?: number;
     questionPartsIncorrect?: number;
     questionPartsNotAttempted?: number;
@@ -458,6 +459,20 @@ export interface Address {
     county?: string;
     postalCode?: string;
     country?: string;
+}
+
+export interface EmailUserRoles {
+    ADMIN: boolean;
+    EVENT_MANAGER: boolean;
+    CONTENT_EDITOR: boolean;
+    TEACHER: boolean;
+    TESTER: boolean;
+    STAFF: boolean;
+    STUDENT: boolean;
+}
+
+export interface QuestionSearchResponse {
+    results: GameboardItem[]
 }
 
 export type GameboardCreationMethod = "FILTER" | "BUILDER";

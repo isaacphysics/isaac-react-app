@@ -20,7 +20,7 @@ import {
     ATTENDANCE,
     BoardOrder,
     LoggedInUser,
-    LoggedInValidationUser,
+    LoggedInValidationUser, QuestionSearchQuery,
     Toast,
     UserPreferencesDTO,
     ValidatedChoice,
@@ -687,7 +687,18 @@ export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|Validat
     dispatch({type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
 };
 
-// Current gameboard
+export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_REQUEST});
+    try {
+        const questionsResponse = await api.questions.search(query);
+        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get email template", e));
+    }
+};
+
+// Current Gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GAMEBOARD_REQUEST, gameboardId});
     try {
@@ -718,6 +729,17 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
         console.error("Error saving gameboard.");
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Error saving gameboard", e));
+    }
+};
+
+export const createGameboard = (gameboard: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST});
+    try {
+        await api.gameboards.create(gameboard);
+        dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Error creating gameboard", e));
     }
 };
 

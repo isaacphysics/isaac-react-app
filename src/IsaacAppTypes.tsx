@@ -131,6 +131,10 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_UNLOCK; questionId: string}
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>}
 
+    | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: ApiTypes.GameboardItem[]}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
@@ -271,6 +275,10 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST}
+    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.BOARDS_GROUPS_REQUEST; board: ApiTypes.GameboardDTO}
     | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groups: {[key: string]: ApiTypes.UserGroupDTO[]}}
     | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
@@ -385,6 +393,7 @@ export interface Toast {
 
 export interface ActiveModal {
     closeAction?: () => void;
+    size?: string;
     title: string;
     body: any;
     buttons?: any[];
@@ -494,4 +503,13 @@ export interface UserSchoolLookup {[userId: number]: School}
 
 export enum ATTENDANCE {
     ABSENT, ATTENDED
+}
+
+export interface QuestionSearchQuery {
+    searchString: string;
+    tags: string;
+    levels: string;
+    fasttrack: boolean;
+    startIndex: number;
+    limit: number;
 }

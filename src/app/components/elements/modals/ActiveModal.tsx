@@ -14,7 +14,7 @@ interface ActiveModalProps {
 
 const ActiveModalComponent = ({activeModal}: ActiveModalProps) => {
     const ModalBody = activeModal && activeModal.body;
-    return <RS.Modal isOpen={!!activeModal} size={"lg"}>
+    return <RS.Modal isOpen={!!activeModal} size={(activeModal && activeModal.size) || "lg"}>
         {activeModal && <React.Fragment>
             <RS.ModalHeader
                 className="h-title pb-5 mb-4"
