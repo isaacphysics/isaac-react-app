@@ -6,7 +6,7 @@ import {SchoolInput} from "./inputs/SchoolInput";
 import {atLeastOne, validateUserSchool, zeroOrLess} from "../../services/validation";
 import {isTeacher} from "../../services/user";
 import {useDispatch} from "react-redux";
-import {addToEventWaitingList, makeEventBookingRequest, requestEmailVerification, showToast} from "../../state/actions";
+import {addMyselfToWaitingList, bookMyselfOnEvent, requestEmailVerification, showToast} from "../../state/actions";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
@@ -78,9 +78,9 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
         formEvent.preventDefault();
         if (validateSubmission(targetUser, additionalInformation)) {
             if (bookable) {
-                dispatch(makeEventBookingRequest(event.id as string, additionalInformation));
+                dispatch(bookMyselfOnEvent(event.id as string, additionalInformation));
             } else if (applyable) {
-                dispatch(addToEventWaitingList(event.id as string, additionalInformation));
+                dispatch(addMyselfToWaitingList(event.id as string, additionalInformation));
             } else {
                 // should never reach here
             }

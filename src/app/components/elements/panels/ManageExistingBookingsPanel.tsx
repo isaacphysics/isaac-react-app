@@ -4,11 +4,16 @@ import {Accordion} from "../Accordion";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {atLeastOne, zeroOrLess} from "../../../services/validation";
-import {getEventBookings} from "../../../state/actions";
+import {
+    cancelUserBooking,
+    deleteUserBooking,
+    getEventBookings,
+    promoteUserFromWaitingList,
+    resendUserConfirmationEmail
+} from "../../../state/actions";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {isAdmin} from "../../../services/user";
 import {UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
-import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
 
 export const ManageExistingBookingsPanel = ({user, eventBookingId}: {user: LoggedInUser; eventBookingId: string}) => {
@@ -77,24 +82,25 @@ export const ManageExistingBookingsPanel = ({user, eventBookingId}: {user: Logge
                 <tbody>
                     {eventBookings.sort(sortOnPredicateAndReverse).map(booking => {
                         const userSchool = booking.userBooked && userIdToSchoolMapping[booking.userBooked.id as number];
+                        const userId = booking.userBooked && booking.userBooked.id;
                         return <tr key={booking.bookingId}>
                             <td>
                                 {(booking.bookingStatus == 'WAITING_LIST' || booking.bookingStatus == 'CANCELLED') && <RS.Button
-                                    color="tertiary" block className="btn-sm mb-1" onClick={() => console.log("promoteBooking(eventIdForBooking, booking.userBooked.id)")}
+                                    color="tertiary" block className="btn-sm mb-1" onClick={() => dispatch(promoteUserFromWaitingList(eventBookingId, userId))}
                                 >
                                     Promote
                                 </RS.Button>}
                                 {(booking.bookingStatus == 'WAITING_LIST' || booking.bookingStatus == 'CONFIRMED') && <RS.Button
-                                    color="tertiary" block className="btn-sm mb-1" onClick={() => console.log("cancelEventBooking(eventIdForBooking, booking.userBooked.id)")}
+                                    color="tertiary" block className="btn-sm mb-1" onClick={() => dispatch(cancelUserBooking(eventBookingId, userId))}
                                 >
                                     Cancel
                                 </RS.Button>}
                                 {isAdmin(user) && <RS.Button
-                                    color="tertiary" block className="btn-sm mb-1" onClick={() => console.log("unbookUserFromEvent(eventIdForBooking, booking.userBooked.id)")}
+                                    color="tertiary" block className="btn-sm mb-1" onClick={() => dispatch(deleteUserBooking(eventBookingId, userId))}
                                 >
                                     Delete
                                 </RS.Button>}
-                                <RS.Button color="tertiary" block className="btn-sm mb-1" onClick={() => console.log("resendConfirmationEmail(eventIdForBooking, booking.userBooked.id)")}>
+                                <RS.Button color="tertiary" block className="btn-sm mb-1" onClick={() => dispatch(resendUserConfirmationEmail(eventBookingId, userId))}>
                                     Resend Email
                                 </RS.Button>
                             </td>

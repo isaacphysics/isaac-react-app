@@ -6,7 +6,7 @@ import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {EVENTS_CRUMB} from "../../services/constants";
 import {AugmentedEvent} from "../../../IsaacAppTypes";
-import {cancelEventBooking, getEvent} from "../../state/actions";
+import {cancelMyBooking, getEvent} from "../../state/actions";
 import {DateString} from "../elements/DateString";
 import {IsaacContent} from "../content/IsaacContent";
 import {Link} from "react-router-dom";
@@ -137,12 +137,12 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     Close booking form
                                 </RS.Button>}
                                 {event.userBooked && !event.expired && <RS.Button
-                                    color="primary" outline onClick={() => {dispatch(cancelEventBooking(eventId))}}
+                                    color="primary" outline onClick={() => {dispatch(cancelMyBooking(eventId))}}
                                 >
                                     Cancel your booking
                                 </RS.Button>}
                                 {event.userOnWaitList && !event.expired && <RS.Button
-                                    color="primary" outline onClick={() => {dispatch(cancelEventBooking(eventId))}}
+                                    color="primary" outline onClick={() => {dispatch(cancelMyBooking(eventId))}}
                                 >
                                     Remove from waiting list
                                 </RS.Button>}

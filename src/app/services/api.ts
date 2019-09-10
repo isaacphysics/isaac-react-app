@@ -322,17 +322,29 @@ export const api = {
         }
     },
     eventBookings: {
-        getBookings: (eventId: string): AxiosPromise<EventBookingDTO[]> => {
-            return endpoint.get(`/events/${eventId}/bookings`);
-        },
-        requestBooking: (eventId: string, additionalInformation: AdditionalInformation) => {
+        bookMyselfOnEvent: (eventId: string, additionalInformation: AdditionalInformation) => {
             return endpoint.post(`/events/${eventId}/bookings`, additionalInformation);
         },
-        addToWaitingList: (eventId: string, additionalInformation: AdditionalInformation) => {
+        addMyselfToWaitingList: (eventId: string, additionalInformation: AdditionalInformation) => {
             return endpoint.post(`/events/${eventId}/waiting_list`, additionalInformation);
         },
-        cancelBooking: (eventId: string) => {
+        cancelMyBooking: (eventId: string) => {
             return endpoint.delete(`/events/${eventId}/bookings/cancel`);
+        },
+        getEventBookings: (eventId: string): AxiosPromise<EventBookingDTO[]> => {
+            return endpoint.get(`/events/${eventId}/bookings`);
+        },
+        resendUserConfirmationEmail: (eventId: string, userId: number) => {
+            return endpoint.post(`/events/${eventId}/bookings/${userId}/resend_confirmation`);
+        },
+        promoteUserFromWaitingList: (eventId: string, userId: number) => {
+            return endpoint.post(`/events/${eventId}/bookings/${userId}/promote`);
+        },
+        cancelUserBooking: (eventId: string, userId: number) => {
+            return endpoint.delete(`/events/${eventId}/bookings/${userId}/cancel`);
+        },
+        deleteUserBooking: (eventId: string, userId: number) => {
+            return endpoint.delete(`/events/${eventId}/bookings/${userId}`);
         }
     },
     logger: {

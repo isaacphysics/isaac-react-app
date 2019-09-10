@@ -1,8 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import React, {useEffect, useState} from "react";
-import {EventOverview} from "../../../../IsaacAppTypes";
-import {updateEventOverviews} from "../../../state/actions";
+import {getEventOverviews} from "../../../state/actions";
 import {Accordion} from "../Accordion";
 import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
@@ -35,7 +34,7 @@ export const EventOverviewsPanel = ({setSelectedEventId}: {setSelectedEventId: (
 
     useEffect(() => {
         setSelectedEventId(null);
-        dispatch(updateEventOverviews(overviewFilter));
+        dispatch(getEventOverviews(overviewFilter));
     }, [overviewFilter]);
 
     return <Accordion title="Events overview" index={0}>
