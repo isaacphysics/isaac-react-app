@@ -1,6 +1,7 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
+import {Location} from "./IsaacApiTypes";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -211,6 +212,10 @@ export type Action =
     | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.EVENTS_CLEAR}
 
+    | {type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST}
+    | {type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS; eventOverviews: EventOverview[]}
+    | {type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.EVENT_REQUEST}
     | {type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS; augmentedEvent: AugmentedEvent}
     | {type: ACTION_TYPE.EVENT_RESPONSE_FAILURE}
@@ -413,6 +418,21 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     student?: boolean;
     virtual?: boolean;
     field?: "physics" | "maths";
+}
+
+export interface EventOverview {
+    id?: string;
+    title?: string;
+    subtitle?: string;
+    date?: Date;
+    bookingDeadline?: Date;
+    eventStatus?: ApiTypes.EventStatus;
+    location?: Location;
+    numberOfConfirmedBookings: number;
+    numberOfWaitingListBookings: number;
+    numberAttended: number;
+    numberAbsent: number;
+    numberOfPlaces: number;
 }
 
 export interface AdditionalInformation {

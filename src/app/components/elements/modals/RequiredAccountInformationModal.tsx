@@ -1,7 +1,7 @@
 import {closeActiveModal, updateCurrentUser} from "../../../state/actions";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
-import {UserEmailPreference} from "../UserEmailPreferences";
+import {UserEmailPreference} from "../panels/UserEmailPreferences";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";

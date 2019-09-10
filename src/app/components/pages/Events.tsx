@@ -19,15 +19,15 @@ interface EventsPageQueryParams {
 }
 
 export enum StatusFilter {
-    "All Events" = "all",
-    "Upcoming Events" = "upcoming",
-    "My Booked Events" = "showBookedOnly",
+    "All events" = "all",
+    "Upcoming events" = "upcoming",
+    "My booked events" = "showBookedOnly",
 }
 export enum TypeFilter {
-    "All Events" = "all",
-    "Student Events" = "student",
-    "Teacher Events" = "teacher",
-    "Online Tutorials" = "virtual",
+    "All events" = "all",
+    "Student events" = "student",
+    "Teacher events" = "teacher",
+    "Online tutorials" = "virtual",
 }
 const EVENTS_PER_PAGE = 6;
 
@@ -40,10 +40,10 @@ export const Events = withRouter(({history, location}: {history: History; locati
     const numberOfLoadedEvents = eventsState ? eventsState.events.length : 0;
 
     const statusFilter =
-        (user && user.loggedIn && query.show_booked_only && StatusFilter["My Booked Events"]) ||
-        (query.event_status === "all" && StatusFilter["All Events"]) ||
-        StatusFilter["Upcoming Events"];
-    const typeFilter = query.types || TypeFilter["All Events"];
+        (user && user.loggedIn && query.show_booked_only && StatusFilter["My booked events"]) ||
+        (query.event_status === "all" && StatusFilter["All events"]) ||
+        StatusFilter["Upcoming events"];
+    const typeFilter = query.types || TypeFilter["All events"];
 
     useEffect(() => {
         const startIndex = 0;
@@ -60,12 +60,12 @@ export const Events = withRouter(({history, location}: {history: History; locati
                 <RS.Label>Filter by
                     <RS.Input className="ml-2 mr-3" type="select" value={statusFilter} onChange={e => {
                         const selectedFilter = e.target.value as StatusFilter;
-                        query.show_booked_only = selectedFilter === StatusFilter["My Booked Events"] ? true : undefined;
-                        query.event_status = selectedFilter == StatusFilter["All Events"] ? "all" : undefined;
+                        query.show_booked_only = selectedFilter === StatusFilter["My booked events"] ? true : undefined;
+                        query.event_status = selectedFilter == StatusFilter["All events"] ? "all" : undefined;
                         history.push({pathname: location.pathname, search: queryString.stringify(query)});
                     }}>
                         {Object.entries(StatusFilter)
-                            .filter(([statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== StatusFilter["My Booked Events"])
+                            .filter(([statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== StatusFilter["My booked events"])
                             .map(([statusLabel, statusValue]) =>
                                 <option key={statusValue} value={statusValue}>{statusLabel}</option>
                             )
@@ -73,7 +73,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
                     </RS.Input>
                     <RS.Input className="ml-2" type="select" value={typeFilter} onChange={e => {
                         const selectedType = e.target.value as TypeFilter;
-                        query.types = selectedType !== TypeFilter["All Events"] ? selectedType : undefined;
+                        query.types = selectedType !== TypeFilter["All events"] ? selectedType : undefined;
                         history.push({pathname: location.pathname, search: queryString.stringify(query)});
                     }}>
                         {Object.entries(TypeFilter).map(([typeLabel, typeValue]) =>
@@ -106,7 +106,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
                 {/* No Results */}
                 {total === 0 && <div className="text-center">
                     <p>Sorry, we cannot find any events that match your filter settings.</p>
-                    {statusFilter === StatusFilter["My Booked Events"] && <p>
+                    {statusFilter === StatusFilter["My booked events"] && <p>
                         N.B. Events booked via Eventbrite may not appear here; for these if you have received email
                         confirmation you are booked.
                     </p>}

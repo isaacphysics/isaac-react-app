@@ -52,6 +52,7 @@ import {isTeacher} from "../services/user";
 import ReactGA from "react-ga";
 import {StatusFilter, TypeFilter} from "../components/pages/Events";
 import {augmentEvent} from "../services/events";
+import {EventOverviewFilter} from "../components/elements/panels/EventOverviewsPanel";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -1109,9 +1110,9 @@ export const getEvent = (eventId: string) => async (dispatch: Dispatch<Action>, 
 };
 
 export const getEventsList = (startIndex: number, eventsPerPage: number, typeFilter: TypeFilter, statusFilter: StatusFilter) => async (dispatch: Dispatch<Action>) => {
-    const filterTags = typeFilter !== TypeFilter["All Events"] ? typeFilter : null;
-    const showActiveOnly = statusFilter === StatusFilter["Upcoming Events"];
-    const showBookedOnly = statusFilter === StatusFilter["My Booked Events"];
+    const filterTags = typeFilter !== TypeFilter["All events"] ? typeFilter : null;
+    const showActiveOnly = statusFilter === StatusFilter["Upcoming events"];
+    const showBookedOnly = statusFilter === StatusFilter["My booked events"];
     const showInactiveOnly = false;
     try {
         dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
@@ -1193,6 +1194,26 @@ export const cancelEventBooking = (eventId: string) => async (dispatch: Dispatch
         }
     }
 };
+
+export const updateEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST});
+        const response = await api.events.getEventOverviews(eventOverviewFilter);
+        // We ignore response.data.total because we do not currently page the results of event overviews
+        dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS, eventOverviews: response.data.results});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load event overviews", error) as any);
+    }
+};
+
+// export const getEventBookings = (evnetId: string) => async (dispatch: Dispatch<Action>) => {
+//     try {
+//         dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST});
+//         const response = await api.eventBookings.getBookings(eventId);
+//
+//     }
+// };
 
 // Content Errors
 export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) => {

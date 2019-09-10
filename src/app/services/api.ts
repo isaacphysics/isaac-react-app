@@ -2,10 +2,16 @@ import axios, {AxiosPromise} from "axios";
 import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
-import {ActualBoardLimit, BoardOrder, LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
+import {
+    ActualBoardLimit,
+    AdditionalInformation,
+    BoardOrder,
+    LoggedInUser,
+    UserPreferencesDTO
+} from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {TypeFilter} from "../components/pages/Events";
-import {AdditionalInformation} from "../../IsaacAppTypes";
+import {EventOverviewFilter} from "../components/elements/panels/EventOverviewsPanel";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -302,6 +308,13 @@ export const api = {
                 show_inactive_only: !active, show_booked_only: false, tags: null
             }});
             /* eslint-enable @typescript-eslint/camelcase */
+        },
+        getEventOverviews: (eventOverviewFilter: EventOverviewFilter): AxiosPromise<{results: AppTypes.EventOverview[]; totalResults: number}> => {
+            const params = {limit: -1, startIndex: 0};
+            if (eventOverviewFilter !== EventOverviewFilter["All events"]) {
+                Object.assign(params, {filter: eventOverviewFilter})
+            }
+            return endpoint.get('/events/overview', {params});
         }
     },
     eventBookings: {

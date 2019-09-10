@@ -40,7 +40,7 @@ import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {ActiveModal} from "../elements/modals/ActiveModal";
-import {isAdmin, isLoggedIn, isStaff, isTeacher} from "../../services/user";
+import {isAdmin, isEventsManager, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {Groups} from "../pages/Groups";
 import {Equality} from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
@@ -53,6 +53,7 @@ import {AddGameboard} from "../handlers/AddGameboard";
 import {isTest} from "../../services/constants";
 import {Events} from "../pages/Events";
 import {EventDetails} from "../pages/EventDetails";
+import {EventAdminManager} from "../pages/EventAdminManager";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -120,6 +121,7 @@ export const IsaacApp = () => {
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
                     <TrackedRoute exact path="/admin/usermanager" ifUser={isAdmin} component={AdminUserManager} />
+                    <TrackedRoute exact path="/admin/events" ifUser={isEventsManager} component={EventAdminManager} />
                     <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
                     <TrackedRoute exact path="/admin/content_errors" ifUser={isStaff} component={AdminContentErrors} />
 

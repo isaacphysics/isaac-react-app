@@ -6,8 +6,10 @@ import {
     AppAssignmentProgress,
     AppGroup,
     AppGroupMembership,
-    AppQuestionDTO, AugmentedEvent,
+    AppQuestionDTO,
+    AugmentedEvent,
     ContentErrorsResponse,
+    EventOverview,
     GroupMembershipDetailDTO,
     isValidatedChoice,
     LoggedInUser,
@@ -20,7 +22,7 @@ import {
     ContentDTO,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardListDTO, IsaacEventPageDTO,
+    GameboardListDTO,
     IsaacTopicSummaryPageDTO,
     ResultsWrapper,
     UserAuthenticationSettingsDTO,
@@ -335,6 +337,19 @@ export const currentEvent = (currentEvent: CurrentEventState = null, action: Act
             return currentEvent;
     }
 };
+
+type EventOverviewsState = EventOverview[] | null;
+export const eventOverviews = (eventOverviews: EventOverviewsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_OVERVIEWS_REQUEST:
+            return null;
+        case ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS:
+            return [...action.eventOverviews];
+        default:
+            return eventOverviews;
+    }
+};
+
 
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const error = (error: ErrorState = null, action: Action): ErrorState => {
@@ -663,6 +678,7 @@ const appReducer = combineReducers({
     progress,
     events,
     currentEvent,
+    eventOverviews,
     fragments
 });
 
@@ -693,6 +709,7 @@ export type AppState = undefined | {
     progress: ProgressState;
     events: EventsState;
     currentEvent: CurrentEventState;
+    eventOverviews: EventOverviewsState;
     fragments: FragmentsState;
 }
 

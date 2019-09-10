@@ -4,8 +4,8 @@ import {withRouter} from "react-router-dom";
 import {ALPHABET} from "../../services/constants";
 import {connect, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
-import {AppState, fragments} from "../../state/reducers";
-import {ContentDTO} from "../../../IsaacApiTypes";
+import {AppState} from "../../state/reducers";
+import {scrollVerticallyIntoView} from "../../services/scrollManager";
 
 interface AccordionsProps {
     id?: string;
@@ -16,10 +16,6 @@ interface AccordionsProps {
     logAction: (eventDetails: object) => void;
 }
 
-function scrollVerticallyIntoView(element: Element) {
-    const yPosition = element.getBoundingClientRect().top + pageYOffset;
-    window.scrollTo(0, yPosition);
-}
 
 const AccordionComponent = ({id, title, index, children, location: {hash}}: AccordionsProps) => {
     // Toggle

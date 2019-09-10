@@ -26,9 +26,9 @@ import {
     UserExamPreferences,
     UserPreferencesDTO
 } from "../../../IsaacAppTypes";
-import {UserDetails} from "../elements/UserDetails";
-import {UserPassword} from "../elements/UserPassword";
-import {UserEmailPreference} from "../elements/UserEmailPreferences";
+import {UserDetails} from "../elements/panels/UserDetails";
+import {UserPassword} from "../elements/panels/UserPassword";
+import {UserEmailPreference} from "../elements/panels/UserEmailPreferences";
 import {
     isDobOverThirteen,
     validateEmail,
@@ -40,7 +40,7 @@ import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
 import {ACCOUNT_TAB} from "../../services/constants";
 import {history} from "../../services/history"
-import {TeacherConnectionsPanel} from "../elements/TeacherConnectionsPanel";
+import {TeacherConnectionsPanel} from "../elements/panels/TeacherConnectionsPanel";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";

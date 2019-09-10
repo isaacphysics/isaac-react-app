@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {
     changeMyMembershipStatus,
     getActiveAuthorisations,
@@ -11,18 +11,18 @@ import {
     releaseAllAuthorisationsAfterPrompt,
     releaseAuthorisationAfterPrompt,
     revokeAuthorisationAfterPrompt
-} from "../../state/actions";
+} from "../../../state/actions";
 import {connect} from "react-redux";
 import {
     ActiveAuthorisationsState,
     AppState,
     GroupMembershipsState,
     OtherUserAuthorisationsState
-} from "../../state/reducers";
-import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
+} from "../../../state/reducers";
+import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import classnames from "classnames";
-import {MEMBERSHIP_STATUS} from "../../services/constants";
-import {extractTeacherName} from "../../services/user";
+import {MEMBERSHIP_STATUS} from "../../../services/constants";
+import {extractTeacherName} from "../../../services/user";
 
 const stateToProps = (state: AppState) => ({
     activeAuthorisations: state ? state.activeAuthorisations : null,
