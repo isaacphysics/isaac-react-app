@@ -22,12 +22,10 @@ export const EventOverviewsPanel = ({setSelectedEventId}: {setSelectedEventId: (
     const eventOverviews = useSelector((state: AppState) => state && state.eventOverviews);
 
     const [overviewFilter, setOverviewFilter] = useState(EventOverviewFilter["Upcoming events"]);
-
-    // Add sort predicate
     const [sortPredicate, setSortPredicate] = useState("date");
-    const [reverse, setReverse] = useState(true);
+    const [reverse, setReverse] = useState(false);
 
-    function sortOnPredicateAndReverse(a: EventOverview, b: EventOverview) {
+    function sortOnPredicateAndReverse(a: object, b: object) {
         // @ts-ignore
         if (a[sortPredicate] < b[sortPredicate]) {return reverse ? 1 : -1;}
         // @ts-ignore
@@ -94,7 +92,7 @@ export const EventOverviewsPanel = ({setSelectedEventId}: {setSelectedEventId: (
                             <td>{event.eventStatus}</td>
                             <td>{event.numberOfConfirmedBookings} / {event.numberOfPlaces}</td>
                             <td>{event.numberOfWaitingListBookings}</td>
-                            <td><RS.Button color="tertiary" className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
+                            <td><RS.Button color="tertiary" block className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
                                 Manage
                             </RS.Button></td>
                         </tr>)}

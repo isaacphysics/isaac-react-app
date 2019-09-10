@@ -53,6 +53,21 @@ import ReactGA from "react-ga";
 import {StatusFilter, TypeFilter} from "../components/pages/Events";
 import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviewsPanel";
+import {atLeastOne} from "../services/validation";
+
+// Utility Functions
+function isAxiosError(e: Error): e is AxiosError {
+    return 'isAxiosError' in e && (e as AxiosError).isAxiosError;
+}
+
+function extractMessage(e: Error) {
+    if (isAxiosError(e)) {
+        if (e.response) {
+            return e.response.data.errorMessage;
+        }
+    }
+    return API_REQUEST_FAILURE_MESSAGE;
+}
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -103,19 +118,6 @@ function showErrorToastIfNeeded(error: string, e: any) {
 export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
 
 export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
-
-function isAxiosError(e: Error): e is AxiosError {
-    return 'isAxiosError' in e && (e as AxiosError).isAxiosError;
-}
-
-function extractMessage(e: Error) {
-    if (isAxiosError(e)) {
-        if (e.response) {
-            return e.response.data.errorMessage;
-        }
-    }
-    return API_REQUEST_FAILURE_MESSAGE;
-}
 
 // User Authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
@@ -341,6 +343,18 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
         dispatch(requestCurrentUser() as any);
     } catch(e) {
         dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+    }
+};
+
+// User error
+export const getUserIdSchoolLookup = (eventIds: number[]) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.USER_SCHOOL_LOOKUP_REQUEST});
+        const response = await api.users.getUserIdSchoolLookup(eventIds);
+        dispatch({type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_SUCCESS, schoolLookup: response.data});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load user school lookup details", error) as any);
     }
 };
 
@@ -1207,13 +1221,21 @@ export const updateEventOverviews = (eventOverviewFilter: EventOverviewFilter) =
     }
 };
 
-// export const getEventBookings = (evnetId: string) => async (dispatch: Dispatch<Action>) => {
-//     try {
-//         dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST});
-//         const response = await api.eventBookings.getBookings(eventId);
-//
-//     }
-// };
+export const getEventBookings = (eventId: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST});
+        const response = await api.eventBookings.getBookings(eventId);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS, eventBookings: response.data});
+        const userIds = response.data.map(booking => booking.userBooked && booking.userBooked.id) as number[];
+        if (atLeastOne(userIds.length)) {
+            dispatch(getUserIdSchoolLookup(userIds) as any);
+        }
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
+    }
+};
+
 
 // Content Errors
 export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) => {

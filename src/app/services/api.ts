@@ -12,6 +12,7 @@ import {
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {TypeFilter} from "../components/pages/Events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviewsPanel";
+import {EventBookingDTO} from "../../IsaacApiTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -64,23 +65,26 @@ export const api = {
         getPreferences: (): AxiosPromise<AppTypes.UserPreferencesDTO> => {
             return endpoint.get(`/users/user_preferences`)
         },
-        passwordReset: (params: {email: string}): AxiosPromise => {
+        passwordReset: (params: {email: string}) => {
             return endpoint.post(`/users/resetpassword`, params);
         },
-        requestEmailVerification(params: {email: string}): AxiosPromise {
+        requestEmailVerification(params: {email: string}) {
             return endpoint.post(`/users/verifyemail`, params);
         },
-        verifyPasswordReset: (token: string | null): AxiosPromise => {
+        verifyPasswordReset: (token: string | null) => {
             return endpoint.get(`/users/resetpassword/${token}`)
         },
-        handlePasswordReset: (params: {token: string | null; password: string | null}): AxiosPromise => {
+        handlePasswordReset: (params: {token: string | null; password: string | null}) => {
             return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
         },
         updateCurrent: (registeredUser: LoggedInUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent});
         },
-        passwordResetById: (id: number): AxiosPromise => {
+        passwordResetById: (id: number) => {
             return endpoint.post(`/users/${id}/resetpassword`);
+        },
+        getUserIdSchoolLookup: (userIds: number[]): AxiosPromise<AppTypes.UserSchoolLookup> => {
+            return endpoint.get(`/users/school_lookup?user_ids=${userIds.join(",")}`);
         }
     },
     authentication: {
@@ -318,6 +322,9 @@ export const api = {
         }
     },
     eventBookings: {
+        getBookings: (eventId: string): AxiosPromise<EventBookingDTO[]> => {
+            return endpoint.get(`/events/${eventId}/bookings`);
+        },
         requestBooking: (eventId: string, additionalInformation: AdditionalInformation) => {
             return endpoint.post(`/events/${eventId}/bookings`, additionalInformation);
         },

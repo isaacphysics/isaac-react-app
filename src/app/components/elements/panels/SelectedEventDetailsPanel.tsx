@@ -15,7 +15,7 @@ export const SelectedEventDetailsPanel = ({eventId}: {eventId: string}) => {
 
     return <RS.Card>
         <RS.CardBody>
-            <strong>Selected event details</strong>
+            <h3 className="h-subtitle mb-1">Selected event details</h3>
             {selectedEvent && selectedEvent !== NOT_FOUND && <p className="m-0">
                 <strong>Event: </strong>
                 <Link to={`/events/${selectedEvent.id}`} target="_blank">

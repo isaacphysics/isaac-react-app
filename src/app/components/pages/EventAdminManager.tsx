@@ -32,7 +32,7 @@ export const EventAdminManager = ({user}: {user: LoggedInUser}) => {
                         <SelectedEventDetailsPanel eventId={selectedEventId} />
                     </div>
                     <div>
-                        <ManageExistingBookingsPanel eventBookingId={selectedEventId} />
+                        <ManageExistingBookingsPanel user={user} eventBookingId={selectedEventId} />
                     </div>
                     <div>
                         <AddUsersToBookingPanel eventBookingId={selectedEventId} />

@@ -15,12 +15,14 @@ import {
     LoggedInUser,
     NOT_FOUND_TYPE,
     Toast,
-    UserPreferencesDTO
+    UserPreferencesDTO,
+    UserSchoolLookup
 } from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
     ContentDTO,
     ContentSummaryDTO,
+    EventBookingDTO,
     GameboardDTO,
     GameboardListDTO,
     IsaacTopicSummaryPageDTO,
@@ -68,6 +70,18 @@ export const userPreferences = (userPreferences: UserPreferencesState = null, ac
             return {...action.userPreferences};
         default:
             return userPreferences;
+    }
+};
+
+export type UserSchoolLookupState = UserSchoolLookup | null;
+export const userSchoolLookup = (userSchoolLookup: UserSchoolLookupState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_SCHOOL_LOOKUP_REQUEST:
+            return null;
+        case ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_SUCCESS:
+            return {...action.schoolLookup};
+        default:
+            return userSchoolLookup;
     }
 };
 
@@ -335,6 +349,18 @@ export const currentEvent = (currentEvent: CurrentEventState = null, action: Act
             return null;
         default:
             return currentEvent;
+    }
+};
+
+export type EventBookingsState = EventBookingDTO[] | null;
+export const eventBookings = (eventBookings: EventBookingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS:
+            return [...action.eventBookings];
+        case ACTION_TYPE.EVENT_BOOKING_REQUEST:
+            return null;
+        default:
+            return eventBookings;
     }
 };
 
@@ -658,6 +684,7 @@ const appReducer = combineReducers({
     adminUserSearch,
     adminContentErrors,
     adminStats,
+    userSchoolLookup,
     activeAuthorisations,
     otherUserAuthorisations,
     groupMemberships,
@@ -679,6 +706,7 @@ const appReducer = combineReducers({
     events,
     currentEvent,
     eventOverviews,
+    eventBookings,
     fragments
 });
 
@@ -689,6 +717,7 @@ export type AppState = undefined | {
     adminUserSearch: AdminUserSearchState;
     adminContentErrors: AdminContentErrorsState;
     adminStats: AdminStatsState;
+    userSchoolLookup: UserSchoolLookupState;
     activeAuthorisations: ActiveAuthorisationsState;
     otherUserAuthorisations: OtherUserAuthorisationsState;
     groupMemberships: GroupMembershipsState;
@@ -710,6 +739,7 @@ export type AppState = undefined | {
     events: EventsState;
     currentEvent: CurrentEventState;
     eventOverviews: EventOverviewsState;
+    eventBookings: EventBookingsState;
     fragments: FragmentsState;
 }
 

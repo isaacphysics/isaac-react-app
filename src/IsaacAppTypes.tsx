@@ -1,7 +1,6 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
-import {Location} from "./IsaacApiTypes";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -42,6 +41,11 @@ export type Action =
     | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
+
+    | {type: ACTION_TYPE.USER_SCHOOL_LOOKUP_REQUEST}
+    | {type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_SUCCESS; schoolLookup: UserSchoolLookup}
+    | {type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_FAILURE}
+
 
     | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST}
     | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS}
@@ -219,6 +223,10 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_REQUEST}
     | {type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS; augmentedEvent: AugmentedEvent}
     | {type: ACTION_TYPE.EVENT_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS; eventBookings: ApiTypes.EventBookingDTO[]}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.EVENT_BOOKING_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_SUCCESS}
@@ -427,7 +435,7 @@ export interface EventOverview {
     date?: Date;
     bookingDeadline?: Date;
     eventStatus?: ApiTypes.EventStatus;
-    location?: Location;
+    location?: ApiTypes.Location;
     numberOfConfirmedBookings: number;
     numberOfWaitingListBookings: number;
     numberAttended: number;
@@ -455,3 +463,5 @@ export interface ZxcvbnResult {
     score: number;
     sequence: any;
 }
+
+export interface UserSchoolLookup {[userId: number]: School}
