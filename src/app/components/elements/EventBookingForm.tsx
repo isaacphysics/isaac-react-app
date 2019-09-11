@@ -1,16 +1,16 @@
 import React, {useState} from "react";
 import * as RS from "reactstrap";
-import {Link} from "react-router-dom";
 import {AdditionalInformation, AugmentedEvent, LoggedInUser, Toast} from "../../../IsaacAppTypes";
 import {SchoolInput} from "./inputs/SchoolInput";
 import {atLeastOne, validateUserSchool, zeroOrLess} from "../../services/validation";
 import {isTeacher} from "../../services/user";
 import {useDispatch} from "react-redux";
 import {addMyselfToWaitingList, bookMyselfOnEvent, requestEmailVerification, showToast} from "../../state/actions";
+import {UserSummaryDTO, UserSummaryForAdminUsersDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
-    user: LoggedInUser;
+    user: UserSummaryWithEmailAddressDTO;
 }
 
 export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
@@ -21,19 +21,16 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
     const targetUser = user; // For a future feature
 
     const isStudentEvent = event.tags !== undefined && event.tags.indexOf('student') != -1;
-    const bookable = event.withinBookingDeadline && event.eventStatus != 'WAITING_LIST_ONLY' && (atLeastOne(event.placesAvailable) || (isStudentEvent && isTeacher(targetUser)));
-    const applyable = !event.userOnWaitList && (event.eventStatus == 'WAITING_LIST_ONLY' || zeroOrLess(event.placesAvailable) || !event.withinBookingDeadline) && !(isStudentEvent && isTeacher(targetUser)) ;
+    const bookable = event.withinBookingDeadline && event.eventStatus != 'WAITING_LIST_ONLY' && (atLeastOne(event.placesAvailable) || (isStudentEvent && targetUser !== "STUDENT"));
+    const applyable = !event.userOnWaitList && (event.eventStatus == 'WAITING_LIST_ONLY' || zeroOrLess(event.placesAvailable) || !event.withinBookingDeadline) && !(isStudentEvent && targetUser !== "STUDENT");
     const submissionTitle = bookable? "Book now" : event.withinBookingDeadline ? "Apply" : "Apply -deadline past";
 
     function updateAdditionalInformation(update: AdditionalInformation) {
         setAdditionalInformation(Object.assign({}, additionalInformation, update));
     }
 
-    function validateSubmission(user: LoggedInUser, additionalInformation: AdditionalInformation) {
+    function validateSubmission(user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {
         const failureToast: Toast = {color: "danger", title: "Validation error", timeout: 5000, body: "Required information is not present."};
-        if (!user.loggedIn) {
-            return false
-        }
 
         if (!validateUserSchool(Object.assign({password: null}, user))) {
             dispatch(showToast(Object.assign({}, failureToast, {
@@ -88,7 +85,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
     }
 
     return <React.Fragment>
-        {targetUser.loggedIn && <RS.Card className="mb-4">
+        <RS.Card className="mb-4">
             <RS.CardBody>
                 <h3>Event booking form</h3>
                 <RS.Form onSubmit={submitBooking}>
@@ -234,7 +231,7 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
 
                     <div>
                         {atLeastOne(event.numberOfPlaces) && !event.userBooked && event.withinBookingDeadline &&
-                        (atLeastOne(event.placesAvailable) || (isStudentEvent && isTeacher(targetUser))) && <p className="mb-3">
+                        (atLeastOne(event.placesAvailable) || (isStudentEvent && targetUser.role !== "STUDENT")) && <p className="mb-3">
                             <small>
                                 By requesting to book on this event, you are granting event organisers access to the information provided in the form above.
                                 You are also giving them permission to set you pre-event work and view your progress.
@@ -248,6 +245,6 @@ export const EventBookingForm = ({event, user}: EventBookingFormProps) => {
                     </div>
                 </RS.Form>
             </RS.CardBody>
-        </RS.Card>}
+        </RS.Card>
     </React.Fragment>
 };

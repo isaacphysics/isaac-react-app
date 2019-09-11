@@ -15,7 +15,7 @@ import {
     ActiveModal,
     ActualBoardLimit, AdditionalInformation,
     AppGroup,
-    AppGroupMembership,
+    AppGroupMembership, AugmentedEvent,
     BoardOrder,
     LoggedInUser,
     LoggedInValidationUser,
@@ -32,7 +32,7 @@ import {
     RegisteredUserDTO,
     Role,
     UserGroupDTO,
-    UserSummaryDTO,
+    UserSummaryDTO, UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {
@@ -1298,7 +1298,6 @@ export const deleteUserBooking = (eventBookingId: string, userId?: number) => as
         }
     }
 };
-
 
 // Content Errors
 export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) => {

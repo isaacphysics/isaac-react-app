@@ -35,8 +35,11 @@ export const EventAdminManager = ({user}: {user: LoggedInUser}) => {
                         <ManageExistingBookingsPanel user={user} eventBookingId={selectedEventId} />
                     </div>
                     <div>
-                        <AddUsersToBookingPanel eventBookingId={selectedEventId} />
+                        <AddUsersToBookingPanel />
                     </div>
+                    {/*<div>*/}
+                    {/*    <EventAttendancePanel eventBookingId={selectedEventId} />*/}
+                    {/*</div>*/}
                 </React.Fragment>}
             </RS.CardBody>
         </RS.Card>

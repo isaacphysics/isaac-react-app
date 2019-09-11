@@ -56,6 +56,9 @@ export const EventOverviewsPanel = ({setSelectedEventId}: {setSelectedEventId: (
                 <RS.Table bordered className="mb-0">
                     <thead>
                         <tr>
+                            <th className="align-middle">
+                                Actions
+                            </th>
                             <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('title'); setReverse(!reverse);}}>
                                 Title
                             </RS.Button></th>
@@ -77,23 +80,20 @@ export const EventOverviewsPanel = ({setSelectedEventId}: {setSelectedEventId: (
                             <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('numberOfWaitingListBookings'); setReverse(!reverse);}}>
                                 Number Waiting
                             </RS.Button></th>
-                            <th className="align-middle">
-                                Actions
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {eventOverviews.sort(sortOnPredicateAndReverse).map((event) => <tr key={event.id}>
-                            <td><Link to={`events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>
-                            <td><DateString>{event.date}</DateString></td>
-                            <td><DateString>{event.bookingDeadline}</DateString></td>
-                            <td>{event.location && event.location.address && event.location.address.town}</td>
-                            <td>{event.eventStatus}</td>
-                            <td>{event.numberOfConfirmedBookings} / {event.numberOfPlaces}</td>
-                            <td>{event.numberOfWaitingListBookings}</td>
-                            <td><RS.Button color="tertiary" block className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
+                            <td className="align-middle"><RS.Button color="tertiary" block className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
                                 Manage
                             </RS.Button></td>
+                            <td className="align-middle"><Link to={`events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>
+                            <td className="align-middle"><DateString>{event.date}</DateString></td>
+                            <td className="align-middle"><DateString>{event.bookingDeadline}</DateString></td>
+                            <td className="align-middle">{event.location && event.location.address && event.location.address.town}</td>
+                            <td className="align-middle">{event.eventStatus}</td>
+                            <td className="align-middle">{event.numberOfConfirmedBookings} / {event.numberOfPlaces}</td>
+                            <td className="align-middle">{event.numberOfWaitingListBookings}</td>
                         </tr>)}
                     </tbody>
                 </RS.Table>
