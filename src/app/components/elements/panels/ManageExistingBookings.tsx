@@ -15,6 +15,7 @@ import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {isAdmin} from "../../../services/user";
 import {UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
+import {sortOnPredicateAndReverse} from "../../../services/sorting";
 
 export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUser; eventBookingId: string}) => {
     const dispatch = useDispatch();
@@ -24,14 +25,6 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
 
     const [sortPredicate, setSortPredicate] = useState("date");
     const [reverse, setReverse] = useState(true);
-    // TODO handle "." in predicates
-    function sortOnPredicateAndReverse(a: object, b: object) {
-        // @ts-ignore
-        if (a[sortPredicate] < b[sortPredicate]) {return reverse ? 1 : -1;}
-        // @ts-ignore
-        else if (a[sortPredicate] > b[sortPredicate]) {return reverse ? -1 : 1;}
-        else {return 0;}
-    }
 
     return <Accordion title="Manage current bookings">
         {atLeastOne(eventBookings.length) && <div className="overflow-auto">
@@ -63,69 +56,72 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                             Booking created
                         </RS.Button></th>
                         <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('updated'); setReverse(!reverse);}}>
-                            Booking Updated
+                            Booking updated
                         </RS.Button></th>
                         <th className="align-middle">
-                            Accessibility Requirements
+                            Accessibility requirements
                         </th>
                         <th className="align-middle">
-                            Medical Requirements
+                            Medical requirements
                         </th>
                         <th className="align-middle">
-                            Emergency Name
+                            Emergency name
                         </th>
                         <th className="align-middle">
-                            Emergency Telephone
+                            Emergency telephone
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {eventBookings.sort(sortOnPredicateAndReverse).map(booking => {
-                        const userSchool = booking.userBooked && userIdToSchoolMapping[booking.userBooked.id as number];
-                        const userId = booking.userBooked && booking.userBooked.id;
-                        return <tr key={booking.bookingId}>
-                            <td className="align-middle">
-                                {(booking.bookingStatus == 'WAITING_LIST' || booking.bookingStatus == 'CANCELLED') &&
-                                    <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(promoteUserFromWaitingList(eventBookingId, userId))}>
-                                        Promote
+                    {eventBookings
+                        .sort(sortOnPredicateAndReverse(sortPredicate, reverse))
+                        .map(booking => {
+                            const userSchool = booking.userBooked && userIdToSchoolMapping[booking.userBooked.id as number];
+                            const userId = booking.userBooked && booking.userBooked.id;
+                            return <tr key={booking.bookingId}>
+                                <td className="align-middle">
+                                    {(booking.bookingStatus == 'WAITING_LIST' || booking.bookingStatus == 'CANCELLED') &&
+                                        <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(promoteUserFromWaitingList(eventBookingId, userId))}>
+                                            Promote
+                                        </RS.Button>
+                                    }
+                                    {(booking.bookingStatus == 'WAITING_LIST' || booking.bookingStatus == 'CONFIRMED') &&
+                                        <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(cancelUserBooking(eventBookingId, userId))}>
+                                            Cancel
+                                        </RS.Button>
+                                    }
+                                    {isAdmin(user) && <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(deleteUserBooking(eventBookingId, userId))}>
+                                        Delete
+                                    </RS.Button>}
+                                    <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(resendUserConfirmationEmail(eventBookingId, userId))}>
+                                        Resend email
                                     </RS.Button>
-                                }
-                                {(booking.bookingStatus == 'WAITING_LIST' || booking.bookingStatus == 'CONFIRMED') &&
-                                    <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(cancelUserBooking(eventBookingId, userId))}>
-                                        Cancel
-                                    </RS.Button>
-                                }
-                                {isAdmin(user) && <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(deleteUserBooking(eventBookingId, userId))}>
-                                    Delete
-                                </RS.Button>}
-                                <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(resendUserConfirmationEmail(eventBookingId, userId))}>
-                                    Resend Email
-                                </RS.Button>
-                            </td>
-                            <td className="align-middle text-center">
-                                {booking.userBooked && <React.Fragment>{booking.userBooked.familyName}, {booking.userBooked.givenName}</React.Fragment>}
-                            </td>
-                            <td className="align-middle">{booking.userBooked && (booking.userBooked as UserSummaryWithEmailAddressDTO).email}</td>
-                            <td className="align-middle">{booking.userBooked && booking.userBooked.role}</td>
-                            {(userSchool === undefined || !userSchool.urn) && <td className="align-middle">
-                                {userSchool && userSchool.name}
-                            </td>}
-                            {userSchool && userSchool.urn !== undefined && <td className="align-middle">
-                                {/*TODO When full stats functionality works <Link to={`/admin/stats/schools/${userSchool.urn}/user_list`}>{userSchool.name}</Link>*/}
-                                {userSchool.name}
-                            </td>}
-                            <td className="align-middle">
-                                {booking.additionalInformation && (booking.additionalInformation.jobTitle ? booking.additionalInformation.jobTitle : booking.additionalInformation.yearGroup)}
-                            </td>
-                            <td className="align-middle">{booking.bookingStatus}</td>
-                            <td className="align-middle"><DateString>{booking.bookingDate}</DateString></td>
-                            <td className="align-middle"><DateString>{booking.updated}</DateString></td>
-                            <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.accessibilityRequirements}</td>
-                            <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.medicalRequirements}</td>
-                            <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.emergencyName}</td>
-                            <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.emergencyNumber}</td>
-                        </tr>
-                    })}
+                                </td>
+                                <td className="align-middle text-center">
+                                    {booking.userBooked && <React.Fragment>{booking.userBooked.familyName}, {booking.userBooked.givenName}</React.Fragment>}
+                                </td>
+                                <td className="align-middle">{booking.userBooked && (booking.userBooked as UserSummaryWithEmailAddressDTO).email}</td>
+                                <td className="align-middle">{booking.userBooked && booking.userBooked.role}</td>
+                                {(userSchool === undefined || !userSchool.urn) && <td className="align-middle">
+                                    {userSchool && userSchool.name}
+                                </td>}
+                                {userSchool && userSchool.urn !== undefined && <td className="align-middle">
+                                    {/*TODO When full stats functionality works <Link to={`/admin/stats/schools/${userSchool.urn}/user_list`}>{userSchool.name}</Link>*/}
+                                    {userSchool.name}
+                                </td>}
+                                <td className="align-middle">
+                                    {booking.additionalInformation && (booking.additionalInformation.jobTitle ? booking.additionalInformation.jobTitle : booking.additionalInformation.yearGroup)}
+                                </td>
+                                <td className="align-middle">{booking.bookingStatus}</td>
+                                <td className="align-middle"><DateString>{booking.bookingDate}</DateString></td>
+                                <td className="align-middle"><DateString>{booking.updated}</DateString></td>
+                                <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.accessibilityRequirements}</td>
+                                <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.medicalRequirements}</td>
+                                <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.emergencyName}</td>
+                                <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.emergencyNumber}</td>
+                            </tr>
+                        })
+                    }
                 </tbody>
             </RS.Table>
         </div>}

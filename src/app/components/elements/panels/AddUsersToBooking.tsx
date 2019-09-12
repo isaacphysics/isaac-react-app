@@ -60,7 +60,7 @@ export const AddUsersToBooking = () => {
                         >
                             <option value="NO_ROLE">Any Role</option>
                             <option value="TEACHER">Teacher</option>
-                            <option value="CONTENT_EDITOR">Content Editor</option>
+                            <option value="CONTENT_EDITOR">Content editor</option>
                             <option value="ADMIN">Admin</option>
                         </RS.Input>
                     </div>
@@ -101,7 +101,7 @@ export const AddUsersToBooking = () => {
                                 Add to WL
                             </RS.Button>
                             }
-                            {userBookings.includes(result.id as number) && <span ng-show="">Booking exists</span>}
+                            {userBookings.includes(result.id as number) && <div className="text-center">Booking exists</div>}
                         </td>
                         <td className="align-middle">{result.familyName}, {result.givenName}</td>
                         <td className="align-middle">{result.email}</td>

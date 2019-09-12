@@ -8,6 +8,7 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
 import {atLeastOne, zeroOrLess} from "../../../services/validation";
+import {sortOnPredicateAndReverse} from "../../../services/sorting";
 
 export enum EventOverviewFilter {
     "All events" = "ALL",
@@ -23,14 +24,6 @@ export const EventOverviews = ({setSelectedEventId}: {setSelectedEventId: (event
     const [overviewFilter, setOverviewFilter] = useState(EventOverviewFilter["Upcoming events"]);
     const [sortPredicate, setSortPredicate] = useState("date");
     const [reverse, setReverse] = useState(false);
-
-    function sortOnPredicateAndReverse(a: object, b: object) {
-        // @ts-ignore
-        if (a[sortPredicate] < b[sortPredicate]) {return reverse ? 1 : -1;}
-        // @ts-ignore
-        else if (a[sortPredicate] > b[sortPredicate]) {return reverse ? -1 : 1;}
-        else {return 0;}
-    }
 
     useEffect(() => {
         setSelectedEventId(null);
@@ -53,7 +46,7 @@ export const EventOverviews = ({setSelectedEventId}: {setSelectedEventId: (event
                 <RS.Table bordered className="mb-0 bg-white">
                     <thead>
                         <tr>
-                            <th className="align-middle">
+                            <th className="align-middle text-center">
                                 Actions
                             </th>
                             <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('title'); setReverse(!reverse);}}>
@@ -63,7 +56,7 @@ export const EventOverviews = ({setSelectedEventId}: {setSelectedEventId: (event
                                 Date
                             </RS.Button></th>
                             <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('bookingDeadline'); setReverse(!reverse);}}>
-                                Booking Deadline
+                                Booking deadline
                             </RS.Button></th>
                             <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('location.address.town'); setReverse(!reverse);}}>
                                 Location
@@ -72,26 +65,29 @@ export const EventOverviews = ({setSelectedEventId}: {setSelectedEventId: (event
                                 Status
                             </RS.Button></th>
                             <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('numberOfConfirmedBookings'); setReverse(!reverse);}}>
-                                Number Confirmed
+                                Number confirmed
                             </RS.Button></th>
                             <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('numberOfWaitingListBookings'); setReverse(!reverse);}}>
-                                Number Waiting
+                                Number waiting
                             </RS.Button></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {eventOverviews.sort(sortOnPredicateAndReverse).map((event) => <tr key={event.id}>
-                            <td className="align-middle"><RS.Button color="primary" outline className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
-                                Manage
-                            </RS.Button></td>
-                            <td className="align-middle"><Link to={`events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>
-                            <td className="align-middle"><DateString>{event.date}</DateString></td>
-                            <td className="align-middle"><DateString>{event.bookingDeadline}</DateString></td>
-                            <td className="align-middle">{event.location && event.location.address && event.location.address.town}</td>
-                            <td className="align-middle">{event.eventStatus}</td>
-                            <td className="align-middle">{event.numberOfConfirmedBookings} / {event.numberOfPlaces}</td>
-                            <td className="align-middle">{event.numberOfWaitingListBookings}</td>
-                        </tr>)}
+                        {eventOverviews
+                            .sort(sortOnPredicateAndReverse(sortPredicate, reverse))
+                            .map((event) => <tr key={event.id}>
+                                <td className="align-middle"><RS.Button color="primary" outline className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
+                                    Manage
+                                </RS.Button></td>
+                                <td className="align-middle"><Link to={`events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>
+                                <td className="align-middle"><DateString>{event.date}</DateString></td>
+                                <td className="align-middle"><DateString>{event.bookingDeadline}</DateString></td>
+                                <td className="align-middle">{event.location && event.location.address && event.location.address.town}</td>
+                                <td className="align-middle">{event.eventStatus}</td>
+                                <td className="align-middle">{event.numberOfConfirmedBookings} / {event.numberOfPlaces}</td>
+                                <td className="align-middle">{event.numberOfWaitingListBookings}</td>
+                            </tr>)
+                        }
                     </tbody>
                 </RS.Table>
             </div>}

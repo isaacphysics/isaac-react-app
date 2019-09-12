@@ -9,6 +9,7 @@ import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../Isaac
 import {DateString} from "../DateString";
 import {recordEventAttendance} from "../../../state/actions";
 import {ATTENDANCE} from "../../../../IsaacAppTypes";
+import {sortOnPredicateAndReverse} from "../../../services/sorting";
 
 function displayAttendanceAsSymbol(status?: string) {
     switch (status) {
@@ -27,14 +28,6 @@ export const EventAttendance = ({eventId}: {eventId: string}) => {
     const [sortPredicate, setSortPredicate] = useState("date");
     const [reverse, setReverse] = useState(true);
     const [familyNameFilter, setFamilyNameFilter] = useState("");
-    // TODO handle "." in predicates
-    function sortOnPredicateAndReverse(a: object, b: object) {
-        // @ts-ignore
-        if (a[sortPredicate] < b[sortPredicate]) {return reverse ? 1 : -1;}
-        // @ts-ignore
-        else if (a[sortPredicate] > b[sortPredicate]) {return reverse ? -1 : 1;}
-        else {return 0;}
-    }
 
     function filterOnSurname(booking: EventBookingDTO) {
         return booking.userBooked && booking.userBooked.familyName !== undefined &&
@@ -67,7 +60,7 @@ export const EventAttendance = ({eventId}: {eventId: string}) => {
                                 <RS.Input className="w-auto" value={familyNameFilter} onChange={e => setFamilyNameFilter(e.target.value)} placeholder="Surname filter" />
                             </th>
                             <th className="align-middle">
-                                Job/year group
+                                Job / year group
                             </th>
                             <th className="align-middle">
                                 School
@@ -100,7 +93,7 @@ export const EventAttendance = ({eventId}: {eventId: string}) => {
                     </thead>
                     <tbody>
                         {bookings
-                            .sort(sortOnPredicateAndReverse)
+                            .sort(sortOnPredicateAndReverse(sortPredicate, reverse))
                             .filter(filterOnSurname)
                             .map(booking => {
                                 const userBooked = booking.userBooked as UserSummaryWithEmailAddressDTO;
