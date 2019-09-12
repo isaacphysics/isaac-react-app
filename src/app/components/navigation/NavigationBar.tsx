@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../state/reducers";
+import {AppState, assignments} from "../../state/reducers";
 import {
     Badge,
     Collapse,
@@ -15,12 +15,20 @@ import {
 } from "reactstrap";
 import {isAdmin, isEventsManager, isStaff} from "../../services/user";
 import {loadMyAssignments} from "../../state/actions";
+import {filterAssignmentsByStatus} from "../../services/assignments";
 
 export const NavigationBar = () => {
     const dispatch = useDispatch();
     const [menuOpen, setMenuOpen] = useState(false);
     const user = useSelector((state: AppState) => (state && state.user) || null);
-    const assignmentCount = useSelector((state: AppState) => (state && state.assignments && state.assignments.length) || 0);
+    const assignmentCount = useSelector((state: AppState) => {
+        if (state && state.assignments) {
+            const {inProgressRecent} = filterAssignmentsByStatus(state.assignments);
+            return inProgressRecent.length;
+        } else {
+            return 0;
+        }
+    });
 
     useEffect(() => {
         if (user && user.loggedIn) {
