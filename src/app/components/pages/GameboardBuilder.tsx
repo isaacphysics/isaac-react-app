@@ -23,7 +23,6 @@ export const GameboardBuilder = () => {
 
     const canSubmit = () => (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardName != "";
 
-    // TODO NOT ANY
     const reorder = (result: DropResult) => {
         if (result.destination) {
             const [removed] = questionOrder.splice(result.source.index, 1);

@@ -4,12 +4,12 @@ import * as RS from "reactstrap";
 import {SortableTableHeader} from "./SortableTableHeader";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {debounce, orderBy} from "lodash";
-import {SortOrder} from "../../services/constants";
+import {debounce} from "lodash";
 import {GameboardItem} from "../../../IsaacApiTypes";
 import classnames from "classnames";
 import Select from "react-select";
 import {ValueType} from "react-select/src/types";
+import {sortQuestions} from "../../services/gameboardBuilder";
 
 interface QuestionSearchModalProps {
     originalSelectedQuestions: Map<string, GameboardItem>;
@@ -26,7 +26,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     const [searchQuestionName, setSearchQuestionName] = useState("");
     const [searchTags, setSearchTags] = useState([] as string[]);
-    const [searchLevel, setSearchLevel] = useState("ANY");
+    const [searchLevel, setSearchLevel] = useState([] as string[]);
     const [searchExamBoard, setSearchExamBoard] = useState("ANY");
 
     const [questionsSort, setQuestionsSort] = useState({});
@@ -35,11 +35,11 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     const questionsSelector = useSelector((state: AppState) => state && state.gameboardEditorQuestions);
 
-    const searchDebounce = debounce((searchString: string, tags: string[], levels: string, fasttrack: boolean, startIndex: number) =>
+    const searchDebounce = debounce((searchString: string, tags: string[], levels: string[], fasttrack: boolean, startIndex: number) =>
         dispatch(searchQuestions({
             searchString: (searchString + " " + [searchSubject, searchField, searchTopic].map((tags) => tags.join(" ")).join(" ")).trimRight(),
             tags: tags.join(","),
-            levels: levels == "ANY" ? "" : levels, // TODO fix this
+            levels: levels == [] ? "1,2,3,4,5,6" : levels.join(","),
             fasttrack,
             startIndex,
             limit: 100})), 250);
@@ -50,18 +50,6 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
             newSortState[key] = order;
             setSortState(newSortState);
         };
-    };
-
-    const sortQuestions = (sortState: { [s: string]: string }) => {
-        const keys: string[] = [];
-        const order: ("asc" | "desc")[] = [];
-        for (const key of Object.keys(sortState)) {
-            if (sortState[key] && sortState[key] != SortOrder.NONE) {
-                keys.push(key);
-                order.push(sortState[key] == SortOrder.ASC ? "asc" : "desc");
-            }
-        }
-        return (questions: GameboardItem[]) => orderBy(questions, keys, order);
     };
 
     const multiSelectOnChange = (setValue: Dispatch<SetStateAction<string[]>>) => (e: ValueType<{value: string; label: string;}>) => {
@@ -150,11 +138,12 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <Select
                     isMulti
                     options={[
-                        // ...(Array(6).map((i) => {return { value: i.toString(), label: i.toString() }})),
-                        { value: 'vanilla', label: 'Vanilla' }]}
+                        ...([...Array(6)].map((_, i) => {return { value: i.toString(), label: i.toString() }})),
+                        { value: '6', label: '6 (Post A-Level)' }]}
                     name="colors"
                     className="basic-multi-select"
                     classNamePrefix="select"
+                    onChange={multiSelectOnChange(setSearchLevel)}
                 />
             </div>
         </div>
