@@ -83,8 +83,9 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
         processAuthenticateWithToken(authenticationToken);
     }
 
+    const editingSelf = true;
     return <RS.CardBody>
-        <RS.Container ng-if="editingSelf">
+        {editingSelf && <RS.Container>
             <h3>
                 <span>Teacher Connections<span id="teacher-connections-title" className="icon-help" /></span>
                 <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">
@@ -284,7 +285,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                     </p>}
                 </RS.Col>
             </RS.Row>
-        </RS.Container>
+        </RS.Container>}
     </RS.CardBody>
 };
 
