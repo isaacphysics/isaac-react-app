@@ -335,11 +335,14 @@ export const api = {
         getEventBookings: (eventId: string): AxiosPromise<EventBookingDTO[]> => {
             return endpoint.get(`/events/${eventId}/bookings`);
         },
+        bookUserOnEvent: (eventId: string, userId: number, additionalInformation: AdditionalInformation) => {
+            return endpoint.post(`/events/${eventId}/bookings/${userId}`, additionalInformation);
+        },
         resendUserConfirmationEmail: (eventId: string, userId: number) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}/resend_confirmation`);
         },
         promoteUserFromWaitingList: (eventId: string, userId: number) => {
-            return endpoint.post(`/events/${eventId}/bookings/${userId}/promote`);
+            return endpoint.post(`/events/${eventId}/bookings/${userId}/promote`, {eventId, userId});
         },
         cancelUserBooking: (eventId: string, userId: number) => {
             return endpoint.delete(`/events/${eventId}/bookings/${userId}/cancel`);

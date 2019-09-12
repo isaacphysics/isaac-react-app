@@ -141,7 +141,9 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     <RS.CardBody>
                                         <h3>Event booking form</h3>
                                         <RS.Form onSubmit={submitBooking}>
-                                            <EventBookingForm event={event} user={user} additionalInformation={additionalInformation} updateAdditionalInformation={updateAdditionalInformation} />
+                                            <EventBookingForm event={event} targetUser={user}
+                                                additionalInformation={additionalInformation} updateAdditionalInformation={updateAdditionalInformation}
+                                            />
                                             <div>
                                                 {atLeastOne(event.numberOfPlaces) && !event.userBooked && event.withinBookingDeadline &&
                                                 (atLeastOne(event.placesAvailable) || (isStudentEvent && userIsNotAStudent)) && <p className="mb-3">

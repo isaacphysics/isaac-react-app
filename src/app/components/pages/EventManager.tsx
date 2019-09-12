@@ -28,9 +28,15 @@ export const EventManager = ({user}: {user: LoggedInUser}) => {
                 <div ref={selectedEventRef} className="mb-3">
                     <SelectedEventDetails eventId={selectedEventId} />
                 </div>
-                <ManageExistingBookings user={user} eventBookingId={selectedEventId} />
-                <AddUsersToBooking />
-                <EventAttendance eventId={selectedEventId} />
+                <div>
+                    <ManageExistingBookings user={user} eventBookingId={selectedEventId} />
+                </div>
+                <div>
+                    <AddUsersToBooking />
+                </div>
+                <div>
+                    <EventAttendance eventId={selectedEventId} />
+                </div>
             </React.Fragment>}
         </div>
     </RS.Container>

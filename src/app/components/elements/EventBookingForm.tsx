@@ -2,22 +2,24 @@ import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {AdditionalInformation, AugmentedEvent} from "../../../IsaacAppTypes";
 import {SchoolInput} from "./inputs/SchoolInput";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {requestEmailVerification} from "../../state/actions";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
+import {AppState} from "../../state/reducers";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
-    user: UserSummaryWithEmailAddressDTO;
+    targetUser: UserSummaryWithEmailAddressDTO;
     additionalInformation: AdditionalInformation;
     updateAdditionalInformation: (update: AdditionalInformation) => void;
 }
 
-export const EventBookingForm = ({event, user, additionalInformation, updateAdditionalInformation}: EventBookingFormProps) => {
+export const EventBookingForm = ({event, targetUser, additionalInformation, updateAdditionalInformation}: EventBookingFormProps) => {
     const dispatch = useDispatch();
+    const user = useSelector((state: AppState) => state && state.user);
+    const editingSelf = user && user.loggedIn && targetUser.id === user.id;
 
     const [verifyEmailRequestSent, setVerifyEmailRequestSent] = useState(false);
-    const targetUser = user; // For a future feature
 
     return <React.Fragment>
         {/* Account Information */}
@@ -45,9 +47,14 @@ export const EventBookingForm = ({event, user, additionalInformation, updateAddi
                     <RS.Label>
                         <span className="form-required">Email address</span>
                         <RS.Input id="account-email" name="email" type="email" disabled value={targetUser.email || ""} invalid={targetUser.emailVerificationStatus != 'VERIFIED'} />
-                        <RS.FormFeedback>You must verify your email address to book on events. This is so we can send you details about the event.</RS.FormFeedback>
+                        <RS.FormFeedback>
+                            {editingSelf ?
+                                "You must verify your email address to book on events. This is so we can send you details about the event." :
+                                "WARNING: This email is not verified. The details about the event might not reach the user."
+                            }
+                        </RS.FormFeedback>
                     </RS.Label>
-                    {targetUser.emailVerificationStatus != 'VERIFIED' && !verifyEmailRequestSent && <RS.Button
+                    {editingSelf && targetUser.emailVerificationStatus != 'VERIFIED' && !verifyEmailRequestSent && <RS.Button
                         color="link" onClick={() => {
                             dispatch(requestEmailVerification());
                             setVerifyEmailRequestSent(true);
@@ -59,12 +66,12 @@ export const EventBookingForm = ({event, user, additionalInformation, updateAddi
                         We have sent an email to {targetUser.email}. Please follow the instructions in the email prior to booking.
                     </span>}
                 </div>
-                <div>
+                {editingSelf && <div>
                     <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} submissionAttempted />
-                </div>
-                <div className="text-center alert-warning p-1">
+                </div>}
+                {editingSelf && <div className="text-center alert-warning p-1">
                     If this information is incorrect, please update it from your <a href="/account" target="_blank">account page</a>.
-                </div>
+                </div>}
             </RS.CardBody>
         </RS.Card>
 

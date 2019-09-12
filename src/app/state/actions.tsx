@@ -16,7 +16,8 @@ import {
     ActualBoardLimit,
     AdditionalInformation,
     AppGroup,
-    AppGroupMembership, ATTENDANCE,
+    AppGroupMembership,
+    ATTENDANCE,
     BoardOrder,
     LoggedInUser,
     LoggedInValidationUser,
@@ -55,6 +56,7 @@ import {StatusFilter, TypeFilter} from "../components/pages/Events";
 import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {atLeastOne} from "../services/validation";
+import {SUCCESS_TOAST} from "../components/navigation/Toasts";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -1237,6 +1239,23 @@ export const cancelMyBooking = (eventId: string) => async (dispatch: Dispatch<Ac
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_RESPONSE_FAILURE});
             dispatch(showErrorToastIfNeeded("Event booking cancellation failed", error) as any);
         }
+    }
+};
+
+export const bookUserOnEvent = (eventBookingId: string, userId: number, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_REQUEST});
+        await api.eventBookings.bookUserOnEvent(eventBookingId, userId, additionalInformation);
+        dispatch(getEventBookings(eventBookingId) as any);
+        dispatch(closeActiveModal() as any);
+        dispatch(showToast({
+            title: "Booking successful", body: `A booking has been created.`,
+            color: "success", timeout: 5000, closable: false,
+        }) as any);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_SUCCESS});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
     }
 };
 

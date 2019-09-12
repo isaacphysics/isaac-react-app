@@ -232,6 +232,10 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.EVENT_BOOKING_USER_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_FAILURE}
@@ -470,6 +474,8 @@ export interface AdditionalInformation {
     accessibilityRequirements?: string;
     emergencyName?: string;
     emergencyNumber?: string;
+    authorisation?: string;
+    authorisationOther?: string;
 }
 
 export interface ZxcvbnResult {

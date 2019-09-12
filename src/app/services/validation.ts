@@ -6,8 +6,7 @@ import {
     ValidationUser
 } from "../../IsaacAppTypes";
 import {UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
-
-const failureToast: Toast = {color: "danger", title: "Validation error", timeout: 5000, body: "Required information is not present."};
+import {FAILURE_TOAST} from "../components/navigation/Toasts";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
@@ -82,23 +81,23 @@ export function allRequiredInformationIsPresent(user?: ValidationUser | null, us
 
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {
     if (!validateUserSchool(Object.assign({password: null}, user))) {
-        return Object.assign({}, failureToast, {title: "School information required", body: "You must enter a school in order to book on to this event."});
+        return Object.assign({}, FAILURE_TOAST, {title: "School information required", body: "You must enter a school in order to book on to this event."});
     }
 
     // validation for users / forms that indicate the booker is not a teacher
     if (user.role == 'STUDENT' && !(additionalInformation.yearGroup == 'TEACHER' || additionalInformation.yearGroup == 'OTHER')) {
         if (!additionalInformation.yearGroup) {
-            return Object.assign({}, failureToast, {title:"Year group required", body: "You must enter a year group to proceed."});
+            return Object.assign({}, FAILURE_TOAST, {title:"Year group required", body: "You must enter a year group to proceed."});
         }
 
         if (!event.virtual && (!additionalInformation.emergencyName || !additionalInformation.emergencyNumber)) {
-            return Object.assign({}, failureToast, {title: "Emergency contact details required", body: "You must enter a emergency contact details in order to book on to this event."});
+            return Object.assign({}, FAILURE_TOAST, {title: "Emergency contact details required", body: "You must enter a emergency contact details in order to book on to this event."});
         }
     }
 
     // validation for users that are teachers
     if (user.role != 'STUDENT' && !additionalInformation.jobTitle) {
-        return Object.assign({}, failureToast, {title: "Job title required", body: "You must enter a job title to proceed."});
+        return Object.assign({}, FAILURE_TOAST, {title: "Job title required", body: "You must enter a job title to proceed."});
     }
 
     return true;

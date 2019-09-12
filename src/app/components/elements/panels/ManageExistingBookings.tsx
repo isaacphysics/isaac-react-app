@@ -38,7 +38,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
             <RS.Table bordered className="mb-0 bg-white">
                 <thead>
                     <tr>
-                        <th className="align-middle">
+                        <th className="align-middle text-center">
                             Actions
                         </th>
                         <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('userBooked.familyName'); setReverse(!reverse);}}>
@@ -102,7 +102,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                                     Resend Email
                                 </RS.Button>
                             </td>
-                            <td className="align-middle">
+                            <td className="align-middle text-center">
                                 {booking.userBooked && <React.Fragment>{booking.userBooked.familyName}, {booking.userBooked.givenName}</React.Fragment>}
                             </td>
                             <td className="align-middle">{booking.userBooked && (booking.userBooked as UserSummaryWithEmailAddressDTO).email}</td>
