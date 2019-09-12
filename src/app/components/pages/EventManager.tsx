@@ -10,7 +10,7 @@ import {ManageExistingBookings} from "../elements/panels/ManageExistingBookings"
 import {AddUsersToBooking} from "../elements/panels/AddUsersToBooking";
 import {EventAttendance} from "../elements/panels/EventAttendance";
 
-export const EventAdminManager = ({user}: {user: LoggedInUser}) => {
+export const EventManager = ({user}: {user: LoggedInUser}) => {
     const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
     const selectedEventRef = useRef<HTMLDivElement>(null);
 
@@ -23,22 +23,14 @@ export const EventAdminManager = ({user}: {user: LoggedInUser}) => {
     return  <RS.Container>
         <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="Event booking admin"/>
         <div className="my-5">
-            <div>
-                <EventOverviews setSelectedEventId={setSelectedEventId} />
-            </div>
+            <EventOverviews setSelectedEventId={setSelectedEventId} />
             {selectedEventId !== null && <React.Fragment>
                 <div ref={selectedEventRef} className="mb-3">
                     <SelectedEventDetails eventId={selectedEventId} />
                 </div>
-                <div>
-                    <ManageExistingBookings user={user} eventBookingId={selectedEventId} />
-                </div>
-                <div>
-                    <AddUsersToBooking />
-                </div>
-                <div>
-                    <EventAttendance eventId={selectedEventId} />
-                </div>
+                <ManageExistingBookings user={user} eventBookingId={selectedEventId} />
+                <AddUsersToBooking />
+                <EventAttendance eventId={selectedEventId} />
             </React.Fragment>}
         </div>
     </RS.Container>

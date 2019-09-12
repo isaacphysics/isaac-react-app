@@ -2,7 +2,7 @@ import React from "react";
 import {UserSummaryForAdminUsersDTO} from "../../../../IsaacApiTypes";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import {store} from "../../../state/store";
-import {closeActiveModal, selectGroup, showGroupManagersModal} from "../../../state/actions";
+import {closeActiveModal} from "../../../state/actions";
 import * as RS from "reactstrap";
 import {history} from "../../../services/history";
 import {zeroOrLess} from "../../../services/validation";
@@ -16,7 +16,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
             `Create a booking for ${selectedUser.givenName} ${selectedUser.familyName}`,
         body: function UserBookingModalBody() {
             return <div>
-                <EventBookingForm event={selectedEvent} user={selectedUser}/>
+                {/*<EventBookingForm event={selectedEvent} user={selectedUser}/>*/}
             </div>
         },
     }

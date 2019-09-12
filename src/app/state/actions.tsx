@@ -1193,9 +1193,10 @@ export const bookMyselfOnEvent = (eventId: string, additionalInformation: Additi
         await dispatch(getEvent(eventId) as any);
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_SUCCESS});
         dispatch(showToast({
-            title: "Event booking confirmed", body: "You have been successfully booked on to this event.",
+            title: "Event booking confirmed", body: "You have been successfully booked onto this event.",
             color: "success", timeout: 5000, closable: false,
         }) as any);
+        dispatch(getEvent(eventId) as any);
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
@@ -1212,6 +1213,7 @@ export const addMyselfToWaitingList = (eventId: string, additionalInformation: A
             title: "Waiting list booking confirmed", body: "You have been successfully added to the waiting list for this event.",
             color: "success", timeout: 5000, closable: false,
         }) as any);
+        dispatch(getEvent(eventId) as any);
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
@@ -1230,6 +1232,7 @@ export const cancelMyBooking = (eventId: string) => async (dispatch: Dispatch<Ac
                 title: "Your booking has been cancelled", body: "Your booking has successfully been cancelled.",
                 color: "success", timeout: 5000, closable: false,
             }) as any);
+            dispatch(getEvent(eventId) as any);
         } catch (error) {
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_RESPONSE_FAILURE});
             dispatch(showErrorToastIfNeeded("Event booking cancellation failed", error) as any);
