@@ -1111,15 +1111,10 @@ export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>,
 // Events
 export const clearEventsList = {type: ACTION_TYPE.EVENTS_CLEAR};
 
-export const getEvent = (eventId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const state = getState();
+export const getEvent = (eventId: string) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_REQUEST});
-        const augmentedEvent =
-            // check if event is already loaded in events
-            (state && state.events && state.events.events.filter(e => e.id === eventId)[0]) ||
-            // else request it then augment it
-            augmentEvent((await api.events.get(eventId)).data);
+        const augmentedEvent = augmentEvent((await api.events.get(eventId)).data);
         dispatch({type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS, augmentedEvent});
     } catch (e) {
         dispatch({type: ACTION_TYPE.EVENT_RESPONSE_FAILURE});
