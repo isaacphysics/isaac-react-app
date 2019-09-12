@@ -276,7 +276,7 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS, gameboardId: string}
     | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.BOARDS_GROUPS_REQUEST; board: ApiTypes.GameboardDTO}
@@ -508,7 +508,7 @@ export enum ATTENDANCE {
 export interface QuestionSearchQuery {
     searchString: string;
     tags: string;
-    levels: string;
+    levels?: string;
     fasttrack: boolean;
     startIndex: number;
     limit: number;

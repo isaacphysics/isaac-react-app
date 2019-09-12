@@ -107,6 +107,9 @@ export const NavigationBar = () => {
                         <DropdownItem tag={Link} to="/set_assignments" className="pl-4 py-3 p-md-3">
                             Set assignments
                         </DropdownItem>
+                        <DropdownItem tag={Link} to="/gameboards/builder" className="pl-4 py-3 p-md-3">
+                            Create gameboards
+                        </DropdownItem>
                         <DropdownItem tag={Link} to="/assignment_progress" className="pl-4 py-3 p-md-3">
                             Assignment progress
                         </DropdownItem>

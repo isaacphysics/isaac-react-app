@@ -107,7 +107,7 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
 
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
-                                    title="Create a gameboard" comingSoon linkDestination="/assignments" linkText="Create gameboards"
+                                    title="Create a gameboard" linkDestination="/gameboards/builder" linkText="Create gameboards"
                                     amountText={<>You have created <span>-999</span> gameboards.</>}
                                 >
                                     Create custom gameboards to set as assignments to your groups.

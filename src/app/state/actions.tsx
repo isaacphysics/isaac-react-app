@@ -469,7 +469,7 @@ export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO
         dispatch(showToast({
             color: "success", title: "Access revoked", timeout: 5000,
             body: "You have revoked access to your data."
-        }) as any)
+        }) as any);
         dispatch(getActiveAuthorisations() as any);
         dispatch(closeActiveModal() as any);
     } catch (e) {
@@ -735,8 +735,8 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
 export const createGameboard = (gameboard: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST});
     try {
-        await api.gameboards.create(gameboard);
-        dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS});
+        const response = await api.gameboards.create(gameboard);
+        dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS, gameboardId: response.data.id});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Error creating gameboard", e));

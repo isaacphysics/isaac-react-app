@@ -1,8 +1,13 @@
 import {SortOrder} from "./constants";
 import {GameboardItem} from "../../IsaacApiTypes";
 import {orderBy} from "lodash";
+import {Tag} from "./tags";
 
-export const sortQuestions = (sortState: { [s: string]: string }) => {
+export const sortQuestions = (sortState: { [s: string]: string }) => (questions: GameboardItem[]) => {
+    if (sortState["title"]) {
+        const sortedQuestions = questions.sort((a, b) => bookSort(a.title || "", b.title || ""));
+        return sortState["title"] == SortOrder.ASC ? sortedQuestions : sortedQuestions.reverse();
+    }
     const keys: string[] = [];
     const order: ("asc" | "desc")[] = [];
     for (const key of Object.keys(sortState)) {
@@ -11,18 +16,17 @@ export const sortQuestions = (sortState: { [s: string]: string }) => {
             order.push(sortState[key] == SortOrder.ASC ? "asc" : "desc");
         }
     }
-    return (questions: GameboardItem[]) => orderBy(questions, keys, order);
+    return orderBy(questions, keys, order);
 };
 
 export const bookSort = (a: string, b: string) => {
-    const isNumberRegex = /((\d\.)*\d)/;
-    const sectionsA = a.split(isNumberRegex).filter((x) => x != "" && x != undefined);
-    const sectionsB = b.split(isNumberRegex).filter((x) => x != "" && x != undefined);
+    const splitRegex = /(\d+)/;
+    const sectionsA = a.split(splitRegex).filter((x) => x != "." && x != "");
+    const sectionsB = b.split(splitRegex).filter((x) => x != "." && x != "");
 
     for (let i = 0; i < Math.min(sectionsA.length, sectionsB.length); i++) {
-        debugger;
-        const isNumberA = sectionsA[i].search(isNumberRegex) != -1;
-        const isNumberB = sectionsB[i].search(isNumberRegex) != -1;
+        const isNumberA = sectionsA[i].search(/\d/) != -1;
+        const isNumberB = sectionsB[i].search(/\d/) != -1;
 
         if (isNumberA && isNumberB) {
             const numbersA = sectionsA[i].split(/\./).map((x) => parseInt(x));
@@ -36,7 +40,7 @@ export const bookSort = (a: string, b: string) => {
             }
 
             if (numbersA.length != numbersB.length) {
-                return numbersA.length - numbersB.length;
+                return numbersB.length - numbersA.length;
             }
         } else if (!isNumberA && !isNumberB) {
             const comparison = sectionsA[i].localeCompare(sectionsB[i]);
@@ -47,5 +51,14 @@ export const bookSort = (a: string, b: string) => {
             return isNumberA ? 1 : -1;
         }
     }
-    return sectionsA.length - sectionsB.length;
+    return sectionsB.length - sectionsA.length;
+};
+
+export const convertTagsToSelectionOptions = (tags: Tag[]) => {
+    return tags.map((tag) => {
+        return {
+            value: tag.id,
+            label: tag.title
+        }
+    })
 };

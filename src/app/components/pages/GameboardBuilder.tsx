@@ -1,24 +1,24 @@
-import React, {useState} from 'react';
-import {useDispatch} from "react-redux";
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {GameboardItem} from "../../../IsaacApiTypes";
+import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
 import {closeActiveModal, createGameboard, openActiveModal} from "../../state/actions";
 import {store} from "../../state/store";
 import {QuestionSearchModal} from "../elements/QuestionSearchModal";
 import classnames from "classnames";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import {Tooltip} from "reactstrap";
+import {AppState} from "../../state/reducers";
+import {GameboardCreatedModal} from "../elements/GameboardCreatedModal";
 
 export const GameboardBuilder = () => {
     const dispatch = useDispatch();
     const [gameboardName, setGameboardName] = useState("");
     const [gameboardTag, setGameboardTag] = useState("null");
     const [gameboardURL, setGameboardURL] = useState("");
-
     const [questionOrder, setQuestionOrder] = useState([] as string[]);
     const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, GameboardItem>());
-
     const [tooltipShow, setTooltipShow] = useState(false);
 
     const canSubmit = () => (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardName != "";
@@ -84,7 +84,6 @@ export const GameboardBuilder = () => {
                           className={"btn btn-block btn-secondary border-0 mt-4 " + classnames({disabled: !canSubmit()})}
                           disabled={!canSubmit()}
                           onClick={() => {
-                              console.log("Saved");
                               dispatch(createGameboard({
                                   title: gameboardName,
                                   questions: Array.from(selectedQuestions.values()).map((question) => {
@@ -99,12 +98,13 @@ export const GameboardBuilder = () => {
                                   },
                                   wildCardPosition: 0,
                                   gameFilter: {
-                                      subjects: ["physics"],
-                                      fields: [""],
-                                      topics: [""],
-                                      // levels: [""],
-                                      // subjects: [""],
+                                      subjects: ["computer_science"],
                                   }
+                              }));
+                              dispatch(openActiveModal({
+                                  closeAction: () => {store.dispatch(closeActiveModal())},
+                                  title: "Gameboard submitted",
+                                  body: <GameboardCreatedModal/>
                               }))
                           }}
                 />
@@ -122,11 +122,11 @@ export const GameboardBuilder = () => {
                         <RS.Table bordered>
                             <thead>
                                 <tr>
+                                    <th className={"col-md-1"}></th>
                                     <th className={"col-md-5"}>Title</th>
                                     <th className={"col-md-3"}>Tags</th>
                                     <th className={"col-md-1"}>Level</th>
                                     <th className="col-md-2">Exam board</th>
-                                    <th className={"col-md-1"}>Selected</th>
                                 </tr>
                             </thead>
                             <Droppable droppableId="droppable">
@@ -143,32 +143,33 @@ export const GameboardBuilder = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}>
                                                         <td>
+                                                            <RS.CustomInput
+                                                                type="checkbox"
+                                                                id={`gameboard-builder-remove-${question.id}`}
+                                                                color="secondary"
+                                                                checked={question.id == undefined || selectedQuestions.has(question.id)}
+                                                                onClick={() => {
+                                                                    if (question.id) {
+                                                                        const newSelectedQuestions = new Map(selectedQuestions);
+                                                                        const newQuestionOrder = [...questionOrder];
+                                                                        newSelectedQuestions.delete(question.id);
+                                                                        setSelectedQuestions(newSelectedQuestions);
+                                                                        newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
+                                                                        setQuestionOrder(newQuestionOrder)
+                                                                    }
+                                                                }}/>
+                                                        </td>
+                                                        <td>
                                                             <a href={question.url} target="_blank">{question.title}</a>
                                                         </td>
                                                         <td>
                                                             {question.tags && question.tags.map((tag) => tagIcons(tag))}
-                                                            <a onClick={() => {console.log("PING")}} className="badge badge-pill badge-warning mx-1">Primary</a>
-                                                            <button onClick={() => {console.log("PING")}} className="badge badge-pill badge-warning mx-1">Secondary</button>
                                                         </td>
                                                         <td>
                                                             {question.level}
                                                         </td>
                                                         <td>
                                                             Not yet implemented
-                                                        </td>
-                                                        <td>
-                                                            <RS.Button className={"btn-sm"}
-                                                                       onClick={() => {
-                                                                           if (question.id) {
-                                                                               const newSelectedQuestions = new Map(selectedQuestions);
-                                                                               const newQuestionOrder = [...questionOrder];
-                                                                               newSelectedQuestions.delete(question.id);
-                                                                               setSelectedQuestions(newSelectedQuestions);
-                                                                               newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
-                                                                               setQuestionOrder(newQuestionOrder)
-                                                                           }
-                                                                       }}
-                                                            >Remove</RS.Button>
                                                         </td>
                                                     </tr>)}
                                                 </Draggable>
