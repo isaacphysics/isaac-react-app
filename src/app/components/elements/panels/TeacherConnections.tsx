@@ -288,4 +288,4 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
     </RS.CardBody>
 };
 
-export const TeacherConnectionsPanel = connect(stateToProps, dispatchToProps)(TeacherConnectionsComponent);
+export const TeacherConnections = connect(stateToProps, dispatchToProps)(TeacherConnectionsComponent);

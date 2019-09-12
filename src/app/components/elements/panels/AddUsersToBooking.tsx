@@ -9,9 +9,7 @@ import {DateString} from "../DateString";
 import {NOT_FOUND} from "../../../services/constants";
 import {userBookingModal} from "../modals/UserBookingModal";
 
-
-
-export const AddUsersToBookingPanel = () => {
+export const AddUsersToBooking = () => {
     const dispatch = useDispatch();
     const userResults = useSelector((state: AppState) => state && state.adminUserSearch || []);
     const selectedEvent = useSelector((state: AppState) => state && state.currentEvent || null);
@@ -34,39 +32,51 @@ export const AddUsersToBookingPanel = () => {
 
     return <Accordion title="Add users to booking">
         <RS.Form onSubmit={userSearch}>
-            <div className="mb-3">
-                <RS.Label htmlFor="user-search-familyName">Find a user by family name:</RS.Label>
-                <RS.Input
-                    id="user-search-familyName" type="text" placeholder="Enter user family name" value={queryParams.familyName || ""}
-                    onChange={e => setQueryParams(Object.assign({}, queryParams, {familyName: nullIfDefault(e.target.value, "")}))}
-                />
-            </div>
-            <div className="mb-3">
-                <RS.Label htmlFor="user-search-email">Find a user by email:</RS.Label>
-                <RS.Input
-                    id="user-search-email" type="text" placeholder="Enter user email" value={queryParams.email || ""}
-                    onChange={e => setQueryParams(Object.assign({}, queryParams, {email: nullIfDefault(e.target.value, "")}))}
-                />
-            </div>
-            <div className="mb-3">
-                <RS.Label htmlFor="user-search-role">Find by user role:</RS.Label>
-                <RS.Input
-                    type="select" id="user-search-role" value={queryParams.role || "NO_ROLE"}
-                    onChange={e => setQueryParams(Object.assign({}, queryParams, {role: nullIfDefault(e.target.value, "NO_ROLE")}))}
-                >
-                    <option value="NO_ROLE">Any Role</option>
-                    <option value="TEACHER">Teacher</option>
-                    <option value="CONTENT_EDITOR">Content Editor</option>
-                    <option value="ADMIN">Admin</option>
-                </RS.Input>
-            </div>
-            <RS.Input type="submit" className="btn btn-secondary mt-2" value="Find user" />
+            <RS.Row>
+                <RS.Col md={6}>
+                    <div className="mb-3">
+                        <RS.Label htmlFor="user-search-familyName">Find a user by family name:</RS.Label>
+                        <RS.Input
+                            id="user-search-familyName" type="text" placeholder="Enter user family name" value={queryParams.familyName || ""}
+                            onChange={e => setQueryParams(Object.assign({}, queryParams, {familyName: nullIfDefault(e.target.value, "")}))}
+                        />
+                    </div>
+                </RS.Col>
+                <RS.Col md={6}>
+                    <div className="mb-3">
+                        <RS.Label htmlFor="user-search-email">Find a user by email:</RS.Label>
+                        <RS.Input
+                            id="user-search-email" type="text" placeholder="Enter user email" value={queryParams.email || ""}
+                            onChange={e => setQueryParams(Object.assign({}, queryParams, {email: nullIfDefault(e.target.value, "")}))}
+                        />
+                    </div>
+                </RS.Col>
+                <RS.Col md={6}>
+                    <div className="mb-3">
+                        <RS.Label htmlFor="user-search-role">Find by user role:</RS.Label>
+                        <RS.Input
+                            type="select" id="user-search-role" value={queryParams.role || "NO_ROLE"}
+                            onChange={e => setQueryParams(Object.assign({}, queryParams, {role: nullIfDefault(e.target.value, "NO_ROLE")}))}
+                        >
+                            <option value="NO_ROLE">Any Role</option>
+                            <option value="TEACHER">Teacher</option>
+                            <option value="CONTENT_EDITOR">Content Editor</option>
+                            <option value="ADMIN">Admin</option>
+                        </RS.Input>
+                    </div>
+                </RS.Col>
+            </RS.Row>
+            <RS.Row>
+                <RS.Col>
+                    <RS.Input type="submit" className="btn btn-secondary mt-2" value="Find user" />
+                </RS.Col>
+            </RS.Row>
         </RS.Form>
 
         {searched && <hr className="text-center my-4" />}
 
         {atLeastOne(userResults.length) && <div className="overflow-auto">
-            <RS.Table bordered className="mb-0">
+            <RS.Table bordered className="mb-0 bg-white">
                 <thead>
                     <tr>
                         <th className="align-middle">Actions</th>
@@ -82,12 +92,12 @@ export const AddUsersToBookingPanel = () => {
                     {selectedEvent && selectedEvent !== NOT_FOUND && userResults.map(result => <tr key={result.id}>
                         <td className="align-middle">
                             {!userBookings.includes(result.id as number) && selectedEvent.eventStatus != 'WAITING_LIST_ONLY' && atLeastOne(selectedEvent.placesAvailable) &&
-                            <RS.Button color="tertiary" className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, selectedEvent, userBookings)))}>
+                            <RS.Button color="primary" outline className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, selectedEvent, userBookings)))}>
                                 Book
                             </RS.Button>
                             }
                             {!userBookings.includes(result.id as number) && (selectedEvent.eventStatus == 'WAITING_LIST_ONLY' || zeroOrLess(selectedEvent.placesAvailable)) &&
-                            <RS.Button color="tertiary" className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, selectedEvent, userBookings)))}>
+                            <RS.Button color="primary" outline className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, selectedEvent, userBookings)))}>
                                 Add to WL
                             </RS.Button>
                             }

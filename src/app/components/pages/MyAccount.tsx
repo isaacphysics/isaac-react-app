@@ -40,7 +40,7 @@ import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
 import {ACCOUNT_TAB} from "../../services/constants";
 import {history} from "../../services/history"
-import {TeacherConnectionsPanel} from "../elements/panels/TeacherConnectionsPanel";
+import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
@@ -237,7 +237,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                         </TabPane>
 
                         <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
-                            {editingSelf && <TeacherConnectionsPanel user={user} authToken={authToken} />}
+                            {editingSelf && <TeacherConnections user={user} authToken={authToken} />}
                         </TabPane>
 
                         <TabPane tabId={ACCOUNT_TAB.emailpreferences}>

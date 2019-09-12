@@ -16,7 +16,7 @@ import {isAdmin} from "../../../services/user";
 import {UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
 
-export const ManageExistingBookingsPanel = ({user, eventBookingId}: {user: LoggedInUser; eventBookingId: string}) => {
+export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUser; eventBookingId: string}) => {
     const dispatch = useDispatch();
     useEffect(() => {dispatch(getEventBookings(eventBookingId))}, [eventBookingId]);
     const eventBookings = useSelector((state: AppState) => state && state.eventBookings || []);
@@ -35,7 +35,7 @@ export const ManageExistingBookingsPanel = ({user, eventBookingId}: {user: Logge
 
     return <Accordion title="Manage current bookings">
         {atLeastOne(eventBookings.length) && <div className="overflow-auto">
-            <RS.Table bordered className="mb-0">
+            <RS.Table bordered className="mb-0 bg-white">
                 <thead>
                     <tr>
                         <th className="align-middle">
@@ -86,19 +86,19 @@ export const ManageExistingBookingsPanel = ({user, eventBookingId}: {user: Logge
                         return <tr key={booking.bookingId}>
                             <td className="align-middle">
                                 {(booking.bookingStatus == 'WAITING_LIST' || booking.bookingStatus == 'CANCELLED') &&
-                                    <RS.Button color="tertiary" block className="btn-sm mb-1" onClick={() => dispatch(promoteUserFromWaitingList(eventBookingId, userId))}>
+                                    <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(promoteUserFromWaitingList(eventBookingId, userId))}>
                                         Promote
                                     </RS.Button>
                                 }
                                 {(booking.bookingStatus == 'WAITING_LIST' || booking.bookingStatus == 'CONFIRMED') &&
-                                    <RS.Button color="tertiary" block className="btn-sm mb-1" onClick={() => dispatch(cancelUserBooking(eventBookingId, userId))}>
+                                    <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(cancelUserBooking(eventBookingId, userId))}>
                                         Cancel
                                     </RS.Button>
                                 }
-                                {isAdmin(user) && <RS.Button color="tertiary" block className="btn-sm mb-1" onClick={() => dispatch(deleteUserBooking(eventBookingId, userId))}>
+                                {isAdmin(user) && <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(deleteUserBooking(eventBookingId, userId))}>
                                     Delete
                                 </RS.Button>}
-                                <RS.Button color="tertiary" block className="btn-sm mb-1" onClick={() => dispatch(resendUserConfirmationEmail(eventBookingId, userId))}>
+                                <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(resendUserConfirmationEmail(eventBookingId, userId))}>
                                     Resend Email
                                 </RS.Button>
                             </td>

@@ -1,18 +1,19 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
+import {EventBookingDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
     AdditionalInformation,
+    ATTENDANCE,
     BoardOrder,
     LoggedInUser,
     UserPreferencesDTO
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {TypeFilter} from "../components/pages/Events";
-import {EventOverviewFilter} from "../components/elements/panels/EventOverviewsPanel";
-import {EventBookingDTO} from "../../IsaacApiTypes";
+import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -345,6 +346,10 @@ export const api = {
         },
         deleteUserBooking: (eventId: string, userId: number) => {
             return endpoint.delete(`/events/${eventId}/bookings/${userId}`);
+        },
+        recordEventAttendance: (eventId: string, userId: number, attendance: ATTENDANCE) => {
+            const attended = attendance === ATTENDANCE.ATTENDED;
+            return endpoint.post(`/events/${eventId}/bookings/${userId}/record_attendance?attended=${attended}`);
         }
     },
     logger: {

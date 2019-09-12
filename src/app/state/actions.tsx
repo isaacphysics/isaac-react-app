@@ -1,6 +1,6 @@
 import {api} from "../services/api";
 import {Dispatch} from "react";
-import {AppState, user} from "./reducers";
+import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {store} from "./store";
 import {
@@ -13,9 +13,10 @@ import {
 import {
     Action,
     ActiveModal,
-    ActualBoardLimit, AdditionalInformation,
+    ActualBoardLimit,
+    AdditionalInformation,
     AppGroup,
-    AppGroupMembership, AugmentedEvent,
+    AppGroupMembership, ATTENDANCE,
     BoardOrder,
     LoggedInUser,
     LoggedInValidationUser,
@@ -32,7 +33,7 @@ import {
     RegisteredUserDTO,
     Role,
     UserGroupDTO,
-    UserSummaryDTO, UserSummaryForAdminUsersDTO,
+    UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {
@@ -52,10 +53,10 @@ import {isTeacher} from "../services/user";
 import ReactGA from "react-ga";
 import {StatusFilter, TypeFilter} from "../components/pages/Events";
 import {augmentEvent} from "../services/events";
-import {EventOverviewFilter} from "../components/elements/panels/EventOverviewsPanel";
+import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {atLeastOne} from "../services/validation";
 
-// Utility Functions
+// Utility functions
 function isAxiosError(e: Error): e is AxiosError {
     return 'isAxiosError' in e && (e as AxiosError).isAxiosError;
 }
@@ -119,7 +120,7 @@ export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE
 
 export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
 
-// User Authentication
+// User authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST});
     try {
@@ -358,7 +359,7 @@ export const getUserIdSchoolLookup = (eventIds: number[]) => async (dispatch: Di
     }
 };
 
-// Contact Us
+// Contact us
 export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST});
     try {
@@ -371,7 +372,7 @@ export const submitMessage = (extra: any, params: {firstName: string; lastName: 
     }
 };
 
-// Teacher Connections
+// Teacher connections
 export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST});
@@ -475,7 +476,7 @@ export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO
     }
 };
 
-// Student/Other Connections
+// Student/other Connections
 export const getStudentAuthorisations = () => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_REQUEST});
@@ -576,7 +577,7 @@ export const requestConstantsSegueEnvironment = () => async (dispatch: Dispatch<
     }
 }
 
-// Document & Topic Fetch
+// Document & topic fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
     let apiEndpoint;
@@ -603,7 +604,7 @@ export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatc
     }
 };
 
-// Page Fragments
+// Page fragments
 export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.FRAGMENT_REQUEST, id});
     try {
@@ -684,7 +685,7 @@ export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|Validat
     dispatch({type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
 };
 
-// Current Gameboard
+// Current gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GAMEBOARD_REQUEST, gameboardId});
     try {
@@ -1299,7 +1300,19 @@ export const deleteUserBooking = (eventBookingId: string, userId?: number) => as
     }
 };
 
-// Content Errors
+export const recordEventAttendance = (eventId: string, userId: number, attendance: ATTENDANCE) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_REQUEST});
+        await api.eventBookings.recordEventAttendance(eventId, userId, attendance);
+        dispatch({type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS});
+        dispatch(getEventBookings(eventId) as any);
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to record event attendance", error) as any);
+    }
+};
+
+// Content errors
 export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST});
     try {

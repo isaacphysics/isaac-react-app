@@ -16,7 +16,7 @@ export enum EventOverviewFilter {
     "Past events" = "PAST",
 }
 
-export const EventOverviewsPanel = ({setSelectedEventId}: {setSelectedEventId: (eventId: string | null) => void}) => {
+export const EventOverviews = ({setSelectedEventId}: {setSelectedEventId: (eventId: string | null) => void}) => {
     const dispatch = useDispatch();
     const eventOverviews = useSelector((state: AppState) => state && state.eventOverviews);
 
@@ -40,10 +40,7 @@ export const EventOverviewsPanel = ({setSelectedEventId}: {setSelectedEventId: (
     return <Accordion title="Events overview" index={0}>
         <div className="d-flex justify-content-end mb-4">
             <RS.Label>
-                <strong>View:</strong>
-                <RS.Input type="select" value={overviewFilter} onChange={e => {
-                    setOverviewFilter(e.target.value as EventOverviewFilter);
-                }}>
+                <RS.Input type="select" value={overviewFilter} onChange={e => {setOverviewFilter(e.target.value as EventOverviewFilter)}}>
                     {Object.entries(EventOverviewFilter).map(([filterLabel, filterValue]) =>
                         <option key={filterValue} value={filterValue}>{filterLabel}</option>
                     )}
@@ -53,7 +50,7 @@ export const EventOverviewsPanel = ({setSelectedEventId}: {setSelectedEventId: (
 
         <ShowLoading until={eventOverviews} render={eventOverviews => <React.Fragment>
             {atLeastOne(eventOverviews.length) && <div className="overflow-auto">
-                <RS.Table bordered className="mb-0">
+                <RS.Table bordered className="mb-0 bg-white">
                     <thead>
                         <tr>
                             <th className="align-middle">
@@ -84,7 +81,7 @@ export const EventOverviewsPanel = ({setSelectedEventId}: {setSelectedEventId: (
                     </thead>
                     <tbody>
                         {eventOverviews.sort(sortOnPredicateAndReverse).map((event) => <tr key={event.id}>
-                            <td className="align-middle"><RS.Button color="tertiary" block className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
+                            <td className="align-middle"><RS.Button color="primary" outline className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
                                 Manage
                             </RS.Button></td>
                             <td className="align-middle"><Link to={`events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>

@@ -8,7 +8,7 @@ import {getEvent} from "../../../state/actions";
 import {NOT_FOUND} from "../../../services/constants";
 import {zeroOrLess} from "../../../services/validation";
 
-export const SelectedEventDetailsPanel = ({eventId}: {eventId: string}) => {
+export const SelectedEventDetails = ({eventId}: {eventId: string}) => {
     const dispatch = useDispatch();
     useEffect(() => {dispatch(getEvent(eventId))}, [eventId]);
     const selectedEvent = useSelector((state: AppState) => {return state && state.currentEvent;});

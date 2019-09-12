@@ -256,6 +256,10 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_BOOKING_DELETION_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.EVENT_BOOKING_DELETION_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_REQUEST}
+    | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
 
@@ -481,3 +485,7 @@ export interface ZxcvbnResult {
 }
 
 export interface UserSchoolLookup {[userId: number]: School}
+
+export enum ATTENDANCE {
+    ABSENT, ATTENDED
+}
