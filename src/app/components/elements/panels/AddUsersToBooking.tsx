@@ -68,7 +68,7 @@ export const AddUsersToBooking = () => {
             </RS.Row>
             <RS.Row>
                 <RS.Col>
-                    <RS.Input type="submit" className="btn btn-secondary mt-2" value="Find user" />
+                    <RS.Input type="submit" className="btn btn-block btn-secondary border-0 mt-2" value="Find user" />
                 </RS.Col>
             </RS.Row>
         </RS.Form>

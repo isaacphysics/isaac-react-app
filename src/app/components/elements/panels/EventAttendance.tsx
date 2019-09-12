@@ -25,7 +25,7 @@ export const EventAttendance = ({eventId}: {eventId: string}) => {
     const bookings = useSelector((state: AppState) => state && state.eventBookings || []);
     const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup || {});
 
-    const [sortPredicate, setSortPredicate] = useState("date");
+    const [sortPredicate, setSortPredicate] = useState("bookingDate");
     const [reverse, setReverse] = useState(true);
     const [familyNameFilter, setFamilyNameFilter] = useState("");
 

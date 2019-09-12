@@ -70,7 +70,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
                         onChange={event => updateAdditionalInformation({authorisationOther: event.target.value})}
                     />}
 
-                    {(userCanBeBookedOnEvent || userCanBeAddedToWaitingList) && <RS.Input className="btn btn-secondary mt-3"
+                    {(userCanBeBookedOnEvent || userCanBeAddedToWaitingList) && <RS.Input className="btn btn-block btn-secondary border-0 mt-3"
                         type="submit" value={userCanBeBookedOnEvent ? "Book on event" : "Add to waiting list"}
                     />}
                 </span>
