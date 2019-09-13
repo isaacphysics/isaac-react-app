@@ -29,17 +29,22 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                                     user && user.loggedIn ? `Welcome ${user.givenName}!` : "A level Computer Science learning"
                                 }</h1>
                                 <p>
-                                    Isaac Computer Science is a free online learning platform, funded by the Department for Education:
+                                    Welcome to Isaac Computer Science, the free online platform for students and teachers.
                                 </p>
                                 <ul>
                                     <li>Use it in the <strong>classroom</strong></li>
                                     <li>Use it for <strong>homework</strong></li>
                                     <li>Use it for <strong>revision</strong></li>
                                 </ul>
-                                <p> Isaac Computer Science will provide full coverage of every A&nbsp;level
-                                    Computer Science topic, and a vast bank of self-marking questions —
-                                    all mapped to the AQA and OCR specifications, and all created by our team of
-                                    experienced teachers.
+                                <p>
+                                    We also offer free <Link to="/events" target="_blank">teacher CPD events</Link> and {" "}
+                                    <span className="text-nowrap">
+                                        <Link to="/events" target="_blank">student workshops</Link>.
+                                    </span> {" "}
+                                    Isaac Computer Science is proud to be part of the Department for Education’s {" "}
+                                    <span className="text-nowrap">
+                                        <a href="https://teachcomputing.org/" target="_blank" rel="noopener noreferrer" >National Centre for Computing Education</a>.
+                                    </span>
                                 </p>
                             </Col>
                         </Row>
