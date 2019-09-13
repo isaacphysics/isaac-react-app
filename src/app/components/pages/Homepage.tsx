@@ -56,7 +56,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                             </Col>
                         </Row>
                     </Col>
-                    <Col lg="7" className="p-sm-5 pb-5 pr-5 align-self-center text-center">
+                    <Col lg="7" className="p-sm-5 pb-5 align-self-center text-center">
                         <iframe width="614" height="390" className="mw-100" src="https://www.youtube-nocookie.com/embed/nW4J-NVDziw?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home" frameBorder="0"
                                 allowFullScreen/>
                     </Col>
