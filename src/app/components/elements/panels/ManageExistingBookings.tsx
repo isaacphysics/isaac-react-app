@@ -62,7 +62,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                             Accessibility requirements
                         </th>
                         <th className="align-middle">
-                            Medical requirements
+                            Medical / dietary
                         </th>
                         <th className="align-middle">
                             Emergency name
