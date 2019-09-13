@@ -54,10 +54,10 @@ export const GameboardBuilder = () => {
                 </RS.Row>
                 <RS.Row className={"mt-2"}>
                     <RS.Col>
-                        <RS.Label>Tag as:</RS.Label>
+                        <RS.Label>Tag as</RS.Label>
                     </RS.Col>
                     <RS.Col>
-                        <RS.Label>Gameboard URL (must be unique and not contain spaces):</RS.Label>
+                        <RS.Label>Gameboard URL (must be unique and not contain spaces)</RS.Label>
                     </RS.Col>
                 </RS.Row>
                 <RS.Row>
@@ -85,6 +85,7 @@ export const GameboardBuilder = () => {
                           disabled={!canSubmit()}
                           onClick={() => {
                               dispatch(createGameboard({
+                                  id: gameboardURL == "" ? undefined : gameboardURL,
                                   title: gameboardName,
                                   questions: Array.from(selectedQuestions.values()).map((question) => {
                                       delete question.type;
@@ -99,7 +100,8 @@ export const GameboardBuilder = () => {
                                   wildCardPosition: 0,
                                   gameFilter: {
                                       subjects: ["computer_science"],
-                                  }
+                                  },
+                                  tags: gameboardTag == "CREATED_BY_ISAAC" ? ["ISAAC_BOARD"] : []
                               }));
                               dispatch(openActiveModal({
                                   closeAction: () => {store.dispatch(closeActiveModal())},
@@ -148,7 +150,7 @@ export const GameboardBuilder = () => {
                                                                 id={`gameboard-builder-remove-${question.id}`}
                                                                 color="secondary"
                                                                 checked={question.id == undefined || selectedQuestions.has(question.id)}
-                                                                onClick={() => {
+                                                                onChange={() => {
                                                                     if (question.id) {
                                                                         const newSelectedQuestions = new Map(selectedQuestions);
                                                                         const newQuestionOrder = [...questionOrder];
