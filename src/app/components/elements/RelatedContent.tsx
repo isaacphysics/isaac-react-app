@@ -1,4 +1,5 @@
 import React from "react";
+import * as RS from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {ListGroup, ListGroupItem} from "reactstrap";
@@ -48,35 +49,48 @@ function getURLForContent(content: ContentSummaryDTO) {
 }
 
 export const RelatedContentComponent = ({content, parentPage, logAction}: RelatedContentProps) => {
-    let makeListGroupItem = (contentSummary: ContentSummaryDTO) => (
+    const concepts = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
+    const questions = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION).sort((a, b) => {
+        if (a.level === b.level) return (a.title || '').localeCompare(b.title || '');
+        const aInt = parseInt(a.level || '-1');
+        const bInt = parseInt(b.level || '-1');
+        return aInt > bInt ? 1 : aInt != bInt ? -1 : 0;
+    });
+
+    const makeListGroupItem = (contentSummary: ContentSummaryDTO) => (
         <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mb-lg-3 mr-lg-3">
-            <Link
-                to={getURLForContent(contentSummary)}
-                className="lrg-text font-weight-bold"
+            <Link to={getURLForContent(contentSummary)} className="lrg-text font-weight-bold"
                 onClick={() => {logAction(getEventDetails(contentSummary, parentPage))}}
             >
                 {contentSummary.title}
             </Link>
         </ListGroupItem>
-    )
-    return <div className="row">
-        <div className="simple-card my-3 p-3 text-wrap col-lg-5">
-            <h2 className="mb-4">Related questions</h2>
-            <div className="d-lg-flex">
-                <ListGroup className="w-100 mb-lg-3 mr-lg-3 w-lg-50">
-                    {content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION).sort((a, b) => {
-                        if (a.level === b.level) return (a.title || '').localeCompare(b.title || '');
-                        return parseInt(a.level || '-1') > parseInt(b.level || '-1') ? 1 : -1;
-                    }).map((contentSummary) => makeListGroupItem(contentSummary))}
-                </ListGroup>
+    );
+    return <div className="d-flex align-items-stretch flex-wrap">
+        <div className="w-100 w-lg-50 d-flex">
+            <div className="flex-fill simple-card mr-lg-3 my-3 p-3 text-wrap">
+                <h2 className="mb-2"><small>Related questions</small></h2>
+                <div className="d-lg-flex">
+                    <ListGroup className="mb-lg-3 mr-lg-3">
+                        {questions.length > 0 ?
+                            questions.map(contentSummary => makeListGroupItem(contentSummary)) :
+                            <div className="mt-2 ml-3">There are no related concepts</div>
+                        }
+                    </ListGroup>
+                </div>
             </div>
         </div>
-        <div className="simple-card my-3 p-3 text-wrap col-lg-5 offset-lg-2">
-            <h2 className="mb-4">Related concepts</h2>
-            <div className="d-lg-flex">
-                <ListGroup className="w-100 mb-lg-3 mr-lg-3 w-lg-50">
-                    {content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT).map((contentSummary) => makeListGroupItem(contentSummary))}
-                </ListGroup>
+        <div className="w-100 w-lg-50 d-flex">
+            <div className="flex-fill simple-card ml-lg-3 my-3 p-3 text-wrap">
+                <h2 className="mb-2"><small>Related concepts</small></h2>
+                <div className="d-lg-flex">
+                    <ListGroup className="mb-lg-3 mr-lg-3">
+                        {concepts.length > 0 ?
+                            concepts.map(contentSummary => makeListGroupItem(contentSummary)):
+                            <div className="mt-2 ml-3">There are no related concepts</div>
+                        }
+                    </ListGroup>
+                </div>
             </div>
         </div>
     </div>
