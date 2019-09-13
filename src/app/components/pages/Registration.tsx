@@ -24,8 +24,8 @@ import {isDobOverThirteen, validateEmail, validatePassword} from "../../services
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistence from "../../services/localStorage"
 import {KEY} from "../../services/localStorage"
+import {DateInput} from "../elements/inputs/DateInput";
 import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../services/passwordStrength"
-import {DateInput} from "../elements/DateInput";
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {Redirect} from "react-router";
 
@@ -57,7 +57,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     const [registrationUser, setRegistrationUser] = useState(
         Object.assign({}, user,{
             email: userEmail,
-            dateOfBirth: null,
+            dateOfBirth: undefined,
             password: null,
         })
     );
@@ -74,8 +74,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
     const emailIsValid = registrationUser.email && validateEmail(registrationUser.email);
     const passwordIsValid =
         (registrationUser.password == unverifiedPassword) && validatePassword(registrationUser.password || "");
-    const dobIsOverThirteen = isDobOverThirteen(registrationUser.dateOfBirth);
-    const confirmedOverThirteen = dobCheckboxChecked || dobIsOverThirteen;
+    const confirmedOverThirteen = dobCheckboxChecked || isDobOverThirteen(registrationUser.dateOfBirth);
 
 
     // Form's submission method

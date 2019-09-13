@@ -1,8 +1,8 @@
 import React from "react";
 import * as RS from "reactstrap";
 import {connect} from "react-redux";
-import {AppState} from "../../state/reducers";
-import * as AppTypes from "../../../IsaacAppTypes";
+import {AppState} from "../../../state/reducers";
+import * as AppTypes from "../../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState) => ({
     activeModal: state && state.activeModal

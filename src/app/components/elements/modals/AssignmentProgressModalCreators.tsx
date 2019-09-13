@@ -1,10 +1,10 @@
 import React from "react";
 import {
     closeActiveModal,
-} from "../../state/actions";
-import {store} from "../../state/store";
+} from "../../../state/actions";
+import {store} from "../../../state/store";
 import * as RS from "reactstrap";
-import {PageFragment} from "./PageFragment";
+import {PageFragment} from "../PageFragment";
 
 // N.B. This modal must not be referenced in actions.tsx to avoid circular dependencies
 

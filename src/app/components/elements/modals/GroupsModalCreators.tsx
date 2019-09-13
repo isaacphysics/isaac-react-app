@@ -1,17 +1,17 @@
 import React, {useState} from "react";
 import {connect, ResolveThunks} from "react-redux";
 import {sortBy} from "lodash";
-import {history} from "../../services/history";
+import {history} from "../../../services/history";
 import * as RS from "reactstrap";
 
-import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
-import {Action, AppGroup} from "../../../IsaacAppTypes";
+import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
+import {Action, AppGroup} from "../../../../IsaacAppTypes";
 
-import {store} from "../../state/store";
+import {store} from "../../../state/store";
 import {closeActiveModal, selectGroup, addGroupManager, deleteGroupManager, showGroupInvitationModal,
-    showGroupManagersModal} from "../../state/actions";
-import {AppState} from "../../state/reducers";
-import {groups} from "../../state/selectors";
+    showGroupManagersModal} from "../../../state/actions";
+import {AppState} from "../../../state/reducers";
+import {groups} from "../../../state/selectors";
 import {bindActionCreators, Dispatch} from "redux";
 
 const mapStateToPropsForInvite = (state: AppState) => {return {group: groups.current(state)};};

@@ -6,7 +6,7 @@ import {
     AppAssignmentProgress,
     AppGroup,
     AppGroupMembership,
-    AppQuestionDTO,
+    AppQuestionDTO, AugmentedEvent,
     ContentErrorsResponse,
     GroupMembershipDetailDTO,
     isValidatedChoice,
@@ -20,7 +20,7 @@ import {
     ContentDTO,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardListDTO,
+    GameboardListDTO, IsaacEventPageDTO,
     IsaacTopicSummaryPageDTO,
     ResultsWrapper,
     UserAuthenticationSettingsDTO,
@@ -305,6 +305,34 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
             return null;
         default:
             return currentTopic;
+    }
+};
+
+type EventsState = {events: AugmentedEvent[]; total: number} | null;
+export const events = (events: EventsState = null, action: Action) => {
+    const currentEvents = events ? events.events : [];
+    switch (action.type) {
+        case ACTION_TYPE.EVENTS_RESPONSE_SUCCESS:
+            return {events: Array.from(new Set([...currentEvents, ...action.augmentedEvents])), total: action.total};
+        case ACTION_TYPE.EVENTS_CLEAR:
+            return null;
+        default:
+            return events;
+    }
+};
+
+export type CurrentEventState = AugmentedEvent | NOT_FOUND_TYPE | null;
+export const currentEvent = (currentEvent: CurrentEventState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_RESPONSE_SUCCESS:
+            return {...action.augmentedEvent};
+        case ACTION_TYPE.EVENT_RESPONSE_FAILURE:
+            return NOT_FOUND;
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
+        case ACTION_TYPE.EVENT_REQUEST:
+            return null;
+        default:
+            return currentEvent;
     }
 };
 
@@ -633,6 +661,8 @@ const appReducer = combineReducers({
     boards,
     assignmentsByMe,
     progress,
+    events,
+    currentEvent,
     fragments
 });
 
@@ -661,6 +691,8 @@ export type AppState = undefined | {
     boards: BoardsState;
     assignmentsByMe: AssignmentsState;
     progress: ProgressState;
+    events: EventsState;
+    currentEvent: CurrentEventState;
     fragments: FragmentsState;
 }
 

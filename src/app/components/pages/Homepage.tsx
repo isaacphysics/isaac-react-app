@@ -29,17 +29,22 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                                     user && user.loggedIn ? `Welcome ${user.givenName}!` : "A level Computer Science learning"
                                 }</h1>
                                 <p>
-                                    Isaac Computer Science is a free online learning platform, funded by the Department for Education:
+                                    Welcome to Isaac Computer Science, the free online platform for students and teachers.
                                 </p>
                                 <ul>
                                     <li>Use it in the <strong>classroom</strong></li>
                                     <li>Use it for <strong>homework</strong></li>
                                     <li>Use it for <strong>revision</strong></li>
                                 </ul>
-                                <p> Isaac Computer Science will provide full coverage of every A&nbsp;level
-                                    Computer Science topic, and a vast bank of self-marking questions —
-                                    all mapped to the AQA and OCR specifications, and all created by our team of
-                                    experienced teachers.
+                                <p>
+                                    We also offer free <Link to="/events" target="_blank">teacher CPD events</Link> and {" "}
+                                    <span className="text-nowrap">
+                                        <Link to="/events" target="_blank">student workshops</Link>.
+                                    </span> {" "}
+                                    Isaac Computer Science is proud to be part of the Department for Education’s {" "}
+                                    <span className="text-nowrap">
+                                        <a href="https://teachcomputing.org/" target="_blank" rel="noopener noreferrer" >National Centre for Computing Education</a>.
+                                    </span>
                                 </p>
                             </Col>
                         </Row>
@@ -57,8 +62,11 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         </Row>
                     </Col>
                     <Col lg="7" className="p-sm-5 pb-5 align-self-center text-center">
-                        <iframe width="614" height="390" className="mw-100" src="https://www.youtube-nocookie.com/embed/nW4J-NVDziw?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home" frameBorder="0"
-                                allowFullScreen/>
+                        <iframe
+                            title="isaac-computer-science-video" width="614" height="390" className="mw-100"
+                            src="https://www.youtube-nocookie.com/embed/nW4J-NVDziw?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
+                            frameBorder="0" allowFullScreen
+                        />
                     </Col>
                 </Row>
             </Container>
@@ -95,9 +103,9 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         {" to see what’s happening in your area, and sign up today!"}
                     </p>
                     <EventsCarousel />
-                    <a href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer">
-                        See all Events on Eventbrite
-                    </a>
+                    <Link to="/events">
+                        See all Events
+                    </Link>
                 </div>
             </Container>
         </section>
