@@ -1,5 +1,6 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
+import {UserProgress} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 
 export type Action =
@@ -37,6 +38,9 @@ export type Action =
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.USER_PROGRESS_REQUEST}
+    | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, progress: UserProgress}
+    | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
     | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}

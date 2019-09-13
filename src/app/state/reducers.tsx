@@ -30,6 +30,7 @@ import {
     ResultsWrapper,
     UserAuthenticationSettingsDTO,
     UserGroupDTO,
+    UserProgress,
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
@@ -83,6 +84,18 @@ export const userSchoolLookup = (userSchoolLookup: UserSchoolLookupState = null,
             return {...action.schoolLookup};
         default:
             return userSchoolLookup;
+    }
+};
+
+export type UserProgressState = UserProgress | null;
+export const userProgress = (userProgress: UserProgressState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS:
+            return action.progress;
+        case ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE:
+            return null;
+        default:
+            return userProgress;
     }
 };
 
@@ -701,6 +714,7 @@ const appReducer = combineReducers({
     user,
     userAuthSettings,
     userPreferences,
+    userProgress,
     adminUserSearch,
     adminContentErrors,
     adminStats,
@@ -735,6 +749,7 @@ export type AppState = undefined | {
     user: UserState;
     userAuthSettings: UserAuthSettingsState;
     userPreferences: UserPreferencesState;
+    userProgress: UserProgressState;
     adminUserSearch: AdminUserSearchState;
     adminContentErrors: AdminContentErrorsState;
     adminStats: AdminStatsState;

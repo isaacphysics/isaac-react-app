@@ -85,8 +85,12 @@ export const api = {
         passwordResetById: (id: number) => {
             return endpoint.post(`/users/${id}/resetpassword`);
         },
+
         getUserIdSchoolLookup: (userIds: number[]): AxiosPromise<AppTypes.UserSchoolLookup> => {
             return endpoint.get(`/users/school_lookup?user_ids=${userIds.join(",")}`);
+        },
+        getProgress: (): AxiosPromise<ApiTypes.UserProgress> => {
+            return endpoint.get(`/users/current_user/progress`);
         }
     },
     authentication: {
@@ -165,7 +169,7 @@ export const api = {
             return endpoint.get(`/pages/questions/${id}`);
         },
         search: (query: QuestionSearchQuery): AxiosPromise<QuestionSearchResponse> => {
-            return endpoint.get("/pages/questions/", {
+            return endpoint.get(`/pages/questions/`, {
                 params: query,
             });
         },

@@ -20,7 +20,8 @@ import {
     ATTENDANCE,
     BoardOrder,
     LoggedInUser,
-    LoggedInValidationUser, QuestionSearchQuery,
+    LoggedInValidationUser,
+    QuestionSearchQuery,
     Toast,
     UserPreferencesDTO,
     ValidatedChoice,
@@ -208,6 +209,16 @@ export const updateCurrentUser = (
         }) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+    }
+};
+
+export const getProgress = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_PROGRESS_REQUEST});
+    try {
+        const response = await api.users.getProgress();
+        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, progress: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE});
     }
 };
 
@@ -694,7 +705,7 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
         dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results});
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Failed to get email template", e));
+        dispatch(showErrorToastIfNeeded("Failed to search for questions", e));
     }
 };
 
