@@ -12,19 +12,21 @@ interface ActiveModalProps {
     activeModal?: AppTypes.ActiveModal | null;
 }
 
-const ActiveModalComponent = ({activeModal}: ActiveModalProps) => (
-    <RS.Modal isOpen={!!activeModal} size={"lg"}>
+const ActiveModalComponent = ({activeModal}: ActiveModalProps) => {
+    const ModalBody = activeModal && activeModal.body;
+    return <RS.Modal isOpen={!!activeModal} size={"lg"}>
         {activeModal && <React.Fragment>
             <RS.ModalHeader
                 className="h-title pb-5 mb-4"
                 close={
-                    activeModal.closeAction ? <button className="close" onClick={activeModal.closeAction}>Close</button> : null
+                    activeModal.closeAction ?
+                        <button className="close" onClick={activeModal.closeAction}>Close</button> : null
                 }
             >
                 {activeModal.title}
             </RS.ModalHeader>
             <RS.ModalBody className="px-0 pb-2 mx-4">
-                {activeModal.body}
+                {typeof ModalBody === "function" ? <ModalBody /> : ModalBody}
             </RS.ModalBody>
             {activeModal.buttons &&
                 <RS.ModalFooter className="mb-4 mx-2 align-self-center">
@@ -33,6 +35,6 @@ const ActiveModalComponent = ({activeModal}: ActiveModalProps) => (
             }
         </React.Fragment>}
     </RS.Modal>
-);
+};
 
 export const ActiveModal = connect(stateToProps)(ActiveModalComponent);

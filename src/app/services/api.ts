@@ -1,11 +1,19 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
+import {EventBookingDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
-import {ActualBoardLimit, BoardOrder, LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
+import {
+    ActualBoardLimit,
+    AdditionalInformation,
+    ATTENDANCE,
+    BoardOrder,
+    LoggedInUser,
+    UserPreferencesDTO
+} from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {TypeFilter} from "../components/pages/Events";
-import {AdditionalInformation} from "../../IsaacAppTypes";
+import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -58,23 +66,26 @@ export const api = {
         getPreferences: (): AxiosPromise<AppTypes.UserPreferencesDTO> => {
             return endpoint.get(`/users/user_preferences`)
         },
-        passwordReset: (params: {email: string}): AxiosPromise => {
+        passwordReset: (params: {email: string}) => {
             return endpoint.post(`/users/resetpassword`, params);
         },
-        requestEmailVerification(params: {email: string}): AxiosPromise {
+        requestEmailVerification(params: {email: string}) {
             return endpoint.post(`/users/verifyemail`, params);
         },
-        verifyPasswordReset: (token: string | null): AxiosPromise => {
+        verifyPasswordReset: (token: string | null) => {
             return endpoint.get(`/users/resetpassword/${token}`)
         },
-        handlePasswordReset: (params: {token: string | null; password: string | null}): AxiosPromise => {
+        handlePasswordReset: (params: {token: string | null; password: string | null}) => {
             return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
         },
         updateCurrent: (registeredUser: LoggedInUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent});
         },
-        passwordResetById: (id: number): AxiosPromise => {
+        passwordResetById: (id: number) => {
             return endpoint.post(`/users/${id}/resetpassword`);
+        },
+        getUserIdSchoolLookup: (userIds: number[]): AxiosPromise<AppTypes.UserSchoolLookup> => {
+            return endpoint.get(`/users/school_lookup?user_ids=${userIds.join(",")}`);
         }
     },
     authentication: {
@@ -302,17 +313,46 @@ export const api = {
                 show_inactive_only: !active, show_booked_only: false, tags: null
             }});
             /* eslint-enable @typescript-eslint/camelcase */
+        },
+        getEventOverviews: (eventOverviewFilter: EventOverviewFilter): AxiosPromise<{results: AppTypes.EventOverview[]; totalResults: number}> => {
+            const params = {limit: -1, startIndex: 0};
+            if (eventOverviewFilter !== EventOverviewFilter["All events"]) {
+                Object.assign(params, {filter: eventOverviewFilter})
+            }
+            return endpoint.get('/events/overview', {params});
         }
     },
     eventBookings: {
-        requestBooking: (eventId: string, additionalInformation: AdditionalInformation) => {
+        bookMyselfOnEvent: (eventId: string, additionalInformation: AdditionalInformation) => {
             return endpoint.post(`/events/${eventId}/bookings`, additionalInformation);
         },
-        addToWaitingList: (eventId: string, additionalInformation: AdditionalInformation) => {
+        addMyselfToWaitingList: (eventId: string, additionalInformation: AdditionalInformation) => {
             return endpoint.post(`/events/${eventId}/waiting_list`, additionalInformation);
         },
-        cancelBooking: (eventId: string) => {
+        cancelMyBooking: (eventId: string) => {
             return endpoint.delete(`/events/${eventId}/bookings/cancel`);
+        },
+        getEventBookings: (eventId: string): AxiosPromise<EventBookingDTO[]> => {
+            return endpoint.get(`/events/${eventId}/bookings`);
+        },
+        bookUserOnEvent: (eventId: string, userId: number, additionalInformation: AdditionalInformation) => {
+            return endpoint.post(`/events/${eventId}/bookings/${userId}`, additionalInformation);
+        },
+        resendUserConfirmationEmail: (eventId: string, userId: number) => {
+            return endpoint.post(`/events/${eventId}/bookings/${userId}/resend_confirmation`);
+        },
+        promoteUserFromWaitingList: (eventId: string, userId: number) => {
+            return endpoint.post(`/events/${eventId}/bookings/${userId}/promote`, {eventId, userId});
+        },
+        cancelUserBooking: (eventId: string, userId: number) => {
+            return endpoint.delete(`/events/${eventId}/bookings/${userId}/cancel`);
+        },
+        deleteUserBooking: (eventId: string, userId: number) => {
+            return endpoint.delete(`/events/${eventId}/bookings/${userId}`);
+        },
+        recordEventAttendance: (eventId: string, userId: number, attendance: ATTENDANCE) => {
+            const attended = attendance === ATTENDANCE.ATTENDED;
+            return endpoint.post(`/events/${eventId}/bookings/${userId}/record_attendance?attended=${attended}`);
         }
     },
     logger: {

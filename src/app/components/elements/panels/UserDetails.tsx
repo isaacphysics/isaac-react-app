@@ -1,17 +1,17 @@
 import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row, default as RS} from "reactstrap";
-import {SubjectInterests, UserExamPreferences, ValidationUser} from "../../../IsaacAppTypes";
-import {EXAM_BOARD} from "../../services/constants";
+import {SubjectInterests, UserExamPreferences, ValidationUser} from "../../../../IsaacAppTypes";
+import {EXAM_BOARD} from "../../../services/constants";
 import React, {ChangeEvent} from "react";
 import {
     validateEmail,
     validateSubjectInterests,
     validateUserGender,
     validateUserSchool
-} from "../../services/validation";
-import {SchoolInput} from "./inputs/SchoolInput";
-import {DobInput} from "./inputs/DobInput";
-import {StudyingCsInput} from "./inputs/StudyingCsInput";
-import {GenderInput} from "./inputs/GenderInput";
+} from "../../../services/validation";
+import {SchoolInput} from "../inputs/SchoolInput";
+import {DobInput} from "../inputs/DobInput";
+import {StudyingCsInput} from "../inputs/StudyingCsInput";
+import {GenderInput} from "../inputs/GenderInput";
 
 interface UserDetailsProps {
     examPreferences: UserExamPreferences;

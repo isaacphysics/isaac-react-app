@@ -1,4 +1,4 @@
-import React, {ReactElement} from "react";
+import React from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {Accordion} from "../elements/Accordion";
 import {IsaacContent} from "./IsaacContent";

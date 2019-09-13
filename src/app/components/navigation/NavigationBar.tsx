@@ -13,7 +13,7 @@ import {
     NavbarToggler,
     UncontrolledDropdown
 } from "reactstrap";
-import {isAdmin, isStaff} from "../../services/user";
+import {isAdmin, isEventsManager, isStaff} from "../../services/user";
 import {loadMyAssignments} from "../../state/actions";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 
@@ -57,7 +57,7 @@ export const NavigationBar = () => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         About us
                     </DropdownToggle>
-                    <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/about" className="pl-4 py-3 p-md-3">
                             What we do
                         </DropdownItem>
@@ -75,7 +75,7 @@ export const NavigationBar = () => {
                             {assignmentCount > 0 && <span className="sr-only">Incomplete assignments</span>}
                         </p>
                     </DropdownToggle>
-                    <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/students" className="pl-4 py-3 p-md-3">
                             For students
                         </DropdownItem>
@@ -100,7 +100,7 @@ export const NavigationBar = () => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         <p className="m-0">For teachers</p>
                     </DropdownToggle>
-                    <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/teachers" className="pl-4 py-3 p-md-3">
                             For teachers
                         </DropdownItem>
@@ -120,7 +120,7 @@ export const NavigationBar = () => {
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                         Topics
                     </DropdownToggle>
-                    <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/topics" className="pl-4 py-3 p-md-3">
                             All topics
                         </DropdownItem>
@@ -140,7 +140,7 @@ export const NavigationBar = () => {
                             <span className="d-none d-md-inline d-lg-none">Support</span>
                         </span>
                     </DropdownToggle>
-                    <DropdownMenu className="p-3 pt-0 m-0 ml-lg-4" onClick={closeMenuIfMobile}>
+                    <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={closeMenuIfMobile}>
                         <DropdownItem tag={Link} to="/support/teacher" className="pl-4 py-3 p-md-3">
                             Teacher support
                         </DropdownItem>
@@ -158,12 +158,15 @@ export const NavigationBar = () => {
                         <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                             Admin
                         </DropdownToggle>
-                        <DropdownMenu className="p-0 pl-md-3 m-0" onClick={closeMenuIfMobile}>
+                        <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={closeMenuIfMobile}>
                             <DropdownItem tag={Link} to="/admin" className="pl-4 py-3 p-md-3">
                                 Admin tools
                             </DropdownItem>
                             {isAdmin(user) && <DropdownItem tag={Link} to="/admin/usermanager" className="pl-4 py-3 p-md-3">
                                 User manager
+                            </DropdownItem>}
+                            {isEventsManager(user) && <DropdownItem tag={Link} to="/admin/events" className="pl-4 py-3 p-md-3">
+                                Event admin
                             </DropdownItem>}
                             <DropdownItem tag={Link} to="/admin/stats" className="pl-4 py-3 p-md-3">
                                 Site statistics

@@ -42,6 +42,11 @@ export type Action =
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
 
+    | {type: ACTION_TYPE.USER_SCHOOL_LOOKUP_REQUEST}
+    | {type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_SUCCESS; schoolLookup: UserSchoolLookup}
+    | {type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_FAILURE}
+
+
     | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST}
     | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE}
@@ -211,21 +216,53 @@ export type Action =
     | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.EVENTS_CLEAR}
 
+    | {type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST}
+    | {type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS; eventOverviews: EventOverview[]}
+    | {type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.EVENT_REQUEST}
     | {type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS; augmentedEvent: AugmentedEvent}
     | {type: ACTION_TYPE.EVENT_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS; eventBookings: ApiTypes.EventBookingDTO[]}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.EVENT_BOOKING_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.EVENT_WAITING_LIST_REQUEST}
-    | {type: ACTION_TYPE.EVENT_WAITING_LIST_RESPONSE_SUCCESS}
-    | {type: ACTION_TYPE.EVENT_WAITING_LIST_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.EVENT_BOOKING_USER_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.EVENT_CANCELLATION_REQUEST}
-    | {type: ACTION_TYPE.EVENT_CANCELLATION_RESPONSE_SUCCESS}
-    | {type: ACTION_TYPE.EVENT_CANCELLATION_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_RESEND_EMAIL_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_RESEND_EMAIL_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_RESEND_EMAIL_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_CANCELLATION_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_CANCELLATION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_CANCELLATION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_DELETION_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_DELETION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_DELETION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_REQUEST}
+    | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
@@ -415,6 +452,21 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     field?: "physics" | "maths";
 }
 
+export interface EventOverview {
+    id?: string;
+    title?: string;
+    subtitle?: string;
+    date?: Date;
+    bookingDeadline?: Date;
+    eventStatus?: ApiTypes.EventStatus;
+    location?: ApiTypes.Location;
+    numberOfConfirmedBookings: number;
+    numberOfWaitingListBookings: number;
+    numberAttended: number;
+    numberAbsent: number;
+    numberOfPlaces: number;
+}
+
 export interface AdditionalInformation {
     jobTitle?: string;
     yearGroup?: string;
@@ -422,6 +474,8 @@ export interface AdditionalInformation {
     accessibilityRequirements?: string;
     emergencyName?: string;
     emergencyNumber?: string;
+    authorisation?: string;
+    authorisationOther?: string;
 }
 
 export interface ZxcvbnResult {
@@ -434,4 +488,10 @@ export interface ZxcvbnResult {
     password: string;
     score: number;
     sequence: any;
+}
+
+export interface UserSchoolLookup {[userId: number]: School}
+
+export enum ATTENDANCE {
+    ABSENT, ATTENDED
 }
