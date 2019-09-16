@@ -4,7 +4,7 @@ import * as RS from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {getAdminSiteStats, getEmailTemplate, sendAdminEmail, sendAdminEmailWithIds} from "../../state/actions";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {EmailUserRoles} from "../../../IsaacApiTypes";
+import {EmailUserRoles} from "../../../IsaacAppTypes";
 import {UserRole} from "../../services/constants";
 import classnames from "classnames";
 import {debounce} from 'lodash';

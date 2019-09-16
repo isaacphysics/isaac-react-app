@@ -2,9 +2,8 @@ import axios, {AxiosPromise} from "axios";
 import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
-import {ActualBoardLimit, BoardOrder, LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
+import {ActualBoardLimit, BoardOrder, EmailUserRoles, LoggedInUser, UserPreferencesDTO} from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
-import {EmailUserRoles} from "../../IsaacApiTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,

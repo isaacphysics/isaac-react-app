@@ -412,3 +412,13 @@ export interface ZxcvbnResult {
     score: number;
     sequence: any;
 }
+
+export interface EmailUserRoles {
+    ADMIN: boolean;
+    EVENT_MANAGER: boolean;
+    CONTENT_EDITOR: boolean;
+    TEACHER: boolean;
+    TESTER: boolean;
+    STAFF: boolean;
+    STUDENT: boolean;
+}
