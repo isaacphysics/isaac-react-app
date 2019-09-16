@@ -21,6 +21,10 @@
         background-color: lightgrey;
       }
 
+      &.selected {
+        background-color: lightyellow;
+      }
+
       td {
         .custom-control-label {
           &:before, &:after {

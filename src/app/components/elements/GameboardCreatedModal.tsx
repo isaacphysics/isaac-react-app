@@ -13,7 +13,8 @@ export const GameboardCreatedModal = () => {
 
     return <div>
         <RS.Row className="mb-3">
-            <RS.Label className="mx-3">
+            <RS.Label className="mx-3"
+                      htmlFor={gameboardIdSelector ? "gameboard-created" : "gameboard-not-successfully-created"}>
                 {gameboardIdSelector ? "Your gameboard has been created. You can now set it as an assignment, create another board or view all of your boards." :
                 "Your gameboard was not successfully created."}
             </RS.Label>

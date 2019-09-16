@@ -10,6 +10,8 @@ import {ValueType} from "react-select/src/types";
 import {convertTagsToSelectionOptions, sortQuestions} from "../../services/gameboardBuilder";
 import {allCategoryTags, allTagIds, getSubcategoryTags, getTopicTags} from "../../services/tags";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
+import {EXAM_BOARD, examBoardTagMap, tagExamboardMap} from "../../services/constants";
+import classnames from "classnames";
 
 interface QuestionSearchModalProps {
     originalSelectedQuestions: Map<string, ContentSummaryDTO>;
@@ -37,8 +39,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const searchDebounce = useCallback(
         debounce((searchString: string, subject: string[], field: string[], topic: string[], levels: string[], examboard: string[], fasttrack: boolean, startIndex: number) =>
             dispatch(searchQuestions({
-                searchString: [searchString, ...([subject, field, topic, levels].map((tags) => tags.join(" ")))].filter((query) => query != "").join(" "),
-                tags: examboard.join(","),
+                searchString: [searchString, ...([subject, field, topic, levels, examboard].map((tags) => tags.join(" ")))].filter((query) => query != "").join(" "),
+                tags: "",
                 fasttrack,
                 startIndex,
                 limit: 50})),
@@ -71,7 +73,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     return <div>
         <div className="row">
             <div className="text-wrap col-lg-6 mt-2">
-                <RS.Label>Subject</RS.Label>
+                <RS.Label htmlFor="subject">Subject</RS.Label>
                 <Select
                     isMulti
                     options={convertTagsToSelectionOptions(allCategoryTags)}
@@ -82,7 +84,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 />
             </div>
             <div className="text-wrap col-lg-6 my-2">
-                <RS.Label>Field</RS.Label>
+                <RS.Label htmlFor="field">Field</RS.Label>
                 <Select
                     isMulti
                     options={convertTagsToSelectionOptions(getSubcategoryTags(allTagIds))}
@@ -95,7 +97,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         </div>
         <div className="row">
             <div className="text-wrap col-lg-6 mt-2">
-                <RS.Label>Topic</RS.Label>
+                <RS.Label htmlFor="topic">Topic</RS.Label>
                 <Select
                     isMulti
                     options={convertTagsToSelectionOptions(getTopicTags(allTagIds))}
@@ -106,11 +108,12 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 />
             </div>
             <div className="text-wrap col-lg-6 my-2">
-                <RS.Label>Exam board</RS.Label>
+                <RS.Label htmlFor="exam-board">Exam board</RS.Label>
                 <Select
                     isMulti
-                    options={[{ value: 'examboard_aqa', label: 'AQA' },
-                        { value: 'examboard_ocr', label: 'OCR' }]}
+                    options={Object.keys(EXAM_BOARD).map((name) => {
+                        return {value: examBoardTagMap[name], label: name};
+                    })}
                     name="colors"
                     className="basic-multi-select"
                     classNamePrefix="select"
@@ -120,7 +123,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         </div>
         <div className="row">
             <div className="text-wrap col-lg-6 mt-2">
-                <RS.Label>Title</RS.Label>
+                <RS.Label htmlFor="title">Title</RS.Label>
                 <RS.Input
                     type="text"
                     placeholder="Year 12 Geology"
@@ -130,7 +133,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 />
             </div>
             <div className="text-wrap col-lg-6 my-2">
-                <RS.Label>Level</RS.Label>
+                <RS.Label htmlFor="level">Level</RS.Label>
                 <Select
                     isMulti
                     options={[
@@ -144,7 +147,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
             </div>
         </div>
         <RS.Row className={"mt-4"}>
-            <RS.Input type="button" value="Update questions"
+            <RS.Input type="button" value="Add questions"
                       className={"btn btn-block btn-secondary border-0"}
                       onClick={() => {
                           setOriginalSelectedQuestions(selectedQuestions);
@@ -172,7 +175,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         return (searchLevels.length == 0 || (question.level && searchLevels.includes(question.level.toString()))) &&
                             (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0))
                     })).map((question) =>
-                        question.id && <tr key={question.id}>
+                        question.id && <tr key={question.id}
+                                           className={classnames({selected: selectedQuestions.has(question.id)})}>
                             <td>
                                 <RS.CustomInput
                                     type="checkbox"
@@ -205,7 +209,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                                 {question.level}
                             </td>
                             <td >
-                                Not yet implemented
+                                {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagExamboardMap[tag]).join(", ")}
                             </td>
                         </tr>
                     )

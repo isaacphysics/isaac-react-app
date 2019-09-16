@@ -1,5 +1,6 @@
 import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {invert} from "lodash";
 
 export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
 
@@ -345,6 +346,8 @@ export const examBoardTagMap: {[examBoard: string]: string} = {
     [EXAM_BOARD.AQA]: "examboard_aqa",
     [EXAM_BOARD.OCR]: "examboard_ocr",
 };
+
+export const tagExamboardMap: {[tag: string]: string} = invert(examBoardTagMap);
 
 export enum TAG_ID {
     // Categories

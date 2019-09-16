@@ -12,6 +12,7 @@ import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful
 import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
+import {examBoardTagMap, tagExamboardMap} from "../../services/constants";
 
 export const GameboardBuilder = () => {
     const dispatch = useDispatch();
@@ -45,7 +46,7 @@ export const GameboardBuilder = () => {
             <RS.CardBody>
                 <RS.Row>
                     <RS.Col>
-                        <RS.Label>Gameboard name:</RS.Label>
+                        <RS.Label htmlFor="gameboard-name">Gameboard name:</RS.Label>
                         <RS.Input
                             type="text"
                             placeholder="Year 12 Geology"
@@ -55,35 +56,27 @@ export const GameboardBuilder = () => {
                         />
                     </RS.Col>
                 </RS.Row>
-                {isStaff(user) && <div>
-                    <RS.Row className={"mt-2"}>
-                        <RS.Col>
-                            <RS.Label>Tag as</RS.Label>
-                        </RS.Col>
-                        <RS.Col>
-                            <RS.Label>Gameboard URL (must be unique and not contain spaces)</RS.Label>
-                        </RS.Col>
-                    </RS.Row>
-                    <RS.Row>
-                        <RS.Col>
-                            <RS.Input type="select" defaultValue={gameboardTag}
-                                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                          setGameboardTag(e.target.value);
-                                      }}>
-                                <option value="null">None</option>
-                                <option value="CREATED_BY_ISAAC">Created by Isaac</option>
-                            </RS.Input>
-                        </RS.Col>
-                        <RS.Col>
-                            <RS.Input
-                                type="text"
-                                placeholder="Optional"
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    setGameboardURL(e.target.value);
-                                }}
-                            />
-                        </RS.Col>
-                    </RS.Row>
+                {isStaff(user) && <div className="d-flex flex-wrap">
+                    <div className="flex-fill mt-2 mr-md-2">
+                        <RS.Label htmlFor="tag-as">Tag as</RS.Label>
+                        <RS.Input type="select" defaultValue={gameboardTag}
+                                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                      setGameboardTag(e.target.value);
+                                  }}>
+                            <option value="null">None</option>
+                            <option value="CREATED_BY_ISAAC">Created by Isaac</option>
+                        </RS.Input>
+                    </div>
+                    <div className="flex-fill mt-2">
+                        <RS.Label htmlFor="gameboard-url">Gameboard URL (must be unique and not contain spaces)</RS.Label>
+                        <RS.Input
+                            type="text"
+                            placeholder="Optional"
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                setGameboardURL(e.target.value);
+                            }}
+                        />
+                    </div>
                 </div>}
                 <RS.Input id="gameboard-save-button" type="button" value="Save gameboard"
                           className={"btn btn-block btn-secondary border-0 mt-4 " + classnames({disabled: !canSubmit()})}
@@ -150,7 +143,7 @@ export const GameboardBuilder = () => {
                                                 return question && question.id && <Draggable key={question.id} draggableId={question.id} index={index}>
                                                     {(provided) => (
                                                     <tr key={question.id} ref={provided.innerRef}
-                                                        className={classnames({disabled: index >= 10})}
+                                                        className={classnames({disabled: index >= 10, selected: true})}
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}>
                                                         <td>
@@ -180,7 +173,7 @@ export const GameboardBuilder = () => {
                                                             {question.level}
                                                         </td>
                                                         <td>
-                                                            Not yet implemented
+                                                            {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagExamboardMap[tag]).join(", ")}
                                                         </td>
                                                     </tr>)}
                                                 </Draggable>
