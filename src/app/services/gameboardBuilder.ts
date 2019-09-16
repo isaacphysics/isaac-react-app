@@ -1,9 +1,9 @@
 import {SortOrder} from "./constants";
-import {GameboardItem} from "../../IsaacApiTypes";
 import {orderBy} from "lodash";
 import {Tag} from "./tags";
+import {ContentSummaryDTO} from "../../IsaacApiTypes";
 
-export const sortQuestions = (sortState: { [s: string]: string }) => (questions: GameboardItem[]) => {
+export const sortQuestions = (sortState: { [s: string]: string }) => (questions: ContentSummaryDTO[]) => {
     if (sortState["title"]) {
         const sortedQuestions = questions.sort((a, b) => bookSort(a.title || "", b.title || ""));
         return sortState["title"] == SortOrder.ASC ? sortedQuestions : sortedQuestions.reverse();

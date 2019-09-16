@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {EventBookingDTO, GameboardDTO, QuestionSearchResponse} from "../../IsaacApiTypes";
+import {EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
@@ -10,6 +10,7 @@ import {
     BoardOrder,
     LoggedInUser,
     QuestionSearchQuery,
+    QuestionSearchResponse,
     UserPreferencesDTO
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
@@ -89,7 +90,7 @@ export const api = {
         getUserIdSchoolLookup: (userIds: number[]): AxiosPromise<AppTypes.UserSchoolLookup> => {
             return endpoint.get(`/users/school_lookup?user_ids=${userIds.join(",")}`);
         },
-        getProgress: (): AxiosPromise<ApiTypes.UserProgress> => {
+        getProgress: (): AxiosPromise<AppTypes.UserProgress> => {
             return endpoint.get(`/users/current_user/progress`);
         }
     },

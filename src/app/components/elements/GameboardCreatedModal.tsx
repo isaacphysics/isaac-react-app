@@ -1,15 +1,15 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {GameboardDTO} from "../../../IsaacApiTypes";
 import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
 import classnames from "classnames";
 import {closeActiveModal} from "../../state/actions";
+import {resourceFound} from "../../services/validation";
 
 export const GameboardCreatedModal = () => {
     const dispatch = useDispatch();
-    const gameboardIdSelector = useSelector((state: AppState) => state && state.currentGameboard && (state.currentGameboard as GameboardDTO).id);
+    const gameboardIdSelector = useSelector((state: AppState) => state && resourceFound(state.currentGameboard) && state.currentGameboard.id);
 
     return <div>
         <RS.Row className="mb-3">

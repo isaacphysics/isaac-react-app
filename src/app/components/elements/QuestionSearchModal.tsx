@@ -5,15 +5,15 @@ import {SortableTableHeader} from "./SortableTableHeader";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {debounce} from "lodash";
-import {GameboardItem} from "../../../IsaacApiTypes";
 import Select from "react-select";
 import {ValueType} from "react-select/src/types";
 import {convertTagsToSelectionOptions, sortQuestions} from "../../services/gameboardBuilder";
 import {allCategoryTags, allTagIds, getSubcategoryTags, getTopicTags} from "../../services/tags";
+import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 
 interface QuestionSearchModalProps {
-    originalSelectedQuestions: Map<string, GameboardItem>;
-    setOriginalSelectedQuestions: (m: Map<string, GameboardItem>) => void;
+    originalSelectedQuestions: Map<string, ContentSummaryDTO>;
+    setOriginalSelectedQuestions: (m: Map<string, ContentSummaryDTO>) => void;
     originalQuestionOrder: string[];
     setOriginalQuestionOrder: (a: string[]) => void;
 }

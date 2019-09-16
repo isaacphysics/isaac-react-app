@@ -386,10 +386,9 @@ export interface GameboardItem {
     id?: string;
     title?: string;
     description?: string;
-    url?: string;
+    uri?: string;
     tags?: string[];
     level?: number;
-    type?: string;
     questionPartsCorrect?: number;
     questionPartsIncorrect?: number;
     questionPartsNotAttempted?: number;
@@ -461,54 +460,6 @@ export interface Address {
     country?: string;
 }
 
-export interface EmailUserRoles {
-    ADMIN: boolean;
-    EVENT_MANAGER: boolean;
-    CONTENT_EDITOR: boolean;
-    TEACHER: boolean;
-    TESTER: boolean;
-    STAFF: boolean;
-    STUDENT: boolean;
-}
-
-export interface QuestionSearchResponse {
-    results: GameboardItem[]
-}
-
-export interface StreakRecord {
-    currentStreak?: number;
-    largestStreak?: number;
-    currentActivity?: number;
-}
-
-export interface AchievementsRecord {
-    TEACHER_ASSIGNMENTS_SET?: number;
-    TEACHER_CPD_EVENTS_ATTENDED?: number;
-    TEACHER_GROUPS_CREATED?: number;
-    TEACHER_BOOK_PAGES_SET?: number;
-    TEACHER_GAMEBOARDS_CREATED?: number;
-}
-
-export interface UserSnapshot {
-    streakRecord?: StreakRecord;
-    achievementsRecord?: AchievementsRecord;
-}
-
-export interface UserProgress {
-    attemptsByLevel?: LevelAttempts<number>;
-    correctByLevel?: LevelAttempts<number>;
-    totalQuestionsAttempted?: number;
-    totalQuestionsCorrect?: number;
-    totalQuestionPartsCorrect: number;
-    totalQuestionPartsAttempted?: number;
-    attemptsByType?: { [type: string]: number };
-    correctByType?: { [type: string]: number };
-    attemptsByTag?: { [tag: string]: number };
-    correctByTag: { [tag: string]: number };
-    userSnapshot?: UserSnapshot;
-    userDetails?: UserSummaryDTO;
-}
-
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
 
 export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY";
@@ -530,7 +481,3 @@ export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN"
 export type GameboardItemState = "PERFECT" | "PASSED" | "IN_PROGRESS" | "NOT_ATTEMPTED" | "FAILED";
 
 export type QuestionPartState = "CORRECT" | "INCORRECT" | "NOT_ATTEMPTED";
-
-export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
-
-export type LevelAttempts<T> = { [level in Levels]?: T; }

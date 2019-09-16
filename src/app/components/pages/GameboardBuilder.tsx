@@ -1,16 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
+import {Tooltip} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardItem} from "../../../IsaacApiTypes";
 import {closeActiveModal, createGameboard, openActiveModal} from "../../state/actions";
 import {store} from "../../state/store";
 import {QuestionSearchModal} from "../elements/QuestionSearchModal";
 import classnames from "classnames";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
-import {Tooltip} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/GameboardCreatedModal";
+import {isStaff} from "../../services/user";
 
 export const GameboardBuilder = () => {
     const dispatch = useDispatch();
@@ -18,8 +19,10 @@ export const GameboardBuilder = () => {
     const [gameboardTag, setGameboardTag] = useState("null");
     const [gameboardURL, setGameboardURL] = useState("");
     const [questionOrder, setQuestionOrder] = useState([] as string[]);
-    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, GameboardItem>());
+    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
     const [tooltipShow, setTooltipShow] = useState(false);
+
+    const user = useSelector((state: AppState) => state && state.user);
 
     const canSubmit = () => (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardName != "";
 
@@ -52,34 +55,36 @@ export const GameboardBuilder = () => {
                         />
                     </RS.Col>
                 </RS.Row>
-                <RS.Row className={"mt-2"}>
-                    <RS.Col>
-                        <RS.Label>Tag as</RS.Label>
-                    </RS.Col>
-                    <RS.Col>
-                        <RS.Label>Gameboard URL (must be unique and not contain spaces)</RS.Label>
-                    </RS.Col>
-                </RS.Row>
-                <RS.Row>
-                    <RS.Col>
-                        <RS.Input type="select" defaultValue={gameboardTag}
-                                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                      setGameboardTag(e.target.value);
-                                  }}>
-                            <option value="null">None</option>
-                            <option value="CREATED_BY_ISAAC">Created by Isaac</option>
-                        </RS.Input>
-                    </RS.Col>
-                    <RS.Col>
-                        <RS.Input
-                            type="text"
-                            placeholder="Optional"
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setGameboardURL(e.target.value);
-                            }}
-                        />
-                    </RS.Col>
-                </RS.Row>
+                {isStaff(user) && <div>
+                    <RS.Row className={"mt-2"}>
+                        <RS.Col>
+                            <RS.Label>Tag as</RS.Label>
+                        </RS.Col>
+                        <RS.Col>
+                            <RS.Label>Gameboard URL (must be unique and not contain spaces)</RS.Label>
+                        </RS.Col>
+                    </RS.Row>
+                    <RS.Row>
+                        <RS.Col>
+                            <RS.Input type="select" defaultValue={gameboardTag}
+                                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                          setGameboardTag(e.target.value);
+                                      }}>
+                                <option value="null">None</option>
+                                <option value="CREATED_BY_ISAAC">Created by Isaac</option>
+                            </RS.Input>
+                        </RS.Col>
+                        <RS.Col>
+                            <RS.Input
+                                type="text"
+                                placeholder="Optional"
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setGameboardURL(e.target.value);
+                                }}
+                            />
+                        </RS.Col>
+                    </RS.Row>
+                </div>}
                 <RS.Input id="gameboard-save-button" type="button" value="Save gameboard"
                           className={"btn btn-block btn-secondary border-0 mt-4 " + classnames({disabled: !canSubmit()})}
                           disabled={!canSubmit()}
@@ -88,9 +93,13 @@ export const GameboardBuilder = () => {
                                   id: gameboardURL == "" ? undefined : gameboardURL,
                                   title: gameboardName,
                                   questions: Array.from(selectedQuestions.values()).map((question) => {
-                                      delete question.type;
-                                      delete question.url;
-                                      return question;
+                                      const newQuestion = {...question};
+                                      delete newQuestion.type;
+                                      delete newQuestion.url;
+
+                                      const gameboardItem = newQuestion as GameboardItem;
+                                      gameboardItem.level = newQuestion.level ? parseInt(newQuestion.level) : 0;
+                                      return gameboardItem;
                                   }),
                                   // TODO THIS NEEDS TO BE FILLED OUT
                                   wildCard: {
@@ -132,14 +141,14 @@ export const GameboardBuilder = () => {
                                 </tr>
                             </thead>
                             <Droppable droppableId="droppable">
-                                {(provided, droppableSnapshot) => {
+                                {(provided) => {
                                     return (
                                         <tbody ref={provided.innerRef}>
                                         {
                                             questionOrder.map((question_id, index: number) => {
                                                 const question = selectedQuestions.get(question_id);
                                                 return question && question.id && <Draggable key={question.id} draggableId={question.id} index={index}>
-                                                    {(provided, snapshot) => (
+                                                    {(provided) => (
                                                     <tr key={question.id} ref={provided.innerRef}
                                                         className={classnames({disabled: index >= 10})}
                                                         {...provided.draggableProps}

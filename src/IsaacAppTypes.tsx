@@ -1,6 +1,6 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
-import {UserProgress} from "./IsaacApiTypes";
+import {ContentSummaryDTO, UserSummaryDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 
 export type Action =
@@ -136,7 +136,7 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>}
 
     | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: ApiTypes.GameboardItem[]}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: ContentSummaryDTO[]}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
@@ -517,3 +517,45 @@ export interface QuestionSearchQuery {
     startIndex: number;
     limit: number;
 }
+
+export interface QuestionSearchResponse {
+    results: ContentSummaryDTO[]
+}
+
+export interface StreakRecord {
+    currentStreak?: number;
+    largestStreak?: number;
+    currentActivity?: number;
+}
+
+export interface AchievementsRecord {
+    TEACHER_ASSIGNMENTS_SET?: number;
+    TEACHER_CPD_EVENTS_ATTENDED?: number;
+    TEACHER_GROUPS_CREATED?: number;
+    TEACHER_BOOK_PAGES_SET?: number;
+    TEACHER_GAMEBOARDS_CREATED?: number;
+}
+
+export interface UserSnapshot {
+    streakRecord?: StreakRecord;
+    achievementsRecord?: AchievementsRecord;
+}
+
+export interface UserProgress {
+    attemptsByLevel?: LevelAttempts<number>;
+    correctByLevel?: LevelAttempts<number>;
+    totalQuestionsAttempted?: number;
+    totalQuestionsCorrect?: number;
+    totalQuestionPartsCorrect: number;
+    totalQuestionPartsAttempted?: number;
+    attemptsByType?: { [type: string]: number };
+    correctByType?: { [type: string]: number };
+    attemptsByTag?: { [tag: string]: number };
+    correctByTag: { [tag: string]: number };
+    userSnapshot?: UserSnapshot;
+    userDetails?: UserSummaryDTO;
+}
+
+export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
+
+export type LevelAttempts<T> = { [level in Levels]?: T; }

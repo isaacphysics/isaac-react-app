@@ -15,21 +15,19 @@
 }
 
 .responsive {
-  overflow-x: auto;
-
   .table.table-bordered {
     tr {
       &.disabled {
         background-color: lightgrey;
       }
-    }
 
-    td {
-      .custom-control-label {
-        &:before, &:after {
-          width: 1.5rem;
-          height: 1.5rem;
-          margin-top: -0.25rem;
+      td {
+        .custom-control-label {
+          &:before, &:after {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-top: -0.25rem;
+          }
         }
       }
     }

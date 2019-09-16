@@ -16,6 +16,7 @@ import {
     NOT_FOUND_TYPE,
     Toast,
     UserPreferencesDTO,
+    UserProgress,
     UserSchoolLookup
 } from "../../IsaacAppTypes";
 import {
@@ -30,7 +31,6 @@ import {
     ResultsWrapper,
     UserAuthenticationSettingsDTO,
     UserGroupDTO,
-    UserProgress,
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
@@ -273,7 +273,7 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
     }
 };
 
-type GameboardEditorQuestionsState = GameboardItem[] | null;
+type GameboardEditorQuestionsState = ContentSummaryDTO[] | null;
 export const gameboardEditorQuestions = (gameboardEditorQuestions: GameboardEditorQuestionsState = null, action: Action) => {
     switch(action.type) {
         case ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS: {
