@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {Tooltip} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ContentSummaryDTO, GameboardItem} from "../../../IsaacApiTypes";
-import {closeActiveModal, createGameboard, openActiveModal} from "../../state/actions";
+import {ContentSummaryDTO, IsaacWildcard} from "../../../IsaacApiTypes";
+import {closeActiveModal, createGameboard, getWildcards, openActiveModal} from "../../state/actions";
 import {store} from "../../state/store";
 import {QuestionSearchModal} from "../elements/QuestionSearchModal";
 import classnames from "classnames";
@@ -13,6 +13,9 @@ import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
 import {examBoardTagMap, tagExamboardMap} from "../../services/constants";
+import {resourceFound} from "../../services/validation";
+import {sample} from 'lodash';
+import {convertContentSummaryToGameboardItem} from "../../services/gameboardBuilder";
 
 export const GameboardBuilder = () => {
     const dispatch = useDispatch();
@@ -22,8 +25,10 @@ export const GameboardBuilder = () => {
     const [questionOrder, setQuestionOrder] = useState([] as string[]);
     const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
     const [tooltipShow, setTooltipShow] = useState(false);
+    const [wildcardId, setWildcardId] = useState("random");
 
     const user = useSelector((state: AppState) => state && state.user);
+    const wildcards = useSelector((state: AppState) => state && state.wildcards);
 
     const canSubmit = () => (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardName != "";
 
@@ -35,8 +40,14 @@ export const GameboardBuilder = () => {
     };
 
     const tagIcons = (tag: string) => {
-        return <span key={tag} className="badge badge-pill badge-warning mx-1">{tag.replace(/[\s,_]+/, " ")}</span>
+        return <span key={tag} className="badge badge-pill badge-warning mx-1">{tag}</span>
     };
+
+    useEffect(() => {
+       if (!wildcards) {
+           dispatch(getWildcards());
+       }
+    }, [user]);
 
     return <RS.Container id="gameboard-builder">
         <TitleAndBreadcrumb currentPageTitle="Gameboard builder"/>
@@ -57,7 +68,7 @@ export const GameboardBuilder = () => {
                     </RS.Col>
                 </RS.Row>
                 {isStaff(user) && <div className="d-flex flex-wrap">
-                    <div className="flex-fill mt-2 mr-md-2">
+                    <div className="flex-fill mt-2 col-lg-4">
                         <RS.Label htmlFor="tag-as">Tag as</RS.Label>
                         <RS.Input type="select" defaultValue={gameboardTag}
                                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,8 +78,8 @@ export const GameboardBuilder = () => {
                             <option value="CREATED_BY_ISAAC">Created by Isaac</option>
                         </RS.Input>
                     </div>
-                    <div className="flex-fill mt-2">
-                        <RS.Label htmlFor="gameboard-url">Gameboard URL (must be unique and not contain spaces)</RS.Label>
+                    <div className="flex-fill mt-2 col-lg-4">
+                        <RS.Label htmlFor="gameboard-url">Gameboard URL</RS.Label>
                         <RS.Input
                             type="text"
                             placeholder="Optional"
@@ -77,34 +88,48 @@ export const GameboardBuilder = () => {
                             }}
                         />
                     </div>
+                    <div className="flex-fill mt-2 col-lg-4">
+                        <RS.Label htmlFor="wildcard">Wildcard</RS.Label>
+                        <RS.Input type="select" defaultValue="random"
+                                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                      setWildcardId(e.target.value);
+                                  }}>
+                            <option value="random">Random wildcard</option>
+                            {resourceFound(wildcards) && wildcards.map((wildcard) => {
+                                return <option value={wildcard.id}>{wildcard.title}</option>
+                            })}
+                        </RS.Input>
+                    </div>
                 </div>}
                 <RS.Input id="gameboard-save-button" type="button" value="Save gameboard"
                           className={"btn btn-block btn-secondary border-0 mt-4 " + classnames({disabled: !canSubmit()})}
                           disabled={!canSubmit()}
                           onClick={() => {
+                              let wildcard = {
+                                  description: "",
+                                  url: ""
+                              } as IsaacWildcard;
+
+                              if (resourceFound(wildcards) && wildcards.length > 0) {
+                                  if (wildcardId == "random") {
+                                      wildcard = sample(wildcards) || wildcard;
+                                  } else {
+                                      wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
+                                  }
+                              }
+
                               dispatch(createGameboard({
                                   id: gameboardURL == "" ? undefined : gameboardURL,
                                   title: gameboardName,
-                                  questions: Array.from(selectedQuestions.values()).map((question) => {
-                                      const newQuestion = {...question};
-                                      delete newQuestion.type;
-                                      delete newQuestion.url;
-
-                                      const gameboardItem = newQuestion as GameboardItem;
-                                      gameboardItem.level = newQuestion.level ? parseInt(newQuestion.level) : 0;
-                                      return gameboardItem;
-                                  }),
-                                  // TODO THIS NEEDS TO BE FILLED OUT
-                                  wildCard: {
-                                      description: "",
-                                      url: "",
-                                  },
+                                  questions: Array.from(selectedQuestions.values()).map(convertContentSummaryToGameboardItem),
+                                  wildCard: wildcard,
                                   wildCardPosition: 0,
                                   gameFilter: {
                                       subjects: ["computer_science"],
                                   },
                                   tags: gameboardTag == "CREATED_BY_ISAAC" ? ["ISAAC_BOARD"] : []
                               }));
+
                               dispatch(openActiveModal({
                                   closeAction: () => {store.dispatch(closeActiveModal())},
                                   title: "Gameboard submitted",

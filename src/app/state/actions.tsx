@@ -57,7 +57,6 @@ import {StatusFilter, TypeFilter} from "../components/pages/Events";
 import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {atLeastOne} from "../services/validation";
-import {SUCCESS_TOAST} from "../components/navigation/Toasts";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -752,6 +751,17 @@ export const createGameboard = (gameboard: GameboardDTO) => async (dispatch: Dis
         dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Error creating gameboard", e));
     }
+};
+
+export const getWildcards = () => async (dispatch: Dispatch<Action>) => {
+  dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST});
+  try {
+      const response = await api.gameboards.getWildcards();
+      dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS, wildcards: response.data});
+  } catch (e) {
+      dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE});
+      dispatch(showErrorToastIfNeeded("Error loading wildcards", e));
+  }
 };
 
 // Assignments

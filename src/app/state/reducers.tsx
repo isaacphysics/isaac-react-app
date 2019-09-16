@@ -25,9 +25,9 @@ import {
     ContentSummaryDTO,
     EventBookingDTO,
     GameboardDTO,
-    GameboardItem,
     GameboardListDTO,
     IsaacTopicSummaryPageDTO,
+    IsaacWildcard,
     ResultsWrapper,
     UserAuthenticationSettingsDTO,
     UserGroupDTO,
@@ -338,6 +338,20 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
             return null;
         default:
             return currentGameboard;
+    }
+};
+
+export type WildcardsState = IsaacWildcard[] | NOT_FOUND_TYPE | null;
+export const wildcards = (wildcards: WildcardsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST:
+            return null;
+        case ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS:
+            return action.wildcards;
+        case ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE:
+            return NOT_FOUND;
+        default:
+            return wildcards;
     }
 };
 
@@ -727,6 +741,7 @@ const appReducer = combineReducers({
     questions,
     currentTopic,
     currentGameboard,
+    wildcards,
     gameboardEditorQuestions,
     assignments,
     contentVersion,
@@ -761,6 +776,7 @@ export type AppState = undefined | {
     questions: QuestionsState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
+    wildcards: WildcardsState;
     gameboardEditorQuestions: GameboardEditorQuestionsState,
     assignments: AssignmentsState;
     contentVersion: ContentVersionState;

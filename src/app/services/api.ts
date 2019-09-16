@@ -207,6 +207,9 @@ export const api = {
         },
         create: (gameboard: GameboardDTO) => {
             return endpoint.post(`gameboards`, gameboard);
+        },
+        getWildcards: (): AxiosPromise<ApiTypes.IsaacWildcard[]> => {
+            return endpoint.get(`gameboards/wildcards`);
         }
     },
     assignments: {

@@ -63,7 +63,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     };
 
     const tagIcons = (tag: string) => {
-        return <span key={tag} className="badge badge-pill badge-warning mx-1">{tag.replace(/[\s,_]+/, " ")}</span>
+        return <span key={tag} className="badge badge-pill badge-warning mx-1">{tag}</span>
     };
 
     useEffect(() => {
@@ -182,6 +182,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                                     type="checkbox"
                                     id={`question-search-modal-include-${question.id}`}
                                     color="secondary"
+                                    checked={selectedQuestions.has(question.id)}
                                     onClick={() => {
                                         if (question.id) {
                                             const newSelectedQuestions = new Map(selectedQuestions);

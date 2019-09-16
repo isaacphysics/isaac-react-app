@@ -1,7 +1,7 @@
 import {SortOrder} from "./constants";
 import {orderBy} from "lodash";
 import {Tag} from "./tags";
-import {ContentSummaryDTO} from "../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardItem} from "../../IsaacApiTypes";
 
 export const sortQuestions = (sortState: { [s: string]: string }) => (questions: ContentSummaryDTO[]) => {
     if (sortState["title"]) {
@@ -52,6 +52,16 @@ export const bookSort = (a: string, b: string) => {
         }
     }
     return sectionsB.length - sectionsA.length;
+};
+
+export const convertContentSummaryToGameboardItem = (question: ContentSummaryDTO) => {
+    const newQuestion = {...question};
+    delete newQuestion.type;
+    delete newQuestion.url;
+
+    const gameboardItem = newQuestion as GameboardItem;
+    gameboardItem.level = newQuestion.level ? parseInt(newQuestion.level) : 0;
+    return gameboardItem;
 };
 
 export const convertTagsToSelectionOptions = (tags: Tag[]) => {
