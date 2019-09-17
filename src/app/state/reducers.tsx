@@ -493,15 +493,16 @@ export const toasts = (toasts: ToastsState = null, action: Action) => {
     }
 };
 
-export type ActiveModalState = ActiveModal | null;
-export const activeModal = (activeModal: ActiveModalState = null, action: Action) => {
+export type ActiveModalsState = ActiveModal[] | null;
+export const activeModals = (activeModals: ActiveModalsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.ACTIVE_MODAL_OPEN:
-            return action.activeModal;
+            activeModals = activeModals || [];
+            return [...activeModals, action.activeModal];
         case ACTION_TYPE.ACTIVE_MODAL_CLOSE:
-            return null;
+            return activeModals && activeModals.length > 1 ? activeModals.slice(0, activeModals.length - 1) : null;
         default:
-            return activeModal;
+            return activeModals;
     }
 };
 
@@ -748,7 +749,7 @@ const appReducer = combineReducers({
     search,
     error,
     toasts,
-    activeModal,
+    activeModals,
     groups,
     boards,
     assignmentsByMe,
@@ -784,7 +785,7 @@ export type AppState = undefined | {
     constants: ConstantsState;
     error: ErrorState;
     toasts: ToastsState;
-    activeModal: ActiveModalState;
+    activeModals: ActiveModalsState;
     groups: GroupsState;
     boards: BoardsState;
     assignmentsByMe: AssignmentsState;

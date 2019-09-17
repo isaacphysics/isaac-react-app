@@ -12,17 +12,17 @@ import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful
 import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
-import {examBoardTagMap, tagExamboardMap} from "../../services/constants";
 import {resourceFound} from "../../services/validation";
 import {sample} from 'lodash';
 import {convertContentSummaryToGameboardItem} from "../../services/gameboardBuilder";
+import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
 
 export const GameboardBuilder = () => {
     const dispatch = useDispatch();
     const [gameboardName, setGameboardName] = useState("");
     const [gameboardTag, setGameboardTag] = useState("null");
     const [gameboardURL, setGameboardURL] = useState("");
-    const [questionOrder, setQuestionOrder] = useState([] as string[]);
+    const [questionOrder, setQuestionOrder] = useState<string[]>([]);
     const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
     const [tooltipShow, setTooltipShow] = useState(false);
     const [wildcardId, setWildcardId] = useState("random");
@@ -37,10 +37,6 @@ export const GameboardBuilder = () => {
             const [removed] = questionOrder.splice(result.source.index, 1);
             questionOrder.splice(result.destination.index, 0, removed);
         }
-    };
-
-    const tagIcons = (tag: string) => {
-        return <span key={tag} className="badge badge-pill badge-warning mx-1">{tag}</span>
     };
 
     useEffect(() => {
@@ -167,40 +163,12 @@ export const GameboardBuilder = () => {
                                                 const question = selectedQuestions.get(question_id);
                                                 return question && question.id && <Draggable key={question.id} draggableId={question.id} index={index}>
                                                     {(provided) => (
-                                                    <tr key={question.id} ref={provided.innerRef}
-                                                        className={classnames({disabled: index >= 10, selected: true})}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}>
-                                                        <td>
-                                                            <RS.CustomInput
-                                                                type="checkbox"
-                                                                id={`gameboard-builder-remove-${question.id}`}
-                                                                color="secondary"
-                                                                checked={question.id == undefined || selectedQuestions.has(question.id)}
-                                                                onChange={() => {
-                                                                    if (question.id) {
-                                                                        const newSelectedQuestions = new Map(selectedQuestions);
-                                                                        const newQuestionOrder = [...questionOrder];
-                                                                        newSelectedQuestions.delete(question.id);
-                                                                        setSelectedQuestions(newSelectedQuestions);
-                                                                        newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
-                                                                        setQuestionOrder(newQuestionOrder)
-                                                                    }
-                                                                }}/>
-                                                        </td>
-                                                        <td>
-                                                            <a href={question.url} target="_blank">{question.title}</a>
-                                                        </td>
-                                                        <td>
-                                                            {question.tags && question.tags.map((tag) => tagIcons(tag))}
-                                                        </td>
-                                                        <td>
-                                                            {question.level}
-                                                        </td>
-                                                        <td>
-                                                            {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagExamboardMap[tag]).join(", ")}
-                                                        </td>
-                                                    </tr>)}
+                                                        <GameboardBuilderRow provided={provided}
+                                                                             question={question}
+                                                                             selectedQuestions={selectedQuestions}
+                                                                             setSelectedQuestions={setSelectedQuestions}
+                                                                             questionOrder={questionOrder}
+                                                                             setQuestionOrder={setQuestionOrder}/>)}
                                                 </Draggable>
                                             })
 
@@ -219,7 +187,6 @@ export const GameboardBuilder = () => {
                                   closeAction: () => {store.dispatch(closeActiveModal())},
                                   size: "xl",
                                   title: "Search questions",
-
                                   body: <QuestionSearchModal originalSelectedQuestions={selectedQuestions}
                                                              setOriginalSelectedQuestions={setSelectedQuestions}
                                                              originalQuestionOrder={questionOrder}

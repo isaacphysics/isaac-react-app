@@ -4,7 +4,7 @@ import {Tag} from "./tags";
 import {ContentSummaryDTO, GameboardItem} from "../../IsaacApiTypes";
 
 export const sortQuestions = (sortState: { [s: string]: string }) => (questions: ContentSummaryDTO[]) => {
-    if (sortState["title"]) {
+    if (sortState["title"] && sortState["title"] != SortOrder.NONE) {
         const sortedQuestions = questions.sort((a, b) => bookSort(a.title || "", b.title || ""));
         return sortState["title"] == SortOrder.ASC ? sortedQuestions : sortedQuestions.reverse();
     }

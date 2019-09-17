@@ -1,21 +1,17 @@
 import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {Col, Container, Row} from "reactstrap";
+import {Container} from "reactstrap";
 import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentBase, ContentDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
-import {RelatedContent} from "../elements/RelatedContent";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
-import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
-import {NavigationLinks} from "../elements/NavigationLinks";
-import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
 import {EditContentButton} from "../elements/EditContentButton";
+import {Question} from "../elements/Question";
 
 const stateToProps = (state: AppState, {match: {params: {questionId}}}: any) => {
     return {
@@ -54,26 +50,10 @@ const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc, segueEnvironment}:
                 {segueEnvironment != "PROD" && (doc as ContentBase).canonicalSourceFile &&
                     <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
                 }
-
-                <Row>
-                    <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
-                        <AnonUserExamBoardPicker className="text-right" />
-                        <WithFigureNumbering doc={doc}>
-                            <IsaacContent doc={doc} />
-                        </WithFigureNumbering>
-
-                        {/* Superseded notice */}
-
-                        <p className="text-muted">{doc.attribution}</p>
-
-                        <NavigationLinks navigation={navigation} />
-
-                        {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
-                    </Col>
-                </Row>
+                <Question doc={doc} urlQuestionId={urlQuestionId}/>
             </Container>
         </div>
     }/>;
 };
 
-export const Question = withRouter(connect(stateToProps, dispatchToProps)(QuestionPageComponent));
+export const QuestionPage = withRouter(connect(stateToProps, dispatchToProps)(QuestionPageComponent));

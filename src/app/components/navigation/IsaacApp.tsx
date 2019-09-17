@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Route, Router, Switch} from "react-router-dom";
 import {Footer} from "./Footer";
 import {Homepage} from "../pages/Homepage";
-import {Question} from "../pages/Question";
+import {QuestionPage} from "../pages/QuestionPage";
 import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
 import {LogIn} from "../pages/LogIn";
@@ -39,7 +39,7 @@ import {Header} from "./Header";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
-import {ActiveModal} from "../elements/modals/ActiveModal";
+import {ActiveModals} from "../elements/modals/ActiveModals";
 import {isAdmin, isEventsManager, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {Groups} from "../pages/Groups";
 import {Equality} from '../pages/Equality';
@@ -75,7 +75,7 @@ export const IsaacApp = () => {
         <React.Fragment>
             <Header />
             <Toasts />
-            <ActiveModal />
+            <ActiveModals />
             <CookieBanner />
             <EmailVerificationBanner />
             <main role="main" className="flex-fill content-body">
@@ -86,7 +86,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path={"/auth_error"} component={AuthError} />
 
                     {/* Special case */}
-                    <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
+                    <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? QuestionPage : NotFound} />
 
                     {/* Application pages */}
                     <TrackedRoute exact path="/(home)?" component={Homepage} />
@@ -94,7 +94,7 @@ export const IsaacApp = () => {
 
                     <TrackedRoute exact path="/search" component={Search} />
 
-                    <TrackedRoute exact path="/questions/:questionId" component={Question} />
+                    <TrackedRoute exact path="/questions/:questionId" component={QuestionPage} />
                     <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
 

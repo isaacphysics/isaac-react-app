@@ -10,8 +10,8 @@ import {ValueType} from "react-select/src/types";
 import {convertTagsToSelectionOptions, sortQuestions} from "../../services/gameboardBuilder";
 import {allCategoryTags, allTagIds, getSubcategoryTags, getTopicTags} from "../../services/tags";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
-import {EXAM_BOARD, examBoardTagMap, tagExamboardMap} from "../../services/constants";
-import classnames from "classnames";
+import {EXAM_BOARD, examBoardTagMap} from "../../services/constants";
+import {GameboardBuilderRow} from "./GameboardBuilderRow";
 
 interface QuestionSearchModalProps {
     originalSelectedQuestions: Map<string, ContentSummaryDTO>;
@@ -22,13 +22,13 @@ interface QuestionSearchModalProps {
 
 export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder}: QuestionSearchModalProps) => {
     const dispatch = useDispatch();
-    const [searchSubjects, setSearchSubjects] = useState([] as string[]);
-    const [searchFields, setSearchFields] = useState([] as string[]);
-    const [searchTopics, setSearchTopics] = useState([] as string[]);
+    const [searchSubjects, setSearchSubjects] = useState<string[]>([]);
+    const [searchFields, setSearchFields] = useState<string[]>([]);
+    const [searchTopics, setSearchTopics] = useState<string[]>([]);
 
     const [searchQuestionName, setSearchQuestionName] = useState("");
-    const [searchLevels, setSearchLevels] = useState([] as string[]);
-    const [searchExamBoards, setSearchExamBoards] = useState([] as string[]);
+    const [searchLevels, setSearchLevels] = useState<string[]>([]);
+    const [searchExamBoards, setSearchExamBoards] = useState<string[]>([]);
 
     const [questionsSort, setQuestionsSort] = useState({});
     const [selectedQuestions, setSelectedQuestions] = useState(originalSelectedQuestions);
@@ -60,10 +60,6 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         } else {
             setValue([]);
         }
-    };
-
-    const tagIcons = (tag: string) => {
-        return <span key={tag} className="badge badge-pill badge-warning mx-1">{tag}</span>
     };
 
     useEffect(() => {
@@ -175,44 +171,11 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         return (searchLevels.length == 0 || (question.level && searchLevels.includes(question.level.toString()))) &&
                             (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0))
                     })).map((question) =>
-                        question.id && <tr key={question.id}
-                                           className={classnames({selected: selectedQuestions.has(question.id)})}>
-                            <td>
-                                <RS.CustomInput
-                                    type="checkbox"
-                                    id={`question-search-modal-include-${question.id}`}
-                                    color="secondary"
-                                    checked={selectedQuestions.has(question.id)}
-                                    onClick={() => {
-                                        if (question.id) {
-                                            const newSelectedQuestions = new Map(selectedQuestions);
-                                            const newQuestionOrder = [...questionOrder];
-                                            if (newSelectedQuestions.has(question.id)) {
-                                                newSelectedQuestions.delete(question.id);
-                                                newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
-                                            } else {
-                                                newSelectedQuestions.set(question.id, question);
-                                                newQuestionOrder.push(question.id);
-                                            }
-                                            setSelectedQuestions(newSelectedQuestions);
-                                            setQuestionOrder(newQuestionOrder);
-                                        }
-                                    }}
-                                />
-                            </td>
-                            <td>
-                                <a href={question.url} target="_blank">{question.title}</a>
-                            </td>
-                            <td >
-                                {question.tags && question.tags.map((tag) => tagIcons(tag))}
-                            </td>
-                            <td >
-                                {question.level}
-                            </td>
-                            <td >
-                                {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagExamboardMap[tag]).join(", ")}
-                            </td>
-                        </tr>
+                        <GameboardBuilderRow question={question}
+                                             selectedQuestions={selectedQuestions}
+                                             setSelectedQuestions={setSelectedQuestions}
+                                             questionOrder={questionOrder}
+                                             setQuestionOrder={setQuestionOrder}/>
                     )
                 }
                 </tbody>
