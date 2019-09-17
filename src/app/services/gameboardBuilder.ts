@@ -1,6 +1,6 @@
-import {SortOrder} from "./constants";
+import {examBoardTagMap, SortOrder, tagExamboardMap} from "./constants";
 import {orderBy} from "lodash";
-import {Tag} from "./tags";
+import {getDescendents, Tag} from "./tags";
 import {ContentSummaryDTO, GameboardItem} from "../../IsaacApiTypes";
 
 export const sortQuestions = (sortState: { [s: string]: string }) => (questions: ContentSummaryDTO[]) => {
@@ -64,11 +64,20 @@ export const convertContentSummaryToGameboardItem = (question: ContentSummaryDTO
     return gameboardItem;
 };
 
-export const convertTagsToSelectionOptions = (tags: Tag[]) => {
-    return tags.map((tag) => {
-        return {
-            value: tag.id,
-            label: tag.title
-        }
-    })
+export const convertTagToSelectionOption = (tag: Tag) => {
+    return {
+        value: tag.id,
+        label: tag.title
+    }
+};
+
+export const groupTagSelectionsByParent = (parent: Tag) => {
+    return {
+        label: parent.title,
+        options: getDescendents(parent.id).map(convertTagToSelectionOption)
+    };
+};
+
+export const convertExamBoardToOption = (examBoard: string) => {
+    return {value: examBoard, label: tagExamboardMap[examBoard]};
 };

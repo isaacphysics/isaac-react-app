@@ -108,7 +108,7 @@ const getById = (id: TAG_ID) => {
     return allTags.filter((tag) => tag.id === id)[0];
 };
 
-const getSpecifiedTag = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
+export const getSpecifiedTag = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
     // Return the first (as ordered in TAG_ID) TAG_ID an object has of a given type!
     if (tagArray != null) {
         for (let i in tagArray) {

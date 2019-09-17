@@ -14,6 +14,21 @@
   }
 }
 
+.modal-body {
+  .basic-multi-select {
+    .select__control.select__control--is-focused {
+      border-color: $primary;
+      box-shadow: 0 0 0 0.2rem $shadow-08;
+    }
+
+    .select__menu {
+      .select__option.select__option--is-focused {
+        background-color: $primary;
+      }
+    }
+  }
+}
+
 .responsive {
   .table.table-bordered {
     tr {
@@ -40,6 +55,12 @@
           padding: 0;
           width: auto;
           background-color: transparent;
+        }
+
+        .img-center {
+          display: flex;
+          justify-content: center;
+          cursor: pointer;
         }
       }
     }

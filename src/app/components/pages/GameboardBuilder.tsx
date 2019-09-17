@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {Tooltip} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ContentSummaryDTO, IsaacWildcard} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {closeActiveModal, createGameboard, getWildcards, openActiveModal} from "../../state/actions";
 import {store} from "../../state/store";
 import {QuestionSearchModal} from "../elements/QuestionSearchModal";
@@ -56,7 +56,7 @@ export const GameboardBuilder = () => {
                         <RS.Label htmlFor="gameboard-name">Gameboard name:</RS.Label>
                         <RS.Input
                             type="text"
-                            placeholder="Year 12 Geology"
+                            placeholder="Year 12 Network components"
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setGameboardName(e.target.value);
                             }}
@@ -92,64 +92,21 @@ export const GameboardBuilder = () => {
                                   }}>
                             <option value="random">Random wildcard</option>
                             {resourceFound(wildcards) && wildcards.map((wildcard) => {
-                                return <option value={wildcard.id}>{wildcard.title}</option>
+                                return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>
                             })}
                         </RS.Input>
                     </div>
                 </div>}
-                <RS.Input id="gameboard-save-button" type="button" value="Save gameboard"
-                          className={"btn btn-block btn-secondary border-0 mt-4 " + classnames({disabled: !canSubmit()})}
-                          disabled={!canSubmit()}
-                          onClick={() => {
-                              let wildcard = {
-                                  description: "",
-                                  url: ""
-                              } as IsaacWildcard;
 
-                              if (resourceFound(wildcards) && wildcards.length > 0) {
-                                  if (wildcardId == "random") {
-                                      wildcard = sample(wildcards) || wildcard;
-                                  } else {
-                                      wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
-                                  }
-                              }
-
-                              dispatch(createGameboard({
-                                  id: gameboardURL == "" ? undefined : gameboardURL,
-                                  title: gameboardName,
-                                  questions: Array.from(selectedQuestions.values()).map(convertContentSummaryToGameboardItem),
-                                  wildCard: wildcard,
-                                  wildCardPosition: 0,
-                                  gameFilter: {
-                                      subjects: ["computer_science"],
-                                  },
-                                  tags: gameboardTag == "CREATED_BY_ISAAC" ? ["ISAAC_BOARD"] : []
-                              }));
-
-                              dispatch(openActiveModal({
-                                  closeAction: () => {store.dispatch(closeActiveModal())},
-                                  title: "Gameboard submitted",
-                                  body: <GameboardCreatedModal/>
-                              }))
-                          }}
-                />
-                {!canSubmit() && <Tooltip target="gameboard-save-button" className="failed" isOpen={tooltipShow} toggle={() => setTooltipShow(!tooltipShow)}>
-                    Gameboards require a title and 1 to 10 questions
-                </Tooltip>}
-            </RS.CardBody>
-        </RS.Card>
-
-        <RS.Card className="p-3 my-3">
-            <RS.CardTitle tag="h2">Selected Questions</RS.CardTitle>
-            <RS.CardBody>
+                <RS.CardSubtitle tag="h3" className="mt-3">Selected Questions</RS.CardSubtitle>
                 <div className="responsive">
                     <DragDropContext onDragEnd={reorder}>
                         <RS.Table bordered>
                             <thead>
                                 <tr>
                                     <th className={"col-md-1"}></th>
-                                    <th className={"col-md-5"}>Title</th>
-                                    <th className={"col-md-3"}>Tags</th>
+                                    <th className={"col-md-5"}>Question title</th>
+                                    <th className={"col-md-3"}>Topic</th>
                                     <th className={"col-md-1"}>Level</th>
                                     <th className="col-md-2">Exam board</th>
                                 </tr>
@@ -174,25 +131,71 @@ export const GameboardBuilder = () => {
 
                                         }
                                         {provided.placeholder}
+                                        <tr>
+                                            <td colSpan={5}
+                                                onClick={() => {
+                                                    dispatch(openActiveModal({
+                                                        closeAction: () => {store.dispatch(closeActiveModal())},
+                                                        size: "xl",
+                                                        title: "Search questions",
+                                                        body: <QuestionSearchModal originalSelectedQuestions={selectedQuestions}
+                                                                                   setOriginalSelectedQuestions={setSelectedQuestions}
+                                                                                   originalQuestionOrder={questionOrder}
+                                                                                   setOriginalQuestionOrder={setQuestionOrder}/>
+                                                    }))}}>
+                                                <div className="img-center">
+                                                    <img src="/assets/add_circle_outline.svg" className="centre img-fluid" alt="Add questions" />
+                                                </div>
+                                            </td>
+                                        </tr>
                                         </tbody>
                                         )}}
                             </Droppable>
                         </RS.Table>
                     </DragDropContext>
                 </div>
-                <RS.Input type="button" value="Add questions"
-                          className={"btn btn-block btn-secondary border-0"}
+                <RS.Input id="gameboard-save-button" type="button" value="Save gameboard"
+                          className={"btn btn-block btn-secondary border-0 mt-4 " + classnames({disabled: !canSubmit()})}
+                          disabled={!canSubmit()}
                           onClick={() => {
+                              let wildcard = {
+                                  description: "",
+                                  url: ""
+                              } as IsaacWildcard;
+
+                              if (resourceFound(wildcards) && wildcards.length > 0) {
+                                  if (wildcardId == "random") {
+                                      wildcard = sample(wildcards) || wildcard;
+                                  } else {
+                                      wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
+                                  }
+                              }
+
+                              dispatch(createGameboard({
+                                  id: gameboardURL == "" ? undefined : gameboardURL,
+                                  title: gameboardName,
+                                  questions: questionOrder.map((questionId) => {
+                                      const question = selectedQuestions.get(questionId);
+                                      return question && convertContentSummaryToGameboardItem(question);
+                                  }).filter((question) => question !== undefined) as GameboardItem[],
+                                  wildCard: wildcard,
+                                  wildCardPosition: 0,
+                                  gameFilter: {
+                                      subjects: ["computer_science"],
+                                  },
+                                  tags: gameboardTag == "CREATED_BY_ISAAC" ? ["ISAAC_BOARD"] : []
+                              }));
+
                               dispatch(openActiveModal({
                                   closeAction: () => {store.dispatch(closeActiveModal())},
-                                  size: "xl",
-                                  title: "Search questions",
-                                  body: <QuestionSearchModal originalSelectedQuestions={selectedQuestions}
-                                                             setOriginalSelectedQuestions={setSelectedQuestions}
-                                                             originalQuestionOrder={questionOrder}
-                                                             setOriginalQuestionOrder={setQuestionOrder}/>
-                          }))}}
+                                  title: "Gameboard submitted",
+                                  body: <GameboardCreatedModal/>
+                              }))
+                          }}
                 />
+                {!canSubmit() && <Tooltip target="gameboard-save-button" className="failed" isOpen={tooltipShow} toggle={() => setTooltipShow(!tooltipShow)}>
+                    Gameboards require a title and 1 to 10 questions
+                </Tooltip>}
             </RS.CardBody>
         </RS.Card>
     </RS.Container>
