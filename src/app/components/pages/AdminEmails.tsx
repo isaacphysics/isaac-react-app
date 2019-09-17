@@ -46,7 +46,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
             return csvIDs.length;
         }
     };
-    const canSubmit = () => emailTemplateSelector && emailType != "null" && numberOfUsers() > 0;
+    const canSubmit = emailTemplateSelector && emailType != "null" && numberOfUsers() > 0;
     const csvInputDebounce = debounce((value: string) => setCSVIDs(value.split(/[\s,]+/).map((e) => {return parseInt(e)}).filter((num) => !isNaN(num))), 250);
 
     useEffect(() => {
@@ -186,8 +186,8 @@ export const AdminEmails = (props: AdminEmailsProps) => {
         <RS.Card className="p-3 my-3">
             <RS.CardBody>
                 <RS.Input type="button" value="Send emails"
-                          className={"btn btn-block btn-secondary border-0 " + classnames({disabled: !canSubmit()})}
-                          disabled={!canSubmit()}
+                          className={"btn btn-block btn-secondary border-0 " + classnames({disabled: !canSubmit})}
+                          disabled={!canSubmit}
                           onClick={() => {
                               if (selectionMode == "USER_FILTER") {
                                   dispatch(sendAdminEmail(contentObjectID, emailType, selectedRoles));

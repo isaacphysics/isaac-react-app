@@ -846,6 +846,7 @@ export const sendAdminEmail = (contentid: string, emailType: string, roles: Emai
     try {
         await api.email.sendAdminEmail(contentid, emailType, roles);
         dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_SUCCESS});
+        dispatch(showToast({color: "success", title: "Mail sent", body: "Mail sent successfully", timeout: 3000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Sending mail failed", e));
@@ -857,6 +858,7 @@ export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids:
     try {
         await api.email.sendAdminEmailWithIds(contentid, emailType, ids);
         dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS});
+        dispatch(showToast({color: "success", title: "Mail sent", body: "Mail sent successfully", timeout: 3000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Sending mail with ids failed", e));
