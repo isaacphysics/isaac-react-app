@@ -96,7 +96,7 @@ export const api = {
         verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
             return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
         },
-        getTemplateEmail: (contentid: string): AxiosPromise<ApiTypes.EmailTemplateDTO> => {
+        getTemplateEmail: (contentid: string): AxiosPromise<AppTypes.TemplateEmail> => {
             return endpoint.get(`/email/viewinbrowser/${contentid}`);
         },
         sendAdminEmail: (contentid: string, emailType: string, roles: EmailUserRoles): AxiosPromise => {

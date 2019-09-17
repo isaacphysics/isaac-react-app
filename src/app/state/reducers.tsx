@@ -11,7 +11,7 @@ import {
     GroupMembershipDetailDTO,
     isValidatedChoice,
     LoggedInUser,
-    NOT_FOUND_TYPE,
+    NOT_FOUND_TYPE, TemplateEmail,
     Toast,
     UserPreferencesDTO
 } from "../../IsaacAppTypes";
@@ -106,12 +106,12 @@ export const adminStats = (adminSiteStats: AdminStatsState = null, action: Actio
     }
 };
 
-export type AdminEmailTemplateState = EmailTemplateDTO | null;
+export type AdminEmailTemplateState = TemplateEmail | null;
 export const adminEmailTemplate = (adminEmailTemplate: AdminEmailTemplateState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST:
             return null;
-        case ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST_SUCCESS:
+        case ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS:
             return action.email;
         default:
             return adminEmailTemplate;

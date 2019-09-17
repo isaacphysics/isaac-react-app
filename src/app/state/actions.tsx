@@ -834,9 +834,9 @@ export const getEmailTemplate = (contentid: string) => async (dispatch: Dispatch
     dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST});
     try {
         const email = await api.email.getTemplateEmail(contentid);
-        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST_SUCCESS, email: email.data});
+        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS, email: email.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST_FAILURE});
+        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to get email template", e));
     }
 };
@@ -845,9 +845,9 @@ export const sendAdminEmail = (contentid: string, emailType: string, roles: Emai
     dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST});
     try {
         await api.email.sendAdminEmail(contentid, emailType, roles);
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST_SUCCESS});
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_SUCCESS});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST_FAILURE});
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Sending mail failed", e));
     }
 };
@@ -856,9 +856,9 @@ export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids:
     dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST});
     try {
         await api.email.sendAdminEmailWithIds(contentid, emailType, ids);
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST_SUCCESS});
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST_FAILURE});
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Sending mail with ids failed", e));
     }
 };
