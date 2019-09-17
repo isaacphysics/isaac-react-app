@@ -66,7 +66,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
             <RS.CardTitle tag="h2">User selection</RS.CardTitle>
             <RS.CardBody>
                 <RS.Input
-                    id="email-type-input" type="select" defaultValue={selectionMode}
+                    id="email-type-input" type="select" className="mb-4" defaultValue={selectionMode}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setSelectionMode(e.target.value);
                     }}
@@ -169,7 +169,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
 
         <RS.Card className="p-3 my-3">
             <RS.CardTitle tag="h2">HTML preview</RS.CardTitle>
-            <RS.Label>The preview below uses fields taken from your account (e.g. givenname and familyname).</RS.Label>
+            <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
             <RS.CardBody>
                 {emailTemplateSelector && emailTemplateSelector.html && <iframe className="email-preview-frame" srcDoc={emailTemplateSelector.html}/>}
             </RS.CardBody>
@@ -177,7 +177,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
 
         <RS.Card className="p-3 my-3">
             <RS.CardTitle tag="h2">Plain text preview</RS.CardTitle>
-            <RS.Label>The preview below uses fields taken from your account (e.g. givenname and familyname).</RS.Label>
+            <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
             <RS.CardBody>
                 {emailTemplateSelector && emailTemplateSelector.plainText}
             </RS.CardBody>
