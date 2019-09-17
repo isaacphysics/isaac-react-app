@@ -58,12 +58,10 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
 
             <RS.Card className="p-3 my-3">
                 <RS.CardTitle tag="h2">Useful links</RS.CardTitle>
-                <RS.CardBody>
-                    <ul>
-                        <li><Link to="/admin/usermanager">User Manager</Link></li>
-                        <li><Link to="/admin/emails">Admin emails</Link></li>
-                    </ul>
-                </RS.CardBody>
+                <RS.ListGroup className="flex-row">
+                    <RS.ListGroupItem className="w-auto"><Link to="/admin/usermanager">User Manager</Link></RS.ListGroupItem>
+                    <RS.ListGroupItem className="w-auto"><Link to="/admin/emails">Admin emails</Link></RS.ListGroupItem>
+                </RS.ListGroup>
             </RS.Card>
 
             <RS.Card className="p-3 mb-3">
