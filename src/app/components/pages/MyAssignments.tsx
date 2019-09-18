@@ -86,6 +86,12 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}:
 
     const [activeTab, setActiveTab] = useState(0);
 
+    const keyPressTabToggle = (tab: number) => (event: React.KeyboardEvent) => {
+        if (event.keyCode === 13) {
+            setActiveTab(tab);
+        }
+    };
+
     const showOld = myAssignments.inProgressRecent.length == 0 && myAssignments.inProgressOld.length > 0 && function(event: MouseEvent) {
         setActiveTab(1);
         event.preventDefault();
@@ -112,7 +118,10 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}:
                             const tabIndex = mapIndex;
                             const classes = activeTab === tabIndex ? "active" : "";
                             return <NavItem key={tabIndex} className="px-3">
-                                <NavLink className={classes} onClick={() => setActiveTab(tabIndex)}>
+                                <NavLink
+                                    className={classes} tabIndex={0}
+                                    onClick={() => setActiveTab(tabIndex)} onKeyDown={keyPressTabToggle(tabIndex)}
+                                >
                                     {tabTitle} ({tabItems.length || 0})
                                 </NavLink>
                             </NavItem>;

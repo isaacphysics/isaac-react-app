@@ -332,6 +332,12 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
         }
     };
 
+    const keyPressTabToggle = (activate: () => void) => (event: React.KeyboardEvent) => {
+        if (event.keyCode === 13) {
+            activate();
+        }
+    };
+
     useEffect(() => {
         loadGroups(showArchived);
         // Clear the selected group when switching between tabs
@@ -366,7 +372,10 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                 {tabs.map((tab, index) => {
                                     const classes = tab.active() ? "active" : "";
                                     return <NavItem key={index} className="mx-2">
-                                        <NavLink className={`text-center ${classes}`} onClick={tab.activate}>
+                                        <NavLink
+                                            className={`text-center ${classes}`} tabIndex={0}
+                                            onClick={tab.activate} onKeyDown={keyPressTabToggle(tab.activate)}
+                                        >
                                             {tab.name}
                                         </NavLink>
                                     </NavItem>;

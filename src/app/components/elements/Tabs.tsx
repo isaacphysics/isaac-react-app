@@ -38,7 +38,7 @@ export const Tabs = (props: TabsProps) => {
         }
     }
 
-    const keyPressToggle = (tab: number) => (event: React.KeyboardEvent) => {
+    const keyPressTabToggle = (tab: number) => (event: React.KeyboardEvent) => {
         if (event.keyCode === 13) {
             changeTab(tab);
         }
@@ -56,7 +56,7 @@ export const Tabs = (props: TabsProps) => {
                 return <NavItem key={tabTitle} className="px-3 text-center">
                     <NavLink
                         tag="button" tabIndex={0} className={classes}
-                        onClick={() => changeTab(tabIndex)} onKeyDown={keyPressToggle(tabIndex)}
+                        onClick={() => changeTab(tabIndex)} onKeyDown={keyPressTabToggle(tabIndex)}
                     >
                         {tabTitle}
                     </NavLink>
