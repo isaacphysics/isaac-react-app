@@ -10,6 +10,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {extractTeacherName} from "../../services/user";
 import {DATE_FORMATTER, STUDENTS_CRUMB} from "../../services/constants";
 import {filterAssignmentsByStatus} from "../../services/assignments";
+import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments, logAction};
@@ -86,12 +87,6 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}:
 
     const [activeTab, setActiveTab] = useState(0);
 
-    const keyPressTabToggle = (tab: number) => (event: React.KeyboardEvent) => {
-        if (event.keyCode === 13) {
-            setActiveTab(tab);
-        }
-    };
-
     const showOld = myAssignments.inProgressRecent.length == 0 && myAssignments.inProgressOld.length > 0 && function(event: MouseEvent) {
         setActiveTab(1);
         event.preventDefault();
@@ -119,8 +114,8 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}:
                             const classes = activeTab === tabIndex ? "active" : "";
                             return <NavItem key={tabIndex} className="px-3">
                                 <NavLink
-                                    className={classes} tabIndex={0}
-                                    onClick={() => setActiveTab(tabIndex)} onKeyDown={keyPressTabToggle(tabIndex)}
+                                    className={classes} tabIndex={0} onClick={() => setActiveTab(tabIndex)}
+                                    onKeyDown={ifKeyIsEnter(() => setActiveTab(tabIndex))}
                                 >
                                     {tabTitle} ({tabItems.length || 0})
                                 </NavLink>

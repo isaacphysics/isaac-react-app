@@ -409,15 +409,9 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
         openActiveModal(downloadLinkModal(event.currentTarget.href));
     }
 
-    const keyPressToggle = (event: React.KeyboardEvent) => {
-        if (event.keyCode === 13) {
-            setIsExpanded(!isExpanded);
-        }
-    };
-
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
         <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
-            <Button color="link" className="gameboard-title align-items-center" onKeyDown={keyPressToggle}>
+            <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
                 <span>{assignment.gameboard.title}{assignment.dueDate && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(assignment.dueDate)})</span>}</span>
             </Button>
             <div className="gameboard-links align-items-center">
@@ -505,19 +499,13 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
         openActiveModal(downloadLinkModal(event.currentTarget.href));
     }
 
-    const keyPressToggle = (event: React.KeyboardEvent) => {
-        if (event.keyCode === 13) {
-            setExpanded(!isExpanded);
-        }
-    };
-
     return <React.Fragment>
         <div onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
             <div className="group-name"><span className="icon-group"/><span>{group.groupName}</span></div>
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
             <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" onClick={openGroupDownloadLink}>(Download Group CSV)</a></div>
-            <Button color="link" className="px-2" tabIndex={0} onKeyDown={keyPressToggle}>
+            <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
                 <img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" />
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
             </Button>

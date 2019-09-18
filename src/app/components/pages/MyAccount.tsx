@@ -45,6 +45,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
+import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -162,12 +163,6 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         }
     };
 
-    const keyPressTabToggle = (tab: number) => (event: React.KeyboardEvent) => {
-        if (event.keyCode === 13) {
-            setActiveTab(tab);
-        }
-    };
-
     return <Container id="account-page" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="My account" className="mb-4" />
         <h3 className="d-md-none text-center text-muted m-3">
@@ -186,7 +181,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <NavItem>
                         <NavLink
                             className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.account})} tabIndex={0}
-                            onClick={() => setActiveTab(ACCOUNT_TAB.account)} onKeyDown={keyPressTabToggle(ACCOUNT_TAB.account)}
+                            onClick={() => setActiveTab(ACCOUNT_TAB.account)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.account))}
                         >
                             Profile
                         </NavLink>
@@ -194,7 +189,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <NavItem>
                         <NavLink
                             className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.passwordreset})} tabIndex={0}
-                            onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={keyPressTabToggle(ACCOUNT_TAB.passwordreset)}
+                            onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                         >
                             <span className="d-none d-lg-block">Change Password</span>
                             <span className="d-block d-lg-none">Password</span>
@@ -203,7 +198,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <NavItem>
                         <NavLink
                             className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.teacherconnections})} tabIndex={0}
-                            onClick={() => setActiveTab(ACCOUNT_TAB.teacherconnections)} onKeyDown={keyPressTabToggle(ACCOUNT_TAB.teacherconnections)}
+                            onClick={() => setActiveTab(ACCOUNT_TAB.teacherconnections)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.teacherconnections))}
                         >
                             <span className="d-none d-lg-block d-md-block">Teacher Connections</span>
                             <span className="d-block d-md-none">Connections</span>
@@ -212,7 +207,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                     <NavItem>
                         <NavLink
                             className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.emailpreferences})} tabIndex={0}
-                            onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} onKeyDown={keyPressTabToggle(ACCOUNT_TAB.emailpreferences)}
+                            onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.emailpreferences))}
                         >
                             <span className="d-none d-lg-block">Email Preferences</span>
                             <span className="d-block d-lg-none">Emails</span>

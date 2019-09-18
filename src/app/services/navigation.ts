@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {history} from "./history";
 import queryString from "query-string";
 import {fetchTopicSummary, loadGameboard} from "../state/actions";
@@ -64,4 +64,10 @@ export const useNavigation = (currentDocId: string): PageNavigation => {
     }
 
     return defaultPageNavigation;
+};
+
+export const ifKeyIsEnter = (action: () => void) => (event: React.KeyboardEvent) => {
+    if (event.keyCode === 13) {
+        action();
+    }
 };

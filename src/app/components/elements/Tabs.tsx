@@ -1,5 +1,6 @@
 import React, {useMemo, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
+import {ifKeyIsEnter} from "../../services/navigation";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
 
@@ -38,12 +39,6 @@ export const Tabs = (props: TabsProps) => {
         }
     }
 
-    const keyPressTabToggle = (tab: number) => (event: React.KeyboardEvent) => {
-        if (event.keyCode === 13) {
-            changeTab(tab);
-        }
-    };
-
     const tabTitles = children && Object.keys(children);
     const specialCaseExamBoardTab = tabTitles.includes("AQA") && tabTitles.includes("OCR") && tabTitles.length === 2;
 
@@ -56,7 +51,7 @@ export const Tabs = (props: TabsProps) => {
                 return <NavItem key={tabTitle} className="px-3 text-center">
                     <NavLink
                         tag="button" tabIndex={0} className={classes}
-                        onClick={() => changeTab(tabIndex)} onKeyDown={keyPressTabToggle(tabIndex)}
+                        onClick={() => changeTab(tabIndex)} onKeyDown={ifKeyIsEnter(() => changeTab(tabIndex))}
                     >
                         {tabTitle}
                     </NavLink>

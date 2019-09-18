@@ -39,6 +39,7 @@ import {groups} from "../../state/selectors";
 import {UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {TEACHERS_CRUMB} from "../../services/constants";
+import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateFromProps = (state: AppState) => (state && {groups: groups.groups(state), group: groups.current(state)});
 const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal};
@@ -332,12 +333,6 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
         }
     };
 
-    const keyPressTabToggle = (activate: () => void) => (event: React.KeyboardEvent) => {
-        if (event.keyCode === 13) {
-            activate();
-        }
-    };
-
     useEffect(() => {
         loadGroups(showArchived);
         // Clear the selected group when switching between tabs
@@ -374,7 +369,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                     return <NavItem key={index} className="mx-2">
                                         <NavLink
                                             className={`text-center ${classes}`} tabIndex={0}
-                                            onClick={tab.activate} onKeyDown={keyPressTabToggle(tab.activate)}
+                                            onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
                                         >
                                             {tab.name}
                                         </NavLink>
