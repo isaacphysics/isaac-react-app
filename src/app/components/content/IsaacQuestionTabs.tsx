@@ -58,13 +58,13 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
 
     let QuestionComponent;
     switch (doc.type) {
-        case 'isaacFreeTextQuestion': QuestionComponent = IsaacFreeTextQuestion; break;
         case 'isaacNumericQuestion': QuestionComponent = IsaacNumericQuestion; break;
-        case 'isaacSymbolicLogicQuestion': QuestionComponent = IsaacSymbolicLogicQuestion; break;
         case 'isaacStringMatchQuestion': QuestionComponent = IsaacStringMatchQuestion; break;
+        case 'isaacFreeTextQuestion': QuestionComponent = IsaacFreeTextQuestion; break;
         case 'isaacItemQuestion': QuestionComponent = IsaacItemQuestion; break;
-        case 'isaacParsonsQuestion': QuestionComponent = IsaacParsonsQuestion; break;
         case 'isaacMultiChoiceQuestion': default: QuestionComponent = IsaacMultiChoiceQuestion; break;
+        case 'isaacParsonsQuestion': QuestionComponent = IsaacParsonsQuestion; break;
+        case 'isaacSymbolicLogicQuestion': QuestionComponent = IsaacSymbolicLogicQuestion; break;
     }
 
     let extraClasses = "";

@@ -48,7 +48,9 @@ export const NavigationBar = () => {
     };
 
     return <Navbar className="main-nav p-0" color="light" light expand="md">
-        <NavbarToggler onClick={() => setMenuOpen(!menuOpen)}>Menu</NavbarToggler>
+        <NavbarToggler onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close menu' : 'Open menu'}>
+            Menu
+        </NavbarToggler>
 
         <Collapse isOpen={menuOpen} navbar className="px-0 mx-0 px-xl-5 mx-xl-5">
             <Nav navbar className="justify-content-between">
