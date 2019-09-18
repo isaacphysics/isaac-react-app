@@ -7,13 +7,8 @@ import {AppState} from "../../state/reducers";
 import {debounce, range} from "lodash";
 import Select from "react-select";
 import {ValueType} from "react-select/src/types";
-import {
-    convertExamBoardToOption,
-    convertTagToSelectionOption,
-    groupTagSelectionsByParent,
-    sortQuestions
-} from "../../services/gameboardBuilder";
-import {allCategoryTags, allTagIds, getCategoryTags, getSubcategoryTags} from "../../services/tags";
+import {convertExamBoardToOption, groupTagSelectionsByParent, sortQuestions} from "../../services/gameboardBuilder";
+import {allTagIds, getSubcategoryTags} from "../../services/tags";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {EXAM_BOARD, examBoardTagMap} from "../../services/constants";
 import {GameboardBuilderRow} from "./GameboardBuilderRow";
@@ -27,8 +22,6 @@ interface QuestionSearchModalProps {
 
 export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder}: QuestionSearchModalProps) => {
     const dispatch = useDispatch();
-    const [searchSubjects, setSearchSubjects] = useState<string[]>([]);
-    const [searchFields, setSearchFields] = useState<string[]>([]);
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
 
     const [searchQuestionName, setSearchQuestionName] = useState("");
@@ -43,9 +36,9 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const userPreferencesSelector = useSelector((state: AppState) => state && state.userPreferences);
 
     const searchDebounce = useCallback(
-        debounce((searchString: string, subject: string[], field: string[], topic: string[], levels: string[], examboard: string[], fasttrack: boolean, startIndex: number) =>
+        debounce((searchString: string, topics: string[], levels: string[], examBoard: string[], fasttrack: boolean, startIndex: number) =>
             dispatch(searchQuestions({
-                searchString: [searchString, ...([subject, field, topic, levels, examboard].map((tags) => tags.join(" ")))].filter((query) => query != "").join(" "),
+                searchString: [searchString, ...([topics, levels, examBoard].map((tags) => tags.join(" ")))].filter((query) => query != "").join(" "),
                 tags: "",
                 fasttrack,
                 startIndex,
@@ -84,36 +77,10 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     }, [userPreferencesSelector]);
 
     useEffect(() => {
-        searchDebounce(searchQuestionName, searchSubjects, searchFields, searchTopics, searchLevels, searchExamBoards, false, 0);
-    },[searchQuestionName, searchSubjects, searchFields, searchTopics, searchLevels, searchExamBoards]);
+        searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, false, 0);
+    },[searchQuestionName, searchTopics, searchLevels, searchExamBoards]);
 
     return <div>
-        <div className="row">
-            <div className="text-wrap col-lg-6 mt-2">
-                <RS.Label htmlFor="subject">Subject</RS.Label>
-                <Select
-                    isMulti
-                    options={allCategoryTags.map(convertTagToSelectionOption)}
-                    name="colors"
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                    placeholder="Any"
-                    onChange={multiSelectOnChange(setSearchSubjects)}
-                />
-            </div>
-            <div className="text-wrap col-lg-6 my-2">
-                <RS.Label htmlFor="field">Field</RS.Label>
-                <Select
-                    isMulti
-                    options={getCategoryTags(allTagIds).map(groupTagSelectionsByParent)}
-                    name="colors"
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                    placeholder="Any"
-                    onChange={multiSelectOnChange(setSearchFields)}
-                />
-            </div>
-        </div>
         <div className="row">
             <div className="text-wrap col-lg-6 mt-2">
                 <RS.Label htmlFor="topic">Topic</RS.Label>
@@ -179,12 +146,12 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                       }}
             />
         </RS.Row>
-        <div className="responsive">
-            <RS.Table bordered className="mt-4">
+        <div className="responsive mt-4">
+            <RS.Table bordered>
                 <thead>
                 <tr>
-                    <th className={"col-md-0"}> </th>
-                    <SortableTableHeader className="col-md-6" title="Question title"
+                    <th className={"col-md-1"}> </th>
+                    <SortableTableHeader className="col-md-5" title="Question title"
                                          updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}/>
                     <th className={"col-md-3"}>Topic</th>
                     <SortableTableHeader className="col-md-1" title="Level"

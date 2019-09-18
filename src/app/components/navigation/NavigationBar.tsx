@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {AppState, assignments} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {
     Badge,
     Collapse,
@@ -106,9 +106,6 @@ export const NavigationBar = () => {
                         </DropdownItem>
                         <DropdownItem tag={Link} to="/set_assignments" className="pl-4 py-3 p-md-3">
                             Set assignments
-                        </DropdownItem>
-                        <DropdownItem tag={Link} to="/gameboards/builder" className="pl-4 py-3 p-md-3">
-                            Create gameboards
                         </DropdownItem>
                         <DropdownItem tag={Link} to="/assignment_progress" className="pl-4 py-3 p-md-3">
                             Assignment progress

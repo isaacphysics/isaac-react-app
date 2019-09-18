@@ -63,8 +63,9 @@ export const GameboardBuilder = () => {
                         />
                     </RS.Col>
                 </RS.Row>
-                {isStaff(user) && <div className="d-flex flex-wrap">
-                    <div className="flex-fill mt-2 col-lg-4">
+
+                {isStaff(user) && <RS.Row className="mt-2">
+                    <RS.Col>
                         <RS.Label htmlFor="tag-as">Tag as</RS.Label>
                         <RS.Input type="select" defaultValue={gameboardTag}
                                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,8 +74,8 @@ export const GameboardBuilder = () => {
                             <option value="null">None</option>
                             <option value="CREATED_BY_ISAAC">Created by Isaac</option>
                         </RS.Input>
-                    </div>
-                    <div className="flex-fill mt-2 col-lg-4">
+                    </RS.Col>
+                    <RS.Col>
                         <RS.Label htmlFor="gameboard-url">Gameboard URL</RS.Label>
                         <RS.Input
                             type="text"
@@ -83,8 +84,8 @@ export const GameboardBuilder = () => {
                                 setGameboardURL(e.target.value);
                             }}
                         />
-                    </div>
-                    <div className="flex-fill mt-2 col-lg-4">
+                    </RS.Col>
+                    <RS.Col>
                         <RS.Label htmlFor="wildcard">Wildcard</RS.Label>
                         <RS.Input type="select" defaultValue="random"
                                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,8 +96,8 @@ export const GameboardBuilder = () => {
                                 return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>
                             })}
                         </RS.Input>
-                    </div>
-                </div>}
+                    </RS.Col>
+                </RS.Row>}
 
                 <RS.CardSubtitle tag="h3" className="mt-3">Selected Questions</RS.CardSubtitle>
                 <div className="responsive">

@@ -1,3 +1,20 @@
+@mixin table-sticky() {
+  top: 0;
+  position: sticky !important;
+  background-clip:  padding-box !important;
+  background: $gray-103;
+  z-index: 2;
+}
+
+@mixin after-border() {
+  content:'';
+  position:absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
 .list-gameboard {
   .bg-success {
     background-color: #dfefd7 !important;
@@ -30,7 +47,25 @@
 }
 
 .responsive {
+  overflow: auto;
+  display: block;
+  max-height: 60vh;
+  width: 101%;
+  padding-bottom: 1px; // Fixes odd broswer bugs around the magic :after borders
+
   .table.table-bordered {
+    thead {
+      @include table-sticky();
+      tr {
+        th {
+          &:after {
+            @include after-border();
+            border: 1px solid $gray-118;
+          }
+        }
+      }
+    }
+
     tr {
       &.disabled {
         background-color: lightgrey;
@@ -49,12 +84,8 @@
           }
         }
 
-        .btn-link {
-          color: black;
-          border: 0;
-          padding: 0;
-          width: auto;
-          background-color: transparent;
+        img {
+          cursor: pointer;
         }
 
         .img-center {

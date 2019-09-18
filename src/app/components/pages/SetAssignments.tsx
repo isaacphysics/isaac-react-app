@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useRef, useState} from "react";
-import {connect} from "react-redux";
+import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
 import {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -28,6 +28,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {DATE_FORMATTER, TEACHERS_CRUMB} from "../../services/constants";
 import {withRouter} from "react-router-dom";
+import {connect} from "react-redux";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -284,9 +285,26 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Set assignments" intermediateCrumbs={[TEACHERS_CRUMB]} help={pageHelp} />
-        <p className="mt-4 mb-3">
-            Choose a gameboard from one of our <Link to="/pages/gameboards">pre-made gameboards</Link> or find one from the <Link to="/topics">Topics list</Link>.
-        </p>
+        <h4 className="mt-4 mb-3">
+            Add a board from ...
+        </h4>
+        <RS.Row className="mb-3">
+            <RS.Col>
+                <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
+                    {"Pre-made gameboards"}
+                </RS.Button>
+            </RS.Col>
+            <RS.Col>
+                <RS.Button tag={Link} to={"/topics"} color="secondary" block>
+                    {"Topics list"}
+                </RS.Button>
+            </RS.Col>
+            <RS.Col>
+                <RS.Button tag={Link} to={"/gameboards/builder"} color="secondary" block>
+                    {"Create gameboard"}
+                </RS.Button>
+            </RS.Col>
+        </RS.Row>
         {groups && groups.length == 0 && <Alert color="warning">You have not created any groups to assign work to. Please <Link to="/groups">create a group here first.</Link></Alert>}
         {boards && boards.totalResults == 0 ? <h3 className="text-center mt-4 mb-5">You have no gameboards to assign; use one of the options above to find one.</h3> :
             <React.Fragment>
