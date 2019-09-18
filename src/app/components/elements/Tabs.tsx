@@ -1,6 +1,5 @@
 import React, {useMemo, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
-import {ifKeyIsEnter} from "../../services/navigation";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
 
@@ -49,10 +48,7 @@ export const Tabs = (props: TabsProps) => {
                 const c = callOrString(tabTitleClass, tabTitle, tabIndex);
                 const classes = activeTab === tabIndex ? `${c} active` : c;
                 return <NavItem key={tabTitle} className="px-3 text-center">
-                    <NavLink
-                        tag="button" tabIndex={0} className={classes}
-                        onClick={() => changeTab(tabIndex)} onKeyDown={ifKeyIsEnter(() => changeTab(tabIndex))}
-                    >
+                    <NavLink tag="button" tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}>
                         {tabTitle}
                     </NavLink>
                 </NavItem>;
