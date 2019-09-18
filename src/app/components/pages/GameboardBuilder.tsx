@@ -105,11 +105,11 @@ export const GameboardBuilder = () => {
                         <RS.Table bordered>
                             <thead>
                                 <tr>
-                                    <th className={"col-md-1"}></th>
-                                    <th className={"col-md-5"}>Question title</th>
-                                    <th className={"col-md-3"}>Topic</th>
-                                    <th className={"col-md-1"}>Level</th>
-                                    <th className="col-md-2">Exam board</th>
+                                    <th className="w-5"></th>
+                                    <th className="w-40">Question title</th>
+                                    <th className="w-30">Topic</th>
+                                    <th className="w-10">Level</th>
+                                    <th className="w-15">Exam board</th>
                                 </tr>
                             </thead>
                             <Droppable droppableId="droppable">

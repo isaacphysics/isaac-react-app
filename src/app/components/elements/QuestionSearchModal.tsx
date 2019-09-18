@@ -149,21 +149,22 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         <div className="responsive mt-4">
             <RS.Table bordered>
                 <thead>
-                <tr>
-                    <th className={"col-md-1"}> </th>
-                    <SortableTableHeader className="col-md-5" title="Question title"
-                                         updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}/>
-                    <th className={"col-md-3"}>Topic</th>
-                    <SortableTableHeader className="col-md-1" title="Level"
-                                         updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "level")}/>
-                    <th className="col-md-2">Exam board</th>
-                </tr>
+                    <tr>
+                        <th className="w-5"> </th>
+                        <SortableTableHeader className="w-40" title="Question title"
+                                             updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}/>
+                        <th className="w-30">Topic</th>
+                        <SortableTableHeader className="w-10" title="Level"
+                                             updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "level")}/>
+                        <th className="w-15">Exam board</th>
+                    </tr>
                 </thead>
                 <tbody>
                 {
                     questionsSelector && sortQuestions(questionsSort)(questionsSelector.filter((question) => {
                         return (searchLevels.length == 0 || (question.level && searchLevels.includes(question.level.toString()))) &&
-                            (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0))
+                            (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0)) &&
+                            (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0))
                     })).map((question) =>
                         <GameboardBuilderRow key={question.id}
                                              question={question}

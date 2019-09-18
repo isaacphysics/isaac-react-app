@@ -45,47 +45,45 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
                className={classnames({selected: question.id && selectedQuestions.has(question.id)})}
                {...(provided && provided.draggableProps)}
                {...(provided && provided.dragHandleProps)}>
-        <td>
-            <div className="d-flex flex-row">
-                {provided && <img src="/assets/drag_indicator.svg"
-                                  className="mr-1"
-                                  alt="Drag to reorder"/>}
-                <RS.CustomInput
-                    type="checkbox"
-                    id={`question-search-modal-include-${question.id}`}
-                    color="secondary"
-                    checked={question.id !== undefined && selectedQuestions.has(question.id)}
-                    onChange={(e: ChangeEvent<HTMLElement>) => {
-                        if (question.id) {
-                            const newSelectedQuestions = new Map(selectedQuestions);
-                            const newQuestionOrder = [...questionOrder];
-                            if (newSelectedQuestions.has(question.id)) {
-                                newSelectedQuestions.delete(question.id);
-                                newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
-                            } else {
-                                newSelectedQuestions.set(question.id, question);
-                                newQuestionOrder.push(question.id);
-                            }
-                            setSelectedQuestions(newSelectedQuestions);
-                            setQuestionOrder(newQuestionOrder);
+        <td className="w-5">
+            <RS.CustomInput
+                type="checkbox"
+                id={`question-search-modal-include-${question.id}`}
+                color="secondary"
+                checked={question.id !== undefined && selectedQuestions.has(question.id)}
+                onChange={(e: ChangeEvent<HTMLElement>) => {
+                    if (question.id) {
+                        const newSelectedQuestions = new Map(selectedQuestions);
+                        const newQuestionOrder = [...questionOrder];
+                        if (newSelectedQuestions.has(question.id)) {
+                            newSelectedQuestions.delete(question.id);
+                            newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
+                        } else {
+                            newSelectedQuestions.set(question.id, question);
+                            newQuestionOrder.push(question.id);
                         }
-                    }}
-                />
-            </div>
+                        setSelectedQuestions(newSelectedQuestions);
+                        setQuestionOrder(newQuestionOrder);
+                    }
+                }}
+            />
         </td>
-        <td>
+        <td className="w-40">
+            {provided && <img src="/assets/drag_indicator.svg"
+                              className="mr-1"
+                              alt="Drag to reorder"/>}
             <a className="mr-2" href={question.url} target="_blank">{question.title}</a>
             <img src="/assets/tab.svg"
                  alt="Preview question"
                  onClick={() => {question.id && openQuestionModal(question.id)}}/>
         </td>
-        <td>
+        <td className="w-30">
             {topicTag()}
         </td>
-        <td>
+        <td className="w-10">
             {question.level}
         </td>
-        <td>
+        <td className="w-15">
             {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagIcon(tagExamboardMap[tag]))}
         </td>
     </tr>
