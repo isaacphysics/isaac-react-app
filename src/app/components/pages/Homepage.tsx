@@ -63,7 +63,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     </Col>
                     <Col lg="7" className="pb-4 p-lg-5 align-self-center text-center">
                         <iframe
-                            title="isaac-computer-science-video" width="614" height="390" className="mw-100 pt-lg-4"
+                            title="Isaac Computer Science introduction video" width="614" height="390" className="mw-100 pt-lg-4"
                             src="https://www.youtube-nocookie.com/embed/nW4J-NVDziw?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
                             frameBorder="0" allowFullScreen
                         />

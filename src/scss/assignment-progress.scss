@@ -24,6 +24,7 @@
   cursor: pointer;
   display: flex;
   align-items: stretch;
+  background: white;
 }
 
 .assignment-progress-group > div {
@@ -254,6 +255,7 @@ $failed-bg-size: 25%;
 
 .assignment-progress-gameboard .gameboard-title {
   display: flex;
+  border: 0px;
 }
 
 .assignment-progress-gameboard .gameboard-header > *:first-child:before {
