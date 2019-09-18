@@ -45,7 +45,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
                className={classnames({selected: question.id && selectedQuestions.has(question.id)})}
                {...(provided && provided.draggableProps)}
                {...(provided && provided.dragHandleProps)}>
-        <td className="w-5">
+        <td>
             <RS.CustomInput
                 type="checkbox"
                 id={`question-search-modal-include-${question.id}`}
@@ -68,22 +68,23 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
                 }}
             />
         </td>
-        <td className="w-40">
+        <td>
             {provided && <img src="/assets/drag_indicator.svg"
-                              className="mr-1"
+                              className="mr-1 grab-cursor"
                               alt="Drag to reorder"/>}
             <a className="mr-2" href={question.url} target="_blank">{question.title}</a>
             <img src="/assets/tab.svg"
                  alt="Preview question"
+                 className="pointer-cursor"
                  onClick={() => {question.id && openQuestionModal(question.id)}}/>
         </td>
-        <td className="w-30">
+        <td>
             {topicTag()}
         </td>
-        <td className="w-10">
+        <td>
             {question.level}
         </td>
-        <td className="w-15">
+        <td>
             {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagIcon(tagExamboardMap[tag]))}
         </td>
     </tr>

@@ -11,7 +11,7 @@ export const SortableTableHeader = ({className, title, updateState}: SortableTab
     const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
     const sortOrders = [SortOrder.NONE, SortOrder.ASC, SortOrder.DESC];
 
-    return <th className={className + " pointer"}
+    return <th className={className + " pointer-cursor"}
                onClick={(e: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => {
                     const newIndex = (currentOrderIndex + 1) % sortOrders.length;
                     setCurrentOrderIndex(newIndex);

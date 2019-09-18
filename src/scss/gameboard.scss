@@ -30,35 +30,9 @@
 }
 
 .responsive {
-  //overflow-x: auto;b
-  //display: block;
-  //max-height: 60vh;
-  //width: 101%;
-
+  overflow-x: auto;
   .table.table-bordered {
-    display: table;
-    width: 100%;
-    //th {
-    //  background: $gray-118;
-    //  position: sticky;
-    //  top: 0;
-    //  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
-    //}
-
-    thead, tbody {
-      float: left;
-      width: 100%;
-      overflow-y: scroll;
-    }
-
-    tbody {
-      max-height: 55vh;
-    }
-
     tr {
-      width: 100%;
-      display: table;
-
       &.disabled {
         background-color: lightgrey;
       }
@@ -74,10 +48,6 @@
             height: 1.5rem;
             margin-top: -0.25rem;
           }
-        }
-
-        img {
-          cursor: pointer;
         }
 
         .img-center {
