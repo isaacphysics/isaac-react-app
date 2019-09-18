@@ -1,27 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import {handleEmailAlter, requestEmailVerification} from "../../state/actions";
 import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
-import {AppState, ErrorState} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {Link} from "react-router-dom";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {connect, useSelector} from "react-redux";
-const stateToProps = (state: AppState, {location: {search}}: {location: {search?: string}}) => ({
-    errorMessage: state ? state.error : null,
-    queryParams: search ? queryString.parse(search) : {}
-});
-const dispatchToProps = {handleEmailAlter, requestEmailVerification};
+import {useDispatch, useSelector} from "react-redux";
+import {handleEmailAlter, requestEmailVerification} from "../../state/actions";
 
-interface EmailAlterHandlerProps {
-    queryParams: {userid?: string; token?: string};
-    handleEmailAlter: (params: {userid: string | null; token: string | null}) => void;
-    errorMessage: ErrorState;
-    requestEmailVerification: () => void;
-}
-
-const EmailAlterHandlerComponent = (props: EmailAlterHandlerProps) => {
+export const EmailAlterHandler = () => {
+    const dispatch = useDispatch();
     const user = useSelector((state: AppState) => state && state.user);
-    const {queryParams: {userid, token}, handleEmailAlter, errorMessage, requestEmailVerification} = props;
+    const errorMessage = useSelector((state: AppState) => state && state.error);
+
+    const {userid, token}: {userid?: string; token?: string} = queryString.parse(location.search);
     const [verificationReSent, setVerificationReSent] = useState(false);
     const validParameters = userid && token;
     const idsMatch = user && user.loggedIn && user.id == userid;
@@ -29,11 +20,18 @@ const EmailAlterHandlerComponent = (props: EmailAlterHandlerProps) => {
 
     const emailVerificationSuccess = validParameters && idsMatch && emailVerified;
 
+    let successMessage = "Email address verification token received. Log in to confirm verification.";
+    if (emailVerificationSuccess) {
+        successMessage = "Email address verified";
+    } else if (!errorMessage && user && user.loggedIn && user.id != userid) {
+        successMessage = "You are signed in as a different user to the user with the email you have just verified. Log in as the other user to confirm verification.";
+    }
+
     useEffect(() => {
         if (userid && token) {
-            handleEmailAlter({userid, token});
+            dispatch(handleEmailAlter({userid, token}));
         }
-    }, [userid, token, handleEmailAlter]);
+    }, [userid, token]);
 
     return <Container id="email-verification">
         <TitleAndBreadcrumb currentPageTitle="Email verification" />
@@ -45,7 +43,7 @@ const EmailAlterHandlerComponent = (props: EmailAlterHandlerProps) => {
 
                         {(!errorMessage || emailVerificationSuccess) &&
                             <React.Fragment>
-                                <h3 className="mb-4">{ emailVerificationSuccess ? "Email address verified" : "Email address verification token received. Log in to confirm verification." }</h3>
+                                <h3 className="mb-4">{successMessage}</h3>
                                 <Button tag={Link} to="/account" color="secondary" block>
                                     Continue to My Account
                                 </Button>
@@ -60,7 +58,7 @@ const EmailAlterHandlerComponent = (props: EmailAlterHandlerProps) => {
                                 {idsMatch ? <p className="mt-4">
                                     {!verificationReSent ?
                                         <Button onClick={() => {
-                                            requestEmailVerification();
+                                            dispatch(requestEmailVerification());
                                             setVerificationReSent(true);
                                         }}>
                                             Resend verification email
@@ -79,5 +77,3 @@ const EmailAlterHandlerComponent = (props: EmailAlterHandlerProps) => {
         </Row>
     </Container>;
 };
-
-export const EmailAlterHandler = connect(stateToProps, dispatchToProps)(EmailAlterHandlerComponent);
