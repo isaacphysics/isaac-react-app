@@ -4,6 +4,8 @@ import {invert} from "lodash";
 
 export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
 
+export const IS_CS_PLATFORM = true;
+
 /*
  * Configure the api provider with the server running the API:
  * No need if we want to use the same server as the static content.

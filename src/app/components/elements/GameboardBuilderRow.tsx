@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import * as RS from "reactstrap";
-import {examBoardTagMap, TAG_ID, TAG_LEVEL, tagExamboardMap} from "../../services/constants";
+import {examBoardTagMap, IS_CS_PLATFORM, TAG_ID, TAG_LEVEL, tagExamboardMap} from "../../services/constants";
 import React, {ChangeEvent} from "react";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
@@ -8,9 +8,7 @@ import {store} from "../../state/store";
 import {QuestionModal} from "./modals/QuestionModal";
 import {useDispatch} from "react-redux";
 import {DraggableProvided} from "react-beautiful-dnd";
-import {allCategoryTags, allTagIds, getCategoryTags, getSpecifiedTag} from "../../services/tags";
-import Select from "react-select";
-import {convertTagToSelectionOption, groupTagSelectionsByParent} from "../../services/gameboardBuilder";
+import {getSpecifiedTag} from "../../services/tags";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -81,9 +79,9 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
         <td>
             {topicTag()}
         </td>
-        <td>
+        {!IS_CS_PLATFORM && <td>
             {question.level}
-        </td>
+        </td>}
         <td>
             {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagIcon(tagExamboardMap[tag]))}
         </td>

@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {Tooltip} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ContentSummaryDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {closeActiveModal, createGameboard, getWildcards, openActiveModal} from "../../state/actions";
 import {store} from "../../state/store";
 import {QuestionSearchModal} from "../elements/QuestionSearchModal";
@@ -14,21 +14,36 @@ import {GameboardCreatedModal} from "../elements/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
 import {resourceFound} from "../../services/validation";
 import {sample} from 'lodash';
-import {convertContentSummaryToGameboardItem} from "../../services/gameboardBuilder";
+import {
+    convertContentSummaryToGameboardItem,
+    loadGameboardQuestionOrder,
+    loadGameboardSelectedQuestions
+} from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
+import {IS_CS_PLATFORM} from "../../services/constants";
 
-export const GameboardBuilder = () => {
+interface GameboardBuilderProps {
+    location: {
+        state?: {
+            gameboard?: GameboardDTO;
+        }
+    }
+};
+
+export const GameboardBuilder = (props: GameboardBuilderProps) => {
     const dispatch = useDispatch();
-    const [gameboardName, setGameboardName] = useState("");
-    const [gameboardTag, setGameboardTag] = useState("null");
-    const [gameboardURL, setGameboardURL] = useState("");
-    const [questionOrder, setQuestionOrder] = useState<string[]>([]);
-    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
-    const [tooltipShow, setTooltipShow] = useState(false);
-    const [wildcardId, setWildcardId] = useState("random");
+    const loadedGameboard = props.location.state && props.location.state.gameboard;
 
     const user = useSelector((state: AppState) => state && state.user);
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
+
+    const [gameboardName, setGameboardName] = useState(loadedGameboard ? `${loadedGameboard.title}-copy`: "");
+    const [gameboardTag, setGameboardTag] = useState(loadedGameboard && isStaff(user) && loadedGameboard.tags ? loadedGameboard.tags[0] : "null");
+    const [gameboardURL, setGameboardURL] = useState(loadedGameboard && isStaff(user) ? `${loadedGameboard.id}-copy` : "");
+    const [questionOrder, setQuestionOrder] = useState<string[]>((loadedGameboard && loadGameboardQuestionOrder(loadedGameboard)) || []);
+    const [selectedQuestions, setSelectedQuestions] = useState((loadedGameboard && loadGameboardSelectedQuestions(loadedGameboard)) || new Map<string, ContentSummaryDTO>());
+    const [tooltipShow, setTooltipShow] = useState(false);
+    const [wildcardId, setWildcardId] = useState(loadedGameboard && loadedGameboard.wildCard && loadedGameboard.wildCard.id ? loadedGameboard.wildCard.id : "random");
 
     const canSubmit = () => (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardName != "";
 
@@ -57,6 +72,7 @@ export const GameboardBuilder = () => {
                         <RS.Input
                             type="text"
                             placeholder="Year 12 Network components"
+                            defaultValue={gameboardName}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setGameboardName(e.target.value);
                             }}
@@ -72,7 +88,7 @@ export const GameboardBuilder = () => {
                                       setGameboardTag(e.target.value);
                                   }}>
                             <option value="null">None</option>
-                            <option value="CREATED_BY_ISAAC">Created by Isaac</option>
+                            <option value="ISAAC_BOARD">Created by Isaac</option>
                         </RS.Input>
                     </RS.Col>
                     <RS.Col>
@@ -80,6 +96,7 @@ export const GameboardBuilder = () => {
                         <RS.Input
                             type="text"
                             placeholder="Optional"
+                            defaultValue={gameboardURL}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setGameboardURL(e.target.value);
                             }}
@@ -87,7 +104,7 @@ export const GameboardBuilder = () => {
                     </RS.Col>
                     <RS.Col>
                         <RS.Label htmlFor="wildcard">Wildcard</RS.Label>
-                        <RS.Input type="select" defaultValue="random"
+                        <RS.Input type="select" defaultValue={wildcardId}
                                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                       setWildcardId(e.target.value);
                                   }}>
@@ -107,8 +124,8 @@ export const GameboardBuilder = () => {
                                 <tr>
                                     <th className="w-5"></th>
                                     <th className="w-40">Question title</th>
-                                    <th className="w-30">Topic</th>
-                                    <th className="w-10">Level</th>
+                                    <th className="w-25">Topic</th>
+                                    {!IS_CS_PLATFORM && <th className="w-15">Level</th>}
                                     <th className="w-15">Exam board</th>
                                 </tr>
                             </thead>
@@ -184,7 +201,7 @@ export const GameboardBuilder = () => {
                                   gameFilter: {
                                       subjects: ["computer_science"],
                                   },
-                                  tags: gameboardTag == "CREATED_BY_ISAAC" ? ["ISAAC_BOARD"] : []
+                                  tags: gameboardTag == "ISAAC_BOARD" ? ["ISAAC_BOARD"] : []
                               }));
 
                               dispatch(openActiveModal({

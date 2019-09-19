@@ -1,3 +1,20 @@
+@mixin table-sticky() {
+  position: sticky !important;
+  background-clip:  padding-box !important;
+  background: $gray-103;
+  z-index: 1;
+  top: 0;
+}
+
+@mixin after-border() {
+  content:'';
+  position:absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
 .list-gameboard {
   .bg-success {
     background-color: #dfefd7 !important;
@@ -22,6 +39,7 @@
     }
 
     .select__menu {
+      z-index: 2;
       .select__option.select__option--is-focused {
         background-color: $primary;
       }
@@ -29,9 +47,17 @@
   }
 }
 
+
+
 .responsive {
-  overflow-x: auto;
+  overflow: auto;
+  display: block;
+  max-height: 60vh;
+  width: 101%;
   .table.table-bordered {
+    thead {
+      @include table-sticky();
+    }
     tr {
       &.disabled {
         background-color: lightgrey;

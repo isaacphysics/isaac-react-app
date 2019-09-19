@@ -41,7 +41,7 @@ export const GameboardCreatedModal = () => {
             </RS.Col>
             <RS.Col>
                 <RS.Button tag={Link}
-                           to={`/set_assignment`}
+                           to={`/set_assignments`}
                            color="primary"
                            outline
                            onClick={() => dispatch(closeActiveModal())}>>

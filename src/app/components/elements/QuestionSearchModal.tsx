@@ -10,8 +10,9 @@ import {ValueType} from "react-select/src/types";
 import {convertExamBoardToOption, groupTagSelectionsByParent, sortQuestions} from "../../services/gameboardBuilder";
 import {allTagIds, getSubcategoryTags} from "../../services/tags";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
-import {EXAM_BOARD, examBoardTagMap} from "../../services/constants";
+import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM} from "../../services/constants";
 import {GameboardBuilderRow} from "./GameboardBuilderRow";
+import classnames from "classnames";
 
 interface QuestionSearchModalProps {
     originalSelectedQuestions: Map<string, ContentSummaryDTO>;
@@ -94,7 +95,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     onChange={multiSelectOnChange(setSearchTopics)}
                 />
             </div>
-            <div className="text-wrap col-lg-3 my-2">
+            <div className={"text-wrap my-2 " + (IS_CS_PLATFORM ? "col-lg-6" : "col-lg-3")}>
                 <RS.Label htmlFor="exam-board">Exam board</RS.Label>
                 <Select
                     isMulti
@@ -109,7 +110,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     onChange={multiSelectOnChange(setSearchExamBoards)}
                 />
             </div>
-            <div className="text-wrap col-lg-3 my-2">
+            {!IS_CS_PLATFORM && <div className="text-wrap col-lg-3 my-2">
                 <RS.Label htmlFor="level">Level</RS.Label>
                 <Select
                     isMulti
@@ -122,7 +123,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     placeholder="Any"
                     onChange={multiSelectOnChange(setSearchLevels)}
                 />
-            </div>
+            </div>}
         </div>
         <div className="row">
             <div className="text-wrap col-lg-12 mt-2">
@@ -153,9 +154,9 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         <th className="w-5"> </th>
                         <SortableTableHeader className="w-40" title="Question title"
                                              updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}/>
-                        <th className="w-30">Topic</th>
-                        <SortableTableHeader className="w-10" title="Level"
-                                             updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "level")}/>
+                        <th className="w-25">Topic</th>
+                        {!IS_CS_PLATFORM && <SortableTableHeader className="w-15" title="Level"
+                                             updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "level")}/>}
                         <th className="w-15">Exam board</th>
                     </tr>
                 </thead>
