@@ -30,8 +30,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [searchExamBoards, setSearchExamBoards] = useState<string[]>([]);
 
     const [questionsSort, setQuestionsSort] = useState({});
-    const [selectedQuestions, setSelectedQuestions] = useState(originalSelectedQuestions);
-    const [questionOrder, setQuestionOrder] = useState(originalQuestionOrder);
+    const [selectedQuestions, setSelectedQuestions] = useState(new Map(originalSelectedQuestions));
+    const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
     const questionsSelector = useSelector((state: AppState) => state && state.gameboardEditorQuestions);
     const userPreferencesSelector = useSelector((state: AppState) => state && state.userPreferences);
@@ -167,7 +167,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                             (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0)) &&
                             (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0))
                     })).map((question) =>
-                        <GameboardBuilderRow key={question.id}
+                        <GameboardBuilderRow key={`question-search-modal-row-${question.id}`}
                                              question={question}
                                              selectedQuestions={selectedQuestions}
                                              setSelectedQuestions={setSelectedQuestions}

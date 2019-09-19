@@ -139,6 +139,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                                                 return question && question.id && <Draggable key={question.id} draggableId={question.id} index={index}>
                                                     {(provided) => (
                                                         <GameboardBuilderRow provided={provided}
+                                                                             key={`gameboard-builder-row-${question.id}`}
                                                                              question={question}
                                                                              selectedQuestions={selectedQuestions}
                                                                              setSelectedQuestions={setSelectedQuestions}

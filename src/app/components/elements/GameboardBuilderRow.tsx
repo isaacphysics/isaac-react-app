@@ -46,7 +46,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
         <td>
             <RS.CustomInput
                 type="checkbox"
-                id={`question-search-modal-include-${question.id}`}
+                id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
                 color="secondary"
                 checked={question.id !== undefined && selectedQuestions.has(question.id)}
                 onChange={(e: ChangeEvent<HTMLElement>) => {
