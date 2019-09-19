@@ -16,6 +16,7 @@ export const EmailAlterHandler = () => {
     const [verificationReSent, setVerificationReSent] = useState(false);
     const validParameters = userid && token;
     const idsMatch = user && user.loggedIn && user.id == userid;
+    const idsMismatch = user && user.loggedIn && user.id != userid;
     const emailVerified = user && user.loggedIn && user.emailVerificationStatus === "VERIFIED";
 
     const emailVerificationSuccess = validParameters && idsMatch && emailVerified;
@@ -23,7 +24,7 @@ export const EmailAlterHandler = () => {
     let successMessage = "Email address verification token received. Log in to confirm verification.";
     if (emailVerificationSuccess) {
         successMessage = "Email address verified";
-    } else if (!errorMessage && user && user.loggedIn && user.id != userid) {
+    } else if (!errorMessage && idsMismatch) {
         successMessage = "You are signed in as a different user to the user with the email you have just verified. Log in as the other user to confirm verification.";
     }
 
@@ -44,9 +45,9 @@ export const EmailAlterHandler = () => {
                         {(!errorMessage || emailVerificationSuccess) &&
                             <React.Fragment>
                                 <h3 className="mb-4">{successMessage}</h3>
-                                <Button tag={Link} to="/account" color="secondary" block>
+                                {!idsMismatch && <Button tag={Link} to="/account" color="secondary" block>
                                     Continue to My Account
-                                </Button>
+                                </Button>}
                             </React.Fragment>}
                         {!emailVerificationSuccess && errorMessage &&
                             <React.Fragment>
