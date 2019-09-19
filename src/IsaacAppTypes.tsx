@@ -1,3 +1,4 @@
+import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
     Content,
@@ -10,8 +11,6 @@ import {
     UserSummaryWithEmailAddressDTO
 } from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
-import React from "react";
-
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -52,6 +51,11 @@ export type Action =
     | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
+
+    | {type: ACTION_TYPE.USER_SCHOOL_LOOKUP_REQUEST}
+    | {type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_SUCCESS; schoolLookup: UserSchoolLookup}
+    | {type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_FAILURE}
+
 
     | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST}
     | {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS}
@@ -225,9 +229,62 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; managerEmail: string; newGroup: ApiTypes.UserGroupDTO}
     | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; managerEmail: string}
 
-    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: UserSummaryWithEmailAddressDTO}
+    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
+    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
+    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
+
+    | {type: ACTION_TYPE.EVENTS_REQUEST}
+    | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
+    | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.EVENTS_CLEAR}
+
+    | {type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST}
+    | {type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS; eventOverviews: EventOverview[]}
+    | {type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_REQUEST}
+    | {type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS; augmentedEvent: AugmentedEvent}
+    | {type: ACTION_TYPE.EVENT_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS; eventBookings: ApiTypes.EventBookingDTO[]}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_USER_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_RESEND_EMAIL_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_RESEND_EMAIL_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_RESEND_EMAIL_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_CANCELLATION_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_CANCELLATION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_CANCELLATION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_DELETION_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_DELETION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_BOOKING_DELETION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_REQUEST}
+    | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
@@ -267,7 +324,7 @@ export interface AppGroup extends ApiTypes.UserGroupDTO {
 }
 
 export interface AppGroupMembership extends ApiTypes.UserSummaryWithGroupMembershipDTO {
-    groupMembershipInformation: GroupMembershipDTO;
+    groupMembershipInformation: ApiTypes.GroupMembershipDTO;
 }
 
 export interface ShortcutResponses {
@@ -290,10 +347,15 @@ export interface UserExamPreferences {
     [EXAM_BOARD.OCR]?: boolean;
 }
 
+export interface SubjectInterests {
+    CS_ALEVEL?: boolean;
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: string;
     EMAIL_PREFERENCE?: UserEmailPreferences;
     EXAM_BOARD?: UserExamPreferences;
+    SUBJECT_INTEREST?: SubjectInterests;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
@@ -359,12 +421,12 @@ export enum BoardOrder {
 
 export type ActualBoardLimit = number | "ALL";
 
-export type AppGameBoard = GameboardDTO & {assignedGroups?: UserGroupDTO[]};
+export type AppGameBoard = ApiTypes.GameboardDTO & {assignedGroups?: ApiTypes.UserGroupDTO[]};
 
 // Admin Content Errors:
 export interface ContentErrorItem {
     listOfErrors: string[];
-    partialContent: Content;
+    partialContent: ApiTypes.Content;
     successfulIngest: boolean;
 }
 
@@ -390,15 +452,52 @@ export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
 
 export interface AppAssignmentProgress {
-    user: UserSummaryDTO;
+    user: ApiTypes.UserSummaryDTO;
     correctPartResults: number[];
     incorrectPartResults: number[];
-    results: GameboardItemState[];
+    results: ApiTypes.GameboardItemState[];
 
     tickCount: number;
     correctQuestionPartsCount: number;
     incorrectQuestionPartsCount: number;
     notAttemptedPartResults: number[];
+}
+
+export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
+    multiDay?: boolean;
+    expired?: boolean;
+    withinBookingDeadline?: boolean;
+    inProgress?: boolean;
+    teacher?: boolean;
+    student?: boolean;
+    virtual?: boolean;
+    field?: "physics" | "maths";
+}
+
+export interface EventOverview {
+    id?: string;
+    title?: string;
+    subtitle?: string;
+    date?: Date;
+    bookingDeadline?: Date;
+    eventStatus?: ApiTypes.EventStatus;
+    location?: ApiTypes.Location;
+    numberOfConfirmedBookings: number;
+    numberOfWaitingListBookings: number;
+    numberAttended: number;
+    numberAbsent: number;
+    numberOfPlaces: number;
+}
+
+export interface AdditionalInformation {
+    jobTitle?: string;
+    yearGroup?: string;
+    medicalRequirements?: string;
+    accessibilityRequirements?: string;
+    emergencyName?: string;
+    emergencyNumber?: string;
+    authorisation?: string;
+    authorisationOther?: string;
 }
 
 export interface ZxcvbnResult {
@@ -427,4 +526,10 @@ export interface TemplateEmail {
     subject?: string;
     plainText?: string;
     html?: string;
+}
+
+export interface UserSchoolLookup {[userId: number]: School}
+
+export enum ATTENDANCE {
+    ABSENT, ATTENDED
 }

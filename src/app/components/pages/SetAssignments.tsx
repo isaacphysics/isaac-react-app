@@ -25,7 +25,7 @@ import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTy
 import {boards, groups} from "../../state/selectors";
 import {sortBy, range} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {currentYear, DateInput} from "../elements/DateInput";
+import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {DATE_FORMATTER, TEACHERS_CRUMB} from "../../services/constants";
 import {withRouter} from "react-router-dom";
 

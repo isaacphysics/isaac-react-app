@@ -1,6 +1,8 @@
 import React, {useEffect} from 'react';
+import "../../services/scrollManager"; // important
+import "../../services/polyfills"; // important
 import {useDispatch, useSelector} from "react-redux";
-import {Router, Switch} from "react-router-dom";
+import {Router, Switch, Route} from "react-router-dom";
 import {Footer} from "./Footer";
 import {Homepage} from "../pages/Homepage";
 import {Question} from "../pages/Question";
@@ -26,6 +28,7 @@ import {Admin} from "../pages/Admin";
 import {history} from "../../services/history"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
+import {AuthError} from "../pages/AuthError";
 import {SessionExpired} from "../pages/SessionExpired";
 import {ConsistencyErrorModal} from "./ConsistencyErrorModal";
 import {Search} from "../pages/Search";
@@ -33,12 +36,11 @@ import {CookieBanner} from "./CookieBanner";
 import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
 import {Header} from "./Header";
-import {Route} from "react-router";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
-import {ActiveModal} from "../elements/ActiveModal";
-import {isAdmin, isLoggedIn, isStaff, isTeacher} from "../../services/user";
+import {ActiveModal} from "../elements/modals/ActiveModal";
+import {isAdmin, isEventsManager, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {Groups} from "../pages/Groups";
 import {Equality} from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
@@ -48,12 +50,11 @@ import {Support} from "../pages/Support";
 import {ForStudents} from "../pages/ForStudents";
 import {ForTeachers} from "../pages/ForTeachers";
 import {AddGameboard} from "../handlers/AddGameboard";
-
-import "../../services/scrollManager";
-import "../../services/polyfills";
 import {isTest} from "../../services/constants";
-import {AuthError} from "../pages/AuthError";
 import {AdminEmails} from "../pages/AdminEmails";
+import {Events} from "../pages/Events";
+import {EventDetails} from "../pages/EventDetails";
+import {EventManager} from "../pages/EventManager";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -104,7 +105,8 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
                     <TrackedRoute exact path="/add_gameboard/:gameboardId" ifUser={isLoggedIn} component={AddGameboard} />
 
-                    <Route exact path='/events' component={() => {window.location.href = "https://isaaccomputerscience.org/events"; return null;}}/>
+                    <TrackedRoute exact path='/events' component={Events}/>
+                    <TrackedRoute exact path='/events/:eventId' component={EventDetails}/>
 
                     {/* Student pages */}
                     <TrackedRoute exact path="/students" component={ForStudents} />
@@ -120,6 +122,7 @@ export const IsaacApp = () => {
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
                     <TrackedRoute exact path="/admin/usermanager" ifUser={isAdmin} component={AdminUserManager} />
+                    <TrackedRoute exact path="/admin/events" ifUser={isEventsManager} component={EventManager} />
                     <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
                     <TrackedRoute exact path="/admin/content_errors" ifUser={isStaff} component={AdminContentErrors} />
                     <TrackedRoute exact path="/admin/emails" ifUser={isAdmin} component={AdminEmails} />

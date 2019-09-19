@@ -1,10 +1,10 @@
 import {Button, CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import React, {useState} from "react";
-import {ValidationUser, ZxcvbnResult} from "../../../IsaacAppTypes";
-import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
-import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../services/validation";
-import {resetPassword} from "../../state/actions";
-import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../services/passwordStrength";
+import {ValidationUser, ZxcvbnResult} from "../../../../IsaacAppTypes";
+import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
+import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../../services/validation";
+import {resetPassword} from "../../../state/actions";
+import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../../services/passwordStrength";
 
 interface UserPasswordProps {
     currentPassword?: string;

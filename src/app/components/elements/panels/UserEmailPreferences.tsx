@@ -1,10 +1,10 @@
 import {CardBody, Col, FormGroup, Row, default as RS, Table} from "reactstrap";
 import React, {useMemo} from "react";
-import {UserEmailPreferences} from "../../../IsaacAppTypes";
-import {TrueFalseRadioInput} from "./TrueFalseRadioInput";
+import {UserEmailPreferences} from "../../../../IsaacAppTypes";
+import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {useSelector} from "react-redux";
-import {AppState} from "../../state/reducers";
-import {validateEmailPreferences} from "../../services/validation";
+import {AppState} from "../../../state/reducers";
+import {validateEmailPreferences} from "../../../services/validation";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences;
@@ -79,7 +79,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     </tr>
                 </tbody>
             </Table>
-            {errorMessage && <h4 role="alert" className="text-danger text-center mb-4">
+            {errorMessage && <h4 role="alert" className="text-danger text-center">
                 {errorMessage}
             </h4>}
         </FormGroup>

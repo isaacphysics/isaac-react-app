@@ -7,19 +7,23 @@ import {
     AppGroup,
     AppGroupMembership,
     AppQuestionDTO,
+    AugmentedEvent,
     ContentErrorsResponse,
+    EventOverview,
     GroupMembershipDetailDTO,
     isValidatedChoice,
     LoggedInUser,
     NOT_FOUND_TYPE, TemplateEmail,
     Toast,
-    UserPreferencesDTO
+    UserPreferencesDTO,
+    UserSchoolLookup
 } from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
     ContentDTO,
     ContentSummaryDTO,
     EmailTemplateDTO,
+    EventBookingDTO,
     GameboardDTO,
     GameboardListDTO,
     IsaacTopicSummaryPageDTO,
@@ -67,6 +71,18 @@ export const userPreferences = (userPreferences: UserPreferencesState = null, ac
             return {...action.userPreferences};
         default:
             return userPreferences;
+    }
+};
+
+export type UserSchoolLookupState = UserSchoolLookup | null;
+export const userSchoolLookup = (userSchoolLookup: UserSchoolLookupState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_SCHOOL_LOOKUP_REQUEST:
+            return null;
+        case ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_SUCCESS:
+            return {...action.schoolLookup};
+        default:
+            return userSchoolLookup;
     }
 };
 
@@ -320,6 +336,59 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
             return currentTopic;
     }
 };
+
+type EventsState = {events: AugmentedEvent[]; total: number} | null;
+export const events = (events: EventsState = null, action: Action) => {
+    const currentEvents = events ? events.events : [];
+    switch (action.type) {
+        case ACTION_TYPE.EVENTS_RESPONSE_SUCCESS:
+            return {events: Array.from(new Set([...currentEvents, ...action.augmentedEvents])), total: action.total};
+        case ACTION_TYPE.EVENTS_CLEAR:
+            return null;
+        default:
+            return events;
+    }
+};
+
+export type CurrentEventState = AugmentedEvent | NOT_FOUND_TYPE | null;
+export const currentEvent = (currentEvent: CurrentEventState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_RESPONSE_SUCCESS:
+            return {...action.augmentedEvent};
+        case ACTION_TYPE.EVENT_RESPONSE_FAILURE:
+            return NOT_FOUND;
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
+        case ACTION_TYPE.EVENT_REQUEST:
+            return null;
+        default:
+            return currentEvent;
+    }
+};
+
+export type EventBookingsState = EventBookingDTO[] | null;
+export const eventBookings = (eventBookings: EventBookingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS:
+            return [...action.eventBookings];
+        case ACTION_TYPE.EVENT_BOOKING_REQUEST:
+            return null;
+        default:
+            return eventBookings;
+    }
+};
+
+type EventOverviewsState = EventOverview[] | null;
+export const eventOverviews = (eventOverviews: EventOverviewsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_OVERVIEWS_REQUEST:
+            return null;
+        case ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS:
+            return [...action.eventOverviews];
+        default:
+            return eventOverviews;
+    }
+};
+
 
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const error = (error: ErrorState = null, action: Action): ErrorState => {
@@ -629,6 +698,7 @@ const appReducer = combineReducers({
     adminContentErrors,
     adminStats,
     adminEmailTemplate,
+    userSchoolLookup,
     activeAuthorisations,
     otherUserAuthorisations,
     groupMemberships,
@@ -647,6 +717,10 @@ const appReducer = combineReducers({
     boards,
     assignmentsByMe,
     progress,
+    events,
+    currentEvent,
+    eventOverviews,
+    eventBookings,
     fragments
 });
 
@@ -658,6 +732,7 @@ export type AppState = undefined | {
     adminContentErrors: AdminContentErrorsState;
     adminStats: AdminStatsState;
     adminEmailTemplate: AdminEmailTemplateState;
+    userSchoolLookup: UserSchoolLookupState;
     activeAuthorisations: ActiveAuthorisationsState;
     otherUserAuthorisations: OtherUserAuthorisationsState;
     groupMemberships: GroupMembershipsState;
@@ -676,6 +751,10 @@ export type AppState = undefined | {
     boards: BoardsState;
     assignmentsByMe: AssignmentsState;
     progress: ProgressState;
+    events: EventsState;
+    currentEvent: CurrentEventState;
+    eventOverviews: EventOverviewsState;
+    eventBookings: EventBookingsState;
     fragments: FragmentsState;
 }
 
