@@ -4,7 +4,7 @@ import * as RS from "reactstrap";
 import {Tooltip} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
-import {closeActiveModal, createGameboard, getWildcards, openActiveModal} from "../../state/actions";
+import {closeActiveModal, createGameboard, getWildcards, logAction, openActiveModal} from "../../state/actions";
 import {store} from "../../state/store";
 import {QuestionSearchModal} from "../elements/QuestionSearchModal";
 import classnames from "classnames";
@@ -17,10 +17,12 @@ import {sample} from 'lodash';
 import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
-    loadGameboardSelectedQuestions
+    loadGameboardSelectedQuestions,
+    logEvent
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
 import {IS_CS_PLATFORM} from "../../services/constants";
+import {history} from "../../services/history"
 
 interface GameboardBuilderProps {
     location: {
@@ -28,7 +30,7 @@ interface GameboardBuilderProps {
             gameboard?: GameboardDTO;
         }
     }
-};
+}
 
 export const GameboardBuilder = (props: GameboardBuilderProps) => {
     const dispatch = useDispatch();
@@ -44,6 +46,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
     const [selectedQuestions, setSelectedQuestions] = useState((loadedGameboard && loadGameboardSelectedQuestions(loadedGameboard)) || new Map<string, ContentSummaryDTO>());
     const [tooltipShow, setTooltipShow] = useState(false);
     const [wildcardId, setWildcardId] = useState(loadedGameboard && loadedGameboard.wildCard && loadedGameboard.wildCard.id ? loadedGameboard.wildCard.id : "random");
+    const [eventLog, setEventLog] = useState<any[]>([]);
 
     const canSubmit = () => (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardName != "";
 
@@ -53,6 +56,18 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
             questionOrder.splice(result.destination.index, 0, removed);
         }
     };
+
+    useEffect(() => {
+        const unblock = history.block(() => {
+            logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
+            logAction({
+                type: "LEAVE_GAMEBOARD_BUILDER",
+                events: eventLog
+            })
+        });
+
+        return unblock;
+    });
 
     useEffect(() => {
        if (!wildcards) {
@@ -153,6 +168,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                                         <tr>
                                             <td colSpan={5}
                                                 onClick={() => {
+                                                    logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
                                                     dispatch(openActiveModal({
                                                         closeAction: () => {store.dispatch(closeActiveModal())},
                                                         size: "xl",
@@ -160,7 +176,8 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                                                         body: <QuestionSearchModal originalSelectedQuestions={selectedQuestions}
                                                                                    setOriginalSelectedQuestions={setSelectedQuestions}
                                                                                    originalQuestionOrder={questionOrder}
-                                                                                   setOriginalQuestionOrder={setQuestionOrder}/>
+                                                                                   setOriginalQuestionOrder={setQuestionOrder}
+                                                                                   eventLog={eventLog}/>
                                                     }))}}>
                                                 <div className="img-center">
                                                     <img src="/assets/add_circle_outline.svg" className="centre img-fluid" alt="Add questions" />
@@ -209,7 +226,13 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                                   closeAction: () => {store.dispatch(closeActiveModal())},
                                   title: "Gameboard submitted",
                                   body: <GameboardCreatedModal/>
-                              }))
+                              }));
+
+                              logEvent(eventLog, "SAVE_GAMEBOARD", {});
+                              logAction({
+                                  type: "SAVE_GAMEBOARD",
+                                  events: eventLog
+                              });
                           }}
                 />
                 {!canSubmit() && <Tooltip target="gameboard-save-button" className="failed" isOpen={tooltipShow} toggle={() => setTooltipShow(!tooltipShow)}>

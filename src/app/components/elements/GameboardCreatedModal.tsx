@@ -35,7 +35,10 @@ export const GameboardCreatedModal = () => {
                            to={`/gameboards/builder`}
                            color="primary"
                            outline
-                           onClick={() => dispatch(closeActiveModal())}>>
+                           onClick={() => {
+                               window.location.reload();
+                               dispatch(closeActiveModal());
+                           }}>
                     Create another board
                 </RS.Button>
             </RS.Col>

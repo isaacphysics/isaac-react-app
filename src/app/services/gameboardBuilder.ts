@@ -101,3 +101,11 @@ export const loadGameboardSelectedQuestions = (gameboard: GameboardDTO) => {
         return map;
     }, new Map<string, ContentSummaryDTO>());
 };
+
+export const logEvent = (eventsLog: any[], event: string, params: any) => {
+    eventsLog.push({
+        event,
+        timestamp: new Date().getTime(),
+        ...params
+    })
+};

@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react";
-import {closeActiveModal, searchQuestions} from "../../state/actions";
+import {closeActiveModal, logAction, searchQuestions} from "../../state/actions";
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "./SortableTableHeader";
 import {useDispatch, useSelector} from "react-redux";
@@ -7,7 +7,12 @@ import {AppState} from "../../state/reducers";
 import {debounce, range} from "lodash";
 import Select from "react-select";
 import {ValueType} from "react-select/src/types";
-import {convertExamBoardToOption, groupTagSelectionsByParent, sortQuestions} from "../../services/gameboardBuilder";
+import {
+    convertExamBoardToOption,
+    groupTagSelectionsByParent,
+    logEvent,
+    sortQuestions
+} from "../../services/gameboardBuilder";
 import {allTagIds, getSubcategoryTags} from "../../services/tags";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM} from "../../services/constants";
@@ -19,9 +24,10 @@ interface QuestionSearchModalProps {
     setOriginalSelectedQuestions: (m: Map<string, ContentSummaryDTO>) => void;
     originalQuestionOrder: string[];
     setOriginalQuestionOrder: (a: string[]) => void;
+    eventLog: any[];
 }
 
-export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder}: QuestionSearchModalProps) => {
+export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useDispatch();
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
 
@@ -37,13 +43,24 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const userPreferencesSelector = useSelector((state: AppState) => state && state.userPreferences);
 
     const searchDebounce = useCallback(
-        debounce((searchString: string, topics: string[], levels: string[], examBoard: string[], fasttrack: boolean, startIndex: number) =>
-            dispatch(searchQuestions({
-                searchString: [searchString, ...([topics, levels, examBoard].map((tags) => tags.join(" ")))].filter((query) => query != "").join(" "),
-                tags: "",
-                fasttrack,
-                startIndex,
-                limit: 50})),
+        debounce((searchString: string, topics: string[], levels: string[], examBoard: string[], fasttrack: boolean, startIndex: number) => {
+                dispatch(searchQuestions({
+                    searchString: [searchString, ...([topics, levels, examBoard].map((tags) => tags.join(" ")))].filter((query) => query != "").join(" "),
+                    tags: "",
+                    fasttrack,
+                    startIndex,
+                    limit: 50
+                }));
+
+                logEvent(eventLog,"SEARCH_QUESTIONS", {
+                    searchString,
+                    topics,
+                    levels,
+                    examBoard,
+                    fasttrack,
+                    startIndex,
+                });
+            },
             250),
         []);
 
