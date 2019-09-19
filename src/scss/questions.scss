@@ -117,6 +117,10 @@
   button {
       box-shadow: none !important; // How horrible...
 
+      &:focus {
+        text-decoration: underline;
+      }
+
       &.active {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
