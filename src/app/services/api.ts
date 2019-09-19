@@ -7,7 +7,7 @@ import {
     ActualBoardLimit,
     AdditionalInformation,
     ATTENDANCE,
-    BoardOrder,
+    BoardOrder, EmailUserRoles,
     LoggedInUser,
     UserPreferencesDTO
 } from "../../IsaacAppTypes";
@@ -108,7 +108,16 @@ export const api = {
     email: {
         verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
             return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
-        }
+        },
+        getTemplateEmail: (contentid: string): AxiosPromise<AppTypes.TemplateEmail> => {
+            return endpoint.get(`/email/viewinbrowser/${contentid}`);
+        },
+        sendAdminEmail: (contentid: string, emailType: string, roles: EmailUserRoles): AxiosPromise => {
+            return endpoint.post(`/email/sendemail/${contentid}/${emailType}`, roles);
+        },
+        sendAdminEmailWithIds: (contentid: string, emailType: string, ids: number[]): AxiosPromise => {
+            return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
+        },
     },
     admin: {
         userSearch: {

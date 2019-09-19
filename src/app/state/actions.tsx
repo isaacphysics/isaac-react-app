@@ -19,6 +19,7 @@ import {
     AppGroupMembership,
     ATTENDANCE,
     BoardOrder,
+    EmailUserRoles,
     LoggedInUser,
     LoggedInValidationUser,
     Toast,
@@ -843,6 +844,41 @@ export const getAdminSiteStats = () => async (dispatch: Dispatch<Action>) => {
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_STATS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to get Admin statistics", e));
+    }
+};
+
+export const getEmailTemplate = (contentid: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST});
+    try {
+        const email = await api.email.getTemplateEmail(contentid);
+        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS, email: email.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get email template", e));
+    }
+};
+
+export const sendAdminEmail = (contentid: string, emailType: string, roles: EmailUserRoles) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST});
+    try {
+        await api.email.sendAdminEmail(contentid, emailType, roles);
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_SUCCESS});
+        dispatch(showToast({color: "success", title: "Mail sent", body: "Mail sent successfully", timeout: 3000}) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Sending mail failed", e));
+    }
+};
+
+export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids: number[]) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST});
+    try {
+        await api.email.sendAdminEmailWithIds(contentid, emailType, ids);
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS});
+        dispatch(showToast({color: "success", title: "Mail sent", body: "Mail sent successfully", timeout: 3000}) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Sending mail with ids failed", e));
     }
 };
 
