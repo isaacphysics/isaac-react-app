@@ -9,6 +9,7 @@ interface ShowLoadingProps<T> {
     children?: any;
     placeholder?: ReactElement;
     render?: (t: T) => ReactNode;
+    notFound?: ReactElement;
 }
 
 const defaultPlaceholder = <div className="w-100 text-center">
@@ -16,7 +17,7 @@ const defaultPlaceholder = <div className="w-100 text-center">
     <Spinner color="primary" />
 </div>;
 
-export const ShowLoading = < T extends {} >({until, children, render, placeholder = defaultPlaceholder}: ShowLoadingProps<T>) => {
+export const ShowLoading = < T extends {} >({until, children, render, placeholder = defaultPlaceholder, notFound = <NotFound/>}: ShowLoadingProps<T>) => {
     const [duringLoad, setDuringLoad] = useState(false);
     useEffect( () => {
         let timeout: NodeJS.Timeout;
@@ -42,7 +43,7 @@ export const ShowLoading = < T extends {} >({until, children, render, placeholde
                 return placeholder;
             }
         case NOT_FOUND:
-            return <NotFound/>;
+            return notFound;
         default:
             return children || (render && render(until));
     }
