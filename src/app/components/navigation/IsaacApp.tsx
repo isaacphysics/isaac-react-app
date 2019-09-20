@@ -133,7 +133,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/register" component={Registration} />
                     <TrackedRoute exact path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                     <TrackedRoute exact path="/resetpassword/:token" component={ResetPasswordHandler}/>
-                    <TrackedRoute exact path="/verifyemail" ifUser={isLoggedIn} component={EmailAlterHandler}/>
+                    <TrackedRoute exact path="/verifyemail" component={EmailAlterHandler}/>
 
                     {/* Static pages */}
                     <TrackedRoute exact path="/contact" component={Contact}/>
