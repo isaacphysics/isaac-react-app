@@ -39,6 +39,7 @@ import {groups} from "../../state/selectors";
 import {UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {TEACHERS_CRUMB} from "../../services/constants";
+import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateFromProps = (state: AppState) => (state && {groups: groups.groups(state), group: groups.current(state)});
 const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal};
@@ -366,7 +367,10 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                 {tabs.map((tab, index) => {
                                     const classes = tab.active() ? "active" : "";
                                     return <NavItem key={index} className="mx-2">
-                                        <NavLink className={`text-center ${classes}`} onClick={tab.activate}>
+                                        <NavLink
+                                            className={`text-center ${classes}`} tabIndex={0}
+                                            onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
+                                        >
                                             {tab.name}
                                         </NavLink>
                                     </NavItem>;

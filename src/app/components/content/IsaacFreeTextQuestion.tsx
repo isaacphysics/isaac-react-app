@@ -96,7 +96,8 @@ const IsaacFreeTextQuestionComponent = (props: IsaacFreeTextQuestionProps) => {
                     rows={3}
                     value={currentAttemptValue}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        setCurrentAttempt(questionId, validatedChoiceDTOfromEvent(event))}/>
+                        setCurrentAttempt(questionId, validatedChoiceDTOfromEvent(event))}
+                />
             </FormGroup>
             <FreeTextValidation {...validation} />
             <IsaacHints questionPartId={questionId} hints={doc.hints}/>

@@ -95,6 +95,7 @@ const AccordionComponent = ({id, title, index, children, location: {hash}}: Acco
                         scrollVerticallyIntoView(event.target);
                     }
                 }}
+                aria-expanded={open ? "true" : "false"}
             >
                 <span className="accordion-part text-secondary pr-2">
                     Part {ALPHABET[index % ALPHABET.length]}

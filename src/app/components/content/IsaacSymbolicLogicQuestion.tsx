@@ -9,6 +9,7 @@ import katex from "katex";
 import {IsaacHints} from "./IsaacHints";
 import { determineExamBoardFrom } from "../../services/examBoard";
 import { EXAM_BOARD } from "../../services/constants";
+import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
@@ -59,7 +60,11 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 </IsaacContentValueOrChildren>
             </div>
             {/* TODO Accessibility */}
-            <div className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} onClick={() => setModalVisible(true)} dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }} />
+            <div
+                role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={0}
+                onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
+                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
+            />
             {modalVisible && <InequalityModal
                 close={closeModal}
                 onEditorStateChange={(state: any) => {
