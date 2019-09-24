@@ -252,7 +252,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                             checked={confirmedOverThirteen}
                                             required
                                             label="I am at least 13 years old"
-                                            disabled={registrationUser.dateOfBirth !== null}
+                                            disabled={registrationUser.dateOfBirth !== undefined}
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                 setDobCheckboxChecked(!dobCheckboxChecked);
                                             }}
