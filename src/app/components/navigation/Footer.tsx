@@ -23,7 +23,7 @@ export const Footer = () => (
                                 <img
                                     src="/assets/logo-inverse.svg"
                                     className="footerLogo"
-                                    alt="Isaac Computer Science logo"
+                                    alt="Isaac Computer Science homepage"
                                 />
                             </Link>
                         </div>

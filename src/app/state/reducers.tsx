@@ -13,7 +13,7 @@ import {
     GroupMembershipDetailDTO,
     isValidatedChoice,
     LoggedInUser,
-    NOT_FOUND_TYPE,
+    NOT_FOUND_TYPE, TemplateEmail,
     Toast,
     UserPreferencesDTO,
     UserProgress,
@@ -23,6 +23,7 @@ import {
     AssignmentDTO,
     ContentDTO,
     ContentSummaryDTO,
+    EmailTemplateDTO,
     EventBookingDTO,
     GameboardDTO,
     GameboardListDTO,
@@ -132,6 +133,18 @@ export const adminStats = (adminSiteStats: AdminStatsState = null, action: Actio
             return action.stats;
         default:
             return adminSiteStats;
+    }
+};
+
+export type AdminEmailTemplateState = TemplateEmail | null;
+export const adminEmailTemplate = (adminEmailTemplate: AdminEmailTemplateState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST:
+            return null;
+        case ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS:
+            return action.email;
+        default:
+            return adminEmailTemplate;
     }
 };
 
@@ -733,6 +746,7 @@ const appReducer = combineReducers({
     adminUserSearch,
     adminContentErrors,
     adminStats,
+    adminEmailTemplate,
     userSchoolLookup,
     activeAuthorisations,
     otherUserAuthorisations,
@@ -769,6 +783,7 @@ export type AppState = undefined | {
     adminUserSearch: AdminUserSearchState;
     adminContentErrors: AdminContentErrorsState;
     adminStats: AdminStatsState;
+    adminEmailTemplate: AdminEmailTemplateState;
     userSchoolLookup: UserSchoolLookupState;
     activeAuthorisations: ActiveAuthorisationsState;
     otherUserAuthorisations: OtherUserAuthorisationsState;

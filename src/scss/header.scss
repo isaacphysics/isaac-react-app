@@ -74,11 +74,13 @@ header {
 
 header {
   background-image: url('/assets/Line.svg');
-  background-repeat: repeat-x;
+  background-size: 100%;
+  background-repeat: no-repeat;
   position: relative;
 
   @include respond-above(sm) {
     background-image: url('/assets/Line-alt.svg');
+    background-size: 100% 60%;
   }
 
   > .container {

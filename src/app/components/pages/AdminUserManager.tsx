@@ -1,14 +1,15 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {connect} from "react-redux";
-import {adminModifyUserRoles, adminUserSearch, adminUserDelete} from "../../state/actions";
+import {connect, useDispatch, useSelector} from "react-redux";
+import {adminModifyUserRoles, adminUserSearch, adminUserDelete, getUserIdSchoolLookup} from "../../state/actions";
 import {AdminUserSearchState, AppState} from "../../state/reducers";
 import {Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
+import {Link} from "react-router-dom";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -26,6 +27,7 @@ interface AdminUserMangerProps {
 }
 
 const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, adminUserDelete, searchResults}: AdminUserMangerProps) => {
+    const dispatch = useDispatch();
     const [searchRequested, setSearchRequested] = useState(false);
     const [searchQuery, setSearchQuery] = useState({
         familyName: null,
@@ -37,6 +39,14 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
         postcodeRadius: "FIVE_MILES",
     });
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+    const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
+
+    useEffect(() => {
+        debugger;
+        if (!userIdToSchoolMapping && searchResults) {
+            dispatch(getUserIdSchoolLookup(searchResults.map((result) => result.id).filter((result) => result != undefined) as number[]));
+        }
+    }, [searchResults]);
 
     const updateQuery = (update: {[key: string]: string | null}) => {
         // Replace empty strings with nulls
@@ -216,6 +226,14 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                             </RS.DropdownMenu>
                         </RS.UncontrolledButtonDropdown>
                     </RS.Col>
+                    <RS.Col>
+                        <Link className="btn float-right btn-secondary border-0" to={{
+                            pathname: "/admin/emails",
+                            state: {
+                                csvIDs: selectedUserIds
+                            }
+                        }}>Email</Link>
+                    </RS.Col>
                 </RS.Row>
 
                 {/* Results */}
@@ -259,7 +277,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                                 <td>{user.familyName}, {user.givenName}</td>
                                                 <td>{user.email}</td>
                                                 <td>{user.role}</td>
-                                                <td>{user.schoolId}</td>
+                                                <td>{user.id && userIdToSchoolMapping && userIdToSchoolMapping[user.id] && userIdToSchoolMapping[user.id].name}</td>
                                                 <td><DateString>{user.registrationDate}</DateString></td>
                                                 <td>{user.emailVerificationStatus}</td>
                                                 <td><DateString>{user.lastSeen}</DateString></td>

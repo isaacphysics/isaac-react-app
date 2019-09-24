@@ -1,6 +1,5 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
-import {ContentSummaryDTO, UserSummaryDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 
 export type Action =
@@ -77,6 +76,18 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_STATS_RESPONSE_SUCCESS; stats: AdminStatsResponse}
     | {type: ACTION_TYPE.ADMIN_STATS_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS; email: TemplateEmail}
+    | {type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST}
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS; authorisations: ApiTypes.UserSummaryWithEmailAddressDTO[]}
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_FAILURE}
@@ -136,7 +147,7 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>}
 
     | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: ContentSummaryDTO[]}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: ApiTypes.ContentSummaryDTO[]}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
@@ -507,6 +518,22 @@ export interface ZxcvbnResult {
     sequence: any;
 }
 
+export interface EmailUserRoles {
+    ADMIN: boolean;
+    EVENT_MANAGER: boolean;
+    CONTENT_EDITOR: boolean;
+    TEACHER: boolean;
+    TESTER: boolean;
+    STAFF: boolean;
+    STUDENT: boolean;
+}
+
+export interface TemplateEmail {
+    subject?: string;
+    plainText?: string;
+    html?: string;
+}
+
 export interface UserSchoolLookup {[userId: number]: School}
 
 export enum ATTENDANCE {
@@ -523,7 +550,7 @@ export interface QuestionSearchQuery {
 }
 
 export interface QuestionSearchResponse {
-    results: ContentSummaryDTO[]
+    results: ApiTypes.ContentSummaryDTO[];
 }
 
 export interface StreakRecord {
@@ -557,7 +584,7 @@ export interface UserProgress {
     attemptsByTag?: { [tag: string]: number };
     correctByTag: { [tag: string]: number };
     userSnapshot?: UserSnapshot;
-    userDetails?: UserSummaryDTO;
+    userDetails?: ApiTypes.UserSummaryDTO;
 }
 
 export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6

@@ -10,6 +10,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {extractTeacherName} from "../../services/user";
 import {DATE_FORMATTER, STUDENTS_CRUMB} from "../../services/constants";
 import {filterAssignmentsByStatus} from "../../services/assignments";
+import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments, logAction};
@@ -112,7 +113,10 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}:
                             const tabIndex = mapIndex;
                             const classes = activeTab === tabIndex ? "active" : "";
                             return <NavItem key={tabIndex} className="px-3">
-                                <NavLink className={classes} onClick={() => setActiveTab(tabIndex)}>
+                                <NavLink
+                                    className={classes} tabIndex={0} onClick={() => setActiveTab(tabIndex)}
+                                    onKeyDown={ifKeyIsEnter(() => setActiveTab(tabIndex))}
+                                >
                                     {tabTitle} ({tabItems.length || 0})
                                 </NavLink>
                             </NavItem>;
