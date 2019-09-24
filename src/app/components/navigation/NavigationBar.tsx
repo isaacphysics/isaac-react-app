@@ -126,11 +126,11 @@ export const NavigationBar = () => {
                         <DropdownItem tag={Link} to="/topics" className="pl-4 py-3 p-md-3">
                             All topics
                         </DropdownItem>
+                        <DropdownItem tag={Link} to="/teaching_order" className="pl-4 py-3 p-md-3">
+                            Suggested teaching
+                        </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             Syllabus view
-                        </DropdownItemComingSoon>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
-                            Suggested teaching
                         </DropdownItemComingSoon>
                     </DropdownMenu>
                 </UncontrolledDropdown>
