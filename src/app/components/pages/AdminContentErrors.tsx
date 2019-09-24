@@ -51,7 +51,7 @@ export const AdminContentErrorsPageComponent = ({errors, getAdminContentErrors}:
     return <Container>
         <Row>
             <Col>
-                <TitleAndBreadcrumb currentPageTitle="Content Errors" />
+                <TitleAndBreadcrumb currentPageTitle="Content errors" />
             </Col>
         </Row>
         <ShowLoading until={errors}>
