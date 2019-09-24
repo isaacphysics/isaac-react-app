@@ -6,7 +6,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {closeActiveModal, createGameboard, getWildcards, logAction, openActiveModal} from "../../state/actions";
 import {store} from "../../state/store";
-import {QuestionSearchModal} from "../elements/QuestionSearchModal";
+import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import classnames from "classnames";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import {AppState} from "../../state/reducers";
