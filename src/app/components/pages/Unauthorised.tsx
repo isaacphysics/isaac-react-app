@@ -8,7 +8,7 @@ interface UnauthorisedProps {location: {pathname: string; state?: {overridePathn
 const UnauthorisedComponent = ({location: {pathname, state}}: UnauthorisedProps) => {
     return <Container>
         <div>
-            <TitleAndBreadcrumb breadcrumbTitleOverride="Unauthorised Access" currentPageTitle="Access denied" />
+            <TitleAndBreadcrumb breadcrumbTitleOverride="Unauthorised" currentPageTitle="Access denied" />
             <h3 className="my-4">
                 <small>
                     {"You do not have authorisation to access the page: "}
