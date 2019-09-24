@@ -12,6 +12,7 @@ import {NOT_FOUND} from "../../services/constants";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
+import {Container} from "reactstrap";
 
 const stateFromProps = (state: AppState) => {
     return state && {
@@ -67,16 +68,28 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
         }
     }, [gameboard]);
 
-    const setAssignmentButton = user && isTeacher(user) && <div className="text-center mt-4">
+    const setAssignmentButton = user && isTeacher(user) && <div className="text-center mt-5">
         <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline>
             Set as Assignment
         </RS.Button>
     </div>;
 
+    const notFoundComponent = <Container>
+        <TitleAndBreadcrumb breadcrumbTitleOverride="Gameboard" currentPageTitle="Gameboard not found" />
+        <h3 className="my-4">
+            <small>
+                {"We're sorry, we were not able to find a gameboard with the id "}
+                <code>{gameboardId}</code>
+                {"."}
+            </small>
+        </h3>
+    </Container>;
+
     return gameboardId ?
         <RS.Container>
-            <ShowLoading until={gameboard} render={gameboard =>
-                <React.Fragment>
+            <ShowLoading
+                until={gameboard}
+                thenRender={gameboard => <React.Fragment>
                     <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
                     <div className="mb-5">
                         <RS.Row>
@@ -90,8 +103,9 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
                         </RS.Row>
                         {setAssignmentButton}
                     </div>
-                </React.Fragment>
-            } />
+                </React.Fragment>}
+                ifNotFound={notFoundComponent}
+            />
         </RS.Container>
         :
         <Redirect to="/gameboards#example-gameboard" />

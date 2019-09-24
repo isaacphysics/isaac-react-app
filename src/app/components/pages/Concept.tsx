@@ -40,7 +40,7 @@ const ConceptPageComponent = ({urlConceptId, doc, fetchDoc, segueEnvironment}: C
 
     const navigation = useNavigation(urlConceptId);
 
-    return <ShowLoading until={doc} render={(doc: ContentDTO) =>
+    return <ShowLoading until={doc} thenRender={doc =>
         <div>
             <Container>
                 <TitleAndBreadcrumb

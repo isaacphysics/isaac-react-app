@@ -18,25 +18,25 @@ export const PageFragment = ({fragmentId}: PageFragmentComponentProps) => {
 
     useEffect(() => {
         dispatch(fetchFragment(fragmentId))
-        },[fragmentId]);
+    }, [fragmentId]);
 
     useEffect(() => {
         setPathname(location.pathname);
     }, [location.pathname]);
 
-    return <ShowLoading until={fragment}
-                        notFound={<div>
-                            <h2> Content not found</h2>
-                            <h3 className="my-4">
-                                <small>
-                                    {"We're sorry, page not found: "}
-                                    <code>
-                                        {pathname}
-                                    </code>
-                                </small>
-                            </h3>
-                        </div>}
-                        render={(fragment: ContentDTO) =>
-        <IsaacContent doc={fragment} />
-    }/>;
+    const notFoundComponent = <div>
+        <h2>Content not found</h2>
+        <h3 className="my-4">
+            <small>
+                {"We're sorry, page not found: "}
+                <code>{pathname}</code>
+            </small>
+        </h3>
+    </div>;
+
+    return <ShowLoading
+        until={fragment}
+        thenRender={fragment => <IsaacContent doc={fragment} />}
+        ifNotFound={notFoundComponent}
+    />;
 };

@@ -43,7 +43,7 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
     }
     const searchQuery = `?topic=${topicName}`;
 
-    return <ShowLoading until={topicPage} render={topicPage =>
+    return <ShowLoading until={topicPage} thenRender={topicPage =>
         <Container id="topic-page">
             <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
             <Row className="pb-5">

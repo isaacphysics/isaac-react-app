@@ -41,7 +41,7 @@ export const EventOverviews = ({setSelectedEventId}: {setSelectedEventId: (event
             </RS.Label>
         </div>
 
-        <ShowLoading until={eventOverviews} render={eventOverviews => <React.Fragment>
+        <ShowLoading until={eventOverviews} thenRender={eventOverviews => <React.Fragment>
             {atLeastOne(eventOverviews.length) && <div className="overflow-auto">
                 <RS.Table bordered className="mb-0 bg-white">
                     <thead>
