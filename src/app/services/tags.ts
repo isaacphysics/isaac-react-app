@@ -29,19 +29,20 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.functionalProgramming, title: "Functional programming", parent: TAG_ID.programming},
     {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programming},
     {id: TAG_ID.proceduralProgramming, title: "Procedural programming", parent: TAG_ID.programming},
+    {id: TAG_ID.softwareProjectProgramming, title: "Software project", parent: TAG_ID.programming},
 
     // GCSE to A level transition topics
     {id: TAG_ID.gcseBooleanLogic, title: "Boolean logic", parent: TAG_ID.gcseToALevel},
     {id: TAG_ID.gcseProgrammingConcepts, title: "Programming concepts", parent: TAG_ID.gcseToALevel},
     {id: TAG_ID.gcseNetworking, title: "Networking", parent: TAG_ID.gcseToALevel, comingSoon: 'Jan 2020'},
     {id: TAG_ID.gcseDataRepresentation, title: "Data representation", parent: TAG_ID.gcseToALevel},
-    {id: TAG_ID.gcseSystems, title: "Systems", parent: TAG_ID.gcseToALevel, new: true},
+    {id: TAG_ID.gcseSystems, title: "Systems", parent: TAG_ID.gcseToALevel},
     // Data structures and algorithms topics
-    {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
+    {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms},
     {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Apr 2020'},
     {id: TAG_ID.modelsOfComputation, title: "Models of computation", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Jan 2020'},
     {id: TAG_ID.planningAndDebugging, title: "Planning and debugging", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Sept 2019'},
+    {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
     // Computer networks topics
     {id: TAG_ID.security, title: "Security", parent: TAG_ID.computerNetworks, comingSoon: 'Apr 2020'},
     {id: TAG_ID.networkStructure, title: "Network structure", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
@@ -52,9 +53,9 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems},
     {id: TAG_ID.architecture, title: "Architecture", parent: TAG_ID.computerSystems, comingSoon: 'Apr 2020'},
     {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.operatingSystemsAndSoftware, title: "Operating systems and software", parent: TAG_ID.computerSystems, new: true},
-    {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems, comingSoon: 'Sept 2019'},
-    {id: TAG_ID.programmingLanguages, title: "Programming languages", parent: TAG_ID.computerSystems, comingSoon: 'Sept 2019'},
+    {id: TAG_ID.operatingSystemsAndSoftware, title: "Operating systems and software", parent: TAG_ID.computerSystems},
+    {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems, new: true},
+    {id: TAG_ID.programmingLanguages, title: "Programming languages", parent: TAG_ID.computerSystems, new: true},
     // Data and information topics
     {id: TAG_ID.numberSystems, title: "Number systems", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
     {id: TAG_ID.numberBases, title: "Number bases", parent: TAG_ID.dataAndInformation},
@@ -63,7 +64,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.databases, title: "Databases", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
     {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
     {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation, comingSoon: 'Sept 2019'},
+    {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation, new: true},
 
     // Functional programming topics
     {id: TAG_ID.functions, title: "Functions", parent: TAG_ID.functionalProgramming, comingSoon: 'Jan 2020'},
@@ -79,10 +80,11 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.files, title: "Files", parent: TAG_ID.proceduralProgramming},
     {id: TAG_ID.structureAndRobustness, title: "Structure & robustness", parent: TAG_ID.proceduralProgramming, comingSoon: 'Apr 2020'},
     {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.proceduralProgramming, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.stringManipulation, title: "String manipulation", parent: TAG_ID.proceduralProgramming, new: true},
+    {id: TAG_ID.stringManipulation, title: "String manipulation", parent: TAG_ID.proceduralProgramming},
     {id: TAG_ID.guis, title: "GUIs", parent: TAG_ID.proceduralProgramming, comingSoon: 'Jan 2020'},
     {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.proceduralProgramming, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.softwareProject, title: "Software project", parent: TAG_ID.proceduralProgramming, comingSoon: 'Sept 2019'},
+    // Software project topics
+    {id: TAG_ID.softwareProject, title: "Software project", parent: TAG_ID.softwareProjectProgramming, new: true},
 ];
 
 const getBaseTagById = (id: TAG_ID) => {
