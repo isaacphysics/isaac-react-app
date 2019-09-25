@@ -252,7 +252,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                             checked={confirmedOverThirteen}
                                             required
                                             label="I am at least 13 years old"
-                                            disabled={registrationUser.dateOfBirth !== undefined}
+                                            disabled={registrationUser.dateOfBirth}
+                                            // TODO: Look at DateInput null vs undefined for updating DoB and maybe
+                                            // change this in future
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                 setDobCheckboxChecked(!dobCheckboxChecked);
                                             }}
