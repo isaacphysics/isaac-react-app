@@ -29,7 +29,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.functionalProgramming, title: "Functional programming", parent: TAG_ID.programming},
     {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programming},
     {id: TAG_ID.proceduralProgramming, title: "Procedural programming", parent: TAG_ID.programming},
-    {id: TAG_ID.softwareProjectProgramming, title: "Software project", parent: TAG_ID.programming},
+    {id: TAG_ID.computingPracticalProject, title: "Computing practical project", parent: TAG_ID.programming},
 
     // GCSE to A level transition topics
     {id: TAG_ID.gcseBooleanLogic, title: "Boolean logic", parent: TAG_ID.gcseToALevel},
@@ -84,7 +84,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.guis, title: "GUIs", parent: TAG_ID.proceduralProgramming, comingSoon: 'Jan 2020'},
     {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.proceduralProgramming, comingSoon: 'Apr 2020'},
     // Software project topics
-    {id: TAG_ID.softwareProject, title: "Software project", parent: TAG_ID.softwareProjectProgramming, new: true},
+    {id: TAG_ID.softwareProject, title: "Software project", parent: TAG_ID.computingPracticalProject, new: true},
 ];
 
 const getBaseTagById = (id: TAG_ID) => {
