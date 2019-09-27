@@ -27,7 +27,7 @@ const HeaderComponent = ({user}: HeaderProps) => {
                             </Link>
                         </div>
 
-                        <a href="#main" className="skip-main">Skip to content</a>
+                        <a href="#main" className="skip-main">Skip to main content</a>
 
                         <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none">
                             {user &&
