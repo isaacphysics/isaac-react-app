@@ -13,7 +13,7 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className}: PageTit
         document.title = currentPageTitle + " — Isaac Computer Science";
     }, [currentPageTitle]);
 
-    return <h1 className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
+    return <h1 id="page-heading" className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
         {currentPageTitle}
         {help && <span id="title-help">Help</span>}
         {help && <UncontrolledTooltip target="#title-help">{help}</UncontrolledTooltip>}

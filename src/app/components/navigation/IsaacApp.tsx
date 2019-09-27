@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import "../../services/scrollManager"; // important
 import "../../services/polyfills"; // important
 import {useDispatch, useSelector} from "react-redux";
@@ -55,6 +55,7 @@ import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
 import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
+import {MainPageContent} from "./MainPageContent";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -78,7 +79,7 @@ export const IsaacApp = () => {
             <ActiveModal />
             <CookieBanner />
             <EmailVerificationBanner />
-            <main role="main" className="flex-fill content-body">
+            <MainPageContent>
                 <Switch>
                     {/* Errors; these paths work but aren't really used */}
                     <Route exact path={serverError ? undefined : "/error"} component={ServerError} />
@@ -152,7 +153,7 @@ export const IsaacApp = () => {
                     {/* Error pages */}
                     <Route component={NotFound} />
                 </Switch>
-            </main>
+            </MainPageContent>
             <Footer />
             <ConsistencyErrorModal consistencyError={consistencyError} />
         </React.Fragment>
