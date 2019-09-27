@@ -38,8 +38,8 @@ const IsaacHintModalComponent = (props: HintModalProps) => {
             <ModalHeader close={closeButton}>
                 {title}
             </ModalHeader>
-            <ModalBody>
-                <IsaacContent doc={body} />
+            <ModalBody className="text-center">
+                <iframe title="zombie-hint" src="https://h5p.org/h5p/embed/602413" width="614" height="390" frameBorder="0" allowFullScreen={true} />
             </ModalBody>
         </Modal>
     </div>
