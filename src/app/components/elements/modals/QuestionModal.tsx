@@ -19,7 +19,7 @@ export const QuestionModal = ({urlQuestionId}: QuestionModalProps) => {
         dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, urlQuestionId));
     }, [urlQuestionId]);
 
-    return <ShowLoading until={doc} render={(doc: ContentDTO) =>
+    return <ShowLoading until={doc} thenRender={(doc: ContentDTO) =>
         <Question doc={doc} urlQuestionId={urlQuestionId}/>
     }/>
 };
