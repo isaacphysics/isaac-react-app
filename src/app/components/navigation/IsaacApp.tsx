@@ -78,7 +78,7 @@ export const IsaacApp = () => {
             <ActiveModal />
             <CookieBanner />
             <EmailVerificationBanner />
-            <main role="main" className="flex-fill content-body">
+            <main id="main" role="main" className="flex-fill content-body">
                 <Switch>
                     {/* Errors; these paths work but aren't really used */}
                     <Route exact path={serverError ? undefined : "/error"} component={ServerError} />
