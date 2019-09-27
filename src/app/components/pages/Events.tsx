@@ -84,7 +84,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
             </RS.Form>
 
             {/* Results */}
-            <ShowLoading until={eventsState} render={({events, total}) => <div className="my-4">
+            <ShowLoading until={eventsState} thenRender={({events, total}) => <div className="my-4">
                 {/* Map */}
 
                 {/* Event Cards */}

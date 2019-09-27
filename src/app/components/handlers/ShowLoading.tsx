@@ -8,8 +8,8 @@ interface ShowLoadingProps<T> {
     until: T | NOT_FOUND_TYPE | null | undefined;
     children?: any;
     placeholder?: ReactElement;
-    render?: (t: T) => ReactNode;
-    notFound?: ReactElement;
+    thenRender?: (t: T) => ReactNode;
+    ifNotFound?: ReactElement;
 }
 
 const defaultPlaceholder = <div className="w-100 text-center">
@@ -17,7 +17,7 @@ const defaultPlaceholder = <div className="w-100 text-center">
     <Spinner color="primary" />
 </div>;
 
-export const ShowLoading = < T extends {} >({until, children, render, placeholder = defaultPlaceholder, notFound = <NotFound/>}: ShowLoadingProps<T>) => {
+export const ShowLoading = < T extends {} >({until, children, thenRender, placeholder = defaultPlaceholder, ifNotFound = <NotFound />}: ShowLoadingProps<T>) => {
     const [duringLoad, setDuringLoad] = useState(false);
     useEffect( () => {
         let timeout: NodeJS.Timeout;
@@ -32,7 +32,7 @@ export const ShowLoading = < T extends {} >({until, children, render, placeholde
                 clearTimeout(timeout);
             }
         };
-    }, [until, children, render]);
+    }, [until, children, thenRender]);
 
     switch(until) {
         case null:
@@ -43,8 +43,8 @@ export const ShowLoading = < T extends {} >({until, children, render, placeholde
                 return placeholder;
             }
         case NOT_FOUND:
-            return notFound;
+            return ifNotFound;
         default:
-            return children || (render && render(until));
+            return children || (thenRender && thenRender(until));
     }
 };

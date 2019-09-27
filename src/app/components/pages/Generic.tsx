@@ -37,7 +37,7 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc, 
         [pageId]
     );
 
-    return <ShowLoading until={doc} render={(doc: ContentDTO) =>
+    return <ShowLoading until={doc} thenRender={doc =>
         <div>
             <Container>
                 <TitleAndBreadcrumb currentPageTitle={doc.title as string} />

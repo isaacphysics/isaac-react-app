@@ -57,7 +57,7 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
             <Container>
                 <Row>
                     <Col>
-                        <TitleAndBreadcrumb currentPageTitle="Inequality Demo Page" />
+                        <TitleAndBreadcrumb currentPageTitle="Inequality demo page" />
                     </Col>
                 </Row>
                 <Row>

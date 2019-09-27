@@ -38,7 +38,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
         history.push("/login");
     }
 
-    return <ShowLoading until={event} render={(event: AugmentedEvent) => {
+    return <ShowLoading until={event} thenRender={event => {
         const userIsNotAStudent = user && user.loggedIn && user.role !== "STUDENT";
         const isStudentEvent = event.tags !== undefined && event.tags.indexOf('student') != -1;
         const canMakeABooking = event.withinBookingDeadline && event.eventStatus != 'WAITING_LIST_ONLY' && (atLeastOne(event.placesAvailable) || (isStudentEvent && userIsNotAStudent));

@@ -83,7 +83,7 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
                                 <strong>Live Content Version</strong>
                             </label>
                         </div>
-                        <ShowLoading until={displayVersion !== null} render={() => {
+                        <ShowLoading until={displayVersion !== null} thenRender={() => {
                             return displayVersion !== null && updateState != ContentVersionUpdatingStatus.UPDATING &&
                                 <RS.Form onSubmit={startVersionUpdate}>
                                     <RS.InputGroup>

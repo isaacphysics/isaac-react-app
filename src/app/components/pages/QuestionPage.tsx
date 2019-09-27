@@ -36,7 +36,7 @@ const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc, segueEnvironment}:
 
     const navigation = useNavigation(urlQuestionId);
 
-    return <ShowLoading until={doc} render={ (doc: ContentDTO) =>
+    return <ShowLoading until={doc} thenRender={doc =>
         <div className="pattern-01">
             <Container>
                 {/*FastTrack progress bar*/}

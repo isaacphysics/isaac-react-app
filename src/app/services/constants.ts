@@ -379,6 +379,7 @@ export enum TAG_ID {
     functionalProgramming = "functional_programming",
     objectOrientedProgramming = "object_oriented_programming",
     proceduralProgramming = "procedural_programming",
+    softwareProjectProgramming = "software_project_programming",
 
     // GCSE to A level transition topics
     gcseBooleanLogic = "gcse_boolean_logic",
@@ -432,6 +433,7 @@ export enum TAG_ID {
     stringManipulation = "string_manipulation",
     guis = "guis",
     softwareEngineeringPrinciples = "software_engineering_principles",
+    // Software project topics
     softwareProject = "software_project",
 }
 

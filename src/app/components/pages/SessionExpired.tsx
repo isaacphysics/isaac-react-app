@@ -5,7 +5,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 export const SessionExpired = () => {
     return <Container>
         <div>
-            <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired error" currentPageTitle="Session Expired"/>
+            <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired error" currentPageTitle="Session expired"/>
 
             <h3 className="my-4"><small>{"We're sorry, but your session has expired!"}</small></h3>
 
