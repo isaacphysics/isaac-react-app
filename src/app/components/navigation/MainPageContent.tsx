@@ -14,7 +14,7 @@ export const MainPageContent = withRouter(({children, history: {location: pathna
         }
     }, [pathname]);
 
-    return <main role="main" className="flex-fill content-body" ref={main} tabIndex={-1} aria-labelledby="page-heading">
+    return <main role="main" id="main" className="flex-fill content-body" ref={main} tabIndex={-1} aria-labelledby="page-heading">
         {children}
     </main>
 });
