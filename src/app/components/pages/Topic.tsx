@@ -14,6 +14,7 @@ import {NOT_FOUND_TYPE, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom} from "../../services/examBoard";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
+import {atLeastOne} from "../../services/validation";
 
 const stateToProps = (state: AppState, {match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => ({
     topicName: topicName,
@@ -53,10 +54,10 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                     }
                     <AnonUserExamBoardPicker className="text-right" />
 
-                    {relatedConcepts &&
+                    {relatedConcepts && atLeastOne(relatedConcepts.length) &&
                         <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />
                     }
-                    {relatedQuestions &&
+                    {relatedQuestions && atLeastOne(relatedQuestions.length) &&
                         <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
                     }
 
@@ -66,11 +67,11 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                                 <span className="d-none d-md-inline">Back to</span> {" "} All topics
                             </Button>
                         </Col>
-                        <Col size={6} className="text-center">
+                        {topicName != TAG_ID.softwareProject && <Col size={6} className="text-center">
                             <Button tag={Link} to={`/gameboards#${topicName}_july19_${examBoard.toLowerCase()}`} color="secondary" size="lg" className="my-4" block>
                                 Topic gameboard
                             </Button>
-                        </Col>
+                        </Col>}
                     </Row>
                 </Col>
             </Row>
