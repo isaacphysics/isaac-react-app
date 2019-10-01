@@ -13,7 +13,7 @@ import {
     NavbarToggler,
     UncontrolledDropdown
 } from "reactstrap";
-import {isAdmin, isEventsManager, isStaff} from "../../services/user";
+import {isAdmin, isEventsLeader, isEventsManager, isStaff} from "../../services/user";
 import {loadMyAssignments} from "../../state/actions";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 
@@ -155,27 +155,27 @@ export const NavigationBar = () => {
                     </DropdownMenu>
                 </UncontrolledDropdown>
 
-                {isStaff(user) &&
+                {(isStaff(user) || isEventsLeader(user)) &&
                     <UncontrolledDropdown nav inNavbar>
                         <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                             Admin
                         </DropdownToggle>
                         <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={closeMenuIfMobile}>
-                            <DropdownItem tag={Link} to="/admin" className="pl-4 py-3 p-md-3">
+                            {isStaff(user) && <DropdownItem tag={Link} to="/admin" className="pl-4 py-3 p-md-3">
                                 Admin tools
-                            </DropdownItem>
+                            </DropdownItem>}
                             {isAdmin(user) && <DropdownItem tag={Link} to="/admin/usermanager" className="pl-4 py-3 p-md-3">
                                 User manager
                             </DropdownItem>}
-                            {isEventsManager(user) && <DropdownItem tag={Link} to="/admin/events" className="pl-4 py-3 p-md-3">
+                            {(isEventsLeader(user) || isEventsManager(user)) && <DropdownItem tag={Link} to="/admin/events" className="pl-4 py-3 p-md-3">
                                 Event admin
                             </DropdownItem>}
-                            <DropdownItem tag={Link} to="/admin/stats" className="pl-4 py-3 p-md-3">
+                            {isStaff(user) && <DropdownItem tag={Link} to="/admin/stats" className="pl-4 py-3 p-md-3">
                                 Site statistics
-                            </DropdownItem>
-                            <DropdownItem tag={Link} to="/admin/content_errors" className="pl-4 py-3 p-md-3">
+                            </DropdownItem>}
+                            {isStaff(user) && <DropdownItem tag={Link} to="/admin/content_errors" className="pl-4 py-3 p-md-3">
                                 Content errors
-                            </DropdownItem>
+                            </DropdownItem>}
                         </DropdownMenu>
                     </UncontrolledDropdown>
                 }
