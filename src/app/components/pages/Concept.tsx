@@ -48,7 +48,7 @@ const ConceptPageComponent = ({urlConceptId, doc, fetchDoc, segueEnvironment}: C
                     currentPageTitle={doc.title as string}
                     collectionType={navigation.collectionType}
                 />
-                {segueEnvironment != "PROD" && (doc as ContentBase).canonicalSourceFile &&
+                {segueEnvironment === "DEV" && (doc as ContentBase).canonicalSourceFile &&
                     <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
                 }
 

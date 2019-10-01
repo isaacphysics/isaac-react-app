@@ -41,7 +41,7 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc, 
         <div>
             <Container>
                 <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
-                {segueEnvironment != "PROD" && (doc as ContentBase).canonicalSourceFile &&
+                {segueEnvironment === "DEV" && (doc as ContentBase).canonicalSourceFile &&
                     <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
                 }
 

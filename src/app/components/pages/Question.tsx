@@ -51,7 +51,7 @@ const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc, segueEnvironment}:
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     collectionType={navigation.collectionType}
                 />
-                {segueEnvironment != "PROD" && (doc as ContentBase).canonicalSourceFile &&
+                {segueEnvironment === "DEV" && (doc as ContentBase).canonicalSourceFile &&
                     <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
                 }
 
