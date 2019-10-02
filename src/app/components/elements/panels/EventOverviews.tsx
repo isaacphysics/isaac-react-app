@@ -9,6 +9,8 @@ import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
 import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
+import {LoggedInUser} from "../../../../IsaacAppTypes";
+import {isEventsLeader} from "../../../services/user";
 
 export enum EventOverviewFilter {
     "All events" = "ALL",
@@ -17,7 +19,7 @@ export enum EventOverviewFilter {
     "Past events" = "PAST",
 }
 
-export const EventOverviews = ({setSelectedEventId}: {setSelectedEventId: (eventId: string | null) => void}) => {
+export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; setSelectedEventId: (eventId: string | null) => void}) => {
     const dispatch = useDispatch();
     const eventOverviews = useSelector((state: AppState) => state && state.eventOverviews);
 
@@ -31,6 +33,9 @@ export const EventOverviews = ({setSelectedEventId}: {setSelectedEventId: (event
     }, [overviewFilter]);
 
     return <Accordion title="Events overview" index={0}>
+        {isEventsLeader(user) && <div className="bg-grey p-2 mb-4 text-center">
+            As an event leader, you are only able to see the details of events which you manage.
+        </div>}
         <div className="d-flex justify-content-end mb-4">
             <RS.Label>
                 <RS.Input type="select" value={overviewFilter} onChange={e => {setOverviewFilter(e.target.value as EventOverviewFilter)}}>
@@ -91,7 +96,7 @@ export const EventOverviews = ({setSelectedEventId}: {setSelectedEventId: (event
                     </tbody>
                 </RS.Table>
             </div>}
-            {zeroOrLess(eventOverviews.length) && <p>
+            {zeroOrLess(eventOverviews.length) && <p className="text-center">
                 <strong>No events to display with this filter setting</strong>
             </p>}
         </React.Fragment>} />

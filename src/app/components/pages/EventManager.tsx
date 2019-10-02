@@ -24,7 +24,7 @@ export const EventManager = ({user}: {user: LoggedInUser}) => {
     return  <RS.Container>
         <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="Event booking admin"/>
         <div className="my-5">
-            <EventOverviews setSelectedEventId={setSelectedEventId} />
+            <EventOverviews user={user} setSelectedEventId={setSelectedEventId} />
             {selectedEventId !== null && <React.Fragment>
                 <div ref={selectedEventRef} className="mb-3">
                     <SelectedEventDetails eventId={selectedEventId} />
