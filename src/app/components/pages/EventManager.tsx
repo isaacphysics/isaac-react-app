@@ -36,7 +36,7 @@ export const EventManager = ({user}: {user: LoggedInUser}) => {
                     <AddUsersToBooking />
                 </div>}
                 <div>
-                    <EventAttendance eventId={selectedEventId} />
+                    <EventAttendance user={user} eventId={selectedEventId} />
                 </div>
             </React.Fragment>}
         </div>
