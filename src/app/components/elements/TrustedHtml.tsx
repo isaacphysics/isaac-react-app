@@ -1,6 +1,7 @@
 import React from "react";
 import katex from "katex";
 import 'katex/dist/contrib/mhchem.js';
+import renderA11yString from '../../services/katex-a11y';
 import he from "he";
 import {UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
@@ -35,7 +36,7 @@ const BaseMacros: {[key: string]: MathJaxMacro} = {
 const BooleanLogicMathsMacros: {[key: string]: MathJaxMacro} = {
     "true": "\\boldsymbol{\\rm{T}}",
     "false": "\\boldsymbol{\\rm{F}}",
-    "and": ["{#1} \\wedge {#2}", 2],
+    "and": ["{#1} \\land {#2}", 2],
     "or": ["{#1} \\lor {#2}", 2],
     "not": ["\\lnot{#1}", 1],
     "bracketnot": ["\\lnot{(#1)}", 1],
@@ -76,6 +77,7 @@ const KatexOptions = {
     throwOnError: false,
     strict: false,
     colorIsTextColor: true,
+    output: "html"
 };
 
 function patternQuote(s: string) {
@@ -221,8 +223,20 @@ export function katexify(html: string, userPreferences: UserPreferencesDTO | nul
                 if (userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA) {
                     macrosToUse = KatexMacrosWithEngineeringBool;
                 }
-                output += katex.renderToString(latexMunged,
-                    {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse});
+                let katexOptions = {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse};
+                let katexRenderResult = katex.renderToString(latexMunged, katexOptions);
+
+                let screenreaderText;
+                try {
+                    let pauseChars = katexOptions.displayMode ? ". &nbsp;" : ",";  // trailing comma/full-stop for pause in speaking
+                    screenreaderText = `${renderA11yString(latexMunged, katexOptions)}${pauseChars}`;
+                } catch (e) {
+                    console.warn(`Unsupported equation for screenreader text: '${latexMunged}'`, e);
+                    screenreaderText = "[[Unsupported equation]]";
+                }
+                output += katexRenderResult.replace('<span class="katex">',
+                    `<span class="katex"><span class="sr-only">${screenreaderText}</span>`);
+
                 index = match.index + match[0].length;
             } else {
                 // Unmatched start, so output the start and continue searching from after it.
