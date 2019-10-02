@@ -1,4 +1,8 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from "react";
+import Select from "react-select";
+import CreatableSelect from 'react-select/creatable';
+import AsyncCreatableSelect from 'react-select/async-creatable';
+import AsyncSelect from 'react-select/async';
 import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
 import {api} from "../../../services/api";
@@ -16,6 +20,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
     let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
+    let [schoolOptions, setSchoolOptions] = useState<any[]>();
 
     function searchSchool(e?: Event) {
         if (e) {
@@ -31,6 +36,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             setSchoolSearchResults([]);
         }
     }
+
+    useEffect(() => {
+        let temp: any = [];
+        schoolSearchResults && schoolSearchResults.length > 0 && schoolSearchResults.map((item: any) => (temp.push({value: item, label: item.name + ", " + item.postcode})));
+        setSchoolOptions(temp);
+    }, [schoolSearchResults]);
 
     function fetchSchool(urn: string) {
         if (urn != "") {
@@ -56,60 +67,59 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         }
     }, [schoolQueryText]);
 
+    function renderInput(queryValue: any) {
+        setSchoolQueryText(queryValue);
+        console.log(schoolQueryText);
+    }
+
+    function handleSetSchool(newValue: any) {
+        if (newValue == null) {
+            console.log("gihfdhb");
+            setSchoolQueryText("");
+            setSelectedSchoolObject(null);
+        } else if (newValue && newValue.value) {
+            setUserSchool(newValue.value);
+        } else if (newValue) {
+            setUserSchool(newValue);
+        }
+    };
+
     function setUserSchool(school: any) {
         if (setUserToUpdate) {
-            setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school && school.urn}));
-            setSchoolQueryText(null);
-            setSelectedSchoolObject(school);
-            setSchoolSearchResults([]);
+            if (school.urn) {
+                setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school && school.urn, schoolOther: undefined}));
+                setSchoolQueryText(null);
+                setSelectedSchoolObject(school);
+                setSchoolSearchResults([]);
+            } else {
+                setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: school, schoolId: undefined}));
+                setSchoolQueryText(null);
+                setSelectedSchoolObject(school);
+                setSchoolSearchResults([]);
+            }
         }
     }
 
+    console.log(typeof schoolQueryText);
+    console.log(schoolQueryText);
+
     const schoolSpecified = (
-        userToUpdate.schoolId !== undefined ||
-        (userToUpdate.schoolOther !== undefined && userToUpdate.schoolOther !== "" && userToUpdate.schoolOther !== NOT_APPLICABLE)
+        (schoolQueryText !== " ")
+    );
+
+    const schoolValue = (
+        schoolQueryText && schoolQueryText !== null ?
+            schoolQueryText :
+                (selectedSchoolObject && selectedSchoolObject.urn ?
+                    {value: selectedSchoolObject.urn, label: selectedSchoolObject.name + ", " + selectedSchoolObject.postcode} :
+                        {value: "", label: userToUpdate.schoolOther})
     );
 
     return <RS.FormGroup className={`school ${className}`}>
         <RS.Label htmlFor="school-input" className="form-required">School</RS.Label>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
-            <RS.Input
-                id="school-input" type="text" name="school" placeholder="Type a UK school name..." autoComplete="isaac-off"
-                invalid={submissionAttempted && !validateUserSchool(userToUpdate)}
-                disabled={!setUserToUpdate}
-                value={
-                    schoolQueryText !== null ?
-                        schoolQueryText :
-                        (selectedSchoolObject && (selectedSchoolObject.name + ", " + selectedSchoolObject.postcode) || "")
-                }
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    const queryValue = e.target.value;
-                    setSchoolQueryText(queryValue);
-                    if (queryValue === "") {
-                        setUserSchool(undefined);
-                    }
-                }}
-            />
-            {schoolSearchResults && schoolSearchResults.length > 0 && <ul className="school-search-results">
-                {schoolSearchResults.map((item: any) =>
-                    <li key={item.urn} onClick={() => {
-                        setUserSchool(item)
-                    }}>
-                        {item.name + ", " + item.postcode}
-                    </li>
-                )}
-            </ul>}
-            {!userToUpdate.schoolId && <RS.Input
-                type="text" name="school-other" placeholder="...or enter a non-UK school."
-                id="school-other-input" className="my-2" maxLength={255}
-                value={userToUpdate.schoolOther || ""} disabled={!setUserToUpdate}
-                invalid={submissionAttempted && !validateUserSchool(userToUpdate)}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    if (setUserToUpdate) {
-                        setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.value}));
-                    }
-                }}
-            />}
+            <CreatableSelect isClearable id="school-input" placeholder={"Type your school name"} value={schoolValue}
+            onInputChange={renderInput} onChange={handleSetSchool} options={schoolOptions}/>
         </React.Fragment>}
 
         {!schoolSpecified && <div className="d-flex">
