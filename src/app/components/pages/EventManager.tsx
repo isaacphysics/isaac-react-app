@@ -9,6 +9,7 @@ import {SelectedEventDetails} from "../elements/panels/SelectedEventDetails";
 import {ManageExistingBookings} from "../elements/panels/ManageExistingBookings";
 import {AddUsersToBooking} from "../elements/panels/AddUsersToBooking";
 import {EventAttendance} from "../elements/panels/EventAttendance";
+import {isEventsLeader} from "../../services/user";
 
 export const EventManager = ({user}: {user: LoggedInUser}) => {
     const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
@@ -31,9 +32,9 @@ export const EventManager = ({user}: {user: LoggedInUser}) => {
                 <div>
                     <ManageExistingBookings user={user} eventBookingId={selectedEventId} />
                 </div>
-                <div>
+                {!isEventsLeader(user) && <div>
                     <AddUsersToBooking />
-                </div>
+                </div>}
                 <div>
                     <EventAttendance eventId={selectedEventId} />
                 </div>
