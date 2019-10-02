@@ -85,7 +85,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                 setSchool(data[0].name + ", " + data[0].postcode);
             });
         } else if (user && user.loggedIn && user.schoolOther) {
-            setSchool(user && user.loggedIn && user.schoolOther);
+            setSchool(user.schoolOther);
         } else {
             setSchool(undefined);
         }
