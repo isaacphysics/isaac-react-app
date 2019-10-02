@@ -1,16 +1,13 @@
-import React, {useEffect, useState, ChangeEvent} from "react";
+import React, {useState} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {Button, Col, Container, Row, Label, Input} from "reactstrap";
+import {Col, Container, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {fetchDoc} from "../../state/actions";
-import {ShowLoading} from "../handlers/ShowLoading";
-import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
-import {ContentDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE} from "../../services/constants";
 
-import { InequalityModal } from "../elements/modals/InequalityModal";
+import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 

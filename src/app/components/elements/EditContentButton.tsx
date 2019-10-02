@@ -1,4 +1,4 @@
-import React, {ReactElement, useEffect} from "react";
+import React from "react";
 
 export interface EditContentButtonProps {
     canonicalSourceFile?: string,

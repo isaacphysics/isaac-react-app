@@ -1,15 +1,5 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
-import {
-    Content,
-    EmailTemplateDTO,
-    GameboardDTO,
-    GameboardItemState,
-    GroupMembershipDTO,
-    UserGroupDTO,
-    UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
-} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 
 export type Action =

@@ -1,7 +1,6 @@
 import React from "react";
-import { Inequality, makeInequality, WidgetSpec } from "inequality";
+import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import katex from "katex";
-import { number } from "prop-types";
 
 class MenuItem {
     constructor(public type: string,
@@ -306,7 +305,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                     const lastMenuItemRect = lastMenuItem.getBoundingClientRect();
                     if (lastMenuItemRect.right > window.innerWidth || dx >= 0) {
                         this._movingMenuBar.style.left = `${newUlLeft}px`;
-                    }    
+                    }
                 }
             }
             this._movingMenuItem.style.top = `${y}px`;

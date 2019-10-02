@@ -57,7 +57,6 @@ import {StatusFilter, TypeFilter} from "../components/pages/Events";
 import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {atLeastOne} from "../services/validation";
-import {SUCCESS_TOAST} from "../components/navigation/Toasts";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {

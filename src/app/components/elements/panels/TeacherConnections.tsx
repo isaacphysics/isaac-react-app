@@ -1,13 +1,13 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {
+    authenticateWithTokenAfterPrompt,
     changeMyMembershipStatus,
     getActiveAuthorisations,
     getMyGroupMemberships,
     getStudentAuthorisations,
-    authenticateWithTokenAfterPrompt,
     releaseAllAuthorisationsAfterPrompt,
     releaseAuthorisationAfterPrompt,
     revokeAuthorisationAfterPrompt

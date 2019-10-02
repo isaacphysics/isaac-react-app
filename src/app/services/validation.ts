@@ -1,6 +1,7 @@
 import {
-    AdditionalInformation, AugmentedEvent,
-    SubjectInterests, Toast,
+    AdditionalInformation,
+    AugmentedEvent,
+    SubjectInterests,
     UserEmailPreferences,
     UserPreferencesDTO,
     ValidationUser
