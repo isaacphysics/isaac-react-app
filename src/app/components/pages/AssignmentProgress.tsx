@@ -504,7 +504,7 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
             <div className="group-name"><span className="icon-group"/><span>{group.groupName}</span></div>
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
-            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" onClick={openGroupDownloadLink}>(Download Group CSV)</a></div>
+            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openGroupDownloadLink}>(Download Group CSV)</a></div>
             <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
                 <img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" />
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
