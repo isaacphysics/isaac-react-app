@@ -39,7 +39,7 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
 
     let [relatedConcepts, relatedQuestions]: [ContentSummaryDTO[] | null, ContentSummaryDTO[] | null] = [null, null];
     if (topicPage && topicPage != NOT_FOUND && topicPage.relatedContent) {
-        [relatedConcepts, relatedQuestions] = topicPage && topicPage.relatedContent &&
+        [relatedConcepts, relatedQuestions] = topicPage.relatedContent &&
             filterAndSeparateRelatedContent(topicPage.relatedContent, examBoard);
     }
     const searchQuery = `?topic=${topicName}`;
