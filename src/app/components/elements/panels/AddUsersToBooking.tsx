@@ -30,7 +30,7 @@ export const AddUsersToBooking = () => {
         return (value !== defaultValue) ? value : null;
     }
 
-    return <Accordion title="Add users to booking">
+    return <Accordion trustedTitle="Add users to booking">
         <RS.Form onSubmit={userSearch}>
             <RS.Row>
                 <RS.Col md={6}>
