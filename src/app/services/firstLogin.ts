@@ -8,5 +8,5 @@ export enum FIRST_LOGIN_STATE {
 }
 
 export const isFirstLoginInPersistence = () => {
-    return persistence.session.load(KEY.FIRST_LOGIN) !== LOADING_FAILURE_VALUE;
+    return persistence.session.load(KEY.FIRST_LOGIN) !== (LOADING_FAILURE_VALUE || FIRST_LOGIN_STATE.BANNER_SHOWN);
 };

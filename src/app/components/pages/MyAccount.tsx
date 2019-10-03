@@ -130,10 +130,6 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         setActiveTab(tab);
     }, [hashAnchor, authToken]);
 
-    // Show registration successful banner once
-    const [bannerShown, _] = useState((persistence.session.load(KEY.FIRST_LOGIN) === FIRST_LOGIN_STATE.BANNER_SHOWN));
-    persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_SHOWN);
-
     // Values derived from inputs (props and state)
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
@@ -170,10 +166,6 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 Update your Isaac Computer Science account, or <Link to="/logout" className="text-secondary">Log out</Link>
             </small>
         </h3>
-
-        {firstLogin && !bannerShown && <Alert color="success">
-            Registration successful
-        </Alert>}
 
         {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
             <Card>
