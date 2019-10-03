@@ -32,7 +32,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; 
         dispatch(getEventOverviews(overviewFilter));
     }, [overviewFilter]);
 
-    return <Accordion title="Events overview" index={0}>
+    return <Accordion trustedTitle="Events overview" index={0}>
         {isEventsLeader(user) && <div className="bg-grey p-2 mb-4 text-center">
             As an event leader, you are only able to see the details of events which you manage.
         </div>}

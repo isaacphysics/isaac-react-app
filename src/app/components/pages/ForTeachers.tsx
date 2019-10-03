@@ -75,11 +75,9 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
             </RS.Col>
         </RS.Row>}
 
-        {user && user.loggedIn && isTeacher(user) &&
-        <RS.Row>
+        {isTeacher(user) && <RS.Row>
             <RS.Col>
-                {user && user.loggedIn && <h2 className="h-secondary h-m">Pick up where you left off</h2>}
-
+                <h2 className="h-secondary h-m">Pick up where you left off</h2>
                 <div>
                     <RS.Row>
                         <RS.ListGroup className="my-3 d-block d-md-flex flex-row flex-wrap align-items-stretch link-list bg-transparent">

@@ -13,7 +13,8 @@ import {
     GroupMembershipDetailDTO,
     isValidatedChoice,
     LoggedInUser,
-    NOT_FOUND_TYPE, TemplateEmail,
+    NOT_FOUND_TYPE,
+    TemplateEmail,
     Toast,
     UserPreferencesDTO,
     UserSchoolLookup
@@ -22,7 +23,6 @@ import {
     AssignmentDTO,
     ContentDTO,
     ContentSummaryDTO,
-    EmailTemplateDTO,
     EventBookingDTO,
     GameboardDTO,
     GameboardListDTO,

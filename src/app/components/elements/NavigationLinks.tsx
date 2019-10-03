@@ -1,7 +1,6 @@
 import React from "react";
 import {PageNavigation} from "../../services/navigation";
 import {Link} from "react-router-dom";
-import * as RS from "reactstrap";
 
 export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
     const backToCollectionLink = navigation.backToCollection && <div className="w-50 w-md-auto mb-4">

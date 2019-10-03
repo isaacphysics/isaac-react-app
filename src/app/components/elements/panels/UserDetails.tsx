@@ -1,4 +1,4 @@
-import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row, default as RS} from "reactstrap";
+import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {SubjectInterests, UserExamPreferences, ValidationUser} from "../../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../../services/constants";
 import React, {ChangeEvent} from "react";

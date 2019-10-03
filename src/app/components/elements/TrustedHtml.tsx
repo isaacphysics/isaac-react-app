@@ -1,6 +1,6 @@
 import React from "react";
 import katex from "katex";
-import '../../services/mhchem';
+import 'katex/dist/contrib/mhchem.js';
 import he from "he";
 import {UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";

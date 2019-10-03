@@ -26,7 +26,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
     const [sortPredicate, setSortPredicate] = useState("date");
     const [reverse, setReverse] = useState(true);
 
-    return <Accordion title="Manage current bookings">
+    return <Accordion trustedTitle="Manage current bookings">
         {isEventsLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
             As an event leader, you are only able to see the bookings of users who have granted you access to their data.
         </div>}

@@ -59,7 +59,7 @@ const RequiredAccountInfoBody = () => {
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
             <div className="text-muted small pb-2">
                 Providing a few extra pieces of information helps us understand the usage of Isaac Computer Science across the UK and beyond.
-                Full details on how we use your personal information can be found in our <a target="_" href="/privacy">Privacy Policy</a>.
+                Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
             </div>
             <div className="text-right text-muted required-before">
                 Required

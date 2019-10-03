@@ -1,8 +1,7 @@
 import React from "react";
-import * as RS from "reactstrap";
+import {ListGroup, ListGroupItem} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {ListGroup, ListGroupItem} from "reactstrap";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../services/constants";
 import {connect} from "react-redux";
 import {logAction} from "../../state/actions";

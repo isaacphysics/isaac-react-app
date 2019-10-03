@@ -57,7 +57,6 @@ import {StatusFilter, TypeFilter} from "../components/pages/Events";
 import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {atLeastOne} from "../services/validation";
-import {SUCCESS_TOAST} from "../components/navigation/Toasts";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -196,7 +195,7 @@ export const updateCurrentUser = (
             const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
             persistence.remove(KEY.AFTER_AUTH_PATH);
             if ((afterAuthPath).includes('account')) {
-                history.push(afterAuthPath, {firstLogin: isFirstLogin})
+                history.push(afterAuthPath, {firstLogin: isFirstLogin});
             }
             history.push('/account', {firstLogin: isFirstLogin});
         }
@@ -298,7 +297,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
                 action: 'registration',
                 label: `Create Account (${provider})`,
             });
-            history.push('/account')
+            history.push('/account');
         } else {
             history.push(nextPage);
         }
@@ -403,7 +402,7 @@ export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToke
         let authenticationToken = userSubmittedAuthenticationToken.split("?authToken=").pop() as string;
         authenticationToken = authenticationToken.toUpperCase().replace(/ /g,'');
 
-        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST})
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST});
         const result = await api.authorisations.getTokenOwner(authenticationToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_SUCCESS});
         const usersToGrantAccess = result.data;
@@ -578,7 +577,7 @@ export const requestConstantsSegueEnvironment = () => async (dispatch: Dispatch<
     } catch (e) {
         dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE});
     }
-}
+};
 
 // Document & topic fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
