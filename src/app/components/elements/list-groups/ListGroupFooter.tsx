@@ -15,7 +15,7 @@ export const ListGroupFooter = () => (
                     <Link className="footerLink py-2" to="/contact">Contact us</Link>
                 </ListGroupItem>
                 <ListGroupItem className="border-0 px-0 py-0 bg-transparent align-items-stretch">
-                    <a className="py-2" href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer">Events</a>
+                    <Link className="footerLink py-2" to="/accessibility">Accessibility <span className="d-none d-md-inline">statement</span></Link>
                 </ListGroupItem>
 
             </ListGroup>

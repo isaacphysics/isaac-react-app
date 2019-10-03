@@ -140,6 +140,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}} />
                     <TrackedRoute exact path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}} />
                     <TrackedRoute exact path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}} />
+                    <TrackedRoute exact path="/accessibility" component={Generic} componentProps={{pageIdOverride: "accessibility_statement"}} />
                     <TrackedRoute exact path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}} />
                     <TrackedRoute exact path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
                     <TrackedRoute exact path="/coming_soon" component={ComingSoon} />
