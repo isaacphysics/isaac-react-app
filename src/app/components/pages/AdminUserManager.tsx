@@ -28,6 +28,7 @@ interface AdminUserMangerProps {
 
 const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, adminUserDelete, searchResults}: AdminUserMangerProps) => {
     const dispatch = useDispatch();
+    const [userUpdating, setUserUpdating] = useState(false);
     const [searchRequested, setSearchRequested] = useState(false);
     const [searchQuery, setSearchQuery] = useState({
         familyName: null,
@@ -88,9 +89,11 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
     const modifyUserRolesAndUpdateResults = async (role: Role) => {
         let confirmed = (role === "STUDENT") || confirmUnverifiedUserPromotions();
         if (confirmed) {
+            setUserUpdating(true);
             await adminModifyUserRoles(role, selectedUserIds);
             adminUserSearch(searchQuery);
             setSelectedUserIds([]);
+            setUserUpdating(false);
         }
     };
 
@@ -211,7 +214,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                 <RS.Row className="pb-4">
                     <RS.Col>
                         <RS.UncontrolledButtonDropdown>
-                            <RS.DropdownToggle caret color="primary" outline>Modify Role</RS.DropdownToggle>
+                            <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline>Modify Role</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Promote or demote selected users to:</RS.DropdownItem>
                                 {["STUDENT", "TEACHER"].map(role =>
