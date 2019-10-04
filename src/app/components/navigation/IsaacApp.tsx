@@ -55,6 +55,7 @@ import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
 import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
+import {Quiz} from "../pages/Quiz";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -95,6 +96,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/search" component={Search} />
 
                     <TrackedRoute exact path="/questions/:questionId" component={Question} />
+                    <TrackedRoute exact path="/quiz/:quizId" component={Quiz} />
                     <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
 

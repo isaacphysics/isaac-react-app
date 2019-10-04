@@ -687,6 +687,30 @@ export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|Validat
     dispatch({type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
 };
 
+// Quizzes
+export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const currentState = getState();
+
+    try {
+        dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST, quizId});
+        if (currentState && currentState.questions) {
+            // TODO log a submission
+            await Promise.all(currentState.questions.map(
+                question => {
+                    if (question.id && question.currentAttempt) {
+                        dispatch(attemptQuestion(question.id, question.currentAttempt) as any);
+                    }
+                }
+            ));
+            dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
+            // TODO success toast and redirect
+        }
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE});
+        // TODO failure toast
+    }
+};
+
 // Current gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GAMEBOARD_REQUEST, gameboardId});

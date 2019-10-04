@@ -143,6 +143,10 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_UNLOCK; questionId: string}
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>}
 
+    | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
+    | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
