@@ -690,11 +690,9 @@ export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|Validat
 // Quizzes
 export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const currentState = getState();
-
     try {
         dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST, quizId});
         if (currentState && currentState.questions) {
-            // TODO log a submission
             await Promise.all(currentState.questions.map(
                 question => {
                     if (question.id && question.currentAttempt) {
@@ -703,11 +701,12 @@ export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Acti
                 }
             ));
             dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
-            // TODO success toast and redirect
+            dispatch(showToast({color: "success", title: "Quiz submitted", body: "Quiz submitted successfully", timeout: 3000}) as any);
+            history.push(`/pages/post-quiz-${quizId}`);
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE});
-        // TODO failure toast
+        dispatch(showErrorToastIfNeeded("Error submitting quiz", e));
     }
 };
 
@@ -738,8 +737,6 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
             history.push(`/gameboards#${gameboardId}`);
         }
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error("Error saving gameboard.");
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Error saving gameboard", e));
     }
