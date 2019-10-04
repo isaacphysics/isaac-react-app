@@ -28,6 +28,8 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
+export const ACCEPTED_QUIZ_IDS = ['quiz_test'];
+
 export const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB");
 export const DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
     year: "numeric", month: "numeric", day: "numeric",

@@ -7,7 +7,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentBase} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
+import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL, NOT_FOUND} from "../../services/constants";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -19,13 +19,21 @@ import {questions} from "../../state/selectors";
 
 export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId: string}}}) => {
     const dispatch = useDispatch();
-    const doc = useSelector((state: AppState) => (state && state.doc) || null);
+    const doc = useSelector((state: AppState) => {
+        if (ACCEPTED_QUIZ_IDS.includes(match.params.quizId)) {
+            return (state && state.doc) || null;
+        } else {
+            return NOT_FOUND;
+        }
+    });
     const allQuestionsAttempted = useSelector(questions.allQuestionsAttempted);
-    const anyQuestionPreviouslyAttempted = useSelector(questions.anyQuestionPreviouslyAttempted);
+    // const anyQuestionPreviouslyAttempted = useSelector(questions.anyQuestionPreviouslyAttempted);
     const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
 
     useEffect(() => {
-        dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, match.params.quizId));
+        if (ACCEPTED_QUIZ_IDS.includes(match.params.quizId)) {
+            dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, match.params.quizId));
+        }
     }, [match.params.quizId, fetchDoc]);
 
     const navigation = useNavigation(match.params.quizId);
