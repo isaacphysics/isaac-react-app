@@ -3,21 +3,21 @@ import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiTypes";
+import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO, ItemChoiceDTO} from "../../../IsaacApiTypes";
 import { InequalityModal } from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {IsaacHints} from "./IsaacHints";
 import { determineExamBoardFrom } from "../../services/examBoard";
 import { EXAM_BOARD } from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
+import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
-    const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
+    const questionAndIndex = questions.getQuestionPartAndIndex(questionId)(state);
     const examBoard = state && determineExamBoardFrom(state.userPreferences);
-    let r: { currentAttempt?: LogicFormulaDTO | null, examBoard? : EXAM_BOARD | null } = { examBoard };
-    if (question) {
-        r.currentAttempt = question.currentAttempt;
+    let r: { currentAttempt?: LogicFormulaDTO | null; examBoard? : EXAM_BOARD | null } = { examBoard };
+    if (questionAndIndex) {
+        r.currentAttempt = questionAndIndex.question.currentAttempt;
     }
     return r;
 };

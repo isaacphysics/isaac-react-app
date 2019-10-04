@@ -3,14 +3,14 @@ import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {ChoiceDTO, IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
+import {ChoiceDTO, IsaacMultiChoiceQuestionDTO, ItemChoiceDTO} from "../../../IsaacApiTypes";
 import {IsaacHints} from "./IsaacHints";
 import {CustomInput, Label} from "reactstrap";
+import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
-    const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
-    return question ? {currentAttempt: question.currentAttempt} : {};
+    const questionAndIndex = questions.getQuestionPartAndIndex(questionId)(state);
+    return questionAndIndex ? {currentAttempt: (questionAndIndex.question.currentAttempt as ItemChoiceDTO)} : {};
 };
 const dispatchToProps = {setCurrentAttempt};
 

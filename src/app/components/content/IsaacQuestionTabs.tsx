@@ -13,13 +13,10 @@ import * as ApiTypes from "../../../IsaacApiTypes";
 import {IsaacParsonsQuestion} from "./IsaacParsonsQuestion";
 import {DATE_TIME_FORMATTER} from "../../services/constants";
 import {IsaacItemQuestion} from "./IsaacItemQuestion";
+import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
-    // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
-    const indexedQuestion = state && state.questions &&
-        state.questions
-            .map((question, index) => ({question, index}))
-            .filter(({question}) => question.id == doc.id)[0];
+    const indexedQuestion = questions.getQuestionPartAndIndex(doc.id)(state);
     return indexedQuestion ? {
         validationResponse: indexedQuestion.question.validationResponse,
         currentAttempt: indexedQuestion.question.currentAttempt,
