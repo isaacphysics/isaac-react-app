@@ -26,6 +26,7 @@ export const AnonUserExamBoardPicker = ({className, hideLabel = true}: AnonUserE
                     dispatch(setAnonUserPreferences(
                         Object.assign(userPreferences || {}, {EXAM_BOARD: examBoardPreferences})));
                 }}
+                {...(hideLabel ? {'aria-label': "Exam Board"} : {})}
             >
                 {/*<option></option> This was not an option although we should probably support it */}
                 <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
