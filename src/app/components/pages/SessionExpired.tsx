@@ -11,7 +11,7 @@ export const SessionExpired = () => {
 
             <h3>
                 <small>
-                    {"You should try to "}
+                    {"You should "}
                     <a
                         role="button"
                         tabIndex={0}
