@@ -38,7 +38,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
         case "isaacFreeTextQuestion":
         case "isaacItemQuestion":
         case "isaacParsonsQuestion":
-            selectedComponent = match.path.startsWith("/quiz") ?
+            selectedComponent = match.path.startsWith("/quizzes") ?
                 <IsaacQuizTabs {...props} /> :
                 <IsaacQuestionTabs {...props} />;
             break;
