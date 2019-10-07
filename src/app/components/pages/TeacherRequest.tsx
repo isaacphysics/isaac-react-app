@@ -47,6 +47,8 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
     const presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: " + school + "\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\nAny other information: " + otherInformation + "\n\nThanks, \n\n" + firstName + " " + lastName;
     const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail"];
 
+    const isValidEmail = validateEmail(email);
+
     const sendForm = () => {
         submitMessage(
             {
@@ -78,6 +80,10 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
         }
     }
 
+    function clickVerify() {
+        requestEmailVerification();
+    }
+
     useEffect(() => {
         setFirstName(user && user.loggedIn && user.givenName || "");
         setLastName(user && user.loggedIn && user.familyName || "");
@@ -86,12 +92,6 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
         fetchSchool(urn);
         isEmailDomainAllowed(email);
     }, [user]);
-
-    const isValidEmail = validateEmail(email);
-
-    function clickVerify() {
-        requestEmailVerification();
-    }
 
     return <Container id="contact-page" className="pb-5">
         <TitleAndBreadcrumb currentPageTitle="Teacher Account Request" />
