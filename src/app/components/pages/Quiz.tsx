@@ -55,25 +55,26 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
                     <RS.Col md={{size: 8, offset: 2}} className="py-4 question-panel">
                         <AnonUserExamBoardPicker className="text-right" />
 
-                        <WithFigureNumbering doc={doc}>
-                            <IsaacContent doc={doc} />
-                        </WithFigureNumbering>
+                        <RS.Form onSubmit={event => {
+                            if (event) {event.preventDefault();}
+                            dispatch(submitQuizPage(match.params.quizId))
+                        }}>
+                            <WithFigureNumbering doc={doc}>
+                                <IsaacContent doc={doc} />
+                            </WithFigureNumbering>
 
-                        <div className="simple-card text-center mt-4 py-4">
-                            <RS.Button
-                                disabled={!allQuestionsAttempted}
-                                onKeyDown={() => dispatch(submitQuizPage(match.params.quizId))}
-                                onClick={() => dispatch(submitQuizPage(match.params.quizId))}
-                                aria-describedby="disabled-button-explanation"
-                            >
-                                Submit quiz
-                            </RS.Button>
-                            {!allQuestionsAttempted && <div id="disabled-button-explanation" className="mt-3">
-                                Please attempt every question before submitting.
-                            </div>}
-                        </div>
+                            <div className="simple-card text-center mt-4 py-4">
+                                {!allQuestionsAttempted && <div id="disabled-button-explanation" className="mb-3">
+                                    Please attempt every question before submitting.
+                                </div>}
+                                <input
+                                    type="submit" value="Submit quiz" className="btn btn-xl btn-secondary border-0"
+                                    disabled={!allQuestionsAttempted} aria-describedby="disabled-button-explanation"
+                                />
+                            </div>
 
-                        <p className="text-muted">{doc.attribution}</p>
+                            <p className="text-muted">{doc.attribution}</p>
+                        </RS.Form>
 
                         <NavigationLinks navigation={navigation} />
 
