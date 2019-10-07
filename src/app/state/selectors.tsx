@@ -1,6 +1,5 @@
 import {AppState} from "./reducers";
 import {sortBy} from "lodash";
-import {useSelector} from "react-redux";
 
 export const groups = {
     current: (state: AppState) => {
@@ -64,6 +63,6 @@ export const questions = {
         return !!state && !!state.questions && state.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
     },
     anyQuestionPreviouslyAttempted: (state: AppState) => {
-        return !!state && !!state.questions && state.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev && current);
+        return !!state && !!state.questions && state.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
     }
 };

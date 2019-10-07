@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
-import {fetchDoc, submitQuizPage} from "../../state/actions";
+import {fetchDoc, redirectForCompletedQuiz, submitQuizPage} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
@@ -27,7 +27,7 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
         }
     });
     const allQuestionsAttempted = useSelector(questions.allQuestionsAttempted);
-    // const anyQuestionPreviouslyAttempted = useSelector(questions.anyQuestionPreviouslyAttempted);
+    const anyQuestionPreviouslyAttempted = useSelector(questions.anyQuestionPreviouslyAttempted);
     const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
 
     useEffect(() => {
@@ -35,6 +35,12 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
             dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, match.params.quizId));
         }
     }, [match.params.quizId, fetchDoc]);
+
+    useEffect(() => {
+        if (doc && anyQuestionPreviouslyAttempted) {
+            dispatch(redirectForCompletedQuiz(match.params.quizId));
+        }
+    }, [anyQuestionPreviouslyAttempted]);
 
     const navigation = useNavigation(match.params.quizId);
 

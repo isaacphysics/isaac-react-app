@@ -1,3 +1,4 @@
+import React from "react";
 import {api} from "../services/api";
 import {Dispatch} from "react";
 import {AppState} from "./reducers";
@@ -688,6 +689,8 @@ export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|Validat
 };
 
 // Quizzes
+const generatePostQuizUrl = (quizId: string) => `/pages/post_quiz_${quizId}`;
+
 export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const currentState = getState();
     try {
@@ -702,12 +705,23 @@ export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Acti
             ));
             dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
             dispatch(showToast({color: "success", title: "Quiz submitted", body: "Quiz submitted successfully", timeout: 3000}) as any);
-            history.push(`/pages/post-quiz-${quizId}`);
+            history.push(generatePostQuizUrl(quizId));
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Error submitting quiz", e));
     }
+};
+
+export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal({
+        closeAction: () => {dispatch(closeActiveModal() as any)},
+        title: "Quiz already submitted",
+        body: <div className="text-center my-5 pb-4">
+            <strong>A submission has already been recorded for this quiz by your account.</strong>
+        </div>
+    }) as any);
+    history.push(generatePostQuizUrl(quizId));
 };
 
 // Current gameboard
