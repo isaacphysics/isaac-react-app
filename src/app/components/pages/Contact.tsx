@@ -13,7 +13,12 @@ const stateToProps = (state: AppState) => {
     const urlQuery = queryString.parse(location.search);
     let presetSubject = "";
     let presetMessage = "";
-    if (urlQuery && urlQuery.preset == 'accountDeletion') {
+    if (urlQuery && urlQuery.preset == "teacherRequest") {
+        if (state && state.user && state.user.loggedIn && state.user.role != "TEACHER") {
+            presetSubject = "Teacher Account Request";
+            presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n" + state.user.givenName + " " + state.user.familyName;
+        }
+    } else if (urlQuery && urlQuery.preset == 'accountDeletion') {
         if (state && state.user && state.user.loggedIn) {
             presetSubject = "Account Deletion Request";
             presetMessage = "Hello,\n\nPlease could you delete my Isaac Computer Science account.\n\nThanks, \n\n" + state.user.givenName + " " + state.user.familyName;
