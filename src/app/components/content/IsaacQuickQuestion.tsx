@@ -11,7 +11,7 @@ interface IsaacQuickQuestionProps {
     doc: ApiTypes.IsaacQuickQuestionDTO;
     logAction: (eventDetails: object) => void;
 }
-export const IsaacQuickQuestionComponent = (props: IsaacQuickQuestionProps) => {
+const IsaacQuickQuestionComponent = (props: IsaacQuickQuestionProps) => {
     const {doc, logAction} = props;
 
     const [isVisible, setVisible] = useState(false);
@@ -39,15 +39,13 @@ export const IsaacQuickQuestionComponent = (props: IsaacQuickQuestionProps) => {
                     </Button>
                 </Col>
             </Row>
-            {isVisible &&
-            <Row>
+            {isVisible && <Row>
                 <Col sm="12" md={{size: 10, offset: 1}}>
                     <Alert color="secondary">
                         <IsaacContentValueOrChildren {...answer} />
                     </Alert>
                 </Col>
-            </Row>
-            }
+            </Row>}
         </div>
     </div>
     ;
