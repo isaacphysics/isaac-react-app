@@ -26,7 +26,7 @@ const dispatchToProps = {
 
 interface TeacherAccountPageProps {
     user: LoggedInUser | null;
-    submitMessage: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string}) => void;
+    submitMessage: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string}) => void;
     errorMessage: ErrorState;
     requestEmailVerification: () => void;
 }
@@ -43,25 +43,12 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
     const [allowedDomain, setAllowedDomain] = useState();
 
     const urn = user && user.loggedIn && user.schoolId || "";
-
-    useEffect(() => {
-        setFirstName(user && user.loggedIn && user.givenName || "");
-        setLastName(user && user.loggedIn && user.familyName || "");
-        setEmail(user && user.loggedIn && user.email || "");
-        setEmailVerified(user && user.loggedIn && user.emailVerificationStatus == "VERIFIED");
-        fetchSchool(urn);
-        isEmailDomainAllowed(email);
-    }, [user]);
-
-    const isValidEmail = validateEmail(email);
-
     const presetSubject = "Teacher Account Request";
     const presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: " + school + "\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\nAny other information: " + otherInformation + "\n\nThanks, \n\n" + firstName + " " + lastName;
     const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail"];
 
     const sendForm = () => {
         submitMessage(
-            {},
             {
                 firstName: firstName,
                 lastName: lastName,
@@ -91,6 +78,17 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
         }
     }
 
+    useEffect(() => {
+        setFirstName(user && user.loggedIn && user.givenName || "");
+        setLastName(user && user.loggedIn && user.familyName || "");
+        setEmail(user && user.loggedIn && user.email || "");
+        setEmailVerified(user && user.loggedIn && user.emailVerificationStatus == "VERIFIED");
+        fetchSchool(urn);
+        isEmailDomainAllowed(email);
+    }, [user]);
+
+    const isValidEmail = validateEmail(email);
+
     function clickVerify() {
         requestEmailVerification();
     }
@@ -109,7 +107,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                     </h3>
                                 </Col>
                             </Row>:
-                            <Form name="contact" onSubmit={(e: any) => {
+                            <Form name="contact" onSubmit={e => {
                                 e.preventDefault();
                                 sendForm();
                                 setMessageSent(true)
@@ -125,16 +123,16 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                             <FormGroup>
                                                 <Label htmlFor="first-name-input" className="form-required">First name</Label>
                                                 <Input disabled id="first-name-input" type="text" name="first-name"
-                                                       defaultValue={user && user.loggedIn ? user.givenName : ""}
-                                                       onChange={(e: any) => setFirstName(e.target.value)} required/>
+                                                    defaultValue={user && user.loggedIn ? user.givenName : ""}
+                                                    onChange={e => setFirstName(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup>
                                                 <Label htmlFor="last-name-input" className="form-required">Last name</Label>
                                                 <Input disabled id="last-name-input" type="text" name="last-name"
-                                                       defaultValue={user && user.loggedIn ? user.familyName : ""}
-                                                       onChange={(e: any) => setLastName(e.target.value)} required/>
+                                                    defaultValue={user && user.loggedIn ? user.familyName : ""}
+                                                    onChange={e => setLastName(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -143,18 +141,18 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                             <FormGroup>
                                                 <Label htmlFor="email-input" className="form-required">Email address</Label>
                                                 <Input disabled invalid={!isValidEmail || !emailVerified || allowedDomain == false} id="email-input"
-                                                       type="email" name="email"
-                                                       defaultValue={user && user.loggedIn ? user.email : ""}
-                                                       onChange={(e: any) => setEmail(e.target.value)}
-                                                       aria-describedby="emailValidationMessage" required/>
+                                                    type="email" name="email"
+                                                    defaultValue={user && user.loggedIn ? user.email : ""}
+                                                    onChange={e => setEmail(e.target.value)}
+                                                    aria-describedby="emailValidationMessage" required/>
                                             </FormGroup>
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup>
                                                 <Label htmlFor="school-input" className="form-required">School</Label>
                                                 <Input disabled id="school-input" type="text" name="school"
-                                                       defaultValue={school} invalid={typeof school == "undefined"}
-                                                       onChange={(e: any) => setSchool(e.target.value)} required/>
+                                                    defaultValue={school} invalid={typeof school == "undefined"}
+                                                    onChange={e => setSchool(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -163,14 +161,14 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                             <FormGroup>
                                                 <Label htmlFor="user-verification-input" className="form-required">URL link to a school page containing your name <b>and</b> corresponding email address, or your school phone number</Label>
                                                 <Input id="user-verification-input" type="text" name="user-verification"
-                                                       onChange={(e: any) => setVerificationDetails(e.target.value)} required/>
+                                                    onChange={e => setVerificationDetails(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup>
                                                 <Label htmlFor="other-info-input">Any other information</Label>
                                                 <Input id="other-info-input" type="textarea" name="other-info"
-                                                       onChange={(e: any) => setOtherInformation(e.target.value)}/>
+                                                    onChange={e => setOtherInformation(e.target.value)}/>
                                             </FormGroup>
                                         </Col>
                                     </Row>

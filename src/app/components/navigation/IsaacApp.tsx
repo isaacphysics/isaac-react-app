@@ -137,8 +137,8 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/verifyemail" component={EmailAlterHandler}/>
 
                     {/* Static pages */}
-                    <TrackedRoute exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>
                     <TrackedRoute exact path="/contact" component={Contact}/>
+                    <TrackedRoute exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>
                     <TrackedRoute exact path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}} />
                     <TrackedRoute exact path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}} />
                     <TrackedRoute exact path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}} />
