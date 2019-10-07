@@ -217,8 +217,10 @@ function toActual(limit: BoardLimit) {
 }
 
 const orderNames: {[key in BoardOrder]: string} = {
-    "created": "Date Created",
-    "visited": "Date Visited",
+    "created": "Date Created Ascending",
+    "-created": "Date Created Descending",
+    "visited": "Date Visited Ascending",
+    "-visited": "Date Visited Descending",
     "title": "Title Ascending",
     "-title": "Title Descending"
 };

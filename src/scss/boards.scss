@@ -6,6 +6,7 @@
   height: 82px;
   background: url(/assets/my-boards-sprite.png) no-repeat 0 0;
   padding: 20px 0 0;
+  z-index: 999;
 }
 
 .subject-physics {
@@ -19,6 +20,10 @@
 }
 .subject-compsci {
   background-position: -71px 0;
+}
+
+.big-header {
+  height: 70px;
 }
 
 .groups-assigned {
@@ -107,4 +112,44 @@
   position: relative;
   margin-right: 10px;
   background-color: transparent;
+}
+
+.order-heading {
+  cursor: pointer;
+}
+
+.ru_share_table {
+  background-image: url(/assets/share.svg);
+  width: 50px;
+  height: 58px;
+  background-repeat: no-repeat;
+  z-index: 1;
+  float: right;
+  position: relative;
+  margin-right: 10px;
+  background-color: transparent;
+}
+
+.share-link-table {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  user-select: all;
+  display: none;
+  position: absolute;
+  padding: 4px;
+  border: 1px solid $gray-118;
+  width: 250px;
+  height: 40px;
+  right: 105px;
+  background: #fff;
+}
+
+.subject-compsci-table {
+  position: relative;
+  width: 71px;
+  height: 82px;
+  background: url(/assets/my-boards-sprite.png) no-repeat -70px 0;
+  padding: 20px 0 0;
+  z-index: 999;
 }
