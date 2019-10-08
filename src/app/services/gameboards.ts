@@ -1,6 +1,22 @@
-import {GameboardDTO} from "../../IsaacApiTypes";
+import {GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {CurrentGameboardState} from "../state/reducers";
-import {NOT_FOUND} from "./constants";
+import {DATE_FORMATTER, NOT_FOUND} from "./constants";
+
+export function formatDate(date: number | Date | undefined) {
+    if (!date) return "Unknown";
+    const dateObject = new Date(date);
+    return DATE_FORMATTER.format(dateObject);
+}
+
+export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
+    if (board.tags && board.tags.includes("isaac")) {
+        return "Isaac CS";
+    }
+    if (user.id == board.ownerUserId) {
+        return "Me";
+    }
+    return "Someone else";
+}
 
 const createGameabordLink = (gameboardId: string) => `/gameboards#${gameboardId}`;
 

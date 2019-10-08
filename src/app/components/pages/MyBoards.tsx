@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
-import {Link, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {deleteBoard, loadBoards, loadGroups, loadGroupsForBoard, showToast} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState, Boards} from "../../state/reducers";
@@ -24,7 +24,8 @@ import {ActualBoardLimit, AppGameBoard, BoardOrder, Toast} from "../../../IsaacA
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {boards, groups} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {DATE_FORMATTER, STUDENTS_CRUMB} from "../../services/constants";
+import {STUDENTS_CRUMB} from "../../services/constants";
+import {formatBoardOwner, formatDate} from "../../services/gameboards";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -47,21 +48,30 @@ interface MyBoardsPageProps {
 
 }
 
-function formatDate(date: number | Date | undefined) {
-    if (!date) return "Unknown";
-    const dateObject = new Date(date);
-    return DATE_FORMATTER.format(dateObject);
+enum BoardLimit {
+    "six" = "6",
+    "eighteen" = "18",
+    "sixy" = "60",
+    "All" = "ALL"
+}
+enum boardViews {
+    "table" = "Table View",
+    "card" = "Card View"
 }
 
-function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
-    if (board.tags && board.tags.includes("isaac")) {
-        return "Isaac CS";
-    }
-    if (user.id == board.ownerUserId) {
-        return "Me";
-    }
-    return "Someone else";
+enum sortIcon {
+    "sortable" = '⇕',
+    "ascending" = '⇑',
+    "descending" = '⇓'
 }
+const orderNames: {[key in BoardOrder]: string} = {
+    "created": "Date Created Ascending",
+    "-created": "Date Created Descending",
+    "visited": "Date Visited Ascending",
+    "-visited": "Date Visited Descending",
+    "title": "Title Ascending",
+    "-title": "Title Descending"
+};
 
 type BoardTableProps = MyBoardsPageProps & {
     board: AppGameBoard;
@@ -126,66 +136,42 @@ const Board = (props: BoardTableProps) => {
     }
 
     return boardView == boardViews.table ?
-    <tr key={board.id} className="board-card">
-        <td><button className="groups-assigned subject-compsci-table" id={hexagonId}>
-            <strong>{board.percentageCompleted}%</strong>
-        </button></td>
-        <td><a href={boardLink}>{board.title}</a></td>
-        <td className="text-center">{formatBoardOwner(user, board)}</td>
-        <td className="text-center">{formatDate(board.creationDate)}</td>
-        <td className="text-center">{formatDate(board.lastVisited)}</td>
-        <td><div className={`share-link-table ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{boardLink}</div></div>
-            <button className="ru_share" onClick={toggleShareLink}/></td>
-        <td><Input type="checkbox" checked={board && selectedBoards.includes(board) || undefined}
-                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                       board && updateBoardSelection(board, event.target.checked)
-                   }} aria-label="Delete gameboard"/></td>
-    </tr>:
-    <Card className="board-card">
-        <CardBody className="pb-4 pt-4">
-            <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
-            <button className="groups-assigned subject-compsci" id={hexagonId}>
+        <tr key={board.id} className="board-card">
+            <td><button className="groups-assigned subject-compsci-table" id={hexagonId}>
                 <strong>{board.percentageCompleted}%</strong>
-            </button>
-            <aside>
-                <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
-                <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-            </aside>
+            </button></td>
+            <td><a href={boardLink}>{board.title}</a></td>
+            <td className="text-center">{formatBoardOwner(user, board)}</td>
+            <td className="text-center">{formatDate(board.creationDate)}</td>
+            <td className="text-center">{formatDate(board.lastVisited)}</td>
+            <td><div className={`share-link-table ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{boardLink}</div></div>
+                <button className="ru_share" onClick={toggleShareLink}/></td>
+            <td><Input type="checkbox" checked={board && selectedBoards.includes(board) || undefined}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    board && updateBoardSelection(board, event.target.checked)
+                }} aria-label="Delete gameboard"/></td>
+        </tr>:
+        <Card className="board-card">
+            <CardBody className="pb-4 pt-4">
+                <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
+                <button className="groups-assigned subject-compsci" id={hexagonId}>
+                    <strong>{board.percentageCompleted}%</strong>
+                </button>
+                <aside>
+                    <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
+                    <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
+                </aside>
 
-            <div className="my-4">
-                <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{boardLink}</div></div>
-                <button className="ru_share" onClick={toggleShareLink}/>
-                <CardTitle><a href={boardLink}>{board.title}</a></CardTitle>
-                <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
-            </div>
-        </CardBody>
-    </Card>;
+                <div className="my-4">
+                    <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{boardLink}</div></div>
+                    <button className="ru_share" onClick={toggleShareLink}/>
+                    <CardTitle><a href={boardLink}>{board.title}</a></CardTitle>
+                    <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
+                </div>
+            </CardBody>
+        </Card>;
 };
 
-enum BoardLimit {
-    "six" = "6",
-    "eighteen" = "18",
-    "sixy" = "60",
-    "All" = "ALL"
-}
-enum boardViews {
-    "table" = "Table View",
-    "card" = "Card View"
-}
-
-enum sortIcon {
-    "sortable" = '⇕',
-    "ascending" = '⇑',
-    "descending" = '⇓'
-}
-const orderNames: {[key in BoardOrder]: string} = {
-    "created": "Date Created Ascending",
-    "-created": "Date Created Descending",
-    "visited": "Date Visited Ascending",
-    "-visited": "Date Visited Descending",
-    "title": "Title Ascending",
-    "-title": "Title Descending"
-};
 function toActual(limit: BoardLimit) {
     if (limit == "ALL") return "ALL";
     return parseInt(limit, 10);
@@ -197,7 +183,7 @@ function orderName(order: BoardOrder) {
 const MyBoardsPageComponent = (props: MyBoardsPageProps) => {
     const {user, loadGroups, boards, loadBoards, deleteBoard} = props;
 
-    useEffect(() => {loadGroups(false);}, []);
+    useEffect(() => {loadGroups(false);});
 
     const [loading, setLoading] = useState(false);
 
@@ -209,6 +195,11 @@ const MyBoardsPageComponent = (props: MyBoardsPageProps) => {
     const [assignedGroups, setAssignedGroups] = useState();
 
     let [actualBoardLimit, setActualBoardLimit] = useState<ActualBoardLimit>(toActual(boardLimit));
+
+    function loadInitial() {
+        loadBoards(0, actualBoardLimit, boardOrder);
+        setLoading(true);
+    }
 
     useEffect(() => {
         selectedBoards && selectedBoards.map(board => board.assignedGroups && board.assignedGroups.length > 0 && setAssignedGroups(true));
@@ -254,11 +245,6 @@ const MyBoardsPageComponent = (props: MyBoardsPageProps) => {
     function switchView(e: any) {
         setSelectedBoards([]);
         setBoardView(e.target.value as boardViews);
-    }
-
-    function loadInitial() {
-        loadBoards(0, actualBoardLimit, boardOrder);
-        setLoading(true);
     }
 
     function viewMore() {
@@ -316,9 +302,9 @@ const MyBoardsPageComponent = (props: MyBoardsPageProps) => {
                 <ShowLoading until={boards}>
                     {boards && boards.boards && <div>
                         {boardView == boardViews.card ?
-                        <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
-                            {boards.boards && boards.boards.map(board => <div key={board.id}><Board selectedBoards={selectedBoards} setSelectedBoards={setSelectedBoards} boardView={boardView} {...props} board={board} /></div>)}
-                        </div>:
+                            <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
+                                {boards.boards && boards.boards.map(board => <div key={board.id}><Board selectedBoards={selectedBoards} setSelectedBoards={setSelectedBoards} boardView={boardView} {...props} board={board} /></div>)}
+                            </div>:
                             <Card className="my-2 mt-2 mb-4">
                                 <CardHeader className="big-header">
                                     <Row>
