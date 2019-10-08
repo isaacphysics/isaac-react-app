@@ -55,9 +55,8 @@ export const boards = {
 };
 
 export const questions = {
-    getQuestionPartAndIndex: (questionPartId?: string) => (state: AppState) => {
-        return state && state.questions &&  state.questions
-            .map((question, index) => ({question, index})).filter(({question}) => question.id == questionPartId)[0];
+    selectQuestionPart: (questionPartId?: string) => (state: AppState) => {
+        return state && state.questions &&  state.questions.filter(question => question.id == questionPartId)[0];
     },
     allQuestionsAttempted: (state: AppState) => {
         return !!state && !!state.questions && state.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);

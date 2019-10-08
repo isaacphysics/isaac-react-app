@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {IsaacParsonsQuestionDTO, ItemChoiceDTO, ParsonsChoiceDTO, ParsonsItemDTO} from "../../../IsaacApiTypes";
+import {IsaacParsonsQuestionDTO, ParsonsChoiceDTO, ParsonsItemDTO} from "../../../IsaacApiTypes";
 import {IsaacHints} from "./IsaacHints";
 import {Col, Row} from "reactstrap";
 import {DragDropContext, Droppable, Draggable, DragStart, DropResult, ResponderProvided, DroppableProvided, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot} from "react-beautiful-dnd";
@@ -251,8 +251,8 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
 }
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionAndIndex = questions.getQuestionPartAndIndex(questionId)(state);
-    return questionAndIndex ? {currentAttempt: (questionAndIndex.question.currentAttempt as ItemChoiceDTO)} : {};
+    const questionPart = questions.selectQuestionPart(questionId)(state);
+    return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
 };
 const dispatchToProps = {setCurrentAttempt};
 

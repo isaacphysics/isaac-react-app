@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO, ItemChoiceDTO} from "../../../IsaacApiTypes";
+import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiTypes";
 import { InequalityModal } from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {IsaacHints} from "./IsaacHints";
@@ -13,11 +13,11 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionAndIndex = questions.getQuestionPartAndIndex(questionId)(state);
+    const questionPart = questions.selectQuestionPart(questionId)(state);
     const examBoard = state && determineExamBoardFrom(state.userPreferences);
     let r: { currentAttempt?: LogicFormulaDTO | null; examBoard? : EXAM_BOARD | null } = { examBoard };
-    if (questionAndIndex) {
-        r.currentAttempt = questionAndIndex.question.currentAttempt;
+    if (questionPart) {
+        r.currentAttempt = questionPart.currentAttempt;
     }
     return r;
 };

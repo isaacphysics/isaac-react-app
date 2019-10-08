@@ -11,13 +11,12 @@ import * as RS from "reactstrap";
 import {QUESTION_TYPES} from "../../services/questions";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
-    const indexedQuestion = questions.getQuestionPartAndIndex(doc.id)(state);
-    return indexedQuestion ? {
-        validationResponse: indexedQuestion.question.validationResponse,
-        currentAttempt: indexedQuestion.question.currentAttempt,
-        canSubmit: indexedQuestion.question.canSubmit && !indexedQuestion.question.locked,
-        locked: indexedQuestion.question.locked,
-        questionIndex: indexedQuestion.index
+    const questionPart = questions.selectQuestionPart(doc.id)(state);
+    return questionPart ? {
+        validationResponse: questionPart.validationResponse,
+        currentAttempt: questionPart.currentAttempt,
+        canSubmit: questionPart.canSubmit && !questionPart.locked,
+        locked: questionPart.locked
     } : {};
 };
 
@@ -27,7 +26,6 @@ interface IsaacQuestionTabsProps {
     canSubmit?: boolean;
     locked?: Date;
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
-    questionIndex?: number;
 }
 
 function showTime(date: Date) {
@@ -35,7 +33,7 @@ function showTime(date: Date) {
 }
 
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
-    const {doc, validationResponse, currentAttempt, canSubmit, locked, questionIndex} = props;
+    const {doc, validationResponse, currentAttempt, canSubmit, locked} = props;
     const dispatch = useDispatch();
 
     useEffect((): (() => void) => {

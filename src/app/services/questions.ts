@@ -6,7 +6,7 @@ import {IsaacStringMatchQuestion} from "../components/content/IsaacStringMatchQu
 import {IsaacFreeTextQuestion} from "../components/content/IsaacFreeTextQuestion";
 import {IsaacSymbolicLogicQuestion} from "../components/content/IsaacSymbolicLogicQuestion";
 
-// @ts-ignore
+// @ts-ignore as TypeScript is struggling to infer common type for questions
 export const QUESTION_TYPES = new Map([
     ["isaacMultiChoiceQuestion", IsaacMultiChoiceQuestion],
     ["isaacItemQuestion", IsaacItemQuestion],

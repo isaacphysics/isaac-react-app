@@ -19,39 +19,33 @@ import {questions} from "../../state/selectors";
 
 export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId: string}}}) => {
     const dispatch = useDispatch();
-    const doc = useSelector((state: AppState) => {
-        if (ACCEPTED_QUIZ_IDS.includes(match.params.quizId)) {
-            return (state && state.doc) || null;
-        } else {
-            return NOT_FOUND;
-        }
-    });
+    // Report 404 NOT_FOUND if quiz ID is not an accepted quiz ID
+    const doc = useSelector((state: AppState) => ACCEPTED_QUIZ_IDS.includes(match.params.quizId) ? (state && state.doc) || null : NOT_FOUND);
     const allQuestionsAttempted = useSelector(questions.allQuestionsAttempted);
     const anyQuestionPreviouslyAttempted = useSelector(questions.anyQuestionPreviouslyAttempted);
     const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
+
+    function submitQuiz(event: React.FormEvent) {
+        if (event) {event.preventDefault();}
+        dispatch(submitQuizPage(match.params.quizId))
+    }
 
     useEffect(() => {
         if (ACCEPTED_QUIZ_IDS.includes(match.params.quizId)) {
             dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, match.params.quizId));
         }
-    }, [match.params.quizId, fetchDoc]);
+    }, [match.params.quizId]);
 
     useEffect(() => {
         if (doc && anyQuestionPreviouslyAttempted) {
             dispatch(redirectForCompletedQuiz(match.params.quizId));
         }
-    }, [anyQuestionPreviouslyAttempted]);
-
-    const navigation = useNavigation(match.params.quizId);
+    }, [anyQuestionPreviouslyAttempted, match.params.quizId]);
 
     return <ShowLoading until={doc} thenRender={doc =>
         <div className="pattern-01">
             <RS.Container>
-                <TitleAndBreadcrumb
-                    currentPageTitle={doc.title as string}
-                    intermediateCrumbs={navigation.breadcrumbHistory}
-                    collectionType={navigation.collectionType}
-                />
+                <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
 
                 {segueEnvironment === "DEV" && (doc as ContentBase).canonicalSourceFile &&
                     <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
@@ -59,12 +53,7 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
 
                 <RS.Row>
                     <RS.Col md={{size: 8, offset: 2}} className="py-4 question-panel">
-                        <AnonUserExamBoardPicker className="text-right" />
-
-                        <RS.Form onSubmit={event => {
-                            if (event) {event.preventDefault();}
-                            dispatch(submitQuizPage(match.params.quizId))
-                        }}>
+                        <RS.Form onSubmit={submitQuiz}>
                             <WithFigureNumbering doc={doc}>
                                 <IsaacContent doc={doc} />
                             </WithFigureNumbering>
@@ -82,8 +71,6 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
                             <p className="text-muted">{doc.attribution}</p>
                         </RS.Form>
 
-                        <NavigationLinks navigation={navigation} />
-
                         {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                     </RS.Col>
                 </RS.Row>
@@ -91,4 +78,3 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
         </div>
     }/>;
 });
-

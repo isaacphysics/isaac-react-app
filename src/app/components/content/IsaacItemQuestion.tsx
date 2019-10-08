@@ -9,8 +9,8 @@ import {CustomInput, Label} from "reactstrap";
 import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionAndIndex = questions.getQuestionPartAndIndex(questionId)(state);
-    return questionAndIndex ? {currentAttempt: (questionAndIndex.question.currentAttempt as ItemChoiceDTO)} : {};
+    const questionPart = questions.selectQuestionPart(questionId)(state);
+    return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
 };
 const dispatchToProps = {setCurrentAttempt};
 

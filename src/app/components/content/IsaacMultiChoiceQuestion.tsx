@@ -3,14 +3,14 @@ import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {ChoiceDTO, IsaacMultiChoiceQuestionDTO, ItemChoiceDTO} from "../../../IsaacApiTypes";
+import {ChoiceDTO, IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacHints} from "./IsaacHints";
 import {CustomInput, Label} from "reactstrap";
 import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionAndIndex = questions.getQuestionPartAndIndex(questionId)(state);
-    return questionAndIndex ? {currentAttempt: (questionAndIndex.question.currentAttempt as ItemChoiceDTO)} : {};
+    const questionPart = questions.selectQuestionPart(questionId)(state);
+    return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
 };
 const dispatchToProps = {setCurrentAttempt};
 
