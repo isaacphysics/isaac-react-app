@@ -11,9 +11,6 @@ import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL, NOT_FOUND} from "../../ser
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useNavigation} from "../../services/navigation";
-import {NavigationLinks} from "../elements/NavigationLinks";
-import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
 import {EditContentButton} from "../elements/EditContentButton";
 import {questions} from "../../state/selectors";
 
