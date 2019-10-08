@@ -102,6 +102,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
+    "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
     "analyse-bundle": "npm run build -- --stats && webpack-bundle-analyzer build/bundle-stats.json build"
   },
   "eslintConfig": {
