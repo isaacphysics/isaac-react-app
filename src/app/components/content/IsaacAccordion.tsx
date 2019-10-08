@@ -14,9 +14,7 @@ export const IsaacAccordion = (props: any) => {
     return <div className="isaac-accordion">
         {children.map((child, index) => (
             <Accordion key={index} trustedTitle={child.title} id={child.id} index={index} >
-                {child.children && child.children.map((contentChild, index) => (
-                    <IsaacContent key={index} doc={contentChild} />
-                ))}
+                <IsaacContent key={index} doc={child} />
             </Accordion>
         ))}
     </div>;
