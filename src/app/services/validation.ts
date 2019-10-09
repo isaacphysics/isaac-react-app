@@ -50,7 +50,7 @@ export const validateSubjectInterests = (subjectInterests?: SubjectInterests | n
 
 export const validateUserSchool = (user?: ValidationUser | null) => {
     return !!user && (
-        (user.schoolId !== null && user.schoolId !== undefined) ||
+        (!!user.schoolId) ||
         (!!user.schoolOther && user.schoolOther.length > 0)
     );
 };

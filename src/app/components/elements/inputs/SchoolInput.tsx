@@ -1,8 +1,5 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from "react";
-import Select from "react-select";
 import CreatableSelect from 'react-select/creatable';
-import AsyncCreatableSelect from 'react-select/async-creatable';
-import AsyncSelect from 'react-select/async';
 import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
 import {api} from "../../../services/api";
@@ -21,6 +18,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
     let [schoolOptions, setSchoolOptions] = useState<any[]>();
+    let [schoolBoxEmpty, setSchoolBoxEmpty] = useState();
 
     function searchSchool(e?: Event) {
         if (e) {
@@ -55,6 +53,9 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     useEffect(() => {
         fetchSchool(userToUpdate.schoolId || "");
+        if (selectedSchoolObject == null) {
+            setSchoolBoxEmpty(true);
+        }
     }, [userToUpdate]);
 
     const timer: MutableRefObject<number | undefined> = useRef();
@@ -69,29 +70,17 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     function renderInput(queryValue: any) {
         setSchoolQueryText(queryValue);
-        console.log(schoolQueryText);
     }
 
-    function handleSetSchool(newValue: any) {
-        if (newValue == null) {
-            console.log("gihfdhb");
-            setSchoolQueryText("");
-            setSelectedSchoolObject(null);
-        } else if (newValue && newValue.value) {
-            setUserSchool(newValue.value);
-        } else if (newValue) {
-            setUserSchool(newValue);
-        }
-    };
-
     function setUserSchool(school: any) {
+        console.log(school);
         if (setUserToUpdate) {
             if (school.urn) {
                 setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school && school.urn, schoolOther: undefined}));
                 setSchoolQueryText(null);
                 setSelectedSchoolObject(school);
                 setSchoolSearchResults([]);
-            } else {
+            } else if (school) {
                 setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: school, schoolId: undefined}));
                 setSchoolQueryText(null);
                 setSelectedSchoolObject(school);
@@ -100,29 +89,36 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         }
     }
 
-    console.log(typeof schoolQueryText);
-    console.log(schoolQueryText);
-
-    const schoolSpecified = (
-        (schoolQueryText !== " ")
-    );
+    function handleSetSchool(newValue: any) {
+        if (newValue == null) {
+            setSchoolBoxEmpty(true);
+            setSchoolQueryText("trains");
+            setSelectedSchoolObject(undefined);
+        } else if (newValue && newValue.value) {
+            setSchoolBoxEmpty(false);
+            setUserSchool(newValue.value);
+        } else if (newValue) {
+            setSchoolBoxEmpty(false);
+            setUserSchool(newValue);
+        }
+    }
 
     const schoolValue = (
-        schoolQueryText && schoolQueryText !== null ?
+        schoolQueryText ?
             schoolQueryText :
-                (selectedSchoolObject && selectedSchoolObject.urn ?
-                    {value: selectedSchoolObject.urn, label: selectedSchoolObject.name + ", " + selectedSchoolObject.postcode} :
-                        {value: "", label: userToUpdate.schoolOther})
+            (selectedSchoolObject && selectedSchoolObject.urn ?
+                {value: selectedSchoolObject.urn, label: selectedSchoolObject.name + ", " + selectedSchoolObject.postcode} :
+                {value: "manually entered school", label: userToUpdate.schoolOther})
     );
 
     return <RS.FormGroup className={`school ${className}`}>
         <RS.Label htmlFor="school-input" className="form-required">School</RS.Label>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <CreatableSelect isClearable id="school-input" placeholder={"Type your school name"} value={schoolValue}
-            onInputChange={renderInput} onChange={handleSetSchool} options={schoolOptions}/>
+                onInputChange={renderInput} onChange={handleSetSchool} options={schoolOptions}/>
         </React.Fragment>}
 
-        {!schoolSpecified && <div className="d-flex">
+        {schoolBoxEmpty && <div className="d-flex">
             <RS.CustomInput
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
@@ -130,7 +126,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 disabled={!setUserToUpdate}
                 onChange={(e => {
                     if (setUserToUpdate) {
-                        setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : ""}));
+                        setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : "", schoolId: e.target.checked && undefined}));
                     }
                 })}
             />
