@@ -11,14 +11,14 @@ interface SchoolInputProps {
     submissionAttempted: boolean;
     className?: string;
     idPrefix?: string;
+    disableInput?: boolean;
 }
 const NOT_APPLICABLE = "N/A";
-export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school"}: SchoolInputProps) => {
+export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput}: SchoolInputProps) => {
     let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
     let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
     let [schoolOptions, setSchoolOptions] = useState<any[]>();
-    let [schoolBoxEmpty, setSchoolBoxEmpty] = useState();
 
     function searchSchool(e?: Event) {
         if (e) {
@@ -53,9 +53,6 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     useEffect(() => {
         fetchSchool(userToUpdate.schoolId || "");
-        if (selectedSchoolObject == null) {
-            setSchoolBoxEmpty(true);
-        }
     }, [userToUpdate]);
 
     const timer: MutableRefObject<number | undefined> = useRef();
@@ -73,7 +70,6 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     }
 
     function setUserSchool(school: any) {
-        console.log(school);
         if (setUserToUpdate) {
             if (school.urn) {
                 setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school && school.urn, schoolOther: undefined}));
@@ -91,14 +87,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     function handleSetSchool(newValue: any) {
         if (newValue == null) {
-            setSchoolBoxEmpty(true);
-            setSchoolQueryText("trains");
+            setSchoolQueryText(null);
             setSelectedSchoolObject(undefined);
+            userToUpdate.schoolOther = undefined;
         } else if (newValue && newValue.value) {
-            setSchoolBoxEmpty(false);
             setUserSchool(newValue.value);
         } else if (newValue) {
-            setSchoolBoxEmpty(false);
             setUserSchool(newValue);
         }
     }
@@ -114,11 +108,11 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     return <RS.FormGroup className={`school ${className}`}>
         <RS.Label htmlFor="school-input" className="form-required">School</RS.Label>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
-            <CreatableSelect isClearable id="school-input" placeholder={"Type your school name"} value={schoolValue}
+            <CreatableSelect isClearable isDisabled={disableInput} id="school-input" placeholder={"Type your school name"} value={schoolValue}
                 onInputChange={renderInput} onChange={handleSetSchool} options={schoolOptions}/>
         </React.Fragment>}
 
-        {schoolBoxEmpty && <div className="d-flex">
+        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex">
             <RS.CustomInput
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
@@ -126,7 +120,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 disabled={!setUserToUpdate}
                 onChange={(e => {
                     if (setUserToUpdate) {
-                        setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : "", schoolId: e.target.checked && undefined}));
+                        setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : undefined, schoolId: e.target.checked && undefined}));
                     }
                 })}
             />

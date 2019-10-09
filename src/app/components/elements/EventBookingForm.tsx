@@ -67,7 +67,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     </span>}
                 </div>
                 {editingSelf && <div>
-                    <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} submissionAttempted />
+                    <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} disableInput={true} submissionAttempted />
                 </div>}
                 {editingSelf && <div className="text-center alert-warning p-1">
                     If this information is incorrect, please update it from your <a href="/account" target="_blank">account page</a>.
