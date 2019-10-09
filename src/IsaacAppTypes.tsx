@@ -505,10 +505,9 @@ export interface ZxcvbnResult {
 export interface EmailUserRoles {
     ADMIN: boolean;
     EVENT_MANAGER: boolean;
+    EVENT_LEADER: boolean;
     CONTENT_EDITOR: boolean;
     TEACHER: boolean;
-    TESTER: boolean;
-    STAFF: boolean;
     STUDENT: boolean;
 }
 

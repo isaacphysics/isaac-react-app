@@ -94,7 +94,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
         doSearch();
     }, [searchFilterProblems, searchFilterConcepts]);
 
-    const isStaffUser = userRole && (userRole == 'ADMIN' || userRole == 'EVENT_MANAGER' || userRole == 'CONTENT_EDITOR' || userRole == 'STAFF');
+    const isStaffUser = userRole && (userRole == 'ADMIN' || userRole == 'EVENT_MANAGER' || userRole == 'CONTENT_EDITOR');
 
     const filterResult = function(r: ContentSummaryDTO) {
         const keepElement = (r.id != "_regression_test_" && (!r.tags || r.tags.indexOf("nofilter") < 0 && !r.supersededBy));
