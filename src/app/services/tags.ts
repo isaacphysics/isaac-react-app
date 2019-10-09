@@ -40,15 +40,15 @@ const baseTags: BaseTag[] = [
     // Data structures and algorithms topics
     {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms},
     {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.modelsOfComputation, title: "Models of computation", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.theoryOfComputation, title: "Theory of computation", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Jan 2020'},
     {id: TAG_ID.planningAndDebugging, title: "Planning and debugging", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Apr 2020'},
     {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
     // Computer networks topics
-    {id: TAG_ID.security, title: "Security", parent: TAG_ID.computerNetworks, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.networkStructure, title: "Network structure", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.networking, title: "Networking", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
     {id: TAG_ID.networkHardware, title: "Network hardware", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.communication, title: "Communication", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
     {id: TAG_ID.internet, title: "Internet", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.security, title: "Security", parent: TAG_ID.computerNetworks, comingSoon: 'Apr 2020'},
+    {id: TAG_ID.communication, title: "Communication (AQA)", parent: TAG_ID.computerNetworks, comingSoon: 'Apr 2020'},
     // Computer systems topics
     {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems},
     {id: TAG_ID.architecture, title: "Architecture", parent: TAG_ID.computerSystems, comingSoon: 'Apr 2020'},
@@ -57,10 +57,9 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems, new: true},
     {id: TAG_ID.programmingLanguages, title: "Programming languages", parent: TAG_ID.computerSystems, new: true},
     // Data and information topics
-    {id: TAG_ID.numberSystems, title: "Number systems", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.numberSystems, title: "Number systems (AQA)", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
     {id: TAG_ID.numberBases, title: "Number bases", parent: TAG_ID.dataAndInformation},
     {id: TAG_ID.representation, title: "Representation", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.transmission, title: "Transmission", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
     {id: TAG_ID.databases, title: "Databases", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
     {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
     {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
@@ -81,7 +80,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.structureAndRobustness, title: "Structure & robustness", parent: TAG_ID.proceduralProgramming, comingSoon: 'Apr 2020'},
     {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.proceduralProgramming, comingSoon: 'Apr 2020'},
     {id: TAG_ID.stringManipulation, title: "String manipulation", parent: TAG_ID.proceduralProgramming},
-    {id: TAG_ID.guis, title: "GUIs", parent: TAG_ID.proceduralProgramming, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.guis, title: "GUIs (OCR)", parent: TAG_ID.proceduralProgramming, comingSoon: 'Jan 2020'},
     {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.proceduralProgramming, comingSoon: 'Apr 2020'},
     // Software project topics
     {id: TAG_ID.softwareProject, title: "Software project", parent: TAG_ID.computingPracticalProject, new: true},

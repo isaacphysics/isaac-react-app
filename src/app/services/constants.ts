@@ -369,12 +369,12 @@ export enum TAG_ID {
     // Data structures and algorithms topics
     searchingSortingPathfinding = "searching_sorting_pathfinding",
     complexity = "complexity",
-    modelsOfComputation = "models_of_computation",
+    theoryOfComputation = "models_of_computation",
     planningAndDebugging = "planning_and_debugging",
     dataStructures = "data_structures",
     // Computer networks topics
     security = "security",
-    networkStructure = "network_structure",
+    networking = "networking",
     networkHardware = "network_hardware",
     communication = "communication",
     internet = "internet",
@@ -389,7 +389,6 @@ export enum TAG_ID {
     numberSystems = "number_systems",
     numberBases = "number_bases",
     representation = "representation",
-    transmission = "transmission",
     databases = "databases",
     bigData = "big_data",
     compression = "compression",
