@@ -55,7 +55,7 @@ export const groupInvitationModal = (firstTime: boolean) => {
         title: firstTime ? "Group Created" : "Invite Users",
         body: <ConnectedCurrentGroupInviteModal firstTime={firstTime} />,
         buttons: [
-            <RS.Row>
+            <RS.Row key={0}>
                 <RS.Col>
                     <RS.Button block key={2} color="secondary" onClick={() => {
                         store.dispatch(closeActiveModal());

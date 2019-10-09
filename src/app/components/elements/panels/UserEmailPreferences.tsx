@@ -1,4 +1,4 @@
-import {CardBody, Col, FormGroup, Row, default as RS, Table} from "reactstrap";
+import {CardBody, FormGroup, Table} from "reactstrap";
 import React, {useMemo} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";

@@ -68,8 +68,8 @@ export const EmailAlterHandler = () => {
                                         "Verification email sent to " + (user && user.loggedIn && user.email)
                                     }
                                 </p>
-                                :
-                                <p>Please login to resend the verification email.</p>}
+                                    :
+                                    <p>Please login to resend the verification email.</p>}
                             </React.Fragment>
                         }
                     </CardBody>

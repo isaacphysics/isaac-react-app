@@ -36,11 +36,7 @@ const IsaacTabsComponent = (props: any) => {
             activeTab = index + 1;
         }
 
-        tabTitlesToContent[tabTitle] = <React.Fragment>
-            {child.children && child.children.map((tabContentChild, index) => (
-                <IsaacContent key={index} doc={tabContentChild} />
-            ))}
-        </React.Fragment>;
+        tabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
     });
 
     return <Tabs className="isaac-tab" tabContentClass="pt-4" activeTabOverride={activeTab}>

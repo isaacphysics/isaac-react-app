@@ -1,15 +1,7 @@
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
-import {
-    ALL_TOPICS_CRUMB,
-    DOCUMENT_TYPE,
-    documentTypePathPrefix,
-    EXAM_BOARD,
-    examBoardTagMap,
-    NOT_FOUND
-} from "./constants";
+import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, documentTypePathPrefix, EXAM_BOARD, NOT_FOUND} from "./constants";
 import {CurrentTopicState} from "../state/reducers";
 import {LinkInfo} from "./navigation";
-import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {filterOnExamBoard} from "./examBoard";
 
 const filterForConcepts = (contents: ContentSummaryDTO[]) => {

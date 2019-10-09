@@ -13,7 +13,7 @@ export const IS_CS_PLATFORM = true;
 let apiPath = `${document.location.origin}/api/${API_VERSION}/api`;
 if (document.location.hostname === "localhost") {
     apiPath = "http://localhost:8080/isaac-api/api";
-} else if (document.location.hostname.indexOf(".eu.ngrok.io") > -1) {
+} else if (document.location.hostname.endsWith(".eu.ngrok.io")) {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
 }
 export const isTest = document.location.hostname.startsWith("test.");
@@ -379,7 +379,7 @@ export enum TAG_ID {
     functionalProgramming = "functional_programming",
     objectOrientedProgramming = "object_oriented_programming",
     proceduralProgramming = "procedural_programming",
-    softwareProjectProgramming = "software_project_programming",
+    computingPracticalProject = "computing_practical_project",
 
     // GCSE to A level transition topics
     gcseBooleanLogic = "gcse_boolean_logic",
@@ -390,12 +390,12 @@ export enum TAG_ID {
     // Data structures and algorithms topics
     searchingSortingPathfinding = "searching_sorting_pathfinding",
     complexity = "complexity",
-    modelsOfComputation = "models_of_computation",
+    theoryOfComputation = "models_of_computation",
     planningAndDebugging = "planning_and_debugging",
     dataStructures = "data_structures",
     // Computer networks topics
     security = "security",
-    networkStructure = "network_structure",
+    networking = "networking",
     networkHardware = "network_hardware",
     communication = "communication",
     internet = "internet",
@@ -410,7 +410,6 @@ export enum TAG_ID {
     numberSystems = "number_systems",
     numberBases = "number_bases",
     representation = "representation",
-    transmission = "transmission",
     databases = "databases",
     bigData = "big_data",
     compression = "compression",
@@ -433,7 +432,7 @@ export enum TAG_ID {
     stringManipulation = "string_manipulation",
     guis = "guis",
     softwareEngineeringPrinciples = "software_engineering_principles",
-    // Software project topics
+    // Computing practical project topics
     softwareProject = "software_project",
 }
 

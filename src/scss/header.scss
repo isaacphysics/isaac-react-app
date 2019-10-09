@@ -69,6 +69,30 @@ header {
   line-height: 1.2;
 }
 
+a.skip-main {
+  left:-999px;
+  position:absolute;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  z-index:-999;
+}
+a.skip-main:focus, a.skip-main:active {
+  color: #000;
+  background-color:#fff;
+  left: 5%;
+  top: 60px;
+  width: 175px;
+  height: auto;
+  overflow: auto;
+  margin: 10px;
+  text-align:center;
+  font-family: $secondary-font-medium;
+  font-size: 1rem;
+  z-index:999;
+}
+
 // NOMENSA header.scss
 // !important used to override bootstraps use of !important :(
 
