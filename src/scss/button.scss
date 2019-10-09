@@ -148,13 +148,6 @@ a.btn {
   &.selected{
     background-color: $cyan;
     border: 1px solid transparent;
-
-    // TODO: Is this normal
-    &.btn-secondary:not(:disabled):not(.disabled) {
-      background-color: $cyan;
-      border-color: $cyan;
-      box-shadow: 0 0 0 0.2rem $shadow-08
-    }
   }
 
   &.btn-tertiary {

@@ -38,27 +38,17 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [selectedQuestions, setSelectedQuestions] = useState(new Map(originalSelectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
-    const questionsSelector = useSelector((state: AppState) => state && state.gameboardEditorQuestions);
-    const userPreferencesSelector = useSelector((state: AppState) => state && state.userPreferences);
+    const questions = useSelector((state: AppState) => state && state.gameboardEditorQuestions);
+    const userPreferences = useSelector((state: AppState) => state && state.userPreferences);
 
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], levels: string[], examBoard: string[], fasttrack: boolean, startIndex: number) => {
             dispatch(searchQuestions({
                 searchString: [searchString, ...([topics, levels, examBoard].map((tags) => tags.join(" ")))].filter((query) => query != "").join(" "),
-                tags: "",
-                fasttrack,
-                startIndex,
-                limit: 50
+                tags: "", fasttrack, startIndex, limit: 50
             }));
 
-            logEvent(eventLog,"SEARCH_QUESTIONS", {
-                searchString,
-                topics,
-                levels,
-                examBoard,
-                fasttrack,
-                startIndex,
-            });
+            logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, levels, examBoard, fasttrack, startIndex});
         }, 250),
         []
     );
@@ -70,8 +60,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     };
 
     const multiSelectOnChange = (setValue: Dispatch<SetStateAction<string[]>>) => (e: ValueType<{value: string; label: string}>) => {
-        if (e && (e as ReadonlyArray<{value: string; label: string;}>).map) {
-            const arr = e as ReadonlyArray<{value: string; label: string;}>;
+        if (e && (e as {value: string; label: string}[]).map) {
+            const arr = e as {value: string; label: string}[];
             setValue(arr.map((item) => item.value));
         } else {
             setValue([]);
@@ -79,11 +69,11 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     };
 
     useMemo(() => {
-        if (userPreferencesSelector && userPreferencesSelector.EXAM_BOARD) {
+        if (userPreferences && userPreferences.EXAM_BOARD) {
             let examBoard;
-            if (userPreferencesSelector.EXAM_BOARD[EXAM_BOARD.AQA]) {
+            if (userPreferences.EXAM_BOARD[EXAM_BOARD.AQA]) {
                 examBoard = EXAM_BOARD.AQA;
-            } else if (userPreferencesSelector.EXAM_BOARD[EXAM_BOARD.OCR]) {
+            } else if (userPreferences.EXAM_BOARD[EXAM_BOARD.OCR]) {
                 examBoard = EXAM_BOARD.OCR;
             }
 
@@ -91,7 +81,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 setSearchExamBoards([examBoardTagMap[examBoard]]);
             }
         }
-    }, [userPreferencesSelector]);
+    }, [userPreferences]);
 
     useEffect(() => {
         searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, false, 0);
@@ -184,7 +174,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 </thead>
                 <tbody>
                     {
-                        questionsSelector && sortQuestions(questionsSort)(questionsSelector.filter((question) => {
+                        questions && sortQuestions(questionsSort)(questions.filter((question) => {
                             return (searchLevels.length == 0 || (question.level && searchLevels.includes(question.level.toString()))) &&
                                 (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0)) &&
                                 (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0))

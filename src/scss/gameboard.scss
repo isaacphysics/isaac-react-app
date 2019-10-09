@@ -53,7 +53,6 @@
   overflow: auto;
   display: block;
   max-height: 60vh;
-  width: 101%;
   .table.table-bordered {
     thead {
       @include table-sticky();
@@ -79,7 +78,9 @@
         .img-center {
           display: flex;
           justify-content: center;
-          cursor: pointer;
+          input {
+            height: 2rem;
+          }
         }
       }
     }

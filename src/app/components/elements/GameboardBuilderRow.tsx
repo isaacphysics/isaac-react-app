@@ -38,11 +38,11 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
             body: <QuestionModal urlQuestionId={urlQuestionId}/>
         }))};
 
-    return <tr key={question.id}
-               ref={provided && provided.innerRef}
-               className={classnames({selected: question.id && selectedQuestions.has(question.id)})}
-               {...(provided && provided.draggableProps)}
-               {...(provided && provided.dragHandleProps)}>
+    return <tr
+        key={question.id} ref={provided && provided.innerRef}
+        className={classnames({selected: question.id && selectedQuestions.has(question.id)})}
+        {...(provided && provided.draggableProps)} {...(provided && provided.dragHandleProps)}
+    >
         <td className="text-center align-middle">
             <RS.CustomInput
                 type="checkbox"
@@ -67,15 +67,14 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
             />
         </td>
         <td>
-            {provided && <img src="/assets/drag_indicator.svg"
-                              className="mr-1 grab-cursor"
-                              alt="Drag to reorder"/>}
-            <a className="mr-2" href={question.url} target="_blank">{question.title}</a>
-            <img src="/assets/tab.svg"
-                 alt="Preview question"
-                 title="Preview question"
-                 className="pointer-cursor"
-                 onClick={() => {question.id && openQuestionModal(question.id)}}/>
+            {provided && <img src="/assets/drag_indicator.svg" alt="Drag to reorder" className="mr-1 grab-cursor" />}
+            <a className="mr-2" href={question.url} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
+                {question.title}
+            </a>
+            <input
+                type="image" src="/assets/tab.svg" alt="Preview question" title="Preview question in modal"
+                className="pointer-cursor align-middle" onClick={() => {question.id && openQuestionModal(question.id)}}
+            />
         </td>
         <td>
             {topicTag()}

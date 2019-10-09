@@ -71,14 +71,14 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
     const teacherButtons = user && isTeacher(user) && <RS.Row className="col-8 offset-2">
         <RS.Col className="mt-4">
             <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                Set as Assignment
+                Set as assignment
             </RS.Button>
         </RS.Col>
         <RS.Col className="mt-4">
-            <RS.Button tag={Link} to={{pathname: "/gameboards/builder/", state: {gameboard: gameboard}}}
-                       color="primary"
-                       className="btn-block"
-                       outline>
+            <RS.Button
+                tag={Link} to={{pathname: "/gameboards/builder/", state: {gameboard: gameboard}}}
+                color="primary" block outline
+            >
                 Clone in editor
             </RS.Button>
         </RS.Col>
