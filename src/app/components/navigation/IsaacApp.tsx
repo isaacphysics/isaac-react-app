@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Route, Router, Switch} from "react-router-dom";
 import {Footer} from "./Footer";
 import {Homepage} from "../pages/Homepage";
-import {QuestionPage} from "../pages/QuestionPage";
+import {Question} from "../pages/Question";
 import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
 import {LogIn} from "../pages/LogIn";
@@ -87,7 +87,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path={"/auth_error"} component={AuthError} />
 
                     {/* Special case */}
-                    <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? QuestionPage : NotFound} />
+                    <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
 
                     {/* Application pages */}
                     <TrackedRoute exact path="/(home)?" component={Homepage} />
@@ -95,7 +95,7 @@ export const IsaacApp = () => {
 
                     <TrackedRoute exact path="/search" component={Search} />
 
-                    <TrackedRoute exact path="/questions/:questionId" component={QuestionPage} />
+                    <TrackedRoute exact path="/questions/:questionId" component={Question} />
                     <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
 

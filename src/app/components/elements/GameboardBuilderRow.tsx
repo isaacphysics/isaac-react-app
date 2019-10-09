@@ -5,10 +5,10 @@ import React, {ChangeEvent} from "react";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
 import {store} from "../../state/store";
-import {QuestionModal} from "./modals/QuestionModal";
 import {useDispatch} from "react-redux";
 import {DraggableProvided} from "react-beautiful-dnd";
 import {getSpecifiedTag} from "../../services/tags";
+import {Question} from "../pages/Question";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -32,11 +32,10 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
 
     const openQuestionModal = (urlQuestionId: string) => {
         dispatch(openActiveModal({
-            closeAction: () => {store.dispatch(closeActiveModal())},
-            size: "xl",
-            title: "Question preview",
-            body: <QuestionModal urlQuestionId={urlQuestionId}/>
-        }))};
+            closeAction: () => {store.dispatch(closeActiveModal())}, size: "xl",
+            title: "Question preview", body: <Question questionIdOverride={urlQuestionId} />
+        }))
+    };
 
     return <tr
         key={question.id} ref={provided && provided.innerRef}

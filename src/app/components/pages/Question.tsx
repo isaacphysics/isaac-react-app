@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {Container} from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
@@ -11,7 +11,11 @@ import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
-import {Question} from "../elements/Question";
+import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
+import {WithFigureNumbering} from "../elements/WithFigureNumbering";
+import {IsaacContent} from "../content/IsaacContent";
+import {NavigationLinks} from "../elements/NavigationLinks";
+import {RelatedContent} from "../elements/RelatedContent";
 
 const stateToProps = (state: AppState, {match: {params: {questionId}}}: any) => {
     return {
@@ -24,17 +28,19 @@ const dispatchToProps = {fetchDoc};
 
 interface QuestionPageProps {
     doc: ContentDTO | NOT_FOUND_TYPE | null;
+    questionIdOverride?: string;
     urlQuestionId: string;
     fetchDoc: (documentType: DOCUMENT_TYPE, questionId: string) => void;
     segueEnvironment: string;
 }
 
-const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc, segueEnvironment}: QuestionPageProps) => {
+const QuestionPageComponent = ({doc, urlQuestionId, questionIdOverride, fetchDoc, segueEnvironment}: QuestionPageProps) => {
+    const questionId = questionIdOverride || urlQuestionId;
     useEffect(() => {
-        fetchDoc(DOCUMENT_TYPE.QUESTION, urlQuestionId)
-    }, [urlQuestionId, fetchDoc]);
+        fetchDoc(DOCUMENT_TYPE.QUESTION, questionId)
+    }, [questionId, fetchDoc]);
 
-    const navigation = useNavigation(urlQuestionId);
+    const navigation = useNavigation(questionId);
 
     return <ShowLoading until={doc} thenRender={doc =>
         <div className="pattern-01">
@@ -50,10 +56,25 @@ const QuestionPageComponent = ({doc, urlQuestionId, fetchDoc, segueEnvironment}:
                 {segueEnvironment != "PROD" && (doc as ContentBase).canonicalSourceFile &&
                     <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
                 }
-                <Question doc={doc} urlQuestionId={urlQuestionId}/>
+                <Row>
+                    <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
+                        <AnonUserExamBoardPicker className="text-right"/>
+                        <WithFigureNumbering doc={doc}>
+                            <IsaacContent doc={doc}/>
+                        </WithFigureNumbering>
+
+                        {/* Superseded notice */}
+
+                        <p className="text-muted">{doc.attribution}</p>
+
+                        <NavigationLinks navigation={navigation}/>
+
+                        {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc}/>}
+                    </Col>
+                </Row>
             </Container>
         </div>
     }/>;
 };
 
-export const QuestionPage = withRouter(connect(stateToProps, dispatchToProps)(QuestionPageComponent));
+export const Question = withRouter(connect(stateToProps, dispatchToProps)(QuestionPageComponent));
