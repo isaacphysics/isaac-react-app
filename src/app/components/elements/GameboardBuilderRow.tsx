@@ -43,7 +43,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
                className={classnames({selected: question.id && selectedQuestions.has(question.id)})}
                {...(provided && provided.draggableProps)}
                {...(provided && provided.dragHandleProps)}>
-        <td>
+        <td className="text-center align-middle">
             <RS.CustomInput
                 type="checkbox"
                 id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
@@ -73,6 +73,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
             <a className="mr-2" href={question.url} target="_blank">{question.title}</a>
             <img src="/assets/tab.svg"
                  alt="Preview question"
+                 title="Preview question"
                  className="pointer-cursor"
                  onClick={() => {question.id && openQuestionModal(question.id)}}/>
         </td>

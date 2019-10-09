@@ -131,7 +131,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                     </RS.Col>
                 </RS.Row>}
 
-                <RS.CardSubtitle tag="h3" className="mt-3">Selected Questions</RS.CardSubtitle>
+                <RS.CardSubtitle tag="h3" className="mt-4 mb-3">Selected Questions</RS.CardSubtitle>
                 <div className="responsive">
                     <DragDropContext onDragEnd={reorder}>
                         <RS.Table bordered>
@@ -191,7 +191,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                     </DragDropContext>
                 </div>
                 <RS.Input id="gameboard-save-button" type="button" value="Save gameboard"
-                          className={"btn btn-block btn-secondary border-0 mt-4 " + classnames({disabled: !canSubmit()})}
+                          className={"btn btn-block btn-secondary border-0 mt-3 " + classnames({disabled: !canSubmit()})}
                           disabled={!canSubmit()}
                           onClick={() => {
                               let wildcard = {

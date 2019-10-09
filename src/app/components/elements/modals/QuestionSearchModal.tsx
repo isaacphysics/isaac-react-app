@@ -153,9 +153,10 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 />
             </div>
         </div>
-        <RS.Row className={"mt-4"}>
+        <div className={"mt-4"}>
             <RS.Input
-                type="button" value="Add questions"
+                type="button" value={`Add question${selectedQuestions.size !== 1 ? "s" : ""} (${selectedQuestions.size})`}
+                disabled={selectedQuestions.size === 0}
                 className={"btn btn-block btn-secondary border-0"}
                 onClick={() => {
                     setOriginalSelectedQuestions(selectedQuestions);
@@ -163,7 +164,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     dispatch(closeActiveModal());
                 }}
             />
-        </RS.Row>
+        </div>
         <div className="responsive mt-4">
             <RS.Table bordered>
                 <thead>
