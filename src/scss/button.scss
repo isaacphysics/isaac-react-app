@@ -145,11 +145,6 @@ a.btn {
     min-width: 80px;
   }
 
-  &.selected{
-    background-color: $cyan;
-    border: 1px solid transparent;
-  }
-
   &.btn-tertiary {
     background: $gray-107;
     color: $black;
