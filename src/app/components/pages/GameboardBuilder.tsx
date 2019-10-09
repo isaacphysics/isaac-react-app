@@ -1,19 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
-import {Tooltip} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {closeActiveModal, createGameboard, getWildcards, logAction, openActiveModal} from "../../state/actions";
 import {store} from "../../state/store";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
-import classnames from "classnames";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
 import {resourceFound} from "../../services/validation";
 import {sample} from 'lodash';
+import classnames from "classnames";
 import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
@@ -39,16 +38,15 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
     const user = useSelector((state: AppState) => state && state.user);
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
 
-    const [gameboardName, setGameboardName] = useState(loadedGameboard ? `${loadedGameboard.title}-copy`: "");
+    const [gameboardTitle, setGameboardTitle] = useState(loadedGameboard ? `${loadedGameboard.title}-copy`: "");
     const [gameboardTag, setGameboardTag] = useState(loadedGameboard && isStaff(user) && loadedGameboard.tags ? loadedGameboard.tags[0] : "null");
     const [gameboardURL, setGameboardURL] = useState(loadedGameboard && isStaff(user) ? `${loadedGameboard.id}-copy` : "");
     const [questionOrder, setQuestionOrder] = useState<string[]>((loadedGameboard && loadGameboardQuestionOrder(loadedGameboard)) || []);
     const [selectedQuestions, setSelectedQuestions] = useState((loadedGameboard && loadGameboardSelectedQuestions(loadedGameboard)) || new Map<string, ContentSummaryDTO>());
-    const [tooltipShow, setTooltipShow] = useState(false);
     const [wildcardId, setWildcardId] = useState(loadedGameboard && loadedGameboard.wildCard && loadedGameboard.wildCard.id ? loadedGameboard.wildCard.id : "random");
     const [eventLog, setEventLog] = useState<any[]>([]);
 
-    const canSubmit = () => (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardName != "";
+    const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "";
 
     const reorder = (result: DropResult) => {
         if (result.destination) {
@@ -79,13 +77,13 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
             <RS.CardBody>
                 <RS.Row>
                     <RS.Col>
-                        <RS.Label htmlFor="gameboard-name">Gameboard name:</RS.Label>
+                        <RS.Label htmlFor="gameboard-name">Gameboard title:</RS.Label>
                         <RS.Input
                             type="text"
                             placeholder="Year 12 Network components"
-                            defaultValue={gameboardName}
+                            defaultValue={gameboardTitle}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setGameboardName(e.target.value);
+                                setGameboardTitle(e.target.value);
                             }}
                         />
                     </RS.Col>
@@ -154,8 +152,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                                                             setQuestionOrder={setQuestionOrder}
                                                         />)}
                                                 </Draggable>
-                                            })
-                                            }
+                                            })}
                                             {provided.placeholder}
                                             <tr>
                                                 <td colSpan={5}>
@@ -188,9 +185,10 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                         </RS.Table>
                     </DragDropContext>
                 </div>
+
                 <RS.Input
-                    id="gameboard-save-button" type="button" value="Save gameboard" disabled={!canSubmit()}
-                    className={"btn btn-block btn-secondary border-0 mt-3 " + classnames({disabled: !canSubmit()})}
+                    id="gameboard-save-button" type="button" value="Save gameboard" disabled={!canSubmit}
+                    className={"btn btn-block btn-secondary border-0 mt-2"} aria-describedby="gameboard-help"
                     onClick={() => {
                         let wildcard: IsaacWildcard = {description: "", url: ""};
                         if (resourceFound(wildcards) && wildcards.length > 0) {
@@ -203,7 +201,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
 
                         dispatch(createGameboard({
                             id: gameboardURL == "" ? undefined : gameboardURL,
-                            title: gameboardName,
+                            title: gameboardTitle,
                             questions: questionOrder.map((questionId) => {
                                 const question = selectedQuestions.get(questionId);
                                 return question && convertContentSummaryToGameboardItem(question);
@@ -224,9 +222,14 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                         dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
                     }}
                 />
-                {!canSubmit() && <Tooltip target="gameboard-save-button" className="failed" isOpen={tooltipShow} toggle={() => setTooltipShow(!tooltipShow)}>
-                    Gameboards require a title and 1 to 10 questions
-                </Tooltip>}
+
+                {!canSubmit && <div
+                    id="gameboard-help" color="light"
+                    className={`text-center mb-0 pt-3 pb-0 ${selectedQuestions.size <= 10 ? "text-muted" : "text-danger"}`}
+                >
+                    Gameboards require both a title and between 1 and 10 questions.
+                </div>}
+
             </RS.CardBody>
         </RS.Card>
     </RS.Container>
