@@ -357,7 +357,7 @@ export enum TAG_ID {
     // Programming sub-categories
     functionalProgramming = "functional_programming",
     objectOrientedProgramming = "object_oriented_programming",
-    proceduralProgramming = "procedural_programming",
+    programmingFundamentals = "programming_fundamentals",
     computingPracticalProject = "computing_practical_project",
 
     // GCSE to A level transition topics
