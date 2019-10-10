@@ -113,10 +113,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                     undefined))
     );
 
+    let randomNumber = Math.random();
+
     return <RS.FormGroup className={`school ${className}`}>
-        <RS.Label htmlFor="school-input" className="form-required">School</RS.Label>
+        <RS.Label htmlFor={`school-input-${randomNumber}`} className="form-required">School</RS.Label>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
-            <CreatableSelect isClearable isDisabled={disableInput} inputId="school-input" placeholder={"Type your school name"} value={schoolValue}
+            <CreatableSelect isClearable isDisabled={disableInput} inputId={`school-input-${randomNumber}`} placeholder={"Type your school name"} value={schoolValue}
                 onInputChange={renderInput} onChange={handleSetSchool} options={schoolOptions}/>
         </React.Fragment>}
 
