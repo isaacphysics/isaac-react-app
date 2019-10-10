@@ -183,7 +183,7 @@ function orderName(order: BoardOrder) {
 const MyBoardsPageComponent = (props: MyBoardsPageProps) => {
     const {user, loadGroups, boards, loadBoards, deleteBoard} = props;
 
-    useEffect(() => {loadGroups(false);});
+    useEffect(() => {loadGroups(false);},[]);
 
     const [loading, setLoading] = useState(false);
 
