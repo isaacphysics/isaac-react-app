@@ -109,7 +109,7 @@ const getById = (id: TAG_ID) => {
     return allTags.filter((tag) => tag.id === id)[0];
 };
 
-const getSpecifiedTag = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
+export const getSpecifiedTag = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
     // Return the first (as ordered in TAG_ID) TAG_ID an object has of a given type!
     if (tagArray != null) {
         for (let i in tagArray) {
@@ -122,7 +122,7 @@ const getSpecifiedTag = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
     return null;
 };
 
-const getAllSpecifiedTags = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
+const getSpecifiedTags = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
     // Return all TAG_ID an object has of a given type!
     if (tagArray == null) return [];
     let tags = [];
@@ -145,7 +145,7 @@ const getAllSpecifiedTags = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
 //         return this.getById(globalSubjectTagId);
 //     }
 //
-//     var subjectTags = this.getAllSpecifiedTags("subject", tagArray);
+//     var subjectTags = this.getSpecifiedTags("subject", tagArray);
 //     for (var i in subjectTags) {
 //         if (subjectTags[i].id == globalSubjectTagId) {
 //             return subjectTags[i];
@@ -155,14 +155,14 @@ const getAllSpecifiedTags = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
 // };
 
 export const getCategoryTag = getSpecifiedTag.bind(null, TAG_LEVEL.category);
-export const getAllCategoryTags = getAllSpecifiedTags.bind(null, TAG_LEVEL.category);
-export const allCategoryTags = getAllCategoryTags(allTagIds);
+export const getCategoryTags = getSpecifiedTags.bind(null, TAG_LEVEL.category);
+export const allCategoryTags = getCategoryTags(allTagIds);
 
 export const getSubcategoryTag = getSpecifiedTag.bind(null, TAG_LEVEL.subcategory);
-export const getAllSubcategoryTags = getAllSpecifiedTags.bind(null, TAG_LEVEL.subcategory);
+export const getSubcategoryTags = getSpecifiedTags.bind(null, TAG_LEVEL.subcategory);
 
 export const getTopicTag = getSpecifiedTag.bind(null, TAG_LEVEL.topic);
-export const getAllTopicTags = getAllSpecifiedTags.bind(null, TAG_LEVEL.topic);
+export const getTopicTags = getSpecifiedTags.bind(null, TAG_LEVEL.topic);
 
 const getDeepestTag = function(tagArray: TAG_ID[]) {
     if (tagArray == null) return null;

@@ -22,6 +22,7 @@ import {
     EmailUserRoles,
     LoggedInUser,
     LoggedInValidationUser,
+    QuestionSearchQuery,
     Toast,
     UserPreferencesDTO,
     ValidatedChoice,
@@ -208,6 +209,16 @@ export const updateCurrentUser = (
         }) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+    }
+};
+
+export const getProgress = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_PROGRESS_REQUEST});
+    try {
+        const response = await api.users.getProgress();
+        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, progress: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE});
     }
 };
 
@@ -469,7 +480,7 @@ export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO
         dispatch(showToast({
             color: "success", title: "Access revoked", timeout: 5000,
             body: "You have revoked access to your data."
-        }) as any)
+        }) as any);
         dispatch(getActiveAuthorisations() as any);
         dispatch(closeActiveModal() as any);
     } catch (e) {
@@ -687,7 +698,18 @@ export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|Validat
     dispatch({type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
 };
 
-// Current gameboard
+export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_REQUEST});
+    try {
+        const questionsResponse = await api.questions.search(query);
+        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to search for questions", e));
+    }
+};
+
+// Current Gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GAMEBOARD_REQUEST, gameboardId});
     try {
@@ -719,6 +741,28 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Error saving gameboard", e));
     }
+};
+
+export const createGameboard = (gameboard: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST});
+    try {
+        const response = await api.gameboards.create(gameboard);
+        dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS, gameboardId: response.data.id});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Error creating gameboard", e));
+    }
+};
+
+export const getWildcards = () => async (dispatch: Dispatch<Action>) => {
+  dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST});
+  try {
+      const response = await api.gameboards.getWildcards();
+      dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS, wildcards: response.data});
+  } catch (e) {
+      dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE});
+      dispatch(showErrorToastIfNeeded("Error loading wildcards", e));
+  }
 };
 
 // Assignments

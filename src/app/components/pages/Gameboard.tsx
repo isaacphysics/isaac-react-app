@@ -68,11 +68,21 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
         }
     }, [gameboard]);
 
-    const setAssignmentButton = user && isTeacher(user) && <div className="text-center mt-5">
-        <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline>
-            Set as Assignment
-        </RS.Button>
-    </div>;
+    const teacherButtons = user && isTeacher(user) && <RS.Row className="col-8 offset-2">
+        <RS.Col className="mt-4">
+            <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
+                Set as assignment
+            </RS.Button>
+        </RS.Col>
+        <RS.Col className="mt-4">
+            <RS.Button
+                tag={Link} to={{pathname: "/gameboards/builder/", state: {gameboard: gameboard}}}
+                color="primary" block outline
+            >
+                Clone in editor
+            </RS.Button>
+        </RS.Col>
+    </RS.Row>;
 
     const notFoundComponent = <Container>
         <TitleAndBreadcrumb breadcrumbTitleOverride="Gameboard" currentPageTitle="Gameboard not found" />
@@ -101,7 +111,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
                                 </RS.ListGroup>
                             </RS.Col>
                         </RS.Row>
-                        {setAssignmentButton}
+                        {teacherButtons}
                     </div>
                 </React.Fragment>}
                 ifNotFound={notFoundComponent}
