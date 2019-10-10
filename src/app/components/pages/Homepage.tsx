@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {Button, Card, CardBody, CardDeck, CardImg, CardText, CardTitle, Col, Container, Row} from "reactstrap";
+import {Button, Col, Container, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {WhySignUpTabs} from "../elements/WhySignUpTabs";

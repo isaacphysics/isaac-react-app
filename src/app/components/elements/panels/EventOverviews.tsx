@@ -30,7 +30,7 @@ export const EventOverviews = ({setSelectedEventId}: {setSelectedEventId: (event
         dispatch(getEventOverviews(overviewFilter));
     }, [overviewFilter]);
 
-    return <Accordion title="Events overview" index={0}>
+    return <Accordion trustedTitle="Events overview" index={0}>
         <div className="d-flex justify-content-end mb-4">
             <RS.Label>
                 <RS.Input type="select" value={overviewFilter} onChange={e => {setOverviewFilter(e.target.value as EventOverviewFilter)}}>

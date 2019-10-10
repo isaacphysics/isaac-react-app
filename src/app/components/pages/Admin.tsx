@@ -79,15 +79,14 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
                     <h3>Manage site content</h3>
                     {contentVersion && <React.Fragment>
                         <div>
-                            <label htmlFor="content-version">
-                                <strong>Live Content Version</strong>
-                            </label>
+                            <strong>Live Content Version</strong>
                         </div>
                         <ShowLoading until={displayVersion !== null} thenRender={() => {
                             return displayVersion !== null && updateState != ContentVersionUpdatingStatus.UPDATING &&
                                 <RS.Form onSubmit={startVersionUpdate}>
                                     <RS.InputGroup>
                                         <RS.Input
+                                            aria-label="Live content commit SHA"
                                             type="text" value={displayVersion}
                                             onChange={e => setNewVersion(e.target.value)}
                                             placeholder="Enter commit SHA"

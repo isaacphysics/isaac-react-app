@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {AppState} from "../../state/reducers";
-import {ContentDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {useDispatch, useSelector} from "react-redux";

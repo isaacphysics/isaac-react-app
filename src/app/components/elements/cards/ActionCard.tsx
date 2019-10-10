@@ -2,7 +2,6 @@ import React from "react";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {Badge} from "reactstrap";
-import {DropdownItem} from "reactstrap";
 
 interface ActionCardProps {
     title: string;

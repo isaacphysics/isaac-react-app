@@ -6,10 +6,11 @@ import {connect, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
+import {TrustedHtml} from "./TrustedHtml";
 
 interface AccordionsProps {
     id?: string;
-    title?: string;
+    trustedTitle?: string;
     index: number;
     location: {hash: string};
     children: React.ReactChildren;
@@ -17,7 +18,7 @@ interface AccordionsProps {
 }
 
 
-const AccordionComponent = ({id, title, index, children, location: {hash}}: AccordionsProps) => {
+const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}}: AccordionsProps) => {
     // Toggle
     const isFirst = index === 0;
     const [open, setOpen] = useState(isFirst);
@@ -73,7 +74,7 @@ const AccordionComponent = ({id, title, index, children, location: {hash}}: Acco
                         type: "ACCORDION_SECTION_OPEN",
                         pageId: page.id,
                         accordionId: id,
-                        accordionTitle: title,
+                        accordionTitle: trustedTitle,
                         accordionIndex: index
                     })
             }
@@ -87,11 +88,9 @@ const AccordionComponent = ({id, title, index, children, location: {hash}}: Acco
                 className={open ? 'active p-3 pr-5 text-left' : 'p-3 pr-5 text-left'}
                 onClick={(event: any) => {
                     const nextState = !open;
-                    if (nextState) {
-                        logAccordionOpen();
-                    }
                     setOpen(nextState);
                     if (nextState) {
+                        logAccordionOpen();
                         scrollVerticallyIntoView(event.target);
                     }
                 }}
@@ -100,7 +99,7 @@ const AccordionComponent = ({id, title, index, children, location: {hash}}: Acco
                 <span className="accordion-part text-secondary pr-2">
                     Part {ALPHABET[index % ALPHABET.length]}
                 </span> {" "}
-                {title}
+                {trustedTitle && <TrustedHtml html={trustedTitle} />}
             </RS.Button>
         </div>
         <RS.Collapse isOpen={open} className="mt-1">

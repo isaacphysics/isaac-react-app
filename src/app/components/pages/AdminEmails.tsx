@@ -13,14 +13,14 @@ interface AdminEmailsProps {
     location: {
         state?: {
             csvIDs?: number[];
-        }
+        };
     };
 }
 
 export const AdminEmails = (props: AdminEmailsProps) => {
     const dispatch = useDispatch();
-    const [selectionMode, setSelectionMode] = useState("USER_FILTER")
-    const [selectedRoles, setSelectedRoles] = useState({
+    const [selectionMode, setSelectionMode] = useState("USER_FILTER");
+    const defaultSelectedRoles: EmailUserRoles = {
         ADMIN: false,
         EVENT_MANAGER: false,
         CONTENT_EDITOR: false,
@@ -28,7 +28,8 @@ export const AdminEmails = (props: AdminEmailsProps) => {
         TESTER: false,
         STAFF: false,
         STUDENT: false
-    } as EmailUserRoles);
+    };
+    const [selectedRoles, setSelectedRoles] = useState(defaultSelectedRoles);
     const [csvIDs, setCSVIDs] = useState([] as number[]);
     const [emailType, setEmailType] = useState("null");
     const [contentObjectID, setContentObjectID] = useState("");
@@ -83,25 +84,25 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                         </tr>
                     </thead>
                     <tbody>
-                    {
-                        userRolesSelector && Object.keys(selectedRoles).map((role: string) =>
-                            <tr key={role}>
-                                <td>
-                                    {`${role}(${(userRolesSelector[role] || 0)})`}
-                                </td>
-                                <td>
-                                    <RS.Input
-                                        type="checkbox" className="m-0 position-relative"
-                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                            const newSelectedRoles = {...selectedRoles};
-                                            newSelectedRoles[role as UserRole] = event.target.checked;
-                                            setSelectedRoles(newSelectedRoles);
-                                        }}
-                                    />
-                                </td>
-                            </tr>
-                        )
-                    }
+                        {
+                            userRolesSelector && Object.keys(selectedRoles).map((role: string) =>
+                                <tr key={role}>
+                                    <td>
+                                        {`${role}(${(userRolesSelector[role] || 0)})`}
+                                    </td>
+                                    <td>
+                                        <RS.Input
+                                            type="checkbox" className="m-0 position-relative"
+                                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                const newSelectedRoles = {...selectedRoles};
+                                                newSelectedRoles[role as UserRole] = event.target.checked;
+                                                setSelectedRoles(newSelectedRoles);
+                                            }}
+                                        />
+                                    </td>
+                                </tr>
+                            )
+                        }
                     </tbody>
                 </RS.Table>
                 }
@@ -171,7 +172,9 @@ export const AdminEmails = (props: AdminEmailsProps) => {
             <RS.CardTitle tag="h2">HTML preview</RS.CardTitle>
             <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
             <RS.CardBody>
-                {emailTemplateSelector && emailTemplateSelector.html && <iframe className="email-preview-frame" srcDoc={emailTemplateSelector.html}/>}
+                {emailTemplateSelector && emailTemplateSelector.html &&
+                <iframe title="Email content preview" className="email-preview-frame" srcDoc={emailTemplateSelector.html} />
+                }
             </RS.CardBody>
         </RS.Card>
 
@@ -186,15 +189,15 @@ export const AdminEmails = (props: AdminEmailsProps) => {
         <RS.Card className="p-3 my-3">
             <RS.CardBody>
                 <RS.Input type="button" value="Send emails"
-                          className={"btn btn-block btn-secondary border-0 " + classnames({disabled: !canSubmit})}
-                          disabled={!canSubmit}
-                          onClick={() => {
-                              if (selectionMode == "USER_FILTER") {
-                                  dispatch(sendAdminEmail(contentObjectID, emailType, selectedRoles));
-                              } else {
-                                  dispatch(sendAdminEmailWithIds(contentObjectID, emailType, csvIDs));
-                              }}
-                          }/>
+                    className={"btn btn-block btn-secondary border-0 " + classnames({disabled: !canSubmit})}
+                    disabled={!canSubmit}
+                    onClick={() => {
+                        if (selectionMode == "USER_FILTER") {
+                            dispatch(sendAdminEmail(contentObjectID, emailType, selectedRoles));
+                        } else {
+                            dispatch(sendAdminEmailWithIds(contentObjectID, emailType, csvIDs));
+                        }}
+                    }/>
             </RS.CardBody>
         </RS.Card>
     </RS.Container>

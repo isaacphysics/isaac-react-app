@@ -26,7 +26,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
     const [sortPredicate, setSortPredicate] = useState("date");
     const [reverse, setReverse] = useState(true);
 
-    return <Accordion title="Manage current bookings">
+    return <Accordion trustedTitle="Manage current bookings">
         {atLeastOne(eventBookings.length) && <div className="overflow-auto">
             <RS.Table bordered className="mb-0 bg-white">
                 <thead>

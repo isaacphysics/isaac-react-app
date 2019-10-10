@@ -1,49 +1,25 @@
 import React, {useEffect} from "react";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
 import {AppState} from "../../state/reducers";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 import {isTeacher} from "../../services/user";
 import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
-import {loadAssignmentsOwnedByMe, loadGroups} from "../../state/actions";
+import {getProgress} from "../../state/actions";
 
-const stateToProps = (state: AppState) => {
-    let numberOfGroupsCreated = 0;
-    let numberOfAssignmentsSet = 0;
-    if (state) {
-        if (state.groups) {
-            if (state.groups.active) {numberOfGroupsCreated += state.groups.active.length;}
-            if (state.groups.archived) {numberOfGroupsCreated += state.groups.archived.length;}
-        }
-        if (state.assignmentsByMe) {
-            numberOfAssignmentsSet = state.assignmentsByMe.length;
-        }
-    }
-    return {user: (state && state.user) || null, numberOfAssignmentsSet, numberOfGroupsCreated}
-};
+export const ForTeachers = () => {
+    const dispatch = useDispatch();
+    const user = useSelector((state: AppState) => state && state.user);
+    const achievementsSelector = useSelector((state: AppState) => state && state.userProgress && state.userProgress.userSnapshot && state.userProgress.userSnapshot.achievementsRecord);
 
-const dispatchToProps = {loadAssignmentsOwnedByMe, loadGroups};
-
-interface ForTeachersProps {
-    user: LoggedInUser | null;
-    loadAssignmentsOwnedByMe: () => void;
-    numberOfAssignmentsSet: number;
-    loadGroups: (b: boolean) => void;
-    numberOfGroupsCreated: number;
-}
-
-const ForTeachersComponent = (props: ForTeachersProps) => {
-    const {user, loadAssignmentsOwnedByMe, numberOfAssignmentsSet, loadGroups, numberOfGroupsCreated} = props;
     useEffect(() => {
-        if (user && isTeacher(user)) {
-            loadAssignmentsOwnedByMe();
-            loadGroups(false);
-        }
-    }, [user, loadAssignmentsOwnedByMe, loadGroups]);
+       if (!achievementsSelector) {
+           dispatch(getProgress());
+       }
+    }, [user]);
 
     const pageTitle = user && isTeacher(user) ? "My Isaac teaching" : "How we help teachers";
 
@@ -57,6 +33,11 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
             Sign up
         </RS.Button>
     </div>;
+    const achievementText = (verb: string, count: number, item: string) => {
+        return <>
+            You have {verb} <span>{count}</span> {item}{count !== 1 && "s"}.
+        </>
+    };
 
     return <RS.Container className="teachers-page">
         <RS.Row className="pb-4">
@@ -75,20 +56,16 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
             </RS.Col>
         </RS.Row>}
 
-        {user && user.loggedIn && isTeacher(user) &&
-        <RS.Row>
+        {isTeacher(user) && <RS.Row>
             <RS.Col>
-                {user && user.loggedIn && <h2 className="h-secondary h-m">Pick up where you left off</h2>}
-
+                <h2 className="h-secondary h-m">Pick up where you left off</h2>
                 <div>
                     <RS.Row>
                         <RS.ListGroup className="my-3 d-block d-md-flex flex-row flex-wrap align-items-stretch link-list bg-transparent">
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
                                     title="Create a group" linkDestination="/groups" linkText="Manage groups"
-                                    amountText={<>
-                                        You have created <span>{numberOfGroupsCreated}</span> group{numberOfGroupsCreated !== 1 && "s"}.
-                                    </>}
+                                    amountText={achievementText("created", (achievementsSelector && achievementsSelector.TEACHER_GROUPS_CREATED) || 0, "group")}
                                 >
                                     Create and alter groups on the manage groups page.
                                 </ActionCard>
@@ -97,9 +74,7 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
                                     title="Set an assignment" linkDestination="/set_assignments" linkText="Set assignments"
-                                    amountText={<>
-                                        You have set <span>{numberOfAssignmentsSet}</span> assignment{numberOfAssignmentsSet !== 1 && "s"}.
-                                    </>}
+                                    amountText={achievementText("set", (achievementsSelector && achievementsSelector.TEACHER_ASSIGNMENTS_SET) || 0, "assignment")}
                                 >
                                     Set more assignments from the set assignments page.
                                 </ActionCard>
@@ -107,8 +82,8 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
 
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
-                                    title="Create a gameboard" comingSoon linkDestination="/assignments" linkText="Create gameboards"
-                                    amountText={<>You have created <span>-999</span> gameboards.</>}
+                                    title="Create a gameboard" linkDestination="/gameboards/builder" linkText="Create gameboards"
+                                    amountText={achievementText("created", (achievementsSelector && achievementsSelector.TEACHER_GAMEBOARDS_CREATED) || 0, "gameboard")}
                                 >
                                     Create custom gameboards to set as assignments to your groups.
                                 </ActionCard>
@@ -154,4 +129,3 @@ const ForTeachersComponent = (props: ForTeachersProps) => {
     </RS.Container>;
 };
 
-export const ForTeachers = connect(stateToProps, dispatchToProps)(ForTeachersComponent);

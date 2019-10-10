@@ -1,12 +1,13 @@
 import React from "react";
 import {Col, Container, Row} from "reactstrap";
-import {withRouter} from "react-router-dom";
+import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
 import {history} from "../../services/history";
 import {fromPairs} from "lodash";
 import {PageFragment} from "../elements/PageFragment";
+import {NotFound} from "./NotFound";
 
 type SupportType = "student" | "teacher";
 
@@ -59,8 +60,17 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
     }
 
     const section = support[type];
+
+    if (section == undefined) {
+        return <Route component={NotFound} />
+    }
+
     const categoryNames = Object.keys(section.categories);
     const categoryIndex = categoryNames.indexOf(category);
+
+    if (categoryIndex == -1) {
+        return <Route component={NotFound} />
+    }
 
     function activeTabChanged(tabIndex: number) {
         history.push(supportPath(type, categoryNames[tabIndex - 1]));

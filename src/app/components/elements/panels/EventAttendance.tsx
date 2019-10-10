@@ -42,7 +42,7 @@ export const EventAttendance = ({eventId}: {eventId: string}) => {
     }
 
     return <React.Fragment>
-        {canRecordAttendance && atLeastOne(bookings.length) && <Accordion title="Record event attendance">
+        {canRecordAttendance && atLeastOne(bookings.length) && <Accordion trustedTitle="Record event attendance">
             <div className="overflow-auto">
                 <RS.Table bordered className="mb-0 bg-white">
                     <thead>

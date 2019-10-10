@@ -1,35 +1,40 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {
+    Button,
+    ButtonDropdown,
     Card,
     CardBody,
+    Col,
     Container,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Form,
+    Input,
+    InputGroup,
+    InputGroupAddon,
     Nav,
     NavItem,
     NavLink,
+    Row,
     TabContent,
     TabPane,
-    Row,
-    Col,
-    UncontrolledTooltip,
     UncontrolledButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Button, Input, Table, ButtonDropdown, Form, InputGroupAddon, InputGroup
+    UncontrolledTooltip
 } from "reactstrap"
 import {Link} from "react-router-dom";
 import {
-    loadGroups,
     createGroup,
     deleteGroup,
-    updateGroup,
-    getGroupInfo,
-    resetMemberPassword,
     deleteMember,
+    getGroupInfo,
+    loadGroups,
+    resetMemberPassword,
+    selectGroup,
     showGroupInvitationModal,
     showGroupManagersModal,
-    selectGroup
+    updateGroup
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";

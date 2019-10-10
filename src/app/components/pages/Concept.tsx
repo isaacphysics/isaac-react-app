@@ -27,18 +27,20 @@ const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
 const dispatchToProps = {fetchDoc};
 
 interface ConceptPageProps {
+    conceptIdOverride?: string;
     urlConceptId: string;
     doc: ContentDTO | NOT_FOUND_TYPE | null;
     fetchDoc: (documentType: DOCUMENT_TYPE, conceptId: string) => void;
     segueEnvironment: string;
 }
 
-const ConceptPageComponent = ({urlConceptId, doc, fetchDoc, segueEnvironment}: ConceptPageProps) => {
+const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc, segueEnvironment}: ConceptPageProps) => {
+    const conceptId = conceptIdOverride || urlConceptId;
     useEffect(() => {
-        fetchDoc(DOCUMENT_TYPE.CONCEPT, urlConceptId)
-    }, [urlConceptId, fetchDoc]);
+        fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId)
+    }, [conceptId, fetchDoc]);
 
-    const navigation = useNavigation(urlConceptId);
+    const navigation = useNavigation(conceptId);
 
     return <ShowLoading until={doc} thenRender={doc =>
         <div>
@@ -48,7 +50,7 @@ const ConceptPageComponent = ({urlConceptId, doc, fetchDoc, segueEnvironment}: C
                     currentPageTitle={doc.title as string}
                     collectionType={navigation.collectionType}
                 />
-                {segueEnvironment != "PROD" && (doc as ContentBase).canonicalSourceFile &&
+                {segueEnvironment === "DEV" && (doc as ContentBase).canonicalSourceFile &&
                     <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
                 }
 
