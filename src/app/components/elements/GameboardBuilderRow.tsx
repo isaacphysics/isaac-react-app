@@ -1,7 +1,7 @@
 import classnames from "classnames";
 import * as RS from "reactstrap";
 import {examBoardTagMap, IS_CS_PLATFORM, TAG_ID, TAG_LEVEL, tagExamboardMap} from "../../services/constants";
-import React, {ChangeEvent} from "react";
+import React from "react";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
 import {store} from "../../state/store";
@@ -46,9 +46,10 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
             <RS.CustomInput
                 type="checkbox"
                 id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
+                aria-label="Select question"
                 color="secondary"
                 checked={question.id !== undefined && selectedQuestions.has(question.id)}
-                onChange={(e: ChangeEvent<HTMLElement>) => {
+                onChange={() => {
                     if (question.id) {
                         const newSelectedQuestions = new Map(selectedQuestions);
                         const newQuestionOrder = [...questionOrder];

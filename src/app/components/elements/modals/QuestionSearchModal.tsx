@@ -90,8 +90,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     return <div>
         <div className="row">
             <div className="text-wrap col-lg-6 mt-2">
-                <RS.Label htmlFor="topic">Topic</RS.Label>
-                <Select
+                <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
+                <Select inputId="question-search-topic"
                     isMulti
                     options={getSubcategoryTags(allTagIds).map(groupTagSelectionsByParent)}
                     name="colors"
@@ -102,8 +102,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 />
             </div>
             <div className={"text-wrap my-2 " + (IS_CS_PLATFORM ? "col-lg-6" : "col-lg-3")}>
-                <RS.Label htmlFor="exam-board">Exam board</RS.Label>
-                <Select
+                <RS.Label htmlFor="question-search-exam-board">Exam board</RS.Label>
+                <Select inputId="question-search-exam-board"
                     isMulti
                     options={Object.keys(EXAM_BOARD).map((name) => {
                         return {value: examBoardTagMap[name], label: name};
@@ -117,8 +117,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 />
             </div>
             {!IS_CS_PLATFORM && <div className="text-wrap col-lg-3 my-2">
-                <RS.Label htmlFor="level">Level</RS.Label>
-                <Select
+                <RS.Label htmlFor="question-search-level">Level</RS.Label>
+                <Select inputId="question-search-level"
                     isMulti
                     options={[
                         ...(range(1,6).map((i) => {return { value: i.toString(), label: i.toString() }})),
@@ -133,8 +133,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         </div>
         <div className="row">
             <div className="text-wrap col-lg-12 mt-2">
-                <RS.Label htmlFor="title">Search</RS.Label>
-                <RS.Input
+                <RS.Label htmlFor="question-search-title">Search</RS.Label>
+                <RS.Input id="question-search-title"
                     type="text"
                     placeholder="e.g. Creating an AST"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,7 +145,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         </div>
         <div className={"mt-4"}>
             <RS.Input
-                type="button" value={`Add question${selectedQuestions.size !== 1 ? "s" : ""} (${selectedQuestions.size})`}
+                type="button" value={`Add ${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""}`}
                 disabled={selectedQuestions.size === 0}
                 className={"btn btn-block btn-secondary border-0"}
                 onClick={() => {
