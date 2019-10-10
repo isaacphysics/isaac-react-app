@@ -55,12 +55,10 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
     };
 
     useEffect(() => {
-        const unblock = history.block(() => {
+        return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
             dispatch(logAction({type: "LEAVE_GAMEBOARD_BUILDER", events: eventLog}));
         });
-
-        return unblock;
     });
 
     useEffect(() => {
