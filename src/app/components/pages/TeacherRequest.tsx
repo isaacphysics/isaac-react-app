@@ -45,7 +45,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
     const urn = user && user.loggedIn && user.schoolId || "";
     const presetSubject = "Teacher Account Request";
     const presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: " + school + "\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\nAny other information: " + otherInformation + "\n\nThanks, \n\n" + firstName + " " + lastName;
-    const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail"];
+    const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
 
     const isValidEmail = validateEmail(email);
 
@@ -113,10 +113,11 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                 setMessageSent(true)
                             }}>
                                 <CardBody>
-                                    <p>To request a teacher account on Isaac Computer Science please fill out this form.
-                                        Your email address must be that assigned to you by your school, which must be
-                                        set in the school field. If any of the information is incorrect you can alter it
-                                        on your <a href="/account">My Account</a> page.
+                                    <p>To request a teacher account on Isaac Computer Science, please fill in this form.
+                                    You must use the email address that was assigned to you by your school, and the
+                                    name of your school should be shown in the ‘School’ field. If any of the
+                                    information is incorrect or missing, you can amend it on your
+                                    <a href="/account">My Account</a> page.
                                     </p>
                                     <Row>
                                         <Col size={12} md={6}>
@@ -159,7 +160,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup>
-                                                <Label htmlFor="user-verification-input" className="form-required">URL link to a school page containing your name <b>and</b> corresponding email address, or your school phone number</Label>
+                                                <Label htmlFor="user-verification-input" className="form-required">URL of a page on your school website which shows your name and email address, or your school phone number</Label>
                                                 <Input id="user-verification-input" type="text" name="user-verification"
                                                     onChange={e => setVerificationDetails(e.target.value)} required/>
                                             </FormGroup>
@@ -175,10 +176,10 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                     {!emailVerified &&
                                     <Row>
                                         <Col>
-                                            <small className="text-danger text-left">Your email address is not verified -
-                                                please find our email in your inbox and follow the verification link. You
-                                                can <Link onClick={clickVerify} to={"#"}>request a new verification
-                                                    email</Link> if necessary.
+                                            <small className="text-danger text-left">Your email address is not verified —
+                                                please click on the link in the verification email to confirm your
+                                                email address. You can <Link onClick={clickVerify} to={"#"}>request a
+                                                    new verification email</Link> if necessary.
                                             </small>
                                         </Col>
                                     </Row>
@@ -186,8 +187,8 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                     {typeof school == "undefined" &&
                                     <Row>
                                         <Col>
-                                            <small className="text-danger text-left">You have not provided a school, please
-                                                add your school on your <a href="/account">My Account</a> page.
+                                            <small className="text-danger text-left">You have not provided your school —
+                                                please add your school on your <a href="/account">My Account</a> page.
                                             </small>
                                         </Col>
                                     </Row>
@@ -195,8 +196,8 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                     {allowedDomain == false &&
                                     <Row>
                                         <Col>
-                                            <small className="text-danger text-left">Your email address is personal, please
-                                                change it to your school email address on your <a href="/account">My Account</a> page.
+                                            <small className="text-danger text-left">Your have not used your school
+                                            email address — please change your email address on your <a href="/account">My Account</a> page.
                                             </small>
                                         </Col>
                                     </Row>
