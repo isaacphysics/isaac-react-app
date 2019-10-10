@@ -2,7 +2,13 @@ import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
-import {fetchDoc, redirectForCompletedQuiz, submitQuizPage} from "../../state/actions";
+import {
+    closeActiveModal,
+    fetchDoc,
+    openActiveModal,
+    redirectForCompletedQuiz,
+    submitQuizPage
+} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
@@ -24,7 +30,24 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
 
     function submitQuiz(event: React.FormEvent) {
         if (event) {event.preventDefault();}
-        dispatch(submitQuizPage(match.params.quizId))
+        dispatch(openActiveModal({
+            title: "Quiz submission confirmation",
+            body: <div className="text-center">
+                You are only allowed to submit answers to this quiz once. <br />
+                Please confirm whether or not you would like to submit your current answers to this quizz.
+            </div>,
+            buttons: [
+                <RS.Button key={2} color="primary" outline onClick={() => dispatch(closeActiveModal())}>
+                    Cancel
+                </RS.Button>,
+                <RS.Button key={0} color="secondary" onClick={() => {
+                    dispatch(submitQuizPage(match.params.quizId));
+                    dispatch(closeActiveModal());
+                }}>
+                    Submit
+                </RS.Button>
+            ]
+        }));
     }
 
     useEffect(() => {
