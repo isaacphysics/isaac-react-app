@@ -116,7 +116,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     return <RS.FormGroup className={`school ${className}`}>
         <RS.Label htmlFor="school-input" className="form-required">School</RS.Label>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
-            <CreatableSelect isClearable isDisabled={disableInput} id="school-input" placeholder={"Type your school name"} value={schoolValue}
+            <CreatableSelect isClearable isDisabled={disableInput} inputId="school-input" placeholder={"Type your school name"} value={schoolValue}
                 onInputChange={renderInput} onChange={handleSetSchool} options={schoolOptions}/>
         </React.Fragment>}
 
