@@ -74,7 +74,8 @@ export const convertGameboardItemToContentSummary = (question: GameboardItem) =>
 export const convertTagToSelectionOption = (tag: Tag) => {
     return {
         value: tag.id,
-        label: tag.title
+        label: `${tag.title}${tag.comingSoon ? ` (Coming ${tag.comingSoon})`: ""}`,
+        isDisabled: !!tag.comingSoon,
     }
 };
 
