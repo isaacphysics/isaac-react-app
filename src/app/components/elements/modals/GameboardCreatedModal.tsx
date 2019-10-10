@@ -3,7 +3,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
-import classnames from "classnames";
 import {closeActiveModal} from "../../../state/actions";
 import {resourceFound} from "../../../services/validation";
 
