@@ -46,6 +46,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
             <RS.CustomInput
                 type="checkbox"
                 id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
+                aria-label="Select question"
                 color="secondary"
                 checked={question.id !== undefined && selectedQuestions.has(question.id)}
                 onChange={() => {

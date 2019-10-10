@@ -74,10 +74,10 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
             <RS.CardBody>
                 <RS.Row>
                     <RS.Col>
-                        <RS.Label htmlFor="gameboard-name">Gameboard title:</RS.Label>
-                        <RS.Input
+                        <RS.Label htmlFor="gameboard-builder-name">Gameboard title:</RS.Label>
+                        <RS.Input id="gameboard-builder-name"
                             type="text"
-                            placeholder="Year 12 Network components"
+                            placeholder="e.g. Year 12 Network components"
                             defaultValue={gameboardTitle}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setGameboardTitle(e.target.value);
@@ -88,8 +88,8 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
 
                 {isStaff(user) && <RS.Row className="mt-2">
                     <RS.Col>
-                        <RS.Label htmlFor="tag-as">Tag as</RS.Label>
-                        <RS.Input
+                        <RS.Label htmlFor="gameboard-builder-tag-as">Tag as</RS.Label>
+                        <RS.Input id="gameboard-builder-tag-as"
                             type="select" defaultValue={gameboardTag}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setGameboardTag(e.target.value);}}
                         >
@@ -98,8 +98,8 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                         </RS.Input>
                     </RS.Col>
                     <RS.Col>
-                        <RS.Label htmlFor="gameboard-url">Gameboard URL</RS.Label>
-                        <RS.Input
+                        <RS.Label htmlFor="gameboard-builder-url">Gameboard URL</RS.Label>
+                        <RS.Input id="gameboard-builder-url"
                             type="text"
                             placeholder="Optional"
                             defaultValue={gameboardURL}
@@ -109,8 +109,8 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                         />
                     </RS.Col>
                     <RS.Col>
-                        <RS.Label htmlFor="wildcard">Wildcard</RS.Label>
-                        <RS.Input
+                        <RS.Label htmlFor="gameboard-builder-wildcard">Wildcard</RS.Label>
+                        <RS.Input id="gameboard-builder-wildcard"
                             type="select" defaultValue={wildcardId}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setWildcardId(e.target.value);}}
                         >
