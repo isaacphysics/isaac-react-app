@@ -35,12 +35,14 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         }
     }
 
+    // Obtain user school search results as a list
     useEffect(() => {
         let temp: any = [];
         schoolSearchResults && schoolSearchResults.length > 0 && schoolSearchResults.map((item: any) => (temp.push({value: item, label: item.name + ", " + item.postcode})));
         setSchoolOptions(temp);
     }, [schoolSearchResults]);
 
+    // Get school associated with urn
     function fetchSchool(urn: string) {
         if (urn != "") {
             api.schools.getByUrn(urn).then(({data}) => {
@@ -55,6 +57,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         fetchSchool(userToUpdate.schoolId || "");
     }, [userToUpdate]);
 
+    // Search for schools when users entry a query
     const timer: MutableRefObject<number | undefined> = useRef();
     useEffect(() => {
         timer.current = window.setTimeout(() => {
@@ -65,10 +68,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         }
     }, [schoolQueryText]);
 
+    // Called as user types
     function renderInput(queryValue: any) {
         setSchoolQueryText(queryValue);
     }
 
+    // Set schoolId or schoolOther
     function setUserSchool(school: any) {
         if (setUserToUpdate) {
             if (school.urn) {
@@ -85,6 +90,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         }
     }
 
+    // Called when school input box option selected
     function handleSetSchool(newValue: any) {
         if (newValue == null) {
             setSchoolQueryText(null);
@@ -102,8 +108,13 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             schoolQueryText :
             (selectedSchoolObject && selectedSchoolObject.urn ?
                 {value: selectedSchoolObject.urn, label: selectedSchoolObject.name + ", " + selectedSchoolObject.postcode} :
-                {value: "manually entered school", label: userToUpdate.schoolOther})
+                (userToUpdate.schoolOther ?
+                    {value: "manually entered school", label: userToUpdate.schoolOther} :
+                    undefined))
     );
+
+    console.log(userToUpdate);
+    console.log(schoolValue);
 
     return <RS.FormGroup className={`school ${className}`}>
         <RS.Label htmlFor="school-input" className="form-required">School</RS.Label>
