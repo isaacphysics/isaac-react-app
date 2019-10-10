@@ -113,9 +113,6 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                     undefined))
     );
 
-    console.log(userToUpdate);
-    console.log(schoolValue);
-
     return <RS.FormGroup className={`school ${className}`}>
         <RS.Label htmlFor="school-input" className="form-required">School</RS.Label>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
