@@ -37,6 +37,9 @@ export type Action =
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.USER_PROGRESS_REQUEST}
+    | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, progress: UserProgress}
+    | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
     | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
@@ -143,6 +146,10 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_UNLOCK; questionId: string}
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>}
 
+    | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: ApiTypes.ContentSummaryDTO[]}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
@@ -150,6 +157,10 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE; gameboardId: string | null}
+
+    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST}
+    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS, wildcards: ApiTypes.IsaacWildcard[]}
+    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS}
@@ -283,6 +294,10 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST}
+    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS, gameboardId: string}
+    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.BOARDS_GROUPS_REQUEST; board: ApiTypes.GameboardDTO}
     | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groups: {[key: string]: ApiTypes.UserGroupDTO[]}}
     | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
@@ -397,6 +412,7 @@ export interface Toast {
 
 export interface ActiveModal {
     closeAction?: () => void;
+    size?: string;
     title: string;
     body: any;
     buttons?: any[];
@@ -525,3 +541,54 @@ export interface UserSchoolLookup {[userId: number]: School}
 export enum ATTENDANCE {
     ABSENT, ATTENDED
 }
+
+export interface QuestionSearchQuery {
+    searchString: string;
+    tags: string;
+    levels?: string;
+    fasttrack: boolean;
+    startIndex: number;
+    limit: number;
+}
+
+export interface QuestionSearchResponse {
+    results: ApiTypes.ContentSummaryDTO[];
+}
+
+export interface StreakRecord {
+    currentStreak?: number;
+    largestStreak?: number;
+    currentActivity?: number;
+}
+
+export interface AchievementsRecord {
+    TEACHER_ASSIGNMENTS_SET?: number;
+    TEACHER_CPD_EVENTS_ATTENDED?: number;
+    TEACHER_GROUPS_CREATED?: number;
+    TEACHER_BOOK_PAGES_SET?: number;
+    TEACHER_GAMEBOARDS_CREATED?: number;
+}
+
+export interface UserSnapshot {
+    streakRecord?: StreakRecord;
+    achievementsRecord?: AchievementsRecord;
+}
+
+export interface UserProgress {
+    attemptsByLevel?: LevelAttempts<number>;
+    correctByLevel?: LevelAttempts<number>;
+    totalQuestionsAttempted?: number;
+    totalQuestionsCorrect?: number;
+    totalQuestionPartsCorrect: number;
+    totalQuestionPartsAttempted?: number;
+    attemptsByType?: { [type: string]: number };
+    correctByType?: { [type: string]: number };
+    attemptsByTag?: { [tag: string]: number };
+    correctByTag: { [tag: string]: number };
+    userSnapshot?: UserSnapshot;
+    userDetails?: ApiTypes.UserSummaryDTO;
+}
+
+export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
+
+export type LevelAttempts<T> = { [level in Levels]?: T; }

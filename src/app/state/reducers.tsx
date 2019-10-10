@@ -17,6 +17,7 @@ import {
     TemplateEmail,
     Toast,
     UserPreferencesDTO,
+    UserProgress,
     UserSchoolLookup
 } from "../../IsaacAppTypes";
 import {
@@ -27,6 +28,7 @@ import {
     GameboardDTO,
     GameboardListDTO,
     IsaacTopicSummaryPageDTO,
+    IsaacWildcard,
     ResultsWrapper,
     UserAuthenticationSettingsDTO,
     UserGroupDTO,
@@ -83,6 +85,18 @@ export const userSchoolLookup = (userSchoolLookup: UserSchoolLookupState = null,
             return {...action.schoolLookup};
         default:
             return userSchoolLookup;
+    }
+};
+
+export type UserProgressState = UserProgress | null;
+export const userProgress = (userProgress: UserProgressState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS:
+            return action.progress;
+        case ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE:
+            return null;
+        default:
+            return userProgress;
     }
 };
 
@@ -272,6 +286,23 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
     }
 };
 
+type GameboardEditorQuestionsState = ContentSummaryDTO[] | null;
+export const gameboardEditorQuestions = (gameboardEditorQuestions: GameboardEditorQuestionsState = null, action: Action) => {
+    switch(action.type) {
+        case ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS: {
+            return action.questions.map((question) => {
+                return {...question, url: question.url && question.url.replace("/isaac-api/api/pages","")}
+            });
+        }
+        case ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE: {
+            return null;
+        }
+        default: {
+            return gameboardEditorQuestions;
+        }
+    }
+};
+
 type AssignmentsState = AssignmentDTO[] | null;
 export const assignments = (assignments: AssignmentsState = null, action: Action) => {
     switch (action.type) {
@@ -312,12 +343,28 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
             return null;
         case ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;
+        case ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS:
+            return {id: action.gameboardId};
         case ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE:
             return NOT_FOUND;
         case ACTION_TYPE.ROUTER_PAGE_CHANGE:
             return null;
         default:
             return currentGameboard;
+    }
+};
+
+export type WildcardsState = IsaacWildcard[] | NOT_FOUND_TYPE | null;
+export const wildcards = (wildcards: WildcardsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST:
+            return null;
+        case ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS:
+            return action.wildcards;
+        case ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE:
+            return NOT_FOUND;
+        default:
+            return wildcards;
     }
 };
 
@@ -459,15 +506,16 @@ export const toasts = (toasts: ToastsState = null, action: Action) => {
     }
 };
 
-export type ActiveModalState = ActiveModal | null;
-export const activeModal = (activeModal: ActiveModalState = null, action: Action) => {
+export type ActiveModalsState = ActiveModal[] | null;
+export const activeModals = (activeModals: ActiveModalsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.ACTIVE_MODAL_OPEN:
-            return action.activeModal;
+            activeModals = activeModals || [];
+            return [...activeModals, action.activeModal];
         case ACTION_TYPE.ACTIVE_MODAL_CLOSE:
-            return null;
+            return activeModals && activeModals.length > 1 ? activeModals.slice(0, activeModals.length - 1) : null;
         default:
-            return activeModal;
+            return activeModals;
     }
 };
 
@@ -694,6 +742,7 @@ const appReducer = combineReducers({
     user,
     userAuthSettings,
     userPreferences,
+    userProgress,
     adminUserSearch,
     adminContentErrors,
     adminStats,
@@ -707,12 +756,14 @@ const appReducer = combineReducers({
     questions,
     currentTopic,
     currentGameboard,
+    wildcards,
+    gameboardEditorQuestions,
     assignments,
     contentVersion,
     search,
     error,
     toasts,
-    activeModal,
+    activeModals,
     groups,
     boards,
     assignmentsByMe,
@@ -728,6 +779,7 @@ export type AppState = undefined | {
     user: UserState;
     userAuthSettings: UserAuthSettingsState;
     userPreferences: UserPreferencesState;
+    userProgress: UserProgressState;
     adminUserSearch: AdminUserSearchState;
     adminContentErrors: AdminContentErrorsState;
     adminStats: AdminStatsState;
@@ -740,13 +792,15 @@ export type AppState = undefined | {
     questions: QuestionsState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
+    wildcards: WildcardsState;
+    gameboardEditorQuestions: GameboardEditorQuestionsState,
     assignments: AssignmentsState;
     contentVersion: ContentVersionState;
     search: SearchState;
     constants: ConstantsState;
     error: ErrorState;
     toasts: ToastsState;
-    activeModal: ActiveModalState;
+    activeModals: ActiveModalsState;
     groups: GroupsState;
     boards: BoardsState;
     assignmentsByMe: AssignmentsState;
