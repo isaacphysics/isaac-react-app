@@ -141,6 +141,7 @@ const Board = (props: BoardTableProps) => {
                 <strong>{board.percentageCompleted}%</strong>
             </button></td>
             <td><a href={boardLink}>{board.title}</a></td>
+            {/*<td className="text-center">{board.levels.join(' ')}</td>*/}
             <td className="text-center">{formatBoardOwner(user, board)}</td>
             <td className="text-center">{formatDate(board.creationDate)}</td>
             <td className="text-center">{formatDate(board.lastVisited)}</td>
@@ -323,6 +324,7 @@ const MyBoardsPageComponent = (props: MyBoardsPageProps) => {
                                                 <tr>
                                                     <th>Completion</th>
                                                     <th className="order-heading"><span onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}</span></th>
+                                                    {/*<th className="text-center">Levels</th>*/}
                                                     <th className="text-center">Creator</th>
                                                     <th className="text-center order-heading"><span onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}</span></th>
                                                     <th className="text-center order-heading"><span onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}</span></th>
