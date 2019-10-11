@@ -373,10 +373,10 @@ export const getUserIdSchoolLookup = (eventIds: number[]) => async (dispatch: Di
 };
 
 // Contact us
-export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
+export const submitMessage = (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST});
     try {
-        await api.contactForm.send(extra, params);
+        await api.contactForm.send(params);
         dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS})
     } catch (e) {
         const errorMessage = extractMessage(e);

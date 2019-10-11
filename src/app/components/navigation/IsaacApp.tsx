@@ -8,6 +8,7 @@ import {Homepage} from "../pages/Homepage";
 import {Question} from "../pages/Question";
 import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
+import {TeacherRequest} from "../pages/TeacherRequest";
 import {LogIn} from "../pages/LogIn";
 import {Registration} from "../pages/Registration";
 import {LogOutHandler} from "../handlers/LogOutHandler";
@@ -139,6 +140,7 @@ export const IsaacApp = () => {
 
                     {/* Static pages */}
                     <TrackedRoute exact path="/contact" component={Contact}/>
+                    <TrackedRoute exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>
                     <TrackedRoute exact path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}} />
                     <TrackedRoute exact path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}} />
                     <TrackedRoute exact path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}} />

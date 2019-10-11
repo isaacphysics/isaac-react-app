@@ -38,7 +38,7 @@ const dispatchToProps = {
 
 interface ContactPageProps {
     user: LoggedInUser | null;
-    submitMessage: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string}) => void;
+    submitMessage: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string}) => void;
     errorMessage: ErrorState;
     presetSubject: string;
     presetMessage: string;
@@ -69,7 +69,6 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
 
     const sendForm = () => {
         submitMessage(
-            {},
             {
                 firstName: firstName,
                 lastName: lastName,
