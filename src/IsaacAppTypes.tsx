@@ -128,6 +128,10 @@ export type Action =
     | {type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS; id: string; doc: ApiTypes.ContentDTO}
     | {type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE; id: string}
 
+    | {type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST}
+    | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: Array<ApiTypes.GlossaryTermDTO>}
+    | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO}
     | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionId: string}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: ApiTypes.ChoiceDTO}

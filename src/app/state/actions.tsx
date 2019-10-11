@@ -596,6 +596,23 @@ export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) 
     }
 };
 
+export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    if (state && state.glossaryTerms) {
+        return;
+    }
+    
+    dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST});
+    try {
+        const response = await api.glossary.getTerms();
+        debugger;
+
+        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS, terms: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE});
+    }
+}
+
 
 // Questions
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
