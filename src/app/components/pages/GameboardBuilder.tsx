@@ -211,7 +211,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
 
                         dispatch(openActiveModal({
                             closeAction: () => {store.dispatch(closeActiveModal())},
-                            title: "Gameboard submitted",
+                            title: "Gameboard created",
                             body: <GameboardCreatedModal/>
                         }));
 

@@ -79,7 +79,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
                 tag={Link} to={{pathname: "/gameboards/builder/", state: {gameboard: gameboard}}}
                 color="primary" block outline
             >
-                Clone in editor
+                Duplicate and edit
             </RS.Button>
         </RS.Col>
     </RS.Row>;
