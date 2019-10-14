@@ -755,14 +755,14 @@ export const createGameboard = (gameboard: GameboardDTO) => async (dispatch: Dis
 };
 
 export const getWildcards = () => async (dispatch: Dispatch<Action>) => {
-  dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST});
-  try {
-      const response = await api.gameboards.getWildcards();
-      dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS, wildcards: response.data});
-  } catch (e) {
-      dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE});
-      dispatch(showErrorToastIfNeeded("Error loading wildcards", e));
-  }
+    dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST});
+    try {
+        const response = await api.gameboards.getWildcards();
+        dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS, wildcards: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Error loading wildcards", e));
+    }
 };
 
 // Assignments
