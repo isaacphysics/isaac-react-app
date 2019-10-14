@@ -34,7 +34,7 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
             title: "Quiz submission confirmation",
             body: <div className="text-center">
                 You are only allowed to submit answers to this quiz once. <br />
-                Please confirm whether or not you would like to submit your current answers to this quizz.
+                Please confirm whether or not you would like to submit your current answers to this quiz.
             </div>,
             buttons: [
                 <RS.Button key={2} color="primary" outline onClick={() => dispatch(closeActiveModal())}>
