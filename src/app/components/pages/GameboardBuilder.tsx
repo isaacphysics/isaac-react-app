@@ -37,9 +37,9 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
     const user = useSelector((state: AppState) => state && state.user);
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
 
-    const [gameboardTitle, setGameboardTitle] = useState(loadedGameboard ? `${loadedGameboard.title}-copy`: "");
-    const [gameboardTag, setGameboardTag] = useState(loadedGameboard && isStaff(user) && loadedGameboard.tags ? loadedGameboard.tags[0] : "null");
-    const [gameboardURL, setGameboardURL] = useState(loadedGameboard && isStaff(user) ? `${loadedGameboard.id}-copy` : "");
+    const [gameboardTitle, setGameboardTitle] = useState(loadedGameboard ? `${loadedGameboard.title} (Copy)`: "");
+    const [gameboardTag, setGameboardTag] = useState("null");
+    const [gameboardURL, setGameboardURL] = useState();
     const [questionOrder, setQuestionOrder] = useState<string[]>((loadedGameboard && loadGameboardQuestionOrder(loadedGameboard)) || []);
     const [selectedQuestions, setSelectedQuestions] = useState((loadedGameboard && loadGameboardSelectedQuestions(loadedGameboard)) || new Map<string, ContentSummaryDTO>());
     const [wildcardId, setWildcardId] = useState(loadedGameboard && loadedGameboard.wildCard && loadedGameboard.wildCard.id ? loadedGameboard.wildCard.id : "random");
@@ -197,7 +197,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                         }
 
                         dispatch(createGameboard({
-                            id: gameboardURL == "" ? undefined : gameboardURL,
+                            id: gameboardURL,
                             title: gameboardTitle,
                             questions: questionOrder.map((questionId) => {
                                 const question = selectedQuestions.get(questionId);
