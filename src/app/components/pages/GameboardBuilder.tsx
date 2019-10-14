@@ -131,7 +131,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                                     <th className="w-40">Question title</th>
                                     <th className="w-25">Topic</th>
                                     {!IS_CS_PLATFORM && <th className="w-15">Level</th>}
-                                    <th className="w-15">Exam board</th>
+                                    <th className="w-15">Exam boards</th>
                                 </tr>
                             </thead>
                             <Droppable droppableId="droppable">
