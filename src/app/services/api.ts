@@ -16,6 +16,7 @@ import {
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {TypeFilter} from "../components/pages/Events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
+import {ContentSummaryDTO} from "../../IsaacApiTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -41,7 +42,6 @@ endpoint.interceptors.response.use((response) => {
     }
     return Promise.reject(error);
 });
-
 
 export const apiHelper = {
     determineImageUrl: (path: string) => {
@@ -380,6 +380,37 @@ export const api = {
             const attended = attendance === ATTENDANCE.ATTENDED;
             return endpoint.post(`/events/${eventId}/bookings/${userId}/record_attendance?attended=${attended}`);
         }
+    },
+    tests: {
+        freeTextRules: () => endpoint.post("/tests/free-text-rules", {
+            rules: [
+                {
+                    "type": "freeTextRule",
+                    "encoding": "markdown",
+                    "value": "*get to*other side*",
+                    "caseInsensitive": true,
+                    "allowsAnyOrder": false,
+                    "allowsExtraWords": false,
+                    "allowsMisspelling": false,
+                    "correct": true,
+                    "explanation": {
+                        "type": "content",
+                        "children": [
+                            {
+                                "type": "content",
+                                "value": "This is a correct answer!",
+                                "encoding": "markdown"
+                            }
+                        ],
+                        "encoding": "markdown"
+                    }
+                }
+            ],
+            tests: [
+                {value: "get to the other side", expected: true},
+                {value: "don't know", expected: false}
+            ]
+        })
     },
     logger: {
         log : (eventDetails: object): AxiosPromise<void> => {

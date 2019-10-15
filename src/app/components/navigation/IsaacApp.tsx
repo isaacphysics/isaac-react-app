@@ -57,6 +57,7 @@ import {Events} from "../pages/Events";
 import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
+import {FreeTextTest} from "../pages/FreeTextTest";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -149,10 +150,13 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
                     <TrackedRoute exact path="/coming_soon" component={ComingSoon} />
                     <TrackedRoute exact path="/teaching_order" component={Generic} componentProps={{pageIdOverride: "teaching_order"}} />
-                    <TrackedRoute exact path="/equality" component={Equality} />
 
                     {/* Support pages */}
                     <TrackedRoute exact path="/support/:type?/:category?" component={Support} />
+
+                    {/* Test pages */}
+                    <TrackedRoute exact path="/equality" component={Equality} />
+                    <TrackedRoute exact path="/free_text" ifUser={isStaff} component={FreeTextTest} />
 
                     {/* Error pages */}
                     <Route component={NotFound} />
