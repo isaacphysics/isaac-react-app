@@ -1,9 +1,7 @@
 import React from 'react';
 import {Col, Row} from "reactstrap";
-import {ContentDTO, GlossaryTermDTO} from "../../../IsaacApiTypes";
-import {apiHelper} from "../../services/api";
+import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {FigureNumberingContext} from "../../../IsaacAppTypes";
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
