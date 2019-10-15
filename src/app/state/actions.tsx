@@ -33,7 +33,8 @@ import {
     Role,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
+    UserSummaryWithEmailAddressDTO,
+    GlossaryTermDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -598,16 +599,13 @@ export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) 
 
 export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const state = getState();
-    if (state && state.glossaryTerms) {
+    if (state && state.glossaryTerms && state.glossaryTerms.length > 0) {
         return;
     }
-    
     dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST});
     try {
         const response = await api.glossary.getTerms();
-        debugger;
-
-        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS, terms: response.data});
+        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS, terms: response.data.results as Array<GlossaryTermDTO>});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE});
     }

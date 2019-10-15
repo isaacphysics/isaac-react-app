@@ -192,13 +192,12 @@ export const fragments = (fragments: FragmentsState = null, action: Action) => {
     }
 };
 
-export const glossaryTerms = (glossaryTerms: Array<GlossaryTermDTO> = [], action: Action) => {
-    debugger;
+type GlossaryTermsState = Array<GlossaryTermDTO> | null;
+export const glossaryTerms = (glossaryTerms: GlossaryTermsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS:
-            return glossaryTerms;
+            return action.terms;
         case ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE:
-            return [];
         default:
             return glossaryTerms;
     }
@@ -676,7 +675,7 @@ export type AppState = undefined | {
     assignmentsByMe: AssignmentsState;
     progress: ProgressState;
     fragments: FragmentsState;
-    glossaryTerms: Array<GlossaryTermDTO>;
+    glossaryTerms: GlossaryTermsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {
