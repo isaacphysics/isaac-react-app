@@ -57,6 +57,7 @@ import {Events} from "../pages/Events";
 import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
+import {Quiz} from "../pages/Quiz";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -96,9 +97,10 @@ export const IsaacApp = () => {
 
                     <TrackedRoute exact path="/search" component={Search} />
 
-                    <TrackedRoute exact path="/questions/:questionId" component={Question} />
-                    <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
+                    <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
+                    <TrackedRoute exact path="/questions/:questionId" component={Question} />
+                    <TrackedRoute exact path="/quizzes/:quizId" ifUser={isLoggedIn} component={Quiz} />
 
                     <TrackedRoute exact path="/topics" component={AllTopics} />
                     <TrackedRoute exact path="/topics/:topicName" component={Topic} />
