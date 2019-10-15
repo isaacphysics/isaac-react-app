@@ -43,7 +43,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
     const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
 
     useEffect(() => {
-        if (!userIdToSchoolMapping && searchResults) {
+        if (searchResults) {
             dispatch(getUserIdSchoolLookup(searchResults.map((result) => result.id).filter((result) => result != undefined) as number[]));
         }
     }, [searchResults]);
