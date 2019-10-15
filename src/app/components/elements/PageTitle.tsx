@@ -1,4 +1,4 @@
-import React, {ReactElement, useEffect} from "react";
+import React, {ReactElement, useEffect, useRef} from "react";
 import {UncontrolledTooltip} from "reactstrap";
 
 export interface PageTitleProps {
@@ -9,11 +9,17 @@ export interface PageTitleProps {
 }
 
 export const PageTitle = ({currentPageTitle, subTitle, help, className}: PageTitleProps) => {
+    const headerRef = useRef<HTMLHeadingElement>(null);
+
     useEffect(() => {
         document.title = currentPageTitle + " — Isaac Computer Science";
+        const element = headerRef.current;
+        if (element) {
+            element.focus();
+        }
     }, [currentPageTitle]);
 
-    return <h1 className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
+    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
         {currentPageTitle}
         {help && <span id="title-help">Help</span>}
         {help && <UncontrolledTooltip target="#title-help">{help}</UncontrolledTooltip>}
