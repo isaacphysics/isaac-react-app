@@ -120,14 +120,14 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                             <RS.FormGroup>
                                 <RS.Label htmlFor="family-name-search">Find a user by family name:</RS.Label>
                                 <RS.Input
-                                    id="family-name-search" type="text" defaultValue={searchQuery.familyName || undefined} placeholder="Wilkes"
+                                    id="family-name-search" type="text" defaultValue={searchQuery.familyName || undefined} placeholder="e.g. Wilkes"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({familyName: e.target.value})}
                                 />
                             </RS.FormGroup>
                             <RS.FormGroup>
                                 <RS.Label htmlFor="email-search">Find a user by email:</RS.Label>
                                 <RS.Input
-                                    id="email-search" type="text" defaultValue={searchQuery.email || undefined} placeholder="teacher@school.org"
+                                    id="email-search" type="text" defaultValue={searchQuery.email || undefined} placeholder="e.g. teacher@school.org"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({email: e.target.value})}
                                 />
                             </RS.FormGroup>
@@ -163,7 +163,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                 <RS.Row>
                                     <RS.Col md={7}>
                                         <RS.Input
-                                            id="postcode-search" type="text" defaultValue={searchQuery.postcode || undefined} placeholder="CB3 0FD"
+                                            id="postcode-search" type="text" defaultValue={searchQuery.postcode || undefined} placeholder="e.g. CB3 0FD"
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({postcode: e.target.value})}
                                         />
                                     </RS.Col>
