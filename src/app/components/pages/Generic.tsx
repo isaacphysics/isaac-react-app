@@ -37,11 +37,11 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc, 
         [pageId]
     );
 
-    return <ShowLoading until={doc} render={(doc: ContentDTO) =>
+    return <ShowLoading until={doc} thenRender={doc =>
         <div>
             <Container>
                 <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
-                {segueEnvironment != "PROD" && (doc as ContentBase).canonicalSourceFile &&
+                {segueEnvironment === "DEV" && (doc as ContentBase).canonicalSourceFile &&
                     <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
                 }
 

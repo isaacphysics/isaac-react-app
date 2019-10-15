@@ -1,10 +1,12 @@
 import React from 'react';
 import {connect} from "react-redux";
 import * as RS from 'reactstrap';
-
 import {AppState} from "../../state/reducers";
 import {hideToast} from "../../state/actions";
 import {Toast} from "../../../IsaacAppTypes";
+
+export const FAILURE_TOAST: Toast = {color: "danger", title: "Validation error", timeout: 5000, body: "Required information is not present."};
+export const SUCCESS_TOAST: Toast = {color: "success", title: "Action completed", timeout: 5000, body: "Action completed successfully."};
 
 function mapStateToProps(state: AppState) {
     return {toasts: state && state.toasts || []};

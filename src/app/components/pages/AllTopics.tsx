@@ -20,10 +20,8 @@ export const AllTopics = () => {
                 </TextTag>
             </Link>
             {" "}
-            {topic.comingSoon ?
-                <Badge color="light" className="border bg-white">Coming soon</Badge> :
-                <Badge color="secondary">New</Badge>
-            }
+            {topic.comingSoon && !topic.new && <Badge color="light" className="border bg-white">Coming {topic.comingSoon}</Badge>}
+            {topic.new && !topic.comingSoon && <Badge color="secondary">New</Badge>}
         </React.Fragment>;
     };
 
@@ -37,12 +35,12 @@ export const AllTopics = () => {
                 <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
                     {Tags.allCategoryTags.map((category) => {
                         const categoryDescendentIds = Tags.getDescendents(category.id).map(t => t.id);
-                        const subcategoryTags = Tags.getAllSubcategoryTags(categoryDescendentIds);
+                        const subcategoryTags = Tags.getSubcategoryTags(categoryDescendentIds);
                         return <Col key={category.id} md={6}>
                             <h2>{category.title}</h2>
                             {subcategoryTags.map((subcategory) => {
                                 const subcategoryDescendentIds = Tags.getDescendents(subcategory.id).map(t => t.id);
-                                const topicTags = Tags.getAllTopicTags(subcategoryDescendentIds);
+                                const topicTags = Tags.getTopicTags(subcategoryDescendentIds);
                                 return <React.Fragment key={subcategory.id}>
                                     <h3>{subcategory.title}</h3>
                                     <ul className="list-unstyled mb-3 link-list">

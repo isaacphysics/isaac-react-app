@@ -1,17 +1,17 @@
 import React, {useState} from "react";
 import {connect, ResolveThunks} from "react-redux";
-import {Link} from "react-router-dom";
 import {sortBy} from "lodash";
+import {history} from "../../../services/history";
 import * as RS from "reactstrap";
 
-import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
-import {Action, AppGroup} from "../../../IsaacAppTypes";
+import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
+import {Action, AppGroup} from "../../../../IsaacAppTypes";
 
-import {store} from "../../state/store";
+import {store} from "../../../state/store";
 import {closeActiveModal, selectGroup, addGroupManager, deleteGroupManager, showGroupInvitationModal,
-    showGroupManagersModal} from "../../state/actions";
-import {AppState} from "../../state/reducers";
-import {groups} from "../../state/selectors";
+    showGroupManagersModal} from "../../../state/actions";
+import {AppState} from "../../../state/reducers";
+import {groups} from "../../../state/selectors";
 import {bindActionCreators, Dispatch} from "redux";
 
 const mapStateToPropsForInvite = (state: AppState) => {return {group: groups.current(state)};};
@@ -36,7 +36,7 @@ const CurrentGroupInviteModal = ({group, firstTime}: CurrentGroupInviteModalProp
         </RS.Jumbotron>
 
         <RS.Jumbotron>
-            <h2>Option 2: Share token</h2>
+            <h2>Option 2: Share code</h2>
             <p>Ask your students to enter the following code into the Teacher Connections tab on their &lsquo;My account&rsquo; page:</p>
             <h3 className="text-center user-select-all d-block border bg-light p-1">{group.token}</h3>
         </RS.Jumbotron>
@@ -55,7 +55,7 @@ export const groupInvitationModal = (firstTime: boolean) => {
         title: firstTime ? "Group Created" : "Invite Users",
         body: <ConnectedCurrentGroupInviteModal firstTime={firstTime} />,
         buttons: [
-            <RS.Row>
+            <RS.Row key={0}>
                 <RS.Col>
                     <RS.Button block key={2} color="secondary" onClick={() => {
                         store.dispatch(closeActiveModal());
@@ -65,7 +65,10 @@ export const groupInvitationModal = (firstTime: boolean) => {
                     </RS.Button>
                 </RS.Col>
                 <RS.Col>
-                    <RS.Button block key={0} color="secondary" tag={Link} to="/set_assignments">
+                    <RS.Button block key={0} color="secondary" onClick={() => {
+                        store.dispatch(closeActiveModal());
+                        history.push("/set_assignments");
+                    }}>
                         Set an assignment
                     </RS.Button>
                 </RS.Col>

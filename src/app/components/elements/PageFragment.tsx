@@ -1,34 +1,41 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {AppState} from "../../state/reducers";
-import {ContentDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {connect} from "react-redux";
-import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {useDispatch, useSelector} from "react-redux";
 import {fetchFragment} from "../../state/actions";
 
-const stateToProps = (state: AppState, {fragmentId}: {fragmentId: string}) => {
-    return {
-        fragment: state && state.fragments && state.fragments[fragmentId] || null
-    };
-};
-const dispatchToProps = {fetchFragment};
 
 interface PageFragmentComponentProps {
     fragmentId: string;
-    fragment: ContentDTO | NOT_FOUND_TYPE | null;
-    fetchFragment: (id: string) => void;
 }
 
-const PageFragmentComponent = ({fragmentId, fragment, fetchFragment}: PageFragmentComponentProps) => {
-    useEffect(
-        () => {fetchFragment(fragmentId);},
-        [fragmentId]
-    );
+export const PageFragment = ({fragmentId}: PageFragmentComponentProps) => {
+    const dispatch = useDispatch();
+    const [pathname, setPathname] = useState("");
+    const fragment = useSelector((state: AppState) => state && state.fragments && state.fragments[fragmentId] || null);
 
-    return <ShowLoading until={fragment} render={(fragment: ContentDTO) =>
-        <IsaacContent doc={fragment} />
-    }/>;
+    useEffect(() => {
+        dispatch(fetchFragment(fragmentId))
+    }, [fragmentId]);
+
+    useEffect(() => {
+        setPathname(location.pathname);
+    }, [location.pathname]);
+
+    const notFoundComponent = <div>
+        <h2>Content not found</h2>
+        <h3 className="my-4">
+            <small>
+                {"We're sorry, page not found: "}
+                <code>{pathname}</code>
+            </small>
+        </h3>
+    </div>;
+
+    return <ShowLoading
+        until={fragment}
+        thenRender={fragment => <IsaacContent doc={fragment} />}
+        ifNotFound={notFoundComponent}
+    />;
 };
-
-export const PageFragment = connect(stateToProps, dispatchToProps)(PageFragmentComponent);

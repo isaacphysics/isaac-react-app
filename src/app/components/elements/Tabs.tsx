@@ -39,8 +39,7 @@ export const Tabs = (props: TabsProps) => {
     }
 
     const tabTitles = children && Object.keys(children);
-    const specialCaseExamBoardTab = tabTitles.length === 2 &&
-        tabTitles.includes("AQA") && tabTitles.includes("OCR");
+    const specialCaseExamBoardTab = tabTitles.includes("AQA") && tabTitles.includes("OCR") && tabTitles.length === 2;
 
     return <div className={className}>
         {!specialCaseExamBoardTab && <Nav tabs>
@@ -49,7 +48,7 @@ export const Tabs = (props: TabsProps) => {
                 const c = callOrString(tabTitleClass, tabTitle, tabIndex);
                 const classes = activeTab === tabIndex ? `${c} active` : c;
                 return <NavItem key={tabTitle} className="px-3 text-center">
-                    <NavLink tag="button" className={classes} disabled={tabIndex == activeTab} onClick={() => changeTab(tabIndex)}>
+                    <NavLink tag="button" tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}>
                         {tabTitle}
                     </NavLink>
                 </NavItem>;

@@ -26,7 +26,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH, DATE_FORMATTER} from "../../services/constants";
-import {downloadLinkModal} from "../elements/AssignmentProgressModalCreators";
+import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 
 const stateFromProps = (state: AppState) => {
     if (state != null) {
@@ -411,9 +411,9 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
 
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
         <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
-            <div className="gameboard-title align-items-center">
+            <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
                 <span>{assignment.gameboard.title}{assignment.dueDate && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(assignment.dueDate)})</span>}</span>
-            </div>
+            </Button>
             <div className="gameboard-links align-items-center">
                 <Button color="link">{isExpanded ? "Hide " : "View "} <span className="d-none d-md-inline">mark sheet</span></Button>
                 <span className="d-none d-md-inline">or</span>
@@ -452,7 +452,8 @@ const GroupDetails = (props: GroupDetailsProps) => {
                     <div className="key-cell"><span className="passed">&nbsp;</span>
                     </div>
                     <div className="key-description">&ge;{passMark * 100}% correct
-                        <span className="d-none d-xl-inline"> (or Mastery)</span></div>
+                        {/*<span className="d-none d-xl-inline"> (or Mastery)</span>*/}
+                    </div>
                 </li>
                 <li className="d-flex flex-wrap">
                     <div className="key-cell"><span className="in-progress">&nbsp;</span>
@@ -503,8 +504,11 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
             <div className="group-name"><span className="icon-group"/><span>{group.groupName}</span></div>
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
-            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" onClick={openGroupDownloadLink}>(Download Group CSV)</a></div>
-            <div className="pr-2 pl-3"><img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" /></div>
+            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openGroupDownloadLink}>(Download Group CSV)</a></div>
+            <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
+                <img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" />
+                <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
+            </Button>
         </div>
         {isExpanded && <GroupDetails {...props} />}
     </React.Fragment>;
@@ -544,7 +548,7 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">
-                        <DropdownToggle color="tertiary" caret>
+                        <DropdownToggle color="tertiary" className="border" caret>
                             {sortOrder}
                         </DropdownToggle>
                         <DropdownMenu>
@@ -561,7 +565,7 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
                 {data && data.map(group => <GroupAssignmentProgress key={group.id} {...props} group={group} pageSettings={pageSettings} />)}
                 {data && data.length == 0 && <Container className="py-5">
                     <h3 className="text-center">
-                        You&apos;ll need to create a group using <Link to="/groups">Manage Groups</Link> to set an assignment.
+                        You&apos;ll need to create a group using <Link to="/groups">Manage groups</Link> to set an assignment.
                     </h3>
                 </Container>}
             </ShowLoading>

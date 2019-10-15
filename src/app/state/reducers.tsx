@@ -7,21 +7,28 @@ import {
     AppGroup,
     AppGroupMembership,
     AppQuestionDTO,
+    AugmentedEvent,
     ContentErrorsResponse,
+    EventOverview,
     GroupMembershipDetailDTO,
     isValidatedChoice,
     LoggedInUser,
     NOT_FOUND_TYPE,
+    TemplateEmail,
     Toast,
-    UserPreferencesDTO
+    UserPreferencesDTO,
+    UserProgress,
+    UserSchoolLookup
 } from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
     ContentDTO,
     ContentSummaryDTO,
+    EventBookingDTO,
     GameboardDTO,
     GameboardListDTO,
     IsaacTopicSummaryPageDTO,
+    IsaacWildcard,
     ResultsWrapper,
     UserAuthenticationSettingsDTO,
     UserGroupDTO,
@@ -70,6 +77,30 @@ export const userPreferences = (userPreferences: UserPreferencesState = null, ac
     }
 };
 
+export type UserSchoolLookupState = UserSchoolLookup | null;
+export const userSchoolLookup = (userSchoolLookup: UserSchoolLookupState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_SCHOOL_LOOKUP_REQUEST:
+            return null;
+        case ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_SUCCESS:
+            return {...action.schoolLookup};
+        default:
+            return userSchoolLookup;
+    }
+};
+
+export type UserProgressState = UserProgress | null;
+export const userProgress = (userProgress: UserProgressState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS:
+            return action.progress;
+        case ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE:
+            return null;
+        default:
+            return userProgress;
+    }
+};
+
 export type AdminUserSearchState = UserSummaryForAdminUsersDTO[] | null;
 export const adminUserSearch = (adminUserSearch: AdminUserSearchState = null, action: Action) => {
     switch (action.type) {
@@ -103,6 +134,18 @@ export const adminStats = (adminSiteStats: AdminStatsState = null, action: Actio
             return action.stats;
         default:
             return adminSiteStats;
+    }
+};
+
+export type AdminEmailTemplateState = TemplateEmail | null;
+export const adminEmailTemplate = (adminEmailTemplate: AdminEmailTemplateState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST:
+            return null;
+        case ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS:
+            return action.email;
+        default:
+            return adminEmailTemplate;
     }
 };
 
@@ -255,6 +298,23 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
     }
 };
 
+type GameboardEditorQuestionsState = ContentSummaryDTO[] | null;
+export const gameboardEditorQuestions = (gameboardEditorQuestions: GameboardEditorQuestionsState = null, action: Action) => {
+    switch(action.type) {
+        case ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS: {
+            return action.questions.map((question) => {
+                return {...question, url: question.url && question.url.replace("/isaac-api/api/pages","")}
+            });
+        }
+        case ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE: {
+            return null;
+        }
+        default: {
+            return gameboardEditorQuestions;
+        }
+    }
+};
+
 type AssignmentsState = AssignmentDTO[] | null;
 export const assignments = (assignments: AssignmentsState = null, action: Action) => {
     switch (action.type) {
@@ -295,12 +355,28 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
             return null;
         case ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;
+        case ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS:
+            return {id: action.gameboardId};
         case ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE:
             return NOT_FOUND;
         case ACTION_TYPE.ROUTER_PAGE_CHANGE:
             return null;
         default:
             return currentGameboard;
+    }
+};
+
+export type WildcardsState = IsaacWildcard[] | NOT_FOUND_TYPE | null;
+export const wildcards = (wildcards: WildcardsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST:
+            return null;
+        case ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS:
+            return action.wildcards;
+        case ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE:
+            return NOT_FOUND;
+        default:
+            return wildcards;
     }
 };
 
@@ -319,6 +395,59 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
             return currentTopic;
     }
 };
+
+type EventsState = {events: AugmentedEvent[]; total: number} | null;
+export const events = (events: EventsState = null, action: Action) => {
+    const currentEvents = events ? events.events : [];
+    switch (action.type) {
+        case ACTION_TYPE.EVENTS_RESPONSE_SUCCESS:
+            return {events: Array.from(new Set([...currentEvents, ...action.augmentedEvents])), total: action.total};
+        case ACTION_TYPE.EVENTS_CLEAR:
+            return null;
+        default:
+            return events;
+    }
+};
+
+export type CurrentEventState = AugmentedEvent | NOT_FOUND_TYPE | null;
+export const currentEvent = (currentEvent: CurrentEventState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_RESPONSE_SUCCESS:
+            return {...action.augmentedEvent};
+        case ACTION_TYPE.EVENT_RESPONSE_FAILURE:
+            return NOT_FOUND;
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
+        case ACTION_TYPE.EVENT_REQUEST:
+            return null;
+        default:
+            return currentEvent;
+    }
+};
+
+export type EventBookingsState = EventBookingDTO[] | null;
+export const eventBookings = (eventBookings: EventBookingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS:
+            return [...action.eventBookings];
+        case ACTION_TYPE.EVENT_BOOKING_REQUEST:
+            return null;
+        default:
+            return eventBookings;
+    }
+};
+
+type EventOverviewsState = EventOverview[] | null;
+export const eventOverviews = (eventOverviews: EventOverviewsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_OVERVIEWS_REQUEST:
+            return null;
+        case ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS:
+            return [...action.eventOverviews];
+        default:
+            return eventOverviews;
+    }
+};
+
 
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const error = (error: ErrorState = null, action: Action): ErrorState => {
@@ -389,15 +518,16 @@ export const toasts = (toasts: ToastsState = null, action: Action) => {
     }
 };
 
-export type ActiveModalState = ActiveModal | null;
-export const activeModal = (activeModal: ActiveModalState = null, action: Action) => {
+export type ActiveModalsState = ActiveModal[] | null;
+export const activeModals = (activeModals: ActiveModalsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.ACTIVE_MODAL_OPEN:
-            return action.activeModal;
+            activeModals = activeModals || [];
+            return [...activeModals, action.activeModal];
         case ACTION_TYPE.ACTIVE_MODAL_CLOSE:
-            return null;
+            return activeModals && activeModals.length > 1 ? activeModals.slice(0, activeModals.length - 1) : null;
         default:
-            return activeModal;
+            return activeModals;
     }
 };
 
@@ -624,9 +754,12 @@ const appReducer = combineReducers({
     user,
     userAuthSettings,
     userPreferences,
+    userProgress,
     adminUserSearch,
     adminContentErrors,
     adminStats,
+    adminEmailTemplate,
+    userSchoolLookup,
     activeAuthorisations,
     otherUserAuthorisations,
     groupMemberships,
@@ -635,16 +768,22 @@ const appReducer = combineReducers({
     questions,
     currentTopic,
     currentGameboard,
+    wildcards,
+    gameboardEditorQuestions,
     assignments,
     contentVersion,
     search,
     error,
     toasts,
-    activeModal,
+    activeModals,
     groups,
     boards,
     assignmentsByMe,
     progress,
+    events,
+    currentEvent,
+    eventOverviews,
+    eventBookings,
     fragments,
     glossaryTerms
 });
@@ -653,9 +792,12 @@ export type AppState = undefined | {
     user: UserState;
     userAuthSettings: UserAuthSettingsState;
     userPreferences: UserPreferencesState;
+    userProgress: UserProgressState;
     adminUserSearch: AdminUserSearchState;
     adminContentErrors: AdminContentErrorsState;
     adminStats: AdminStatsState;
+    adminEmailTemplate: AdminEmailTemplateState;
+    userSchoolLookup: UserSchoolLookupState;
     activeAuthorisations: ActiveAuthorisationsState;
     otherUserAuthorisations: OtherUserAuthorisationsState;
     groupMemberships: GroupMembershipsState;
@@ -663,17 +805,23 @@ export type AppState = undefined | {
     questions: QuestionsState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
+    wildcards: WildcardsState;
+    gameboardEditorQuestions: GameboardEditorQuestionsState,
     assignments: AssignmentsState;
     contentVersion: ContentVersionState;
     search: SearchState;
     constants: ConstantsState;
     error: ErrorState;
     toasts: ToastsState;
-    activeModal: ActiveModalState;
+    activeModals: ActiveModalsState;
     groups: GroupsState;
     boards: BoardsState;
     assignmentsByMe: AssignmentsState;
     progress: ProgressState;
+    events: EventsState;
+    currentEvent: CurrentEventState;
+    eventOverviews: EventOverviewsState;
+    eventBookings: EventBookingsState;
     fragments: FragmentsState;
     glossaryTerms: GlossaryTermsState;
 }

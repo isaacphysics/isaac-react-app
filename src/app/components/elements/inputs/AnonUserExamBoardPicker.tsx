@@ -1,10 +1,10 @@
 import React, {ChangeEvent} from "react";
 import {FormGroup, Input, Label} from "reactstrap";
-import {determineExamBoardFrom} from "../../services/examBoard";
-import {EXAM_BOARD} from "../../services/constants";
+import {determineExamBoardFrom} from "../../../services/examBoard";
+import {EXAM_BOARD} from "../../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
-import {setAnonUserPreferences} from "../../state/actions";
-import {AppState} from "../../state/reducers";
+import {setAnonUserPreferences} from "../../../state/actions";
+import {AppState} from "../../../state/reducers";
 
 interface AnonUserExamBoardPicker {className?: string; hideLabel?: boolean}
 
@@ -26,6 +26,7 @@ export const AnonUserExamBoardPicker = ({className, hideLabel = true}: AnonUserE
                     dispatch(setAnonUserPreferences(
                         Object.assign(userPreferences || {}, {EXAM_BOARD: examBoardPreferences})));
                 }}
+                {...(hideLabel ? {'aria-label': "Exam Board"} : {})}
             >
                 {/*<option></option> This was not an option although we should probably support it */}
                 <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>

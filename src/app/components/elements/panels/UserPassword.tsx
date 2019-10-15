@@ -1,9 +1,10 @@
-import {Button, CardBody, Col, Form, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {Button, CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import React, {useState} from "react";
-import {LoggedInUser, ValidationUser} from "../../../IsaacAppTypes";
-import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
-import {MINIMUM_PASSWORD_LENGTH, validateEmail, validatePassword} from "../../services/validation";
-import {resetPassword} from "../../state/actions";
+import {ValidationUser, ZxcvbnResult} from "../../../../IsaacAppTypes";
+import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
+import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../../services/validation";
+import {resetPassword} from "../../../state/actions";
+import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../../services/passwordStrength";
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -22,6 +23,7 @@ export const UserPassword = (
     {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, userAuthSettings, setNewPassword, setNewPasswordConfirm, newPasswordConfirm}: UserPasswordProps) => {
 
     const [passwordResetRequested, setPasswordResetRequested] = useState(false);
+    const [passwordFeedback, setPasswordFeedback] = useState<ZxcvbnResult | null>(null);
 
     const resetPasswordIfValidEmail = () => {
         if (currentUserEmail && validateEmail(currentUserEmail)) {
@@ -37,7 +39,7 @@ export const UserPassword = (
                     <Row>
                         <Col md={{size: 6, offset: 3}}>
                             <FormGroup>
-                                <Label htmlFor="password-current">Current Password</Label>
+                                <Label htmlFor="password-current">Current password</Label>
                                 <Input
                                     id="password-current" type="password" name="current-password"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -50,23 +52,36 @@ export const UserPassword = (
                     <Row>
                         <Col md={{size: 6, offset: 3}}>
                             <FormGroup>
-                                <Label htmlFor="new-password">New Password</Label>
+                                <Label htmlFor="new-password">New password</Label>
                                 <Input
                                     invalid={!!newPasswordConfirm && !isNewPasswordConfirmed}
                                     id="new-password" type="password" name="new-password"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setNewPassword(e.target.value);
+                                        passwordDebounce(e.target.value, setPasswordFeedback);
                                     }}
+                                    onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        passwordDebounce(e.target.value, setPasswordFeedback);
+                                    }}
+                                    onFocus={loadZxcvbnIfNotPresent}
                                     aria-describedby="passwordValidationMessage"
                                     disabled={currentPassword == ""}
                                 />
+                                {passwordFeedback &&
+                                <span className='float-right small mt-1'>
+                                    <strong>Password strength: </strong>
+                                    <span id="password-strength-feedback">
+                                        {passwordStrengthText[(passwordFeedback as ZxcvbnResult).score]}
+                                    </span>
+                                </span>
+                                }
                             </FormGroup>
                         </Col>
                     </Row>
                     <Row>
                         <Col md={{size: 6, offset: 3}}>
                             <FormGroup>
-                                <Label htmlFor="password-confirm">Re-enter New Password</Label>
+                                <Label htmlFor="password-confirm">Re-enter new password</Label>
                                 <Input
                                     invalid={!!currentPassword && !isNewPasswordConfirmed}
                                     id="password-confirm"

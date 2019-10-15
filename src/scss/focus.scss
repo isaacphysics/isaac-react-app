@@ -1,0 +1,124 @@
+// From NOMENSA global.scss
+.search--filter-group.form-group input.form-control {
+  border-width: 0.5px !important;
+  border-color: $gray-160;
+}
+
+/** Focus styles **/
+
+.form-control:focus {
+  box-shadow: none;
+  outline: 0.2rem solid $focus-blue;
+}
+
+.form-control-file:focus {
+  outline: none;
+  border: 0.2rem solid $focus-blue;
+  border-radius: 5px;
+}
+
+.form-check-input:focus {
+  outline: 0.2rem solid $focus-blue;
+}
+
+.page-link:focus {
+  box-shadow: none;
+  border: 0.2rem solid $focus-blue;
+  border-radius: 3px;
+}
+
+.btn.btn-link:focus {
+  box-shadow: none !important;
+  border: 0.2rem solid $focus-blue !important;
+  border-radius: 3px;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+  border: 0.2rem solid $focus-blue;
+  border-radius: 3px;
+}
+
+.link-list.a:focus {
+  box-shadow: none !important;
+  outline: 0.2rem solid $focus-blue !important;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+  outline: 0.2rem solid $black;
+}
+
+.nav-link.active:focus {
+  box-shadow: none;
+  outline: 0.2rem solid $secondary;
+}
+
+.btn.btn-outline-primary:focus {
+  box-shadow: none !important;
+  border: 0.2rem solid $secondary;
+  border-radius: 8px;
+}
+
+.btn-secondary:focus {
+  box-shadow: none;
+  border: 0.2rem solid black;
+  border-radius: 8px;
+}
+
+.btn-danger:focus {
+  box-shadow: none;
+  border: 0.2rem solid black;
+  border-radius: 8px;
+}
+
+.login-b:focus {
+  box-shadow: none;
+  border: 0.2rem solid $focus-blue;
+}
+
+.btn-outline-primary:focus {
+  box-shadow: none;
+  border: 0.2rem solid $secondary;
+  border-radius: 8px;
+}
+
+.btn.btn-sm.a-alt:focus {
+  box-shadow: none;
+  border: 0.2rem solid $focus-blue;
+  border-radius: 5px;
+}
+
+.footerLink:focus {
+  box-shadow: none !important;
+  border: 0.2rem solid white;
+  border-radius: 5px;
+}
+
+.footerTop a:focus {
+  border: 0.2rem solid white;
+}
+
+// Close modal button
+.close:not(:disabled):not(.disabled):focus {
+  box-shadow: none;
+  outline: 0.2rem solid $focus-blue;
+}
+
+::placeholder { // Firefox, Chrome, Opera
+  color: $gray-160 !important;
+}
+
+:-ms-input-placeholder { // Internet Explorer 10-11
+  color: $gray-160 !important;
+}
+
+::-ms-input-placeholder { // Microsoft Edge
+  color: $gray-160 !important;
+}
+
+:focus {
+  outline: 0.2rem solid $black;
+}
+
+/** End of focus styles **/

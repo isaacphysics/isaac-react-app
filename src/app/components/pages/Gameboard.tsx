@@ -12,6 +12,7 @@ import {NOT_FOUND} from "../../services/constants";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
+import {Container} from "reactstrap";
 
 const stateFromProps = (state: AppState) => {
     return state && {
@@ -67,16 +68,38 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
         }
     }, [gameboard]);
 
-    const setAssignmentButton = user && isTeacher(user) && <div className="text-center mt-4">
-        <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline>
-            Set as Assignment
-        </RS.Button>
-    </div>;
+    const teacherButtons = user && isTeacher(user) && <RS.Row className="col-8 offset-2">
+        <RS.Col className="mt-4">
+            <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
+                Set as assignment
+            </RS.Button>
+        </RS.Col>
+        <RS.Col className="mt-4">
+            <RS.Button
+                tag={Link} to={{pathname: "/gameboards/builder/", state: {gameboard: gameboard}}}
+                color="primary" block outline
+            >
+                Duplicate and edit
+            </RS.Button>
+        </RS.Col>
+    </RS.Row>;
+
+    const notFoundComponent = <Container>
+        <TitleAndBreadcrumb breadcrumbTitleOverride="Gameboard" currentPageTitle="Gameboard not found" />
+        <h3 className="my-4">
+            <small>
+                {"We're sorry, we were not able to find a gameboard with the id "}
+                <code>{gameboardId}</code>
+                {"."}
+            </small>
+        </h3>
+    </Container>;
 
     return gameboardId ?
         <RS.Container>
-            <ShowLoading until={gameboard} render={gameboard =>
-                <React.Fragment>
+            <ShowLoading
+                until={gameboard}
+                thenRender={gameboard => <React.Fragment>
                     <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
                     <div className="mb-5">
                         <RS.Row>
@@ -88,10 +111,11 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
                                 </RS.ListGroup>
                             </RS.Col>
                         </RS.Row>
-                        {setAssignmentButton}
+                        {teacherButtons}
                     </div>
-                </React.Fragment>
-            } />
+                </React.Fragment>}
+                ifNotFound={notFoundComponent}
+            />
         </RS.Container>
         :
         <Redirect to="/gameboards#example-gameboard" />

@@ -1,35 +1,40 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {
+    Button,
+    ButtonDropdown,
     Card,
     CardBody,
+    Col,
     Container,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Form,
+    Input,
+    InputGroup,
+    InputGroupAddon,
     Nav,
     NavItem,
     NavLink,
+    Row,
     TabContent,
     TabPane,
-    Row,
-    Col,
-    UncontrolledTooltip,
     UncontrolledButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Button, Input, Table, ButtonDropdown, Form, InputGroupAddon, InputGroup
+    UncontrolledTooltip
 } from "reactstrap"
 import {Link} from "react-router-dom";
 import {
-    loadGroups,
     createGroup,
     deleteGroup,
-    updateGroup,
-    getGroupInfo,
-    resetMemberPassword,
     deleteMember,
+    getGroupInfo,
+    loadGroups,
+    resetMemberPassword,
+    selectGroup,
     showGroupInvitationModal,
     showGroupManagersModal,
-    selectGroup
+    updateGroup
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
@@ -39,6 +44,7 @@ import {groups} from "../../state/selectors";
 import {UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {TEACHERS_CRUMB} from "../../services/constants";
+import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateFromProps = (state: AppState) => (state && {groups: groups.groups(state), group: groups.current(state)});
 const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal};
@@ -192,12 +198,12 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                 <Col xs={5} sm={6} md={5} lg={4}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
                 {group && <Col xs={7} sm={6} md={7} lg={8} className="text-right">
                     <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => showGroupManagersModal()}>
-                        Edit<span className="d-none d-xl-inline">{" "}Group</span>{" "}Managers
+                        Edit<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
                     </Button>
                     <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
                     <span className="d-inline-block d-md-none">&nbsp;</span>
                     <Button size="sm" color="secondary" className="text-white" onClick={() => showGroupInvitationModal(false)}>
-                        Invite Users
+                        Invite users
                     </Button>
                 </Col>}
             </Row>
@@ -350,9 +356,9 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     const groupNameRef = useRef<HTMLInputElement>(null);
 
     const pageHelp = <span>
-        Use this page to manage groups. You can add users to a group by giving them the group token and asking them paste it into their account settings page.
+        Use this page to manage groups. You can add users to a group by giving them the group code and asking them paste it into their account settings page.
         <br />
-        You can find the token for an existing group by selecting the group and clicking <i>Invite Users</i>.
+        You can find the code for an existing group by selecting the group and clicking <i>Invite Users</i>.
     </span>;
 
     return <Container>
@@ -366,7 +372,10 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                 {tabs.map((tab, index) => {
                                     const classes = tab.active() ? "active" : "";
                                     return <NavItem key={index} className="mx-2">
-                                        <NavLink className={`text-center ${classes}`} onClick={tab.activate}>
+                                        <NavLink
+                                            className={`text-center ${classes}`} tabIndex={0}
+                                            onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
+                                        >
                                             {tab.name}
                                         </NavLink>
                                     </NavItem>;

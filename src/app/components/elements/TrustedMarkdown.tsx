@@ -6,9 +6,22 @@ import {TrustedHtml} from "./TrustedHtml";
 import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";
 import {fetchGlossaryTerms} from "../../state/actions";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
+import {escapeHtml, replaceEntities} from "remarkable/lib/common/utils";
+import {Token} from "remarkable";
 
 import ReactDOMServer from "react-dom/server";
-import ReactDOM from "react-dom";
+
+// eslint-disable-next-line @typescript-eslint/camelcase
+MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
+    let href = escapeHtml(tokens[idx].href || "");
+    let localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:");
+    let title = tokens[idx].title ? (' title="' + escapeHtml(replaceEntities(tokens[idx].title || "")) + '"') : '';
+    if (localLink) {
+        return `<a href="${href}" ${title}>`;
+    } else {
+        return `<a href="${href}" ${title} target="_blank" rel="noopener nofollow">`;
+    }
+};
 
 const stateToProps = (state: AppState) => {
     const glossaryTerms = state && state.glossaryTerms;

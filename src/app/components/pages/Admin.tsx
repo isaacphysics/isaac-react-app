@@ -58,9 +58,10 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
 
             <RS.Card className="p-3 my-3">
                 <RS.CardTitle tag="h2">Useful links</RS.CardTitle>
-                <RS.CardBody>
-                    <Link to="/admin/usermanager">User Manager</Link>
-                </RS.CardBody>
+                <RS.ListGroup className="flex-row">
+                    <RS.ListGroupItem className="w-auto"><Link to="/admin/usermanager">User Manager</Link></RS.ListGroupItem>
+                    <RS.ListGroupItem className="w-auto"><Link to="/admin/emails">Admin emails</Link></RS.ListGroupItem>
+                </RS.ListGroup>
             </RS.Card>
 
             <RS.Card className="p-3 mb-3">
@@ -78,15 +79,14 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
                     <h3>Manage site content</h3>
                     {contentVersion && <React.Fragment>
                         <div>
-                            <label htmlFor="content-version">
-                                <strong>Live Content Version</strong>
-                            </label>
+                            <strong>Live Content Version</strong>
                         </div>
-                        <ShowLoading until={displayVersion !== null} render={() => {
+                        <ShowLoading until={displayVersion !== null} thenRender={() => {
                             return displayVersion !== null && updateState != ContentVersionUpdatingStatus.UPDATING &&
                                 <RS.Form onSubmit={startVersionUpdate}>
                                     <RS.InputGroup>
                                         <RS.Input
+                                            aria-label="Live content commit SHA"
                                             type="text" value={displayVersion}
                                             onChange={e => setNewVersion(e.target.value)}
                                             placeholder="Enter commit SHA"

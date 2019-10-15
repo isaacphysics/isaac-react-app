@@ -1,28 +1,28 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {
+    authenticateWithTokenAfterPrompt,
     changeMyMembershipStatus,
     getActiveAuthorisations,
     getMyGroupMemberships,
     getStudentAuthorisations,
-    authenticateWithTokenAfterPrompt,
     releaseAllAuthorisationsAfterPrompt,
     releaseAuthorisationAfterPrompt,
     revokeAuthorisationAfterPrompt
-} from "../../state/actions";
+} from "../../../state/actions";
 import {connect} from "react-redux";
 import {
     ActiveAuthorisationsState,
     AppState,
     GroupMembershipsState,
     OtherUserAuthorisationsState
-} from "../../state/reducers";
-import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
+} from "../../../state/reducers";
+import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import classnames from "classnames";
-import {MEMBERSHIP_STATUS} from "../../services/constants";
-import {extractTeacherName} from "../../services/user";
+import {MEMBERSHIP_STATUS} from "../../../services/constants";
+import {extractTeacherName} from "../../../services/user";
 
 const stateToProps = (state: AppState) => ({
     activeAuthorisations: state ? state.activeAuthorisations : null,
@@ -83,8 +83,9 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
         processAuthenticateWithToken(authenticationToken);
     }
 
+    const editingSelf = true;
     return <RS.CardBody>
-        <RS.Container ng-if="editingSelf">
+        {editingSelf && <RS.Container>
             <h3>
                 <span>Teacher Connections<span id="teacher-connections-title" className="icon-help" /></span>
                 <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">
@@ -284,8 +285,8 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                     </p>}
                 </RS.Col>
             </RS.Row>
-        </RS.Container>
+        </RS.Container>}
     </RS.CardBody>
 };
 
-export const TeacherConnectionsPanel = connect(stateToProps, dispatchToProps)(TeacherConnectionsComponent);
+export const TeacherConnections = connect(stateToProps, dispatchToProps)(TeacherConnectionsComponent);

@@ -20,6 +20,7 @@ $gray-blue: #636c73;
 $shadow-3: rgba(0, 0, 0, 0.3);
 $shadow-25: rgba(0, 0, 0, 0.25);
 $shadow-08: rgba(0, 0, 0, 0.08);
+$shadow-black: rgb(0, 0, 0);
 
 // Colour Overrides
 $purple: #9148bc;
@@ -28,6 +29,7 @@ $green: #208838;
 
 //Custom Colours
 $reddish: #d7335f; // Used as an active colour on secondary buttons
+$focus-blue: #3E59A3; // Used as focus indicator colour on inputs
 
 // Button sizing
 $input-btn-padding-y-lg: 0.5rem;
@@ -74,6 +76,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./carousel";
 @import "./icons";
 @import "./boards";
+@import "./focus";
 
 // Navigation
 @import "./navigation-bar";
@@ -92,6 +95,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./gameboard";
 @import "./assignment-progress";
 @import "./groups";
+@import "./events";
 
 // Print
 @import "./print";
@@ -124,6 +128,9 @@ body {
     color: $black;
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
     line-height: 1.625;
+    display: -ms-flexbox;
+    -ms-flex-direction: column;
+    flex-direction: column;
 }
 
 .content-body {

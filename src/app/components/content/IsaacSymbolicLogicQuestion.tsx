@@ -4,17 +4,18 @@ import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiTypes";
-import { InequalityModal } from "../elements/InequalityModal";
+import { InequalityModal } from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {IsaacHints} from "./IsaacHints";
 import { determineExamBoardFrom } from "../../services/examBoard";
 import { EXAM_BOARD } from "../../services/constants";
+import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
     const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
     const examBoard = state && determineExamBoardFrom(state.userPreferences);
-    let r: { currentAttempt?: LogicFormulaDTO | null, examBoard? : EXAM_BOARD | null } = { examBoard };
+    let r: { currentAttempt?: LogicFormulaDTO | null; examBoard? : EXAM_BOARD | null } = { examBoard };
     if (question) {
         r.currentAttempt = question.currentAttempt;
     }
@@ -59,7 +60,11 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 </IsaacContentValueOrChildren>
             </div>
             {/* TODO Accessibility */}
-            <div className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} onClick={() => setModalVisible(true)} dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }} />
+            <div
+                role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={0}
+                onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
+                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
+            />
             {modalVisible && <InequalityModal
                 close={closeModal}
                 onEditorStateChange={(state: any) => {

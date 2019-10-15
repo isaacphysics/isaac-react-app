@@ -58,13 +58,13 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
 
     let QuestionComponent;
     switch (doc.type) {
-        case 'isaacFreeTextQuestion': QuestionComponent = IsaacFreeTextQuestion; break;
         case 'isaacNumericQuestion': QuestionComponent = IsaacNumericQuestion; break;
-        case 'isaacSymbolicLogicQuestion': QuestionComponent = IsaacSymbolicLogicQuestion; break;
         case 'isaacStringMatchQuestion': QuestionComponent = IsaacStringMatchQuestion; break;
+        case 'isaacFreeTextQuestion': QuestionComponent = IsaacFreeTextQuestion; break;
         case 'isaacItemQuestion': QuestionComponent = IsaacItemQuestion; break;
-        case 'isaacParsonsQuestion': QuestionComponent = IsaacParsonsQuestion; break;
         case 'isaacMultiChoiceQuestion': default: QuestionComponent = IsaacMultiChoiceQuestion; break;
+        case 'isaacParsonsQuestion': QuestionComponent = IsaacParsonsQuestion; break;
+        case 'isaacSymbolicLogicQuestion': QuestionComponent = IsaacSymbolicLogicQuestion; break;
     }
 
     let extraClasses = "";
@@ -99,7 +99,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
                 This question is locked until at least {showTime(locked)} to prevent repeated guessing.
             </Alert>}
 
-            {((!validationResponse) || (validationResponse && !validationResponse.correct) || canSubmit) && (!locked) && <Row>
+            {((!validationResponse) || (!validationResponse.correct) || canSubmit) && (!locked) && <Row>
                 <Col className="text-center pt-3 pb-1">
                     <Button color="secondary" disabled={!canSubmit} onClick={submitCurrentAttempt}>
                         Check my answer
@@ -107,7 +107,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
                 </Col>
             </Row>}
 
-            {((!validationResponse) || (validationResponse && !validationResponse.correct) || canSubmit) && <Row>
+            {((!validationResponse) || (!validationResponse.correct) || canSubmit) && <Row>
                 <Col xl={{size: 10, offset: 1}} >
                     {doc.hints && <p className="text-center pt-2 mb-0">
                         <small>Don&apos;t forget to use the hints above if you need help.</small>

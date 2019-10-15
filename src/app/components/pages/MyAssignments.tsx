@@ -6,10 +6,11 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
 import {Card, CardBody, Container, Row, Col, Nav, NavItem, NavLink} from 'reactstrap';
-import {orderBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {extractTeacherName} from "../../services/user";
 import {DATE_FORMATTER, STUDENTS_CRUMB} from "../../services/constants";
+import {filterAssignmentsByStatus} from "../../services/assignments";
+import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments, logAction};
@@ -76,49 +77,13 @@ const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; show
     </ShowLoading>;
 };
 
-function notMissing<T>(item: T | undefined): T {
-    if (item === undefined) throw new Error("Missing item");
-    return item;
-}
+
 
 const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}: MyAssignmentsPageProps) => {
     useEffect(() => {loadMyAssignments();}, []);
     useEffect(() => {logAction({type: "VIEW_MY_ASSIGNMENTS"})}, []);
 
-    const now = new Date();
-    const fourWeeksAgo = new Date(now.valueOf() - (4 * 7 * 24 * 60 * 60 * 1000));
-    // Midnight five days ago:
-    const fiveDaysAgo = new Date(now);
-    fiveDaysAgo.setDate(now.getDate() - 5);
-    fiveDaysAgo.setHours(0, 0, 0, 0);
-
-    const myAssignments: {inProgressRecent: AssignmentDTO[]; inProgressOld: AssignmentDTO[]; completed: AssignmentDTO[]} = {
-        inProgressRecent: [],
-        inProgressOld: [],
-        completed: []
-    };
-
-    if (assignments) {
-        assignments.forEach(assignment => {
-            assignment.gameboard = notMissing(assignment.gameboard);
-            assignment.creationDate = notMissing(assignment.creationDate);
-            if (assignment.gameboard.percentageCompleted === undefined || assignment.gameboard.percentageCompleted < 100) {
-                let noDueDateButRecent = !assignment.dueDate && (assignment.creationDate > fourWeeksAgo);
-                let dueDateAndCurrent = assignment.dueDate && (assignment.dueDate >= fiveDaysAgo);
-                if (noDueDateButRecent || dueDateAndCurrent) {
-                    // Assignment either not/only just overdue, or else set within last month but no due date.
-                    myAssignments.inProgressRecent.push(assignment);
-                } else {
-                    myAssignments.inProgressOld.push(assignment);
-                }
-            } else {
-                myAssignments.completed.push(assignment);
-            }
-        });
-        myAssignments.inProgressRecent = orderBy(myAssignments.inProgressRecent, ["dueDate", "creationDate"], ["asc", "desc"]);
-        myAssignments.inProgressOld = orderBy(myAssignments.inProgressOld, ["dueDate", "creationDate"], ["asc", "desc"]);
-        myAssignments.completed = orderBy(myAssignments.completed, ["creationDate"], ["desc"]);
-    }
+    const myAssignments = filterAssignmentsByStatus(assignments)
 
     const [activeTab, setActiveTab] = useState(0);
 
@@ -148,7 +113,10 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}:
                             const tabIndex = mapIndex;
                             const classes = activeTab === tabIndex ? "active" : "";
                             return <NavItem key={tabIndex} className="px-3">
-                                <NavLink className={classes} onClick={() => setActiveTab(tabIndex)}>
+                                <NavLink
+                                    className={classes} tabIndex={0} onClick={() => setActiveTab(tabIndex)}
+                                    onKeyDown={ifKeyIsEnter(() => setActiveTab(tabIndex))}
+                                >
                                     {tabTitle} ({tabItems.length || 0})
                                 </NavLink>
                             </NavItem>;

@@ -8,12 +8,13 @@ import {notificationCheckerMiddleware} from "../services/notificationManager";
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+export const middleware: Middleware[] = [
+    userConsistencyCheckerMiddleware,
+    notificationCheckerMiddleware,
+    thunk,
+];
+
 const storeFactory = (initialState: object) => {
-    const middleware: Middleware[] = [
-        userConsistencyCheckerMiddleware,
-        notificationCheckerMiddleware,
-        thunk
-    ];
     // @ts-ignore
     if (process.env.NODE_ENV !== 'production' && !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
         middleware.push(reduxLogger.createLogger());

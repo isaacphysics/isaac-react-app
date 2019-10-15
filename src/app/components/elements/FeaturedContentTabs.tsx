@@ -3,7 +3,7 @@ import {Tabs} from "./Tabs";
 import {Col, Row, Button} from "reactstrap";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
-import {AnonUserExamBoardPicker} from "./AnonUserExamBoardPicker";
+import {AnonUserExamBoardPicker} from "./inputs/AnonUserExamBoardPicker";
 
 export const FeaturedContentTabs = () => (
     <div className="tabs-featured-question">
@@ -74,7 +74,7 @@ export const FeaturedContentTabs = () => (
                                                 "children": [
 
                                                 ],
-                                                "value": "**Goal**\n\nSimplify the expression shown to one of the four options provided.\n\n**Information given**\n\n- A Boolean expression\n\n**Information assumed**\n\n- [Rules of Boolean algebra](concepts\/sys_bool_boolean_laws)\n- [How to simplify Boolean expressions](concepts\/sys_bool_simplifying_expressions)",
+                                                "value": "**Goal**\n\nSimplify the expression shown to one of the four options provided.\n\n**Information given**\n\n- A Boolean expression\n\n**Information assumed**\n\n- [Rules of Boolean algebra](concepts/sys_bool_boolean_laws)\n- [How to simplify Boolean expressions](concepts/sys_bool_simplifying_expressions)",
                                                 "published": false,
                                                 "tags": [
 
@@ -90,7 +90,7 @@ export const FeaturedContentTabs = () => (
                                         "type": "content",
                                         "children": [
                                             {
-                                                "id": "sys_bool_07|d69ed9d9-2d76-4019-8022-358490d0c75d|sys_bool_07|d69ed9d9-2d76-4019-8022-358490d0c75d|aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g\/dj10bjlnUUpkMGdmSQ==",
+                                                "id": "sys_bool_07|d69ed9d9-2d76-4019-8022-358490d0c75d|sys_bool_07|d69ed9d9-2d76-4019-8022-358490d0c75d|aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj10bjlnUUpkMGdmSQ==",
                                                 "type": "video",
                                                 "encoding": "markdown",
                                                 "children": [
@@ -98,7 +98,7 @@ export const FeaturedContentTabs = () => (
                                                 ],
                                                 "value": "_Add video caption here_",
                                                 "published": true,
-                                                "src": "https:\/\/www.youtube.com\/watch?v=tn9gQJd0gfI"
+                                                "src": "https://www.youtube.com/watch?v=tn9gQJd0gfI"
                                             }
                                         ],
                                         "published": false,

@@ -14,11 +14,15 @@ import {
     Action,
     ActiveModal,
     ActualBoardLimit,
+    AdditionalInformation,
     AppGroup,
     AppGroupMembership,
+    ATTENDANCE,
     BoardOrder,
+    EmailUserRoles,
     LoggedInUser,
     LoggedInValidationUser,
+    QuestionSearchQuery,
     Toast,
     UserPreferencesDTO,
     ValidatedChoice,
@@ -41,16 +45,34 @@ import {
     releaseConfirmationModal,
     revocationConfirmationModal,
     tokenVerificationModal
-} from "../components/elements/TeacherConnectionModalCreators";
+} from "../components/elements/modals/TeacherConnectionModalCreators";
 import * as persistence from "../services/localStorage";
 import {KEY} from "../services/localStorage";
-import {groupInvitationModal, groupManagersModal} from "../components/elements/GroupsModalCreators";
+import {groupInvitationModal, groupManagersModal} from "../components/elements/modals/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
 import {groups} from "./selectors";
 import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
 import {isTeacher} from "../services/user";
 import ReactGA from "react-ga";
+import {StatusFilter, TypeFilter} from "../components/pages/Events";
+import {augmentEvent} from "../services/events";
+import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
+import {atLeastOne} from "../services/validation";
+
+// Utility functions
+function isAxiosError(e: Error): e is AxiosError {
+    return 'isAxiosError' in e && (e as AxiosError).isAxiosError;
+}
+
+function extractMessage(e: Error) {
+    if (isAxiosError(e)) {
+        if (e.response) {
+            return e.response.data.errorMessage;
+        }
+    }
+    return API_REQUEST_FAILURE_MESSAGE;
+}
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -102,20 +124,7 @@ export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE
 
 export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
 
-function isAxiosError(e: Error): e is AxiosError {
-    return 'isAxiosError' in e && (e as AxiosError).isAxiosError;
-}
-
-function extractMessage(e: Error) {
-    if (isAxiosError(e)) {
-        if (e.response) {
-            return e.response.data.errorMessage;
-        }
-    }
-    return API_REQUEST_FAILURE_MESSAGE;
-}
-
-// User Authentication
+// User authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST});
     try {
@@ -188,7 +197,7 @@ export const updateCurrentUser = (
             const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
             persistence.remove(KEY.AFTER_AUTH_PATH);
             if ((afterAuthPath).includes('account')) {
-                history.push(afterAuthPath, {firstLogin: isFirstLogin})
+                history.push(afterAuthPath, {firstLogin: isFirstLogin});
             }
             history.push('/account', {firstLogin: isFirstLogin});
         }
@@ -204,13 +213,23 @@ export const updateCurrentUser = (
     }
 };
 
+export const getProgress = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_PROGRESS_REQUEST});
+    try {
+        const response = await api.users.getProgress();
+        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, progress: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE});
+    }
+};
+
 export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_OUT_REQUEST});
     try {
         await api.authentication.logout();
         dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Logout Failed", e));
+        dispatch(showErrorToastIfNeeded("Logout failed", e));
     }
 };
 
@@ -235,7 +254,7 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
         await api.users.passwordReset(params);
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Reset Password Failed", e));
+        dispatch(showErrorToastIfNeeded("Password reset failed", e));
     }
 };
 
@@ -255,7 +274,7 @@ export const handlePasswordReset = (params: {token: string | null; password: str
         await api.users.handlePasswordReset(params);
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
         history.push('/login');
-        dispatch(showToast({color: "success", title: "Password Reset Successfully", body: "Please log in with your new password.", timeout: 5000}) as any);
+        dispatch(showToast({color: "success", title: "Password reset successful", body: "Please log in with your new password.", timeout: 5000}) as any);
     } catch(e) {
         dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
     }
@@ -269,7 +288,7 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider) =>
         dispatch({type: ACTION_TYPE.AUTHENTICATION_REDIRECT, provider, redirectUrl: redirectUrl});
         window.location.href = redirectUrl;
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Login Redirect Failed", e));
+        dispatch(showErrorToastIfNeeded("Login redirect failed", e));
     }
     // TODO MT handle case when user is already logged in
 };
@@ -290,12 +309,13 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
                 action: 'registration',
                 label: `Create Account (${provider})`,
             });
-            history.push('/account')
+            history.push('/account');
         } else {
             history.push(nextPage);
         }
-    } catch (e) {
-        dispatch(showErrorToastIfNeeded("Login Failed", e));
+    } catch (error) {
+        history.push({pathname: "/auth_error", state: {errorMessage: isAxiosError(error) ? extractMessage(error) : API_REQUEST_FAILURE_MESSAGE}});
+        dispatch(showErrorToastIfNeeded("Login Failed", error));
     }
 };
 
@@ -341,11 +361,23 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
     }
 };
 
-// Contact Us
-export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
+// User error
+export const getUserIdSchoolLookup = (eventIds: number[]) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.USER_SCHOOL_LOOKUP_REQUEST});
+        const response = await api.users.getUserIdSchoolLookup(eventIds);
+        dispatch({type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_SUCCESS, schoolLookup: response.data});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load user school lookup details", error) as any);
+    }
+};
+
+// Contact us
+export const submitMessage = (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST});
     try {
-        await api.contactForm.send(extra, params);
+        await api.contactForm.send(params);
         dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS})
     } catch (e) {
         const errorMessage = extractMessage(e);
@@ -354,7 +386,7 @@ export const submitMessage = (extra: any, params: {firstName: string; lastName: 
     }
 };
 
-// Teacher Connections
+// Teacher connections
 export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST});
@@ -365,14 +397,14 @@ export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) 
         });
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Loading Authorised Teachers Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading authorised teachers failed", e));
     }
 };
 
 export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
     if (!userSubmittedAuthenticationToken) {
         dispatch(showToast({
-            color: "danger", title: "No Token Provided", body: "You have to enter a token!"}) as any);
+            color: "danger", title: "No group code provided", body: "You have to enter a group code!"}) as any);
         return;
     }
 
@@ -382,7 +414,7 @@ export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToke
         let authenticationToken = userSubmittedAuthenticationToken.split("?authToken=").pop() as string;
         authenticationToken = authenticationToken.toUpperCase().replace(/ /g,'');
 
-        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST})
+        dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST});
         const result = await api.authorisations.getTokenOwner(authenticationToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_SUCCESS});
         const usersToGrantAccess = result.data;
@@ -398,12 +430,12 @@ export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToke
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_FAILURE});
         if (e.status == 429) {
             dispatch(showToast({
-                color: "danger", title: "Too Many Attempts", timeout: 5000,
-                body: "You have entered too many tokens. Please check your code with your teacher and try again later!"
+                color: "danger", title: "Too many attempts", timeout: 5000,
+                body: "You have entered too many group codes. Please check your code with your teacher and try again later!"
             }) as any);
         } else {
             dispatch(showToast({
-                color: "danger", title: "Teacher Connection Failed", timeout: 5000,
+                color: "danger", title: "Teacher connection failed", timeout: 5000,
                 body: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
             }) as any);
         }
@@ -417,7 +449,7 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
         dispatch(getActiveAuthorisations() as any);
         dispatch(getMyGroupMemberships() as any);
         dispatch(showToast({
-            color: "success", title: "Granted Access", timeout: 5000,
+            color: "success", title: "Granted access", timeout: 5000,
             body: "You have granted access to your data."
         }) as any);
         const state = getState();
@@ -432,7 +464,7 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_FAILURE});
         dispatch(showToast({
-            color: "danger", title: "Teacher Connection Failed", timeout: 5000,
+            color: "danger", title: "Teacher connection failed", timeout: 5000,
             body: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
         }) as any);
     }
@@ -447,18 +479,18 @@ export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO
         await api.authorisations.revoke(userToRevoke.id as number);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_SUCCESS});
         dispatch(showToast({
-            color: "success", title: "Access Revoked", timeout: 5000,
+            color: "success", title: "Access revoked", timeout: 5000,
             body: "You have revoked access to your data."
-        }) as any)
+        }) as any);
         dispatch(getActiveAuthorisations() as any);
         dispatch(closeActiveModal() as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Revoke Operation Failed", e));
+        dispatch(showErrorToastIfNeeded("Revoke operation failed", e));
     }
 };
 
-// Student/Other Connections
+// Student/other Connections
 export const getStudentAuthorisations = () => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_REQUEST});
@@ -469,7 +501,7 @@ export const getStudentAuthorisations = () => async (dispatch: Dispatch<Action>)
         });
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Loading Authorised Students Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading authorised students failed", e));
     }
 };
 
@@ -484,12 +516,12 @@ export const releaseAuthorisation = (student: UserSummaryDTO) => async (dispatch
         dispatch(getStudentAuthorisations() as any);
         dispatch(closeActiveModal() as any);
         dispatch(showToast({
-            color: "success", title: "Access Removed", timeout: 5000,
+            color: "success", title: "Access removed", timeout: 5000,
             body: "You have ended your access to your student's data."
         }) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Revoke Operation Failed", e));
+        dispatch(showErrorToastIfNeeded("Revoke operation failed", e));
     }
 };
 
@@ -504,12 +536,12 @@ export const releaseAllAuthorisations = () => async (dispatch: Dispatch<Action>)
         dispatch(getStudentAuthorisations() as any);
         dispatch(closeActiveModal() as any);
         dispatch(showToast({
-            color: "success", title: "Access Removed", timeout: 5000,
+            color: "success", title: "Access removed", timeout: 5000,
             body: "You have ended your access to all of your students' data."
         }) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Revoke Operation Failed", e));
+        dispatch(showErrorToastIfNeeded("Revoke operation failed", e));
     }
 };
 
@@ -557,9 +589,9 @@ export const requestConstantsSegueEnvironment = () => async (dispatch: Dispatch<
     } catch (e) {
         dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE});
     }
-}
+};
 
-// Document & Topic Fetch
+// Document & topic fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
     let apiEndpoint;
@@ -597,6 +629,7 @@ export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) 
     }
 };
 
+// Glossary Terms
 export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const state = getState();
     if (state && state.glossaryTerms && state.glossaryTerms.length > 0) {
@@ -610,7 +643,6 @@ export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>, getSt
         dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE});
     }
 }
-
 
 // Questions
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
@@ -652,7 +684,7 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
         const softLimit = isAnonymous ? 3 : 10;
         if (lastAttempt.attempts >= softLimit && !response.data.correct) {
             dispatch(showToast({
-                color: "warning", title: "Approaching Attempts Limit", timeout: 10000,
+                color: "warning", title: "Approaching attempts limit", timeout: 10000,
                 body: "You have entered several guesses for this question; soon it will be temporarily locked."
             }) as any);
         }
@@ -662,8 +694,8 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
 
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock});
             dispatch(showToast({
-                color: "danger", title: "Too Many Attempts", timeout: 10000,
-                body: "You have entered too many attempts for this question. Please try again later!"
+                color: "danger", title: "Too many attempts", timeout: 10000,
+                body: "You have made too many attempts at this question. Please try again later!"
             }) as any);
             setTimeout( () => {
                 dispatch({type: ACTION_TYPE.QUESTION_UNLOCK, questionId});
@@ -671,8 +703,8 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
         } else {
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId});
             dispatch(showToast({
-                color: "danger", title: "Question Attempt Failed", timeout: 5000,
-                body: "Your submission could not be processed. Please try again."
+                color: "danger", title: "Question attempt failed", timeout: 5000,
+                body: "Your answer could not be checked. Please try again."
             }) as any);
         }
     }
@@ -680,6 +712,17 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
 
 export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|ValidatedChoice<ChoiceDTO>) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
+};
+
+export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_REQUEST});
+    try {
+        const questionsResponse = await api.questions.search(query);
+        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to search for questions", e));
+    }
 };
 
 // Current Gameboard
@@ -716,6 +759,28 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
     }
 };
 
+export const createGameboard = (gameboard: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST});
+    try {
+        const response = await api.gameboards.create(gameboard);
+        dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS, gameboardId: response.data.id});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Error creating gameboard", e));
+    }
+};
+
+export const getWildcards = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST});
+    try {
+        const response = await api.gameboards.getWildcards();
+        dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS, wildcards: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Error loading wildcards", e));
+    }
+};
+
 // Assignments
 export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_REQUEST});
@@ -724,13 +789,11 @@ export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     // Generic error handling covers errors here
 };
 
-
 export const loadAssignmentsOwnedByMe = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST});
     const assignmentsResponse = await api.assignments.getAssignmentsOwnedByMe();
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
 };
-
 
 export const loadProgress = (assignment: AssignmentDTO) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     // Don't request this again if it has already been fetched successfully
@@ -756,7 +819,7 @@ export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
         dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS, ...version.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Failed to get Content Version", e));
+        dispatch(showErrorToastIfNeeded("Failed to get content version", e));
     }
 };
 
@@ -780,7 +843,7 @@ export const fetchSearch = (query: string, types: string) => async (dispatch: Di
         const searchResponse = await api.search.get(query, types);
         dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Search Failed", e));
+        dispatch(showErrorToastIfNeeded("Search failed", e));
     }
 };
 
@@ -796,7 +859,7 @@ export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Ac
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("User Search Failed", e));
+        dispatch(showErrorToastIfNeeded("User search failed", e));
     }
 };
 
@@ -808,7 +871,7 @@ export const adminUserDelete = (userid: number | undefined) => async (dispatch: 
             await api.admin.userDelete.delete(userid);
             dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS});
             dispatch(showToast({
-                title: "User Deleted",
+                title: "User deleted",
                 body: "The selected user was successfully deleted.",
                 color: "success",
                 timeout: 5000,
@@ -817,7 +880,7 @@ export const adminUserDelete = (userid: number | undefined) => async (dispatch: 
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("User Deletion Failed", e));
+        dispatch(showErrorToastIfNeeded("User deletion failed", e));
     }
 };
 
@@ -828,7 +891,7 @@ export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (di
         dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS});
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("User Role Modification Failed", e));
+        dispatch(showErrorToastIfNeeded("User role modification failed", e));
     }
 };
 
@@ -843,15 +906,49 @@ export const getAdminSiteStats = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-// Groups
+export const getEmailTemplate = (contentid: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST});
+    try {
+        const email = await api.email.getTemplateEmail(contentid);
+        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS, email: email.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get email template", e));
+    }
+};
 
+export const sendAdminEmail = (contentid: string, emailType: string, roles: EmailUserRoles) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST});
+    try {
+        await api.email.sendAdminEmail(contentid, emailType, roles);
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_SUCCESS});
+        dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Sending email failed", e));
+    }
+};
+
+export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids: number[]) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST});
+    try {
+        await api.email.sendAdminEmailWithIds(contentid, emailType, ids);
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS});
+        dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Sending email with ids failed", e));
+    }
+};
+
+// Groups
 export const loadGroups = (archivedGroupsOnly: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_REQUEST});
     try {
         const groups = await api.groups.get(archivedGroupsOnly);
         dispatch({type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: groups.data, archivedGroupsOnly});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Loading Groups Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading groups failed", e));
     }
 };
 
@@ -866,7 +963,7 @@ export const createGroup = (groupName: string) => async (dispatch: Dispatch<Acti
         dispatch({type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS, newGroup: newGroup.data});
         return newGroup.data as AppGroup;
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Creating a Group Failed", e));
+        dispatch(showErrorToastIfNeeded("Group creation failed", e));
         throw e;
     }
 };
@@ -878,7 +975,7 @@ export const deleteGroup = (group: UserGroupDTO) => async (dispatch: Dispatch<an
         dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS, deletedGroup: group});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_FAILURE, deletedGroup: group});
-        dispatch(showErrorToastIfNeeded("Deleting a Group Failed", e));
+        dispatch(showErrorToastIfNeeded("Group deletion failed", e));
     }
 };
 
@@ -890,7 +987,7 @@ export const updateGroup = (updatedGroup: UserGroupDTO, message?: string) => asy
         dispatch(showToast({color: "success", title: "Group saved successfully", body: message, timeout: 3000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE, updatedGroup: updatedGroup});
-        dispatch(showErrorToastIfNeeded("Group Saving Failed", e));
+        dispatch(showErrorToastIfNeeded("Group saving failed", e));
     }
 };
 
@@ -901,7 +998,7 @@ export const getGroupMembers = (group: UserGroupDTO) => async (dispatch: Dispatc
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS, group: group, members: result.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_FAILURE, group: group});
-        dispatch(showErrorToastIfNeeded("Loading Group Members Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading group members failed", e));
     }
 };
 
@@ -912,7 +1009,7 @@ export const getGroupToken = (group: AppGroup) => async (dispatch: Dispatch<Acti
         dispatch({type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS, group: group, token: result.data.token});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_FAILURE, group: group});
-        dispatch(showErrorToastIfNeeded("Loading Group Token Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading group token failed", e));
     }
 };
 
@@ -951,7 +1048,7 @@ export const addGroupManager = (group: AppGroup, managerEmail: string) => async 
         return true;
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_FAILURE, group, managerEmail});
-        dispatch(showErrorToastIfNeeded("Group Manager Addition Failed", e));
+        dispatch(showErrorToastIfNeeded("Group manager addition failed", e));
         return false;
     }
 };
@@ -963,7 +1060,7 @@ export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmai
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS, group, manager});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE, group, manager});
-        dispatch(showErrorToastIfNeeded("Group Manager Removal Failed", e));
+        dispatch(showErrorToastIfNeeded("Group manager removal failed", e));
     }
 };
 
@@ -989,7 +1086,7 @@ export const getMyGroupMemberships = () => async (dispatch: Dispatch<Action>) =>
         });
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Loading Group Memberships Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading group memberships failed", e));
     }
 };
 
@@ -1004,12 +1101,11 @@ export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_
         }) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Membership Status Update Failed", e));
+        dispatch(showErrorToastIfNeeded("Membership status update failed", e));
     }
 };
 
-// boards
-
+// Gameboards
 export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => async (dispatch: Dispatch<Action>) => {
     const accumulate = startIndex != 0;
     dispatch({type: ACTION_TYPE.BOARDS_REQUEST, accumulate});
@@ -1017,7 +1113,7 @@ export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: Bo
         const boards = await api.boards.get(startIndex, limit, sort);
         dispatch({type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: boards.data, accumulate});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Loading Gameboards Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading gameboards failed", e));
     }
 };
 
@@ -1028,7 +1124,7 @@ export const loadGroupsForBoard = (board: GameboardDTO) => async (dispatch: Disp
         dispatch({type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS, board, groups: result.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE, board});
-        dispatch(showErrorToastIfNeeded("Loading Groups for Gameboard Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading groups for gameboard failed", e));
     }
 };
 
@@ -1037,10 +1133,10 @@ export const deleteBoard = (board: GameboardDTO) => async (dispatch: Dispatch<Ac
     try {
         await api.boards.delete(board);
         dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, board});
-        dispatch(showToast({color: "success", title: "Gameboard Deleted", body: "You have deleted gameboard " + board.title, timeout: 5000}) as any);
+        dispatch(showToast({color: "success", title: "Gameboard deleted", body: "You have deleted gameboard " + board.title, timeout: 5000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE, board});
-        dispatch(showErrorToastIfNeeded("Delete Gameboard Failed", e));
+        dispatch(showErrorToastIfNeeded("Gameboard deletion failed", e));
     }
 };
 
@@ -1049,16 +1145,16 @@ export const unassignBoard = (board: GameboardDTO, group: UserGroupDTO) => async
     try {
         await api.boards.unassign(board, group);
         dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, board, group});
-        dispatch(showToast({color: "success", title: "Assignment Deleted", body: "This assignment has been unset successfully.", timeout: 5000}) as any);
+        dispatch(showToast({color: "success", title: "Assignment deleted", body: "This assignment has been unset successfully.", timeout: 5000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE, board, group});
-        dispatch(showErrorToastIfNeeded("Board Unassignment Failed", e));
+        dispatch(showErrorToastIfNeeded("Assignment deletion failed", e));
     }
 };
 
 export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Date) => async (dispatch: Dispatch<Action>) => {
     if (groupId == null) {
-        dispatch(showToast({color: "danger", title: "Board Assignment Failed", body: "Error: Please choose a group.", timeout: 5000}) as any);
+        dispatch(showToast({color: "danger", title: "Board assignment failed", body: "Error: Please choose a group.", timeout: 5000}) as any);
         return false;
     }
 
@@ -1068,7 +1164,7 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
         let today = new Date();
         today.setUTCHours(0, 0, 0, 0);
         if ((dueDateUTC - today.valueOf()) < 0) {
-            dispatch(showToast({color: "danger", title: "Board Assignment Failed", body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
+            dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
             return false;
         }
     }
@@ -1079,11 +1175,11 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
     try {
         await api.boards.assign(board, groupId, dueDateUTC);
         dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, ...assignment});
-        dispatch(showToast({color: "success", title: "Assignment Saved", body: "This assignment has been saved successfully.", timeout: 5000}) as any);
+        dispatch(showToast({color: "success", title: "Assignment saved", body: "This assignment has been saved successfully.", timeout: 5000}) as any);
         return true;
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, ...assignment});
-        dispatch(showErrorToastIfNeeded("Gameboard Assignment Failed", e));
+        dispatch(showErrorToastIfNeeded("Gameboard assignment failed", e));
         return false;
     }
 };
@@ -1107,7 +1203,228 @@ export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>,
     });
 };
 
-// Content Errors
+// Events
+export const clearEventsList = {type: ACTION_TYPE.EVENTS_CLEAR};
+
+export const getEvent = (eventId: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_REQUEST});
+        const augmentedEvent = augmentEvent((await api.events.get(eventId)).data);
+        dispatch({type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS, augmentedEvent});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.EVENT_RESPONSE_FAILURE});
+    }
+};
+
+export const getEventsList = (startIndex: number, eventsPerPage: number, typeFilter: TypeFilter, statusFilter: StatusFilter) => async (dispatch: Dispatch<Action>) => {
+    const filterTags = typeFilter !== TypeFilter["All events"] ? typeFilter : null;
+    const showActiveOnly = statusFilter === StatusFilter["Upcoming events"];
+    const showBookedOnly = statusFilter === StatusFilter["My booked events"];
+    const showInactiveOnly = false;
+    try {
+        dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
+        const response = await api.events.getEvents(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly);
+        const augmentedEvents = response.data.results.map(event => augmentEvent(event));
+        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: response.data.totalResults});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Events request failed", e));
+    }
+};
+
+export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch(clearEventsList as any);
+        dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
+        const getActive = true;
+        const eventsResponse = await api.events.getFirstN(numberOfEvents, getActive);
+        if (eventsResponse.data.totalResults < numberOfEvents) {
+            const numberOfRemainingEvents = numberOfEvents - eventsResponse.data.totalResults;
+            const inactiveEventsResponse = await api.events.getFirstN(numberOfRemainingEvents, !getActive);
+            eventsResponse.data.results.push(...inactiveEventsResponse.data.results);
+        }
+        const augmentedEvents = eventsResponse.data.results.map(event => augmentEvent(event));
+        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: augmentedEvents.length});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Unable to display events", e));
+    }
+};
+
+export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST});
+        const response = await api.events.getEventOverviews(eventOverviewFilter);
+        // We ignore response.data.total because we do not currently page the results of event overviews
+        dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS, eventOverviews: response.data.results});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load event overviews", error) as any);
+    }
+};
+
+export const getEventBookings = (eventId: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST});
+        const response = await api.eventBookings.getEventBookings(eventId);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS, eventBookings: response.data});
+        const userIds = response.data.map(booking => booking.userBooked && booking.userBooked.id) as number[];
+        if (atLeastOne(userIds.length)) {
+            dispatch(getUserIdSchoolLookup(userIds) as any);
+        }
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
+    }
+};
+
+export const bookMyselfOnEvent = (eventId: string, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_REQUEST});
+        await api.eventBookings.bookMyselfOnEvent(eventId, additionalInformation);
+        await dispatch(getEvent(eventId) as any);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            title: "Event booking confirmed", body: "You have been successfully booked onto this event.",
+            color: "success", timeout: 5000, closable: false,
+        }) as any);
+        dispatch(getEvent(eventId) as any);
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
+    }
+};
+
+export const addMyselfToWaitingList = (eventId: string, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_REQUEST});
+        await api.eventBookings.addMyselfToWaitingList(eventId, additionalInformation);
+        await dispatch(getEvent(eventId) as any);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            title: "Waiting list booking confirmed", body: "You have been successfully added to the waiting list for this event.",
+            color: "success", timeout: 5000, closable: false,
+        }) as any);
+        dispatch(getEvent(eventId) as any);
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
+    }
+};
+
+export const cancelMyBooking = (eventId: string) => async (dispatch: Dispatch<Action>) => {
+    let cancel = window.confirm('Are you sure you want to cancel your booking on this event. You may not be able to re-book, especially if there is a waiting list.');
+    if (cancel) {
+        try {
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_REQUEST});
+            await api.eventBookings.cancelMyBooking(eventId);
+            await dispatch(getEvent(eventId) as any);
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_RESPONSE_SUCCESS});
+            dispatch(showToast({
+                title: "Your booking has been cancelled", body: "Your booking has successfully been cancelled.",
+                color: "success", timeout: 5000, closable: false,
+            }) as any);
+            dispatch(getEvent(eventId) as any);
+        } catch (error) {
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_RESPONSE_FAILURE});
+            dispatch(showErrorToastIfNeeded("Event booking cancellation failed", error) as any);
+        }
+    }
+};
+
+export const bookUserOnEvent = (eventBookingId: string, userId: number, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_REQUEST});
+        await api.eventBookings.bookUserOnEvent(eventBookingId, userId, additionalInformation);
+        dispatch(getEventBookings(eventBookingId) as any);
+        dispatch(closeActiveModal() as any);
+        dispatch(showToast({
+            title: "Booking successful", body: `A booking has been created.`,
+            color: "success", timeout: 5000, closable: false,
+        }) as any);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_SUCCESS});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
+    }
+};
+
+export const resendUserConfirmationEmail = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
+    const resendEmail = window.confirm('Are you sure you want to resend the confirmation email for this booking?');
+    if (resendEmail && userId) {
+        try {
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESEND_EMAIL_REQUEST});
+            await api.eventBookings.resendUserConfirmationEmail(eventBookingId, userId);
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESEND_EMAIL_RESPONSE_SUCCESS});
+            dispatch(showToast({
+                color: "success", closable: false, timeout: 5000,
+                title: "Event email sent", body: `Email sent to ${userId}`
+            }) as any);
+        } catch (error) {
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESEND_EMAIL_RESPONSE_FAILURE});
+            dispatch(showErrorToastIfNeeded("Failed to resend email for event booking", error) as any);
+        }
+    }
+};
+
+export const promoteUserFromWaitingList = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
+    const promote = window.confirm('Are you sure you want to convert this to a confirmed booking?');
+    if (promote && userId) {
+        try {
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_REQUEST});
+            await api.eventBookings.promoteUserFromWaitingList(eventBookingId, userId);
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_RESPONSE_SUCCESS});
+            dispatch(getEventBookings(eventBookingId) as any);
+        } catch (error) {
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_RESPONSE_FAILURE});
+            dispatch(showErrorToastIfNeeded("Failed to promote event booking", error) as any);
+        }
+    }
+};
+
+export const cancelUserBooking = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
+    const cancelBooking = window.confirm('Are you sure you want to cancel this booking?');
+    if (cancelBooking && userId) {
+        try {
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_CANCELLATION_REQUEST});
+            await api.eventBookings.cancelUserBooking(eventBookingId, userId);
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_CANCELLATION_RESPONSE_SUCCESS});
+            dispatch(getEventBookings(eventBookingId) as any);
+        } catch (error) {
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_CANCELLATION_RESPONSE_FAILURE});
+            dispatch(showErrorToastIfNeeded("Failed to cancel event booking", error) as any);
+        }
+    }
+};
+
+export const deleteUserBooking = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
+    const deleteBooking = window.confirm('Are you sure you want to delete this booking permanently?');
+    if (deleteBooking && userId) {
+        try {
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_DELETION_REQUEST});
+            await api.eventBookings.deleteUserBooking(eventBookingId, userId);
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_DELETION_RESPONSE_SUCCESS});
+            dispatch(getEventBookings(eventBookingId) as any);
+        } catch (error) {
+            dispatch({type: ACTION_TYPE.EVENT_BOOKING_DELETION_RESPONSE_FAILURE});
+            dispatch(showErrorToastIfNeeded("Failed to un-book user from event", error) as any);
+        }
+    }
+};
+
+export const recordEventAttendance = (eventId: string, userId: number, attendance: ATTENDANCE) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_REQUEST});
+        await api.eventBookings.recordEventAttendance(eventId, userId, attendance);
+        dispatch({type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS});
+        dispatch(getEventBookings(eventId) as any);
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to record event attendance", error) as any);
+    }
+};
+
+// Content errors
 export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST});
     try {

@@ -13,46 +13,45 @@
     max-height: 180px;
   }
 
-  .form-group.school {
-    position: relative;
-
-    #school-input {
-      position: relative;
-    }
-
-    #school-search-results {
-      position: absolute;
-      z-index: 1;
-      margin-top: -0.7rem;
-      padding: 0;
-      width: 100%;
-      border: 1px solid black;
-      border-top: 1px solid $gray-103;
-      border-bottom-left-radius: $border-radius;
-      border-bottom-right-radius: $border-radius;
-
-      @include respond-above(sm) {
-        background-color: $white;
-        box-shadow: 0 20px 30px 0 $shadow-08;
-        top: 5rem;
-      }
-
-      li {
-        list-style-type: none;
-        padding: 0.5em 1em;
-        margin: 0;
-        background: white;
-        cursor: default;
-
-        &:hover {
-          background: theme-color("primary");
-        }
-      }
-    }
-  }
-
   legend {
     font-size: 1rem;
+  }
+}
+
+.form-group.school {
+  position: relative;
+
+  .school-input {
+    position: relative;
+  }
+
+  .school-search-results {
+    position: absolute;
+    z-index: 1;
+    margin-top: -0.7rem;
+    padding: 0;
+    width: 100%;
+    border: 1px solid black;
+    border-top: 1px solid $gray-103;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+
+    @include respond-above(sm) {
+      background-color: $white;
+      box-shadow: 0 20px 30px 0 $shadow-08;
+      top: 5rem;
+    }
+
+    li {
+      list-style-type: none;
+      padding: 0.5em 1em;
+      margin: 0;
+      background: white;
+      cursor: default;
+      &:hover {
+        background: $primary;
+      }
+    }
   }
 }
 

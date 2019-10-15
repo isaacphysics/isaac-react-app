@@ -6,14 +6,15 @@ import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {ContentSummaryDTO, IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
-import {LinkToContentSummaryList} from "../elements/ContentSummaryListGroupItem";
+import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {filterAndSeparateRelatedContent} from "../../services/topics";
 import {Button, Col, Container, Row} from "reactstrap";
 import {ALL_TOPICS_CRUMB, NOT_FOUND, TAG_ID} from "../../services/constants";
 import {NOT_FOUND_TYPE, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom} from "../../services/examBoard";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AnonUserExamBoardPicker} from "../elements/AnonUserExamBoardPicker";
+import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
+import {atLeastOne} from "../../services/validation";
 
 const stateToProps = (state: AppState, {match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => ({
     topicName: topicName,
@@ -38,12 +39,12 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
 
     let [relatedConcepts, relatedQuestions]: [ContentSummaryDTO[] | null, ContentSummaryDTO[] | null] = [null, null];
     if (topicPage && topicPage != NOT_FOUND && topicPage.relatedContent) {
-        [relatedConcepts, relatedQuestions] = topicPage && topicPage.relatedContent &&
+        [relatedConcepts, relatedQuestions] = topicPage.relatedContent &&
             filterAndSeparateRelatedContent(topicPage.relatedContent, examBoard);
     }
     const searchQuery = `?topic=${topicName}`;
 
-    return <ShowLoading until={topicPage} render={topicPage =>
+    return <ShowLoading until={topicPage} thenRender={topicPage =>
         <Container id="topic-page">
             <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
             <Row className="pb-5">
@@ -53,24 +54,24 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                     }
                     <AnonUserExamBoardPicker className="text-right" />
 
-                    {relatedConcepts &&
+                    {relatedConcepts && atLeastOne(relatedConcepts.length) &&
                         <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />
                     }
-                    {relatedQuestions &&
+                    {relatedQuestions && atLeastOne(relatedQuestions.length) &&
                         <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
                     }
 
                     <Row>
                         <Col size={6} className="text-center">
                             <Button tag={Link} to="/topics" color="primary" outline size="lg" className="my-4" block>
-                                <span className="d-none d-md-inline">Back to</span> {" "} All Topics
+                                <span className="d-none d-md-inline">Back to</span> {" "} All topics
                             </Button>
                         </Col>
-                        <Col size={6} className="text-center">
+                        {topicName != TAG_ID.softwareProject && <Col size={6} className="text-center">
                             <Button tag={Link} to={`/gameboards#${topicName}_july19_${examBoard.toLowerCase()}`} color="secondary" size="lg" className="my-4" block>
-                                Topic Gameboard
+                                Topic gameboard
                             </Button>
-                        </Col>
+                        </Col>}
                     </Row>
                 </Col>
             </Row>

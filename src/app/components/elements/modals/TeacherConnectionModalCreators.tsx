@@ -1,15 +1,15 @@
 import React from "react";
-import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
+import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {
     authenticateWithToken,
     closeActiveModal,
     releaseAllAuthorisations,
     releaseAuthorisation,
     revokeAuthorisation
-} from "../../state/actions";
-import {store} from "../../state/store";
+} from "../../../state/actions";
+import {store} from "../../../state/store";
 import * as RS from "reactstrap";
-import {extractTeacherName} from "../../services/user";
+import {extractTeacherName} from "../../../services/user";
 
 export const tokenVerificationModal = (authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
     return {

@@ -25,11 +25,7 @@ const checkUserConsistency = (middleware: MiddlewareAPI) => {
     const state = middleware.getState();
     const appUserId = state && state.user && state.user._id;
     if (storedUserId != appUserId) {
-        const eventDetails = {
-            type: "USER_CONSISTENCY_WARNING_SHOWN",
-            userAgent: navigator.userAgent,
-        };
-        middleware.dispatch(logAction(eventDetails));
+        middleware.dispatch(logAction({type: "USER_CONSISTENCY_WARNING_SHOWN", userAgent: navigator.userAgent}));
         // Mark error after this check has finished, else the error will be snuffed by the error reducer.
         setImmediate(() => middleware.dispatch({type: ACTION_TYPE.USER_CONSISTENCY_ERROR}));
     } else {
