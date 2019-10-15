@@ -1,20 +1,14 @@
 import React from "react";
 import * as RS from "reactstrap";
-import {connect} from "react-redux";
-import {AppState} from "../../../state/reducers";
 import * as AppTypes from "../../../../IsaacAppTypes";
-
-const stateToProps = (state: AppState) => ({
-    activeModal: state && state.activeModal
-});
 
 interface ActiveModalProps {
     activeModal?: AppTypes.ActiveModal | null;
 }
 
-const ActiveModalComponent = ({activeModal}: ActiveModalProps) => {
+export const ActiveModal = ({activeModal}: ActiveModalProps) => {
     const ModalBody = activeModal && activeModal.body;
-    return <RS.Modal isOpen={!!activeModal} size={"lg"}>
+    return <RS.Modal isOpen={!!activeModal} size={(activeModal && activeModal.size) || "lg"}>
         {activeModal && <React.Fragment>
             <RS.ModalHeader
                 className="h-title pb-5 mb-4"
@@ -36,5 +30,3 @@ const ActiveModalComponent = ({activeModal}: ActiveModalProps) => {
         </React.Fragment>}
     </RS.Modal>
 };
-
-export const ActiveModal = connect(stateToProps)(ActiveModalComponent);

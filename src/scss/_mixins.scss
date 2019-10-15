@@ -98,17 +98,22 @@ $breakpoints: (
 @mixin placeholder($colour: pink) {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   &::placeholder {
-    color: $colour;
+    color: $colour !important;
     /* Firefox */
+    opacity: 1;
+  }
+  /* Some older WebKit based browsers */
+  &::-webkit-input-placeholder {
+    color: $colour !important;
     opacity: 1;
   }
   /* Internet Explorer 10-11 */
   &:-ms-input-placeholder {
-    color: $colour;
+    color: $colour !important;
   }
   /* Microsoft Edge */
   &::-ms-input-placeholder {
-    color: $colour;
+    color: $colour !important;
   }
 }
 // Size / viewports

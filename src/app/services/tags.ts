@@ -21,34 +21,33 @@ const baseTags: BaseTag[] = [
 
     // Theory sub-categories
     {id: TAG_ID.gcseToALevel, title: "GCSE to A level transition", parent: TAG_ID.theory},
+    {id: TAG_ID.dataAndInformation, title: "Data and information", parent: TAG_ID.theory},
     {id: TAG_ID.dataStructuresAndAlgorithms, title: "Data structures and algorithms", parent: TAG_ID.theory},
     {id: TAG_ID.computerNetworks, title: "Computer networks", parent: TAG_ID.theory},
     {id: TAG_ID.computerSystems, title: "Computer systems", parent: TAG_ID.theory},
-    {id: TAG_ID.dataAndInformation, title: "Data and information", parent: TAG_ID.theory},
     // Programming sub-categories
-    {id: TAG_ID.functionalProgramming, title: "Functional programming", parent: TAG_ID.programming},
+    {id: TAG_ID.programmingFundamentals, title: "Programming fundamentals", parent: TAG_ID.programming},
     {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programming},
-    {id: TAG_ID.proceduralProgramming, title: "Procedural programming", parent: TAG_ID.programming},
+    {id: TAG_ID.functionalProgramming, title: "Functional programming", parent: TAG_ID.programming},
     {id: TAG_ID.computingPracticalProject, title: "Computing practical project", parent: TAG_ID.programming},
 
     // GCSE to A level transition topics
-    {id: TAG_ID.gcseBooleanLogic, title: "Boolean logic", parent: TAG_ID.gcseToALevel},
     {id: TAG_ID.gcseProgrammingConcepts, title: "Programming concepts", parent: TAG_ID.gcseToALevel},
-    {id: TAG_ID.gcseNetworking, title: "Networking", parent: TAG_ID.gcseToALevel, comingSoon: 'Jan 2020'},
     {id: TAG_ID.gcseDataRepresentation, title: "Data representation", parent: TAG_ID.gcseToALevel},
+    {id: TAG_ID.gcseBooleanLogic, title: "Boolean logic", parent: TAG_ID.gcseToALevel},
     {id: TAG_ID.gcseSystems, title: "Systems", parent: TAG_ID.gcseToALevel},
+    {id: TAG_ID.gcseNetworking, title: "Networking", parent: TAG_ID.gcseToALevel, comingSoon: 'Jan 2020'},
     // Data structures and algorithms topics
+    {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
     {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms},
     {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.modelsOfComputation, title: "Models of computation", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.planningAndDebugging, title: "Planning and debugging", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
+    {id: TAG_ID.theoryOfComputation, title: "Theory of computation", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Jan 2020'},
     // Computer networks topics
-    {id: TAG_ID.security, title: "Security", parent: TAG_ID.computerNetworks, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.networkStructure, title: "Network structure", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.networking, title: "Networking", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
     {id: TAG_ID.networkHardware, title: "Network hardware", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.communication, title: "Communication", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
     {id: TAG_ID.internet, title: "Internet", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.security, title: "Security", parent: TAG_ID.computerNetworks, comingSoon: 'Apr 2020'},
+    {id: TAG_ID.communication, title: "Communication (AQA)", parent: TAG_ID.computerNetworks, comingSoon: 'Apr 2020'},
     // Computer systems topics
     {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems},
     {id: TAG_ID.architecture, title: "Architecture", parent: TAG_ID.computerSystems, comingSoon: 'Apr 2020'},
@@ -57,32 +56,32 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems, new: true},
     {id: TAG_ID.programmingLanguages, title: "Programming languages", parent: TAG_ID.computerSystems, new: true},
     // Data and information topics
-    {id: TAG_ID.numberSystems, title: "Number systems", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.numberSystems, title: "Number systems (AQA)", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
     {id: TAG_ID.numberBases, title: "Number bases", parent: TAG_ID.dataAndInformation},
     {id: TAG_ID.representation, title: "Representation", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.transmission, title: "Transmission", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.databases, title: "Databases", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
     {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
     {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation, new: true},
+    {id: TAG_ID.databases, title: "Databases", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
+    {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
 
     // Functional programming topics
     {id: TAG_ID.functions, title: "Functions", parent: TAG_ID.functionalProgramming, comingSoon: 'Jan 2020'},
     {id: TAG_ID.lists, title: "Lists", parent: TAG_ID.functionalProgramming, comingSoon: 'Jan 2020'},
     {id: TAG_ID.higherOrderFunctions, title: "Higher order functions", parent: TAG_ID.functionalProgramming, comingSoon: 'Jan 2020'},
     // Object-oriented programming topics
-    {id: TAG_ID.creatingObjects, title: "Creating objects", parent: TAG_ID.objectOrientedProgramming, comingSoon: 'Jan 2020'},
     {id: TAG_ID.oopConcepts, title: "OOP concepts", parent: TAG_ID.objectOrientedProgramming, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.creatingObjects, title: "Creating objects", parent: TAG_ID.objectOrientedProgramming, comingSoon: 'Jan 2020'},
     {id: TAG_ID.classDiagrams, title: "Class diagrams", parent: TAG_ID.objectOrientedProgramming, comingSoon: 'Jan 2020'},
     // Procedural programming topics
-    {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.proceduralProgramming},
-    {id: TAG_ID.subroutines, title: "Subroutines", parent: TAG_ID.proceduralProgramming},
-    {id: TAG_ID.files, title: "Files", parent: TAG_ID.proceduralProgramming},
-    {id: TAG_ID.structureAndRobustness, title: "Structure & robustness", parent: TAG_ID.proceduralProgramming, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.proceduralProgramming, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.stringManipulation, title: "String manipulation", parent: TAG_ID.proceduralProgramming},
-    {id: TAG_ID.guis, title: "GUIs", parent: TAG_ID.proceduralProgramming, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.proceduralProgramming, comingSoon: 'Apr 2020'},
+    {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.programmingFundamentals},
+    {id: TAG_ID.stringManipulation, title: "String manipulation", parent: TAG_ID.programmingFundamentals},
+    {id: TAG_ID.subroutines, title: "Subroutines", parent: TAG_ID.programmingFundamentals},
+    {id: TAG_ID.files, title: "Files", parent: TAG_ID.programmingFundamentals},
+    {id: TAG_ID.structureAndRobustness, title: "Structure & robustness", parent: TAG_ID.programmingFundamentals, comingSoon: 'Apr 2020'},
+    {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.programmingFundamentals, comingSoon: 'Apr 2020'},
+    {id: TAG_ID.guis, title: "GUIs (OCR)", parent: TAG_ID.programmingFundamentals, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.planningAndDebugging, title: "Planning and debugging", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Apr 2020'},
+    {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.programmingFundamentals, comingSoon: 'Apr 2020'},
     // Software project topics
     {id: TAG_ID.softwareProject, title: "Software project", parent: TAG_ID.computingPracticalProject, new: true},
 ];
@@ -110,7 +109,7 @@ const getById = (id: TAG_ID) => {
     return allTags.filter((tag) => tag.id === id)[0];
 };
 
-const getSpecifiedTag = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
+export const getSpecifiedTag = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
     // Return the first (as ordered in TAG_ID) TAG_ID an object has of a given type!
     if (tagArray != null) {
         for (let i in tagArray) {
@@ -123,7 +122,7 @@ const getSpecifiedTag = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
     return null;
 };
 
-const getAllSpecifiedTags = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
+const getSpecifiedTags = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
     // Return all TAG_ID an object has of a given type!
     if (tagArray == null) return [];
     let tags = [];
@@ -146,7 +145,7 @@ const getAllSpecifiedTags = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
 //         return this.getById(globalSubjectTagId);
 //     }
 //
-//     var subjectTags = this.getAllSpecifiedTags("subject", tagArray);
+//     var subjectTags = this.getSpecifiedTags("subject", tagArray);
 //     for (var i in subjectTags) {
 //         if (subjectTags[i].id == globalSubjectTagId) {
 //             return subjectTags[i];
@@ -156,14 +155,14 @@ const getAllSpecifiedTags = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
 // };
 
 export const getCategoryTag = getSpecifiedTag.bind(null, TAG_LEVEL.category);
-export const getAllCategoryTags = getAllSpecifiedTags.bind(null, TAG_LEVEL.category);
-export const allCategoryTags = getAllCategoryTags(allTagIds);
+export const getCategoryTags = getSpecifiedTags.bind(null, TAG_LEVEL.category);
+export const allCategoryTags = getCategoryTags(allTagIds);
 
 export const getSubcategoryTag = getSpecifiedTag.bind(null, TAG_LEVEL.subcategory);
-export const getAllSubcategoryTags = getAllSpecifiedTags.bind(null, TAG_LEVEL.subcategory);
+export const getSubcategoryTags = getSpecifiedTags.bind(null, TAG_LEVEL.subcategory);
 
 export const getTopicTag = getSpecifiedTag.bind(null, TAG_LEVEL.topic);
-export const getAllTopicTags = getAllSpecifiedTags.bind(null, TAG_LEVEL.topic);
+export const getTopicTags = getSpecifiedTags.bind(null, TAG_LEVEL.topic);
 
 const getDeepestTag = function(tagArray: TAG_ID[]) {
     if (tagArray == null) return null;
