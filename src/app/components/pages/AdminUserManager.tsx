@@ -10,6 +10,7 @@ import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
 import {Link} from "react-router-dom";
+import {history} from "../../services/history";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -101,6 +102,10 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
         event.preventDefault();
         setSearchRequested(true);
         adminUserSearch(searchQuery);
+    };
+
+    const editUser = (userid: number | undefined) => {
+        history.push(`/account?userId=${userid}`);
     };
 
     const deleteUser = async (userid: number | undefined) => {
@@ -273,7 +278,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                                 </td>
                                                 <td>
                                                     {/*View*/}
-                                                    {/*Edit*/}
+                                                    <RS.Input type="button" value="Edit" onClick={() => editUser(user.id)} className="btn btn-sm btn-secondary border-0 p-0"/>
                                                     <RS.Input type="button" value="Delete" onClick={() => deleteUser(user.id)} className="btn btn-sm btn-secondary border-0 p-0"/>
                                                 </td>
                                                 <td>{user.familyName}, {user.givenName}</td>

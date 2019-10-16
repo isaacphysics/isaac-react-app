@@ -112,6 +112,18 @@ export const adminUserSearch = (adminUserSearch: AdminUserSearchState = null, ac
     }
 };
 
+export type AdminUserGetState = UserSummaryForAdminUsersDTO | null;
+export const adminUserGet = (adminUserGet: AdminUserGetState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.ADMIN_USER_GET_REQUEST:
+            return null;
+        case ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS:
+            return action.getUsers;
+        default:
+            return adminUserSearch;
+    }
+};
+
 export type AdminContentErrorsState = ContentErrorsResponse | null;
 export const adminContentErrors = (adminContentErrors: AdminContentErrorsState = null, action: Action) => {
     switch (action.type) {
@@ -739,6 +751,7 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
 };
 
 const appReducer = combineReducers({
+    adminUserGet,
     user,
     userAuthSettings,
     userPreferences,
@@ -776,6 +789,7 @@ const appReducer = combineReducers({
 });
 
 export type AppState = undefined | {
+    adminUserGet: AdminUserGetState;
     user: UserState;
     userAuthSettings: UserAuthSettingsState;
     userPreferences: UserPreferencesState;
@@ -793,7 +807,7 @@ export type AppState = undefined | {
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
     wildcards: WildcardsState;
-    gameboardEditorQuestions: GameboardEditorQuestionsState,
+    gameboardEditorQuestions: GameboardEditorQuestionsState;
     assignments: AssignmentsState;
     contentVersion: ContentVersionState;
     search: SearchState;

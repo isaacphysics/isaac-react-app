@@ -1,7 +1,7 @@
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {SubjectInterests, UserExamPreferences, ValidationUser} from "../../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../../services/constants";
-import React, {ChangeEvent} from "react";
+import React, {ChangeEvent, useEffect} from "react";
 import {
     validateEmail,
     validateSubjectInterests,
@@ -12,6 +12,7 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
+import {user} from "../../../state/reducers";
 
 interface UserDetailsProps {
     examPreferences: UserExamPreferences;
@@ -36,6 +37,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         validateUserGender(userToUpdate) &&
         validateUserSchool(userToUpdate) &&
         validateSubjectInterests(subjectInterests);
+
+    console.log(userToUpdate);
 
     return <CardBody className="pt-0">
         <Row>

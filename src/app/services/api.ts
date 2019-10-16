@@ -131,6 +131,11 @@ export const api = {
                 return endpoint.get(`/admin/users/`, {params: queryParams});
             }
         },
+        userGet: {
+            get: (userid: number | undefined): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO> => {
+                return endpoint.get(`/admin/users/${userid}`);
+            }
+        },
         userDelete: {
             delete: (userid: number | undefined): AxiosPromise => {
                 return endpoint.delete(`/admin/users/${userid}`);

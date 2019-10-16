@@ -172,16 +172,22 @@ export const updateCurrentUser = (
     currentUser: LoggedInUser
 ) => async (dispatch: Dispatch<Action>) => {
     // Confirm email change
-    if (currentUser.loggedIn && updatedUser.loggedIn && currentUser.email !== updatedUser.email) {
-        const emailChangeConfirmed = window.confirm(
-            "You have edited your email address. Your current address will continue to work until you verify your " +
-            "new address by following the verification link sent to it via email. Continue?"
-        );
-        if (!emailChangeConfirmed) {
-            dispatch(showToast({
-                title: "Account settings not updated", body: "Your account settings update was cancelled.", color: "danger", timeout: 5000, closable: false,
-            }) as any);
-            return; //early
+    if (currentUser.loggedIn && updatedUser.loggedIn && currentUser.id == updatedUser.id) {
+        if (currentUser.loggedIn && updatedUser.loggedIn && currentUser.email !== updatedUser.email) {
+            const emailChangeConfirmed = window.confirm(
+                "You have edited your email address. Your current address will continue to work until you verify your " +
+                "new address by following the verification link sent to it via email. Continue?"
+            );
+            if (!emailChangeConfirmed) {
+                dispatch(showToast({
+                    title: "Account settings not updated",
+                    body: "Your account settings update was cancelled.",
+                    color: "danger",
+                    timeout: 5000,
+                    closable: false,
+                }) as any);
+                return; //early
+            }
         }
     }
 
@@ -844,6 +850,17 @@ export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Ac
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("User Search Failed", e));
+    }
+};
+
+export const adminUserGet = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_USER_GET_REQUEST});
+    try {
+        const searchResponse = await api.admin.userGet.get(userid);
+        dispatch({type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS, getUsers: searchResponse.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("User Get Failed", e));
     }
 };
 
