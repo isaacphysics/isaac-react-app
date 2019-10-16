@@ -7,8 +7,7 @@ install:
 cache: npm
 script:
 - npm run build
-- npm test-phy
-- npm test-cs -- --coverage
+- npm test -- --coverage
 - codecov
 notifications:
   slack:
