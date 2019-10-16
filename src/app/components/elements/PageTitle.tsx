@@ -1,5 +1,6 @@
 import React, {ReactElement, useEffect} from "react";
 import {UncontrolledTooltip} from "reactstrap";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 export interface PageTitleProps {
     currentPageTitle: string;
@@ -10,7 +11,7 @@ export interface PageTitleProps {
 
 export const PageTitle = ({currentPageTitle, subTitle, help, className}: PageTitleProps) => {
     useEffect(() => {
-        document.title = currentPageTitle + " — Isaac Computer Science";
+        document.title = currentPageTitle + " — Isaac " + SITE_SUBJECT_TITLE;
     }, [currentPageTitle]);
 
     return <h1 className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
