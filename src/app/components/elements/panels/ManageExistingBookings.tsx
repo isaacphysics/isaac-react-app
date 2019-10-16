@@ -12,7 +12,7 @@ import {
     resendUserConfirmationEmail
 } from "../../../state/actions";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
-import {isAdmin, isEventsLeader} from "../../../services/user";
+import {isAdmin, isEventLeader} from "../../../services/user";
 import {UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
@@ -27,7 +27,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
     const [reverse, setReverse] = useState(true);
 
     return <Accordion trustedTitle="Manage current bookings">
-        {isEventsLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
+        {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
             As an event leader, you are only able to see the bookings of users who have granted you access to their data.
         </div>}
         {atLeastOne(eventBookings.length) && <div className="overflow-auto">

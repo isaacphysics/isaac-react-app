@@ -14,14 +14,15 @@ import {DOCUMENT_TYPE} from "../../services/constants";
 import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
-import {ShortcutResponses, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {LoggedInUser, ShortcutResponses, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom, filterOnExamBoard} from "../../services/examBoard";
 import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
+import {isStaff} from "../../services/user";
 
 const stateToProps = (state: AppState) => {
     return {
         searchResults: state && state.search && state.search.searchResults || null,
-        userRole: state && state.user && state.user.loggedIn && state.user.role || null,
+        user: state && state.user || null,
         userPreferences: state ? state.userPreferences : null
     };
 };
@@ -31,14 +32,14 @@ const dispatchToProps = {fetchSearch};
 interface SearchPageProps {
     searchResults: ResultsWrapper<ContentSummaryDTO> | null;
     userPreferences: UserPreferencesDTO | null;
-    userRole: Role | null;
+    user: LoggedInUser | null;
     history: History;
     location: Location;
     fetchSearch: (query: string, types: string) => void;
 }
 
 const SearchPageComponent = (props: SearchPageProps) => {
-    const {searchResults, userRole, location, history, fetchSearch, userPreferences} = props;
+    const {searchResults, user, location, history, fetchSearch, userPreferences} = props;
 
     const searchParsed = queryString.parse(location.search);
 
@@ -94,11 +95,9 @@ const SearchPageComponent = (props: SearchPageProps) => {
         doSearch();
     }, [searchFilterProblems, searchFilterConcepts]);
 
-    const isStaffUser = userRole && (userRole == 'ADMIN' || userRole == 'EVENT_MANAGER' || userRole == 'CONTENT_EDITOR');
-
     const filterResult = function(r: ContentSummaryDTO) {
         const keepElement = (r.id != "_regression_test_" && (!r.tags || r.tags.indexOf("nofilter") < 0 && !r.supersededBy));
-        return keepElement || isStaffUser;
+        return keepElement || isStaff(user);
     };
 
     const filteredSearchResults = searchResults && searchResults.results && filterOnExamBoard(searchResults.results.filter(filterResult), examBoard);

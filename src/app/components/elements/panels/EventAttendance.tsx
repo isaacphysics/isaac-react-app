@@ -10,7 +10,7 @@ import {DateString} from "../DateString";
 import {recordEventAttendance} from "../../../state/actions";
 import {ATTENDANCE, LoggedInUser} from "../../../../IsaacAppTypes";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
-import {isEventsLeader} from "../../../services/user";
+import {isEventLeader} from "../../../services/user";
 
 function displayAttendanceAsSymbol(status?: string) {
     switch (status) {
@@ -44,7 +44,7 @@ export const EventAttendance = ({user, eventId}: {user: LoggedInUser; eventId: s
 
     return <React.Fragment>
         {canRecordAttendance && atLeastOne(bookings.length) && <Accordion trustedTitle="Record event attendance">
-            {isEventsLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
+            {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
                 As an event leader, you are only able to see the bookings of users who have granted you access to their data.
             </div>}
             <div className="overflow-auto">

@@ -13,7 +13,7 @@ import {
     NavbarToggler,
     UncontrolledDropdown
 } from "reactstrap";
-import {isAdmin, isEventsLeader, isEventsManager, isStaff} from "../../services/user";
+import {isAdmin, isEventLeader, isAdminOrEventManager, isStaff} from "../../services/user";
 import {loadMyAssignments} from "../../state/actions";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 
@@ -155,7 +155,7 @@ export const NavigationBar = () => {
                     </DropdownMenu>
                 </UncontrolledDropdown>
 
-                {(isStaff(user) || isEventsLeader(user)) &&
+                {(isStaff(user) || isEventLeader(user)) &&
                     <UncontrolledDropdown nav inNavbar>
                         <DropdownToggle nav caret className="p-3 ml-3 mr-3">
                             Admin
@@ -167,7 +167,7 @@ export const NavigationBar = () => {
                             {isAdmin(user) && <DropdownItem tag={Link} to="/admin/usermanager" className="pl-4 py-3 p-md-3">
                                 User manager
                             </DropdownItem>}
-                            {(isEventsLeader(user) || isEventsManager(user)) && <DropdownItem tag={Link} to="/admin/events" className="pl-4 py-3 p-md-3">
+                            {(isEventLeader(user) || isAdminOrEventManager(user)) && <DropdownItem tag={Link} to="/admin/events" className="pl-4 py-3 p-md-3">
                                 Event admin
                             </DropdownItem>}
                             {isStaff(user) && <DropdownItem tag={Link} to="/admin/stats" className="pl-4 py-3 p-md-3">

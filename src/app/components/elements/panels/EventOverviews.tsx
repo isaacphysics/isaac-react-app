@@ -10,7 +10,7 @@ import {DateString} from "../DateString";
 import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
-import {isEventsLeader} from "../../../services/user";
+import {isEventLeader} from "../../../services/user";
 
 export enum EventOverviewFilter {
     "All events" = "ALL",
@@ -33,7 +33,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; 
     }, [overviewFilter]);
 
     return <Accordion trustedTitle="Events overview" index={0}>
-        {isEventsLeader(user) && <div className="bg-grey p-2 mb-4 text-center">
+        {isEventLeader(user) && <div className="bg-grey p-2 mb-4 text-center">
             As an event leader, you are only able to see the details of events which you manage.
         </div>}
         <div className="d-flex justify-content-end mb-4">
