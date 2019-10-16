@@ -217,7 +217,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                             <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline>Modify Role</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Promote or demote selected users to:</RS.DropdownItem>
-                                {["STUDENT", "TEACHER"].map(role =>
+                                {["STUDENT", "TEACHER", "EVENT_LEADER"].map(role =>
                                     <RS.DropdownItem
                                         key={role} disabled={selectedUserIds.length === 0}
                                         onClick={() => modifyUserRolesAndUpdateResults(role as Role)}
