@@ -84,7 +84,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; 
                                 <td className="align-middle"><RS.Button color="primary" outline className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
                                     Manage
                                 </RS.Button></td>
-                                <td className="align-middle"><Link to={`events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>
+                                <td className="align-middle"><Link to={`/events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>
                                 <td className="align-middle"><DateString>{event.date}</DateString></td>
                                 <td className="align-middle"><DateString>{event.bookingDeadline}</DateString></td>
                                 <td className="align-middle">{event.location && event.location.address && event.location.address.town}</td>
