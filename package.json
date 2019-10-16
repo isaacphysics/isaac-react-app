@@ -111,7 +111,9 @@
     "build-cs":  "webpack --env prod --config config/webpack.config.cs.js",
     "start-phy": "webpack-dev-server --hot --port 8004 --history-api-fallback --config config/webpack.config.physics.js",
     "start-cs":  "webpack-dev-server --hot --port 8003 --history-api-fallback --config config/webpack.config.cs.js",
-    "test": "node scripts/test.js",
+    "test": "npm run test-phy && npm run test-cs",
+    "test-phy": "jest --config config/jest/jest.config.physics.js",
+    "test-cs": "jest --config config/jest/jest.config.cs.js",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
     "analyse-bundle": "npm run build -- --stats && webpack-bundle-analyzer build/bundle-stats.json build"
   },
@@ -161,56 +163,6 @@
     "jest-enzyme": "^7.0.2",
     "redux-mock-store": "^1.5.3",
     "webpack-bundle-analyzer": "^3.3.2"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "resolver": "jest-pnp-resolver",
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [
-      "jest-enzyme"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/*.test.(js|jsx|ts|tsx)"
-    ],
-    "testEnvironment": "enzyme",
-    "testURL": "http://localhost",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ],
-    "watchPlugins": [
-      "<rootDir>/node_modules/jest-watch-typeahead/filename.js",
-      "<rootDir>/node_modules/jest-watch-typeahead/testname.js"
-    ]
   },
   "babel": {
     "presets": [
