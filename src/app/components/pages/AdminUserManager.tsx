@@ -28,6 +28,7 @@ interface AdminUserMangerProps {
 
 const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, adminUserDelete, searchResults}: AdminUserMangerProps) => {
     const dispatch = useDispatch();
+    const [userUpdating, setUserUpdating] = useState(false);
     const [searchRequested, setSearchRequested] = useState(false);
     const [searchQuery, setSearchQuery] = useState({
         familyName: null,
@@ -42,7 +43,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
     const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
 
     useEffect(() => {
-        if (!userIdToSchoolMapping && searchResults) {
+        if (searchResults) {
             dispatch(getUserIdSchoolLookup(searchResults.map((result) => result.id).filter((result) => result != undefined) as number[]));
         }
     }, [searchResults]);
@@ -88,9 +89,11 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
     const modifyUserRolesAndUpdateResults = async (role: Role) => {
         let confirmed = (role === "STUDENT") || confirmUnverifiedUserPromotions();
         if (confirmed) {
+            setUserUpdating(true);
             await adminModifyUserRoles(role, selectedUserIds);
             adminUserSearch(searchQuery);
             setSelectedUserIds([]);
+            setUserUpdating(false);
         }
     };
 
@@ -117,14 +120,14 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                             <RS.FormGroup>
                                 <RS.Label htmlFor="family-name-search">Find a user by family name:</RS.Label>
                                 <RS.Input
-                                    id="family-name-search" type="text" defaultValue={searchQuery.familyName || undefined} placeholder="Wilkes"
+                                    id="family-name-search" type="text" defaultValue={searchQuery.familyName || undefined} placeholder="e.g. Wilkes"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({familyName: e.target.value})}
                                 />
                             </RS.FormGroup>
                             <RS.FormGroup>
                                 <RS.Label htmlFor="email-search">Find a user by email:</RS.Label>
                                 <RS.Input
-                                    id="email-search" type="text" defaultValue={searchQuery.email || undefined} placeholder="teacher@school.org"
+                                    id="email-search" type="text" defaultValue={searchQuery.email || undefined} placeholder="e.g. teacher@school.org"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({email: e.target.value})}
                                 />
                             </RS.FormGroup>
@@ -160,7 +163,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                 <RS.Row>
                                     <RS.Col md={7}>
                                         <RS.Input
-                                            id="postcode-search" type="text" defaultValue={searchQuery.postcode || undefined} placeholder="CB3 0FD"
+                                            id="postcode-search" type="text" defaultValue={searchQuery.postcode || undefined} placeholder="e.g. CB3 0FD"
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({postcode: e.target.value})}
                                         />
                                     </RS.Col>
@@ -211,7 +214,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                 <RS.Row className="pb-4">
                     <RS.Col>
                         <RS.UncontrolledButtonDropdown>
-                            <RS.DropdownToggle caret color="primary" outline>Modify Role</RS.DropdownToggle>
+                            <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline>Modify Role</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Promote or demote selected users to:</RS.DropdownItem>
                                 {["STUDENT", "TEACHER", "EVENT_LEADER"].map(role =>

@@ -10,14 +10,14 @@ import {IsaacHints} from "./IsaacHints";
 import { determineExamBoardFrom } from "../../services/examBoard";
 import { EXAM_BOARD } from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
+import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
-    const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
+    const questionPart = questions.selectQuestionPart(questionId)(state);
     const examBoard = state && determineExamBoardFrom(state.userPreferences);
-    let r: { currentAttempt?: LogicFormulaDTO | null, examBoard? : EXAM_BOARD | null } = { examBoard };
-    if (question) {
-        r.currentAttempt = question.currentAttempt;
+    let r: { currentAttempt?: LogicFormulaDTO | null; examBoard? : EXAM_BOARD | null } = { examBoard };
+    if (questionPart) {
+        r.currentAttempt = questionPart.currentAttempt;
     }
     return r;
 };

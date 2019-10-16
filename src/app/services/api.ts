@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {EventBookingDTO} from "../../IsaacApiTypes";
+import {EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
@@ -9,6 +9,8 @@ import {
     ATTENDANCE,
     BoardOrder, EmailUserRoles,
     LoggedInUser,
+    QuestionSearchQuery,
+    QuestionSearchResponse,
     UserPreferencesDTO
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
@@ -84,8 +86,12 @@ export const api = {
         passwordResetById: (id: number) => {
             return endpoint.post(`/users/${id}/resetpassword`);
         },
+
         getUserIdSchoolLookup: (userIds: number[]): AxiosPromise<AppTypes.UserSchoolLookup> => {
             return endpoint.get(`/users/school_lookup?user_ids=${userIds.join(",")}`);
+        },
+        getProgress: (): AxiosPromise<AppTypes.UserProgress> => {
+            return endpoint.get(`/users/current_user/progress`);
         }
     },
     authentication: {
@@ -172,6 +178,11 @@ export const api = {
         get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
             return endpoint.get(`/pages/questions/${id}`);
         },
+        search: (query: QuestionSearchQuery): AxiosPromise<QuestionSearchResponse> => {
+            return endpoint.get(`/pages/questions/`, {
+                params: query,
+            });
+        },
         answer: (id: string, answer: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
         }
@@ -202,6 +213,12 @@ export const api = {
         },
         save: (gameboardId: string) => {
             return endpoint.post(`gameboards/user_gameboards/${gameboardId}`, {});
+        },
+        create: (gameboard: GameboardDTO) => {
+            return endpoint.post(`gameboards`, gameboard);
+        },
+        getWildcards: (): AxiosPromise<ApiTypes.IsaacWildcard[]> => {
+            return endpoint.get(`gameboards/wildcards`);
         }
     },
     assignments: {
@@ -243,7 +260,7 @@ export const api = {
         }
     },
     contactForm: {
-        send: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
+        send: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
             return endpoint.post(`/contact/`, params, {});
         }
     },

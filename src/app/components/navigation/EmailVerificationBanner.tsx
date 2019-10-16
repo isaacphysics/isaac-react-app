@@ -40,9 +40,9 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
 
             <RS.Row style={{alignItems: "center"}}>
                 <RS.Col xs={12} sm={2} md={1}>
-                    <h3 className="text-center" role="presentation">
-                        ℹ️
-                        <span className="d-inline-block d-sm-none">&nbsp;Email Verification</span>
+                    <h3 className="text-center">
+                        <span role="presentation" aria-labelledby="email-verification-heading">ℹ</span>
+                        <span id="email-verification-heading" className="d-inline-block d-sm-none">&nbsp;Email Verification</span>
                     </h3>
                 </RS.Col>
                 {(status == null || status == "NOT_VERIFIED") && <React.Fragment>

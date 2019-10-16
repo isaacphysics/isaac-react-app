@@ -1,7 +1,10 @@
 import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {invert} from "lodash";
 
 export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
+
+export const IS_CS_PLATFORM = true;
 
 /*
  * Configure the api provider with the server running the API:
@@ -10,7 +13,7 @@ export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
 let apiPath = `${document.location.origin}/api/${API_VERSION}/api`;
 if (document.location.hostname === "localhost") {
     apiPath = "http://localhost:8080/isaac-api/api";
-} else if (document.location.hostname.indexOf(".eu.ngrok.io") > -1) {
+} else if (document.location.hostname.endsWith(".eu.ngrok.io")) {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
 }
 export const isTest = document.location.hostname.startsWith("test.");
@@ -27,6 +30,8 @@ export const MARKDOWN_RENDERER = new Remarkable({
     linkify: true,
     html: true,
 });
+
+export const ACCEPTED_QUIZ_IDS = ['quiz_test'];
 
 export const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB");
 export const DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
@@ -73,6 +78,10 @@ export enum ACTION_TYPE {
 
     USER_LOG_OUT_REQUEST = "USER_LOG_OUT_REQUEST",
     USER_LOG_OUT_RESPONSE_SUCCESS = "USER_LOG_OUT_RESPONSE_SUCCESS",
+
+    USER_PROGRESS_REQUEST = "USER_PROGRESS_REQUEST",
+    USER_PROGRESS_RESPONSE_SUCCESS = "USER_PROGRESS_RESPONSE_SUCCESS",
+    USER_PROGRESS_RESPONSE_FAILURE = "USER_PROGRESS_RESPONSE_FAILURE",
 
     AUTHENTICATION_REQUEST_REDIRECT = "AUTHENTICATION_REQUEST_REDIRECT",
     AUTHENTICATION_REDIRECT = "AUTHENTICATION_REDIRECT",
@@ -227,6 +236,14 @@ export enum ACTION_TYPE {
     QUESTION_UNLOCK = "QUESTION_UNLOCK",
     QUESTION_SET_CURRENT_ATTEMPT = "QUESTION_SET_CURRENT_ATTEMPT",
 
+    QUESTION_SEARCH_REQUEST = "QUESTION_SEARCH_REQUEST",
+    QUESTION_SEARCH_RESPONSE_SUCCESS = "QUESTION_SEARCH_RESPONSE_SUCCESS",
+    QUESTION_SEARCH_RESPONSE_FAILURE = "QUESTION_SEARCH_RESPONSE_FAILURE",
+
+    QUIZ_SUBMISSION_REQUEST = "QUIZ_SUBMISSION_REQUEST",
+    QUIZ_SUBMISSION_RESPONSE_SUCCESS = "QUIZ_SUBMISSION_RESPONSE_SUCCESS",
+    QUIZ_SUBMISSION_RESPONSE_FAILURE = "QUIZ_SUBMISSION_RESPONSE_FAILURE",
+
     TOPIC_REQUEST = "TOPIC_REQUEST",
     TOPIC_RESPONSE_SUCCESS = "TOPIC_RESPONSE_SUCCESS",
     TOPIC_RESPONSE_FAILURE = "TOPIC_RESPONSE_FAILURE",
@@ -238,6 +255,14 @@ export enum ACTION_TYPE {
     GAMEBOARD_ADD_REQUEST = "GAMEBOARD_ADD_REQUEST",
     GAMEBOARD_ADD_RESPONSE_SUCCESS = "GAMEBOARD_ADD_RESPONSE_SUCCESS",
     GAMEBOARD_ADD_RESPONSE_FAILURE = "GAMEBOARD_ADD_RESPONSE_FAILURE",
+
+    GAMEBOARD_CREATE_REQUEST = "GAMEBOARD_CREATE_REQUEST",
+    GAMEBOARD_CREATE_RESPONSE_SUCCESS = "GAMEBOARD_CREATE_RESPONSE_SUCCESS",
+    GAMEBOARD_CREATE_RESPONSE_FAILURE = "GAMEBOARD_CREATE_RESPONSE_FAILURE",
+
+    GAMEBOARD_WILDCARDS_REQUEST = "GAMEBOARD_WILDCARDS_REQUEST",
+    GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS = "GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS",
+    GAMEBOARD_WILDCARDS_RESPONSE_FAILURE = "GAMEBOARD_WILDCARDS_RESPONSE_FAILURE",
 
     CONTACT_FORM_SEND_REQUEST = "CONTACT_FORM_SEND_REQUEST",
     CONTACT_FORM_SEND_RESPONSE_SUCCESS = "CONTACT_FORM_SEND_RESPONSE_SUCCESS",
@@ -343,6 +368,8 @@ export const examBoardTagMap: {[examBoard: string]: string} = {
     [EXAM_BOARD.OCR]: "examboard_ocr",
 };
 
+export const tagExamboardMap: {[tag: string]: string} = invert(examBoardTagMap);
+
 export enum TAG_ID {
     // Categories
     theory = "theory",
@@ -357,7 +384,7 @@ export enum TAG_ID {
     // Programming sub-categories
     functionalProgramming = "functional_programming",
     objectOrientedProgramming = "object_oriented_programming",
-    proceduralProgramming = "procedural_programming",
+    programmingFundamentals = "programming_fundamentals",
     computingPracticalProject = "computing_practical_project",
 
     // GCSE to A level transition topics
@@ -369,12 +396,12 @@ export enum TAG_ID {
     // Data structures and algorithms topics
     searchingSortingPathfinding = "searching_sorting_pathfinding",
     complexity = "complexity",
-    modelsOfComputation = "models_of_computation",
+    theoryOfComputation = "models_of_computation",
     planningAndDebugging = "planning_and_debugging",
     dataStructures = "data_structures",
     // Computer networks topics
     security = "security",
-    networkStructure = "network_structure",
+    networking = "networking",
     networkHardware = "network_hardware",
     communication = "communication",
     internet = "internet",
@@ -389,7 +416,6 @@ export enum TAG_ID {
     numberSystems = "number_systems",
     numberBases = "number_bases",
     representation = "representation",
-    transmission = "transmission",
     databases = "databases",
     bigData = "big_data",
     compression = "compression",
@@ -466,4 +492,10 @@ export enum UserRole {
     EVENT_LEADER = "EVENT_LEADER",
     TEACHER = "TEACHER",
     STUDENT = "STUDENT"
+}
+
+export enum SortOrder {
+    ASC = "ASC",
+    DESC = "DESC",
+    NONE = "NONE"
 }

@@ -150,12 +150,14 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                     <small>
                                                         By requesting to book on this event, you are granting event organisers access to the information provided in the form above.
                                                         You are also giving them permission to set you pre-event work and view your progress.
-                                                        You can manage access to your progress data in your <a href="/account#teacherconnections" target="_blank">account settings</a>.
+                                                        You can manage access to your progress data in your <Link to="/account#teacherconnections" target="_blank">account settings</Link>.
+                                                        <br />
+                                                        Your data will be processed in accordance with Isaac Computer Science&apos;s <Link to="/privacy" target="_blank">privacy policy</Link>.
                                                     </small>
                                                 </p>}
 
-                                                {atLeastOne(event.numberOfPlaces) && !event.userBooked && (canMakeABooking || canBeAddedToWaitingList) && <div>
-                                                    <RS.Input type="submit" value={submissionTitle} className="btn btn-secondary btn-xl border-0 w-auto" />
+                                                {atLeastOne(event.numberOfPlaces) && !event.userBooked && (canMakeABooking || canBeAddedToWaitingList) && <div className="text-center mt-4 mb-2">
+                                                    <RS.Input type="submit" value={submissionTitle} className="btn btn-xl btn-secondary border-0" />
                                                 </div>}
                                             </div>
                                         </RS.Form>

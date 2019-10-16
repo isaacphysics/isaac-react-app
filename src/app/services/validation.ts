@@ -1,6 +1,7 @@
 import {
     AdditionalInformation,
     AugmentedEvent,
+    NOT_FOUND_TYPE,
     SubjectInterests,
     UserEmailPreferences,
     UserPreferencesDTO,
@@ -8,6 +9,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
+import {NOT_FOUND} from "./constants";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
@@ -103,3 +105,7 @@ export function validateBookingSubmission(event: AugmentedEvent, user: UserSumma
 
     return true;
 }
+
+export const resourceFound = <T>(resource: undefined | null | NOT_FOUND_TYPE | T): resource is T => {
+    return resource !== undefined && resource !== null && resource !== NOT_FOUND;
+};
