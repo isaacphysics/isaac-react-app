@@ -254,8 +254,8 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                             <th>Email</th>
                                             <th>User role</th>
                                             <th>School</th>
-                                            <th>Member since</th>
                                             <th>Verification status</th>
+                                            <th>Member since</th>
                                             <th>Last seen</th>
                                         </tr>
                                     </thead>
@@ -280,8 +280,8 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                                 <td>{user.email}</td>
                                                 <td>{user.role}</td>
                                                 <td>{user.id && userIdToSchoolMapping && userIdToSchoolMapping[user.id] && userIdToSchoolMapping[user.id].name}</td>
-                                                <td><DateString>{user.registrationDate}</DateString></td>
                                                 <td>{user.emailVerificationStatus}</td>
+                                                <td><DateString>{user.registrationDate}</DateString></td>
                                                 <td><DateString>{user.lastSeen}</DateString></td>
                                             </tr>
                                         )}
