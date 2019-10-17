@@ -300,7 +300,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                 </RS.Button>
             </RS.Col>
             <RS.Col>
-                <RS.Button tag={Link} to={"/gameboards/builder"} color="secondary" block>
+                <RS.Button tag={Link} to={"/gameboard_builder"} color="secondary" block>
                     {"Create gameboard"}
                 </RS.Button>
             </RS.Col>
