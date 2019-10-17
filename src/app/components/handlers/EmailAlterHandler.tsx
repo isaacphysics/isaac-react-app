@@ -46,7 +46,7 @@ export const EmailAlterHandler = () => {
                             <React.Fragment>
                                 <h3 className="mb-4">{successMessage}</h3>
                                 {!idsMismatch && <Button tag={Link} to="/account" color="secondary" block>
-                                    Continue to My Account
+                                    Continue to My account
                                 </Button>}
                             </React.Fragment>}
                         {!emailVerificationSuccess && errorMessage &&
