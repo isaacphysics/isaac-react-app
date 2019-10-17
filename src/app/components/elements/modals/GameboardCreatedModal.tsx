@@ -21,7 +21,7 @@ export const GameboardCreatedModal = () => {
         <RS.Row>
             <RS.Col>
                 <RS.Button
-                    tag={Link} to={`/gameboards#${gameboardIdSelector}`} color="secondary" block
+                    tag={Link} to={`/add_gameboard/${gameboardIdSelector}`} color="secondary" block
                     disabled={!gameboardIdSelector} onClick={() => dispatch(closeActiveModal())}
                 >
                     Set as assignment
