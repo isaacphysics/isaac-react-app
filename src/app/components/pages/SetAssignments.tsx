@@ -289,17 +289,17 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
             Add a board from ...
         </h4>
         <RS.Row className="mb-4">
-            <RS.Col>
+            <RS.Col md={6} lg={4} className="pt-1">
                 <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
                     {"Pre-made gameboards"}
                 </RS.Button>
             </RS.Col>
-            <RS.Col>
+            <RS.Col md={6} lg={4} className="pt-1">
                 <RS.Button tag={Link} to={"/topics"} color="secondary" block>
                     {"Topics list"}
                 </RS.Button>
             </RS.Col>
-            <RS.Col>
+            <RS.Col md={12} lg={4} className="pt-1">
                 <RS.Button tag={Link} to={"/gameboard_builder"} color="secondary" block>
                     {"Create gameboard"}
                 </RS.Button>
