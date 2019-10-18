@@ -2,6 +2,7 @@ import React from 'react';
 import {Col, Row} from "reactstrap";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
+import {IsaacContent} from "./IsaacContent";
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
@@ -14,9 +15,10 @@ export const IsaacGlossaryTerm = ({doc}: IsaacGlossaryTermProps) => {
             <a id={doc.id && doc.id.split('|')[1]}><strong>{doc.value}</strong></a>
         </Col>
         <Col>
-            <IsaacContentValueOrChildren encoding={doc.encoding}>
+            {/* <IsaacContentValueOrChildren encoding={doc.encoding}>
                 { doc.explanation && doc.explanation.children }
-            </IsaacContentValueOrChildren>
+            </IsaacContentValueOrChildren> */}
+            { doc.explanation && <IsaacContent doc={doc.explanation} />}
         </Col>
     </Row>;
 };
