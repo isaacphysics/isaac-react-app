@@ -67,8 +67,16 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
         }
     }, [user]);
 
+    const pageHelp = <span>
+        You can create custom question sets to assign to your groups. Search by question title or topic and add up to
+        ten questions to a gameboard.
+        <br />
+        You cannot modify a gameboard after it has been created. You&apos;ll find a link underneath any
+        existing gameboard to duplicate and edit it.
+    </span>;
+
     return <RS.Container id="gameboard-builder">
-        <TitleAndBreadcrumb currentPageTitle="Gameboard builder"/>
+        <TitleAndBreadcrumb currentPageTitle="Gameboard builder" help={pageHelp}/>
 
         <RS.Card className="p-3 mt-4 mb-5">
             <RS.CardBody>
