@@ -11,6 +11,7 @@ import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
 import {withRouter} from "react-router-dom";
 import {IsaacQuizTabs} from "./IsaacQuizTabs";
+import {AnvilApp} from "./AnvilApp";
 
 interface IsaacContentProps {
     doc: ContentDTO;
@@ -26,7 +27,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
         case "video": selectedComponent = <IsaacVideo {...props} />; break;
         // case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break; // TODO
         case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break;
-        // case "anvilApp": selectedComponent = <AnvilApp {...props} />; break; // TODO
+        case "anvilApp": selectedComponent = <AnvilApp {...props} />; break;
         case "isaacMultiChoiceQuestion":
         case "isaacNumericQuestion":
         case "isaacSymbolicQuestion":
