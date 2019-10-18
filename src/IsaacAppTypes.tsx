@@ -154,6 +154,10 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: ApiTypes.ContentSummaryDTO[]}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
+    | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
@@ -525,10 +529,9 @@ export interface ZxcvbnResult {
 export interface EmailUserRoles {
     ADMIN: boolean;
     EVENT_MANAGER: boolean;
+    EVENT_LEADER: boolean;
     CONTENT_EDITOR: boolean;
     TEACHER: boolean;
-    TESTER: boolean;
-    STAFF: boolean;
     STUDENT: boolean;
 }
 

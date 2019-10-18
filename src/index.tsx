@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import {Provider} from "react-redux";
 import {store} from "./app/state/store";
 import {IsaacApp} from './app/components/navigation/IsaacApp';
-import {printAsciiArtLogoToConsole} from "./app/services/easterEggs";
+import {printAsciiArtLogoToConsole} from "./app/services/easterEggs/csLogoAsciiArt";
 
 printAsciiArtLogoToConsole();
 

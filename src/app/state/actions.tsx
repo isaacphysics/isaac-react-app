@@ -1,3 +1,4 @@
+import React from "react";
 import {api} from "../services/api";
 import {Dispatch} from "react";
 import {AppState} from "./reducers";
@@ -725,7 +726,43 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
     }
 };
 
-// Current Gameboard
+// Quizzes
+const generatePostQuizUrl = (quizId: string) => `/pages/post_quiz_${quizId}`;
+
+export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const currentState = getState();
+    try {
+        dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST, quizId});
+        if (currentState && currentState.questions) {
+            await Promise.all(currentState.questions.map(
+                question => {
+                    if (question.id && question.currentAttempt) {
+                        dispatch(attemptQuestion(question.id, question.currentAttempt) as any);
+                    }
+                }
+            ));
+            dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
+            dispatch(showToast({color: "success", title: "Quiz submitted", body: "Quiz submitted successfully", timeout: 3000}) as any);
+            history.push(generatePostQuizUrl(quizId));
+        }
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Error submitting quiz", e));
+    }
+};
+
+export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal({
+        closeAction: () => {dispatch(closeActiveModal() as any)},
+        title: "Quiz already submitted",
+        body: <div className="text-center my-5 pb-4">
+            <strong>A submission has already been recorded for this quiz by your account.</strong>
+        </div>
+    }) as any);
+    history.push(generatePostQuizUrl(quizId));
+};
+
+// Current gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GAMEBOARD_REQUEST, gameboardId});
     try {
@@ -752,8 +789,6 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
             history.push(`/gameboards#${gameboardId}`);
         }
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error("Error saving gameboard.");
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Error saving gameboard", e));
     }

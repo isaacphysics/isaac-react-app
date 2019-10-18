@@ -25,7 +25,7 @@ import {groups} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {API_PATH, DATE_FORMATTER} from "../../services/constants";
+import {API_PATH, DATE_FORMATTER, TEACHERS_CRUMB} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 
 const stateFromProps = (state: AppState) => {
@@ -543,7 +543,7 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
 
     return <React.Fragment>
         <Container>
-            <TitleAndBreadcrumb currentPageTitle="Assignment progress" subTitle="Track your class performance" intermediateCrumbs={[{title: "For teachers", to: "#"}]} help="Click on your groups to see the assignments you have set. View your students' progress by question." />
+            <TitleAndBreadcrumb currentPageTitle="Assignment progress" subTitle="Track your class performance" intermediateCrumbs={[TEACHERS_CRUMB]} help="Click on your groups to see the assignments you have set. View your students' progress by question." />
             <Row className="align-items-center d-none d-md-flex">
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
