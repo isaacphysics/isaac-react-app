@@ -32,7 +32,7 @@ module.exports = function(proxy, allowedHost) {
       !proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === 'true',
     // Add some custom headers to all responses:
     headers: {
-      "Content-Security-Policy-Report-Only": "default-src 'self' https://cdn.isaaccomputerscience.org localhost:8080 https://www.google-analytics.com https://stats.g.doubleclick.net; object-src 'none'; style-src 'self' 'unsafe-inline';",
+      "Content-Security-Policy-Report-Only": "default-src 'self' https://cdn.isaaccomputerscience.org localhost:8080 https://www.google-analytics.com https://www.youtube-nocookie.com https://www.youtube.com; object-src 'none'; frame-src 'self' https://anvil.works https://*.anvil.app; img-src 'self' data: https://cdn.isaaccomputerscience.org https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://cdn.isaaccomputerscience.org https://fonts.gstatic.com;",
       "Feature-Policy": "geolocation 'none'; camera 'none'; microphone 'none'; accelerometer 'none';",
       "X-Clacks-Overhead": "GNU Terry Pratchett",
     },
