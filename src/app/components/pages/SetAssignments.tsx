@@ -28,8 +28,9 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {TEACHERS_CRUMB} from "../../services/constants";
 import {withRouter} from "react-router-dom";
-import {formatBoardOwner, formatDate} from "../../services/gameboards";
+import {formatBoardOwner} from "../../services/gameboards";
 import {connect} from "react-redux";
+import {formatDate} from "../elements/DateString";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,

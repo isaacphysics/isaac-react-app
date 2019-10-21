@@ -16,6 +16,7 @@
   background: url(/assets/my-boards-sprite.png) no-repeat -70px 0;
   padding: 20px 0 0;
   z-index: 999;
+  padding-top: 35px !important;
 }
 
 .subject-physics {
@@ -32,7 +33,7 @@
 }
 
 .big-header {
-  height: 70px;
+  margin: 0;
 }
 
 .groups-assigned {

@@ -494,3 +494,9 @@ export enum SortOrder {
     DESC = "DESC",
     NONE = "NONE"
 }
+
+export enum sortIcon {
+    "sortable" = '⇕',
+    "ascending" = '⇑',
+    "descending" = '⇓'
+}

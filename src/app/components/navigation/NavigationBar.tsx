@@ -86,7 +86,7 @@ export const NavigationBar = () => {
                             {assignmentCount > 0 && <span className="badge badge-pill bg-grey ml-2">{assignmentCount}</span>}
                             {assignmentCount > 0 && <span className="sr-only">Incomplete assignments</span>}
                         </DropdownItem>
-                        <DropdownItem tag={Link} to="/boards" className="pl-4 py-3 p-md-3">
+                        <DropdownItem tag={Link} to="/my_gameboards" className="pl-4 py-3 p-md-3">
                             My gameboards
                         </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">

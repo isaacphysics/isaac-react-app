@@ -11,7 +11,7 @@ import {extractTeacherName} from "../../services/user";
 import {STUDENTS_CRUMB} from "../../services/constants";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 import {ifKeyIsEnter} from "../../services/navigation";
-import {formatDate} from "../../services/gameboards";
+import {formatDate} from "../elements/DateString";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments, logAction};
