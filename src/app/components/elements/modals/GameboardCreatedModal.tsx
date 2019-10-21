@@ -21,7 +21,7 @@ export const GameboardCreatedModal = () => {
         <RS.Row>
             <RS.Col>
                 <RS.Button
-                    tag={Link} to={`/gameboards#${gameboardIdSelector}`} color="secondary" block
+                    tag={Link} to={`/add_gameboard/${gameboardIdSelector}`} color="secondary" block
                     disabled={!gameboardIdSelector} onClick={() => dispatch(closeActiveModal())}
                 >
                     Set as assignment
@@ -29,7 +29,7 @@ export const GameboardCreatedModal = () => {
             </RS.Col>
             <RS.Col>
                 <RS.Button
-                    tag={Link} to={`/gameboards/builder`} color="primary" outline
+                    tag={Link} to={`/gameboard_builder`} color="primary" outline
                     onClick={() => {window.location.reload(); dispatch(closeActiveModal());}}
                 >
                     Create another board

@@ -169,7 +169,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                             className="w-15" title="Level"
                             updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "level")}
                         />}
-                        <th className="w-15">Exam board</th>
+                        <th className="w-15">Exam boards</th>
                     </tr>
                 </thead>
                 <tbody>
