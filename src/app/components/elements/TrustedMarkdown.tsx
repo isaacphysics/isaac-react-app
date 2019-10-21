@@ -56,8 +56,10 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     }
 
     useEffect(() => {
-        dispatch(fetchGlossaryTerms());
-    });
+        if (glossaryTerms) {
+            dispatch(fetchGlossaryTerms());
+        }
+    }, [glossaryTerms]);
     // RegEx replacements to match Latex inspired Isaac Physics functionality
     const regexRules = {
         "<span isaac-figure-ref='$2'></span>": /(~D)?\\ref{([^}]*)}(~D)?/g,
