@@ -113,7 +113,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                 </Col>
                             </Row>
                         }
-                        {!isTeacher(user) && (!messageSent && !errorMessage ?
+                        {!isTeacher(user) && (messageSent && !errorMessage ?
                             <Row>
                                 <Col className="text-center">
                                     <p className="mt-3">
