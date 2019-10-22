@@ -382,7 +382,7 @@ export const api = {
         }
     },
     tests: {
-        freeTextRules: () => endpoint.post("/tests/free-text-rules", {
+        freeTextRules: () => endpoint.post("/tests/free-text", {
             rules: [
                 {
                     "type": "freeTextRule",
@@ -407,8 +407,8 @@ export const api = {
                 }
             ],
             tests: [
-                {value: "get to the other side", expected: true},
-                {value: "don't know", expected: false}
+                {choice: {type: "stringChoice", value: "get to the other side"}, expected: true},
+                {choice: {type: "stringChoice", value: "don't know"}, expected: false}
             ]
         })
     },

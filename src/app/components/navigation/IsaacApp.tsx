@@ -40,8 +40,8 @@ import {Header} from "./Header";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
+import {isAdmin, isEventLeader, isAdminOrEventManager, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {ActiveModals} from "../elements/modals/ActiveModals";
-import {isAdmin, isEventsManager, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {Groups} from "../pages/Groups";
 import {Equality} from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
@@ -57,6 +57,7 @@ import {Events} from "../pages/Events";
 import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
+import {Quiz} from "../pages/Quiz";
 import {FreeTextTest} from "../pages/FreeTextTest";
 
 export const IsaacApp = () => {
@@ -97,15 +98,16 @@ export const IsaacApp = () => {
 
                     <TrackedRoute exact path="/search" component={Search} />
 
-                    <TrackedRoute exact path="/questions/:questionId" component={Question} />
-                    <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
+                    <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
+                    <TrackedRoute exact path="/questions/:questionId" component={Question} />
+                    <TrackedRoute exact path="/quizzes/:quizId" ifUser={isLoggedIn} component={Quiz} />
 
                     <TrackedRoute exact path="/topics" component={AllTopics} />
                     <TrackedRoute exact path="/topics/:topicName" component={Topic} />
 
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
-                    <TrackedRoute exact path="/gameboards/builder" component={GameboardBuilder} />
+                    <TrackedRoute exact path="/gameboard_builder" ifUser={isTeacher} component={GameboardBuilder} />
                     <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
                     <TrackedRoute exact path="/add_gameboard/:gameboardId" ifUser={isLoggedIn} component={AddGameboard} />
 
@@ -126,7 +128,7 @@ export const IsaacApp = () => {
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
                     <TrackedRoute exact path="/admin/usermanager" ifUser={isAdmin} component={AdminUserManager} />
-                    <TrackedRoute exact path="/admin/events" ifUser={isEventsManager} component={EventManager} />
+                    <TrackedRoute exact path="/admin/events" ifUser={user => isAdminOrEventManager(user) || isEventLeader(user)} component={EventManager} />
                     <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
                     <TrackedRoute exact path="/admin/content_errors" ifUser={isStaff} component={AdminContentErrors} />
                     <TrackedRoute exact path="/admin/emails" ifUser={isAdmin} component={AdminEmails} />

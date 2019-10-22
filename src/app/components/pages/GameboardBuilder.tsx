@@ -42,7 +42,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
     const [gameboardURL, setGameboardURL] = useState();
     const [questionOrder, setQuestionOrder] = useState<string[]>((loadedGameboard && loadGameboardQuestionOrder(loadedGameboard)) || []);
     const [selectedQuestions, setSelectedQuestions] = useState((loadedGameboard && loadGameboardSelectedQuestions(loadedGameboard)) || new Map<string, ContentSummaryDTO>());
-    const [wildcardId, setWildcardId] = useState(loadedGameboard && loadedGameboard.wildCard && loadedGameboard.wildCard.id ? loadedGameboard.wildCard.id : "random");
+    const [wildcardId, setWildcardId] = useState(isStaff(user) && loadedGameboard && loadedGameboard.wildCard && loadedGameboard.wildCard.id ? loadedGameboard.wildCard.id : undefined);
     const eventLog = useRef<any[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
     const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "";
@@ -67,8 +67,16 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
         }
     }, [user]);
 
+    const pageHelp = <span>
+        You can create custom question sets to assign to your groups. Search by question title or topic and add up to
+        ten questions to a gameboard.
+        <br />
+        You cannot modify a gameboard after it has been created. You&apos;ll find a link underneath any
+        existing gameboard to duplicate and edit it.
+    </span>;
+
     return <RS.Container id="gameboard-builder">
-        <TitleAndBreadcrumb currentPageTitle="Gameboard builder"/>
+        <TitleAndBreadcrumb currentPageTitle="Gameboard builder" help={pageHelp}/>
 
         <RS.Card className="p-3 mt-4 mb-5">
             <RS.CardBody>
@@ -187,13 +195,9 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                     id="gameboard-save-button" type="button" value="Save gameboard" disabled={!canSubmit}
                     className={"btn btn-block btn-secondary border-0 mt-2"} aria-describedby="gameboard-help"
                     onClick={() => {
-                        let wildcard: IsaacWildcard = {description: "", url: ""};
-                        if (resourceFound(wildcards) && wildcards.length > 0) {
-                            if (wildcardId == "random") {
-                                wildcard = sample(wildcards) || wildcard;
-                            } else {
-                                wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
-                            }
+                        let wildcard = undefined;
+                        if (wildcardId && resourceFound(wildcards) && wildcards.length > 0) {
+                            wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
                         }
 
                         dispatch(createGameboard({

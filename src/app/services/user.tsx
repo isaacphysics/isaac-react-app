@@ -4,6 +4,10 @@ export function isLoggedIn(user?: LoggedInUser | null) {
     return user ? user.loggedIn : false;
 }
 
+export function isStudent(user?: LoggedInUser | null) {
+    return user ? user.loggedIn && user.role == "STUDENT" : false;
+}
+
 export function isTeacher(user?: LoggedInUser | null) {
     return user ? user.loggedIn && user.role != "STUDENT" : false;
 }
@@ -16,7 +20,11 @@ export function isStaff(user?: LoggedInUser | null) {
     return user ? user.loggedIn && (user.role == "ADMIN" || user.role == "EVENT_MANAGER" || user.role == "CONTENT_EDITOR") : false;
 }
 
-export function isEventsManager(user?: LoggedInUser | null) {
+export function isEventLeader(user?: LoggedInUser | null) {
+    return user ? user.loggedIn && user.role == "EVENT_LEADER" : false;
+}
+
+export function isAdminOrEventManager(user?: LoggedInUser | null) {
     return user ? user.loggedIn && (user.role == "ADMIN" || user.role == "EVENT_MANAGER") : false;
 }
 

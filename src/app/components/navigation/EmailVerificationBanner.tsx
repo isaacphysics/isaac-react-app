@@ -50,7 +50,7 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
                         <small>Your email address is not verified -
                             please find our email in your inbox and follow the verification link. You can <Link onClick={clickVerify}>request a new
                                 verification email</Link> if necessary. To change
-                            your account email, go to <Link to="/account">My Account</Link>.
+                            your account email, go to <Link to="/account">My account</Link>.
                         </small>
                     </RS.Col>
                     <RS.Col xs={12} md={3} className="text-center">
@@ -62,7 +62,7 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
                         <small>One or more email(s) sent to your email
                             address failed. This means you won&apos;t receive emails from Isaac, and may prevent you
                             regaining access to your account. <br/>To start receiving emails again, update your email
-                            address on your <Link to="/account">My Account</Link> page. If you believe this is in
+                            address on your <Link to="/account">My account</Link> page. If you believe this is in
                             error, please <a href="mailto:webmaster@isaaccomputerscience.org">email us</a>.
                         </small>
                     </RS.Col>
