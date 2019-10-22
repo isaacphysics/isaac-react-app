@@ -1,6 +1,6 @@
 {
   "name": "isaac-cs-app",
-  "version": "1.0.10",
+  "version": "1.0.11-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@babel/core": "7.2.2",
