@@ -57,20 +57,24 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                         <AnonUserExamBoardPicker className="text-right"/>
 
                         {doc.supersededBy && !isStudent(user) && <div className="alert alert-primary">
-                            {isTeacher(user) && <strong>Teacher Note: </strong>}
+                            {isTeacher(user) && <React.Fragment>
+                                <strong>
+                                    <span id="superseded-help" className="icon-help" />
+                                    Teacher Note: {" "}
+                                </strong>
+                                <RS.UncontrolledTooltip placement="bottom" target="superseded-help">
+                                    <div  className="text-left">
+                                        We periodically update questions into new formats.<br />
+                                        If this question appears on one of your gameboards, you may want to update the gameboard.<br />
+                                        You can find help for this at Help and support &gt; Teacher Support &gt; Assigning Work.<br /><br />
+                                        Students will not see this message, but will see a smaller note at the bottom of the page.
+                                    </div>
+                                </RS.UncontrolledTooltip>
+                            </React.Fragment>}
                             This question has been replaced by {" "}
                             <RS.Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
                                 this question
                             </RS.Button>.
-                            {isTeacher(user) && <React.Fragment>
-                                <span id="superseded-help" className="icon-help float-right" />
-                                <RS.UncontrolledTooltip className="text-left" placement="bottom" target="superseded-help">
-                                    We periodically update questions into new formats.<br />
-                                    If this question appears on one of your gameboards, you may want to update the gameboard.<br />
-                                    You can find help for this at Teacher Support -&gt; Assigning Work.<br /><br />
-                                    Students will not see this message, but will see a smaller note at the bottom of the page.
-                                </RS.UncontrolledTooltip>
-                            </React.Fragment>}
                         </div>}
 
                         <WithFigureNumbering doc={doc}>
