@@ -5,6 +5,8 @@ install:
     - npm install -g codecov
     - npm ci
 cache: npm
+before_script:
+  - export NODE_OPTIONS=--max_old_space_size=4096
 script:
 - npm run build
 - npm test -- --coverage
