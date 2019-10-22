@@ -77,7 +77,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     function setUserSchool(school: any) {
         if (setUserToUpdate) {
             if (school.urn) {
-                setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school && school.urn, schoolOther: undefined}));
+                setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school.urn, schoolOther: undefined}));
                 setSchoolQueryText(null);
                 setSelectedSchoolObject(school);
                 setSchoolSearchResults([]);
