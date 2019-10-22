@@ -1,3 +1,4 @@
+import React from "react";
 import {api} from "../services/api";
 import {Dispatch} from "react";
 import {AppState} from "./reducers";
@@ -31,7 +32,7 @@ import {
     AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
-    GameboardDTO,
+    GameboardDTO, IsaacQuestionPageDTO,
     QuestionDTO,
     RegisteredUserDTO,
     Role,
@@ -122,6 +123,12 @@ function showErrorToastIfNeeded(error: string, e: any) {
 export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
 
 export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
+
+// Generic log action:
+export const logAction = (eventDetails: object) => {
+    api.logger.log(eventDetails); // We do not care whether this completes or not
+    return {type: ACTION_TYPE.LOG_EVENT, eventDetails: eventDetails};
+};
 
 // User authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
@@ -373,10 +380,10 @@ export const getUserIdSchoolLookup = (eventIds: number[]) => async (dispatch: Di
 };
 
 // Contact us
-export const submitMessage = (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
+export const submitMessage = (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST});
     try {
-        await api.contactForm.send(extra, params);
+        await api.contactForm.send(params);
         dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS})
     } catch (e) {
         const errorMessage = extractMessage(e);
@@ -709,7 +716,52 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
     }
 };
 
-// Current Gameboard
+export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (dispatch: Dispatch<Action>) =>  {
+    if (page.supersededBy) {
+        dispatch(logAction({
+            type: "VIEW_SUPERSEDED_BY_QUESTION", questionId: page.id, supersededBy: page.supersededBy
+        }) as any);
+        history.push(`/questions/${page.supersededBy}`);
+    }
+};
+
+// Quizzes
+const generatePostQuizUrl = (quizId: string) => `/pages/post_quiz_${quizId}`;
+
+export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const currentState = getState();
+    try {
+        dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST, quizId});
+        if (currentState && currentState.questions) {
+            await Promise.all(currentState.questions.map(
+                question => {
+                    if (question.id && question.currentAttempt) {
+                        dispatch(attemptQuestion(question.id, question.currentAttempt) as any);
+                    }
+                }
+            ));
+            dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
+            dispatch(showToast({color: "success", title: "Quiz submitted", body: "Quiz submitted successfully", timeout: 3000}) as any);
+            history.push(generatePostQuizUrl(quizId));
+        }
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Error submitting quiz", e));
+    }
+};
+
+export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal({
+        closeAction: () => {dispatch(closeActiveModal() as any)},
+        title: "Quiz already submitted",
+        body: <div className="text-center my-5 pb-4">
+            <strong>A submission has already been recorded for this quiz by your account.</strong>
+        </div>
+    }) as any);
+    history.push(generatePostQuizUrl(quizId));
+};
+
+// Current gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GAMEBOARD_REQUEST, gameboardId});
     try {
@@ -736,8 +788,6 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
             history.push(`/gameboards#${gameboardId}`);
         }
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error("Error saving gameboard.");
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Error saving gameboard", e));
     }
@@ -755,14 +805,14 @@ export const createGameboard = (gameboard: GameboardDTO) => async (dispatch: Dis
 };
 
 export const getWildcards = () => async (dispatch: Dispatch<Action>) => {
-  dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST});
-  try {
-      const response = await api.gameboards.getWildcards();
-      dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS, wildcards: response.data});
-  } catch (e) {
-      dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE});
-      dispatch(showErrorToastIfNeeded("Error loading wildcards", e));
-  }
+    dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST});
+    try {
+        const response = await api.gameboards.getWildcards();
+        dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS, wildcards: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Error loading wildcards", e));
+    }
 };
 
 // Assignments
@@ -803,7 +853,7 @@ export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
         dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS, ...version.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Failed to get Content Version", e));
+        dispatch(showErrorToastIfNeeded("Failed to get content version", e));
     }
 };
 
@@ -827,7 +877,7 @@ export const fetchSearch = (query: string, types: string) => async (dispatch: Di
         const searchResponse = await api.search.get(query, types);
         dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Search Failed", e));
+        dispatch(showErrorToastIfNeeded("Search failed", e));
     }
 };
 
@@ -843,7 +893,7 @@ export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Ac
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("User Search Failed", e));
+        dispatch(showErrorToastIfNeeded("User search failed", e));
     }
 };
 
@@ -855,7 +905,7 @@ export const adminUserDelete = (userid: number | undefined) => async (dispatch: 
             await api.admin.userDelete.delete(userid);
             dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS});
             dispatch(showToast({
-                title: "User Deleted",
+                title: "User deleted",
                 body: "The selected user was successfully deleted.",
                 color: "success",
                 timeout: 5000,
@@ -864,7 +914,7 @@ export const adminUserDelete = (userid: number | undefined) => async (dispatch: 
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("User Deletion Failed", e));
+        dispatch(showErrorToastIfNeeded("User deletion failed", e));
     }
 };
 
@@ -875,7 +925,7 @@ export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (di
         dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS});
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("User Role Modification Failed", e));
+        dispatch(showErrorToastIfNeeded("User role modification failed", e));
     }
 };
 
@@ -906,10 +956,10 @@ export const sendAdminEmail = (contentid: string, emailType: string, roles: Emai
     try {
         await api.email.sendAdminEmail(contentid, emailType, roles);
         dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_SUCCESS});
-        dispatch(showToast({color: "success", title: "Mail sent", body: "Mail sent successfully", timeout: 3000}) as any);
+        dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Sending mail failed", e));
+        dispatch(showErrorToastIfNeeded("Sending email failed", e));
     }
 };
 
@@ -918,10 +968,10 @@ export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids:
     try {
         await api.email.sendAdminEmailWithIds(contentid, emailType, ids);
         dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS});
-        dispatch(showToast({color: "success", title: "Mail sent", body: "Mail sent successfully", timeout: 3000}) as any);
+        dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Sending mail with ids failed", e));
+        dispatch(showErrorToastIfNeeded("Sending email with ids failed", e));
     }
 };
 
@@ -932,7 +982,7 @@ export const loadGroups = (archivedGroupsOnly: boolean) => async (dispatch: Disp
         const groups = await api.groups.get(archivedGroupsOnly);
         dispatch({type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: groups.data, archivedGroupsOnly});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Loading Groups Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading groups failed", e));
     }
 };
 
@@ -947,7 +997,7 @@ export const createGroup = (groupName: string) => async (dispatch: Dispatch<Acti
         dispatch({type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS, newGroup: newGroup.data});
         return newGroup.data as AppGroup;
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Creating a Group Failed", e));
+        dispatch(showErrorToastIfNeeded("Group creation failed", e));
         throw e;
     }
 };
@@ -959,7 +1009,7 @@ export const deleteGroup = (group: UserGroupDTO) => async (dispatch: Dispatch<an
         dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS, deletedGroup: group});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_FAILURE, deletedGroup: group});
-        dispatch(showErrorToastIfNeeded("Deleting a Group Failed", e));
+        dispatch(showErrorToastIfNeeded("Group deletion failed", e));
     }
 };
 
@@ -971,7 +1021,7 @@ export const updateGroup = (updatedGroup: UserGroupDTO, message?: string) => asy
         dispatch(showToast({color: "success", title: "Group saved successfully", body: message, timeout: 3000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE, updatedGroup: updatedGroup});
-        dispatch(showErrorToastIfNeeded("Group Saving Failed", e));
+        dispatch(showErrorToastIfNeeded("Group saving failed", e));
     }
 };
 
@@ -982,7 +1032,7 @@ export const getGroupMembers = (group: UserGroupDTO) => async (dispatch: Dispatc
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS, group: group, members: result.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_FAILURE, group: group});
-        dispatch(showErrorToastIfNeeded("Loading Group Members Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading group members failed", e));
     }
 };
 
@@ -993,7 +1043,7 @@ export const getGroupToken = (group: AppGroup) => async (dispatch: Dispatch<Acti
         dispatch({type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS, group: group, token: result.data.token});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_FAILURE, group: group});
-        dispatch(showErrorToastIfNeeded("Loading Group Token Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading group token failed", e));
     }
 };
 
@@ -1032,7 +1082,7 @@ export const addGroupManager = (group: AppGroup, managerEmail: string) => async 
         return true;
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_FAILURE, group, managerEmail});
-        dispatch(showErrorToastIfNeeded("Group Manager Addition Failed", e));
+        dispatch(showErrorToastIfNeeded("Group manager addition failed", e));
         return false;
     }
 };
@@ -1044,7 +1094,7 @@ export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmai
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS, group, manager});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE, group, manager});
-        dispatch(showErrorToastIfNeeded("Group Manager Removal Failed", e));
+        dispatch(showErrorToastIfNeeded("Group manager removal failed", e));
     }
 };
 
@@ -1070,7 +1120,7 @@ export const getMyGroupMemberships = () => async (dispatch: Dispatch<Action>) =>
         });
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Loading Group Memberships Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading group memberships failed", e));
     }
 };
 
@@ -1085,7 +1135,7 @@ export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_
         }) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Membership Status Update Failed", e));
+        dispatch(showErrorToastIfNeeded("Membership status update failed", e));
     }
 };
 
@@ -1097,7 +1147,7 @@ export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: Bo
         const boards = await api.boards.get(startIndex, limit, sort);
         dispatch({type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: boards.data, accumulate});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Loading Gameboards Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading gameboards failed", e));
     }
 };
 
@@ -1108,7 +1158,7 @@ export const loadGroupsForBoard = (board: GameboardDTO) => async (dispatch: Disp
         dispatch({type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS, board, groups: result.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE, board});
-        dispatch(showErrorToastIfNeeded("Loading Groups for Gameboard Failed", e));
+        dispatch(showErrorToastIfNeeded("Loading groups for gameboard failed", e));
     }
 };
 
@@ -1117,10 +1167,10 @@ export const deleteBoard = (board: GameboardDTO) => async (dispatch: Dispatch<Ac
     try {
         await api.boards.delete(board);
         dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, board});
-        dispatch(showToast({color: "success", title: "Gameboard Deleted", body: "You have deleted gameboard " + board.title, timeout: 5000}) as any);
+        dispatch(showToast({color: "success", title: "Gameboard deleted", body: "You have deleted gameboard " + board.title, timeout: 5000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE, board});
-        dispatch(showErrorToastIfNeeded("Delete Gameboard Failed", e));
+        dispatch(showErrorToastIfNeeded("Gameboard deletion failed", e));
     }
 };
 
@@ -1129,16 +1179,16 @@ export const unassignBoard = (board: GameboardDTO, group: UserGroupDTO) => async
     try {
         await api.boards.unassign(board, group);
         dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, board, group});
-        dispatch(showToast({color: "success", title: "Assignment Deleted", body: "This assignment has been unset successfully.", timeout: 5000}) as any);
+        dispatch(showToast({color: "success", title: "Assignment deleted", body: "This assignment has been unset successfully.", timeout: 5000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE, board, group});
-        dispatch(showErrorToastIfNeeded("Board Unassignment Failed", e));
+        dispatch(showErrorToastIfNeeded("Assignment deletion failed", e));
     }
 };
 
 export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Date) => async (dispatch: Dispatch<Action>) => {
     if (groupId == null) {
-        dispatch(showToast({color: "danger", title: "Board Assignment Failed", body: "Error: Please choose a group.", timeout: 5000}) as any);
+        dispatch(showToast({color: "danger", title: "Board assignment failed", body: "Error: Please choose a group.", timeout: 5000}) as any);
         return false;
     }
 
@@ -1148,7 +1198,7 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
         let today = new Date();
         today.setUTCHours(0, 0, 0, 0);
         if ((dueDateUTC - today.valueOf()) < 0) {
-            dispatch(showToast({color: "danger", title: "Board Assignment Failed", body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
+            dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
             return false;
         }
     }
@@ -1159,11 +1209,11 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
     try {
         await api.boards.assign(board, groupId, dueDateUTC);
         dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, ...assignment});
-        dispatch(showToast({color: "success", title: "Assignment Saved", body: "This assignment has been saved successfully.", timeout: 5000}) as any);
+        dispatch(showToast({color: "success", title: "Assignment saved", body: "This assignment has been saved successfully.", timeout: 5000}) as any);
         return true;
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, ...assignment});
-        dispatch(showErrorToastIfNeeded("Gameboard Assignment Failed", e));
+        dispatch(showErrorToastIfNeeded("Gameboard assignment failed", e));
         return false;
     }
 };
@@ -1420,11 +1470,6 @@ export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) =>
     }
 };
 
-// Generic log action:
-export const logAction = (eventDetails: object) => {
-    api.logger.log(eventDetails); // We do not care whether this completes or not
-    return {type: ACTION_TYPE.LOG_EVENT, eventDetails: eventDetails};
-};
 
 // SERVICE ACTIONS (w/o dispatch)
 // Page change
