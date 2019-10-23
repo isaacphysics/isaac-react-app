@@ -96,7 +96,7 @@ const Board = (props: BoardTableProps) => {
             setShowShareLink(false);
         } else {
             setShowShareLink(true);
-            setImmediate(() => {
+            setTimeout(() => {
                 if (shareLink.current) {
                     const selection = window.getSelection();
                     const range = document.createRange();
@@ -180,10 +180,11 @@ export const MyGameboards = () => {
     const [loading, setLoading] = useState(false);
     const [boardView, setBoardView] = useState(isMobile() ? boardViews.card : boardViews.table);
     const [boardLimit, setBoardLimit] = useState<BoardLimit>(boardView == boardViews.table ? BoardLimit.All : BoardLimit.six);
-    const [actualBoardLimit, setActualBoardLimit] = useState<ActualBoardLimit>(toActual(boardLimit));
     const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
     const [selectedBoards, setSelectedBoards] = useState<AppGameBoard[]>([]);
     const [assignedGroups, setAssignedGroups] = useState();
+
+    let actualBoardLimit: ActualBoardLimit = toActual(boardLimit);
 
     function loadInitial() {
         dispatch(loadBoards(0, actualBoardLimit, boardOrder));
@@ -195,10 +196,8 @@ export const MyGameboards = () => {
     }, [selectedBoards]);
 
     useEffect( () => {
-        if (actualBoardLimit != boardLimit) {
-            setActualBoardLimit(toActual(boardLimit));
-            loadInitial();
-        }
+        actualBoardLimit = toActual(boardLimit);
+        loadInitial();
     }, [boardLimit]);
 
     useMemo(() => {
@@ -249,7 +248,7 @@ export const MyGameboards = () => {
             setLoading(false);
             if (boards.boards) {
                 if (actualBoardLimit != boards.boards.length) {
-                    setActualBoardLimit(boards.boards.length);
+                    actualBoardLimit = (boards.boards.length);
                     if (!wasLoading && boards.boards.length == 0) {
                         // Through deletion or something we have ended up with no boards, so fetch more.
                         viewMore();
