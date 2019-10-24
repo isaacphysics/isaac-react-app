@@ -278,7 +278,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                                 </td>
                                                 <td>
                                                     {/*View*/}
-                                                    <RS.Input type="button" value="Edit" onClick={() => editUser(user.id)} className="btn btn-sm btn-secondary border-0 p-0"/>
+                                                    <RS.Input type="button" value="Edit" onClick={() => editUser(user.id)} className="btn btn-sm btn-secondary border-0 p-0 mb-2"/>
                                                     <RS.Input type="button" value="Delete" onClick={() => deleteUser(user.id)} className="btn btn-sm btn-secondary border-0 p-0"/>
                                                 </td>
                                                 <td>{user.familyName}, {user.givenName}</td>

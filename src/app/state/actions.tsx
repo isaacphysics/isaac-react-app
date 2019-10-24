@@ -25,7 +25,7 @@ import {
     QuestionSearchQuery,
     Toast,
     UserPreferencesDTO,
-    ValidatedChoice,
+    ValidatedChoice, ValidationUser,
 } from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
@@ -134,6 +134,16 @@ export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
+export const getChosenUserAuthSettings = (userId: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_REQUEST});
+    try {
+        const authenticationSettings = await api.authentication.getSelectedUserAuthSettings(userId);
+        dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS, selectedUserAuthSettings: authenticationSettings.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+    }
+};
+
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
     try {
@@ -166,14 +176,14 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
 
 // TODO scope for pulling out a separate registerUser method from this
 export const updateCurrentUser = (
-    updatedUser: LoggedInValidationUser,
+    updatedUser: ValidationUser,
     updatedUserPreferences: UserPreferencesDTO,
     passwordCurrent: string | null,
     currentUser: LoggedInUser
 ) => async (dispatch: Dispatch<Action>) => {
     // Confirm email change
-    if (currentUser.loggedIn && updatedUser.loggedIn && currentUser.id == updatedUser.id) {
-        if (currentUser.loggedIn && updatedUser.loggedIn && currentUser.email !== updatedUser.email) {
+    if (currentUser.loggedIn && currentUser.id == updatedUser.id) {
+        if (currentUser.loggedIn && currentUser.email !== updatedUser.email) {
             const emailChangeConfirmed = window.confirm(
                 "You have edited your email address. Your current address will continue to work until you verify your " +
                 "new address by following the verification link sent to it via email. Continue?"
@@ -191,13 +201,18 @@ export const updateCurrentUser = (
         }
     }
 
+    const editingOtherUser = currentUser.loggedIn && currentUser.id != updatedUser.id;
+
+    console.log(editingOtherUser);
+    console.log(updatedUser);
+
     try {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
         const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent);
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
         await dispatch(requestCurrentUser() as any);
 
-        const isFirstLogin = updatedUser.loggedIn && isFirstLoginInPersistence() || false;
+        const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
             const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
             persistence.remove(KEY.AFTER_AUTH_PATH);
@@ -206,13 +221,19 @@ export const updateCurrentUser = (
             }
             history.push('/account', {firstLogin: isFirstLogin});
         }
-        dispatch(showToast({
-            title: "Account settings updated",
-            body: "Your account settings were updated successfully.",
-            color: "success",
-            timeout: 5000,
-            closable: false,
-        }) as any);
+
+        if (!editingOtherUser) {
+            dispatch(showToast({
+                title: "Account settings updated",
+                body: "Your account settings were updated successfully.",
+                color: "success",
+                timeout: 5000,
+                closable: false,
+            }) as any);
+        }
+        if (editingOtherUser) {
+            history.push("/");
+        }
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
@@ -857,7 +878,7 @@ export const adminUserGet = (userid: number | undefined) => async (dispatch: Dis
     dispatch({type: ACTION_TYPE.ADMIN_USER_GET_REQUEST});
     try {
         const searchResponse = await api.admin.userGet.get(userid);
-        dispatch({type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS, getUsers: searchResponse.data});
+        dispatch({type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS, getUsers: Object.assign({}, searchResponse.data)});
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("User Get Failed", e));

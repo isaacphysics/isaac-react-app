@@ -17,10 +17,11 @@ interface UserPasswordProps {
     setNewPassword: (e: any) => void;
     setNewPasswordConfirm: (e: any) => void;
     newPasswordConfirm: string;
+    editingOtherUser: boolean;
 }
 
 export const UserPassword = (
-    {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, userAuthSettings, setNewPassword, setNewPasswordConfirm, newPasswordConfirm}: UserPasswordProps) => {
+    {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, userAuthSettings, setNewPassword, setNewPasswordConfirm, newPasswordConfirm, editingOtherUser}: UserPasswordProps) => {
 
     const [passwordResetRequested, setPasswordResetRequested] = useState(false);
     const [passwordFeedback, setPasswordFeedback] = useState<ZxcvbnResult | null>(null);
@@ -36,6 +37,7 @@ export const UserPassword = (
         {userAuthSettings && userAuthSettings.hasSegueAccount ?
             <Row>
                 <Col>
+                    {!editingOtherUser &&
                     <Row>
                         <Col md={{size: 6, offset: 3}}>
                             <FormGroup>
@@ -49,6 +51,7 @@ export const UserPassword = (
                             </FormGroup>
                         </Col>
                     </Row>
+                    }
                     <Row>
                         <Col md={{size: 6, offset: 3}}>
                             <FormGroup>
@@ -65,7 +68,7 @@ export const UserPassword = (
                                     }}
                                     onFocus={loadZxcvbnIfNotPresent}
                                     aria-describedby="passwordValidationMessage"
-                                    disabled={currentPassword == ""}
+                                    disabled={!editingOtherUser && currentPassword == ""}
                                 />
                                 {passwordFeedback &&
                                 <span className='float-right small mt-1'>
@@ -90,7 +93,7 @@ export const UserPassword = (
                                         setNewPasswordConfirm(e.target.value);
                                         setMyUser(Object.assign({}, myUser, {password: e.target.value}));
                                     }} aria-describedby="passwordConfirmationValidationMessage"
-                                    disabled={currentPassword == ""}
+                                    disabled={!editingOtherUser && currentPassword == ""}
                                 />
                                 {currentPassword && !isNewPasswordConfirmed &&
                                     <FormFeedback id="passwordConfirmationValidationMessage">

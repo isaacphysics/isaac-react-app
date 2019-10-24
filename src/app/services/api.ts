@@ -11,7 +11,7 @@ import {
     LoggedInUser,
     QuestionSearchQuery,
     QuestionSearchResponse,
-    UserPreferencesDTO
+    UserPreferencesDTO, ValidationUser
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {TypeFilter} from "../components/pages/Events";
@@ -80,7 +80,8 @@ export const api = {
         handlePasswordReset: (params: {token: string | null; password: string | null}) => {
             return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
         },
-        updateCurrent: (registeredUser: LoggedInUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        updateCurrent: (registeredUser: ValidationUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+            console.log(registeredUser);
             return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent});
         },
         passwordResetById: (id: number) => {
@@ -109,6 +110,9 @@ export const api = {
         },
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings`)
+        },
+        getSelectedUserAuthSettings: (userId: number): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
+            return endpoint.get(`/auth/user_authentication_settings/${userId}`)
         }
     },
     email: {
@@ -132,7 +136,7 @@ export const api = {
             }
         },
         userGet: {
-            get: (userid: number | undefined): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO> => {
+            get: (userid: number | undefined): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
                 return endpoint.get(`/admin/users/${userid}`);
             }
         },

@@ -15,16 +15,16 @@ import {
     TabContent,
     TabPane,
 } from "reactstrap";
-import {RegisteredUserDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
+import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AdminUserGetState, AppState, ErrorState} from "../../state/reducers";
-import {resetPassword, updateCurrentUser, adminUserGet} from "../../state/actions";
+import {adminUserGet, resetPassword, getChosenUserAuthSettings, updateCurrentUser} from "../../state/actions";
 import {
     LoggedInUser,
     LoggedInValidationUser,
     SubjectInterests,
     UserEmailPreferences,
     UserExamPreferences,
-    UserPreferencesDTO
+    UserPreferencesDTO, ValidationUser
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
@@ -53,12 +53,13 @@ const stateToProps = (state: AppState, props: any) => {
     return {
         errorMessage: state ? state.error : null,
         userAuthSettings: state ? state.userAuthSettings : null,
+        selectedUserAuthSettings: state ? state.selectedUserAuthSettings : null,
         userPreferences: state ? state.userPreferences : null,
         firstLogin: history.location && history.location.state && history.location.state.firstLogin,
         hashAnchor: (hash && hash.slice(1)) || null,
         authToken: (searchParams && searchParams.authToken) ? (searchParams.authToken as string) : null,
         userOfInterest: (searchParams && searchParams.userId) ? (searchParams.userId as string) : null,
-        searchResults: state && state.adminUserGet || null
+        userFind: state && Object.assign({}, state.adminUserGet, {loggedIn: true}) || {loggedIn: false}
     }
 };
 
@@ -66,15 +67,18 @@ const dispatchToProps = {
     updateCurrentUser,
     resetPassword,
     adminUserGet,
+    getChosenUserAuthSettings,
 };
 
 interface AccountPageProps {
     user: LoggedInUser;
     errorMessage: ErrorState;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
+    selectedUserAuthSettings: UserAuthenticationSettingsDTO | null;
+    getChosenUserAuthSettings: (userid: number) => void;
     userPreferences: UserPreferencesDTO | null;
     updateCurrentUser: (
-        updatedUser: LoggedInValidationUser,
+        updatedUser: ValidationUser,
         updatedUserPreferences: UserPreferencesDTO,
         passwordCurrent: string | null,
         currentUser: LoggedInUser
@@ -84,41 +88,24 @@ interface AccountPageProps {
     authToken: string | null;
     userOfInterest: string | null;
     adminUserGet: (userid: number | undefined) => void;
-    searchResults: AdminUserGetState;
+    userFind: AdminUserGetState;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, searchResults}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, userFind}: AccountPageProps) => {
+    useEffect(() => {
+        userOfInterest && adminUserGet(Number(userOfInterest));
+        userOfInterest && getChosenUserAuthSettings(Number(userOfInterest));
+    }, []);
     // - Admin user modification
-    const [editingOtherUser, _] = useState(!!userOfInterest && user && user.loggedIn && user.id && user.id.toString() !== userOfInterest);
+    const [editingOtherUser, _] = useState(!!userOfInterest && user && user.loggedIn && user.id && user.id.toString() !== userOfInterest || false);
     const [userToEdit, setUserToEdit] = useState();
 
-    const targetUserUpdate = async () => {
-        await adminUserGet(Number(userOfInterest));
-    };
-
-    useEffect(() =>  {
-        if (editingOtherUser && userOfInterest) {
-            targetUserUpdate();
-        }
-    }, [editingOtherUser, userOfInterest]);
-
-    useEffect(() => {
-        console.log(searchResults);
-        if (searchResults) {
-            setUserToEdit(Object.assign({}, searchResults));
-        }
-    }, [searchResults]);
+    useEffect(() => {editingOtherUser && userFind && setUserToEdit(Object.assign({}, userFind))}, [userFind]);
 
     // - Copy of user to store changes before saving
-    const [userToUpdate, setUserToUpdate] = useState(userToEdit && userToEdit !== {} ? Object.assign({}, userToEdit, {loggedIn: true, password: ""}) : Object.assign({}, user, {password: ""}));
-    useMemo(() => {setUserToUpdate(userToEdit ? Object.assign({}, userToEdit, {loggedIn: true, password: ""}) : Object.assign({}, user, {password: ""}))}, [user, userToEdit]);
+    const [userToUpdate, setUserToUpdate] = useState(editingOtherUser && userOfInterest && userFind ? Object.assign({}, userFind, {loggedIn: true, password: ""}) : Object.assign({}, user, {password: ""}));
 
-    // useEffect(() => {
-    //     if (userToEdit) {
-    //         setUserToUpdate(userToEdit);
-    //         console.log(userToEdit);
-    //     }
-    // }, [userToEdit]);
+    useEffect(() => {editingOtherUser && userToEdit && setUserToUpdate(Object.assign({}, userToEdit, {loggedIn: true}))}, [userToEdit]);
 
     // Inputs which trigger re-render
     const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
@@ -133,6 +120,8 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
     const [examPreferences, setExamPreferences] = useState<UserExamPreferences>({});
     const [subjectInterests, setSubjectInterests] = useState<SubjectInterests>({});
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
+
+    const pageTitle = editingOtherUser ? "Edit User" : "My Account";
 
     useMemo(() => {
         const currentEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
@@ -150,7 +139,6 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         setMyUserPreferences(currentUserPreferences);
     }, [userPreferences]);
 
-
     // Set active tab using hash anchor
     const [activeTab, setActiveTab] = useState(ACCOUNT_TAB.account);
     useMemo(() => {
@@ -162,21 +150,17 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
         setActiveTab(tab);
     }, [hashAnchor, authToken]);
 
-    // useMemo(() => {
-    //     if (userToEdit) {
-    //         setUserToUpdate(userToEdit);
-    //         setUserToUpdate(Object.assign({}, userToUpdate, {authorisedFullAccess: true}))
-    //         console.log(userToUpdate);
-    //     }
-    // }, [userToEdit]);
-
     // Values derived from inputs (props and state)
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
     // Form's submission method
     const updateAccount = (event: React.FormEvent<HTMLFormElement>) => {
+        // console.log("hello");
         event.preventDefault();
         setAttemptedAccountUpdate(true);
+
+        console.log(userToUpdate);
+        userToUpdate.loggedIn && console.log(validateEmail(userToUpdate.email));
 
         // Only update email preferences on the email preferences tab
         if (activeTab == ACCOUNT_TAB.emailpreferences) {
@@ -195,23 +179,19 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
             validateSubjectInterests(subjectInterests) &&
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
             (!userToUpdate.password || isNewPasswordConfirmed)) {
-            updateCurrentUser(userToUpdate, myUserPreferences, currentPassword, user);
+            updateCurrentUser(userToUpdate, editingOtherUser ? {} : myUserPreferences, currentPassword, user);
         }
     };
 
-    console.log(user);
-    console.log(userToEdit);
-    console.log(userToUpdate);
-
     return <Container id="account-page" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle="My account" className="mb-4" />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} className="mb-4" />
         <h3 className="d-md-none text-center text-muted m-3">
             <small>
                 Update your Isaac Computer Science account, or <Link to="/logout" className="text-secondary">Log out</Link>
             </small>
         </h3>
 
-        <ShowLoading until={editingOtherUser ? userToEdit : userToUpdate}>
+        <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <Card>
                     <Nav tabs className="my-4 flex-wrap">
@@ -275,7 +255,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                     myUser={userToUpdate} setMyUser={setUserToUpdate}
                                     setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
                                     isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
-                                    setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm}
+                                    setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
                                 />
                             </TabPane>
                             {!editingOtherUser &&

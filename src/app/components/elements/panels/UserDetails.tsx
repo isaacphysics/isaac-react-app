@@ -12,7 +12,6 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
-import {user} from "../../../state/reducers";
 
 interface UserDetailsProps {
     examPreferences: UserExamPreferences;
@@ -37,8 +36,6 @@ export const UserDetails = (props: UserDetailsProps) => {
         validateUserGender(userToUpdate) &&
         validateUserSchool(userToUpdate) &&
         validateSubjectInterests(subjectInterests);
-
-    console.log(userToUpdate);
 
     return <CardBody className="pt-0">
         <Row>
