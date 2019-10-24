@@ -38,7 +38,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     let ids: Array<string> = [];
     let m;
     while ((m = r.exec(markdown)) !== null) {
-        ids.push(m[1]);
+        ids.push(m.groups && m.groups.id || ''); // bit stupid but hey, Typescript needs pleasing...
     }
     if (glossaryTerms && glossaryTerms.length > 0 && ids && ids.length > 0) {
         terms = Object.assign({}, ...glossaryTerms.filter(t => {
