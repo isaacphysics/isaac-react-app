@@ -7,11 +7,12 @@ import {
     ActualBoardLimit,
     AdditionalInformation,
     ATTENDANCE,
-    BoardOrder, EmailUserRoles,
-    LoggedInUser,
+    BoardOrder,
+    EmailUserRoles,
     QuestionSearchQuery,
     QuestionSearchResponse,
-    UserPreferencesDTO, ValidationUser
+    UserPreferencesDTO,
+    ValidationUser
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {TypeFilter} from "../components/pages/Events";
@@ -158,7 +159,6 @@ export const api = {
     },
     authorisations: {
         get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get(`authorisations`);
             return endpoint.get(`authorisations`);
         },
         getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {

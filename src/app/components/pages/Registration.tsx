@@ -16,13 +16,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {
-    LoggedInUser,
-    LoggedInValidationUser,
-    UserPreferencesDTO,
-    ValidationUser,
-    ZxcvbnResult
-} from "../../../IsaacAppTypes";
+import {LoggedInUser, UserPreferencesDTO, ValidationUser, ZxcvbnResult} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
