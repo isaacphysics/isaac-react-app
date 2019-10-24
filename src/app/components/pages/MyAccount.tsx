@@ -17,14 +17,14 @@ import {
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AdminUserGetState, AppState, ErrorState} from "../../state/reducers";
-import {adminUserGet, resetPassword, getChosenUserAuthSettings, updateCurrentUser} from "../../state/actions";
+import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
     LoggedInUser,
-    LoggedInValidationUser,
     SubjectInterests,
     UserEmailPreferences,
     UserExamPreferences,
-    UserPreferencesDTO, ValidationUser
+    UserPreferencesDTO,
+    ValidationUser
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
@@ -155,12 +155,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     // Form's submission method
     const updateAccount = (event: React.FormEvent<HTMLFormElement>) => {
-        // console.log("hello");
         event.preventDefault();
         setAttemptedAccountUpdate(true);
-
-        console.log(userToUpdate);
-        userToUpdate.loggedIn && console.log(validateEmail(userToUpdate.email));
 
         // Only update email preferences on the email preferences tab
         if (activeTab == ACCOUNT_TAB.emailpreferences) {

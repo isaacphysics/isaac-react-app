@@ -81,7 +81,6 @@ export const api = {
             return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
         },
         updateCurrent: (registeredUser: ValidationUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
-            console.log(registeredUser);
             return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent});
         },
         passwordResetById: (id: number) => {
@@ -159,6 +158,7 @@ export const api = {
     },
     authorisations: {
         get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
+            return endpoint.get(`authorisations`);
             return endpoint.get(`authorisations`);
         },
         getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
