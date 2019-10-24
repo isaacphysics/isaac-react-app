@@ -161,11 +161,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
         document.documentElement.style.width = null;
         document.documentElement.style.height = null;
-        document.documentElement.style.overflow = null;
+        document.documentElement.style.overflow = '';
         document.documentElement.style.touchAction = 'auto';
         document.body.style.width = null;
         document.body.style.height = null;
-        document.body.style.overflow = null;
+        document.body.style.overflow = '';
         document.body.style.touchAction = 'auto';
     }
 
