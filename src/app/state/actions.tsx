@@ -21,11 +21,11 @@ import {
     BoardOrder,
     EmailUserRoles,
     LoggedInUser,
-    LoggedInValidationUser,
     QuestionSearchQuery,
     Toast,
     UserPreferencesDTO,
-    ValidatedChoice, ValidationUser,
+    ValidatedChoice,
+    ValidationUser,
 } from "../../IsaacAppTypes";
 import {
     AssignmentDTO,

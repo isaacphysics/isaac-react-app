@@ -3,14 +3,13 @@ import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {connect, useDispatch, useSelector} from "react-redux";
-import {adminModifyUserRoles, adminUserSearch, adminUserDelete, getUserIdSchoolLookup} from "../../state/actions";
+import {adminModifyUserRoles, adminUserDelete, adminUserSearch, getUserIdSchoolLookup} from "../../state/actions";
 import {AdminUserSearchState, AppState} from "../../state/reducers";
 import {Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
 import {Link} from "react-router-dom";
-import {history} from "../../services/history";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -105,7 +104,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
     };
 
     const editUser = (userid: number | undefined) => {
-        history.push(`/account?userId=${userid}`);
+        window.open(`/account?userId=${userid}`, '_blank');
     };
 
     const deleteUser = async (userid: number | undefined) => {
