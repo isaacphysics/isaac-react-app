@@ -61,9 +61,9 @@
 }
 
 .btn-secondary:focus {
-  box-shadow: none;
-  border: 0.2rem solid black !important;
+  box-shadow: 0 0 0 2pt black !important;
   border-radius: 8px;
+  outline: none !important;
 }
 
 .btn-danger:focus {
