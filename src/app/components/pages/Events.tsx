@@ -9,6 +9,7 @@ import {withRouter} from "react-router-dom";
 import {History} from "history";
 import {clearEventsList, getEventsList} from "../../state/actions";
 import {EventCard} from "../elements/cards/EventCard";
+import {PageFragment} from "../elements/PageFragment";
 
 /* eslint-disable @typescript-eslint/camelcase */
 
@@ -56,6 +57,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
 
         <div className="my-4">
             {/* Filters */}
+            <PageFragment fragmentId="event_type_description"/>
             <RS.Form inline className="d-flex justify-content-end">
                 <RS.Label>Filter by
                     <RS.Input className="ml-2 mr-3" type="select" value={statusFilter} onChange={e => {
