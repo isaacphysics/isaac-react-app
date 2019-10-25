@@ -57,7 +57,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
 
         <div className="my-4">
             {/* Filters */}
-            <PageFragment fragmentId="event_type_description"/>
+            <PageFragment fragmentId="event_type_descriptions"/>
             <RS.Form inline className="d-flex justify-content-end">
                 <RS.Label>Filter by
                     <RS.Input className="ml-2 mr-3" type="select" value={statusFilter} onChange={e => {
