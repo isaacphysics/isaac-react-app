@@ -28,8 +28,8 @@
 }
 
 .btn.btn-link:focus {
-  box-shadow: none !important;
-  border: 0.2rem solid $focus-blue !important;
+  box-shadow: 0 0 0 0.2rem $focus-blue !important;
+  outline: none !important;
   border-radius: 3px;
 }
 
@@ -81,12 +81,6 @@
   box-shadow: none;
   border: 0.2rem solid $secondary;
   border-radius: 8px;
-}
-
-.btn.btn-sm.a-alt:focus {
-  box-shadow: none;
-  border: 0.2rem solid $focus-blue;
-  border-radius: 5px;
 }
 
 .footerLink:focus {
