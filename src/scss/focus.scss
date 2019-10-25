@@ -90,13 +90,13 @@
 }
 
 .footerLink:focus {
-  box-shadow: none !important;
-  border: 0.2rem solid white;
-  border-radius: 5px;
+  box-shadow: 0 0 0 2pt white;
+  border-radius: 3px;
+  outline: none !important;
 }
 
 .footerTop a:focus {
-  border: 0.2rem solid white;
+  outline: 0.2rem solid white;
 }
 
 // Close modal button
