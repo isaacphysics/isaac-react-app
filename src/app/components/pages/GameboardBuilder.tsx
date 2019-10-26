@@ -1,9 +1,16 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
-import {closeActiveModal, createGameboard, getWildcards, logAction, openActiveModal} from "../../state/actions";
+import {ContentSummaryDTO, GameboardItem} from "../../../IsaacApiTypes";
+import {
+    closeActiveModal,
+    createGameboard,
+    getWildcards,
+    loadGameboard,
+    logAction,
+    openActiveModal
+} from "../../state/actions";
 import {store} from "../../state/store";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
@@ -11,7 +18,6 @@ import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
 import {resourceFound} from "../../services/validation";
-import {sample} from 'lodash';
 import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
@@ -21,29 +27,37 @@ import {
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
 import {IS_CS_PLATFORM} from "../../services/constants";
 import {history} from "../../services/history"
+import {withRouter} from "react-router-dom";
+import queryString from "query-string";
 
-interface GameboardBuilderProps {
-    location: {
-        state?: {
-            gameboard?: GameboardDTO;
-        };
-    };
-}
+export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
+    const queryParams = props.location.search && queryString.parse(props.location.search);
+    const gameboardId = queryParams && queryParams.base as string;
 
-export const GameboardBuilder = (props: GameboardBuilderProps) => {
     const dispatch = useDispatch();
-    const loadedGameboard = props.location.state && props.location.state.gameboard;
 
     const user = useSelector((state: AppState) => state && state.user);
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
+    const loadedGameboard = useSelector((state: AppState) => {
+        return state && state.currentGameboard != 404 && state.currentGameboard && state.currentGameboard.id == gameboardId && state.currentGameboard
+    });
 
-    const [gameboardTitle, setGameboardTitle] = useState(loadedGameboard ? `${loadedGameboard.title} (Copy)`: "");
+    const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTag, setGameboardTag] = useState("null");
     const [gameboardURL, setGameboardURL] = useState();
-    const [questionOrder, setQuestionOrder] = useState<string[]>((loadedGameboard && loadGameboardQuestionOrder(loadedGameboard)) || []);
-    const [selectedQuestions, setSelectedQuestions] = useState((loadedGameboard && loadGameboardSelectedQuestions(loadedGameboard)) || new Map<string, ContentSummaryDTO>());
-    const [wildcardId, setWildcardId] = useState(isStaff(user) && loadedGameboard && loadedGameboard.wildCard && loadedGameboard.wildCard.id ? loadedGameboard.wildCard.id : undefined);
-    const eventLog = useRef<any[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
+    const [questionOrder, setQuestionOrder] = useState<string[]>( []);
+    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
+    const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
+    const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
+
+    useMemo(() => {
+        if (loadedGameboard) {
+            setGameboardTitle(`${loadedGameboard.title} (Copy)`);
+            setQuestionOrder(loadGameboardQuestionOrder(loadedGameboard) || []);
+            setSelectedQuestions(loadGameboardSelectedQuestions(loadedGameboard) || new Map<string, ContentSummaryDTO>());
+            setWildcardId(isStaff(user) && loadedGameboard.wildCard && loadedGameboard.wildCard.id || undefined);
+        }
+    }, [loadedGameboard]);
 
     const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "";
 
@@ -54,18 +68,14 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
         }
     };
 
+    useEffect(() => {if (!wildcards) dispatch(getWildcards())}, [user]);
+    useEffect(() => {if (gameboardId) dispatch(loadGameboard(gameboardId))}, [gameboardId]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
             dispatch(logAction({type: "LEAVE_GAMEBOARD_BUILDER", events: eventLog}));
         });
     });
-
-    useEffect(() => {
-        if (!wildcards) {
-            dispatch(getWildcards());
-        }
-    }, [user]);
 
     const pageHelp = <span>
         You can create custom question sets to assign to your groups. Search by question title or topic and add up to
@@ -234,4 +244,4 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
             </RS.CardBody>
         </RS.Card>
     </RS.Container>
-};
+});
