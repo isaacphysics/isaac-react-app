@@ -351,10 +351,11 @@ export const MyGameboards = () => {
                                             </thead>
                                             <tbody>
                                                 {boards.boards
-                                                    .filter(board => board.title && board.title.includes(boardTitleFilter))
+                                                    .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase()))
                                                     .map(board =>
                                                         <Board
-                                                            board={board} location={location}
+                                                            board={board}
+                                                            location={location}
                                                             showToast={dispatch(showToast)}
                                                             loadGroupsForBoard={dispatch(loadGroupsForBoard)}
                                                             groups={groups}
