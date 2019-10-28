@@ -69,7 +69,11 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
     };
 
     useEffect(() => {if (!wildcards) dispatch(getWildcards())}, [user]);
-    useEffect(() => {if (baseGameboardId && !baseGameboard) dispatch(loadGameboard(baseGameboardId))}, [baseGameboardId]);
+    useEffect(() => {
+        if (baseGameboardId && (!baseGameboard || baseGameboard === NOT_FOUND)) {
+            dispatch(loadGameboard(baseGameboardId));
+        }
+    }, [baseGameboardId]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
