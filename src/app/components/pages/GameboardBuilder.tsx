@@ -40,13 +40,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
     const user = useSelector((state: AppState) => state && state.user);
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
-    const baseGameboard = useSelector((state: AppState) => {
-        if (state && state.currentGameboard && state.currentGameboard != NOT_FOUND) {
-            if (state.currentGameboard.id == baseGameboardId) {
-                return state.currentGameboard;
-            }
-        }
-    });
+    const baseGameboard = useSelector((state: AppState) => state && state.currentGameboard);
 
     const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTag, setGameboardTag] = useState("null");
@@ -57,7 +51,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
     useMemo(() => {
-        if (baseGameboard) {
+        if (baseGameboard && baseGameboard !== NOT_FOUND) {
             setGameboardTitle(`${baseGameboard.title} (Copy)`);
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
             setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
@@ -180,7 +174,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                                     <div className="img-center">
                                                         <ShowLoading
                                                             placeholder={<div className="text-center"><Spinner color="primary" /></div>}
-                                                            until={!baseGameboardId || baseGameboard}
+                                                            until={!baseGameboardId || baseGameboard == NOT_FOUND || baseGameboard}
                                                         >
                                                             <input
                                                                 type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
