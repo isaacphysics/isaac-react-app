@@ -126,7 +126,7 @@ button.btn.btn-link.login-b,
   text-decoration: none;
   text-transform: uppercase;
   position: initial !important;
-  display: block !important;
+  display: unset !important;
 
   &:hover {
     @include respond-above(sm) {
