@@ -294,7 +294,7 @@ export const MyGameboards = () => {
                                 {boards.boards && boards.boards.map(board => <div key={board.id}><Board board={board} location={location} showToast={dispatch(showToast)} loadGroupsForBoard={dispatch(loadGroupsForBoard)} groups={groups} selectedBoards={selectedBoards} setSelectedBoards={setSelectedBoards} boardView={boardView} user={user} loadGroups={dispatch(loadGroups)} boards={boards} loadBoards={dispatch(loadBoards)} deleteBoard={dispatch(deleteBoard)} /></div>)}
                             </div>:
                             <Card className="my-2 mt-2 mb-4">
-                                <CardHeader className="big-header">
+                                <CardHeader className="m-0">
                                     <Row>
                                         <Col md={4}>
                                             <Label>Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/></Label>
