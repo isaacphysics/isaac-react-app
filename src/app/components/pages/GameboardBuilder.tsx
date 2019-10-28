@@ -25,21 +25,27 @@ import {
     logEvent
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
-import {IS_CS_PLATFORM} from "../../services/constants";
+import {IS_CS_PLATFORM, NOT_FOUND} from "../../services/constants";
 import {history} from "../../services/history"
 import {withRouter} from "react-router-dom";
 import queryString from "query-string";
+import {ShowLoading} from "../handlers/ShowLoading";
+import {Spinner} from "reactstrap";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
-    const gameboardId = queryParams && queryParams.base as string;
+    const baseGameboardId = queryParams && queryParams.base as string;
 
     const dispatch = useDispatch();
 
     const user = useSelector((state: AppState) => state && state.user);
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
-    const loadedGameboard = useSelector((state: AppState) => {
-        return state && state.currentGameboard != 404 && state.currentGameboard && state.currentGameboard.id == gameboardId && state.currentGameboard
+    const baseGameboard = useSelector((state: AppState) => {
+        if (state && state.currentGameboard && state.currentGameboard != NOT_FOUND) {
+            if (state.currentGameboard.id == baseGameboardId) {
+                return state.currentGameboard;
+            }
+        }
     });
 
     const [gameboardTitle, setGameboardTitle] = useState("");
@@ -51,13 +57,13 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
     useMemo(() => {
-        if (loadedGameboard) {
-            setGameboardTitle(`${loadedGameboard.title} (Copy)`);
-            setQuestionOrder(loadGameboardQuestionOrder(loadedGameboard) || []);
-            setSelectedQuestions(loadGameboardSelectedQuestions(loadedGameboard) || new Map<string, ContentSummaryDTO>());
-            setWildcardId(isStaff(user) && loadedGameboard.wildCard && loadedGameboard.wildCard.id || undefined);
+        if (baseGameboard) {
+            setGameboardTitle(`${baseGameboard.title} (Copy)`);
+            setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
+            setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
+            setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
         }
-    }, [loadedGameboard]);
+    }, [baseGameboard]);
 
     const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "";
 
@@ -69,7 +75,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
     };
 
     useEffect(() => {if (!wildcards) dispatch(getWildcards())}, [user]);
-    useEffect(() => {if (gameboardId) dispatch(loadGameboard(gameboardId))}, [gameboardId]);
+    useEffect(() => {if (baseGameboardId && !baseGameboard) dispatch(loadGameboard(baseGameboardId))}, [baseGameboardId]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
@@ -172,25 +178,30 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                             <tr>
                                                 <td colSpan={5}>
                                                     <div className="img-center">
-                                                        <input
-                                                            type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
-                                                            alt="Add questions" title="Add questions"
-                                                            onClick={() => {
-                                                                logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
-                                                                dispatch(openActiveModal({
-                                                                    closeAction: () => {store.dispatch(closeActiveModal())},
-                                                                    size: "xl",
-                                                                    title: "Search questions",
-                                                                    body: <QuestionSearchModal
-                                                                        originalSelectedQuestions={selectedQuestions}
-                                                                        setOriginalSelectedQuestions={setSelectedQuestions}
-                                                                        originalQuestionOrder={questionOrder}
-                                                                        setOriginalQuestionOrder={setQuestionOrder}
-                                                                        eventLog={eventLog}
-                                                                    />
-                                                                }))
-                                                            }}
-                                                        />
+                                                        <ShowLoading
+                                                            placeholder={<div className="text-center"><Spinner color="primary" /></div>}
+                                                            until={!baseGameboardId || baseGameboard}
+                                                        >
+                                                            <input
+                                                                type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
+                                                                alt="Add questions" title="Add questions"
+                                                                onClick={() => {
+                                                                    logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
+                                                                    dispatch(openActiveModal({
+                                                                        closeAction: () => {store.dispatch(closeActiveModal())},
+                                                                        size: "xl",
+                                                                        title: "Search questions",
+                                                                        body: <QuestionSearchModal
+                                                                            originalSelectedQuestions={selectedQuestions}
+                                                                            setOriginalSelectedQuestions={setSelectedQuestions}
+                                                                            originalQuestionOrder={questionOrder}
+                                                                            setOriginalQuestionOrder={setQuestionOrder}
+                                                                            eventLog={eventLog}
+                                                                        />
+                                                                    }))
+                                                                }}
+                                                            />
+                                                        </ShowLoading>
                                                     </div>
                                                 </td>
                                             </tr>
