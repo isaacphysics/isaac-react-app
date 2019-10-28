@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {useDispatch, useStore, useSelector, ReactReduxContext, Provider} from "react-redux";
+import * as RS from "reactstrap";
 import {Router} from "react-router-dom";
 import {AppState} from "../../state/reducers";
 import {MARKDOWN_RENDERER} from "../../services/constants";
@@ -32,17 +33,22 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         return state && state.glossaryTerms;
     });
 
+    let tooltips: Array<any> = [];
     let terms: any = {};
     // TODO Could be using String::matchAll() if we had a decent polyfill...
-    let r = /^\[glossary:(?<id>[a-z-|]+?)\]/gm;
-    let ids: Array<string> = [];
+    let glossaryBlockRegexp = /^\[glossary:(?<id>[a-z-|]+?)\]/gm;
+    let glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z-|]+?)\]/gm;
+    let glossaryIDs: Array<string> = [];
     let m;
-    while ((m = r.exec(markdown)) !== null) {
-        ids.push(m.groups && m.groups.id || ''); // bit stupid but hey, Typescript needs pleasing...
+    while ((m = glossaryBlockRegexp.exec(markdown)) !== null) {
+        glossaryIDs.push(m.groups && m.groups.id || ''); // bit stupid but hey, Typescript needs pleasing...
     }
-    if (glossaryTerms && glossaryTerms.length > 0 && ids && ids.length > 0) {
+    while ((m = glossaryInlineRegexp.exec(markdown)) !== null) {
+        glossaryIDs.push(m.groups && m.groups.id || '');
+    }
+    if (glossaryTerms && glossaryTerms.length > 0 && glossaryIDs && glossaryIDs.length > 0) {
         terms = Object.assign({}, ...glossaryTerms.filter(t => {
-            return ids.includes(t.id || '')
+            return glossaryIDs.includes(t.id || '')
         }).map(
             (t: GlossaryTermDTO) => {
                 if (t.id) {
@@ -50,7 +56,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
                 }
             }
         ));
-        markdown = markdown.replace(r, (_match, id: string) => {
+        markdown = markdown.replace(glossaryBlockRegexp, (_match, id: string) => {
             let string = ReactDOMServer.renderToStaticMarkup(
                 <Provider store={store}>
                     <Router history={history}>
@@ -58,6 +64,17 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
                     </Router>
                 </Provider>
             );
+            return string;
+        });
+        markdown = markdown.replace(glossaryInlineRegexp, (_match, id: string) => {
+            let term = terms[id];
+            // This is properly horrible but it works...
+            tooltips.push(
+                <RS.UncontrolledTooltip placement="bottom" target={`glossary-term-id-${term.id.replace('|', '-')}`}>
+                    <TrustedMarkdown markdown={term.explanation.value} />
+                </RS.UncontrolledTooltip>
+            );
+            let string = `<span class="inline-glossary-term" id="glossary-term-id-${term.id.replace('|', '-')}">${term.value}</span>`;
             return string;
         });
     }
@@ -80,5 +97,8 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     );
 
     const html = MARKDOWN_RENDERER.render(regexProcessedMarkdown);
-    return <TrustedHtml html={html} />;
+    return <div>
+        <TrustedHtml html={html} />
+        {tooltips}
+    </div>;
 };
