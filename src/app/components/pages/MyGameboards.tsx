@@ -39,7 +39,6 @@ interface MyBoardsPageProps {
     deleteBoard: (board: GameboardDTO) => void;
     showToast: (toast: Toast) => void;
     location: {hash: string};
-
 }
 
 enum BoardLimit {
@@ -290,9 +289,28 @@ export const MyGameboards = () => {
                 <ShowLoading until={boards}>
                     {boards && boards.boards && <div>
                         {boardView == boardViews.card ?
+                            // Card view
                             <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
-                                {boards.boards && boards.boards.map(board => <div key={board.id}><Board board={board} location={location} showToast={dispatch(showToast)} loadGroupsForBoard={dispatch(loadGroupsForBoard)} groups={groups} selectedBoards={selectedBoards} setSelectedBoards={setSelectedBoards} boardView={boardView} user={user} loadGroups={dispatch(loadGroups)} boards={boards} loadBoards={dispatch(loadBoards)} deleteBoard={dispatch(deleteBoard)} /></div>)}
-                            </div>:
+                                {boards.boards.map(board => <div key={board.id}>
+                                    <Board
+                                        board={board}
+                                        location={location}
+                                        showToast={dispatch(showToast)}
+                                        loadGroupsForBoard={dispatch(loadGroupsForBoard)}
+                                        groups={groups}
+                                        selectedBoards={selectedBoards}
+                                        setSelectedBoards={setSelectedBoards}
+                                        boardView={boardView}
+                                        user={user}
+                                        loadGroups={dispatch(loadGroups)}
+                                        boards={boards}
+                                        loadBoards={dispatch(loadBoards)}
+                                        deleteBoard={dispatch(deleteBoard)}
+                                    />
+                                </div>)}
+                            </div>
+                            :
+                            // Table view
                             <Card className="my-2 mt-2 mb-4">
                                 <CardHeader className="m-0">
                                     <Row>
@@ -306,21 +324,50 @@ export const MyGameboards = () => {
                                 </CardHeader>
                                 <CardBody id="boards-table">
                                     <div className="overflow-auto">
-                                        <Table>
+                                        <Table className="mb-0">
                                             <thead>
                                                 <tr>
                                                     <th>Completion</th>
-                                                    <th className="pointer-cursor"><span onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}</span></th>
+                                                    <th className="pointer-cursor">
+                                                        <span onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
+                                                            Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
+                                                        </span>
+                                                    </th>
                                                     {/*<th className="text-center">Levels</th>*/}
                                                     <th className="text-center">Creator</th>
-                                                    <th className="text-center pointer-cursor"><span onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}</span></th>
-                                                    <th className="text-center pointer-cursor"><span onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}</span></th>
+                                                    <th className="text-center pointer-cursor">
+                                                        <span onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
+                                                            Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
+                                                        </span>
+                                                    </th>
+                                                    <th className="text-center pointer-cursor">
+                                                        <span onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
+                                                            Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
+                                                        </span>
+                                                    </th>
                                                     <th></th>
                                                     <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {boards.boards && boards.boards.map(board => board.title && board.title.includes(boardTitleFilter) && <Board board={board} location={location} showToast={dispatch(showToast)} loadGroupsForBoard={dispatch(loadGroupsForBoard)} groups={groups} selectedBoards={selectedBoards} setSelectedBoards={setSelectedBoards} boardView={boardView} user={user} loadGroups={dispatch(loadGroups)} boards={boards} loadBoards={dispatch(loadBoards)} deleteBoard={dispatch(deleteBoard)} />)}
+                                                {boards.boards
+                                                    .filter(board => board.title && board.title.includes(boardTitleFilter))
+                                                    .map(board =>
+                                                        <Board
+                                                            board={board} location={location}
+                                                            showToast={dispatch(showToast)}
+                                                            loadGroupsForBoard={dispatch(loadGroupsForBoard)}
+                                                            groups={groups}
+                                                            selectedBoards={selectedBoards}
+                                                            setSelectedBoards={setSelectedBoards}
+                                                            boardView={boardView}
+                                                            user={user}
+                                                            loadGroups={dispatch(loadGroups)}
+                                                            boards={boards}
+                                                            loadBoards={dispatch(loadBoards)}
+                                                            deleteBoard={dispatch(deleteBoard)}
+                                                        />)
+                                                }
                                             </tbody>
                                         </Table>
                                     </div>
