@@ -7,6 +7,7 @@ import {logAction} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {TrustedHtml} from "./TrustedHtml";
+import {AccordionContext} from "../../services/contexts";
 
 interface AccordionsProps {
     id?: string;
@@ -81,7 +82,7 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
         }
     }
 
-    return <div className="accordion">
+    return<div className="accordion">
         <div className="accordion-header">
             <RS.Button
                 id={anchorId || ""} block color="link"
@@ -103,11 +104,13 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
             </RS.Button>
         </div>
         <RS.Collapse isOpen={open} className="mt-1">
-            <RS.Card>
-                <RS.CardBody>
-                    {children}
-                </RS.CardBody>
-            </RS.Card>
+            <AccordionContext.Provider value={index}>
+                <RS.Card>
+                    <RS.CardBody>
+                        {children}
+                    </RS.CardBody>
+                </RS.Card>
+            </AccordionContext.Provider>
         </RS.Collapse>
     </div>;
 };

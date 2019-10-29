@@ -1,10 +1,11 @@
 import React from "react";
+import {AnvilApp} from "./AnvilApp"
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
 import {IsaacVideo} from "./IsaacVideo";
 import {IsaacImage} from "./IsaacImage";
 import {IsaacFigure} from "./IsaacFigure";
-import {ContentDTO} from "../../../IsaacApiTypes";
+import {ContentDTO, AnvilAppDTO} from "../../../IsaacApiTypes";
 import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
 import {IsaacTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
@@ -13,6 +14,7 @@ import {withRouter} from "react-router-dom";
 import {IsaacQuizTabs} from "./IsaacQuizTabs";
 
 interface IsaacContentProps {
+    app: AnvilAppDTO;
     doc: ContentDTO;
     match: {path: string};
 }
@@ -26,7 +28,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
         case "video": selectedComponent = <IsaacVideo {...props} />; break;
         // case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break; // TODO
         case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break;
-        // case "anvilApp": selectedComponent = <AnvilApp {...props} />; break; // TODO
+        case "anvilApp": selectedComponent = <AnvilApp {...props} />; break;
         case "isaacMultiChoiceQuestion":
         case "isaacNumericQuestion":
         case "isaacSymbolicQuestion":
