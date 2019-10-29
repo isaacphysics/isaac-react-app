@@ -2,8 +2,7 @@ import React, {useContext} from 'react';
 import {AnvilAppDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {connect} from "react-redux";
-import {LoggedInUser} from "../../../IsaacAppTypes";
-import {AccordionContext} from "../../services/contexts";
+import {LoggedInUser, AccordionSectionContext} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) || null
@@ -19,9 +18,7 @@ const AnvilAppComponent = ({doc, user}: AnvilAppProps) => {
     const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${Math.random()}`;
     const title = doc.value || "Anvil app";
 
-    let index = useContext(AccordionContext);
-    console.log(index);
-    // + "#?accordion_section_id=" + index
+    let index = useContext(AccordionSectionContext);
 
     let appParams: {[s: string]: string} = {};
 
@@ -37,9 +34,26 @@ const AnvilAppComponent = ({doc, user}: AnvilAppProps) => {
     // TODO: appParams["problem_id"] = ...
     // TODO: appParams["problem_type"] = ...
     // TODO: appParams["problem_previously_correct"] = ...
-    // TODO: appParams["accordion_section_id"] = ...
-    // TODO: appParams["page_id"] = ...
-    // TODO: appParams["page_type"] = ...
+    if (!(index === undefined)) {
+        appParams["accordion_section_id"] = index.toString();
+    }
+
+    if (location.pathname.indexOf("/questions/") == 0) {
+        appParams["page_id"] = location.pathname.replace("/questions/", "");
+        appParams["page_type"] = "isaacQuestionPage";
+    } else if (location.pathname.indexOf("/concepts/") == 0) {
+        appParams["page_id"] = location.pathname.replace("/concepts/", "");
+        appParams["page_type"] = "isaacConceptPage";
+    } else if (location.pathname.indexOf("/events/") == 0) {
+        appParams["page_id"] = location.pathname.replace("/events/", "");
+        appParams["page_type"] = "isaacEventPage";
+    } else if (location.pathname.indexOf("/pages/") == 0) {
+        appParams["page_id"] = location.pathname.replace("/pages/", "");
+        appParams["page_type"] = "page";
+    } else if ((location.pathname.match(/\//g) || []).length == 1) {
+        appParams["page_id"] = location.pathname.replace("/", "");
+        appParams["page_type"] = "page";
+    }
 
     let queryParams = Object.keys(appParams).map((key) => {
         return encodeURIComponent(key) + '=' + encodeURIComponent(appParams[key])

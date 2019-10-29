@@ -460,6 +460,7 @@ export interface AdminStatsResponse {
 
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
+export const AccordionSectionContext = React.createContext<number | undefined>(undefined);
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;
