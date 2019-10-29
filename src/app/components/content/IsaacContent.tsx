@@ -12,6 +12,7 @@ import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
 import {withRouter} from "react-router-dom";
 import {IsaacQuizTabs} from "./IsaacQuizTabs";
+import {AnvilApp} from "./AnvilApp";
 
 interface IsaacContentProps {
     app: AnvilAppDTO;
