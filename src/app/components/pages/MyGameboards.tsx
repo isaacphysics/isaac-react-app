@@ -136,7 +136,7 @@ const Board = (props: BoardTableProps) => {
             <CardBody className="pb-4 pt-4">
                 <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
                 <button className="groups-assigned subject-compsci" id={hexagonId}>
-                    <strong>{board.percentageCompleted}%</strong>
+                    {board.percentageCompleted}%
                 </button>
                 <aside>
                     <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
