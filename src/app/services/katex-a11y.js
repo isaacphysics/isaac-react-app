@@ -25,9 +25,12 @@ const stringMap = {
     "]": "close square bracket",
     "\\{": "left curly bracket",
     "\\}": "right curly bracket",
+    "\\lbrace": "left curly bracket",
+    "\\rbrace": "right curly bracket",
     "\\lvert": "open vertical bar",
     "\\rvert": "close vertical bar",
     "|": "vertical bar",
+    "\\vert": "vertical bar",
     "\\uparrow": "up arrow",
     "\\Uparrow": "up arrow",
     "\\downarrow": "down arrow",
@@ -60,6 +63,7 @@ const stringMap = {
     ":": "colon",
     "?": "question mark",
     "'": "apostrophe",
+    "\\#": "hash symbol",
     "\\%": "percent",
     " ": "space",
     "\\ ": "space",
@@ -89,6 +93,7 @@ const stringMap = {
     "\\ldots": "dots",
     "\\@cdots": "dots",
     "\\lnot": "not",
+    "\\emptyset": "empty set",
     // TODO: add entries for all accents
     "\\hat": "hat",
     "\\acute": "acute",
@@ -125,13 +130,16 @@ const binMap = {
     "\\bullet": "bullet",
     "\\land": "and",
     "\\lor": "or",
-    "\\veebar": "xor"
+    "\\veebar": "xor",
+    "\\cup": "union",
+    "\\cap": "intersection",
 };
 
 const relMap = {
     "=": "equals",
     "\\approx": "approximately equals",
     "≠": "is not equal to",
+    "\\neq": "is not equal to",
     "\\geq": "is greater than or equal to",
     "\\ge": "is greater than or equal to",
     "\\leq": "is less than or equal to",
@@ -143,6 +151,13 @@ const relMap = {
     "\\rightarrow": "right arrow",
     "\\Rightarrow": "right arrow",
     ":": "colon",
+    "\\in": "in",
+    "\\notin": "not in",
+    "\\setminus": "difference",
+    "\\subset": "proper subset of",
+    "\\subseteq": "subset of",
+    "\\supset": "proper superset of",
+    "\\supseteq": "superset of",
 };
 
 const accentUnderMap = {
