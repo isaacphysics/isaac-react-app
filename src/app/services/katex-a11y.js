@@ -138,7 +138,6 @@ const binMap = {
 const relMap = {
     "=": "equals",
     "\\approx": "approximately equals",
-    "≠": "is not equal to",
     "\\neq": "is not equal to",
     "\\geq": "is greater than or equal to",
     "\\ge": "is greater than or equal to",
