@@ -7,7 +7,6 @@ import {
     Button,
     Card,
     CardBody,
-    CardHeader,
     CardSubtitle,
     CardTitle,
     Col,
@@ -21,8 +20,8 @@ import {
     Table
 } from 'reactstrap';
 import {ActualBoardLimit, AppGameBoard, BoardOrder} from "../../../IsaacAppTypes";
-import {RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
-import {boards as ThisBoards, groups as ThisGroup} from "../../state/selectors";
+import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {boards as ThisBoards} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {sortIcon, STUDENTS_CRUMB} from "../../services/constants";
 import {formatBoardOwner} from "../../services/gameboards";
@@ -32,8 +31,6 @@ import {formatDate} from "../elements/DateString";
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
     boards: Boards | null;
-    groups: UserGroupDTO[] | null;
-    location: {hash: string};
 }
 
 enum BoardLimit {
@@ -65,7 +62,7 @@ type BoardTableProps = MyBoardsPageProps & {
 const Board = (props: BoardTableProps) => {
     const {user, board, setSelectedBoards, selectedBoards, boardView} = props;
 
-    const boardLink = `${window.location.origin}/board/${board.id}`;
+    const boardLink = `${window.location.origin}/gameboards#${board.id}`;
 
     const dispatch = useDispatch();
     const [showShareLink, setShowShareLink] = useState(false);
@@ -99,10 +96,10 @@ const Board = (props: BoardTableProps) => {
     }
 
     function confirmCardDeleteBoard() {
-        if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
-            dispatch(loadGroupsForBoard(board));
-            const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
-            if (hasAssignedGroups) {
+        dispatch(loadGroupsForBoard(board));
+        const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
+        if (hasAssignedGroups) {
+            if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
                 alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.");
             } else {
                 showToast({color: "failure", title: "Gameboard Deletion Not Allowed", body: "You have groups assigned to this gameboard. To delete this gameboard, you must unassign all groups.", timeout: 5000});
@@ -165,7 +162,6 @@ export const MyGameboards = () => {
     //Redux state and dispatch
     const dispatch = useDispatch();
     const boards = useSelector((state: AppState) => ThisBoards.boards(state) as Boards);
-    const groups = useSelector((state: AppState) => ThisGroup.active(state)) as UserGroupDTO[] || null;
     const user = useSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
@@ -198,10 +194,10 @@ export const MyGameboards = () => {
     }, [boardView]);
 
     function confirmDeleteMultipleBoards() {
-        if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
-            selectedBoards && selectedBoards.map(board => dispatch(loadGroupsForBoard(board)));
-            selectedBoards && selectedBoards.map(board => board.assignedGroups && board.assignedGroups.length > 0 && setAssignedGroups(true));
-            if (assignedGroups) {
+        selectedBoards && selectedBoards.map(board => dispatch(loadGroupsForBoard(board)));
+        selectedBoards && selectedBoards.map(board => board.assignedGroups && board.assignedGroups.length > 0 && setAssignedGroups(true));
+        if (assignedGroups) {
+            if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
                 alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.");
             } else {
                 dispatch(showToast({
@@ -287,8 +283,6 @@ export const MyGameboards = () => {
                                     <Board
                                         key={board.id}
                                         board={board}
-                                        location={location}
-                                        groups={groups}
                                         selectedBoards={selectedBoards}
                                         setSelectedBoards={setSelectedBoards}
                                         boardView={boardView}
@@ -343,8 +337,6 @@ export const MyGameboards = () => {
                                                             <Board
                                                                 key={board.id}
                                                                 board={board}
-                                                                location={location}
-                                                                groups={groups}
                                                                 selectedBoards={selectedBoards}
                                                                 setSelectedBoards={setSelectedBoards}
                                                                 boardView={boardView}

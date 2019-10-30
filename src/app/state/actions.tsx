@@ -769,8 +769,7 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
         if (isTeacher(user)) {
             history.push(`/set_assignments#${gameboardId}`);
         } else {
-            // FIXME - update this to be correct when My Boards is launched!
-            history.push(`/gameboards#${gameboardId}`);
+            history.push(`/my_gameboards#${gameboardId}`);
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
