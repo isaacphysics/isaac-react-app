@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteBoard, loadBoards, loadGroups, loadGroupsForBoard, showToast} from "../../state/actions";
+import {deleteBoard, loadBoards, loadGroupsForBoard, showToast} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState, Boards} from "../../state/reducers";
 import {
@@ -20,11 +20,11 @@ import {
     Spinner,
     Table
 } from 'reactstrap';
-import {ActualBoardLimit, AppGameBoard, BoardOrder, Toast} from "../../../IsaacAppTypes";
-import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
+import {ActualBoardLimit, AppGameBoard, BoardOrder} from "../../../IsaacAppTypes";
+import {RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {boards as ThisBoards, groups as ThisGroup} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {STUDENTS_CRUMB, sortIcon} from "../../services/constants";
+import {sortIcon, STUDENTS_CRUMB} from "../../services/constants";
 import {formatBoardOwner} from "../../services/gameboards";
 import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
@@ -33,11 +33,6 @@ interface MyBoardsPageProps {
     user: RegisteredUserDTO;
     boards: Boards | null;
     groups: UserGroupDTO[] | null;
-    loadGroups: (getArchived: boolean) => void;
-    loadBoards: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => void;
-    loadGroupsForBoard: (board: GameboardDTO) => void;
-    deleteBoard: (board: GameboardDTO) => void;
-    showToast: (toast: Toast) => void;
     location: {hash: string};
 }
 
@@ -73,13 +68,9 @@ const Board = (props: BoardTableProps) => {
     const boardLink = `${window.location.origin}/board/${board.id}`;
 
     const dispatch = useDispatch();
-
-    useEffect( () => {
-        dispatch(loadGroupsForBoard(board));
-    }, [board.id]);
     const [showShareLink, setShowShareLink] = useState(false);
     const shareLink = useRef<HTMLInputElement>(null);
-    const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
+
     const hexagonId = `board-hex-${board.id}`;
 
     const updateBoardSelection = (board: AppGameBoard, checked: boolean) => {
@@ -108,8 +99,10 @@ const Board = (props: BoardTableProps) => {
     }
 
     function confirmCardDeleteBoard() {
-        if (hasAssignedGroups) {
-            if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
+        if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
+            dispatch(loadGroupsForBoard(board));
+            const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
+            if (hasAssignedGroups) {
                 alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.");
             } else {
                 showToast({color: "failure", title: "Gameboard Deletion Not Allowed", body: "You have groups assigned to this gameboard. To delete this gameboard, you must unassign all groups.", timeout: 5000});
@@ -125,7 +118,7 @@ const Board = (props: BoardTableProps) => {
     return boardView == boardViews.table ?
         <tr key={board.id} className="board-card">
             <td><div className="subject-compsci-table groups-assigned" id={hexagonId}>
-                <strong>{board.percentageCompleted}%</strong>
+                {board.percentageCompleted}%
             </div></td>
             <td><a href={boardLink}>{board.title}</a></td>
             {/*<td className="text-center">{board.levels.join(' ')}</td>*/}
@@ -190,9 +183,6 @@ export const MyGameboards = () => {
         setLoading(true);
     }
     useEffect( loadInitial, [boardOrder]);
-    useMemo(() => {
-        selectedBoards && selectedBoards.map(board => board.assignedGroups && board.assignedGroups.length > 0 && setAssignedGroups(true));
-    }, [selectedBoards]);
 
     useEffect( () => {
         actualBoardLimit = toActual(boardLimit);
@@ -208,8 +198,10 @@ export const MyGameboards = () => {
     }, [boardView]);
 
     function confirmDeleteMultipleBoards() {
-        if (assignedGroups) {
-            if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
+        if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
+            selectedBoards && selectedBoards.map(board => dispatch(loadGroupsForBoard(board)));
+            selectedBoards && selectedBoards.map(board => board.assignedGroups && board.assignedGroups.length > 0 && setAssignedGroups(true));
+            if (assignedGroups) {
                 alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.");
             } else {
                 dispatch(showToast({
@@ -264,19 +256,19 @@ export const MyGameboards = () => {
     // @ts-ignore
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="My gameboards" intermediateCrumbs={[STUDENTS_CRUMB]} help={pageHelp} />
-        {boards && boards.totalResults == 0 ? <h3 className="text-center mt-4 mb-5">You have no gameboards to view; use one of the options above to find one.</h3> :
+        {boards && boards.totalResults == 0 ? <h3 className="text-center mt-4 mb-5">You have no gameboards to view.</h3> :
             <React.Fragment>
                 {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} saved...</h4>}
                 {!boards && <h4>You have <Spinner size="sm" /> saved gameboards...</h4>}
                 <Row>
                     <Col>
-                        <Form inline>
+                        <Form inline className="input-options" onSubmit={e => e.preventDefault()}>
                             <span className="flex-grow-1" />
-                            <Label>Display in <Input className="ml-2 mr-3" type="select" value={boardView} onChange={e => switchView(e)}>
+                            <Label>Display in <Input className="ml-2 mr-2" type="select" value={boardView} onChange={e => switchView(e)}>
                                 {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
                             </Input></Label>
                             {boardView !== boardViews.table &&
-                            <Label>Show <Input className="ml-2 mr-3" type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                            <Label>Show <Input className="ml-2 mr-2" type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                 {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                             </Input></Label>}
                             {boardView !== boardViews.table &&
@@ -293,19 +285,15 @@ export const MyGameboards = () => {
                             <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
                                 {boards.boards.map(board => <div key={board.id}>
                                     <Board
+                                        key={board.id}
                                         board={board}
                                         location={location}
-                                        showToast={dispatch(showToast)}
-                                        loadGroupsForBoard={dispatch(loadGroupsForBoard)}
                                         groups={groups}
                                         selectedBoards={selectedBoards}
                                         setSelectedBoards={setSelectedBoards}
                                         boardView={boardView}
                                         user={user}
-                                        loadGroups={dispatch(loadGroups)}
                                         boards={boards}
-                                        loadBoards={dispatch(loadBoards)}
-                                        deleteBoard={dispatch(deleteBoard)}
                                     />
                                 </div>)}
                             </div>
@@ -313,12 +301,12 @@ export const MyGameboards = () => {
                             // Table view
                             <Card className="my-2 mt-2 mb-4">
                                 <CardHeader className="m-0">
-                                    <Row>
+                                    <Row className="align-content-center">
                                         <Col md={4}>
                                             <Label>Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/></Label>
                                         </Col>
                                         <Col md={8}>
-                                            {selectedBoards && selectedBoards.length > 0 && <Button className="float-right" onClick={confirmDeleteMultipleBoards}>Delete</Button>}
+                                            {selectedBoards && selectedBoards.length > 0 && <div className="m-0"><Button className="float-right m-2" onClick={confirmDeleteMultipleBoards}>Delete ({selectedBoards.length})</Button></div>}
                                         </Col>
                                     </Row>
                                 </CardHeader>
@@ -329,21 +317,21 @@ export const MyGameboards = () => {
                                                 <tr>
                                                     <th>Completion</th>
                                                     <th className="pointer-cursor">
-                                                        <span onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
+                                                        <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
                                                             Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
-                                                        </span>
+                                                        </button>
                                                     </th>
                                                     {/*<th className="text-center">Levels</th>*/}
                                                     <th className="text-center">Creator</th>
                                                     <th className="text-center pointer-cursor">
-                                                        <span onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
+                                                        <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
                                                             Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
-                                                        </span>
+                                                        </button>
                                                     </th>
                                                     <th className="text-center pointer-cursor">
-                                                        <span onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
+                                                        <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
                                                             Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
-                                                        </span>
+                                                        </button>
                                                     </th>
                                                     <th></th>
                                                     <th></th>
@@ -354,19 +342,15 @@ export const MyGameboards = () => {
                                                     .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase()))
                                                     .map(board =>
                                                         <Board
+                                                            key={board.id}
                                                             board={board}
                                                             location={location}
-                                                            showToast={dispatch(showToast)}
-                                                            loadGroupsForBoard={dispatch(loadGroupsForBoard)}
                                                             groups={groups}
                                                             selectedBoards={selectedBoards}
                                                             setSelectedBoards={setSelectedBoards}
                                                             boardView={boardView}
                                                             user={user}
-                                                            loadGroups={dispatch(loadGroups)}
                                                             boards={boards}
-                                                            loadBoards={dispatch(loadBoards)}
-                                                            deleteBoard={dispatch(deleteBoard)}
                                                         />)
                                                 }
                                             </tbody>

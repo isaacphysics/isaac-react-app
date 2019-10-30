@@ -32,6 +32,21 @@
   background-position: -71px 0;
 }
 
+.table-button {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  font-weight: bold;
+}
+
+.input-options {
+  float: right;
+  @media only screen and (max-width:800px) {
+    float: unset !important;
+    flex-direction: column;
+  }
+}
+
 .groups-assigned {
   font-size: 14pt;
   line-height: 110%;
