@@ -133,6 +133,7 @@ const binMap = {
     "\\veebar": "xor",
     "\\cup": "union",
     "\\cap": "intersection",
+    "\\setminus": "difference",
 };
 
 const relMap = {
@@ -152,7 +153,6 @@ const relMap = {
     ":": "colon",
     "\\in": "in",
     "\\notin": "not in",
-    "\\setminus": "difference",
     "\\subset": "proper subset of",
     "\\subseteq": "subset of",
     "\\supset": "proper superset of",
