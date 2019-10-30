@@ -299,65 +299,65 @@ export const MyGameboards = () => {
                             </div>
                             :
                             // Table view
-                            <Card className="my-2 mt-2 mb-4">
-                                <CardHeader className="m-0">
-                                    <Row className="align-content-center">
-                                        <Col md={4}>
-                                            <Label>Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/></Label>
-                                        </Col>
-                                        <Col md={8}>
-                                            {selectedBoards && selectedBoards.length > 0 && <div className="m-0"><Button className="float-right m-2" onClick={confirmDeleteMultipleBoards}>Delete ({selectedBoards.length})</Button></div>}
-                                        </Col>
-                                    </Row>
-                                </CardHeader>
-                                <CardBody id="boards-table">
-                                    <div className="overflow-auto">
-                                        <Table className="mb-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Completion</th>
-                                                    <th className="pointer-cursor">
-                                                        <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
-                                                            Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
-                                                        </button>
-                                                    </th>
-                                                    {/*<th className="text-center">Levels</th>*/}
-                                                    <th className="text-center">Creator</th>
-                                                    <th className="text-center pointer-cursor">
-                                                        <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
-                                                            Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
-                                                        </button>
-                                                    </th>
-                                                    <th className="text-center pointer-cursor">
-                                                        <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
-                                                            Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
-                                                        </button>
-                                                    </th>
-                                                    <th></th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {boards.boards
-                                                    .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase()))
-                                                    .map(board =>
-                                                        <Board
-                                                            key={board.id}
-                                                            board={board}
-                                                            location={location}
-                                                            groups={groups}
-                                                            selectedBoards={selectedBoards}
-                                                            setSelectedBoards={setSelectedBoards}
-                                                            boardView={boardView}
-                                                            user={user}
-                                                            boards={boards}
-                                                        />)
-                                                }
-                                            </tbody>
-                                        </Table>
-                                    </div>
-                                </CardBody>
-                            </Card>}
+                            <div>
+                                <Row className="align-content-center">
+                                    <Col md={4}>
+                                        <Label>Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/></Label>
+                                    </Col>
+                                    <Col md={8}>
+                                        {selectedBoards && selectedBoards.length > 0 && <div className="m-0"><Button className="float-right m-2" onClick={confirmDeleteMultipleBoards}>Delete ({selectedBoards.length})</Button></div>}
+                                    </Col>
+                                </Row>
+                                <Card className="my-2 mt-2 mb-4">
+                                    <CardBody id="boards-table">
+                                        <div className="overflow-auto">
+                                            <Table className="mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Completion</th>
+                                                        <th className="pointer-cursor">
+                                                            <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
+                                                                Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
+                                                            </button>
+                                                        </th>
+                                                        {/*<th className="text-center">Levels</th>*/}
+                                                        <th className="text-center">Creator</th>
+                                                        <th className="text-center pointer-cursor">
+                                                            <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
+                                                                Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
+                                                            </button>
+                                                        </th>
+                                                        <th className="text-center pointer-cursor">
+                                                            <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
+                                                                Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
+                                                            </button>
+                                                        </th>
+                                                        <th></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {boards.boards
+                                                        .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase()))
+                                                        .map(board =>
+                                                            <Board
+                                                                key={board.id}
+                                                                board={board}
+                                                                location={location}
+                                                                groups={groups}
+                                                                selectedBoards={selectedBoards}
+                                                                setSelectedBoards={setSelectedBoards}
+                                                                boardView={boardView}
+                                                                user={user}
+                                                                boards={boards}
+                                                            />)
+                                                    }
+                                                </tbody>
+                                            </Table>
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            </div>}
                     </div>}
                 </ShowLoading>
             </React.Fragment>}
