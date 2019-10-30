@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteBoard, loadBoards, loadGroupsForBoard, showToast} from "../../state/actions";
+import {deleteBoard, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState, Boards} from "../../state/reducers";
 import {
@@ -96,17 +96,6 @@ const Board = (props: BoardTableProps) => {
     }
 
     function confirmCardDeleteBoard() {
-        dispatch(loadGroupsForBoard(board));
-        const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
-        if (hasAssignedGroups) {
-            if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
-                alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.");
-            } else {
-                showToast({color: "failure", title: "Gameboard Deletion Not Allowed", body: "You have groups assigned to this gameboard. To delete this gameboard, you must unassign all groups.", timeout: 5000});
-                return;
-            }
-        }
-
         if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
             dispatch(deleteBoard(board));
         }
@@ -170,7 +159,6 @@ export const MyGameboards = () => {
     const [boardLimit, setBoardLimit] = useState<BoardLimit>(boardView == boardViews.table ? BoardLimit.All : BoardLimit.six);
     const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
     const [selectedBoards, setSelectedBoards] = useState<AppGameBoard[]>([]);
-    const [assignedGroups, setAssignedGroups] = useState();
 
     let actualBoardLimit: ActualBoardLimit = toActual(boardLimit);
 
@@ -194,22 +182,6 @@ export const MyGameboards = () => {
     }, [boardView]);
 
     function confirmDeleteMultipleBoards() {
-        selectedBoards && selectedBoards.map(board => dispatch(loadGroupsForBoard(board)));
-        selectedBoards && selectedBoards.map(board => board.assignedGroups && board.assignedGroups.length > 0 && setAssignedGroups(true));
-        if (assignedGroups) {
-            if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
-                alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.");
-            } else {
-                dispatch(showToast({
-                    color: "failure",
-                    title: "Gameboard Deletion Not Allowed",
-                    body: "You have groups assigned to this gameboard. To delete this gameboard, you must unassign all groups.",
-                    timeout: 5000
-                }));
-                return;
-            }
-        }
-
         if (confirm(`Are you sure you want to remove ${selectedBoards && selectedBoards.length > 1 ? selectedBoards.length + " boards" : selectedBoards[0].title} from your account?`)) {
             selectedBoards && selectedBoards.map(board => dispatch(deleteBoard(board)));
             setSelectedBoards([]);
@@ -230,7 +202,7 @@ export const MyGameboards = () => {
     }
 
     useEffect( () => {
-        if (boards) {
+        if (boards && boards.totalResults != 0) {
             const wasLoading = loading;
             setLoading(false);
             if (boards.boards) {
