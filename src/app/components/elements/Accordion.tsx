@@ -104,7 +104,7 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
             </RS.Button>
         </div>
         <RS.Collapse isOpen={open} className="mt-1">
-            <AccordionSectionContext.Provider value={trustedTitle}>
+            <AccordionSectionContext.Provider value={id}>
                 <RS.Card>
                     <RS.CardBody>
                         {children}

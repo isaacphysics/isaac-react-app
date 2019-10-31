@@ -5,13 +5,14 @@ import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
 import {IsaacVideo} from "./IsaacVideo";
 import {IsaacImage} from "./IsaacImage";
 import {IsaacFigure} from "./IsaacFigure";
-import {ContentDTO, AnvilAppDTO} from "../../../IsaacApiTypes";
+import {AnvilAppDTO, ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
 import {IsaacTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
 import {withRouter} from "react-router-dom";
 import {IsaacQuizTabs} from "./IsaacQuizTabs";
+import {QuestionContext} from "../../../IsaacAppTypes";
 
 interface IsaacContentProps {
     app: AnvilAppDTO;
@@ -22,6 +23,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
     const {doc: {type, layout, encoding, value, children}, match} = props;
 
     let selectedComponent;
+    let tempSelectedComponent;
     switch (type) {
         case "figure": selectedComponent = <IsaacFigure {...props} />; break;
         case "image": selectedComponent = <IsaacImage {...props} />; break;
@@ -41,10 +43,11 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
         case "isaacItemQuestion":
         case "isaacParsonsQuestion":
             if (match.path.startsWith("/quizzes")) {
-                selectedComponent = <IsaacQuizTabs {...props} />;
+                tempSelectedComponent = <IsaacQuizTabs {...props} />;
             } else {
-                selectedComponent = <IsaacQuestionTabs {...props} />;
+                tempSelectedComponent = <IsaacQuestionTabs {...props} />;
             }
+            selectedComponent = <QuestionContext.Provider value={props.doc.id}>{tempSelectedComponent}</QuestionContext.Provider>;
             break;
         default:
             switch (layout) {

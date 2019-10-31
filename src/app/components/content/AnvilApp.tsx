@@ -1,28 +1,36 @@
 import React, {useContext} from 'react';
-import {AnvilAppDTO} from "../../../IsaacApiTypes";
+import {AnvilAppDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {connect} from "react-redux";
-import {LoggedInUser, AccordionSectionContext} from "../../../IsaacAppTypes";
+import {AccordionSectionContext, LoggedInUser, QuestionContext} from "../../../IsaacAppTypes";
+import {store} from "../../state/store";
 
 const stateToProps = (state: AppState) => ({
-    user: (state && state.user) || null
+    user: (state && state.user) || null,
+    page: (state && state.doc) || null,
+    pageState: store.getState()
 });
 
 interface AnvilAppProps {
     doc: AnvilAppDTO;
     user: LoggedInUser | null;
+    pageState: any;
 }
 
-// TODO add dynamic resizing using onmessage, additional required info in URL params!
-const AnvilAppComponent = ({doc, user}: AnvilAppProps) => {
+// TODO add dynamic resizing using onmessage
+const AnvilAppComponent = ({doc, user, pageState}: AnvilAppProps) => {
     const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${Math.random()}`;
     const title = doc.value || "Anvil app";
 
-    let accordionSectionTitle = useContext(AccordionSectionContext);
+    let accordionSectionId = useContext(AccordionSectionContext);
+    let questionId = useContext(QuestionContext);
+
+    let parentQuestion = pageState && pageState.questions ? (pageState.questions).find(
+        function(question: IsaacQuestionPageDTO) {return question.id == questionId}) : undefined;
 
     let appParams: {[s: string]: string} = {};
 
-    appParams["hostname"] = window.location.host;
+    appParams["hostname"] = window.location.hostname;
     if (user && user.loggedIn) {
         if (user.id) {
             appParams["user_id"] = user.id.toString();
@@ -31,28 +39,20 @@ const AnvilAppComponent = ({doc, user}: AnvilAppProps) => {
             appParams["user_role"] = user.role;
         }
     }
-    // TODO: appParams["problem_id"] = ...
-    // TODO: appParams["problem_type"] = ...
-    // TODO: appParams["problem_previously_correct"] = ...
-    if (!(accordionSectionTitle === undefined)) {
-        appParams["accordion_section_id"] = accordionSectionTitle;
+
+    if (parentQuestion !== undefined) {
+        appParams["problem_id"] = parentQuestion.id;
+        appParams["problem_type"] = parentQuestion.type;
+        appParams["problem_previously_correct"] = parentQuestion.bestAttempt.correct;
     }
 
-    if (location.pathname.indexOf("/questions/") == 0) {
-        appParams["page_id"] = location.pathname.replace("/questions/", "");
-        appParams["page_type"] = "isaacQuestionPage";
-    } else if (location.pathname.indexOf("/concepts/") == 0) {
-        appParams["page_id"] = location.pathname.replace("/concepts/", "");
-        appParams["page_type"] = "isaacConceptPage";
-    } else if (location.pathname.indexOf("/events/") == 0) {
-        appParams["page_id"] = location.pathname.replace("/events/", "");
-        appParams["page_type"] = "isaacEventPage";
-    } else if (location.pathname.indexOf("/pages/") == 0) {
-        appParams["page_id"] = location.pathname.replace("/pages/", "");
-        appParams["page_type"] = "page";
-    } else if ((location.pathname.match(/\//g) || []).length == 1) {
-        appParams["page_id"] = location.pathname.replace("/", "");
-        appParams["page_type"] = "page";
+    if ((accordionSectionId !== undefined)) {
+        appParams["accordion_section_id"] = accordionSectionId;
+    }
+
+    if (pageState.doc) {
+        appParams["page_id"] = pageState.doc.id;
+        appParams["page_type"] = pageState.doc.type;
     }
 
     let queryParams = Object.keys(appParams).map((key) => {
