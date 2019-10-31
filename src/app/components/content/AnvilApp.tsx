@@ -18,7 +18,7 @@ const AnvilAppComponent = ({doc, user}: AnvilAppProps) => {
     const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${Math.random()}`;
     const title = doc.value || "Anvil app";
 
-    let index = useContext(AccordionSectionContext);
+    let accordionSectionTitle = useContext(AccordionSectionContext);
 
     let appParams: {[s: string]: string} = {};
 
@@ -34,8 +34,8 @@ const AnvilAppComponent = ({doc, user}: AnvilAppProps) => {
     // TODO: appParams["problem_id"] = ...
     // TODO: appParams["problem_type"] = ...
     // TODO: appParams["problem_previously_correct"] = ...
-    if (!(index === undefined)) {
-        appParams["accordion_section_id"] = index.toString();
+    if (!(accordionSectionTitle === undefined)) {
+        appParams["accordion_section_id"] = accordionSectionTitle;
     }
 
     if (location.pathname.indexOf("/questions/") == 0) {
