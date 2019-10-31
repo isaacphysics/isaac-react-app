@@ -18,13 +18,13 @@ import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {EditContentButton} from "../elements/EditContentButton";
-import {doc, questions} from "../../state/selectors";
+import * as selectors from "../../state/selectors";
 
 export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId: string}}}) => {
     const dispatch = useDispatch();
-    const doc = useSelector(doc.ifQuizId(match.params.quizId));
-    const allQuestionsAttempted = useSelector(questions.allQuestionsAttempted);
-    const anyQuestionPreviouslyAttempted = useSelector(questions.anyQuestionPreviouslyAttempted);
+    const doc = useSelector(selectors.doc.ifQuizId(match.params.quizId));
+    const allQuestionsAttempted = useSelector(selectors.questions.allQuestionsAttempted);
+    const anyQuestionPreviouslyAttempted = useSelector(selectors.questions.anyQuestionPreviouslyAttempted);
     const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
 
     function submitQuiz(event: React.FormEvent) {

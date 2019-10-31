@@ -17,7 +17,7 @@ import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
 import {isStudent, isTeacher} from "../../services/user";
-import {doc} from "../../state/selectors";
+import * as selectors from "../../state/selectors";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -26,7 +26,7 @@ interface QuestionPageProps {
 
 export const Question = withRouter(({questionIdOverride, match}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
-    const doc = useSelector(doc.ifNotAQuizId(questionId));
+    const doc = useSelector(selectors.doc.ifNotAQuizId(questionId));
     const user = useSelector((state: AppState) => state && state.user);
     const segueEnvironment = useSelector((state: AppState) =>
         (state && state.constants && state.constants.segueEnvironment) || "unknown"
