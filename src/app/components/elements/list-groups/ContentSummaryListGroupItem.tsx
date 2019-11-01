@@ -1,6 +1,6 @@
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, SEARCH_RESULT_TYPE, TAG_ID, TAG_LEVEL} from "../../../services/constants";
-import {ListGroup, ListGroupItem} from "reactstrap";
+import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
 import React from "react";
 import {getSpecifiedTag} from "../../../services/tags";
@@ -31,14 +31,14 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             iconLabel = "Concept page icon";
             topicTitle = itemTopic ? itemTopic.title : null;
     }
-    return <ListGroupItem className={itemClasses} key={linkDestination}>
+    return <RS.ListGroupItem className={itemClasses} key={linkDestination}>
         <Link to={{pathname: linkDestination, search: search}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
             <span className="content-summary-link-title">{item.title}</span>
-            {item.summary && <span className="small pt-1 pl-4 d-none d-md-inline">{item.summary}</span>}
-            {displayTopicTitle && <span className="small pt-1 pl-4 d-none d-md-inline">{topicTitle}</span>}
+            {item.summary && <span className="small text-muted ml-2 pl-1 align-self-center d-none d-md-inline">{item.summary}</span>}
+            {displayTopicTitle && <span className="small text-muted ml-2 pl-1 align-self-center d-none d-md-inline">{topicTitle}</span>}
         </Link>
-    </ListGroupItem>;
+    </RS.ListGroupItem>;
 };
 
 export const linkToContent = (search: string | undefined, item: ContentSummaryDTO, displayTopicTitle: boolean | undefined) => {
@@ -54,7 +54,7 @@ export const LinkToContentSummaryList = ({items, search, displayTopicTitle, ...r
     className?: string;
     cssModule?: any;
 }) => {
-    return <ListGroup {...rest} className="mb-3 link-list list-group-links">
+    return <RS.ListGroup {...rest} className="mb-3 link-list list-group-links">
         {items.map(item => linkToContent(search, item, displayTopicTitle))}
-    </ListGroup>;
+    </RS.ListGroup>;
 };
