@@ -119,7 +119,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         <RS.Label htmlFor={`school-input-${randomNumber}`} className="form-required">School</RS.Label>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <CreatableSelect isClearable isDisabled={disableInput} inputId={`school-input-${randomNumber}`} placeholder={"Type your school name"} value={schoolValue}
-                onInputChange={renderInput} onChange={handleSetSchool} options={schoolOptions}/>
+                onInputChange={renderInput} onChange={handleSetSchool} options={schoolOptions} filterOption={() => true}/>
         </React.Fragment>}
 
         {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex">
