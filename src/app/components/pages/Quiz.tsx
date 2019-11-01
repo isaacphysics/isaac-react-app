@@ -33,7 +33,7 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
         dispatch(openActiveModal({
             title: "Quiz submission confirmation",
             body: <div className="text-center">
-                You are only allowed to submit answers to this quiz once. <br />
+                You can only submit answers to this quiz once. <br />
                 Please confirm whether or not you would like to submit your current answers to this quiz.
             </div>,
             buttons: [
@@ -44,7 +44,7 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
                     dispatch(submitQuizPage(match.params.quizId));
                     dispatch(closeActiveModal());
                 }}>
-                    Submit
+                    Submit answers
                 </RS.Button>
             ]
         }));
@@ -80,10 +80,10 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
 
                             <div className="simple-card text-center mt-4 py-4">
                                 {!allQuestionsAttempted && <div id="disabled-button-explanation" className="mb-3">
-                                    Please attempt every question before submitting.
+                                    You must attempt every question before submitting.
                                 </div>}
                                 <input
-                                    type="submit" value="Submit quiz" className="btn btn-xl btn-secondary border-0"
+                                    type="submit" value="Submit answers" className="btn btn-xl btn-secondary border-0"
                                     disabled={!allQuestionsAttempted} aria-describedby="disabled-button-explanation"
                                 />
                             </div>

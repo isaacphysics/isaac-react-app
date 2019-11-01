@@ -152,7 +152,7 @@ export const FeaturedContentTabs = () => (
                     <Col md={{size: 5, offset: 1}} className="feattab-image text-center" >
                         <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
                         <Button tag={Link} to="/topics" color="primary" outline className="mt-4 d-none d-md-inline-block">
-                            Explore by Topic
+                            Explore by topic
                         </Button>
                     </Col>
                 </Row>
