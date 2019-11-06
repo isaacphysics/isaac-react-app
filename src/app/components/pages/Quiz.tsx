@@ -13,17 +13,16 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentBase} from "../../../IsaacApiTypes";
-import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL, NOT_FOUND} from "../../services/constants";
+import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {EditContentButton} from "../elements/EditContentButton";
-import {questions} from "../../state/selectors";
+import {doc as selectDoc, questions} from "../../state/selectors";
 
 export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId: string}}}) => {
     const dispatch = useDispatch();
-    // Report 404 NOT_FOUND if quiz ID is not an accepted quiz ID
-    const doc = useSelector((state: AppState) => ACCEPTED_QUIZ_IDS.includes(match.params.quizId) ? (state && state.doc) || null : NOT_FOUND);
+    const doc = useSelector(selectDoc.ifQuizId(match.params.quizId));
     const allQuestionsAttempted = useSelector(questions.allQuestionsAttempted);
     const anyQuestionPreviouslyAttempted = useSelector(questions.anyQuestionPreviouslyAttempted);
     const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
