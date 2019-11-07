@@ -22,7 +22,7 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className}: PageTit
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
         {currentPageTitle}
         {help && <span id="title-help">Help</span>}
-        {help && <UncontrolledTooltip target="#title-help">{help}</UncontrolledTooltip>}
+        {help && <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>}
         {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
     </h1>
 };

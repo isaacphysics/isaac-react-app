@@ -82,7 +82,7 @@ export const ForTeachers = () => {
 
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
-                                    title="Create a gameboard" linkDestination="/gameboards/builder" linkText="Create gameboards"
+                                    title="Create a gameboard" linkDestination="/gameboard_builder" linkText="Create gameboards"
                                     amountText={achievementText("created", (achievementsSelector && achievementsSelector.TEACHER_GAMEBOARDS_CREATED) || 0, "gameboard")}
                                 >
                                     Create custom gameboards to set as assignments to your groups.

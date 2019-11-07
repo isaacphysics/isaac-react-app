@@ -31,7 +31,7 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
-export const ACCEPTED_QUIZ_IDS = ['quiz_test'];
+export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_nov19_aqa', 'class_test_nov19_ocr'];
 
 export const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB");
 export const DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
@@ -489,9 +489,8 @@ export enum UserRole {
     ADMIN = "ADMIN",
     EVENT_MANAGER = "EVENT_MANAGER",
     CONTENT_EDITOR = "CONTENT_EDITOR",
+    EVENT_LEADER = "EVENT_LEADER",
     TEACHER = "TEACHER",
-    TESTER = "TESTER",
-    STAFF = "STAFF",
     STUDENT = "STUDENT"
 }
 

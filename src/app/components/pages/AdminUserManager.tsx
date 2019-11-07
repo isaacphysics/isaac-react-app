@@ -43,7 +43,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
     const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
 
     useEffect(() => {
-        if (searchResults) {
+        if (searchResults && searchResults.length > 0) {
             dispatch(getUserIdSchoolLookup(searchResults.map((result) => result.id).filter((result) => result != undefined) as number[]));
         }
     }, [searchResults]);
@@ -217,7 +217,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                             <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline>Modify Role</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Promote or demote selected users to:</RS.DropdownItem>
-                                {["STUDENT", "TEACHER"].map(role =>
+                                {["STUDENT", "TEACHER", "EVENT_LEADER"].map(role =>
                                     <RS.DropdownItem
                                         key={role} disabled={selectedUserIds.length === 0}
                                         onClick={() => modifyUserRolesAndUpdateResults(role as Role)}
@@ -254,8 +254,8 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                             <th>Email</th>
                                             <th>User role</th>
                                             <th>School</th>
-                                            <th>Member since</th>
                                             <th>Verification status</th>
+                                            <th>Member since</th>
                                             <th>Last seen</th>
                                         </tr>
                                     </thead>
@@ -280,8 +280,8 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                                 <td>{user.email}</td>
                                                 <td>{user.role}</td>
                                                 <td>{user.id && userIdToSchoolMapping && userIdToSchoolMapping[user.id] && userIdToSchoolMapping[user.id].name}</td>
-                                                <td><DateString>{user.registrationDate}</DateString></td>
                                                 <td>{user.emailVerificationStatus}</td>
+                                                <td><DateString>{user.registrationDate}</DateString></td>
                                                 <td><DateString>{user.lastSeen}</DateString></td>
                                             </tr>
                                         )}

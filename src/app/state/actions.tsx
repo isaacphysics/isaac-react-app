@@ -32,7 +32,7 @@ import {
     AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
-    GameboardDTO,
+    GameboardDTO, IsaacQuestionPageDTO,
     QuestionDTO,
     RegisteredUserDTO,
     Role,
@@ -123,6 +123,12 @@ function showErrorToastIfNeeded(error: string, e: any) {
 export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
 
 export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
+
+// Generic log action:
+export const logAction = (eventDetails: object) => {
+    api.logger.log(eventDetails); // We do not care whether this completes or not
+    return {type: ACTION_TYPE.LOG_EVENT, eventDetails: eventDetails};
+};
 
 // User authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
@@ -710,8 +716,17 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
     }
 };
 
+export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (dispatch: Dispatch<Action>) =>  {
+    if (page.supersededBy) {
+        dispatch(logAction({
+            type: "VIEW_SUPERSEDED_BY_QUESTION", questionId: page.id, supersededBy: page.supersededBy
+        }) as any);
+        history.push(`/questions/${page.supersededBy}`);
+    }
+};
+
 // Quizzes
-const generatePostQuizUrl = (quizId: string) => `/pages/post_quiz_${quizId}`;
+const generatePostQuizUrl = (quizId: string) => `/pages/post_${quizId}`;
 
 export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const currentState = getState();
@@ -1455,11 +1470,6 @@ export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) =>
     }
 };
 
-// Generic log action:
-export const logAction = (eventDetails: object) => {
-    api.logger.log(eventDetails); // We do not care whether this completes or not
-    return {type: ACTION_TYPE.LOG_EVENT, eventDetails: eventDetails};
-};
 
 // SERVICE ACTIONS (w/o dispatch)
 // Page change

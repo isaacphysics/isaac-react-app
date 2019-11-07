@@ -9,6 +9,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {api} from "../../services/api";
 import {requestEmailVerification} from "../../state/actions";
 import {Link} from "react-router-dom";
+import {isTeacher} from "../../services/user";
 
 
 
@@ -94,19 +95,37 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
     }, [user]);
 
     return <Container id="contact-page" className="pb-5">
-        <TitleAndBreadcrumb currentPageTitle="Teacher Account Request" />
+        <TitleAndBreadcrumb currentPageTitle="Teacher Account request" />
         <div className="pt-4">
             <Row>
                 <Col size={9}>
                     <Card>
-                        {messageSent && !errorMessage ?
+                        {isTeacher(user) &&
+                            <Row>
+                                <Col className="text-center pt-3">
+                                    <span className="h3">
+                                        You already have a teacher account
+                                    </span>
+                                    <p className="mt-3">
+                                        Go to the <Link to="/teachers">For teachers page</Link> to start using your
+                                        new account features.
+                                    </p>
+                                </Col>
+                            </Row>
+                        }
+                        {!isTeacher(user) && (messageSent && !errorMessage ?
                             <Row>
                                 <Col className="text-center">
-                                    <h3>
-                                        Thank you for submitting a teacher account request, we will be in touch shortly.
-                                    </h3>
+                                    <p className="mt-3">
+                                        Thank you for submitting a teacher account request.
+                                    </p>
+                                    <p>
+                                        We will be in touch shortly. Please note that account verification is a manual
+                                        process and may take a few days.
+                                    </p>
                                 </Col>
-                            </Row>:
+                            </Row>
+                            :
                             <Form name="contact" onSubmit={e => {
                                 e.preventDefault();
                                 sendForm();
@@ -115,9 +134,9 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                 <CardBody>
                                     <p>To request a teacher account on Isaac Computer Science, please fill in this form.
                                     You must use the email address that was assigned to you by your school, and the
-                                    name of your school should be shown in the ‘School’ field. If any of the
+                                    name of your school should be shown in the &lsquo;School&rsquo; field. If any of the
                                     information is incorrect or missing, you can amend it on your
-                                    <a href="/account">My Account</a> page.
+                                    <Link to="/account">My account</Link> page.
                                     </p>
                                     <Row>
                                         <Col size={12} md={6}>
@@ -188,7 +207,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                     <Row>
                                         <Col>
                                             <small className="text-danger text-left">You have not provided your school —
-                                                please add your school on your <a href="/account">My Account</a> page.
+                                                please add your school on your <Link to="/account">My Account</Link> page.
                                             </small>
                                         </Col>
                                     </Row>
@@ -196,8 +215,8 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                     {allowedDomain == false &&
                                     <Row>
                                         <Col>
-                                            <small className="text-danger text-left">Your have not used your school
-                                            email address — please change your email address on your <a href="/account">My Account</a> page.
+                                            <small className="text-danger text-left">You have not used your school
+                                            email address — please change your email address on your <Link to="/account">My Account</Link> page.
                                             </small>
                                         </Col>
                                     </Row>
@@ -219,7 +238,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                     </Row>
                                 </CardFooter>
                             </Form>
-                        }
+                        )}
                     </Card>
                 </Col>
             </Row>

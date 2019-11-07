@@ -76,7 +76,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
         </RS.Col>
         <RS.Col className="mt-4">
             <RS.Button
-                tag={Link} to={{pathname: "/gameboards/builder/", state: {gameboard: gameboard}}}
+                tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}}
                 color="primary" block outline
             >
                 Duplicate and edit
