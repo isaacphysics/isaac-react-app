@@ -45,9 +45,10 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     // full version of a glossary term using the IsaacGlossaryTerm component.
     let glossaryBlockRegexp = /^\[glossary:(?<id>[a-z-|]+?)\]/gm;
     // Matches strings such as [glossary-inline:glossary-demo|boolean-algebra]
+    // and [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"]
     // which CAN be inlined. This is used to produce a hoverable element showing
     // the glossary term, and its definition in a tooltip.
-    let glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z-|]+?)\]/g;
+    let glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z-|]+?)\s*(?:"(?<text>[A-Za-z0-9 ]+)")?\]/g;
     let glossaryIDs: Array<string> = [
         ...Array.from(markdown.matchAll(glossaryBlockRegexp)).map(m => m.groups && m.groups.id || ''),
         ...Array.from(markdown.matchAll(glossaryInlineRegexp)).map(m => m.groups && m.groups.id || ''),
@@ -80,15 +81,18 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         // The tooltip components can be rendered as regular react objects, so
         // we just add them to an array, and return them inside the JSX.Element
         // that is returned as TrustedMarkdown.
-        markdown = markdown.replace(glossaryInlineRegexp, (_match, id: string) => {
+        let i = 0;
+        markdown = markdown.replace(glossaryInlineRegexp, (_match, id: string, text: string) => {
             let term = filteredTerms[id];
+            let elementId = `glossary-term-id-${term && term.id && term.id.replace('|', '-')}-${++i}`;
+            let displayString = text || term.value;
             // This is properly horrible but it works...
             tooltips.push(
-                <RS.UncontrolledTooltip placement="bottom" target={`glossary-term-id-${term && term.id && term.id.replace('|', '-')}`}>
+                <RS.UncontrolledTooltip placement="bottom" target={elementId}>
                     <TrustedMarkdown markdown={term.explanation && term.explanation.value || ''} />
                 </RS.UncontrolledTooltip>
             );
-            let string = `<span class="inline-glossary-term" id="glossary-term-id-${term && term.id && term.id.replace('|', '-')}">${term.value}</span>`;
+            let string = `<span class="inline-glossary-term" id="${elementId}">${displayString}</span>`;
             return string;
         });
     }
