@@ -349,6 +349,10 @@ export interface ShortcutResponses {
     type: string;
 }
 
+export interface UserBetaFeaturePreferences {
+    SCREENREADER_HOVERTEXT?: boolean;
+}
+
 export interface UserEmailPreferences {
     NEWS_AND_UPDATES?: boolean;
     ASSIGNMENTS?: boolean;
@@ -365,7 +369,7 @@ export interface SubjectInterests {
 }
 
 export interface UserPreferencesDTO {
-    BETA_FEATURE?: string;
+    BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences;
     EXAM_BOARD?: UserExamPreferences;
     SUBJECT_INTEREST?: SubjectInterests;
