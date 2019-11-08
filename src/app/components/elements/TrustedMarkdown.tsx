@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {useDispatch, useStore, useSelector, ReactReduxContext, Provider} from "react-redux";
+import React, { useEffect } from "react";
+import {useDispatch, useStore, useSelector, Provider} from "react-redux";
 import * as RS from "reactstrap";
 import {Router} from "react-router-dom";
 import {AppState} from "../../state/reducers";
@@ -53,7 +53,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         ...Array.from(markdown.matchAll(glossaryBlockRegexp)).map(m => m.groups && m.groups.id || ''),
         ...Array.from(markdown.matchAll(glossaryInlineRegexp)).map(m => m.groups && m.groups.id || ''),
     ];
-    if (glossaryTerms && glossaryTerms.length > 0 && glossaryIDs && glossaryIDs.length > 0) {
+    if (glossaryTerms && glossaryTerms.length > 0 && glossaryIDs.length > 0) {
         filteredTerms = Object.assign({}, ...glossaryTerms.filter(t => {
             return glossaryIDs.includes(t.id || '')
         }).map(
@@ -81,10 +81,11 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         // The tooltip components can be rendered as regular react objects, so
         // we just add them to an array, and return them inside the JSX.Element
         // that is returned as TrustedMarkdown.
-        let i = 0;
+        let i = 0; // Uniquify HTML ids for UncontrolledTooltip to work...
+                   // ... but don't uniquify them too much with random numbers.
         markdown = markdown.replace(glossaryInlineRegexp, (_match, id: string, text: string) => {
             let term = filteredTerms[id];
-            let elementId = `glossary-term-id-${term && term.id && term.id.replace('|', '-')}-${++i}`;
+            let elementId = `glossary-term-id-${term && term.id && term.id.replace(/\|/g, '-')}-${++i}`;
             let displayString = text || term.value;
             // This is properly horrible but it works...
             tooltips.push(
