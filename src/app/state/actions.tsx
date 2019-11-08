@@ -726,7 +726,7 @@ export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (d
 };
 
 // Quizzes
-const generatePostQuizUrl = (quizId: string) => `/pages/post_quiz_${quizId}`;
+const generatePostQuizUrl = (quizId: string) => `/pages/post_${quizId}`;
 
 export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const currentState = getState();

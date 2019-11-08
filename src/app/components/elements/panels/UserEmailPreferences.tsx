@@ -32,7 +32,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
             <Table className="mb-0">
                 <thead>
                     <tr>
-                        <th>Email Type</th>
+                        <th>Email type</th>
                         <th className="d-none d-sm-table-cell">Description</th>
                         <th className="text-center">Preference</th>
                     </tr>

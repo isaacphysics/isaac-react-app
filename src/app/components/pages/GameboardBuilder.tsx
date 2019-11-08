@@ -1,9 +1,16 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
-import {closeActiveModal, createGameboard, getWildcards, logAction, openActiveModal} from "../../state/actions";
+import {ContentSummaryDTO, GameboardItem} from "../../../IsaacApiTypes";
+import {
+    closeActiveModal,
+    createGameboard,
+    getWildcards,
+    loadGameboard,
+    logAction,
+    openActiveModal
+} from "../../state/actions";
 import {store} from "../../state/store";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
@@ -11,7 +18,6 @@ import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
 import {resourceFound} from "../../services/validation";
-import {sample} from 'lodash';
 import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
@@ -19,31 +25,39 @@ import {
     logEvent
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
-import {IS_CS_PLATFORM} from "../../services/constants";
+import {IS_CS_PLATFORM, NOT_FOUND} from "../../services/constants";
 import {history} from "../../services/history"
+import {withRouter} from "react-router-dom";
+import queryString from "query-string";
+import {ShowLoading} from "../handlers/ShowLoading";
+import {Spinner} from "reactstrap";
 
-interface GameboardBuilderProps {
-    location: {
-        state?: {
-            gameboard?: GameboardDTO;
-        };
-    };
-}
+export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
+    const queryParams = props.location.search && queryString.parse(props.location.search);
+    const baseGameboardId = queryParams && queryParams.base as string;
 
-export const GameboardBuilder = (props: GameboardBuilderProps) => {
     const dispatch = useDispatch();
-    const loadedGameboard = props.location.state && props.location.state.gameboard;
 
     const user = useSelector((state: AppState) => state && state.user);
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
+    const baseGameboard = useSelector((state: AppState) => state && state.currentGameboard);
 
-    const [gameboardTitle, setGameboardTitle] = useState(loadedGameboard ? `${loadedGameboard.title} (Copy)`: "");
+    const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTag, setGameboardTag] = useState("null");
     const [gameboardURL, setGameboardURL] = useState();
-    const [questionOrder, setQuestionOrder] = useState<string[]>((loadedGameboard && loadGameboardQuestionOrder(loadedGameboard)) || []);
-    const [selectedQuestions, setSelectedQuestions] = useState((loadedGameboard && loadGameboardSelectedQuestions(loadedGameboard)) || new Map<string, ContentSummaryDTO>());
-    const [wildcardId, setWildcardId] = useState(isStaff(user) && loadedGameboard && loadedGameboard.wildCard && loadedGameboard.wildCard.id ? loadedGameboard.wildCard.id : undefined);
-    const eventLog = useRef<any[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
+    const [questionOrder, setQuestionOrder] = useState<string[]>( []);
+    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
+    const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
+    const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
+
+    useMemo(() => {
+        if (baseGameboard && baseGameboard !== NOT_FOUND) {
+            setGameboardTitle(`${baseGameboard.title} (Copy)`);
+            setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
+            setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
+            setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
+        }
+    }, [baseGameboard]);
 
     const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "";
 
@@ -54,18 +68,18 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
         }
     };
 
+    useEffect(() => {if (!wildcards) dispatch(getWildcards())}, [user]);
+    useEffect(() => {
+        if (baseGameboardId && (!baseGameboard || baseGameboard === NOT_FOUND)) {
+            dispatch(loadGameboard(baseGameboardId));
+        }
+    }, [baseGameboardId]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
             dispatch(logAction({type: "LEAVE_GAMEBOARD_BUILDER", events: eventLog}));
         });
     });
-
-    useEffect(() => {
-        if (!wildcards) {
-            dispatch(getWildcards());
-        }
-    }, [user]);
 
     const pageHelp = <span>
         You can create custom question sets to assign to your groups. Search by question title or topic and add up to
@@ -162,25 +176,30 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                                             <tr>
                                                 <td colSpan={5}>
                                                     <div className="img-center">
-                                                        <input
-                                                            type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
-                                                            alt="Add questions" title="Add questions"
-                                                            onClick={() => {
-                                                                logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
-                                                                dispatch(openActiveModal({
-                                                                    closeAction: () => {store.dispatch(closeActiveModal())},
-                                                                    size: "xl",
-                                                                    title: "Search questions",
-                                                                    body: <QuestionSearchModal
-                                                                        originalSelectedQuestions={selectedQuestions}
-                                                                        setOriginalSelectedQuestions={setSelectedQuestions}
-                                                                        originalQuestionOrder={questionOrder}
-                                                                        setOriginalQuestionOrder={setQuestionOrder}
-                                                                        eventLog={eventLog}
-                                                                    />
-                                                                }))
-                                                            }}
-                                                        />
+                                                        <ShowLoading
+                                                            placeholder={<div className="text-center"><Spinner color="primary" /></div>}
+                                                            until={!baseGameboardId || baseGameboard == NOT_FOUND || baseGameboard}
+                                                        >
+                                                            <input
+                                                                type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
+                                                                alt="Add questions" title="Add questions"
+                                                                onClick={() => {
+                                                                    logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
+                                                                    dispatch(openActiveModal({
+                                                                        closeAction: () => {store.dispatch(closeActiveModal())},
+                                                                        size: "xl",
+                                                                        title: "Search questions",
+                                                                        body: <QuestionSearchModal
+                                                                            originalSelectedQuestions={selectedQuestions}
+                                                                            setOriginalSelectedQuestions={setSelectedQuestions}
+                                                                            originalQuestionOrder={questionOrder}
+                                                                            setOriginalQuestionOrder={setQuestionOrder}
+                                                                            eventLog={eventLog}
+                                                                        />
+                                                                    }))
+                                                                }}
+                                                            />
+                                                        </ShowLoading>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -234,4 +253,4 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
             </RS.CardBody>
         </RS.Card>
     </RS.Container>
-};
+});
