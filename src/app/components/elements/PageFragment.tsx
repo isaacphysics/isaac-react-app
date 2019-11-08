@@ -8,11 +8,13 @@ import {fetchFragment} from "../../state/actions";
 
 interface PageFragmentComponentProps {
     fragmentId: string;
+    renderFragmentNotFound?: boolean;
 }
 
-export const PageFragment = ({fragmentId}: PageFragmentComponentProps) => {
+export const PageFragment = ({fragmentId, renderFragmentNotFound}: PageFragmentComponentProps) => {
     const dispatch = useDispatch();
     const fragment = useSelector((state: AppState) => state && state.fragments && state.fragments[fragmentId] || null);
+    const showFragment = typeof renderFragmentNotFound == "boolean" ? renderFragmentNotFound : true;
 
     useEffect(() => {
         dispatch(fetchFragment(fragmentId))
@@ -28,9 +30,11 @@ export const PageFragment = ({fragmentId}: PageFragmentComponentProps) => {
         </h3>
     </div>;
 
-    return <ShowLoading
-        until={fragment}
-        thenRender={fragment => <IsaacContent doc={fragment} />}
-        ifNotFound={notFoundComponent}
-    />;
+    return <React.Fragment>
+        {!(fragment == 404 && !showFragment) && <ShowLoading
+            until={fragment}
+            thenRender={fragment => <IsaacContent doc={fragment} />}
+            ifNotFound={notFoundComponent}
+        />}
+    </React.Fragment>;
 };
