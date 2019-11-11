@@ -55,9 +55,9 @@
 }
 
 .btn.btn-outline-primary:focus {
-  box-shadow: none !important;
-  border: 0.2rem solid $secondary;
+  box-shadow: 0 0 0 2pt $secondary !important;
   border-radius: 8px;
+  outline: none !important;
 }
 
 .btn-secondary:focus {
@@ -78,9 +78,7 @@
 }
 
 .btn-outline-primary:focus {
-  box-shadow: none;
-  border: 0.2rem solid $secondary;
-  border-radius: 8px;
+  border-color: $secondary !important;
 }
 
 .footerLink:focus {
