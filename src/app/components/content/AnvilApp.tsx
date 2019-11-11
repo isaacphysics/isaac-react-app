@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {AnvilAppDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {connect} from "react-redux";
@@ -22,17 +22,16 @@ interface AnvilAppProps {
 const AnvilAppComponent = ({doc, user, pageState}: AnvilAppProps) => {
     const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${Math.random()}`;
     const title = doc.value || "Anvil app";
+    const [currentIframe, setCurrentIframe] = useState();
+
+    const iframeId = title + Math.random();
 
     let accordionSectionId = useContext(AccordionSectionContext);
     let questionId = useContext(QuestionContext);
 
-    let currentIframe = (element: any) => {
-        if (element) {
-            // console.log(element);
-            // let data = element.origionalEvent.data;
-            // console.log(data);
-        }
-    }
+    useEffect(() => {
+        setCurrentIframe(document.getElementById(iframeId) as HTMLIFrameElement)
+    }, []);
 
     let parentQuestion = pageState && pageState.questions ? (pageState.questions).find(
         function(question: IsaacQuestionPageDTO) {return question.id == questionId}) : undefined;
@@ -67,22 +66,23 @@ const AnvilAppComponent = ({doc, user, pageState}: AnvilAppProps) => {
     let queryParams = Object.keys(appParams).map((key) => {
         return encodeURIComponent(key) + '=' + encodeURIComponent(appParams[key])
     }).join('&');
+
     let iframeSrc = `${baseURL}#?${queryParams}`;
 
-    // let onMessage = function(e) {
-    //     if (e.originalEvent.source !== currentIframe.contentWindow) { return; }
-    //
-    //     let data = e.originalEvent.data;
-    //     console.debug("Anvil app message:", data);
-    //
-    //     if (data.fn == "newAppHeight") {
-    //         currentIframe.height(data.newHeight+15);
-    //     } else {
-    //         scope.$emit("anvilAppMessage", data);
-    //     }
-    // };
+    let onMessage = function(e: any) {
+        if (currentIframe && e.source !== currentIframe.contentWindow) { return; }
 
-    return <iframe ref={currentIframe} src={iframeSrc} title={title} className="anvil-app"/>;
+        let data = e.data;
+        console.debug("Anvil app message:", data);
+
+        if (currentIframe && (data.fn == "newAppHeight")) {
+            currentIframe.height = data.newHeight + 15;
+        }
+    };
+
+    window.addEventListener("message", onMessage);
+
+    return <iframe id={iframeId} src={iframeSrc} title={title} className="anvil-app"/>;
 };
 
 export const AnvilApp = connect(stateToProps)(AnvilAppComponent);
