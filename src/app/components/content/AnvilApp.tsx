@@ -4,7 +4,6 @@ import {AppState} from "../../state/reducers";
 import {connect} from "react-redux";
 import {AccordionSectionContext, LoggedInUser, QuestionContext} from "../../../IsaacAppTypes";
 import {store} from "../../state/store";
-import {createPortal} from "react-dom";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) || null,
