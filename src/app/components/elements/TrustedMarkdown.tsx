@@ -27,6 +27,17 @@ MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* opt
     }
 };
 
+function getTermFromCandidateTerms(candidateTerms: Array<GlossaryTermDTO>): GlossaryTermDTO {
+    if (candidateTerms.length === 0) {
+        throw Error();
+    } else if (candidateTerms.length === 1) {
+        return candidateTerms[0];
+    } else {
+        console.warn('More than one candidate term was found: ', candidateTerms);
+        return candidateTerms[0];
+    }
+}
+
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const dispatch = useDispatch();
     const store = useStore();
@@ -68,14 +79,11 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         markdown = markdown.replace(glossaryBlockRegexp, (_match, id: string) => {
             let candidateTerms = filteredTerms.filter(term => (term.id || '').indexOf(id) === 0);
             let term: GlossaryTermDTO;
-            if (candidateTerms.length === 0) {
-                console.warn('No candidate terms were found. Here are the filtered terms: ', filteredTerms);
+            try {
+                term = getTermFromCandidateTerms(candidateTerms);
+            } catch (e) {
+                console.error('No valid term found among the candidates. Here are the filtered terms: ', filteredTerms);
                 return '';
-            } else if (candidateTerms.length === 1) {
-                term = candidateTerms[0];
-            } else {
-                term = candidateTerms[0];
-                console.warn('More than one candidate term was found: ', candidateTerms);
             }
             let string = ReactDOMServer.renderToStaticMarkup(
                 <Provider store={store}>
@@ -96,14 +104,11 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         markdown = markdown.replace(glossaryInlineRegexp, (_match, id: string, text: string) => {
             let candidateTerms = filteredTerms.filter(term => (term.id || '').indexOf(id) === 0);
             let term: GlossaryTermDTO;
-            if (candidateTerms.length === 0) {
-                console.warn('No candidate terms were found. Here are the filtered terms: ', filteredTerms);
+            try {
+                term = getTermFromCandidateTerms(candidateTerms);
+            } catch (e) {
+                console.error('No valid term found among the candidates. Here are the filtered terms: ', filteredTerms);
                 return '';
-            } else if (candidateTerms.length === 1) {
-                term = candidateTerms[0];
-            } else {
-                term = candidateTerms[0];
-                console.warn('More than one candidate term was found: ', candidateTerms);
             }
             let elementId = `glossary-term-id-${term && term.id && term.id.replace(/\|/g, '-')}-${++i}`;
             let displayString = text || term.value;
