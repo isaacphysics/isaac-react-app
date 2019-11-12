@@ -26,7 +26,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         <Row>
                             <Col>
                                 <h1>{
-                                    user && user.loggedIn ? `Welcome ${user.givenName}!` : "A level Computer Science learning"
+                                    user?.loggedIn ? `Welcome ${user.givenName}!` : "A level Computer Science learning"
                                 }</h1>
                                 <p>
                                     Welcome to Isaac Computer Science, the free online platform for students and teachers.

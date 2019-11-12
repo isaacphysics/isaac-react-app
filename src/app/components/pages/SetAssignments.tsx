@@ -98,7 +98,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
         </Label>
         <Label className="w-100 pb-2">Due Date Reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate)} />
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} />
         </Label>
         <Button className="mt-3 mb-2" block color="primary" onClick={assign} disabled={groupId === null}>Assign to group</Button>
     </Container>;
@@ -127,8 +127,8 @@ const Board = (props: BoardProps) => {
                         let selection = window.getSelection();
                         let range = document.createRange();
                         range.selectNodeContents(shareLink.current);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
+                        selection?.removeAllRanges();
+                        selection?.addRange(range);
                     }
                 }
             });
