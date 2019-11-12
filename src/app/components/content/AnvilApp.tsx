@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {RefObject, useContext, useEffect, useState} from 'react';
 import {AnvilAppDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {connect} from "react-redux";
@@ -17,20 +17,19 @@ interface AnvilAppProps {
     pageState: any;
 }
 
-// TODO add dynamic resizing using onmessage
 const AnvilAppComponent = ({doc, user, pageState}: AnvilAppProps) => {
     const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${Math.random()}`;
     const title = doc.value || "Anvil app";
     const [currentIframe, setCurrentIframe] = useState();
 
-    const iframeId = title + Math.random();
+    let iframeRef = React.createRef() as RefObject<HTMLIFrameElement>;
 
     let accordionSectionId = useContext(AccordionSectionContext);
     let questionId = useContext(QuestionContext);
 
     useEffect(() => {
-        setCurrentIframe(document.getElementById(iframeId) as HTMLIFrameElement)
-    }, []);
+        setCurrentIframe(iframeRef.current as HTMLIFrameElement);
+    }, [iframeRef]);
 
     let parentQuestion = pageState && pageState.questions ? (pageState.questions).find(
         function(question: IsaacQuestionPageDTO) {return question.id == questionId}) : undefined;
@@ -81,7 +80,7 @@ const AnvilAppComponent = ({doc, user, pageState}: AnvilAppProps) => {
 
     window.addEventListener("message", onMessage);
 
-    return <iframe id={iframeId} src={iframeSrc} title={title} className="anvil-app"/>;
+    return <iframe ref={iframeRef} src={iframeSrc} title={title} className="anvil-app"/>;
 };
 
 export const AnvilApp = connect(stateToProps)(AnvilAppComponent);
