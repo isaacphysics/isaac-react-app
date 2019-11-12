@@ -206,6 +206,7 @@ export interface ChoiceQuestionDTO extends QuestionDTO {
 
 export interface GlossaryTermDTO extends ContentDTO {
     explanation?: ContentDTO;
+    examBoard: string;
 }
 
 export interface ContentBaseDTO {
@@ -430,6 +431,7 @@ export interface ExternalReference {
 
 export interface GlossaryTerm extends Content {
     explanation?: Content;
+    examBoard: string;
 }
 
 export interface ContentBase {

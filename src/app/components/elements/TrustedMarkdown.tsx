@@ -11,6 +11,7 @@ import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {escapeHtml, replaceEntities} from "remarkable/lib/common/utils";
 import {Token} from "remarkable";
 import {history} from "../../services/history";
+import {determineExamBoardFrom} from "../../services/examBoard";
 
 import ReactDOMServer from "react-dom/server";
 
@@ -29,6 +30,9 @@ MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* opt
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const dispatch = useDispatch();
     const store = useStore();
+    // const user = useSelector((state: AppState) => state && state.user || null);
+    const userPreferences = useSelector((state: AppState) => state && state.userPreferences || null);
+    const examBoard = determineExamBoardFrom(userPreferences);
     const glossaryTerms = useSelector((state: AppState) => {
         return state && state.glossaryTerms;
     });
@@ -37,7 +41,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     // UncontrolledTooltip elements that cannot be pre-rendered as static HTML.
     let tooltips: Array<JSX.Element> = [];
 
-    let filteredTerms: { [id: string]: GlossaryTermDTO } = {};
+    let filteredTerms: Array<GlossaryTermDTO> = [];
 
     // Matches strings such as
     // [glossary:glossary-demo|boolean-algebra]
@@ -49,28 +53,34 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     // which CAN be inlined. This is used to produce a hoverable element showing
     // the glossary term, and its definition in a tooltip.
     let glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z-|]+?)\s*(?:"(?<text>[A-Za-z0-9 ]+)")?\]/g;
-    let glossaryIDs: Array<string> = [
+    let glossaryIDs: Array<string> = Array.from(new Set([
         ...Array.from(markdown.matchAll(glossaryBlockRegexp)).map(m => m.groups && m.groups.id || ''),
         ...Array.from(markdown.matchAll(glossaryInlineRegexp)).map(m => m.groups && m.groups.id || ''),
-    ];
+    ]));
     if (glossaryTerms && glossaryTerms.length > 0 && glossaryIDs.length > 0) {
-        filteredTerms = Object.assign({}, ...glossaryTerms.filter(t => {
-            return glossaryIDs.includes(t.id || '')
-        }).map(
-            (t: GlossaryTermDTO) => {
-                if (t.id) {
-                    return { [t.id]: t };
-                }
-            }
-        ));
+        filteredTerms = glossaryTerms.filter(t => {
+            let id = t.id || '';
+            return glossaryIDs.some(e => id.indexOf(e) === 0) && (t.examBoard === "" || t.examBoard === examBoard);
+        });
         // Markdown can't cope with React components, so we pre-render our
         // component to static HTML, which Markdown will then ignore. This
         // requires a bunch of stuff to be passed down along with the component.
         markdown = markdown.replace(glossaryBlockRegexp, (_match, id: string) => {
+            let candidateTerms = filteredTerms.filter(term => (term.id || '').indexOf(id) === 0);
+            let term: GlossaryTermDTO;
+            if (candidateTerms.length === 0) {
+                console.warn('No candidate terms were found. Here are the filtered terms: ', filteredTerms);
+                return '';
+            } else if (candidateTerms.length === 1) {
+                term = candidateTerms[0];
+            } else {
+                term = candidateTerms[0];
+                console.warn('More than one candidate term was found: ', candidateTerms);
+            }
             let string = ReactDOMServer.renderToStaticMarkup(
                 <Provider store={store}>
                     <Router history={history}>
-                        <IsaacGlossaryTerm doc={filteredTerms[id]} />
+                        <IsaacGlossaryTerm doc={term} />
                     </Router>
                 </Provider>
             );
@@ -84,7 +94,17 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         let i = 0; // Uniquify HTML ids for UncontrolledTooltip to work...
                    // ... but don't uniquify them too much with random numbers.
         markdown = markdown.replace(glossaryInlineRegexp, (_match, id: string, text: string) => {
-            let term = filteredTerms[id];
+            let candidateTerms = filteredTerms.filter(term => (term.id || '').indexOf(id) === 0);
+            let term: GlossaryTermDTO;
+            if (candidateTerms.length === 0) {
+                console.warn('No candidate terms were found. Here are the filtered terms: ', filteredTerms);
+                return '';
+            } else if (candidateTerms.length === 1) {
+                term = candidateTerms[0];
+            } else {
+                term = candidateTerms[0];
+                console.warn('More than one candidate term was found: ', candidateTerms);
+            }
             let elementId = `glossary-term-id-${term && term.id && term.id.replace(/\|/g, '-')}-${++i}`;
             let displayString = text || term.value;
             // This is properly horrible but it works...
