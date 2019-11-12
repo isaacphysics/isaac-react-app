@@ -41,7 +41,6 @@ function getTermFromCandidateTerms(candidateTerms: Array<GlossaryTermDTO>): Glos
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const dispatch = useDispatch();
     const store = useStore();
-    // const user = useSelector((state: AppState) => state && state.user || null);
     const userPreferences = useSelector((state: AppState) => state && state.userPreferences || null);
     const examBoard = determineExamBoardFrom(userPreferences);
     const glossaryTerms = useSelector((state: AppState) => {
