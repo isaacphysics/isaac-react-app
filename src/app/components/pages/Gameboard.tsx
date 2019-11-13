@@ -68,7 +68,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
         }
     }, [gameboard]);
 
-    const teacherButtons = user && isTeacher(user) ? <RS.Row className="col-8 offset-2">
+    const userButtons = user && isTeacher(user) ? <RS.Row className="col-8 offset-2">
         <RS.Col className="mt-4">
             <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
                 Set as assignment
@@ -118,7 +118,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
                                 </RS.ListGroup>
                             </RS.Col>
                         </RS.Row>
-                        {teacherButtons}
+                        {userButtons}
                     </div>
                 </React.Fragment>}
                 ifNotFound={notFoundComponent}
