@@ -40,7 +40,7 @@ npm install
 npm run build-cs
 npm run build-phy
 docker build -t "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=cs .
-docker build -t "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=phy .
+docker build -t "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=physics .
 docker push "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}"
 docker push "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}"
 
