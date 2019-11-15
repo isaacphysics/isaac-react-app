@@ -1,6 +1,6 @@
 {
   "name": "isaac-cs-app",
-  "version": "1.0.9-SNAPSHOT",
+  "version": "1.0.12-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@babel/core": "7.2.2",
@@ -36,6 +36,7 @@
     "bootstrap-block-grid": "^1.1.7",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "classnames": "^2.2.6",
+    "copy-webpack-plugin": "^5.0.4",
     "core-js": "^3.0.1",
     "css-loader": "1.0.0",
     "dotenv": "6.0.0",
@@ -64,7 +65,7 @@
     "katex": "^0.11.1",
     "lodash": "^4.17.15",
     "math-random-seed": "^2.0.0",
-    "mini-css-extract-plugin": "0.5.0",
+    "mini-css-extract-plugin": "0.8.0",
     "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.2.1",
@@ -93,17 +94,26 @@
     "style-loader": "0.23.1",
     "terser-webpack-plugin": "1.2.2",
     "transfer-webpack-plugin": "^0.1.4",
+    "ts-loader": "6.2.0",
     "typescript": "3.3.3333",
     "url-loader": "1.1.2",
-    "webpack": "4.28.3",
-    "webpack-dev-server": "3.1.14",
-    "webpack-manifest-plugin": "2.0.4",
+    "webpack": "4.41.2",
+    "webpack-cli": "3.3.9",
+    "webpack-dev-server": "3.8.2",
+    "webpack-manifest-plugin": "2.2.0",
+    "webpack-merge": "4.2.2",
     "workbox-webpack-plugin": "3.6.3"
   },
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
+    "build-phy": "webpack --env prod --config config/webpack.config.physics.js",
+    "build-cs": "webpack --env prod --config config/webpack.config.cs.js",
+    "start-phy": "webpack-dev-server --hot --port 8004 --history-api-fallback --config config/webpack.config.physics.js",
+    "start-cs": "webpack-dev-server --hot --port 8003 --history-api-fallback --config config/webpack.config.cs.js",
+    "test": "npm run test-phy && npm run test-cs",
+    "test-phy": "jest --config config/jest/jest.config.physics.js",
+    "test-cs": "jest --config config/jest/jest.config.cs.js",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
     "analyse-bundle": "npm run build -- --stats && webpack-bundle-analyzer build/bundle-stats.json build"
   },
@@ -123,7 +133,8 @@
     "rules": {
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
-      "@typescript-eslint/explicit-function-return-type": "off"
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/no-empty-interface": "warn"
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -146,62 +157,13 @@
     "@types/redux-mock-store": "^1.0.0",
     "@typescript-eslint/parser": "^1.13.0",
     "axios-mock-adapter": "^1.16.0",
+    "clean-webpack-plugin": "^3.0.0",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.11.2",
     "jest-environment-enzyme": "^7.0.2",
     "jest-enzyme": "^7.0.2",
     "redux-mock-store": "^1.5.3",
     "webpack-bundle-analyzer": "^3.3.2"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "resolver": "jest-pnp-resolver",
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [
-      "jest-enzyme"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/*.test.(js|jsx|ts|tsx)"
-    ],
-    "testEnvironment": "enzyme",
-    "testURL": "http://localhost",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ],
-    "watchPlugins": [
-      "<rootDir>/node_modules/jest-watch-typeahead/filename.js",
-      "<rootDir>/node_modules/jest-watch-typeahead/testname.js"
-    ]
   },
   "babel": {
     "presets": [
