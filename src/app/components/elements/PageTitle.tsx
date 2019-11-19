@@ -1,5 +1,6 @@
 import React, {ReactElement, useEffect, useRef} from "react";
 import {UncontrolledTooltip} from "reactstrap";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 export interface PageTitleProps {
     currentPageTitle: string;
@@ -12,7 +13,7 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className}: PageTit
     const headerRef = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {
-        document.title = currentPageTitle + " — Isaac Computer Science";
+        document.title = currentPageTitle + " — Isaac " + SITE_SUBJECT_TITLE;
         const element = headerRef.current;
         if (element) {
             element.focus();

@@ -7,6 +7,7 @@ import {LoggedInUser} from "../../../IsaacAppTypes";
 import {WhySignUpTabs} from "../elements/WhySignUpTabs";
 import {FeaturedContentTabs} from "../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../elements/EventsCarousel";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
@@ -16,7 +17,7 @@ interface HomePageProps {
 }
 export const HomepageComponent = ({user}: HomePageProps) => {
     useEffect( () => {
-        document.title = "Isaac Computer Science";
+        document.title = "Isaac " + SITE_SUBJECT_TITLE;
     }, []);
     return <div id="homepage">
         <section id="call-to-action" className="homepageHero">
