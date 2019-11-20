@@ -178,7 +178,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
                                 {/* Options for logged-in users */}
                                 {user && user.loggedIn && <span>
-                                    {event.eventStatus != 'CLOSED' && !event.expired && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && event.withinBookingDeadline && <RS.Button
+                                    {event.eventStatus != 'CLOSED' && !event.expired && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
                                         onClick={() => {setBookingFormOpen(true)}}
                                     >
                                         Open booking form
