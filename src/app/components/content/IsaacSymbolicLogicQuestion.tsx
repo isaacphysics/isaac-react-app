@@ -74,7 +74,8 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols}
                 visible={modalVisible}
-                syntax={props.examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
+                editorMode='logic'
+                logicSyntax={props.examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
             />}
             <IsaacHints questionPartId={questionId} hints={doc.hints} />
         </div>

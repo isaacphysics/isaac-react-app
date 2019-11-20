@@ -14,7 +14,8 @@ interface InequalityModalProps {
     close: () => void;
     onEditorStateChange: (state: any) => void;
     initialEditorSymbols: any;
-    syntax?: string;
+    editorMode?: string;
+    logicSyntax?: string;
     visible: boolean;
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
@@ -60,7 +61,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             menuOpen: false,
             editorState: {},
             menuItems: {
-                logicFunctionItems: this.generateLogicFunctionsItems(props.syntax || "logic"),
+                logicFunctionItems: this.generateLogicFunctionsItems(props.logicSyntax || "logic"),
                 upperCaseLetters: [],
                 lowerCaseLetters: [],
                 letters: [],
@@ -89,8 +90,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             window.innerHeight * Math.ceil(window.devicePixelRatio),
             this.props.initialEditorSymbols,
             {
-                editorMode: 'logic',
-                logicSyntax: this.props.syntax || 'logic',
+                editorMode: this.props.editorMode || 'logic',
+                logicSyntax: this.props.logicSyntax || 'logic',
                 textEntry: false,
                 fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
                 fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf'
@@ -159,13 +160,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             inequalityElement.removeChild(inequalityElement.getElementsByTagName('canvas')[0]);
         }
 
-        document.documentElement.style.width = null;
-        document.documentElement.style.height = null;
-        document.documentElement.style.overflow = null;
+        document.documentElement.style.width = '';
+        document.documentElement.style.height = '';
+        document.documentElement.style.overflow = '';
         document.documentElement.style.touchAction = 'auto';
-        document.body.style.width = null;
-        document.body.style.height = null;
-        document.body.style.overflow = null;
+        document.body.style.width = '';
+        document.body.style.height = '';
+        document.body.style.overflow = '';
         document.body.style.touchAction = 'auto';
     }
 
@@ -388,7 +389,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             <div id="inequality-menu-tabs" className="menu-tabs">
                 <ul>
                     <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString("A\\ b") }} onClick={() => this.onMenuTabClick("letters")} />
-                    <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(this.props.syntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }} onClick={(e) => { e.preventDefault(); this.onMenuTabClick("functions") } } />
+                    <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(this.props.logicSyntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }} onClick={(e) => { e.preventDefault(); this.onMenuTabClick("functions") } } />
                 </ul>
             </div>
         </nav>

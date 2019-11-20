@@ -22,7 +22,7 @@ const stateToProps = (state: AppState, {match: {params: {questionId}}, location:
 const dispatchToProps = {fetchDoc};
 
 interface EqualityPageProps {
-    queryParams: {board?: string};
+    queryParams: {board?: string, mode?: string};
     history: any;
     fetchDoc: (documentType: DOCUMENT_TYPE, questionId: string) => void;
 }
@@ -33,6 +33,7 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
     const [currentAttempt, setCurrentAttempt] = useState();
     const [editorSyntax, setEditorSyntax] = useState('logic');
+    const [editorMode, setEditorMode] = useState(queryParams.mode || 'logic');
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -77,7 +78,8 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
                             }}
                             availableSymbols={[]}
                             initialEditorSymbols={initialEditorSymbols}
-                            syntax={editorSyntax}
+                            editorMode={editorMode}
+                            logicSyntax={editorSyntax}
                             visible={modalVisible}
                         />}
                     </div>
