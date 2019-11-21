@@ -5,7 +5,7 @@ import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
 import {IsaacVideo} from "./IsaacVideo";
 import {IsaacImage} from "./IsaacImage";
 import {IsaacFigure} from "./IsaacFigure";
-import {AnvilAppDTO, ContentDTO} from "../../../IsaacApiTypes";
+import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
 import {IsaacTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
