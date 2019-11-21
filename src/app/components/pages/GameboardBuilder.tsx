@@ -1,9 +1,16 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ContentSummaryDTO, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
-import {closeActiveModal, createGameboard, getWildcards, logAction, openActiveModal} from "../../state/actions";
+import {ContentSummaryDTO, GameboardItem} from "../../../IsaacApiTypes";
+import {
+    closeActiveModal,
+    createGameboard,
+    getWildcards,
+    loadGameboard,
+    logAction,
+    openActiveModal
+} from "../../state/actions";
 import {store} from "../../state/store";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
@@ -11,7 +18,6 @@ import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
 import {resourceFound} from "../../services/validation";
-import {sample} from 'lodash';
 import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
@@ -19,31 +25,39 @@ import {
     logEvent
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
-import {IS_CS_PLATFORM} from "../../services/constants";
+import {IS_CS_PLATFORM, NOT_FOUND} from "../../services/constants";
 import {history} from "../../services/history"
+import {withRouter} from "react-router-dom";
+import queryString from "query-string";
+import {ShowLoading} from "../handlers/ShowLoading";
+import {Spinner} from "reactstrap";
 
-interface GameboardBuilderProps {
-    location: {
-        state?: {
-            gameboard?: GameboardDTO;
-        };
-    };
-}
+export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
+    const queryParams = props.location.search && queryString.parse(props.location.search);
+    const baseGameboardId = queryParams && queryParams.base as string;
 
-export const GameboardBuilder = (props: GameboardBuilderProps) => {
     const dispatch = useDispatch();
-    const loadedGameboard = props.location.state && props.location.state.gameboard;
 
     const user = useSelector((state: AppState) => state && state.user);
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
+    const baseGameboard = useSelector((state: AppState) => state && state.currentGameboard);
 
-    const [gameboardTitle, setGameboardTitle] = useState(loadedGameboard ? `${loadedGameboard.title}-copy`: "");
-    const [gameboardTag, setGameboardTag] = useState(loadedGameboard && isStaff(user) && loadedGameboard.tags ? loadedGameboard.tags[0] : "null");
-    const [gameboardURL, setGameboardURL] = useState(loadedGameboard && isStaff(user) ? `${loadedGameboard.id}-copy` : "");
-    const [questionOrder, setQuestionOrder] = useState<string[]>((loadedGameboard && loadGameboardQuestionOrder(loadedGameboard)) || []);
-    const [selectedQuestions, setSelectedQuestions] = useState((loadedGameboard && loadGameboardSelectedQuestions(loadedGameboard)) || new Map<string, ContentSummaryDTO>());
-    const [wildcardId, setWildcardId] = useState(loadedGameboard && loadedGameboard.wildCard && loadedGameboard.wildCard.id ? loadedGameboard.wildCard.id : "random");
-    const eventLog = useRef<any[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
+    const [gameboardTitle, setGameboardTitle] = useState("");
+    const [gameboardTag, setGameboardTag] = useState("null");
+    const [gameboardURL, setGameboardURL] = useState();
+    const [questionOrder, setQuestionOrder] = useState<string[]>( []);
+    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
+    const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
+    const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
+
+    useMemo(() => {
+        if (baseGameboard && baseGameboard !== NOT_FOUND) {
+            setGameboardTitle(`${baseGameboard.title} (Copy)`);
+            setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
+            setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
+            setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
+        }
+    }, [baseGameboard]);
 
     const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "";
 
@@ -54,6 +68,12 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
         }
     };
 
+    useEffect(() => {if (!wildcards) dispatch(getWildcards())}, [user]);
+    useEffect(() => {
+        if (baseGameboardId && (!baseGameboard || baseGameboard === NOT_FOUND)) {
+            dispatch(loadGameboard(baseGameboardId));
+        }
+    }, [baseGameboardId]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
@@ -61,14 +81,16 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
         });
     });
 
-    useEffect(() => {
-        if (!wildcards) {
-            dispatch(getWildcards());
-        }
-    }, [user]);
+    const pageHelp = <span>
+        You can create custom question sets to assign to your groups. Search by question title or topic and add up to
+        ten questions to a gameboard.
+        <br />
+        You cannot modify a gameboard after it has been created. You&apos;ll find a link underneath any
+        existing gameboard to duplicate and edit it.
+    </span>;
 
     return <RS.Container id="gameboard-builder">
-        <TitleAndBreadcrumb currentPageTitle="Gameboard builder"/>
+        <TitleAndBreadcrumb currentPageTitle="Gameboard builder" help={pageHelp}/>
 
         <RS.Card className="p-3 mt-4 mb-5">
             <RS.CardBody>
@@ -131,7 +153,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                                     <th className="w-40">Question title</th>
                                     <th className="w-25">Topic</th>
                                     {!IS_CS_PLATFORM && <th className="w-15">Level</th>}
-                                    <th className="w-15">Exam board</th>
+                                    <th className="w-15">Exam boards</th>
                                 </tr>
                             </thead>
                             <Droppable droppableId="droppable">
@@ -154,25 +176,30 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                                             <tr>
                                                 <td colSpan={5}>
                                                     <div className="img-center">
-                                                        <input
-                                                            type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
-                                                            alt="Add questions" title="Add questions"
-                                                            onClick={() => {
-                                                                logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
-                                                                dispatch(openActiveModal({
-                                                                    closeAction: () => {store.dispatch(closeActiveModal())},
-                                                                    size: "xl",
-                                                                    title: "Search questions",
-                                                                    body: <QuestionSearchModal
-                                                                        originalSelectedQuestions={selectedQuestions}
-                                                                        setOriginalSelectedQuestions={setSelectedQuestions}
-                                                                        originalQuestionOrder={questionOrder}
-                                                                        setOriginalQuestionOrder={setQuestionOrder}
-                                                                        eventLog={eventLog}
-                                                                    />
-                                                                }))
-                                                            }}
-                                                        />
+                                                        <ShowLoading
+                                                            placeholder={<div className="text-center"><Spinner color="primary" /></div>}
+                                                            until={!baseGameboardId || baseGameboard == NOT_FOUND || baseGameboard}
+                                                        >
+                                                            <input
+                                                                type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
+                                                                alt="Add questions" title="Add questions"
+                                                                onClick={() => {
+                                                                    logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
+                                                                    dispatch(openActiveModal({
+                                                                        closeAction: () => {store.dispatch(closeActiveModal())},
+                                                                        size: "xl",
+                                                                        title: "Search questions",
+                                                                        body: <QuestionSearchModal
+                                                                            originalSelectedQuestions={selectedQuestions}
+                                                                            setOriginalSelectedQuestions={setSelectedQuestions}
+                                                                            originalQuestionOrder={questionOrder}
+                                                                            setOriginalQuestionOrder={setQuestionOrder}
+                                                                            eventLog={eventLog}
+                                                                        />
+                                                                    }))
+                                                                }}
+                                                            />
+                                                        </ShowLoading>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -187,17 +214,13 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                     id="gameboard-save-button" type="button" value="Save gameboard" disabled={!canSubmit}
                     className={"btn btn-block btn-secondary border-0 mt-2"} aria-describedby="gameboard-help"
                     onClick={() => {
-                        let wildcard: IsaacWildcard = {description: "", url: ""};
-                        if (resourceFound(wildcards) && wildcards.length > 0) {
-                            if (wildcardId == "random") {
-                                wildcard = sample(wildcards) || wildcard;
-                            } else {
-                                wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
-                            }
+                        let wildcard = undefined;
+                        if (wildcardId && resourceFound(wildcards) && wildcards.length > 0) {
+                            wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
                         }
 
                         dispatch(createGameboard({
-                            id: gameboardURL == "" ? undefined : gameboardURL,
+                            id: gameboardURL,
                             title: gameboardTitle,
                             questions: questionOrder.map((questionId) => {
                                 const question = selectedQuestions.get(questionId);
@@ -211,7 +234,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
 
                         dispatch(openActiveModal({
                             closeAction: () => {store.dispatch(closeActiveModal())},
-                            title: "Gameboard submitted",
+                            title: "Gameboard created",
                             body: <GameboardCreatedModal/>
                         }));
 
@@ -230,4 +253,4 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
             </RS.CardBody>
         </RS.Card>
     </RS.Container>
-};
+});

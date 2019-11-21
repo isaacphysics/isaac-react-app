@@ -24,9 +24,8 @@ export const AdminEmails = (props: AdminEmailsProps) => {
         ADMIN: false,
         EVENT_MANAGER: false,
         CONTENT_EDITOR: false,
+        EVENT_LEADER: false,
         TEACHER: false,
-        TESTER: false,
-        STAFF: false,
         STUDENT: false
     };
     const [selectedRoles, setSelectedRoles] = useState(defaultSelectedRoles);

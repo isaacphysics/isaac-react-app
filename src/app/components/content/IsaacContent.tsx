@@ -9,12 +9,15 @@ import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
 import {IsaacTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
+import {withRouter} from "react-router-dom";
+import {IsaacQuizTabs} from "./IsaacQuizTabs";
 
 interface IsaacContentProps {
     doc: ContentDTO;
+    match: {path: string};
 }
-export const IsaacContent = (props: IsaacContentProps) => {
-    const {doc: {type, layout, encoding, value, children}} = props;
+export const IsaacContent = withRouter((props: IsaacContentProps) => {
+    const {doc: {type, layout, encoding, value, children}, match} = props;
 
     let selectedComponent;
     switch (type) {
@@ -35,7 +38,12 @@ export const IsaacContent = (props: IsaacContentProps) => {
         case "isaacFreeTextQuestion":
         case "isaacItemQuestion":
         case "isaacParsonsQuestion":
-            selectedComponent = <IsaacQuestionTabs {...props} />; break;
+            if (match.path.startsWith("/quizzes")) {
+                selectedComponent = <IsaacQuizTabs {...props} />;
+            } else {
+                selectedComponent = <IsaacQuestionTabs {...props} />;
+            }
+            break;
         default:
             switch (layout) {
                 case "tabs": selectedComponent = <IsaacTabs {...props} />; break;
@@ -48,4 +56,4 @@ export const IsaacContent = (props: IsaacContentProps) => {
             }
     }
     return selectedComponent;
-};
+});

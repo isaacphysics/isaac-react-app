@@ -1,5 +1,6 @@
 import {AppState} from "./reducers";
 import {sortBy} from "lodash";
+import {ACCEPTED_QUIZ_IDS, NOT_FOUND} from "../services/constants";
 
 export const groups = {
     current: (state: AppState) => {
@@ -51,5 +52,22 @@ export const boards = {
                 }
             ))
         };
+    }
+};
+
+export const doc = {
+    ifNotAQuizId: (id: string) => (state: AppState) => ACCEPTED_QUIZ_IDS.includes(id) ? NOT_FOUND : (state && state.doc) || null,
+    ifQuizId: (id: string) => (state: AppState) => ACCEPTED_QUIZ_IDS.includes(id) ? (state && state.doc) || null : NOT_FOUND,
+};
+
+export const questions = {
+    selectQuestionPart: (questionPartId?: string) => (state: AppState) => {
+        return state && state.questions && state.questions.filter(question => question.id == questionPartId)[0];
+    },
+    allQuestionsAttempted: (state: AppState) => {
+        return !!state && !!state.questions && state.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
+    },
+    anyQuestionPreviouslyAttempted: (state: AppState) => {
+        return !!state && !!state.questions && state.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
     }
 };

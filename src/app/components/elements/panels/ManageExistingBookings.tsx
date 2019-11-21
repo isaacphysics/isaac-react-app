@@ -12,8 +12,8 @@ import {
     resendUserConfirmationEmail
 } from "../../../state/actions";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
-import {isAdmin} from "../../../services/user";
-import {UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
+import {isAdmin, isEventLeader} from "../../../services/user";
+import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 
@@ -26,7 +26,23 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
     const [sortPredicate, setSortPredicate] = useState("date");
     const [reverse, setReverse] = useState(true);
 
+    const setSortPredicateAndDirection = (predicate: string) => () => {
+        setSortPredicate(predicate);
+        setReverse(!reverse);
+    };
+
+    let augmentedEventBookings = eventBookings.map((booking: EventBookingDTO & {schoolName?: string}) => {
+        if (booking.userBooked && booking.userBooked.id) {
+            const schoolDetails = userIdToSchoolMapping[booking.userBooked.id];
+            booking.schoolName = schoolDetails ? schoolDetails.name : "UNKNOWN";
+        }
+        return booking
+    });
+
     return <Accordion trustedTitle="Manage current bookings">
+        {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
+            As an event leader, you are only able to see the bookings of users who have granted you access to their data.
+        </div>}
         {atLeastOne(eventBookings.length) && <div className="overflow-auto">
             <RS.Table bordered className="mb-0 bg-white">
                 <thead>
@@ -34,30 +50,44 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                         <th className="align-middle text-center">
                             Actions
                         </th>
-                        <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('userBooked.familyName'); setReverse(!reverse);}}>
-                            Name
-                        </RS.Button></th>
-                        <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('userBooked.email'); setReverse(!reverse);}}>
-                            Email
-                        </RS.Button></th>
                         <th className="align-middle">
-                            Account type
+                            <RS.Button color="link" onClick={setSortPredicateAndDirection('userBooked.familyName')}>
+                                Name
+                            </RS.Button>
                         </th>
                         <th className="align-middle">
-                            School
+                            <RS.Button color="link" onClick={setSortPredicateAndDirection('userBooked.email')}>
+                                Email
+                            </RS.Button>
+                        </th>
+                        <th className="align-middle">
+                            <RS.Button color="link" onClick={setSortPredicateAndDirection('userBooked.role')}>
+                                Account type
+                            </RS.Button>
+                        </th>
+                        <th className="align-middle">
+                            <RS.Button color="link" onClick={setSortPredicateAndDirection('schoolName')}>
+                                School
+                            </RS.Button>
                         </th>
                         <th className="align-middle">
                             Job / year group
                         </th>
-                        <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('bookingStatus'); setReverse(!reverse);}}>
-                            Booking status
-                        </RS.Button></th>
-                        <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('bookingDate'); setReverse(!reverse);}}>
-                            Booking created
-                        </RS.Button></th>
-                        <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('updated'); setReverse(!reverse);}}>
-                            Booking updated
-                        </RS.Button></th>
+                        <th className="align-middle">
+                            <RS.Button color="link" onClick={setSortPredicateAndDirection('bookingStatus')}>
+                                Booking status
+                            </RS.Button>
+                        </th>
+                        <th className="align-middle">
+                            <RS.Button color="link" onClick={setSortPredicateAndDirection('bookingDate')}>
+                                Booking created
+                            </RS.Button>
+                        </th>
+                        <th className="align-middle">
+                            <RS.Button color="link" onClick={setSortPredicateAndDirection('updated')}>
+                                Booking updated
+                            </RS.Button>
+                        </th>
                         <th className="align-middle">
                             Accessibility requirements
                         </th>
@@ -73,10 +103,9 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                     </tr>
                 </thead>
                 <tbody>
-                    {eventBookings
+                    {augmentedEventBookings
                         .sort(sortOnPredicateAndReverse(sortPredicate, reverse))
                         .map(booking => {
-                            const userSchool = booking.userBooked && userIdToSchoolMapping[booking.userBooked.id as number];
                             const userId = booking.userBooked && booking.userBooked.id;
                             return <tr key={booking.bookingId}>
                                 <td className="align-middle">
@@ -102,13 +131,8 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                                 </td>
                                 <td className="align-middle">{booking.userBooked && (booking.userBooked as UserSummaryWithEmailAddressDTO).email}</td>
                                 <td className="align-middle">{booking.userBooked && booking.userBooked.role}</td>
-                                {(userSchool === undefined || !userSchool.urn) && <td className="align-middle">
-                                    {userSchool && userSchool.name}
-                                </td>}
-                                {userSchool && userSchool.urn !== undefined && <td className="align-middle">
-                                    {/*TODO When full stats functionality works <Link to={`/admin/stats/schools/${userSchool.urn}/user_list`}>{userSchool.name}</Link>*/}
-                                    {userSchool.name}
-                                </td>}
+                                {/*TODO When full stats functionality works <Link to={`/admin/stats/schools/${userSchool.urn}/user_list`}>{userSchool.name}</Link>*/}
+                                <td className="align-middle">{booking.schoolName}</td>
                                 <td className="align-middle">
                                     {booking.additionalInformation && (booking.additionalInformation.jobTitle ? booking.additionalInformation.jobTitle : booking.additionalInformation.yearGroup)}
                                 </td>

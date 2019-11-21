@@ -6,11 +6,11 @@ import {AppState} from "../../state/reducers";
 import {ChoiceDTO, IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacHints} from "./IsaacHints";
 import {CustomInput, Label} from "reactstrap";
+import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
-    const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
-    return question ? {currentAttempt: question.currentAttempt} : {};
+    const questionPart = questions.selectQuestionPart(questionId)(state);
+    return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
 };
 const dispatchToProps = {setCurrentAttempt};
 
@@ -35,7 +35,7 @@ const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps)
 
             <ul>{doc.choices && doc.choices.map((choice, index) =>
                 <li key={choice.value} className="list-unstyled">
-                    <Label className="label-radio multichoice-option">
+                    <Label className="label-radio multichoice-option d-flex">
                         <CustomInput
                             id={`${questionId}${index}`}
                             color="secondary"
@@ -43,7 +43,9 @@ const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps)
                             checked={currentAttemptValue == choice.value}
                             onChange={() => setCurrentAttempt(questionId, choice)}
                         />
-                        <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} />
+                        <div className="flex-fill">
+                            <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} />
+                        </div>
                     </Label>
                 </li>)
             }</ul>

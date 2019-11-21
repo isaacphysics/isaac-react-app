@@ -68,7 +68,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
         </td>
         <td className="w-40">
             {provided && <img src="/assets/drag_indicator.svg" alt="Drag to reorder" className="mr-1 grab-cursor" />}
-            <a className="mr-2" href={question.url} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
+            <a className="mr-2" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
                 {question.title}
             </a>
             <input
