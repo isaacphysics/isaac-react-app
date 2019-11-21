@@ -43,7 +43,9 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
         if (parentQuestion.type != null) {
             appParams["problem_type"] = parentQuestion.type;
         }
-        parentQuestion.bestAttempt && parentQuestion.bestAttempt.correct && (appParams["problem_previously_correct"] = parentQuestion.bestAttempt.correct.toString());
+        if (parentQuestion.bestAttempt && parentQuestion.bestAttempt.correct) {
+            appParams["problem_previously_correct"] = parentQuestion.bestAttempt.correct.toString()
+        }
     }
 
     if ((accordionSectionId !== undefined)) {
@@ -66,7 +68,9 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
     let iframeSrc = `${baseURL}#?${queryParams}`;
 
     let onMessage = function(e: any) {
-        if (iframeRef.current && e.source !== (iframeRef.current as HTMLIFrameElement).contentWindow) { return; }
+        if (iframeRef.current && e.source !== (iframeRef.current as HTMLIFrameElement).contentWindow) {
+            return;
+        }
 
         let data = e.data;
 

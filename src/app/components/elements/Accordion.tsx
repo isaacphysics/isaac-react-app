@@ -82,7 +82,7 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
         }
     }
 
-    return<div className="accordion">
+    return <div className="accordion">
         <div className="accordion-header">
             <RS.Button
                 id={anchorId || ""} block color="link"
