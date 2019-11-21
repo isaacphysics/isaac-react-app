@@ -4,7 +4,6 @@ import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
 import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
 import {questions} from "../../state/selectors";
-import {withRouter} from "react-router-dom";
 
 interface AnvilAppProps {
     doc: AnvilAppDTO;
@@ -12,7 +11,7 @@ interface AnvilAppProps {
 
 const sessionIdentifier = Math.random();
 
-export const AnvilApp = withRouter(({doc}: AnvilAppProps) => {
+export const AnvilApp = ({doc}: AnvilAppProps) => {
     const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${sessionIdentifier}`;
     const title = doc.value || "Anvil app";
     const page = useSelector((state: AppState) => (state && state.doc) || null);
@@ -70,7 +69,6 @@ export const AnvilApp = withRouter(({doc}: AnvilAppProps) => {
         if (iframeRef.current && e.source !== (iframeRef.current as HTMLIFrameElement).contentWindow) { return; }
 
         let data = e.data;
-        console.debug("Anvil app message:", data);
 
         if (iframeRef.current && (data.fn == "newAppHeight")) {
             (iframeRef.current as HTMLIFrameElement).height = data.newHeight + 15;
@@ -86,4 +84,4 @@ export const AnvilApp = withRouter(({doc}: AnvilAppProps) => {
     }, [onMessage]);
 
     return <iframe ref={iframeRef} src={iframeSrc} title={title} className="anvil-app"/>;
-});
+};
