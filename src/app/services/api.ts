@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
+import {ChoiceDTO, EventBookingDTO, GameboardDTO, TestCaseDTO, TestDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
@@ -382,35 +382,9 @@ export const api = {
         }
     },
     tests: {
-        freeTextRules: () => endpoint.post("/tests/free-text", {
-            rules: [
-                {
-                    "type": "freeTextRule",
-                    "encoding": "markdown",
-                    "value": "*get to*other side*",
-                    "caseInsensitive": true,
-                    "allowsAnyOrder": false,
-                    "allowsExtraWords": false,
-                    "allowsMisspelling": false,
-                    "correct": true,
-                    "explanation": {
-                        "type": "content",
-                        "children": [
-                            {
-                                "type": "content",
-                                "value": "This is a correct answer!",
-                                "encoding": "markdown"
-                            }
-                        ],
-                        "encoding": "markdown"
-                    }
-                }
-            ],
-            tests: [
-                {choice: {type: "stringChoice", value: "get to the other side"}, expected: true},
-                {choice: {type: "stringChoice", value: "don't know"}, expected: false}
-            ]
-        })
+        freeTextRules: (choices: ChoiceDTO[], testCases: TestCaseDTO[]) => {
+            return endpoint.post("/tests/question?type=isaacFreeTextQuestion", {choices, testCases});
+        }
     },
     logger: {
         log : (eventDetails: object): AxiosPromise<void> => {
