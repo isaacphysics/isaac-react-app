@@ -15,7 +15,7 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className}: PageTit
     useEffect(() => {
         document.title = currentPageTitle + " — Isaac " + SITE_SUBJECT_TITLE;
         const element = headerRef.current;
-        if (element) {
+        if (element && (window as any).followedAtLeastOneSoftLink) {
             element.focus();
         }
     }, [currentPageTitle]);
