@@ -1,38 +1,29 @@
-import React, {RefObject, useContext, useEffect, useState} from 'react';
-import {AnvilAppDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import React, {RefObject, useContext, useEffect} from 'react';
+import {AnvilAppDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
-import {connect} from "react-redux";
-import {AccordionSectionContext, LoggedInUser, QuestionContext} from "../../../IsaacAppTypes";
-import {store} from "../../state/store";
-
-const stateToProps = (state: AppState) => ({
-    user: (state && state.user) || null,
-    page: (state && state.doc) || null,
-    pageState: store.getState()
-});
+import {useSelector} from "react-redux";
+import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
+import {questions} from "../../state/selectors";
+import {withRouter} from "react-router-dom";
 
 interface AnvilAppProps {
     doc: AnvilAppDTO;
-    user: LoggedInUser | null;
-    pageState: any;
 }
 
-const AnvilAppComponent = ({doc, user, pageState}: AnvilAppProps) => {
-    const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${Math.random()}`;
-    const title = doc.value || "Anvil app";
-    const [currentIframe, setCurrentIframe] = useState();
+const sessionIdentifier = Math.random();
 
-    let iframeRef = React.createRef() as RefObject<HTMLIFrameElement>;
+export const AnvilApp = withRouter(({doc}: AnvilAppProps) => {
+    const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${sessionIdentifier}`;
+    const title = doc.value || "Anvil app";
+    const page = useSelector((state: AppState) => (state && state.doc) || null);
+    const user = useSelector((state: AppState) => (state && state.user) || null);
+
+    let iframeRef = React.useRef() as RefObject<HTMLIFrameElement>;
 
     let accordionSectionId = useContext(AccordionSectionContext);
     let questionId = useContext(QuestionContext);
 
-    useEffect(() => {
-        setCurrentIframe(iframeRef.current as HTMLIFrameElement);
-    }, [iframeRef]);
-
-    let parentQuestion = pageState && pageState.questions ? (pageState.questions).find(
-        function(question: IsaacQuestionPageDTO) {return question.id == questionId}) : undefined;
+    let parentQuestion = useSelector((state: AppState) => questions.selectQuestionPart(questionId)(state)) || undefined;
 
     let appParams: {[s: string]: string} = {};
 
@@ -47,18 +38,26 @@ const AnvilAppComponent = ({doc, user, pageState}: AnvilAppProps) => {
     }
 
     if (parentQuestion !== undefined) {
-        appParams["problem_id"] = parentQuestion.id;
-        appParams["problem_type"] = parentQuestion.type;
-        parentQuestion.bestAttempt && (appParams["problem_previously_correct"] = parentQuestion.bestAttempt.correct);
+        if (parentQuestion.id != null) {
+            appParams["problem_id"] = parentQuestion.id;
+        }
+        if (parentQuestion.type != null) {
+            appParams["problem_type"] = parentQuestion.type;
+        }
+        parentQuestion.bestAttempt && parentQuestion.bestAttempt.correct && (appParams["problem_previously_correct"] = parentQuestion.bestAttempt.correct.toString());
     }
 
     if ((accordionSectionId !== undefined)) {
         appParams["accordion_section_id"] = accordionSectionId;
     }
 
-    if (pageState.doc) {
-        appParams["page_id"] = pageState.doc.id;
-        appParams["page_type"] = pageState.doc.type;
+    if (page && page != 404) {
+        if (page.id != null) {
+            appParams["page_id"] = page.id;
+        }
+        if (page.type != null) {
+            appParams["page_type"] = page.type;
+        }
     }
 
     let queryParams = Object.keys(appParams).map((key) => {
@@ -68,19 +67,23 @@ const AnvilAppComponent = ({doc, user, pageState}: AnvilAppProps) => {
     let iframeSrc = `${baseURL}#?${queryParams}`;
 
     let onMessage = function(e: any) {
-        if (currentIframe && e.source !== currentIframe.contentWindow) { return; }
+        if (iframeRef.current && e.source !== (iframeRef.current as HTMLIFrameElement).contentWindow) { return; }
 
         let data = e.data;
         console.debug("Anvil app message:", data);
 
-        if (currentIframe && (data.fn == "newAppHeight")) {
-            currentIframe.height = data.newHeight + 15;
+        if (iframeRef.current && (data.fn == "newAppHeight")) {
+            (iframeRef.current as HTMLIFrameElement).height = data.newHeight + 15;
         }
     };
 
-    window.addEventListener("message", onMessage);
+    useEffect(() => {
+        window.addEventListener("message", onMessage);
+
+        return () => {
+            window.removeEventListener("message", onMessage);
+        };
+    }, [onMessage]);
 
     return <iframe ref={iframeRef} src={iframeSrc} title={title} className="anvil-app"/>;
-};
-
-export const AnvilApp = connect(stateToProps)(AnvilAppComponent);
+});

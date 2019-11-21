@@ -15,7 +15,6 @@ import {IsaacQuizTabs} from "./IsaacQuizTabs";
 import {QuestionContext} from "../../../IsaacAppTypes";
 
 interface IsaacContentProps {
-    app: AnvilAppDTO;
     doc: ContentDTO;
     match: {path: string};
 }
