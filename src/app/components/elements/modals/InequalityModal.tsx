@@ -48,6 +48,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private _movingMenuBar?: HTMLElement | null = null;
     private _potentialSymbolSpec?: MenuItem | null = null;
 
+    private _greekLetterMap: { [letter: string]: string } = {"\\alpha": "α", "\\beta": "β", "\\gamma": "γ", "\\delta": "δ", "\\epsilon": "ε", "\\varepsilon": "ε", "\\zeta": "ζ", "\\eta": "η", "\\theta": "θ", "\\iota": "ι", "\\kappa": "κ", "\\lambda": "λ", "\\mu": "μ", "\\nu": "ν", "\\xi": "ξ", "\\omicron": "ο", "\\pi": "π", "\\rho": "ρ", "\\sigma": "σ", "\\tau": "τ", "\\upsilon": "υ", "\\phi": "ϕ", "\\chi": "χ", "\\psi": "ψ", "\\omega": "ω", "\\Gamma": "Γ", "\\Delta": "Δ", "\\Theta": "Θ", "\\Lambda": "Λ", "\\Xi": "Ξ", "\\Pi": "Π", "\\Sigma": "Σ", "\\Upsilon": "Υ", "\\Phi": "Φ", "\\Psi": "Ψ", "\\Omega": "Ω"};
+
     // Call this to close the editor
     close: () => void;
 
@@ -78,14 +80,16 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         } else {
             if (props.editorMode === 'logic') {
                 // T and F are reserved in logic. The jury is still out on t and f.
-                this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( this.makeLetterMenuItem );
-                this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( this.makeLetterMenuItem );
+                this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( letter => this.makeLetterMenuItem(letter) );
+                this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( letter => this.makeLetterMenuItem(letter) );
             } else {
                 // Assuming editorMode === 'maths'
-                this.state.menuItems.upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map( this.makeLetterMenuItem );
-                this.state.menuItems.lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz".split("").map( this.makeLetterMenuItem );
-                this.state.menuItems.upperCaseGreekLetters = "ΓΔΘΛΠΣΤΥΦΨΩ".split("").map( this.makeLetterMenuItem );
-                this.state.menuItems.lowerCaseGreekLetters = "αβγδεζηθικλμνξοπρστυφχψω".split("").map( this.makeLetterMenuItem );
+                this.state.menuItems.upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map( letter => this.makeLetterMenuItem(letter) );
+                this.state.menuItems.lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz".split("").map( letter => this.makeLetterMenuItem(letter) );
+                const lowerCaseGreekLetters = ["\\alpha", "\\beta", "\\gamma", "\\delta", "\\varepsilon", "\\zeta", "\\eta", "\\theta", "\\iota", "\\kappa", "\\lambda", "\\mu", "\\nu", "\\xi", "\\omicron", "\\pi", "\\rho", "\\sigma", "\\tau", "\\upsilon", "\\phi", "\\chi", "\\psi", "\\omega"];
+                const upperCaseGreekLetters = ["\\Gamma", "\\Delta", "\\Theta", "\\Lambda", "\\Xi", "\\Pi", "\\Sigma", "\\Upsilon", "\\Phi", "\\Psi", "\\Omega"];
+                this.state.menuItems.upperCaseGreekLetters = upperCaseGreekLetters.map( letter => this.makeLetterMenuItem(this._greekLetterMap[letter] || letter, letter) );
+                this.state.menuItems.lowerCaseGreekLetters = lowerCaseGreekLetters.map( letter => this.makeLetterMenuItem(this._greekLetterMap[letter] || letter, letter) );
             }
         }
         this.close = () => {
@@ -179,8 +183,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.body.style.touchAction = 'auto';
     }
 
-    private makeLetterMenuItem(l: string) {
-        return new MenuItem("Symbol", { letter: l }, { label: l, texLabel: true, className: `symbol-${l} menu-item` });
+    private makeLetterMenuItem(letter: string, label?: string) {
+        return new MenuItem("Symbol", { letter: letter }, { label: label || letter, texLabel: true, className: `symbol-${letter} menu-item` });
     }
 
     private prepareAbsoluteElement(element?: Element | null) {
