@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
 import * as RS from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {Col, Container, Row} from "reactstrap";
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
