@@ -21,6 +21,7 @@ interface UserDetailsProps {
     subjectInterests: SubjectInterests;
     setSubjectInterests: (si: SubjectInterests) => void;
     submissionAttempted: boolean;
+    editingOtherUser: boolean;
 }
 
 export const UserDetails = (props: UserDetailsProps) => {
@@ -28,7 +29,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         userToUpdate, setUserToUpdate,
         examPreferences, setExamPreferences,
         subjectInterests, setSubjectInterests,
-        submissionAttempted
+        submissionAttempted, editingOtherUser
     } = props;
 
     const allRequiredFieldsValid = userToUpdate && subjectInterests &&
@@ -92,7 +93,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </FormGroup>
             </Col>
             <Col md={6}>
-                <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} editingOtherUser={editingOtherUser}/>
             </Col>
         </Row>
         <Row>

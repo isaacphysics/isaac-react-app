@@ -242,7 +242,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                     examPreferences={examPreferences} setExamPreferences={setExamPreferences}
                                     subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
-                                    submissionAttempted={attemptedAccountUpdate}
+                                    submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                 />
                             </TabPane>
                             <TabPane tabId={ACCOUNT_TAB.passwordreset}>
