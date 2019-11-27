@@ -10,7 +10,7 @@ import {api} from "../../services/api";
 import {requestEmailVerification} from "../../state/actions";
 import {Link} from "react-router-dom";
 import {isTeacher} from "../../services/user";
-
+import {PageFragment} from "../elements/PageFragment";
 
 
 const stateToProps = (state: AppState) => {
@@ -99,6 +99,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
         <div className="pt-4">
             <Row>
                 <Col size={9}>
+                    <PageFragment fragmentId="holiday_teacher_registration" renderFragmentNotFound={false}/>
                     <Card>
                         {isTeacher(user) &&
                             <Row>
