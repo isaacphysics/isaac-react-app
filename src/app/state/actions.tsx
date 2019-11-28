@@ -1458,6 +1458,16 @@ export const recordEventAttendance = (eventId: string, userId: number, attendanc
     }
 };
 
+export const showGroupBookingModal = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    const user = state && state.user && state.user.loggedIn && state.user || null;
+    dispatch(openActiveModal({
+        closeAction: () => {},
+        title: 'Test',
+        body: <div>Ho! Ho! Ho!</div>
+    }) as any);
+};
+
 // Content errors
 export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST});

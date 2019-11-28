@@ -6,7 +6,7 @@ import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {EVENTS_CRUMB} from "../../services/constants";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
-import {addMyselfToWaitingList, bookMyselfOnEvent, cancelMyBooking, getEvent, showToast} from "../../state/actions";
+import {addMyselfToWaitingList, bookMyselfOnEvent, cancelMyBooking, getEvent, showToast, showGroupBookingModal} from "../../state/actions";
 import {DateString} from "../elements/DateString";
 import {IsaacContent} from "../content/IsaacContent";
 import {Link} from "react-router-dom";
@@ -189,7 +189,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                         Close booking form
                                     </RS.Button>}
                                     {user.role && ['TEACHER', 'EVENT_LEADER', 'EVENT_MANAGER', 'ADMIN'].includes(user.role) && <RS.Button
-                                        color="primary" onClick={() => {}}
+                                        color="primary" onClick={() => {dispatch(showGroupBookingModal())}}
                                     >
                                         Group booking
                                     </RS.Button>}
