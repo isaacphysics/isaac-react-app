@@ -59,6 +59,7 @@ import {StatusFilter, TypeFilter} from "../components/pages/Events";
 import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {atLeastOne} from "../services/validation";
+import {reservationsModal} from "../components/elements/modals/ResearvationsModal";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -1459,13 +1460,7 @@ export const recordEventAttendance = (eventId: string, userId: number, attendanc
 };
 
 export const showGroupBookingModal = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const state = getState();
-    const user = state && state.user && state.user.loggedIn && state.user || null;
-    dispatch(openActiveModal({
-        closeAction: () => {},
-        title: 'Test',
-        body: <div>Ho! Ho! Ho!</div>
-    }) as any);
+    dispatch(openActiveModal(reservationsModal()) as any);
 };
 
 // Content errors
