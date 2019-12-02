@@ -102,7 +102,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; 
                                 <td className="align-middle"><RS.Button color="primary" outline className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
                                     Manage
                                 </RS.Button>
-                                <RS.Button color="primary" outline className="btn-sm" href={getCSVDownloadLink(event.id as string)} onClick={() => getEventCSV(event.id as string)}>
+                                <RS.Button color="primary" outline className="btn-sm mt-1" href={getCSVDownloadLink(event.id as string)} onClick={() => getEventCSV(event.id as string)}>
                                     CSV
                                 </RS.Button></td>
                                 <td className="align-middle"><Link to={`/events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>
