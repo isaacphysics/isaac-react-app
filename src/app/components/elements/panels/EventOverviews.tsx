@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import React, {useEffect, useState} from "react";
-import {getEventOverviews, getEventBookingCSV} from "../../../state/actions";
+import {getEventBookingCSV, getEventOverviews} from "../../../state/actions";
 import {Accordion} from "../Accordion";
 import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
@@ -11,8 +11,6 @@ import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {isEventLeader} from "../../../services/user";
-import {api} from "../../../services/api";
-import {downloadLinkModal} from "../modals/AssignmentProgressModalCreators";
 import {API_PATH} from "../../../services/constants";
 
 export enum EventOverviewFilter {
@@ -41,13 +39,6 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; 
 
     function getCSVDownloadLink(eventId: string) {
         return API_PATH + "/events/" + eventId + "/bookings/download";
-    }
-
-    function openEventDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
-        event.stopPropagation();
-        event.preventDefault();
-        // openActiveModal(downloadLinkModal(event.currentTarget.href));
-        downloadLinkModal(event.currentTarget.href);
     }
 
     return <Accordion trustedTitle="Events overview" index={0}>
