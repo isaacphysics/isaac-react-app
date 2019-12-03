@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {connect} from "react-redux";
-import {closeActiveModal, loadGroups, getGroupMembers} from "../../../state/actions";
+import {connect, useDispatch} from "react-redux";
+import {closeActiveModal, loadGroups, selectGroup, getGroupMembers} from "../../../state/actions";
 import {store} from "../../../state/store";
 import {
     Row,
@@ -11,47 +11,51 @@ import {RegisteredUserDTO, UserGroupDTO} from "../../../../IsaacApiTypes";
 import {AppState, user} from "../../../state/reducers";
 import {groups} from '../../../state/selectors';
 import { ShowLoading } from "../../handlers/ShowLoading";
+import { AppGroup } from "../../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
     groups: groups.active(state),
-    groupMembers: [] as Array<RegisteredUserDTO>
+    currentGroup: groups.current(state)
 });
-const dispatchToProps = { groups, loadGroups, getGroupMembers };
+const dispatchToProps = { groups, loadGroups, selectGroup, getGroupMembers };
 
 interface ReservationsModalProps {
     user: RegisteredUserDTO;
     groups: UserGroupDTO[] | null;
-    groupMembers: RegisteredUserDTO[] | null;
+    currentGroup: AppGroup | null;
     loadGroups: (archivedGroupsOnly: boolean) => void;
+    selectGroup: (group: UserGroupDTO | null) => void;
     getGroupMembers: (group: UserGroupDTO) => void;
 }
 
 const ReservationsModalComponent = (props: ReservationsModalProps) => {
-    const { user, groups, loadGroups, getGroupMembers } = props;
-
-    const [groupMembers, setGroupMembers] = useState();
+    const { user, groups, loadGroups, currentGroup } = props;
+    const dispatch = useDispatch();
 
     useEffect(() => {
         loadGroups(false);
     }, []);
 
     useEffect(() => {
-        // Promise here...
-        console.log(groupMembers);
-    }, [groupMembers]);
+        if (currentGroup && !currentGroup.members) {
+            dispatch(getGroupMembers(currentGroup));
+        } else if (currentGroup && currentGroup.members) {
+            // TODO: Retrieve event status for members maybe?
+        }
+    }, [currentGroup]);
 
     return <React.Fragment>
         <Row>
             <Col md={4}>
                 <ShowLoading until={groups}>
-                    {groups && groups.map(g => (
-                        <Row key={g.id}>
+                    {groups && groups.map(group => (
+                        <Row key={group.id}>
                             <Col>
                                 <div className="group-item p-2">
                                     <div className="d-flex justify-content-between align-items-center">
-                                        <Button color="link text-left" className="flex-fill" onClick={() => {setGroupMembers(getGroupMembers(g))}}>
-                                            {g.groupName}
+                                        <Button color="link text-left" className="flex-fill" onClick={() => {dispatch(selectGroup(group))}}>
+                                            {group.groupName}
                                         </Button>
                                     </div>
                                 </div>
@@ -60,6 +64,15 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                     ))}
                 </ShowLoading>
             </Col>
+            {currentGroup && currentGroup.members && <Col>
+                {currentGroup.members.map(member => (
+                    <Row key={member.id}>
+                        <Col>
+                            { member.givenName } { member.familyName }
+                        </Col>
+                    </Row>
+                ))}
+            </Col>}
         </Row>
     </React.Fragment>
 }
