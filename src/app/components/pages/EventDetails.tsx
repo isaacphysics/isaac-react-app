@@ -6,7 +6,7 @@ import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {EVENTS_CRUMB} from "../../services/constants";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
-import {addMyselfToWaitingList, bookMyselfOnEvent, cancelMyBooking, getEvent, showToast, showGroupBookingModal} from "../../state/actions";
+import {addMyselfToWaitingList, bookMyselfOnEvent, cancelMyBooking, getEvent, showToast, openActiveModal} from "../../state/actions";
 import {DateString} from "../elements/DateString";
 import {IsaacContent} from "../content/IsaacContent";
 import {Link} from "react-router-dom";
@@ -16,6 +16,7 @@ import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
 import {isTeacher} from "../../services/user";
+import {reservationsModal} from "../../components/elements/modals/ResearvationsModal";
 
 interface EventDetailsProps {
     match: {params: {eventId: string}};
@@ -189,7 +190,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                         Close booking form
                                     </RS.Button>}
                                     {user.role && ['TEACHER', 'EVENT_LEADER', 'EVENT_MANAGER', 'ADMIN'].includes(user.role) && <RS.Button
-                                        color="primary" onClick={() => {dispatch(showGroupBookingModal())}}
+                                        color="primary" onClick={() => { dispatch(openActiveModal(reservationsModal())) }}
                                     >
                                         Group booking
                                     </RS.Button>}

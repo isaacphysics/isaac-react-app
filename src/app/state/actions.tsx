@@ -59,7 +59,6 @@ import {StatusFilter, TypeFilter} from "../components/pages/Events";
 import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {atLeastOne} from "../services/validation";
-import {reservationsModal} from "../components/elements/modals/ResearvationsModal";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -1457,10 +1456,6 @@ export const recordEventAttendance = (eventId: string, userId: number, attendanc
         dispatch({type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to record event attendance", error) as any);
     }
-};
-
-export const showGroupBookingModal = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    dispatch(openActiveModal(reservationsModal()) as any);
 };
 
 // Content errors
