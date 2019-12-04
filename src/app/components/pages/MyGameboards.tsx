@@ -109,8 +109,8 @@ const Board = (props: BoardTableProps) => {
 
     return boardView == boardViews.table ?
         <tr key={board.id} className="board-card">
-            <td><div className="subject-compsci-table groups-assigned" id={hexagonId}>
-                {board.percentageCompleted}%
+            <td><div className="subject-compsci-table groups-assigned myBoardsTable-percentageCompleted" id={hexagonId}>
+                <h4>{board.percentageCompleted}</h4>
             </div></td>
             <td><a href={boardLink}>{board.title}</a></td>
             {/*<td className="text-center">{board.levels.join(' ')}</td>*/}
@@ -127,8 +127,8 @@ const Board = (props: BoardTableProps) => {
         <Card className="board-card">
             <CardBody className="pb-4 pt-4">
                 <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
-                <button className="groups-assigned subject-compsci" id={hexagonId}>
-                    {board.percentageCompleted}%
+                <button className="groups-assigned subject-compsci myBoards-percentageCompleted" id={hexagonId}>
+                    <h4>{board.percentageCompleted}</h4>
                 </button>
                 <aside>
                     <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
@@ -237,17 +237,17 @@ export const MyGameboards = () => {
                 {!boards && <h4>You have <Spinner size="sm" /> saved gameboards...</h4>}
                 <Row>
                     <Col>
-                        <Form inline className="input-options" onSubmit={e => e.preventDefault()}>
+                        <Form inline className="input-options input-align" onSubmit={e => e.preventDefault()}>
                             <span className="flex-grow-1" />
-                            <Label>Display in <Input className="ml-2 mr-2" type="select" value={boardView} onChange={e => switchView(e)}>
+                            <Label>Display in <Input className="ml-2 mr-2 input-align" type="select" value={boardView} onChange={e => switchView(e)}>
                                 {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
                             </Input></Label>
                             {boardView !== boardViews.table &&
-                            <Label>Show <Input className="ml-2 mr-2" type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                            <Label>Show <Input className="ml-2 mr-2 input-align" type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                 {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                             </Input></Label>}
                             {boardView !== boardViews.table &&
-                            <Label>Sort by <Input className="ml-2" type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
+                            <Label>Sort by <Input className="ml-2 mr-2 input-align" type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
                                 {Object.values(BoardOrder).map(order => <option key={order} value={order}>{orderName(order)}</option>)}
                             </Input></Label>}
                         </Form>
@@ -283,7 +283,7 @@ export const MyGameboards = () => {
                                         </Input></Label>
                                     </Col>
                                     <Col md={7}>
-                                        {selectedBoards && selectedBoards.length > 0 && <div className="m-0"><Button className="float-right m-2" onClick={confirmDeleteMultipleBoards}>Delete ({selectedBoards.length})</Button></div>}
+                                        {selectedBoards && selectedBoards.length > 0 && <div className="m-0"><Button className="float-right mt-4" onClick={confirmDeleteMultipleBoards}>Delete ({selectedBoards.length})</Button></div>}
                                     </Col>
                                 </Row>
                                 <Card className="my-2 mt-2 mb-4">
