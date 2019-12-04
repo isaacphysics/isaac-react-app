@@ -192,7 +192,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     {user.role && ['TEACHER', 'EVENT_LEADER', 'EVENT_MANAGER', 'ADMIN'].includes(user.role) && <RS.Button
                                         color="primary" onClick={() => { dispatch(openActiveModal(reservationsModal())) }}
                                     >
-                                        Group booking
+                                        Reserve spaces
                                     </RS.Button>}
                                     {event.userBooked && !event.expired && <RS.Button
                                         color="primary" outline onClick={() => {dispatch(cancelMyBooking(eventId))}}

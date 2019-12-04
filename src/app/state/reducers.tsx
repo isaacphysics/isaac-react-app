@@ -424,6 +424,17 @@ export const eventBookings = (eventBookings: EventBookingsState = null, action: 
     }
 };
 
+export const eventBookingsForGroup = (eventBookingsForGroup: EventBookingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS:
+            return [...action.eventBookingsForGroup];
+        case ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_REQUEST:
+            return null;
+        default:
+            return eventBookingsForGroup;
+    }
+};
+
 type EventOverviewsState = EventOverview[] | null;
 export const eventOverviews = (eventOverviews: EventOverviewsState = null, action: Action) => {
     switch (action.type) {
@@ -772,6 +783,7 @@ const appReducer = combineReducers({
     currentEvent,
     eventOverviews,
     eventBookings,
+    eventBookingsForGroup,
     fragments
 });
 
@@ -809,6 +821,7 @@ export type AppState = undefined | {
     currentEvent: CurrentEventState;
     eventOverviews: EventOverviewsState;
     eventBookings: EventBookingsState;
+    eventBookingsForGroup: EventBookingsState;
     fragments: FragmentsState;
 }
 

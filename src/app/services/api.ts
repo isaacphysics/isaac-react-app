@@ -361,6 +361,9 @@ export const api = {
         getEventBookings: (eventId: string): AxiosPromise<EventBookingDTO[]> => {
             return endpoint.get(`/events/${eventId}/bookings`);
         },
+        getEventBookingsForGroup: (eventId: string, groupId: number): AxiosPromise<EventBookingDTO[]> => {
+            return endpoint.get(`/events/${eventId}/bookings/for_group/${groupId}`);
+        },
         bookUserOnEvent: (eventId: string, userId: number, additionalInformation: AdditionalInformation) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}`, additionalInformation);
         },
