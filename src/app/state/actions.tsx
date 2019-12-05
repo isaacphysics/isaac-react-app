@@ -1317,11 +1317,6 @@ export const getEventBookingsForGroup = (eventId: string, groupId: number) => as
         dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_REQUEST});
         const response = await api.eventBookings.getEventBookingsForGroup(eventId, groupId);
         dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS, eventBookingsForGroup: response.data});
-        const userIds = response.data.map(booking => booking.userBooked && booking.userBooked.id) as number[];
-        // TODO: Not sure this is necessary... found it in getEventBookings
-        if (atLeastOne(userIds.length)) {
-            dispatch(getUserIdSchoolLookup(userIds) as any);
-        }
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
