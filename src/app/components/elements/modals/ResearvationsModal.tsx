@@ -3,9 +3,10 @@ import {connect, useDispatch, useSelector} from "react-redux";
 import {closeActiveModal, loadGroups, selectGroup, getGroupMembers, getEventBookingsForGroup} from "../../../state/actions";
 import {store} from "../../../state/store";
 import {
-    Row,
+    Button,
     Col,
-    Button
+    CustomInput,
+    Row
 } from "reactstrap";
 import {RegisteredUserDTO, UserGroupDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
 import {AppState, user} from "../../../state/reducers";
@@ -34,7 +35,6 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
     const { user, groups, loadGroups, currentGroup } = props;
     const dispatch = useDispatch();
 
-    const [bookedUsers, setBookedUsers] = useState<UserSummaryDTO[]>([]);
     const [unbookedUsers, setUnbookedUsers] = useState<AppGroupMembership[]>([]);
 
     const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
@@ -60,21 +60,18 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
     const eventBookingsForGroup = useSelector((state: AppState) => state && state.eventBookingsForGroup || []);
 
     useEffect(() => {
-        if (currentGroup && currentGroup.members && eventBookingsForGroup && eventBookingsForGroup.length > 0) {
-            setBookedUsers(eventBookingsForGroup.map(booking => booking && booking.userBooked) as UserSummaryDTO[]);
-        }
-    }, [eventBookingsForGroup]);
-
-    useEffect(() => {
+        // TODO: Check the API (EventsFacade), it returns the wrong type of users
+        //       (i.e., the one with an email address attached) even when the
+        //       request comes from a TEACHER.
         if (currentGroup && currentGroup.members) {
-            const bookedUserIds = bookedUsers.map(user => user.id);
+            const bookedUserIds = eventBookingsForGroup.map(booking => booking.userBooked && booking.userBooked.id);
             setUnbookedUsers(currentGroup.members.filter(member => !bookedUserIds.includes(member.id as number)) as AppGroupMembership[]);
         }
-    }, [bookedUsers])
+    }, [eventBookingsForGroup])
 
     return <React.Fragment>
         <pre>
-            booked: { JSON.stringify(bookedUsers) }<br />
+            bookings: { JSON.stringify(eventBookingsForGroup) }<br />
             unbooked: { JSON.stringify(unbookedUsers) }
         </pre>
         <Row>
@@ -95,22 +92,38 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                     ))}
                 </ShowLoading>
             </Col>
-            {currentGroup && currentGroup.members && <Col>
-                {currentGroup.members.length > 0 && currentGroup.members.map(member => (
-                    <Row key={member.id}>
-                        <Col>
-                            { member.givenName } { member.familyName }
-                        </Col>
-                    </Row>
-                ))}
-                {currentGroup.members.length == 0 && <Col>
-                    <Row>
-                        <Col><p>This group has no members. Please select another group.</p></Col>
-                    </Row>
-                </Col>}
-            </Col>}
             {(!currentGroup || !currentGroup.members) && <Col>
                 <p>Select one of your groups from the list to see its members.</p>
+            </Col>}
+            {currentGroup && currentGroup.members && currentGroup.members.length == 0 && <Col>
+                <p>This group has no members. Please select another group.</p>
+            </Col>}
+            {currentGroup && currentGroup.members && currentGroup.members.length > 0 && <Col>
+                <Row className="mb-3 booked-users">
+                    <Col>Booked
+                        <Row>
+                            <Col>Student</Col>
+                            <Col>Status</Col>
+                        </Row>
+                        {eventBookingsForGroup.length > 0 && eventBookingsForGroup.map(booking => {
+                            return <Row>
+                                <Col>{booking.userBooked && booking.userBooked.givenName} {booking.userBooked && booking.userBooked.familyName}</Col>
+                                <Col>{booking.bookingStatus}</Col>
+                            </Row>
+                        })}
+                        {eventBookingsForGroup.length == 0 && <p>None of the members of this group are booked in for this event.</p>}
+                    </Col>
+                </Row>
+                <Row className="mb-3 unbooked-users">
+                    <Col>Unbooked
+                        {unbookedUsers.length > 0 && unbookedUsers.map(user => {
+                            return <Row>
+                                <Col><CustomInput type="checkbox" name="student" /> {user.givenName} {user.familyName}</Col>
+                            </Row>
+                        })}
+                        {unbookedUsers.length == 0 && <p>All the members have a booking or reservation for this event.</p>}
+                    </Col>
+                </Row>
             </Col>}
         </Row>
     </React.Fragment>
@@ -119,6 +132,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
 export const reservationsModal = () => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
+        size: 'xl',
         title: "Groups and Reservations",
         body: <ReservationsModal />,
         // buttons: [
