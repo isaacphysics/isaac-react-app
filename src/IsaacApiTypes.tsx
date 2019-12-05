@@ -208,6 +208,7 @@ export interface TestCaseDTO {
     choice?: ChoiceDTO;
     expected?: boolean;
     actual?: boolean;
+    explanation?: Content;
 }
 
 export interface TestDTO {
