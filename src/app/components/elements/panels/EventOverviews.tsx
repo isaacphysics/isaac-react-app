@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import React, {useEffect, useState} from "react";
-import {getEventBookingCSV, getEventOverviews} from "../../../state/actions";
+import {getEventOverviews} from "../../../state/actions";
 import {Accordion} from "../Accordion";
 import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
@@ -11,7 +11,6 @@ import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {isEventLeader} from "../../../services/user";
-import {API_PATH} from "../../../services/constants";
 
 export enum EventOverviewFilter {
     "All events" = "ALL",
@@ -32,14 +31,6 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; 
         setSelectedEventId(null);
         dispatch(getEventOverviews(overviewFilter));
     }, [overviewFilter]);
-
-    function getEventCSV(eventId: string) {
-        dispatch(getEventBookingCSV(eventId));
-    }
-
-    function getCSVDownloadLink(eventId: string) {
-        return API_PATH + "/events/" + eventId + "/bookings/download";
-    }
 
     return <Accordion trustedTitle="Events overview" index={0}>
         {isEventLeader(user) && <div className="bg-grey p-2 mb-4 text-center">
@@ -92,9 +83,6 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; 
                             .map((event) => <tr key={event.id}>
                                 <td className="align-middle"><RS.Button color="primary" outline className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
                                     Manage
-                                </RS.Button>
-                                <RS.Button color="primary" outline className="btn-sm mt-1" href={getCSVDownloadLink(event.id as string)} onClick={() => getEventCSV(event.id as string)}>
-                                    CSV
                                 </RS.Button></td>
                                 <td className="align-middle"><Link to={`/events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>
                                 <td className="align-middle"><DateString>{event.date}</DateString></td>
