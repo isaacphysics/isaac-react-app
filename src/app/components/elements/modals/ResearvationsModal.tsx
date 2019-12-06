@@ -14,6 +14,7 @@ import {groups} from '../../../state/selectors';
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { AppGroup, AppGroupMembership } from "../../../../IsaacAppTypes";
 import { NOT_FOUND } from "../../../services/constants";
+import _orderBy from "lodash/orderBy";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -36,6 +37,8 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
     const dispatch = useDispatch();
 
     const [unbookedUsers, setUnbookedUsers] = useState<AppGroupMembership[]>([]);
+    const [userCheckboxes, setUserCheckboxes] = useState<{[key: number]: boolean}>({});
+    const [checkAllCheckbox, setCheckAllCheckbox] = useState<boolean>(false);
 
     const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
 
@@ -65,9 +68,34 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
         //       request comes from a TEACHER.
         if (currentGroup && currentGroup.members) {
             const bookedUserIds = eventBookingsForGroup.map(booking => booking.userBooked && booking.userBooked.id);
-            setUnbookedUsers(currentGroup.members.filter(member => !bookedUserIds.includes(member.id as number)) as AppGroupMembership[]);
+            const newUnbookedUsers: AppGroupMembership[] = _orderBy(currentGroup.members.filter(member => !bookedUserIds.includes(member.id as number)), ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']);
+            let newUserCheckboxes: boolean[] = []; //{[key: number]: boolean} = {}
+            for (const id of newUnbookedUsers.map(user => user.id)) {
+                // TODO: Exclude users who have not authorisedFullAccess.
+                if (!id) continue;
+                newUserCheckboxes[id] = false;
+            }
+            setUserCheckboxes(newUserCheckboxes);
+            setUnbookedUsers(newUnbookedUsers);
         }
     }, [eventBookingsForGroup])
+
+    const toggleCheckboxForUser = (userId?: number) => {
+        if (!userId) return;
+        let checkboxes = { ...userCheckboxes };
+        checkboxes[userId] = !checkboxes[userId];
+        setUserCheckboxes(checkboxes);
+        setCheckAllCheckbox(Object.values(checkboxes).every(v => v));
+    }
+
+    const toggleAllUnbooked = () => {
+        setCheckAllCheckbox(!checkAllCheckbox);
+        let checkboxes = { ...userCheckboxes };
+        for (const id in userCheckboxes) {
+            checkboxes[id] = !checkAllCheckbox;
+        }
+        setUserCheckboxes(checkboxes);
+    }
 
     return <React.Fragment>
         <pre>
@@ -104,25 +132,59 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                         <Row>
                             <Col>Student</Col>
                             <Col>Status</Col>
+                            <Col>Reserved by</Col>
                         </Row>
                         {eventBookingsForGroup.length > 0 && eventBookingsForGroup.map(booking => {
-                            return <Row>
-                                <Col>{booking.userBooked && booking.userBooked.givenName} {booking.userBooked && booking.userBooked.familyName}</Col>
+                            return (booking.userBooked && booking.userBooked.id && <Row>
+                                <Col>{booking.userBooked && <CustomInput key={booking.userBooked.id}
+                                                                         id={`${booking.userBooked.id}`}
+                                                                         type="checkbox"
+                                                                         name={`booked_student-${booking.userBooked.id}`}
+                                                                         label={booking.userBooked.givenName + " " + booking.userBooked.familyName}
+                                                                         checked
+                                                                         disabled={!booking.userBooked.authorisedFullAccess}
+                                                            />}
+                                </Col>
                                 <Col>{booking.bookingStatus}</Col>
-                            </Row>
+                                <Col></Col>
+                            </Row>)
                         })}
                         {eventBookingsForGroup.length == 0 && <p>None of the members of this group are booked in for this event.</p>}
                     </Col>
                 </Row>
                 <Row className="mb-3 unbooked-users">
                     <Col>Unbooked
+                        <Row>
+                            <Col>
+                                <CustomInput id="check_all_unbooked"
+                                             type="checkbox"
+                                             label="Check all unbooked students"
+                                             checked={checkAllCheckbox}
+                                             onChange={() => toggleAllUnbooked()}
+                                />
+                            </Col>
+                        </Row>
                         {unbookedUsers.length > 0 && unbookedUsers.map(user => {
-                            return <Row>
-                                <Col><CustomInput type="checkbox" name="student" /> {user.givenName} {user.familyName}</Col>
-                            </Row>
+                            return (user.id && <Row>
+                                <Col><CustomInput key={user.id}
+                                                  id={`${user.id}`}
+                                                  type="checkbox"
+                                                  name={`unbooked_student-${user.id}`}
+                                                  label={user.givenName + " " + user.familyName}
+                                                  checked={userCheckboxes[user.id]}
+                                                  disabled={!user.authorisedFullAccess}
+                                                  onChange={() => toggleCheckboxForUser(user.id)}
+                                     />
+                                </Col>
+                                <Col></Col>
+                                <Col></Col>
+                            </Row>)
                         })}
                         {unbookedUsers.length == 0 && <p>All the members have a booking or reservation for this event.</p>}
                     </Col>
+                </Row>
+                <Row className="mb-5 toolbar">
+                    <Col><Button disabled={!Object.values(userCheckboxes).some(v => v)}>Reserve</Button></Col>
                 </Row>
             </Col>}
         </Row>
