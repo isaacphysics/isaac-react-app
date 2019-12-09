@@ -69,11 +69,11 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
         if (currentGroup && currentGroup.members) {
             const bookedUserIds = eventBookingsForGroup.map(booking => booking.userBooked && booking.userBooked.id);
             const newUnbookedUsers: AppGroupMembership[] = _orderBy(currentGroup.members.filter(member => !bookedUserIds.includes(member.id as number)), ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']);
-            let newUserCheckboxes: boolean[] = []; //{[key: number]: boolean} = {}
-            for (const id of newUnbookedUsers.map(user => user.id)) {
+            let newUserCheckboxes: boolean[] = [];
+            for (const user of newUnbookedUsers) {
                 // TODO: Exclude users who have not authorisedFullAccess.
-                if (!id) continue;
-                newUserCheckboxes[id] = false;
+                if (!user.id || !user.authorisedFullAccess) continue;
+                newUserCheckboxes[user.id] = false;
             }
             setUserCheckboxes(newUserCheckboxes);
             setUnbookedUsers(newUnbookedUsers);
@@ -85,7 +85,10 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
         let checkboxes = { ...userCheckboxes };
         checkboxes[userId] = !checkboxes[userId];
         setUserCheckboxes(checkboxes);
-        setCheckAllCheckbox(Object.values(checkboxes).every(v => v));
+        // setCheckAllCheckbox(Object.values(checkboxes).every(v => v));
+        if (!Object.values(checkboxes).every(v => v)) {
+            setCheckAllCheckbox(false);
+        }
     }
 
     const toggleAllUnbooked = () => {
@@ -98,10 +101,10 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
     }
 
     return <React.Fragment>
-        <pre>
+        {/* <pre>
             bookings: { JSON.stringify(eventBookingsForGroup) }<br />
             unbooked: { JSON.stringify(unbookedUsers) }
-        </pre>
+        </pre> */}
         <Row>
             <Col md={4}>
                 <ShowLoading until={groups}>
@@ -158,7 +161,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                             <Col>
                                 <CustomInput id="check_all_unbooked"
                                              type="checkbox"
-                                             label="Check all unbooked students"
+                                             label="Select all unbooked students"
                                              checked={checkAllCheckbox}
                                              onChange={() => toggleAllUnbooked()}
                                 />
