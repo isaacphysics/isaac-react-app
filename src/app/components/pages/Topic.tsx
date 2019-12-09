@@ -43,7 +43,7 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
             filterAndSeparateRelatedContent(topicPage.relatedContent, examBoard);
     }
     const searchQuery = `?topic=${topicName}`;
-    const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards.filter((gameboard) => {
+    const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards.filter((gameboard) => {
         return gameboard.tags && gameboard.tags.includes(examBoardTagMap[examBoard]);
     });
 
