@@ -1333,10 +1333,27 @@ export const bookMyselfOnEvent = (eventId: string, additionalInformation: Additi
             title: "Event booking confirmed", body: "You have been successfully booked onto this event.",
             color: "success", timeout: 5000, closable: false,
         }) as any);
-        dispatch(getEvent(eventId) as any);
+        dispatch(getEvent(eventId) as any); // Why twice?
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
+    }
+};
+
+export const reserveUsersOnEvent = (eventId: string, userIds: number[]) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_RESERVATION_REQUEST});
+        await api.eventBookings.reserveUsersOnEvent(eventId, userIds);
+        await dispatch(getEvent(eventId) as any);
+        dispatch({type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            title: "Reservations confirmed", body: "You have successfully reserved students onto this event.",
+            color: "success", timeout: 5000, closable: false,
+        }) as any);
+        dispatch(getEvent(eventId) as any); // Why twice?
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Reservation failed", error) as any);
     }
 };
 

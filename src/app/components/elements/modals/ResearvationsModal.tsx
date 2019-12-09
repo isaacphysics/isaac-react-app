@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {connect, useDispatch, useSelector} from "react-redux";
-import {closeActiveModal, loadGroups, selectGroup, getGroupMembers, getEventBookingsForGroup} from "../../../state/actions";
+import {closeActiveModal, loadGroups, selectGroup, getGroupMembers, getEventBookingsForGroup, reserveUsersOnEvent} from "../../../state/actions";
 import {store} from "../../../state/store";
 import {
     Button,
@@ -100,6 +100,13 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
         setUserCheckboxes(checkboxes);
     }
 
+    const requestReservation = () => {
+        if (selectedEvent && selectedEvent.id) {
+            const reservableIds = Object.entries(userCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
+            dispatch(reserveUsersOnEvent(selectedEvent.id, reservableIds));
+        }
+    }
+
     return <React.Fragment>
         {/* <pre>
             bookings: { JSON.stringify(eventBookingsForGroup) }<br />
@@ -187,7 +194,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                     </Col>
                 </Row>
                 <Row className="mb-5 toolbar">
-                    <Col><Button disabled={!Object.values(userCheckboxes).some(v => v)}>Reserve</Button></Col>
+                    <Col><Button disabled={!Object.values(userCheckboxes).some(v => v)} onClick={requestReservation}>Reserve</Button></Col>
                 </Row>
             </Col>}
         </Row>

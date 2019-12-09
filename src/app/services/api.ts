@@ -367,6 +367,9 @@ export const api = {
         bookUserOnEvent: (eventId: string, userId: number, additionalInformation: AdditionalInformation) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}`, additionalInformation);
         },
+        reserveUsersOnEvent: (eventId: string, userIds: number[]) => {
+            return endpoint.post(`/events/${eventId}/reserve`, userIds);
+        },
         resendUserConfirmationEmail: (eventId: string, userId: number) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}/resend_confirmation`);
         },
