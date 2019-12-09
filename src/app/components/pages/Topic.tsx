@@ -9,7 +9,7 @@ import {ContentSummaryDTO, IsaacTopicSummaryPageDTO} from "../../../IsaacApiType
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {filterAndSeparateRelatedContent} from "../../services/topics";
 import {Button, Col, Container, Row} from "reactstrap";
-import {ALL_TOPICS_CRUMB, NOT_FOUND, TAG_ID} from "../../services/constants";
+import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID} from "../../services/constants";
 import {NOT_FOUND_TYPE, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom} from "../../services/examBoard";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -43,6 +43,9 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
             filterAndSeparateRelatedContent(topicPage.relatedContent, examBoard);
     }
     const searchQuery = `?topic=${topicName}`;
+    const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards.filter((gameboard) => {
+        return gameboard.tags && gameboard.tags.includes(examBoardTagMap[examBoard]);
+    });
 
     return <ShowLoading until={topicPage} thenRender={topicPage =>
         <Container id="topic-page">
@@ -67,8 +70,8 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                                 <span className="d-none d-md-inline">Back to</span> {" "} All topics
                             </Button>
                         </Col>
-                        {topicName != TAG_ID.softwareProject && <Col size={6} className="text-center">
-                            <Button tag={Link} to={`/gameboards#${topicName}_july19_${examBoard.toLowerCase()}`} color="secondary" size="lg" className="my-4" block>
+                        {linkedRelevantGameboards && linkedRelevantGameboards.length > 0 && <Col size={6} className="text-center">
+                            <Button tag={Link} to={`/gameboards#${linkedRelevantGameboards[0].id}`} color="secondary" size="lg" className="my-4" block>
                                 Topic gameboard
                             </Button>
                         </Col>}
