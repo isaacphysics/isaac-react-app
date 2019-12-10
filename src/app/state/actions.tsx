@@ -1340,10 +1340,11 @@ export const bookMyselfOnEvent = (eventId: string, additionalInformation: Additi
     }
 };
 
-export const reserveUsersOnEvent = (eventId: string, userIds: number[]) => async (dispatch: Dispatch<Action>) => {
+export const reserveUsersOnEvent = (eventId: string, userIds: number[], groupId: number) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_RESERVATION_REQUEST});
         await api.eventBookings.reserveUsersOnEvent(eventId, userIds);
+        await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
         await dispatch(getEvent(eventId) as any);
         dispatch({type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_SUCCESS});
         dispatch(showToast({

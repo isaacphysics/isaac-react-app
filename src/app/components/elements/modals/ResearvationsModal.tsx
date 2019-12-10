@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import {connect, useDispatch, useSelector} from "react-redux";
-import {closeActiveModal, loadGroups, selectGroup, getGroupMembers, getEventBookingsForGroup, reserveUsersOnEvent} from "../../../state/actions";
-import {store} from "../../../state/store";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { closeActiveModal, loadGroups, selectGroup, getGroupMembers, getEventBookingsForGroup, reserveUsersOnEvent } from "../../../state/actions";
+import { store } from "../../../state/store";
 import {
     Button,
     Col,
     CustomInput,
     Row
 } from "reactstrap";
-import {RegisteredUserDTO, UserGroupDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
-import {AppState, user} from "../../../state/reducers";
-import {groups} from '../../../state/selectors';
+import { RegisteredUserDTO, UserGroupDTO } from "../../../../IsaacApiTypes";
+import { AppState } from "../../../state/reducers";
+import { groups } from '../../../state/selectors';
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { AppGroup, AppGroupMembership } from "../../../../IsaacAppTypes";
 import { NOT_FOUND } from "../../../services/constants";
@@ -33,7 +33,7 @@ interface ReservationsModalProps {
 }
 
 const ReservationsModalComponent = (props: ReservationsModalProps) => {
-    const { user, groups, loadGroups, currentGroup } = props;
+    const { groups, loadGroups, currentGroup } = props;
     const dispatch = useDispatch();
 
     const [unbookedUsers, setUnbookedUsers] = useState<AppGroupMembership[]>([]);
@@ -71,11 +71,11 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
             const newUnbookedUsers: AppGroupMembership[] = _orderBy(currentGroup.members.filter(member => !bookedUserIds.includes(member.id as number)), ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']);
             let newUserCheckboxes: boolean[] = [];
             for (const user of newUnbookedUsers) {
-                // TODO: Exclude users who have not authorisedFullAccess.
                 if (!user.id || !user.authorisedFullAccess) continue;
                 newUserCheckboxes[user.id] = false;
             }
             setUserCheckboxes(newUserCheckboxes);
+            setCheckAllCheckbox(false);
             setUnbookedUsers(newUnbookedUsers);
         }
     }, [eventBookingsForGroup])
@@ -85,7 +85,6 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
         let checkboxes = { ...userCheckboxes };
         checkboxes[userId] = !checkboxes[userId];
         setUserCheckboxes(checkboxes);
-        // setCheckAllCheckbox(Object.values(checkboxes).every(v => v));
         if (!Object.values(checkboxes).every(v => v)) {
             setCheckAllCheckbox(false);
         }
@@ -101,17 +100,13 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
     }
 
     const requestReservation = () => {
-        if (selectedEvent && selectedEvent.id) {
+        if (selectedEvent && selectedEvent.id && currentGroup && currentGroup.id) {
             const reservableIds = Object.entries(userCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
-            dispatch(reserveUsersOnEvent(selectedEvent.id, reservableIds));
+            dispatch(reserveUsersOnEvent(selectedEvent.id, reservableIds, currentGroup.id));
         }
     }
 
     return <React.Fragment>
-        {/* <pre>
-            bookings: { JSON.stringify(eventBookingsForGroup) }<br />
-            unbooked: { JSON.stringify(unbookedUsers) }
-        </pre> */}
         <Row>
             <Col md={4}>
                 <ShowLoading until={groups}>
