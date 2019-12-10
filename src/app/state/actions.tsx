@@ -1333,7 +1333,6 @@ export const bookMyselfOnEvent = (eventId: string, additionalInformation: Additi
             title: "Event booking confirmed", body: "You have been successfully booked onto this event.",
             color: "success", timeout: 5000, closable: false,
         }) as any);
-        dispatch(getEvent(eventId) as any); // Why twice?
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
@@ -1351,7 +1350,6 @@ export const reserveUsersOnEvent = (eventId: string, userIds: number[], groupId:
             title: "Reservations confirmed", body: "You have successfully reserved students onto this event.",
             color: "success", timeout: 5000, closable: false,
         }) as any);
-        dispatch(getEvent(eventId) as any); // Why twice?
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Reservation failed", error) as any);

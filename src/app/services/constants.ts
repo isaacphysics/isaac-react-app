@@ -1,6 +1,7 @@
 import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {invert} from "lodash";
+import { BookingStatus } from "../../IsaacApiTypes";
 
 export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
 
@@ -506,4 +507,13 @@ export enum SortOrder {
     ASC = "ASC",
     DESC = "DESC",
     NONE = "NONE"
+}
+
+export const bookingStatusMap: {[status in BookingStatus]: string} = {
+    "ABSENT": "Absent",
+    "ATTENDED": "Attended",
+    "CANCELLED": "Booking cancelled",
+    "CONFIRMED": "Booking confirmed",
+    "RESERVED": "Place reserved",
+    "WAITING_LIST": "In waiting list"
 }

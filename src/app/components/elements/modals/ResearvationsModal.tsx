@@ -13,7 +13,7 @@ import { AppState } from "../../../state/reducers";
 import { groups } from '../../../state/selectors';
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { AppGroup, AppGroupMembership } from "../../../../IsaacAppTypes";
-import { NOT_FOUND } from "../../../services/constants";
+import { NOT_FOUND, bookingStatusMap } from "../../../services/constants";
 import _orderBy from "lodash/orderBy";
 
 const stateToProps = (state: AppState) => ({
@@ -68,7 +68,9 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
         //       request comes from a TEACHER.
         if (currentGroup && currentGroup.members) {
             const bookedUserIds = eventBookingsForGroup.map(booking => booking.userBooked && booking.userBooked.id);
-            const newUnbookedUsers: AppGroupMembership[] = _orderBy(currentGroup.members.filter(member => !bookedUserIds.includes(member.id as number)), ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']);
+            const newUnbookedUsers: AppGroupMembership[] = _orderBy(currentGroup.members.filter(member =>
+                !bookedUserIds.includes(member.id as number)),
+                ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']);
             let newUserCheckboxes: boolean[] = [];
             for (const user of newUnbookedUsers) {
                 if (!user.id || !user.authorisedFullAccess) continue;
@@ -150,7 +152,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                                                                          disabled={!booking.userBooked.authorisedFullAccess}
                                                             />}
                                 </Col>
-                                <Col>{booking.bookingStatus}</Col>
+                                <Col>{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</Col>
                                 <Col></Col>
                             </Row>)
                         })}
@@ -166,6 +168,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                                              label="Select all unbooked students"
                                              checked={checkAllCheckbox}
                                              onChange={() => toggleAllUnbooked()}
+                                             disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
                                 />
                             </Col>
                         </Row>

@@ -466,7 +466,7 @@ export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WA
 
 export type FastTrackConceptState = "ft_top_ten" | "ft_upper" | "ft_lower";
 
-export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT";
+export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT" | "RESERVED";
 
 export type Role = "STUDENT" | "TEACHER" | "EVENT_LEADER"| "CONTENT_EDITOR" | "EVENT_MANAGER" | "ADMIN";
 
