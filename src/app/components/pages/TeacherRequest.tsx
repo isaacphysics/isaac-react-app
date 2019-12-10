@@ -1,38 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {connect} from "react-redux";
-import {Alert, Container, Card, CardBody, CardFooter, Col, Form, FormGroup, Input, Row, Label} from "reactstrap";
-import {AppState, ErrorState} from "../../state/reducers";
-import {submitMessage} from "../../state/actions";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {useDispatch, useSelector} from "react-redux";
+import {Alert, Card, CardBody, CardFooter, Col, Container, Form, FormGroup, Input, Label, Row} from "reactstrap";
+import {AppState} from "../../state/reducers";
+import {fetchFragment, requestEmailVerification, submitMessage} from "../../state/actions";
 import {validateEmail} from "../../services/validation";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {api} from "../../services/api";
-import {requestEmailVerification} from "../../state/actions";
 import {Link} from "react-router-dom";
 import {isTeacher} from "../../services/user";
 import {PageFragment} from "../elements/PageFragment";
 
-
-const stateToProps = (state: AppState) => {
-    return {
-        user: state ? state.user : null,
-        errorMessage: state ? state.error : null,
-    };
-};
-
-const dispatchToProps = {
-    requestEmailVerification,
-    submitMessage
-};
-
-interface TeacherAccountPageProps {
-    user: LoggedInUser | null;
-    submitMessage: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string}) => void;
-    errorMessage: ErrorState;
-    requestEmailVerification: () => void;
-}
-
-const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, requestEmailVerification}: TeacherAccountPageProps) => {
+export const TeacherRequest = () => {
+    const dispatch = useDispatch();
+    const user = useSelector((state: AppState) => (state && state.user) || null);
+    const errorMessage = useSelector((state: AppState) => (state && state.error) || null);
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName || "");
     const [email, setEmail] = useState(user && user.loggedIn && user.email || "");
@@ -43,6 +24,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
     const [emailVerified, setEmailVerified] = useState(user && user.loggedIn && user.emailVerificationStatus == "VERIFIED");
     const [allowedDomain, setAllowedDomain] = useState();
 
+    const registrationOnHold = "teacher_registration_on_hold";
     const urn = user && user.loggedIn && user.schoolId || "";
     const presetSubject = "Teacher Account Request";
     const presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: " + school + "\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\nAny other information: " + otherInformation + "\n\nThanks, \n\n" + firstName + " " + lastName;
@@ -50,15 +32,21 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
 
     const isValidEmail = validateEmail(email);
 
+    useEffect(() => {
+        dispatch(fetchFragment(registrationOnHold))
+    }, []);
+
+    const fragment = useSelector((state: AppState) => state && state.fragments && state.fragments[registrationOnHold] || null);
+
     const sendForm = () => {
-        submitMessage(
+        dispatch(submitMessage(
             {
                 firstName: firstName,
                 lastName: lastName,
                 emailAddress: email,
                 subject: presetSubject,
                 message: presetMessage
-            })
+            }))
     };
 
     function isEmailDomainAllowed(email: string) {
@@ -82,7 +70,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
     }
 
     function clickVerify() {
-        requestEmailVerification();
+        dispatch(requestEmailVerification());
     }
 
     useEffect(() => {
@@ -99,7 +87,9 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
         <div className="pt-4">
             <Row>
                 <Col size={9}>
-                    <PageFragment fragmentId="holiday_teacher_registration" renderFragmentNotFound={false}/>
+                    {fragment && fragment != 404 && <Alert color="warning">
+                        <PageFragment fragmentId={registrationOnHold} renderFragmentNotFound={false}/>
+                    </Alert>}
                     <Card>
                         {isTeacher(user) &&
                             <Row>
@@ -246,5 +236,3 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
         </div>
     </Container>;
 };
-
-export const TeacherRequest = connect(stateToProps, dispatchToProps)(TeacherAccountRequestPageComponent);
