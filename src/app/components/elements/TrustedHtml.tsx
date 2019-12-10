@@ -3,9 +3,11 @@ import katex from "katex";
 import 'katex/dist/contrib/mhchem.js';
 import renderA11yString from '../../services/katex-a11y';
 import he from "he";
-import {UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {LoggedInUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {connect} from "react-redux";
+import {determineCurrentExamBoard} from "../../services/examBoard";
+import {EXAM_BOARD} from "../../services/constants";
 
 type MathJaxMacro = string|[string, number];
 
@@ -196,7 +198,7 @@ function munge(latex: string) {
         .replace(/\\newline/g, "\\\\");
 }
 
-export function katexify(html: string, userPreferences: UserPreferencesDTO | null) {
+export function katexify(html: string, user: LoggedInUser | null, currentExamBoardPreference: EXAM_BOARD | null) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -220,7 +222,7 @@ export function katexify(html: string, userPreferences: UserPreferencesDTO | nul
                 const latexUnEntitied = he.decode(latex);
                 const latexMunged = munge(latexUnEntitied);
                 let macrosToUse = KatexMacrosWithMathsBool;
-                if (userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA) {
+                if (determineCurrentExamBoard(user, currentExamBoardPreference) == EXAM_BOARD.AQA) {
                     macrosToUse = KatexMacrosWithEngineeringBool;
                 }
                 let katexOptions = {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse};
@@ -290,17 +292,19 @@ function manipulateHtml(html: string) {
 }
 
 const stateToProps = (state: AppState) => ({
-    userPreferences: state ? state.userPreferences : null
+    user: state ? state.user : null,
+    currentExamBoardPreference: state ? state.currentExamBoardPreference : null
 });
 
 interface TrustedHtmlProps {
     html: string;
     span?: boolean;
-    userPreferences: UserPreferencesDTO | null;
+    user: LoggedInUser | null;
+    currentExamBoardPreference: EXAM_BOARD | null;
 }
 
-let TrustedHtmlComponent = ({html, span, userPreferences}: TrustedHtmlProps) => {
-    html = manipulateHtml(katexify(html, userPreferences));
+let TrustedHtmlComponent = ({html, span, user, currentExamBoardPreference}: TrustedHtmlProps) => {
+    html = manipulateHtml(katexify(html, user, currentExamBoardPreference));
     if (span) {
         return <span dangerouslySetInnerHTML={{__html: html}} />;
     } else {

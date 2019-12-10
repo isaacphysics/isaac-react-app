@@ -14,8 +14,6 @@ import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 
 interface UserDetailsProps {
-    examPreferences: UserExamPreferences;
-    setExamPreferences: (e: any) => void;
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
     subjectInterests: SubjectInterests;
@@ -26,7 +24,6 @@ interface UserDetailsProps {
 export const UserDetails = (props: UserDetailsProps) => {
     const {
         userToUpdate, setUserToUpdate,
-        examPreferences, setExamPreferences,
         subjectInterests, setSubjectInterests,
         submissionAttempted
     } = props;
@@ -107,18 +104,14 @@ export const UserDetails = (props: UserDetailsProps) => {
                     </Label>
                     <Input
                         type="select" name="select" id="exam-board-select"
-                        value={
-                            (examPreferences && examPreferences[EXAM_BOARD.AQA]) ? EXAM_BOARD.AQA : EXAM_BOARD.OCR
-                        }
+                        value={userToUpdate.examBoard}
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                            setExamPreferences(
-                                event.target.value == EXAM_BOARD.AQA ?
-                                    {[EXAM_BOARD.AQA]: true, [EXAM_BOARD.OCR]: false} :
-                                    {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true}
+                            setUserToUpdate(
+                                Object.assign({}, userToUpdate, {examBoard: event.target.value})
                             )
                         }
                     >
-                        {/*<option></option> This was not an option although we should probably support it */}
+                        <option value={EXAM_BOARD.OTHER}>Other</option>
                         <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>

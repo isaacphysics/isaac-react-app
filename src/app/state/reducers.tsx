@@ -37,7 +37,7 @@ import {
     UserSummaryWithEmailAddressDTO,
     UserSummaryWithGroupMembershipDTO
 } from "../../IsaacApiTypes";
-import {ACTION_TYPE, ContentVersionUpdatingStatus, NOT_FOUND} from "../services/constants";
+import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
 
 type UserState = LoggedInUser | null;
@@ -69,8 +69,6 @@ type UserPreferencesState = UserPreferencesDTO | null;
 export const userPreferences = (userPreferences: UserPreferencesState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
-        case ACTION_TYPE.USER_PREFERENCES_SET_FOR_ANON:
-            return {...action.userPreferences};
         default:
             return userPreferences;
     }
@@ -353,6 +351,17 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
             return currentGameboard;
     }
 };
+
+export type CurrentExamBoardPreferenceState = EXAM_BOARD | null;
+export const currentExamBoardPreference = (currentExamBoardPreference: CurrentExamBoardPreferenceState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_SET_FOR_ANON:
+            return action.currentExamBoardPreference;
+        default:
+            return currentExamBoardPreference;
+    }
+};
+
 
 export type WildcardsState = IsaacWildcard[] | NOT_FOUND_TYPE | null;
 export const wildcards = (wildcards: WildcardsState = null, action: Action) => {
@@ -756,6 +765,7 @@ const appReducer = combineReducers({
     questions,
     currentTopic,
     currentGameboard,
+    currentExamBoardPreference,
     wildcards,
     gameboardEditorQuestions,
     assignments,
@@ -792,8 +802,9 @@ export type AppState = undefined | {
     questions: QuestionsState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
+    currentExamBoardPreference: CurrentExamBoardPreferenceState;
     wildcards: WildcardsState;
-    gameboardEditorQuestions: GameboardEditorQuestionsState,
+    gameboardEditorQuestions: GameboardEditorQuestionsState;
     assignments: AssignmentsState;
     contentVersion: ContentVersionState;
     search: SearchState;

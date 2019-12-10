@@ -1,5 +1,5 @@
 import {closeActiveModal, updateCurrentUser} from "../../../state/actions";
-import React, {useState} from "react";
+import React, {ChangeEvent, useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "../panels/UserEmailPreferences";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
@@ -8,6 +8,7 @@ import {AppState} from "../../../state/reducers";
 import {
     allRequiredInformationIsPresent,
     validateEmailPreferences,
+    validateExamBoard,
     validateSubjectInterests,
     validateUserGender,
     validateUserSchool
@@ -17,6 +18,8 @@ import {isLoggedIn} from "../../../services/user";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
+import {EXAM_BOARD} from "../../../services/constants";
+import {Input} from "reactstrap";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -73,11 +76,26 @@ const RequiredAccountInfoBody = () => {
                             submissionAttempted={submissionAttempted} idPrefix="modal"
                         />
                     </div>}
-                    {!validateSubjectInterests(initialSubjectInterestsValue) && <div>
-                        <StudyingCsInput
-                            subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
-                            submissionAttempted={submissionAttempted} idPrefix="modal-"
-                        />
+                    {!validateExamBoard(initialUserValue) && <div>
+                        <RS.FormGroup>
+                            <RS.Label className="d-inline-block pr-2 form-required" htmlFor="exam-board-select">
+                                Exam board
+                            </RS.Label>
+                            <Input
+                                type="select" name="select" id="exam-board-select"
+                                value={userToUpdate.examBoard}
+                                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                                    setUserToUpdate(
+                                        Object.assign({}, userToUpdate, {examBoard: event.target.value})
+                                    )
+                                }
+                            >
+                                <option value={undefined}></option>
+                                <option value={EXAM_BOARD.OTHER}>Other</option>
+                                <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
+                                <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
+                            </Input>
+                        </RS.FormGroup>
                     </div>}
                 </RS.Col>}
                 {!validateUserSchool(initialUserValue) && <RS.Col>
@@ -86,6 +104,16 @@ const RequiredAccountInfoBody = () => {
                         submissionAttempted={submissionAttempted} idPrefix="modal"
                     />
                 </RS.Col>}
+            </RS.Row>
+            <RS.Row className="d-flex flex-wrap my-1">
+                <RS.Col>
+                    {!validateSubjectInterests(initialSubjectInterestsValue) && <div>
+                        <StudyingCsInput
+                            subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
+                            submissionAttempted={submissionAttempted} idPrefix="modal-"
+                        />
+                    </div>}
+                </RS.Col>
             </RS.Row>
         </RS.CardBody>}
 

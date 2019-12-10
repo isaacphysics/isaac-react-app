@@ -23,7 +23,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
 
-    | {type: ACTION_TYPE.USER_PREFERENCES_SET_FOR_ANON; userPreferences: UserPreferencesDTO}
+    | {type: ACTION_TYPE.USER_SET_FOR_ANON; currentExamBoardPreference: EXAM_BOARD}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
@@ -367,7 +367,6 @@ export interface SubjectInterests {
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences;
-    EXAM_BOARD?: UserExamPreferences;
     SUBJECT_INTEREST?: SubjectInterests;
 }
 
@@ -380,7 +379,7 @@ export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<Api
     return choice.hasOwnProperty("frontEndValidation");
 }
 
-export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {loggedIn: false};
+export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {loggedIn: false, examBoard?: EXAM_BOARD};
 
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;

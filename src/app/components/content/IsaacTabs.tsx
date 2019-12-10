@@ -5,11 +5,13 @@ import {IsaacContent} from "./IsaacContent";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {LoggedInUser} from "../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../services/constants";
+import {determineCurrentExamBoard} from "../../services/examBoard";
 
 const stateToProps = (state: AppState) => ({
-    userPreferences: state ? state.userPreferences : null
+    user: state && state.user,
+    currentExamBoardPreference: state && state.currentExamBoardPreference
 });
 
 interface IsaacTabsProps {
@@ -19,15 +21,16 @@ interface IsaacTabsProps {
             children?: ContentDTO[];
         }[];
     };
-    userPreferences: UserPreferencesDTO | null;
+    user: LoggedInUser | null;
+    currentExamBoardPreference: EXAM_BOARD | null;
 }
 
 const IsaacTabsComponent = (props: any) => {
-    const {doc: {children}, userPreferences} = props as IsaacTabsProps;
-    const [examBoardFilter, setExamBoardFilter] = useState(userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA ? EXAM_BOARD.AQA : EXAM_BOARD.OCR);
+    const {doc: {children}, user, currentExamBoardPreference} = props as IsaacTabsProps;
+    const [examBoardFilter, setExamBoardFilter] = useState(determineCurrentExamBoard(user, currentExamBoardPreference));
     useMemo(() => {
-        setExamBoardFilter(userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA ? EXAM_BOARD.AQA : EXAM_BOARD.OCR);
-    }, [userPreferences]);
+        setExamBoardFilter(determineCurrentExamBoard(user, currentExamBoardPreference));
+    }, [user]);
     const tabTitlesToContent: {[title: string]: ReactElement} = {};
     let activeTab = 1;
     children.forEach((child, index) => {

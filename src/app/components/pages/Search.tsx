@@ -43,7 +43,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
 
     const searchParsed = queryString.parse(location.search);
 
-    const examBoard = determineExamBoardFrom(userPreferences);
+    const examBoard = determineExamBoardFrom(user);
 
     const queryParsed = searchParsed.query || "";
     const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;

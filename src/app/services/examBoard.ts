@@ -1,12 +1,20 @@
 import {EXAM_BOARD, examBoardTagMap} from "./constants";
-import {UserPreferencesDTO} from "../../IsaacAppTypes";
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
+import {LoggedInUser} from "../../IsaacAppTypes";
 
-export const determineExamBoardFrom = (userPreferences?: UserPreferencesDTO | null) => {
-    if (userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA) {
-        return EXAM_BOARD.AQA;
-    } else {
+export const determineExamBoardFrom = (user: LoggedInUser | null | undefined) => {
+    if (!user || user.examBoard == undefined || user.examBoard == EXAM_BOARD.OTHER) {
         return EXAM_BOARD.OCR;
+    } else {
+        return user.examBoard;
+    }
+};
+
+export const determineCurrentExamBoard = (user: LoggedInUser | null | undefined, currentExamBoardPreference: EXAM_BOARD | null | undefined): EXAM_BOARD => {
+    if (!user || user.examBoard == undefined || user.examBoard == EXAM_BOARD.OTHER) {
+        return currentExamBoardPreference || EXAM_BOARD.OCR;
+    } else {
+        return user.examBoard;
     }
 };
 
