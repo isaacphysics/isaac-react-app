@@ -153,7 +153,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                                                             />}
                                 </Col>
                                 <Col>{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</Col>
-                                <Col></Col>
+                                <Col>{booking.reservedBy && (booking.reservedBy.givenName + " " + booking.reservedBy.familyName)}</Col>
                             </Row>)
                         })}
                         {eventBookingsForGroup.length == 0 && <p>None of the members of this group are booked in for this event.</p>}

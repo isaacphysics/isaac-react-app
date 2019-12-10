@@ -148,6 +148,7 @@ export interface QuestionPartConceptDTO {
 export interface EventBookingDTO {
     bookingId?: number;
     userBooked?: UserSummaryDTO;
+    reservedBy?: UserSummaryDTO;
     eventId?: string;
     eventTitle?: string;
     eventDate?: Date;
