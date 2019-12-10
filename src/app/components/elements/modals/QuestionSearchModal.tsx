@@ -6,11 +6,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {debounce, range} from "lodash";
 import Select from "react-select";
-import {ValueType} from "react-select/src/types";
 import {
     convertExamBoardToOption,
     groupTagSelectionsByParent,
     logEvent,
+    multiSelectOnChange,
     sortQuestions
 } from "../../../services/gameboardBuilder";
 import {allTagIds, getSubcategoryTags} from "../../../services/tags";
@@ -57,15 +57,6 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         const newSortState = {...sortState};
         newSortState[key] = order;
         setSortState(newSortState);
-    };
-
-    const multiSelectOnChange = (setValue: Dispatch<SetStateAction<string[]>>) => (e: ValueType<{value: string; label: string}>) => {
-        if (e && (e as {value: string; label: string}[]).map) {
-            const arr = e as {value: string; label: string}[];
-            setValue(arr.map((item) => item.value));
-        } else {
-            setValue([]);
-        }
     };
 
     useMemo(() => {

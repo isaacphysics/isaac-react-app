@@ -11,16 +11,17 @@ import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
 import {resourceFound} from "../../services/validation";
-import {sample} from 'lodash';
 import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
     loadGameboardSelectedQuestions,
-    logEvent
+    logEvent,
+    multiSelectOnChange
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
-import {IS_CS_PLATFORM} from "../../services/constants";
+import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM} from "../../services/constants";
 import {history} from "../../services/history"
+import Select from "react-select";
 
 interface GameboardBuilderProps {
     location: {
@@ -38,7 +39,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
 
     const [gameboardTitle, setGameboardTitle] = useState(loadedGameboard ? `${loadedGameboard.title} (Copy)`: "");
-    const [gameboardTag, setGameboardTag] = useState("null");
+    const [gameboardTags, setGameboardTags] = useState<string[]>([]);
     const [gameboardURL, setGameboardURL] = useState();
     const [questionOrder, setQuestionOrder] = useState<string[]>((loadedGameboard && loadGameboardQuestionOrder(loadedGameboard)) || []);
     const [selectedQuestions, setSelectedQuestions] = useState((loadedGameboard && loadGameboardSelectedQuestions(loadedGameboard)) || new Map<string, ContentSummaryDTO>());
@@ -97,13 +98,18 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                 {isStaff(user) && <RS.Row className="mt-2">
                     <RS.Col>
                         <RS.Label htmlFor="gameboard-builder-tag-as">Tag as</RS.Label>
-                        <RS.Input id="gameboard-builder-tag-as"
-                            type="select" defaultValue={gameboardTag}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setGameboardTag(e.target.value);}}
-                        >
-                            <option value="null">None</option>
-                            <option value="ISAAC_BOARD">Created by Isaac</option>
-                        </RS.Input>
+                        <Select inputId="question-search-level"
+                            isMulti
+                            options={[
+                                { value: examBoardTagMap[EXAM_BOARD.AQA], label: 'AQA' },
+                                { value: examBoardTagMap[EXAM_BOARD.OCR], label: 'OCR' },
+                                { value: 'ISAAC_BOARD', label: 'Created by Isaac' }]}
+                            name="colors"
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                            placeholder="None"
+                            onChange={multiSelectOnChange(setGameboardTags)}
+                        />
                     </RS.Col>
                     <RS.Col>
                         <RS.Label htmlFor="gameboard-builder-url">Gameboard URL</RS.Label>
@@ -210,7 +216,7 @@ export const GameboardBuilder = (props: GameboardBuilderProps) => {
                             wildCard: wildcard,
                             wildCardPosition: 0,
                             gameFilter: {subjects: ["computer_science"]},
-                            tags: gameboardTag == "ISAAC_BOARD" ? ["ISAAC_BOARD"] : []
+                            tags: gameboardTags
                         }));
 
                         dispatch(openActiveModal({
