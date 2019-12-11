@@ -50,7 +50,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
         if (currentGroup && !currentGroup.members) {
             dispatch(getGroupMembers(currentGroup));
         } else if (currentGroup && currentGroup.members) {
-            // TODO: Retrieve event status for members maybe?
+            // af599 TODO: Retrieve event status for members maybe?
         }
     }, [currentGroup]);
 
@@ -63,9 +63,10 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
     const eventBookingsForGroup = useSelector((state: AppState) => state && state.eventBookingsForGroup || []);
 
     useEffect(() => {
-        // TODO: Check the API (EventsFacade), it returns the wrong type of users
-        //       (i.e., the one with an email address attached) even when the
-        //       request comes from a TEACHER.
+        // af599 TODO:
+        //   Check the API (EventsFacade), it returns the wrong type of users
+        //   (i.e., the one with an email address attached) even when the
+        //   request comes from a TEACHER.
         if (currentGroup && currentGroup.members) {
             const bookedUserIds = eventBookingsForGroup.map(booking => booking.userBooked && booking.userBooked.id);
             const newUnbookedUsers: AppGroupMembership[] = _orderBy(currentGroup.members.filter(member =>
