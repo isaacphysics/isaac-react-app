@@ -206,10 +206,13 @@ export const reservationsModal = () => {
         size: 'xl',
         title: "Groups and Reservations",
         body: <ReservationsModal />,
+        // af599 TODO: Wouldn't it be nice if we coul move the Reserve button
+        //             here instead of having it in the component? Would it even
+        //             be possible?
         // buttons: [
-        //     <RS.Button key={0} block color="primary" tag="a"  target="_blank" rel="noopener noreferer" onClick={() => {store.dispatch(closeActiveModal())}}>
+        //     <Button key={0} block color="primary" tag="a"  target="_blank" rel="noopener noreferer" onClick={requestReservation}>
         //         Download CSV
-        //     </RS.Button>,
+        //     </Button>,
         // ]
     }
 };
