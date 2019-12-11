@@ -77,6 +77,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./icons";
 @import "./boards";
 @import "./focus";
+@import "./progress-bar";
 
 // Navigation
 @import "./navigation-bar";
@@ -92,6 +93,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./topic";
 @import "./search";
 @import "./my-assignments";
+@import "./my-progress";
 @import "./gameboard";
 @import "./assignment-progress";
 @import "./groups";

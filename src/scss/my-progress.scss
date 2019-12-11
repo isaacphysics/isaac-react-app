@@ -1,0 +1,25 @@
+.text-center-width {
+  text-align: center;
+  width: 100%;
+}
+
+.auto-margin {
+  margin: auto;
+}
+
+.type-progress-bar {
+  flex-basis: unset;
+}
+
+.center-align-select {
+  .small-select {
+    height: 20px;
+    font-size: 12px;
+  }
+}
+
+.doughnut-binding {
+  svg {
+    margin: auto;
+  }
+}
