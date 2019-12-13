@@ -185,6 +185,15 @@ export const api = {
         },
         answer: (id: string, answer: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
+        },
+        answeredQuestionsByDate: (userId: number, fromDate: number, toDate: number, perDay: boolean): AxiosPromise<ApiTypes.AnsweredQuestionsByDate> => {
+            return endpoint.get(`/questions/answered_questions/${userId}`, {
+                params: {
+                    "from_date": fromDate,
+                    "to_date": toDate,
+                    "per_day": perDay
+                }
+            })
         }
     },
     concepts: {

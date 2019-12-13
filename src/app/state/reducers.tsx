@@ -21,6 +21,7 @@ import {
     UserSchoolLookup
 } from "../../IsaacAppTypes";
 import {
+    AnsweredQuestionsByDate,
     AssignmentDTO,
     ContentDTO,
     ContentSummaryDTO,
@@ -282,6 +283,21 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
         }
         default: {
             return questions;
+        }
+    }
+};
+
+type AnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
+export const answeredQuestionsByDate = (answeredQuestionsByDateState: AnsweredQuestionsByDateState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST: {
+            return null;
+        }
+        case ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
+            return action.answeredQuestionsByDate;
+        }
+        default: {
+            return answeredQuestionsByDateState;
         }
     }
 };
@@ -754,6 +770,7 @@ const appReducer = combineReducers({
     constants,
     doc,
     questions,
+    answeredQuestionsByDate,
     currentTopic,
     currentGameboard,
     wildcards,
@@ -790,6 +807,7 @@ export type AppState = undefined | {
     groupMemberships: GroupMembershipsState;
     doc: DocState;
     questions: QuestionsState;
+    answeredQuestionsByDate: AnsweredQuestionsByDateState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
     wildcards: WildcardsState;

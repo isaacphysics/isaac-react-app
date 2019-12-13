@@ -12,6 +12,7 @@ import {QuestionProgressGraphs} from "../elements/QuestionProgressGraphs";
 import {DailyStreakGauge} from "../elements/DailyStreakGauge";
 import {HUMAN_QUESTION_TYPES, QUESTION_TYPES} from "../../services/questions";
 import {TestD3} from "../elements/TestD3";
+import {ActivityGraph} from "../elements/ActivityGraph";
 
 
 
@@ -41,17 +42,17 @@ export const MyProgress = () => {
         <RS.Card className="p-3 mt-4 mb-5">
             <RS.CardBody>
                 <RS.Row>
-                    <RS.Col className={"col-md-8 pr-5"}>
+                    <RS.Col className={"col-md-8 pr-5 mt-2"}>
                         <RS.Row>
                             Questions completed correctly of those attempted
                         </RS.Row>
-                        <RS.Row>
+                        <RS.Row className={"mt-2"}>
                             <ProgressBar percentage={fullPercentage || 0} description={fullPercentage == null ? "No data" : `${fullCorrect} of ${fullAttempt}`}/>
                         </RS.Row>
-                        <RS.Row>
+                        <RS.Row className={"mt-3"}>
                             Question parts correct of those attempted
                         </RS.Row>
-                        <RS.Row>
+                        <RS.Row className={"mt-2"}>
                             <ProgressBar percentage={partPercentage || 0} description={partPercentage == null ? "No data" : `${partCorrect} of ${partAttempt}`}/>
                         </RS.Row>
                     </RS.Col>
@@ -62,7 +63,7 @@ export const MyProgress = () => {
                             </div>
                         </RS.Row>
                         <RS.Row>
-                            <DailyStreakGauge/>
+                            <DailyStreakGauge streakRecord={userProgress && userProgress.userSnapshot && userProgress.userSnapshot.streakRecord}/>
                         </RS.Row>
                         <RS.Row>
                             <div className={"text-center-width"}>
@@ -78,10 +79,10 @@ export const MyProgress = () => {
                     }}
                 </Tabs>
 
-                <RS.Row>
-                    <div>
+                <RS.Row className={"mt-3"}>
+                    <h4>
                         Question parts correct by Type
-                    </div>
+                    </h4>
                 </RS.Row>
                 <RS.Row>
                     {(Array.from(QUESTION_TYPES.keys()) as string[]).filter((qType: string) => qType != "default").map((qType: string) => {
@@ -98,7 +99,18 @@ export const MyProgress = () => {
                         </RS.Col>
                     })}
                 </RS.Row>
+                <RS.Row className={"mt-3"}>
+                    <h4>
+                        Question attempts over time
+                    </h4>
+                </RS.Row>
+                <RS.Row>
+                    <ActivityGraph/>
+                </RS.Row>
             </RS.CardBody>
+        </RS.Card>
+        <RS.Card className="p-3 mt-4 mb-5">
+            HELLO
         </RS.Card>
     </RS.Container>
 };

@@ -1,13 +1,19 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {bb} from "billboard.js";
-import "billboard.js/dist/theme/insight.css";
+import "billboard.js/dist/theme/insight.css"; //TODO remove this??
+import {StreakRecord} from "../../../IsaacAppTypes";
 
-export const DailyStreakGauge = () => {
-    setTimeout(() => {
+interface DailyStreakGaugeProps {
+    streakRecord: StreakRecord | null | undefined;
+}
+
+export const DailyStreakGauge = (props: DailyStreakGaugeProps) => {
+    const {streakRecord} = props;
+    useEffect(() => {
         bb.generate({
             data: {
                 columns: [
-                    ["data", 0.32]
+                    ["data", (streakRecord && streakRecord.currentActivity) || 0]
                 ],
                 type: "gauge",
             },
@@ -15,14 +21,14 @@ export const DailyStreakGauge = () => {
                 fullCircle: true,
                 label: {
                     extents: () => "",
-                    format: () => "0"
+                    format: () => (streakRecord && streakRecord.currentStreak || 0).toString()
                 },
-                max: 1,
+                max: 3,
                 startingAngle: 0
             },
             color: {
                 pattern: [
-                    "#00FF00",
+                    "light-green",
                 ],
                 threshold: {
                     values: [
@@ -41,6 +47,6 @@ export const DailyStreakGauge = () => {
                 show: false
             }
         });
-    }, 0);
+    }, [streakRecord]);
     return <div className={"auto-margin"} id="dailyStreakChart"/>
 };
