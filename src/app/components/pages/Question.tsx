@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -25,6 +25,7 @@ interface QuestionPageProps {
 
 export const Question = withRouter(({questionIdOverride, match}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
+    const [questionShareOpen, setQuestionShareOpen] = useState(false);
     const doc = useSelector((state: AppState) => state ? state.doc : null);
     const user = useSelector((state: AppState) => state && state.user);
     const segueEnvironment = useSelector((state: AppState) =>
@@ -49,9 +50,24 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     collectionType={navigation.collectionType}
                 />
-                {segueEnvironment === "DEV" && doc.canonicalSourceFile &&
-                    <EditContentButton canonicalSourceFile={EDITOR_URL + doc.canonicalSourceFile} />
-                }
+                <RS.Row>
+                    {segueEnvironment === "DEV" && doc.canonicalSourceFile &&
+                        <EditContentButton canonicalSourceFile={EDITOR_URL + doc.canonicalSourceFile} />
+                    }
+                    <div className="question-share mt-3">
+                        <input
+                            type="image"
+                            src="/assets/share.svg"
+                            alt='Show/Hide the question share link'
+                            className="question-share-icon"
+                            onClick={() => setQuestionShareOpen(!questionShareOpen)}/>
+                        {questionShareOpen && <div className="question-share-link-box">
+                            <div className="question-share-link">
+                                {`${window.location.origin}/questions/${questionId}`}
+                            </div>
+                        </div>}
+                    </div>
+                </RS.Row>
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
                         <AnonUserExamBoardPicker className="text-right"/>

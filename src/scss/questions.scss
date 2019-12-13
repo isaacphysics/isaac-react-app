@@ -22,6 +22,38 @@
   min-width: auto;
 }
 
+.question-share {
+  flex-grow: 1;
+  .question-share-icon {
+    float: right;
+    height: 3rem;
+    margin-left: -1.25rem;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .question-share-link-box {
+    float:right;
+    border: 1px solid gray;
+    height: 3rem;
+    border-right: none;
+    padding-right: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .question-share-link {
+      background: lightgray;
+      padding-left: 3px;
+      padding-right: 3px;
+      margin-left: 1rem;
+      font-style: italic;
+    }
+  }
+}
+
 .question-component {
   margin-bottom: 2rem;
 
