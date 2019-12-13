@@ -88,7 +88,7 @@ export const QuestionProgressGraphs = (props: QuestionProgressGraphsProps) => {
     return <RS.Row className={"mt-4"}>
         <RS.Col className={"col-md-4"}>
             <RS.Row>
-                <div className={"text-center-width"}>
+                <div className={"height-40px text-flex-align"}>
                     Questions by category
                 </div>
             </RS.Row>
@@ -121,7 +121,7 @@ export const QuestionProgressGraphs = (props: QuestionProgressGraphsProps) => {
         </RS.Col>
         <RS.Col className={"col-md-4"}>
             <RS.Row>
-                <div className={"text-center-width"}>
+                <div className={"height-40px text-flex-align"}>
                     Questions by level
                 </div>
             </RS.Row>

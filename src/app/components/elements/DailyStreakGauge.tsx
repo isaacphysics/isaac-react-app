@@ -28,7 +28,7 @@ export const DailyStreakGauge = (props: DailyStreakGaugeProps) => {
             },
             color: {
                 pattern: [
-                    "light-green",
+                    "#00FF00",
                 ],
                 threshold: {
                     values: [

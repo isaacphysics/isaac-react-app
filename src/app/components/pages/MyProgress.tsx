@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    getProgress,
+    getProgress, loadMyAssignments,
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {ProgressBar} from "../elements/ProgressBar";
@@ -13,19 +13,28 @@ import {DailyStreakGauge} from "../elements/DailyStreakGauge";
 import {HUMAN_QUESTION_TYPES, QUESTION_TYPES} from "../../services/questions";
 import {TestD3} from "../elements/TestD3";
 import {ActivityGraph} from "../elements/ActivityGraph";
+import {MyAssignments} from "./MyAssignments";
+import {Assignments} from "../elements/Assignments";
+import {filterAssignmentsByStatus} from "../../services/assignments";
 
 
 
 export const MyProgress = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state: AppState) => state && state.user);
     const userProgress = useSelector((state: AppState) => state && state.userProgress);
+    const myAssignments = useSelector((state: AppState) => state && state.assignments || null);
 
     useEffect(() => {
         if (!userProgress) {
             dispatch(getProgress());
         }
-    }, [user]);
+    }, [userProgress]);
+
+    // useEffect(() => {
+    //     if (!myAssignments) {
+    //         dispatch(loadMyAssignments());
+    //     }
+    // }, [myAssignments]);
 
     const safePercentage = (correct: number | null | undefined, attempts: number | null | undefined) => (!(correct || correct == 0) || !attempts) ? null : correct / attempts * 100;
 
@@ -39,7 +48,10 @@ export const MyProgress = () => {
 
     return <RS.Container id="my-progress">
         <TitleAndBreadcrumb currentPageTitle="My Progress"/>
-        <RS.Card className="p-3 mt-4 mb-5">
+        <RS.Card className="p-3 mt-4">
+            <RS.CardTitle tag="h2">
+                Statistics
+            </RS.CardTitle>
             <RS.CardBody>
                 <RS.Row>
                     <RS.Col className={"col-md-8 pr-5 mt-2"}>
@@ -109,8 +121,13 @@ export const MyProgress = () => {
                 </RS.Row>
             </RS.CardBody>
         </RS.Card>
-        <RS.Card className="p-3 mt-4 mb-5">
-            HELLO
+        <RS.Card className="p-3 mt-3 mb-5">
+            <RS.CardTitle tag="h2">
+                Current assignments
+            </RS.CardTitle>
+            <RS.CardBody>
+                <Assignments assignments={filterAssignmentsByStatus(myAssignments).inProgressRecent}/>
+            </RS.CardBody>
         </RS.Card>
     </RS.Container>
 };
