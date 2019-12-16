@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    getProgress, loadMyAssignments,
+    getProgress
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {ProgressBar} from "../elements/ProgressBar";
@@ -11,9 +11,7 @@ import {Tabs} from "../elements/Tabs";
 import {QuestionProgressGraphs} from "../elements/QuestionProgressGraphs";
 import {DailyStreakGauge} from "../elements/DailyStreakGauge";
 import {HUMAN_QUESTION_TYPES, QUESTION_TYPES} from "../../services/questions";
-import {TestD3} from "../elements/TestD3";
 import {ActivityGraph} from "../elements/ActivityGraph";
-import {MyAssignments} from "./MyAssignments";
 import {Assignments} from "../elements/Assignments";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 
@@ -78,9 +76,15 @@ export const MyProgress = () => {
                             <DailyStreakGauge streakRecord={userProgress && userProgress.userSnapshot && userProgress.userSnapshot.streakRecord}/>
                         </RS.Row>
                         <RS.Row>
-                            <div className={"text-center-width"}>
-                                Longest streak: {userProgress && userProgress.userSnapshot && userProgress.userSnapshot.streakRecord && userProgress.userSnapshot.streakRecord.largestStreak} days [tooltip here]
+                            <div id="streak-help" className={"text-center-width"}>
+                                Longest streak: {userProgress && userProgress.userSnapshot && userProgress.userSnapshot.streakRecord && userProgress.userSnapshot.streakRecord.largestStreak} days
                             </div>
+                            <RS.UncontrolledTooltip placement="bottom" target="streak-help">
+                                <div  className="text-left">
+                                    The daily streak indicates the number of consecutive days you have been active on Isaac.<br/>
+                                    Answer at least <b>three question parts</b> correctly per day to fill up your daily progress bar and increase your streak!
+                                </div>
+                            </RS.UncontrolledTooltip>
                         </RS.Row>
                     </RS.Col>
                 </RS.Row>
