@@ -14,13 +14,18 @@ import {HUMAN_QUESTION_TYPES, QUESTION_TYPES} from "../../services/questions";
 import {ActivityGraph} from "../elements/ActivityGraph";
 import {Assignments} from "../elements/Assignments";
 import {filterAssignmentsByStatus} from "../../services/assignments";
+import {isTeacher} from "../../services/user";
+import {TeacherAchievement} from "../elements/TeacherAchievement";
+import {IS_CS_PLATFORM} from "../../services/constants";
 
 
 
 export const MyProgress = () => {
     const dispatch = useDispatch();
+    const user = useSelector((state: AppState) => state && state.user);
     const userProgress = useSelector((state: AppState) => state && state.userProgress);
     const myAssignments = useSelector((state: AppState) => state && state.assignments || null);
+    const achievementsSelector = useSelector((state: AppState) => state && state.userProgress && state.userProgress.userSnapshot && state.userProgress.userSnapshot.achievementsRecord);
 
     useEffect(() => {
         if (!userProgress) {
@@ -48,7 +53,7 @@ export const MyProgress = () => {
         <TitleAndBreadcrumb currentPageTitle="My Progress"/>
         <RS.Card className="p-3 mt-4">
             <RS.CardTitle tag="h2">
-                Statistics
+                Question statistics
             </RS.CardTitle>
             <RS.CardBody>
                 <RS.Row>
@@ -125,6 +130,55 @@ export const MyProgress = () => {
                 </RS.Row>
             </RS.CardBody>
         </RS.Card>
+        {isTeacher(user) &&
+            <RS.Card className="p-3 mt-3">
+                <RS.CardTitle tag="h2">
+                    Isaac teacher activity
+                </RS.CardTitle>
+                <RS.CardBody>
+                    <TeacherAchievement
+                        verb="created"
+                        count={achievementsSelector && achievementsSelector.TEACHER_GROUPS_CREATED}
+                        item="group"
+                        createMoreText="Manage groups"
+                        createMoreLink="/groups"
+                        iconClassName="group-badge"/>
+
+                    <TeacherAchievement
+                        verb="set"
+                        count={achievementsSelector && achievementsSelector.TEACHER_ASSIGNMENTS_SET}
+                        item="assignment"
+                        createMoreText="Set assignments"
+                        createMoreLink="/set_assignments"
+                        iconClassName="assignment-badge"/>
+
+                    <TeacherAchievement
+                        verb="created"
+                        count={achievementsSelector && achievementsSelector.TEACHER_GAMEBOARDS_CREATED}
+                        item="gameboard"
+                        createMoreText="Board builder"
+                        createMoreLink="/gameboard_builder"
+                        iconClassName="gameboard-badge"/>
+
+                    {!IS_CS_PLATFORM && <TeacherAchievement
+                        verb="set"
+                        count={achievementsSelector && achievementsSelector.TEACHER_BOOK_PAGES_SET}
+                        item="book page assignment"
+                        createMoreText="Set assignments"
+                        createMoreLink="/set_assignments"
+                        iconClassName="book-page-badge"/>
+                    }
+
+                    <TeacherAchievement
+                        verb="visited"
+                        count={achievementsSelector && achievementsSelector.TEACHER_CPD_EVENTS_ATTENDED}
+                        item="CPD event"
+                        createMoreText="Events"
+                        createMoreLink="/events"
+                        iconClassName="cpd-badge"/>
+                </RS.CardBody>
+            </RS.Card>
+        }
         <RS.Card className="p-3 mt-3 mb-5">
             <RS.CardTitle tag="h2">
                 Current assignments
