@@ -345,6 +345,10 @@ export interface ShortcutResponses {
     type: string;
 }
 
+export interface UserBetaFeaturePreferences {
+    SCREENREADER_HOVERTEXT?: boolean;
+}
+
 export interface UserEmailPreferences {
     NEWS_AND_UPDATES?: boolean;
     ASSIGNMENTS?: boolean;
@@ -361,7 +365,7 @@ export interface SubjectInterests {
 }
 
 export interface UserPreferencesDTO {
-    BETA_FEATURE?: string;
+    BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences;
     EXAM_BOARD?: UserExamPreferences;
     SUBJECT_INTEREST?: SubjectInterests;
@@ -460,6 +464,8 @@ export interface AdminStatsResponse {
 
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
+export const AccordionSectionContext = React.createContext<string | undefined>(undefined);
+export const QuestionContext = React.createContext<string | undefined>(undefined);
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;

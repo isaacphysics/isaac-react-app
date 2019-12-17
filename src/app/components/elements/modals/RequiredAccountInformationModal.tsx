@@ -109,7 +109,7 @@ const RequiredAccountInfoBody = () => {
                 <RS.Input value={isMobile() ? "Update" : "Update account"} type="submit" className="btn btn-secondary border-0 px-0 px-md-2 my-1" />
             </RS.Col>
         </RS.Row>
-    </RS.Form>
+    </RS.Form>;
 };
 
 export const requiredAccountInformationModal = {

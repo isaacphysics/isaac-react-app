@@ -180,5 +180,5 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 </tbody>
             </RS.Table>
         </div>
-    </div>
+    </div>;
 };
