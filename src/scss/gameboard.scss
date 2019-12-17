@@ -34,8 +34,10 @@
 
 .basic-multi-select {
   .select__control.select__control--is-focused {
-    border-color: $primary;
-    box-shadow: 0 0 0 0.2rem $shadow-08;
+    box-shadow: 0 0 0 0.2rem $focus-blue;
+  }
+  .select__control {
+    border-color: $black;
   }
 
   .select__menu {
