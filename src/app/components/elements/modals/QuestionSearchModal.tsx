@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {closeActiveModal, searchQuestions} from "../../../state/actions";
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
