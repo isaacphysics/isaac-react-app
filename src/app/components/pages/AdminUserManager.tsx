@@ -295,7 +295,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                 }
             </RS.CardBody>
         </RS.Card>
-    </RS.Container>
+    </RS.Container>;
 };
 
 export const AdminUserManager = connect(stateToProps, dispatchToProps)(AdminUserManagerComponent);
