@@ -505,3 +505,15 @@ export enum sortIcon {
     "ascending" = '⇑',
     "descending" = '⇓'
 }
+
+export enum EventStatusFilter {
+    "All events" = "all",
+    "Upcoming events" = "upcoming",
+    "My booked events" = "showBookedOnly",
+}
+export enum EventTypeFilter {
+    "All events" = "all",
+    "Student events" = "student",
+    "Teacher events" = "teacher",
+    "Online tutorials" = "virtual",
+}

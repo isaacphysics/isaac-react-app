@@ -70,7 +70,10 @@
   background-position: -71px 0;
 }
 .subject-complete {
-  background-position: -142px 0;
+  position: relative;
+  top: 0;
+  left: 0;
+  background: url(/assets/my-boards-sprite.png) no-repeat -142px 0;
 }
 .subject-compsci {
   background-position: -71px 0;

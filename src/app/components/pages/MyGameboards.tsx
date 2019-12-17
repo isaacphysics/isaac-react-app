@@ -109,9 +109,11 @@ const Board = (props: BoardTableProps) => {
 
     return boardView == boardViews.table ?
         <tr key={board.id} className="board-card">
-            <td><div className="subject-compsci-table groups-assigned myBoardsTable-percentageCompleted" id={hexagonId}>
-                <h4>{board.percentageCompleted}</h4>
-            </div></td>
+            {(board.percentageCompleted == 100) ?
+                <td><div className="subject-complete" id={hexagonId}/></td> :
+                <td><div className="subject-compsci-table groups-assigned myBoardsTable-percentageCompleted" id={hexagonId}>
+                    <h4>{board.percentageCompleted}</h4>
+                </div></td>}
             <td><a href={boardLink}>{board.title}</a></td>
             {/*<td className="text-center">{board.levels.join(' ')}</td>*/}
             <td className="text-center">{formatBoardOwner(user, board)}</td>
