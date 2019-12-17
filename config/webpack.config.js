@@ -25,6 +25,7 @@ const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 const TransferWebpackPlugin = require('transfer-webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
@@ -41,6 +42,23 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+
+// Show multiple cycle errors instead of just one
+let detectedCycles = [];
+
+// Allow whitelisting of acceptable cycles
+// e.g. new Set(["src/app/services/api.ts", "src/app/state/actions.tsx", "src/app/services/api.ts"])
+const cycleWhitelist = [
+];
+const isWhitelistedCycle = (cycle) => cycleWhitelist.filter((validCycle) => {
+  if (cycle.size != validCycle.size) return false;
+  for (let node in cycle) {
+    if (!validCycle.has(node)) {
+      return false;
+    }
+  }
+  return true;
+}).length > 0;
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -595,6 +613,34 @@ module.exports = function(webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
+      // Detect and fail compilation if cyclical dependencies are detected
+      isEnvDevelopment &&
+        new CircularDependencyPlugin({
+          exclude: /\.tsx|node_modules/,
+          failOnError: true,
+          allowAsyncCycles: false,
+          cwd: process.cwd(),
+          onStart({ compilation }) {
+            detectedCycles = [];
+          },
+          onDetected({ module: webpackModuleRecord, paths, compilation }) {
+            if (!isWhitelistedCycle(new Set(paths))) {
+              detectedCycles.push(paths.join('\n  -> '));
+            }
+          },
+          onEnd({ compilation }) {
+            if (detectedCycles.length > 0) {
+              let error = "";
+              detectedCycles.forEach((cycle, i) => {
+                error += `Cycle ${i}: ${cycle}\n\n`;
+              });
+              error += `Detected ${detectedCycles.length} cycles`;
+              compilation.errors.push(new Error(
+                  error
+              ));
+            }
+          },
+        })
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.
