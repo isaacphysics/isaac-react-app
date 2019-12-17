@@ -216,6 +216,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                 examPreferences={examPreferences} setExamPreferences={setExamPreferences}
                                 subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
                                 submissionAttempted={attemptedAccountUpdate}
+                                userAuthSettings={userAuthSettings}
                             />
                         </TabPane>
 

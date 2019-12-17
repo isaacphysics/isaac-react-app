@@ -21,6 +21,11 @@
   border:solid thin #e3e3e3;
 }
 
+.vertical-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 // NOMENSA login.scss
 button.btn.btn-link.login-b,

@@ -12,6 +12,9 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
+import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
+import {useDispatch} from "react-redux";
+import {linkAccount, unlinkAccount} from "../../../state/actions";
 
 interface UserDetailsProps {
     examPreferences: UserExamPreferences;
@@ -21,14 +24,17 @@ interface UserDetailsProps {
     subjectInterests: SubjectInterests;
     setSubjectInterests: (si: SubjectInterests) => void;
     submissionAttempted: boolean;
+    userAuthSettings: UserAuthenticationSettingsDTO | null;
 }
 
 export const UserDetails = (props: UserDetailsProps) => {
+    const dispatch = useDispatch();
     const {
         userToUpdate, setUserToUpdate,
         examPreferences, setExamPreferences,
         subjectInterests, setSubjectInterests,
-        submissionAttempted
+        submissionAttempted,
+        userAuthSettings
     } = props;
 
     const allRequiredFieldsValid = userToUpdate && subjectInterests &&
@@ -36,6 +42,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         validateUserGender(userToUpdate) &&
         validateUserSchool(userToUpdate) &&
         validateSubjectInterests(subjectInterests);
+
+    const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
 
     return <CardBody className="pt-0">
         <Row>
@@ -129,14 +137,19 @@ export const UserDetails = (props: UserDetailsProps) => {
             </Col>
         </Row>
 
-        {/*<Row>*/}
-        {/*    <Col md={6}>*/}
-        {/*        <FormGroup>*/}
-        {/*            <Label htmlFor="linked-accounts">Linked Accounts</Label>*/}
-        {/*            <Row>Placeholder</Row> /!* TODO add linked account control *!/*/}
-        {/*        </FormGroup>*/}
-        {/*    </Col>*/}
-        {/*</Row>*/}
+        <Row>
+            <Col md={6}>
+                <FormGroup>
+                    <Label htmlFor="linked-accounts">Linked Accounts</Label>
+                    <Row className="ml-3">
+                        <input type="button" className="linked-account-button google-button" onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}/>
+                        <div className="vertical-center ml-2">
+                            {authenticationProvidersUsed("GOOGLE") ? "Remove" : "Add"}
+                        </div>
+                    </Row>
+                </FormGroup>
+            </Col>
+        </Row>
 
         {userToUpdate && userToUpdate.role == "STUDENT" && <Row>
             <Col className="text-muted text-center mt-2">

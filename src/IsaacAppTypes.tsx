@@ -1,6 +1,7 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
+import {AuthenticationProvider} from "./IsaacApiTypes";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -19,6 +20,12 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_LINK_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS; provider: AuthenticationProvider; redirectUrl: string}
+    | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE, errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS; provider: AuthenticationProvider}
+    | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE, errorMessage: string}
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
