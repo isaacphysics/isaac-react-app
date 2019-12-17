@@ -2,7 +2,6 @@ import React, {useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
-    Alert,
     Card,
     CardFooter,
     Col,
@@ -21,7 +20,8 @@ import {AppState, ErrorState} from "../../state/reducers";
 import {resetPassword, updateCurrentUser} from "../../state/actions";
 import {
     LoggedInUser,
-    LoggedInValidationUser, SubjectInterests,
+    LoggedInValidationUser,
+    SubjectInterests,
     UserEmailPreferences,
     UserExamPreferences,
     UserPreferencesDTO
@@ -33,7 +33,9 @@ import {
     isDobOverThirteen,
     validateEmail,
     validateEmailPreferences,
-    validatePassword, validateSubjectInterests, validateUserGender,
+    validatePassword,
+    validateSubjectInterests,
+    validateUserGender,
     validateUserSchool
 } from "../../services/validation";
 import queryString from "query-string";
@@ -42,9 +44,6 @@ import {ACCOUNT_TAB} from "../../services/constants";
 import {history} from "../../services/history"
 import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import * as persistence from "../../services/localStorage";
-import {KEY} from "../../services/localStorage";
-import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateToProps = (state: AppState, props: any) => {
