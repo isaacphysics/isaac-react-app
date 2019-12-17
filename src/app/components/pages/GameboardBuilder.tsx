@@ -252,5 +252,5 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
             </RS.CardBody>
         </RS.Card>
-    </RS.Container>
+    </RS.Container>;
 });
