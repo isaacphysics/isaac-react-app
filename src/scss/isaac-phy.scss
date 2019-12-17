@@ -1,7 +1,7 @@
 // NOMENSA variables.scss
 //Colours
-$primary: #ffb53f;
-$secondary: #ff3369;
+$primary: #509e2e;
+$secondary: #944cbe;
 
 //Greys
 $gray-103: #f8f8f8;
@@ -77,6 +77,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./icons";
 @import "./boards";
 @import "./focus";
+@import "./anvil";
 
 // Navigation
 @import "./navigation-bar";

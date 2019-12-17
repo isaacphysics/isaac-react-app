@@ -1,5 +1,5 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
+import {API_PATH, MEMBERSHIP_STATUS, TAG_ID, EventTypeFilter} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
@@ -7,14 +7,14 @@ import {
     ActualBoardLimit,
     AdditionalInformation,
     ATTENDANCE,
-    BoardOrder, EmailUserRoles,
+    BoardOrder,
+    EmailUserRoles,
     LoggedInUser,
     QuestionSearchQuery,
     QuestionSearchResponse,
     UserPreferencesDTO
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
-import {TypeFilter} from "../components/pages/Events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 
 export const endpoint = axios.create({
@@ -322,7 +322,7 @@ export const api = {
             return endpoint.get(`/events/${eventId}`);
         },
         getEvents: (
-            startIndex: number, eventsPerPage: number, filterEventsByType: TypeFilter | null,
+            startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
             showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
             /* eslint-disable @typescript-eslint/camelcase */

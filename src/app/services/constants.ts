@@ -382,8 +382,7 @@ export enum TAG_ID {
     computerSystems = "computer_systems",
     dataAndInformation = "data_and_information",
     // Programming sub-categories
-    functionalProgramming = "functional_programming",
-    objectOrientedProgramming = "object_oriented_programming",
+    programmingParadigms = "programming_paradigms",
     programmingFundamentals = "programming_fundamentals",
     computingPracticalProject = "computing_practical_project",
 
@@ -396,7 +395,7 @@ export enum TAG_ID {
     // Data structures and algorithms topics
     searchingSortingPathfinding = "searching_sorting_pathfinding",
     complexity = "complexity",
-    theoryOfComputation = "models_of_computation",
+    theoryOfComputation = "theory_of_computation",
     planningAndDebugging = "planning_and_debugging",
     dataStructures = "data_structures",
     // Computer networks topics
@@ -421,15 +420,7 @@ export enum TAG_ID {
     compression = "compression",
     encryption = "encryption",
 
-    // Functional programming topics
-    functions = "functions",
-    lists = "lists",
-    higherOrderFunctions = "higher_order_functions",
-    // Object-oriented programming topics
-    creatingObjects = "creating_objects",
-    oopConcepts = "oop_concepts",
-    classDiagrams = "class_diagrams",
-    // Procedural programming topics
+    // Programming fundamentals topics
     programmingConcepts = "programming_concepts",
     subroutines = "subroutines",
     files = "files",
@@ -438,6 +429,9 @@ export enum TAG_ID {
     stringManipulation = "string_manipulation",
     guis = "guis",
     softwareEngineeringPrinciples = "software_engineering_principles",
+    // Programming paradigms topics
+    objectOrientedProgramming = "object_oriented_programming",
+    functionalProgramming = "functional_programming",
     // Computing practical project topics
     softwareProject = "software_project",
 }
@@ -498,4 +492,16 @@ export enum SortOrder {
     ASC = "ASC",
     DESC = "DESC",
     NONE = "NONE"
+}
+
+export enum EventStatusFilter {
+    "All events" = "all",
+    "Upcoming events" = "upcoming",
+    "My booked events" = "showBookedOnly",
+}
+export enum EventTypeFilter {
+    "All events" = "all",
+    "Student events" = "student",
+    "Teacher events" = "teacher",
+    "Online tutorials" = "virtual",
 }
