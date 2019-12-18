@@ -39,6 +39,12 @@ enum boardCreators {
     "me" = "Me",
     "someoneelse" = "Someone else"
 }
+enum boardCompletions {
+    "any" = "Any",
+    "notStarted" = "Not Started",
+    "inProgress" = "In Progress",
+    "completed" = "Completed"
+}
 enum BoardLimit {
     "six" = "6",
     "eighteen" = "18",
@@ -168,6 +174,11 @@ export const MyGameboards = () => {
     const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
     const [selectedBoards, setSelectedBoards] = useState<AppGameBoard[]>([]);
     const [boardCreator, setBoardCreator] = useState<boardCreators>(boardCreators.all);
+    const [boardCompletion, setBoardCompletion] = useState<boardCompletions>(boardCompletions.any);
+
+    useEffect(() => {
+        console.log(boardCompletion)
+    }, [boardCompletion]);
 
     let actualBoardLimit: ActualBoardLimit = toActual(boardLimit);
 
@@ -284,7 +295,12 @@ export const MyGameboards = () => {
                                             {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
                                         </Input></Label>
                                     </Col>
-                                    <Col md={7}>
+                                    <Col md={2}>
+                                        <Label>Completion <Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as boardCompletions)}>
+                                            {Object.values(boardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
+                                        </Input></Label>
+                                    </Col>
+                                    <Col md={5}>
                                         {selectedBoards && selectedBoards.length > 0 && <div className="m-0"><Button className="float-right mt-4" onClick={confirmDeleteMultipleBoards}>Delete ({selectedBoards.length})</Button></div>}
                                     </Col>
                                 </Row>
@@ -319,7 +335,7 @@ export const MyGameboards = () => {
                                                 <tbody>
                                                     {boards.boards
                                                         .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
-                                                        && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All"))
+                                                        && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")) // && (boardCompletionSelection(board, boardCompletion)
                                                         .map(board =>
                                                             <Board
                                                                 key={board.id}

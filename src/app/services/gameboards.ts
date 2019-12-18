@@ -2,6 +2,13 @@ import {GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {CurrentGameboardState} from "../state/reducers";
 import {NOT_FOUND} from "./constants";
 
+enum boardCompletions {
+    "any" = "Any",
+    "notStarted" = "Not Started",
+    "inProgress" = "In Progress",
+    "completed" = "Completed"
+}
+
 export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
     if (board.tags && board.tags.includes("isaac")) {
         return "Isaac";
@@ -11,6 +18,10 @@ export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
     }
     return "Someone else";
 }
+
+// export function boardCompletionSelection(board: GameboardDTO, boardCompletion: boardCompletions) {
+//
+// }
 
 const createGameabordLink = (gameboardId: string) => `/gameboards#${gameboardId}`;
 
