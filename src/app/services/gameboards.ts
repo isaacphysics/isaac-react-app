@@ -19,9 +19,15 @@ export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
     return "Someone else";
 }
 
-// export function boardCompletionSelection(board: GameboardDTO, boardCompletion: boardCompletions) {
-//
-// }
+export function boardCompletionSelection(board: GameboardDTO, boardCompletion: boardCompletions) {
+    if (boardCompletion == boardCompletions.notStarted && (board.percentageCompleted == 0 || !board.percentageCompleted)) {
+        return true;
+    } else if (boardCompletion == boardCompletions.completed && board.percentageCompleted && board.percentageCompleted == 100) {
+        return true;
+    } else if (boardCompletion == boardCompletions.inProgress && board.percentageCompleted && board.percentageCompleted != 100 && board.percentageCompleted != 0) {
+        return true;
+    } else return boardCompletion == boardCompletions.any;
+}
 
 const createGameabordLink = (gameboardId: string) => `/gameboards#${gameboardId}`;
 

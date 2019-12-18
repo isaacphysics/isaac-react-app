@@ -50,9 +50,8 @@
 .myBoardsTable-percentageCompleted h4{
   font-size: 2em;
   text-align: center;
-  top: 12px;
-  right: 12px;
-  position: absolute;
+  top: -22px;
+  position: relative;
 }
 
 .myBoardsTable-percentageCompleted h4::after {
@@ -73,6 +72,14 @@
   position: relative;
   top: 0;
   left: 0;
+  background: url(/assets/my-boards-sprite.png) no-repeat -142px 0;
+}
+.subject-complete-card {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 71px;
+  height: 82px;
   background: url(/assets/my-boards-sprite.png) no-repeat -142px 0;
 }
 .subject-compsci {

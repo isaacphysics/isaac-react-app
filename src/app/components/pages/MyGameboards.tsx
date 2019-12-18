@@ -24,7 +24,7 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {boards as ThisBoards} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {sortIcon, STUDENTS_CRUMB} from "../../services/constants";
-import {formatBoardOwner} from "../../services/gameboards";
+import {formatBoardOwner, boardCompletionSelection} from "../../services/gameboards";
 import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
 
@@ -135,13 +135,18 @@ const Board = (props: BoardTableProps) => {
         <Card className="board-card">
             <CardBody className="pb-4 pt-4">
                 <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
-                <button className="groups-assigned subject-compsci myBoards-percentageCompleted" id={hexagonId}>
-                    <h4>{board.percentageCompleted}</h4>
-                </button>
-                <aside>
-                    <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
-                    <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                </aside>
+                <Row>
+                    {(board.percentageCompleted == 100) ?
+                        <button className="subject-complete-card" id={hexagonId}/> :
+                        <button className="groups-assigned subject-compsci myBoards-percentageCompleted" id={hexagonId}>
+                            <h4>{board.percentageCompleted}</h4>
+                        </button>
+                    }
+                    <aside>
+                        <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
+                        <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
+                    </aside>
+                </Row>
 
                 <div className="my-4">
                     <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{boardLink}</div></div>
@@ -286,17 +291,17 @@ export const MyGameboards = () => {
                             :
                             // Table view
                             <div>
-                                <Row className="align-content-center">
+                                <Row>
                                     <Col md={3}>
-                                        <Label>Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/></Label>
+                                        <Label>Filter boards <Input className="ml-2 mr-2 input-align" type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/></Label>
                                     </Col>
                                     <Col md={2}>
-                                        <Label>Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
+                                        <Label>Creator <Input className="ml-2 mr-2 input-align" type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
                                             {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
                                         </Input></Label>
                                     </Col>
                                     <Col md={2}>
-                                        <Label>Completion <Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as boardCompletions)}>
+                                        <Label>Completion <Input className="ml-2 mr-2 input-align" type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as boardCompletions)}>
                                             {Object.values(boardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
                                         </Input></Label>
                                     </Col>
@@ -335,7 +340,8 @@ export const MyGameboards = () => {
                                                 <tbody>
                                                     {boards.boards
                                                         .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
-                                                        && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")) // && (boardCompletionSelection(board, boardCompletion)
+                                                        && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                                                        && (boardCompletionSelection(board, boardCompletion))) // && (boardCompletionSelection(board, boardCompletion)
                                                         .map(board =>
                                                             <Board
                                                                 key={board.id}
