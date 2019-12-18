@@ -9,9 +9,9 @@ else
   VERSION_TO_DEPLOY="$1"
 fi
 
-BUILD_DIR=/tmp/isaacCSDeploy
+BUILD_DIR=/tmp/isaacAppsDeploy
 
-echo Building Isaac CS in $BUILD_DIR: $VERSION_TO_DEPLOY
+echo Building Isaac CS and Physics apps in $BUILD_DIR: $VERSION_TO_DEPLOY
 
 rm -rf $BUILD_DIR
 mkdir -p $BUILD_DIR
@@ -37,9 +37,14 @@ else
 fi
 
 npm install
-npm run build
-docker build -t "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION .
+#npm run build-cs
+#npm run build-phy
+npm run build # FIXME - remove this line!
+#docker build -t "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=cs .
+#docker build -t "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=physics .
+docker build -t "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION . # FIXME - remove this line!
 docker push "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}"
+#docker push "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}"
 
 cd ..
 rm -rf isaac-cs-app

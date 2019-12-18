@@ -1,6 +1,5 @@
-import React from "react";
+import React, {Dispatch} from "react";
 import {api} from "../services/api";
-import {Dispatch} from "react";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {store} from "./store";
@@ -9,7 +8,9 @@ import {
     API_REQUEST_FAILURE_MESSAGE,
     DOCUMENT_TYPE,
     MEMBERSHIP_STATUS,
-    TAG_ID
+    EventStatusFilter,
+    TAG_ID,
+    EventTypeFilter
 } from "../services/constants";
 import {
     Action,
@@ -32,7 +33,8 @@ import {
     AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
-    GameboardDTO, IsaacQuestionPageDTO,
+    GameboardDTO,
+    IsaacQuestionPageDTO,
     QuestionDTO,
     RegisteredUserDTO,
     Role,
@@ -56,7 +58,6 @@ import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
 import {isTeacher} from "../services/user";
 import ReactGA from "react-ga";
-import {StatusFilter, TypeFilter} from "../components/pages/Events";
 import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {atLeastOne} from "../services/validation";
@@ -1266,10 +1267,10 @@ export const getEvent = (eventId: string) => async (dispatch: Dispatch<Action>) 
     }
 };
 
-export const getEventsList = (startIndex: number, eventsPerPage: number, typeFilter: TypeFilter, statusFilter: StatusFilter) => async (dispatch: Dispatch<Action>) => {
-    const filterTags = typeFilter !== TypeFilter["All events"] ? typeFilter : null;
-    const showActiveOnly = statusFilter === StatusFilter["Upcoming events"];
-    const showBookedOnly = statusFilter === StatusFilter["My booked events"];
+export const getEventsList = (startIndex: number, eventsPerPage: number, typeFilter: EventTypeFilter, statusFilter: EventStatusFilter) => async (dispatch: Dispatch<Action>) => {
+    const filterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
+    const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
+    const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
     const showInactiveOnly = false;
     try {
         dispatch({type: ACTION_TYPE.EVENTS_REQUEST});

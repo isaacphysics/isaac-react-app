@@ -137,5 +137,5 @@ export const EventAttendance = ({user, eventId}: {user: LoggedInUser; eventId: s
                 </RS.Table>
             </div>
         </Accordion>}
-    </React.Fragment>
+    </React.Fragment>;
 };
