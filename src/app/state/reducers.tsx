@@ -235,7 +235,7 @@ export const fragments = (fragments: FragmentsState = null, action: Action) => {
     }
 };
 
-type GlossaryTermsState = Array<GlossaryTermDTO> | null;
+type GlossaryTermsState = GlossaryTermDTO[] | null;
 export const glossaryTerms = (glossaryTerms: GlossaryTermsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS:

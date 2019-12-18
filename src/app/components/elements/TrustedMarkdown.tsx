@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
-import {useDispatch, useStore, useSelector, Provider} from "react-redux";
+import React from "react";
+import {useStore, useSelector, Provider} from "react-redux";
 import * as RS from "reactstrap";
 import {Router} from "react-router-dom";
 import {AppState} from "../../state/reducers";
 import {MARKDOWN_RENDERER} from "../../services/constants";
 import {TrustedHtml} from "./TrustedHtml";
 import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";
-import {fetchGlossaryTerms} from "../../state/actions";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {escapeHtml, replaceEntities} from "remarkable/lib/common/utils";
 import {Token} from "remarkable";
@@ -27,7 +26,7 @@ MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* opt
     }
 };
 
-function getTermFromCandidateTerms(candidateTerms: Array<GlossaryTermDTO>): GlossaryTermDTO {
+function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]): GlossaryTermDTO {
     if (candidateTerms.length === 0) {
         throw Error();
     } else if (candidateTerms.length === 1) {
@@ -39,7 +38,6 @@ function getTermFromCandidateTerms(candidateTerms: Array<GlossaryTermDTO>): Glos
 }
 
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
-    const dispatch = useDispatch();
     const store = useStore();
     const userPreferences = useSelector((state: AppState) => state && state.userPreferences || null);
     const examBoard = determineExamBoardFrom(userPreferences);
@@ -49,9 +47,9 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
 
     // This tooltips array is necessary later on: it will contain
     // UncontrolledTooltip elements that cannot be pre-rendered as static HTML.
-    let tooltips: Array<JSX.Element> = [];
+    let tooltips: JSX.Element[] = [];
 
-    let filteredTerms: Array<GlossaryTermDTO> = [];
+    let filteredTerms: GlossaryTermDTO[] = [];
 
     // Matches strings such as
     // [glossary:glossary-demo|boolean-algebra]
@@ -63,7 +61,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     // which CAN be inlined. This is used to produce a hoverable element showing
     // the glossary term, and its definition in a tooltip.
     let glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z-|]+?)\s*(?:"(?<text>[A-Za-z0-9 ]+)")?\]/g;
-    let glossaryIDs: Array<string> = Array.from(new Set([
+    let glossaryIDs: string[] = Array.from(new Set([
         ...Array.from(markdown.matchAll(glossaryBlockRegexp)).map(m => m.groups && m.groups.id || ''),
         ...Array.from(markdown.matchAll(glossaryInlineRegexp)).map(m => m.groups && m.groups.id || ''),
     ]));
@@ -122,11 +120,6 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         });
     }
 
-    useEffect(() => {
-        if (!glossaryTerms) {
-            dispatch(fetchGlossaryTerms());
-        }
-    }, [glossaryTerms]);
     // RegEx replacements to match Latex inspired Isaac Physics functionality
     const regexRules = {
         "<span isaac-figure-ref='$2'></span>": /(~D)?\\ref{([^}]*)}(~D)?/g,

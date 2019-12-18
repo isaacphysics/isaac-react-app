@@ -38,7 +38,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.USER_PROGRESS_REQUEST}
-    | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, progress: UserProgress}
+    | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS; progress: UserProgress}
     | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
     | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
@@ -139,7 +139,7 @@ export type Action =
     | {type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE; id: string}
 
     | {type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST}
-    | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: Array<ApiTypes.GlossaryTermDTO>}
+    | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO}
@@ -151,7 +151,7 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>}
 
     | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: ApiTypes.ContentSummaryDTO[]}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
@@ -167,7 +167,7 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE; gameboardId: string | null}
 
     | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS, wildcards: ApiTypes.IsaacWildcard[]}
+    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS; wildcards: ApiTypes.IsaacWildcard[]}
     | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST}

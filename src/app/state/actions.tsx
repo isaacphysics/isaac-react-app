@@ -638,19 +638,15 @@ export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) 
 };
 
 // Glossary Terms
-export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const state = getState();
-    if (state && state.glossaryTerms && state.glossaryTerms.length > 0) {
-        return;
-    }
+export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST});
     try {
         const response = await api.glossary.getTerms();
-        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS, terms: response.data.results as Array<GlossaryTermDTO>});
+        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS, terms: response.data.results as GlossaryTermDTO[]});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE});
     }
-}
+};
 
 // Questions
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
