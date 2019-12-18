@@ -22,7 +22,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         "<span isaac-figure-ref='$2'></span>": /(~D)?\\ref{([^}]*)}(~D)?/g,
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
         "[**Glossary**](/glossary)": /\*\*Glossary\*\*/g,
-        "[**Concepts**](/concepts)": /\*\*Concepts\*\*/g,
+        // "[**Concepts**](/concepts)": /\*\*Concepts\*\*/g,
     };
     let regexProcessedMarkdown = markdown;
     Object.entries(regexRules).forEach(([replacement, rule]) =>
