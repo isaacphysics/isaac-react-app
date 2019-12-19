@@ -94,7 +94,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
             }
 
             const cssFriendlyTermId = (term.id as string).replace(/\|/g, '-');
-            const tooltipTargetId = `${componentUuid}-glossary-term-${cssFriendlyTermId}-${offset}`;
+            const tooltipTargetId = `glossary-${componentUuid}-${cssFriendlyTermId}-${offset}`;
             // This is properly horrible but it works...
             tooltips.push(
                 <RS.UncontrolledTooltip placement="bottom" target={tooltipTargetId}>
