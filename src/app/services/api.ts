@@ -174,6 +174,18 @@ export const api = {
             return endpoint.delete(`/authorisations/release/`);
         }
     },
+    glossary: {
+        getTerms: (): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.GlossaryTermDTO>> => {
+            // FIXME: Magic number. This needs to go through pagination with
+            // limit and start_index query parameters.
+            return endpoint.get('/glossary/terms', {
+                params: { limit: 10000 }
+            });
+        },
+        getTermById: (id: string): AxiosPromise<ApiTypes.GlossaryTermDTO> => {
+            return endpoint.get(`/glossary/terms/${id}`);
+        }
+    },
     questions: {
         get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
             return endpoint.get(`/pages/questions/${id}`);
