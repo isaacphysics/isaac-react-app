@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useState} from "react";
+import ReactDOMServer from "react-dom/server";
 import {useStore, useSelector, Provider} from "react-redux";
 import * as RS from "reactstrap";
 import {Router} from "react-router-dom";
@@ -9,10 +10,9 @@ import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {escapeHtml, replaceEntities} from "remarkable/lib/common/utils";
 import {Token} from "remarkable";
+import uuid from "uuid";
 import {history} from "../../services/history";
 import {determineExamBoardFrom} from "../../services/examBoard";
-
-import ReactDOMServer from "react-dom/server";
 
 // eslint-disable-next-line @typescript-eslint/camelcase
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
@@ -26,9 +26,9 @@ MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* opt
     }
 };
 
-function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]): GlossaryTermDTO {
+function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
     if (candidateTerms.length === 0) {
-        throw Error();
+        return null;
     } else if (candidateTerms.length === 1) {
         return candidateTerms[0];
     } else {
@@ -41,82 +41,67 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
     const userPreferences = useSelector((state: AppState) => state && state.userPreferences || null);
     const examBoard = determineExamBoardFrom(userPreferences);
-    const glossaryTerms = useSelector((state: AppState) => {
-        return state && state.glossaryTerms;
-    });
+    const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
+    const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));
 
     // This tooltips array is necessary later on: it will contain
     // UncontrolledTooltip elements that cannot be pre-rendered as static HTML.
-    let tooltips: JSX.Element[] = [];
+    const tooltips: JSX.Element[] = [];
 
-    let filteredTerms: GlossaryTermDTO[] = [];
+    // Matches strings such as [glossary:glossary-demo|boolean-algebra] which MUST be at the beginning of the line.
+    // This is used to render the full version of a glossary term using the IsaacGlossaryTerm component.
+    const glossaryBlockRegexp = /^\[glossary:(?<id>[a-z-|]+?)\]/gm;
 
-    // Matches strings such as
-    // [glossary:glossary-demo|boolean-algebra]
-    // which MUST be at the beginning of the line. This is used to render the
-    // full version of a glossary term using the IsaacGlossaryTerm component.
-    let glossaryBlockRegexp = /^\[glossary:(?<id>[a-z-|]+?)\]/gm;
-    // Matches strings such as [glossary-inline:glossary-demo|boolean-algebra]
-    // and [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"]
-    // which CAN be inlined. This is used to produce a hoverable element showing
-    // the glossary term, and its definition in a tooltip.
-    let glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z-|]+?)\s*(?:"(?<text>[A-Za-z0-9 ]+)")?\]/g;
-    let glossaryIDs: string[] = Array.from(new Set([
-        ...Array.from(markdown.matchAll(glossaryBlockRegexp)).map(m => m.groups && m.groups.id || ''),
-        ...Array.from(markdown.matchAll(glossaryInlineRegexp)).map(m => m.groups && m.groups.id || ''),
+    // Matches strings such as [glossary-inline:glossary-demo|boolean-algebra] and
+    // [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"] which CAN be inlined.
+    // This is used to produce a hoverable element showing the glossary term, and its definition in a tooltip.
+    const glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z-|]+?)\s*(?:"(?<text>[A-Za-z0-9 ]+)")?\]/g;
+
+    const glossaryIdsInMarkdown = Array.from(new Set([
+        ...Array.from(markdown.matchAll(glossaryBlockRegexp)).filter(m => m.groups && m.groups.id),
+        ...Array.from(markdown.matchAll(glossaryInlineRegexp)).filter(m => m.groups && m.groups.id),
     ]));
-    if (glossaryTerms && glossaryTerms.length > 0 && glossaryIDs.length > 0) {
-        filteredTerms = glossaryTerms.filter(t => {
-            let id = t.id || '';
-            return glossaryIDs.some(e => id.indexOf(e) === 0) && (t.examBoard === "" || t.examBoard === examBoard);
-        });
-        // Markdown can't cope with React components, so we pre-render our
-        // component to static HTML, which Markdown will then ignore. This
-        // requires a bunch of stuff to be passed down along with the component.
-        markdown = markdown.replace(glossaryBlockRegexp, (_match, id: string) => {
-            let candidateTerms = filteredTerms.filter(term => (term.id || '').indexOf(id) === 0);
-            let term: GlossaryTermDTO;
-            try {
-                term = getTermFromCandidateTerms(candidateTerms);
-            } catch (e) {
-                console.error('No valid term found among the candidates. Here are the filtered terms: ', filteredTerms);
-                return '';
+
+    if (glossaryTerms && glossaryTerms.length > 0 && glossaryIdsInMarkdown.length > 0) {
+        const filteredTerms = glossaryTerms.filter(term => term.examBoard === "" || term.examBoard === examBoard);
+
+        // Markdown can't cope with React components, so we pre-render our component to static HTML, which Markdown will then ignore.
+        // This requires a bunch of stuff to be passed down along with the component.
+        markdown = markdown.replace(glossaryBlockRegexp, (_match, id) => {
+            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string).startsWith(id)));
+            if (term === null) {
+                console.error('No valid term for "' + id + '" found among the filtered terms: ', filteredTerms);
+                return "";
             }
-            let string = ReactDOMServer.renderToStaticMarkup(
+
+            return ReactDOMServer.renderToStaticMarkup(
                 <Provider store={store}>
                     <Router history={history}>
-                        <IsaacGlossaryTerm doc={term} />
+                        <IsaacGlossaryTerm doc={term}/>
                     </Router>
                 </Provider>
             );
-            return string;
         });
-        // This is easier: we replace an inline glossary term with a <span>
-        // which is later targetted by Reactstrap's UncontrolledTooltip.
-        // The tooltip components can be rendered as regular react objects, so
-        // we just add them to an array, and return them inside the JSX.Element
-        // that is returned as TrustedMarkdown.
-        let i = 0; // Uniquify HTML ids for UncontrolledTooltip to work...
-                   // ... but don't uniquify them too much with random numbers.
-        markdown = markdown.replace(glossaryInlineRegexp, (_match, id: string, text: string) => {
-            let candidateTerms = filteredTerms.filter(term => (term.id || '').indexOf(id) === 0);
-            let term: GlossaryTermDTO;
-            try {
-                term = getTermFromCandidateTerms(candidateTerms);
-            } catch (e) {
-                console.error('No valid term found among the candidates. Here are the filtered terms: ', filteredTerms);
-                return '';
+
+        // This is easier: we replace an inline glossary term with a <span> which is later targeted by ReactStrap's UncontrolledTooltip.
+        // The tooltip components can be rendered as regular react objects, so we just add them to an array,
+        // and return them inside the JSX.Element that is returned as TrustedMarkdown.
+        markdown = markdown.replace(glossaryInlineRegexp, (_match, id, text, offset) => {
+            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string).startsWith(id)));
+            if (term === null) {
+                console.error('No valid term for "' + id + '" found among the filtered terms: ', filteredTerms);
+                return "";
             }
-            let elementId = `glossary-term-id-${term && term.id && term.id.replace(/\|/g, '-')}-${++i}`;
-            let displayString = text || term.value;
+
+            const cssFriendlyTermId = (term.id as string).replace(/\|/g, '-');
+            const tooltipTargetId = `${componentUuid}-glossary-term-${cssFriendlyTermId}-${offset}`;
             // This is properly horrible but it works...
             tooltips.push(
-                <RS.UncontrolledTooltip placement="bottom" target={elementId}>
+                <RS.UncontrolledTooltip placement="bottom" target={tooltipTargetId}>
                     <TrustedMarkdown markdown={term.explanation && term.explanation.value || ''} />
                 </RS.UncontrolledTooltip>
             );
-            let string = `<span class="inline-glossary-term" id="${elementId}">${displayString}</span>`;
-            return string;
+            return `<span class="inline-glossary-term" id="${tooltipTargetId}">${text || term.value}</span>`;
         });
     }
 
