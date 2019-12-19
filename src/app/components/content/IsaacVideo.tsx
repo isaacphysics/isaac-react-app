@@ -66,11 +66,16 @@ const IsaacVideoComponent = (props: IsaacVideoProps) => {
         }
     }, [logAction, pageId]);
 
-    return <div className="content-value text-center">
-        { src ?
-            <iframe ref={videoRef} className="mw-100" title={altText} width="614" height="390" src={rewrite(src)} frameBorder="0" allowFullScreen/>
-            : altText
-        }
+    return <div>
+        <div className="no-print content-value text-center">
+            { src ?
+                <iframe ref={videoRef} className="mw-100" title={altText} width="614" height="390" src={rewrite(src)} frameBorder="0" allowFullScreen/>
+                : altText
+            }
+        </div>
+        <div className="only-print">
+            Video source: {altText || "No text description available"}
+        </div>
     </div>;
 };
 

@@ -3,7 +3,7 @@ import * as RS from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {Col, Container, Row} from "reactstrap";
-import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
+import {fetchDoc, goToSupersededByQuestion, setPrintingHints} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
@@ -26,6 +26,7 @@ interface QuestionPageProps {
 export const Question = withRouter(({questionIdOverride, match}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
     const [questionShareOpen, setQuestionShareOpen] = useState(false);
+    const [questionPrintOpen, setQuestionPrintOpen] = useState(false);
     const doc = useSelector((state: AppState) => state ? state.doc : null);
     const user = useSelector((state: AppState) => state && state.user);
     const segueEnvironment = useSelector((state: AppState) =>
@@ -50,27 +51,54 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     collectionType={navigation.collectionType}
                 />
-                <RS.Row>
+                <RS.Row className="no-print">
                     {segueEnvironment === "DEV" && doc.canonicalSourceFile &&
                         <EditContentButton canonicalSourceFile={EDITOR_URL + doc.canonicalSourceFile} />
                     }
-                    <div className="question-share mt-3">
+                    <div className="question-actions question-actions-leftmost mt-3">
                         <input
                             type="image"
                             src="/assets/share.svg"
                             alt='Show/Hide the question share link'
-                            className="question-share-icon"
+                            className="question-actions-icon"
                             onClick={() => setQuestionShareOpen(!questionShareOpen)}/>
-                        {questionShareOpen && <div className="question-share-link-box">
-                            <div className="question-share-link">
+                        {questionShareOpen && <div className="question-actions-link-box">
+                            <div className="question-actions-link">
                                 {`${window.location.origin}/questions/${questionId}`}
                             </div>
                         </div>}
                     </div>
+                    <div className="question-actions mt-3">
+                        <input
+                            type="image"
+                            src="/assets/print.svg"
+                            alt='Show/Hide the question print buttons'
+                            className="question-actions-icon"
+                            onClick={() => setQuestionPrintOpen(!questionPrintOpen)}/>
+                        {questionPrintOpen && <div className="question-actions-link-box">
+                            <div className="question-actions-link">
+                                <button
+                                    className="a-alt btn btn-link btn-sm"
+                                    onClick={() => {
+                                        dispatch(setPrintingHints(true));
+                                        setTimeout(window.print, 100);
+                                    }}
+                                >With hints</button>
+                                /
+                                <button
+                                    className="a-alt btn btn-link btn-sm"
+                                    onClick={() => {
+                                        dispatch(setPrintingHints(false));
+                                        setTimeout(window.print, 100);
+                                    }}
+                                >Without hints</button>
+                            </div>
+                        </div>}
+                    </div>
                 </RS.Row>
-                <Row>
+                <Row className="question-content-container">
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
-                        <AnonUserExamBoardPicker className="text-right"/>
+                        <AnonUserExamBoardPicker className=" no-print text-right"/>
 
                         {doc.supersededBy && !isStudent(user) && <div className="alert alert-primary">
                             {isTeacher(user) && <React.Fragment>
