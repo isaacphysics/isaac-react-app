@@ -1325,6 +1325,17 @@ export const getEventBookings = (eventId: string) => async (dispatch: Dispatch<A
     }
 };
 
+export const getEventBookingCSV = (eventId: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST});
+        const response = await api.eventBookings.getEventBookingCSV(eventId);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_SUCCESS, eventBookingCSV: response.data});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load event booking csv", error) as any);
+    }
+};
+
 export const bookMyselfOnEvent = (eventId: string, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_REQUEST});

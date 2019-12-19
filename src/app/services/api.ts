@@ -391,6 +391,9 @@ export const api = {
         recordEventAttendance: (eventId: string, userId: number, attendance: ATTENDANCE) => {
             const attended = attendance === ATTENDANCE.ATTENDED;
             return endpoint.post(`/events/${eventId}/bookings/${userId}/record_attendance?attended=${attended}`);
+        },
+        getEventBookingCSV: (eventId: string) => {
+            return endpoint.get(`/events/${eventId}/bookings/download`);
         }
     },
     logger: {
