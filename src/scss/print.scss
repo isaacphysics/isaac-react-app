@@ -1,6 +1,10 @@
 @media print {
-  // Fix one page print cut off in Firefox
-  div#root, .question-content-container {
+  div#root {
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  .question-content-container {
     display: block !important;
   }
 
@@ -56,6 +60,12 @@
   .parsons-available-items {
     flex: 0 0 100%;
     max-width: 100%;
+  }
+
+  .content-value {
+    .row {
+      display: block !important;
+    }
   }
 }
 
