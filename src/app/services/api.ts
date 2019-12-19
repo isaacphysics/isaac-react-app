@@ -346,6 +346,17 @@ export const api = {
                 Object.assign(params, {filter: eventOverviewFilter})
             }
             return endpoint.get('/events/overview', {params});
+        },
+        getEventMapData: (
+            startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
+            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
+        ): AxiosPromise<{results: AppTypes.EventMapData[]; totalResults: number}> => {
+            /* eslint-disable @typescript-eslint/camelcase */
+            return endpoint.get(`/events/map_data`, {params: {
+                start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
+                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
+            }});
+            /* eslint-enable @typescript-eslint/camelcase */
         }
     },
     eventBookings: {

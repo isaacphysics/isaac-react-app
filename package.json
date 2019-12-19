@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/core": "7.2.2",
+    "@react-google-maps/api": "^1.8.1",
     "@svgr/webpack": "^4.2.0",
     "@types/classnames": "^2.2.6",
     "@types/enzyme": "^3.9.1",

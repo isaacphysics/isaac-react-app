@@ -23,3 +23,17 @@
     }
   }
 }
+
+#events-map {
+  height: 400px;
+}
+
+.event-map-info {
+  .link {
+    color: $primary
+  }
+
+  .heading {
+    text-underline-mode: none;
+  }
+}

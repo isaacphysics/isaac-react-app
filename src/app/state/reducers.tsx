@@ -18,7 +18,8 @@ import {
     Toast,
     UserPreferencesDTO,
     UserProgress,
-    UserSchoolLookup
+    UserSchoolLookup,
+    EventMapData
 } from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
@@ -436,6 +437,18 @@ export const eventOverviews = (eventOverviews: EventOverviewsState = null, actio
     }
 };
 
+type EventMapDataState = EventMapData[] | null;
+export const eventMapData = (eventMapData: EventMapDataState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_MAP_DATA_REQUEST:
+            return null;
+        case ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS:
+            return [...action.eventMapData];
+        default:
+            return eventMapData;
+    }
+};
+
 
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const error = (error: ErrorState = null, action: Action): ErrorState => {
@@ -771,6 +784,7 @@ const appReducer = combineReducers({
     events,
     currentEvent,
     eventOverviews,
+    eventMapData,
     eventBookings,
     fragments
 });
@@ -808,6 +822,7 @@ export type AppState = undefined | {
     events: EventsState;
     currentEvent: CurrentEventState;
     eventOverviews: EventOverviewsState;
+    eventMapData: EventMapDataState;
     eventBookings: EventBookingsState;
     fragments: FragmentsState;
 }
