@@ -31,14 +31,16 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermPr
         }
     }, [hash, anchorId]);
 
-    return (doc.examBoard == '' || examBoard === doc.examBoard) && <Row className="glossary_term">
-        <Col md={3}>
-            <p id={anchorId}><strong>{doc.value}</strong></p>
-        </Col>
-        <Col>
-            {doc.explanation && <IsaacContent doc={doc.explanation} />}
-        </Col>
-    </Row>;
+    return <React.Fragment>
+        {(doc.examBoard == '' || examBoard === doc.examBoard) && <Row className="glossary_term">
+            <Col md={3}>
+                <p id={anchorId}><strong>{doc.value}</strong></p>
+            </Col>
+            <Col>
+                {doc.explanation && <IsaacContent doc={doc.explanation} />}
+            </Col>
+        </Row>}
+    </React.Fragment>;
 };
 
 export const IsaacGlossaryTerm = withRouter(IsaacGlossaryTermComponent);
