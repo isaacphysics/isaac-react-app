@@ -44,7 +44,7 @@ const baseTags: BaseTag[] = [
     // Computer networks topics
     {id: TAG_ID.networking, title: "Networking", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
     {id: TAG_ID.networkHardware, title: "Network hardware", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.internet, title: "Internet", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.theInternet, title: "The internet", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
     {id: TAG_ID.security, title: "Security", parent: TAG_ID.computerNetworks, comingSoon: 'Apr 2020'},
     {id: TAG_ID.communication, title: "Communication (AQA)", parent: TAG_ID.computerNetworks, comingSoon: 'Apr 2020'},
     // Computer systems topics

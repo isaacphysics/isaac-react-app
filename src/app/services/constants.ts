@@ -411,7 +411,7 @@ export enum TAG_ID {
     networking = "networking",
     networkHardware = "network_hardware",
     communication = "communication",
-    internet = "internet",
+    theInternet = "the_internet",
     // Computer systems topics
     booleanLogic = "boolean_logic",
     architecture = "architecture",
