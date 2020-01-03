@@ -130,10 +130,10 @@ export const NavigationBar = () => {
                             Suggested teaching
                         </DropdownItem>
                         <DropdownItem tag={Link} to="/pages/specification_page_aqa" className="pl-4 py-3 p-md-3">
-                            AQA Syllabus view
+                            AQA specification view
                         </DropdownItem>
                         <DropdownItem tag={Link} to="/pages/specification_page_ocr" className="pl-4 py-3 p-md-3">
-                            OCR Syllabus view
+                            OCR specification view
                         </DropdownItem>
                     </DropdownMenu>
                 </UncontrolledDropdown>
