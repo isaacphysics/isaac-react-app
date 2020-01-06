@@ -75,7 +75,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.programmingFundamentals, comingSoon: 'Apr 2020'},
     // Programming paradigms topics:
     {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programmingParadigms, new: true},
-    {id: TAG_ID.functionalProgramming, title: "Functional programming", parent: TAG_ID.programmingParadigms, new: true},
+    {id: TAG_ID.functionalProgramming, title: "Functional programming (AQA)", parent: TAG_ID.programmingParadigms, new: true},
     // Software project topics
     {id: TAG_ID.softwareProject, title: "Software project", parent: TAG_ID.computingPracticalProject},
 ];
