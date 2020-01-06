@@ -218,9 +218,7 @@ export const updateCurrentUser = (
     }
 };
 
-export const setAnonUser = (currentExamBoardPreference: EXAM_BOARD) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_SET_FOR_ANON, currentExamBoardPreference});
-};
+export const setTempExamBoard = (examBoard: EXAM_BOARD) => ({type: ACTION_TYPE.EXAM_BOARD_SET_TEMP, examBoard});
 
 export const getProgress = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PROGRESS_REQUEST});

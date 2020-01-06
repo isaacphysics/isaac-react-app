@@ -16,7 +16,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
 import {ShortcutResponses} from "../../../IsaacAppTypes";
 import {filterOnExamBoard, useCurrentExamBoard} from "../../services/examBoard";
-import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
+import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {isStaff} from "../../services/user";
 
 
@@ -121,7 +121,7 @@ export const Search = withRouter((props: {history: History; location: Location})
                                     <Label className="d-none d-sm-inline-block">Filter</Label>
                                     <Label><CustomInput id="problem-search" type="checkbox" defaultChecked={searchFilterProblems} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterProblems(e.target.checked)} />Search problems</Label>
                                     <Label><CustomInput id="concept-search" type="checkbox" defaultChecked={searchFilterConcepts} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterConcepts(e.target.checked)} />Search concepts</Label>
-                                    <Label><AnonUserExamBoardPicker className="text-right" /></Label>
+                                    <Label><TempExamBoardPicker className="text-right" /></Label>
                                 </Form>
                             </Col>
                         </RS.CardHeader>

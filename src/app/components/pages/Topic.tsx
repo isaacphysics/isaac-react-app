@@ -11,7 +11,7 @@ import {filterAndSeparateRelatedContent} from "../../services/topics";
 import {Button, Col, Container, Row} from "reactstrap";
 import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
+import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {atLeastOne} from "../../services/validation";
 import {useCurrentExamBoard} from "../../services/examBoard";
 
@@ -44,7 +44,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }
-                    <AnonUserExamBoardPicker className="text-right" />
+                    <TempExamBoardPicker className="text-right" />
 
                     {relatedConcepts && atLeastOne(relatedConcepts.length) &&
                         <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />

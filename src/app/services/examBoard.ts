@@ -5,9 +5,9 @@ import {AppState} from "../state/reducers";
 
 export const useCurrentExamBoard = () => {
     const user = useSelector((state: AppState) => state && state.user);
-    const currentExamBoardPreference = useSelector((state: AppState) => state && state.currentExamBoardPreference);
+    const tempExamBoardPreference = useSelector((state: AppState) => state && state.tempExamBoard);
     if (!user || user.examBoard == undefined || user.examBoard == EXAM_BOARD.OTHER) {
-        return currentExamBoardPreference || EXAM_BOARD.OCR;
+        return tempExamBoardPreference || EXAM_BOARD.OCR;
     } else {
         return user.examBoard;
     }

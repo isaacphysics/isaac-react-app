@@ -364,13 +364,13 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
     }
 };
 
-export type CurrentExamBoardPreferenceState = EXAM_BOARD | null;
-export const currentExamBoardPreference = (currentExamBoardPreference: CurrentExamBoardPreferenceState = null, action: Action) => {
+export type TempExamBoardState = EXAM_BOARD | null;
+export const tempExamBoard = (tempExamBoard: TempExamBoardState = null, action: Action) => {
     switch (action.type) {
-        case ACTION_TYPE.USER_SET_FOR_ANON:
-            return action.currentExamBoardPreference;
+        case ACTION_TYPE.EXAM_BOARD_SET_TEMP:
+            return action.examBoard;
         default:
-            return currentExamBoardPreference;
+            return tempExamBoard;
     }
 };
 
@@ -777,7 +777,7 @@ const appReducer = combineReducers({
     questions,
     currentTopic,
     currentGameboard,
-    currentExamBoardPreference,
+    tempExamBoard,
     wildcards,
     gameboardEditorQuestions,
     assignments,
@@ -815,7 +815,7 @@ export type AppState = undefined | {
     questions: QuestionsState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
-    currentExamBoardPreference: CurrentExamBoardPreferenceState;
+    tempExamBoard: TempExamBoardState;
     wildcards: WildcardsState;
     gameboardEditorQuestions: GameboardEditorQuestionsState;
     assignments: AssignmentsState;
