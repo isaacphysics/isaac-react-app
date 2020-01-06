@@ -17,14 +17,14 @@ import {allTagIds, getSubcategoryTags} from "../../../services/tags";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
-import {determineExamBoardFrom} from "../../../services/examBoard";
+import {useCurrentExamBoard} from "../../../services/examBoard";
 
 interface QuestionSearchModalProps {
     originalSelectedQuestions: Map<string, ContentSummaryDTO>;
     setOriginalSelectedQuestions: (m: Map<string, ContentSummaryDTO>) => void;
     originalQuestionOrder: string[];
     setOriginalQuestionOrder: (a: string[]) => void;
-    eventLog: any[];
+    eventLog: object[];
 }
 
 export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
@@ -41,6 +41,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     const questions = useSelector((state: AppState) => state && state.gameboardEditorQuestions);
     const user = useSelector((state: AppState) => state && state.user);
+    const examBoard = useCurrentExamBoard();
 
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], levels: string[], examBoard: string[], fasttrack: boolean, startIndex: number) => {
@@ -61,7 +62,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     };
 
     useMemo(() => {
-        setSearchExamBoards([examBoardTagMap[determineExamBoardFrom(user)]]);
+        setSearchExamBoards([examBoardTagMap[examBoard]]);
     }, [user]);
 
     useEffect(() => {

@@ -12,7 +12,7 @@ import {escapeHtml, replaceEntities} from "remarkable/lib/common/utils";
 import {Token} from "remarkable";
 import uuid from "uuid";
 import {history} from "../../services/history";
-import {determineCurrentExamBoard} from "../../services/examBoard";
+import {useCurrentExamBoard} from "../../services/examBoard";
 
 // eslint-disable-next-line @typescript-eslint/camelcase
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
@@ -39,9 +39,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
-    const user = useSelector((state: AppState) => state && state.user || null);
-    const currentExamBoardPreference = useSelector((state: AppState) => state && state.currentExamBoardPreference);
-    const examBoard = determineCurrentExamBoard(user, currentExamBoardPreference);
+    const examBoard = useCurrentExamBoard();
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));

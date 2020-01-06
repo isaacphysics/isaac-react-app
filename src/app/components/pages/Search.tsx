@@ -1,47 +1,33 @@
 import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {withRouter} from "react-router-dom";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {Col, Container, CustomInput, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {fetchSearch} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {ContentSummaryDTO, ResultsWrapper} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
-import {LoggedInUser, ShortcutResponses} from "../../../IsaacAppTypes";
-import {determineExamBoardFrom, filterOnExamBoard} from "../../services/examBoard";
+import {ShortcutResponses} from "../../../IsaacAppTypes";
+import {filterOnExamBoard, useCurrentExamBoard} from "../../services/examBoard";
 import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
 import {isStaff} from "../../services/user";
 
-const stateToProps = (state: AppState) => {
-    return {
-        searchResults: state && state.search && state.search.searchResults || null,
-        user: state && state.user || null,
-    };
-};
-const dispatchToProps = {fetchSearch};
 
-
-interface SearchPageProps {
-    searchResults: ResultsWrapper<ContentSummaryDTO> | null;
-    user: LoggedInUser | null;
-    history: History;
-    location: Location;
-    fetchSearch: (query: string, types: string) => void;
-}
-
-const SearchPageComponent = (props: SearchPageProps) => {
-    const {searchResults, user, location, history, fetchSearch} = props;
+export const Search = withRouter((props: {history: History; location: Location}) => {
+    const {location, history} = props;
+    const dispatch = useDispatch();
+    const searchResults = useSelector((state: AppState) => state && state.search && state.search.searchResults || null);
+    const user = useSelector((state: AppState) => state && state.user || null);
+    const examBoard = useCurrentExamBoard();
 
     const searchParsed = queryString.parse(location.search);
-
-    const examBoard = determineExamBoardFrom(user);
 
     const queryParsed = searchParsed.query || "";
     const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
@@ -62,7 +48,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
             setSearchText(query);
             setSearchFilterProblems(problems);
             setSearchFilterConcepts(concepts);
-            fetchSearch(query, calculateSearchTypes(problems, concepts));
+            dispatch(fetchSearch(query, calculateSearchTypes(problems, concepts)));
         },
         [query, problems, concepts]
     );
@@ -151,6 +137,4 @@ const SearchPageComponent = (props: SearchPageProps) => {
             </Row>
         </Container>
     );
-};
-
-export const Search = withRouter(connect(stateToProps, dispatchToProps)(SearchPageComponent));
+});

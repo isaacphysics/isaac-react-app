@@ -6,8 +6,8 @@ import he from "he";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
-import {determineCurrentExamBoard} from "../../services/examBoard";
 import {EXAM_BOARD} from "../../services/constants";
+import {useCurrentExamBoard} from "../../services/examBoard";
 
 type MathJaxMacro = string|[string, number];
 
@@ -198,7 +198,7 @@ function munge(latex: string) {
         .replace(/\\newline/g, "\\\\");
 }
 
-export function katexify(html: string, user: LoggedInUser | null, currentExamBoardPreference: EXAM_BOARD | null, screenReaderHoverText: boolean) {
+export function katexify(html: string, user: LoggedInUser | null, examBoard: EXAM_BOARD | null, screenReaderHoverText: boolean) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -222,7 +222,7 @@ export function katexify(html: string, user: LoggedInUser | null, currentExamBoa
                 const latexUnEntitied = he.decode(latex);
                 const latexMunged = munge(latexUnEntitied);
                 let macrosToUse = KatexMacrosWithMathsBool;
-                if (determineCurrentExamBoard(user, currentExamBoardPreference) == EXAM_BOARD.AQA) {
+                if (examBoard == EXAM_BOARD.AQA) {
                     macrosToUse = KatexMacrosWithEngineeringBool;
                 }
                 let katexOptions = {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse};
@@ -293,10 +293,9 @@ function manipulateHtml(html: string) {
 
 export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
     const user = useSelector((state: AppState) => state && state.user || null);
-    const currentExamBoardPreference = useSelector((state: AppState) => state && state.currentExamBoardPreference);
-    const examBoard = determineCurrentExamBoard(user, currentExamBoardPreference);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
+    const examBoard = useCurrentExamBoard();
 
     html = manipulateHtml(katexify(html, user, examBoard, screenReaderHoverText));
 

@@ -1,16 +1,11 @@
 import {EXAM_BOARD, examBoardTagMap} from "./constants";
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
-import {LoggedInUser} from "../../IsaacAppTypes";
+import {useSelector} from "react-redux";
+import {AppState} from "../state/reducers";
 
-export const determineExamBoardFrom = (user: LoggedInUser | null | undefined) => {
-    if (!user || user.examBoard == undefined || user.examBoard == EXAM_BOARD.OTHER) {
-        return EXAM_BOARD.OCR;
-    } else {
-        return user.examBoard;
-    }
-};
-
-export const determineCurrentExamBoard = (user: LoggedInUser | null | undefined, currentExamBoardPreference: EXAM_BOARD | null | undefined): EXAM_BOARD => {
+export const useCurrentExamBoard = () => {
+    const user = useSelector((state: AppState) => state && state.user);
+    const currentExamBoardPreference = useSelector((state: AppState) => state && state.currentExamBoardPreference);
     if (!user || user.examBoard == undefined || user.examBoard == EXAM_BOARD.OTHER) {
         return currentExamBoardPreference || EXAM_BOARD.OCR;
     } else {

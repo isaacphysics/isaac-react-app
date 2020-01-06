@@ -7,7 +7,7 @@ import {AppState} from "../state/reducers";
 import {determineGameboardHistory, determineNextGameboardItem, makeAttemptAtGameboardHistory} from "./gameboards";
 import {NOT_FOUND, TAG_ID} from "./constants";
 import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopicHistory} from "./topics";
-import {determineCurrentExamBoard} from "./examBoard";
+import {useCurrentExamBoard} from "./examBoard";
 
 export interface LinkInfo {title: string; to: string}
 export type CollectionType = "Gameboard" | "Topic";
@@ -34,8 +34,7 @@ export const useNavigation = (currentDocId: string): PageNavigation => {
 
     const currentGameboard = useSelector((state: AppState) => state && state.currentGameboard);
     const currentTopic = useSelector((state: AppState) => state && state.currentTopic);
-    const user = useSelector((state: AppState) => state && state.user);
-    const currentExamBoardPreference = useSelector((state: AppState) => state && state.currentExamBoardPreference);
+    const examBoard = useCurrentExamBoard();
 
     if (queryParams.board) {
         const gameboardHistory = (currentGameboard && currentGameboard != 404 && queryParams.board === currentGameboard.id) ?
@@ -51,7 +50,6 @@ export const useNavigation = (currentDocId: string): PageNavigation => {
     }
 
     if (queryParams.topic) {
-        const examBoard = determineCurrentExamBoard(user, currentExamBoardPreference);
         const topicHistory = (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && queryParams.topic === currentTopic.id.slice("topic_summary_".length)) ?
             determineTopicHistory(currentTopic) :
             makeAttemptAtTopicHistory();
