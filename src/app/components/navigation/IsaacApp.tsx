@@ -21,7 +21,7 @@ import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
 import {NotFound} from "../pages/NotFound";
-import {requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
+import {fetchGlossaryTerms, requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
@@ -71,6 +71,7 @@ export const IsaacApp = () => {
     useEffect(() => {
         dispatch(requestCurrentUser());
         dispatch(requestConstantsSegueEnvironment());
+        dispatch(fetchGlossaryTerms());
     }, []);
 
     // Render

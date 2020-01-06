@@ -41,7 +41,8 @@ import {
     Role,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
+    UserSummaryWithEmailAddressDTO,
+    GlossaryTermDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -634,6 +635,17 @@ export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) 
         dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS, id, doc: response.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE, id});
+    }
+};
+
+// Glossary Terms
+export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST});
+    try {
+        const response = await api.glossary.getTerms();
+        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS, terms: response.data.results as GlossaryTermDTO[]});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE});
     }
 };
 
@@ -1311,6 +1323,17 @@ export const getEventBookings = (eventId: string) => async (dispatch: Dispatch<A
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
+    }
+};
+
+export const getEventBookingCSV = (eventId: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST});
+        const response = await api.eventBookings.getEventBookingCSV(eventId);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_SUCCESS, eventBookingCSV: response.data});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load event booking csv", error) as any);
     }
 };
 

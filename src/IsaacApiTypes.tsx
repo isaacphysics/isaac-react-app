@@ -207,6 +207,11 @@ export interface ChoiceDTO extends ContentDTO {
 export interface ChoiceQuestionDTO extends QuestionDTO {
 }
 
+export interface GlossaryTermDTO extends ContentDTO {
+    explanation?: ContentDTO;
+    examBoard: string;
+}
+
 export interface ContentBaseDTO {
     id?: string;
     type?: string;
@@ -426,6 +431,11 @@ export interface Location {
 export interface ExternalReference {
     title?: string;
     url?: string;
+}
+
+export interface GlossaryTerm extends Content {
+    explanation?: Content;
+    examBoard: string;
 }
 
 export interface ContentBase {
