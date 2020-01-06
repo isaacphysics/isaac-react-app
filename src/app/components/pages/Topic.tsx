@@ -74,7 +74,7 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                                 <span className="d-none d-md-inline">Back to</span> {" "} All topics
                             </Button>
                         </Col>
-                        {topicName != TAG_ID.softwareProject && <Col size={6} className="text-center">
+                        {relatedQuestions && atLeastOne(relatedQuestions.length) && <Col size={6} className="text-center">
                             <Button tag={Link} to={`/gameboards#${topicName}_july19_${examBoard.toLowerCase()}`} color="secondary" size="lg" className="my-4" block>
                                 Topic gameboard
                             </Button>
