@@ -1,5 +1,5 @@
 import {closeActiveModal, updateCurrentUser} from "../../../state/actions";
-import React, {ChangeEvent, useState} from "react";
+import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "../panels/UserEmailPreferences";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
@@ -19,7 +19,6 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {EXAM_BOARD} from "../../../services/constants";
-import {Input} from "reactstrap";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -81,10 +80,10 @@ const RequiredAccountInfoBody = () => {
                             <RS.Label className="d-inline-block pr-2 form-required" htmlFor="exam-board-select">
                                 Exam board
                             </RS.Label>
-                            <Input
+                            <RS.Input
                                 type="select" name="select" id="exam-board-select"
                                 value={userToUpdate.examBoard}
-                                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                                onChange={event =>
                                     setUserToUpdate(
                                         Object.assign({}, userToUpdate, {examBoard: event.target.value})
                                     )
@@ -94,7 +93,7 @@ const RequiredAccountInfoBody = () => {
                                 <option value={EXAM_BOARD.OTHER}>Other</option>
                                 <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                                 <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
-                            </Input>
+                            </RS.Input>
                         </RS.FormGroup>
                     </div>}
                 </RS.Col>}
