@@ -60,6 +60,13 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                     {relatedQuestions && atLeastOne(relatedQuestions.length) &&
                         <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
                     }
+                    {(!relatedQuestions || !atLeastOne(relatedQuestions.length)) &&
+                        (!relatedConcepts || !atLeastOne(relatedConcepts.length)) && <div className='text-center py-3'>
+                        <div className='alert alert-warning'>
+                            There is no material in this topic for the {examBoard} exam board.
+                        </div>
+                    </div>
+                    }
 
                     <Row>
                         <Col size={6} className="text-center">
