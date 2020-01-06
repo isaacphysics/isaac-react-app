@@ -14,7 +14,7 @@ import {DOCUMENT_TYPE} from "../../services/constants";
 import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
-import {LoggedInUser, ShortcutResponses, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {LoggedInUser, ShortcutResponses} from "../../../IsaacAppTypes";
 import {determineExamBoardFrom, filterOnExamBoard} from "../../services/examBoard";
 import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
 import {isStaff} from "../../services/user";
@@ -23,7 +23,6 @@ const stateToProps = (state: AppState) => {
     return {
         searchResults: state && state.search && state.search.searchResults || null,
         user: state && state.user || null,
-        userPreferences: state ? state.userPreferences : null
     };
 };
 const dispatchToProps = {fetchSearch};
@@ -31,7 +30,6 @@ const dispatchToProps = {fetchSearch};
 
 interface SearchPageProps {
     searchResults: ResultsWrapper<ContentSummaryDTO> | null;
-    userPreferences: UserPreferencesDTO | null;
     user: LoggedInUser | null;
     history: History;
     location: Location;
@@ -39,7 +37,7 @@ interface SearchPageProps {
 }
 
 const SearchPageComponent = (props: SearchPageProps) => {
-    const {searchResults, user, location, history, fetchSearch, userPreferences} = props;
+    const {searchResults, user, location, history, fetchSearch} = props;
 
     const searchParsed = queryString.parse(location.search);
 

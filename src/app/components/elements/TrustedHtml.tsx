@@ -5,7 +5,7 @@ import renderA11yString from '../../services/katex-a11y';
 import he from "he";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
-import {connect} from "react-redux";
+import {useSelector} from "react-redux";
 import {determineCurrentExamBoard} from "../../services/examBoard";
 import {EXAM_BOARD} from "../../services/constants";
 
@@ -198,7 +198,7 @@ function munge(latex: string) {
         .replace(/\\newline/g, "\\\\");
 }
 
-export function katexify(html: string, user: LoggedInUser | null, currentExamBoardPreference: EXAM_BOARD | null) {
+export function katexify(html: string, user: LoggedInUser | null, currentExamBoardPreference: EXAM_BOARD | null, screenReaderHoverText: boolean) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -240,7 +240,7 @@ export function katexify(html: string, user: LoggedInUser | null, currentExamBoa
                 katexRenderResult = katexRenderResult.replace('<span class="katex">',
                     `<span class="katex"><span class="sr-only">${screenreaderText}</span>`);
 
-                if (userPreferences && userPreferences.BETA_FEATURE && userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT) {
+                if (screenReaderHoverText) {
                     katexRenderResult = katexRenderResult.replace('<span class="katex">',
                         `<span class="katex" title="${screenreaderText.replace(/,/g, "").replace(/\s\s+/g, " ")}">`);
                 }
@@ -291,25 +291,15 @@ function manipulateHtml(html: string) {
     return htmlDom.innerHTML;
 }
 
-const stateToProps = (state: AppState) => ({
-    user: state ? state.user : null,
-    currentExamBoardPreference: state ? state.currentExamBoardPreference : null
-});
+export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
+    const user = useSelector((state: AppState) => state && state.user || null);
+    const currentExamBoardPreference = useSelector((state: AppState) => state && state.currentExamBoardPreference);
+    const examBoard = determineCurrentExamBoard(user, currentExamBoardPreference);
+    const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
+        state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
 
-interface TrustedHtmlProps {
-    html: string;
-    span?: boolean;
-    user: LoggedInUser | null;
-    currentExamBoardPreference: EXAM_BOARD | null;
-}
+    html = manipulateHtml(katexify(html, user, examBoard, screenReaderHoverText));
 
-let TrustedHtmlComponent = ({html, span, user, currentExamBoardPreference}: TrustedHtmlProps) => {
-    html = manipulateHtml(katexify(html, user, currentExamBoardPreference));
-    if (span) {
-        return <span dangerouslySetInnerHTML={{__html: html}} />;
-    } else {
-        return <div dangerouslySetInnerHTML={{__html: html}} />;
-    }
+    const ElementType = span ? "span" : "div";
+    return <ElementType dangerouslySetInnerHTML={{__html: html}} />;
 };
-
-export const TrustedHtml = connect(stateToProps)(TrustedHtmlComponent);

@@ -6,7 +6,7 @@ import {AppState} from "../../state/reducers";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
-import {determineExamBoardFrom} from "../../services/examBoard";
+import {determineCurrentExamBoard} from "../../services/examBoard";
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
@@ -16,8 +16,9 @@ interface IsaacGlossaryTermProps {
 // TODO add figure counting and linking
 const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermProps) => {
     let anchorId: string | undefined = doc.id && doc.id.split('|')[1];
-    const userPreferences = useSelector((state: AppState) => state && state.userPreferences || null);
-    const examBoard = determineExamBoardFrom(userPreferences);
+    const user = useSelector((state: AppState) => state && state.user || null);
+    const currentExamBoardPreference = useSelector((state: AppState) => state && state.currentExamBoardPreference);
+    const examBoard = determineCurrentExamBoard(user, currentExamBoardPreference);
 
     useEffect(() => {
         if (hash.includes("#")) {
