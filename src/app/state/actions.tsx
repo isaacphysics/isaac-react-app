@@ -112,6 +112,9 @@ function showErrorToastIfNeeded(error: string, e: any) {
                 }) as any;
             }
         } else {
+            ReactGA.exception({
+                description: `load_fail: ${error}`
+            });
             return showToast({
                 color: "danger", title: error, timeout: 5000,
                 body: API_REQUEST_FAILURE_MESSAGE
