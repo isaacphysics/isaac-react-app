@@ -14,7 +14,7 @@ import {useCurrentExamBoard} from "../../services/examBoard";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
-    let r: { currentAttempt?: LogicFormulaDTO | null; examBoard? : EXAM_BOARD | null } = {};
+    let r: {currentAttempt?: LogicFormulaDTO | null} = {};
     if (questionPart) {
         r.currentAttempt = questionPart.currentAttempt;
     }
@@ -32,7 +32,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
-    const examBoard = useCurrentExamBoard(); //TODO double check that this works in this case
+    const examBoard = useCurrentExamBoard();
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
