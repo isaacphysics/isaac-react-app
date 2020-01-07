@@ -2,7 +2,6 @@ import React, {useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
-    Alert,
     Card,
     CardFooter,
     Col,
@@ -21,7 +20,8 @@ import {AppState, ErrorState} from "../../state/reducers";
 import {resetPassword, updateCurrentUser} from "../../state/actions";
 import {
     LoggedInUser,
-    LoggedInValidationUser, SubjectInterests,
+    LoggedInValidationUser,
+    SubjectInterests,
     UserEmailPreferences,
     UserExamPreferences,
     UserPreferencesDTO
@@ -33,7 +33,9 @@ import {
     isDobOverThirteen,
     validateEmail,
     validateEmailPreferences,
-    validatePassword, validateSubjectInterests, validateUserGender,
+    validatePassword,
+    validateSubjectInterests,
+    validateUserGender,
     validateUserSchool
 } from "../../services/validation";
 import queryString from "query-string";
@@ -42,9 +44,6 @@ import {ACCOUNT_TAB} from "../../services/constants";
 import {history} from "../../services/history"
 import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import * as persistence from "../../services/localStorage";
-import {KEY} from "../../services/localStorage";
-import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateToProps = (state: AppState, props: any) => {
@@ -183,7 +182,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.passwordreset})} tabIndex={0}
                             onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                         >
-                            <span className="d-none d-lg-block">Change Password</span>
+                            <span className="d-none d-lg-block">Change password</span>
                             <span className="d-block d-lg-none">Password</span>
                         </NavLink>
                     </NavItem>
@@ -192,7 +191,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.teacherconnections})} tabIndex={0}
                             onClick={() => setActiveTab(ACCOUNT_TAB.teacherconnections)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.teacherconnections))}
                         >
-                            <span className="d-none d-lg-block d-md-block">Teacher Connections</span>
+                            <span className="d-none d-lg-block d-md-block">Teacher connections</span>
                             <span className="d-block d-md-none">Connections</span>
                         </NavLink>
                     </NavItem>
@@ -201,7 +200,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.emailpreferences})} tabIndex={0}
                             onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.emailpreferences))}
                         >
-                            <span className="d-none d-lg-block">Email Preferences</span>
+                            <span className="d-none d-lg-block">Email preferences</span>
                             <span className="d-block d-lg-none">Emails</span>
                         </NavLink>
                     </NavItem>

@@ -21,7 +21,7 @@ import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
 import {NotFound} from "../pages/NotFound";
-import {requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
+import {fetchGlossaryTerms, requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
@@ -72,6 +72,7 @@ export const IsaacApp = () => {
     useEffect(() => {
         dispatch(requestCurrentUser());
         dispatch(requestConstantsSegueEnvironment());
+        dispatch(fetchGlossaryTerms());
     }, []);
 
     // Render
@@ -127,7 +128,7 @@ export const IsaacApp = () => {
 
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
-                    <TrackedRoute exact path="/admin/usermanager" ifUser={isAdmin} component={AdminUserManager} />
+                    <TrackedRoute exact path="/admin/usermanager" ifUser={isAdminOrEventManager} component={AdminUserManager} />
                     <TrackedRoute exact path="/admin/events" ifUser={user => isAdminOrEventManager(user) || isEventLeader(user)} component={EventManager} />
                     <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
                     <TrackedRoute exact path="/admin/content_errors" ifUser={isStaff} component={AdminContentErrors} />

@@ -2,6 +2,8 @@ import {SortOrder, tagExamboardMap} from "./constants";
 import {orderBy} from "lodash";
 import {getDescendents, Tag} from "./tags";
 import {ContentSummaryDTO, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
+import {Dispatch, SetStateAction} from "react";
+import {ValueType} from "react-select/src/types";
 
 export const sortQuestions = (sortState: { [s: string]: string }) => (questions: ContentSummaryDTO[]) => {
     if (sortState["title"] && sortState["title"] != SortOrder.NONE) {
@@ -88,6 +90,15 @@ export const groupTagSelectionsByParent = (parent: Tag) => {
 
 export const convertExamBoardToOption = (examBoard: string) => {
     return {value: examBoard, label: tagExamboardMap[examBoard]};
+};
+
+export const multiSelectOnChange = (setValue: Dispatch<SetStateAction<string[]>>) => (e: ValueType<{value: string; label: string}>) => {
+    if (e && (e as {value: string; label: string}[]).map) {
+        const arr = e as {value: string; label: string}[];
+        setValue(arr.map((item) => item.value));
+    } else {
+        setValue([]);
+    }
 };
 
 export const loadGameboardQuestionOrder = (gameboard: GameboardDTO) => {

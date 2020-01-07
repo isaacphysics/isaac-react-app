@@ -32,7 +32,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
             <Table className="mb-0">
                 <thead>
                     <tr>
-                        <th>Email Type</th>
+                        <th>Email type</th>
                         <th className="d-none d-sm-table-cell">Description</th>
                         <th className="text-center">Preference</th>
                     </tr>
@@ -41,7 +41,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     <tr>
                         <td className="form-required">News</td>
                         <td className="d-none d-sm-table-cell">
-                            Content updates, new website features, and other interesting news as it happens.
+                            Be the first to know about new topics, new platform features, and our fantastic competition giveaways.
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
@@ -54,7 +54,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     <tr>
                         <td className="form-required">Assignments</td>
                         <td className="d-none d-sm-table-cell">
-                            A notification when your teacher sets a new group assignment.
+                            If you&apos;re a student, set this to &lsquo;Yes&rsquo; to receive assignment notifications from your teacher.
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
@@ -67,7 +67,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     <tr>
                         <td className="form-required">Events</td>
                         <td className="d-none d-sm-table-cell">
-                            Information about our events around England.
+                            Get valuable updates on our free student workshops/teacher CPD events happening near you.
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
