@@ -31,8 +31,10 @@
 }
 
 .myBoards-percentageCompleted h4{
-  font-size: 2em;
+  font-size: 1.5em;
   text-align: center;
+  position: relative;
+  top: 5px
 }
 
 .myBoards-percentageCompleted h4::after {
@@ -48,9 +50,9 @@
 }
 
 .myBoardsTable-percentageCompleted h4{
-  font-size: 2em;
+  font-size: 1.5em;
   text-align: center;
-  top: -22px;
+  top: -15px;
   position: relative;
 }
 
