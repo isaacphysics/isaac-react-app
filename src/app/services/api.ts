@@ -1,5 +1,5 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
+import {API_PATH, MEMBERSHIP_STATUS, TAG_ID, EventTypeFilter} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
@@ -7,14 +7,14 @@ import {
     ActualBoardLimit,
     AdditionalInformation,
     ATTENDANCE,
-    BoardOrder, EmailUserRoles,
+    BoardOrder,
+    EmailUserRoles,
     LoggedInUser,
     QuestionSearchQuery,
     QuestionSearchResponse,
     UserPreferencesDTO
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
-import {TypeFilter} from "../components/pages/Events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 
 export const endpoint = axios.create({
@@ -174,6 +174,18 @@ export const api = {
             return endpoint.delete(`/authorisations/release/`);
         }
     },
+    glossary: {
+        getTerms: (): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.GlossaryTermDTO>> => {
+            // FIXME: Magic number. This needs to go through pagination with
+            // limit and start_index query parameters.
+            return endpoint.get('/glossary/terms', {
+                params: { limit: 10000 }
+            });
+        },
+        getTermById: (id: string): AxiosPromise<ApiTypes.GlossaryTermDTO> => {
+            return endpoint.get(`/glossary/terms/${id}`);
+        }
+    },
     questions: {
         get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
             return endpoint.get(`/pages/questions/${id}`);
@@ -322,7 +334,7 @@ export const api = {
             return endpoint.get(`/events/${eventId}`);
         },
         getEvents: (
-            startIndex: number, eventsPerPage: number, filterEventsByType: TypeFilter | null,
+            startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
             showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
             /* eslint-disable @typescript-eslint/camelcase */
@@ -385,6 +397,9 @@ export const api = {
         recordEventAttendance: (eventId: string, userId: number, attendance: ATTENDANCE) => {
             const attended = attendance === ATTENDANCE.ATTENDED;
             return endpoint.post(`/events/${eventId}/bookings/${userId}/record_attendance?attended=${attended}`);
+        },
+        getEventBookingCSV: (eventId: string) => {
+            return endpoint.get(`/events/${eventId}/bookings/download`);
         }
     },
     logger: {

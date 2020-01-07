@@ -37,12 +37,14 @@ else
 fi
 
 npm install
-npm run build-cs
-npm run build-phy
-docker build -t "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=cs .
-docker build -t "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=physics .
+#npm run build-cs
+#npm run build-phy
+npm run build # FIXME - remove this line!
+#docker build -t "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=cs .
+#docker build -t "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=physics .
+docker build -t "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION . # FIXME - remove this line!
 docker push "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}"
-docker push "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}"
+#docker push "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}"
 
 cd ..
 rm -rf isaac-cs-app

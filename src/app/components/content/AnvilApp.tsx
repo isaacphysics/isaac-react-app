@@ -44,7 +44,7 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
             appParams["problem_type"] = parentQuestion.type;
         }
         if (parentQuestion.bestAttempt && parentQuestion.bestAttempt.correct) {
-            appParams["problem_previously_correct"] = parentQuestion.bestAttempt.correct.toString()
+            appParams["problem_previously_correct"] = parentQuestion.bestAttempt.correct.toString();
         }
     }
 
