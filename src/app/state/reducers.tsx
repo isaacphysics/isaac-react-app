@@ -35,7 +35,8 @@ import {
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO
+    UserSummaryWithGroupMembershipDTO,
+    GlossaryTermDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
@@ -233,6 +234,17 @@ export const fragments = (fragments: FragmentsState = null, action: Action) => {
             return fragments;
     }
 };
+
+type GlossaryTermsState = GlossaryTermDTO[] | null;
+export const glossaryTerms = (glossaryTerms: GlossaryTermsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS:
+            return action.terms;
+        case ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE:
+        default:
+            return glossaryTerms;
+    }
+}
 
 export const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {
@@ -772,7 +784,8 @@ const appReducer = combineReducers({
     currentEvent,
     eventOverviews,
     eventBookings,
-    fragments
+    fragments,
+    glossaryTerms
 });
 
 export type AppState = undefined | {
@@ -810,6 +823,7 @@ export type AppState = undefined | {
     eventOverviews: EventOverviewsState;
     eventBookings: EventBookingsState;
     fragments: FragmentsState;
+    glossaryTerms: GlossaryTermsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {
