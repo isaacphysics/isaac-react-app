@@ -27,6 +27,7 @@ import {sortIcon, STUDENTS_CRUMB} from "../../services/constants";
 import {formatBoardOwner, boardCompletionSelection} from "../../services/gameboards";
 import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
+import {Redirect} from "react-router";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -251,26 +252,28 @@ export const MyGameboards = () => {
             <React.Fragment>
                 {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} saved...</h4>}
                 {!boards && <h4>You have <Spinner size="sm" /> saved gameboards...</h4>}
-                <Form inline className="input-options input-align" onSubmit={e => e.preventDefault()}>
-                    <span className="flex-grow-1" />
-                    <Col md={4}>
-                        <Label className="input-align">Display in <Input className="ml-2 mr-2 input-align" type="select" value={boardView} onChange={e => switchView(e)}>
-                            {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
-                        </Input></Label>
-                    </Col>
+                <Col>
                     {boardView !== boardViews.table &&
-                        <Col md={2}>
-                            <Label className="input-align">Show <Input className="ml-2 mr-2 input-align" type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
-                                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
-                            </Input></Label>
-                        </Col>}
-                    {boardView !== boardViews.table &&
-                        <Col md={4}>
-                            <Label className="input-align">Sort by <Input className="ml-2 mr-2 input-align" type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
-                                {Object.values(BoardOrder).map(order => <option key={order} value={order}>{orderName(order)}</option>)}
-                            </Input></Label>
-                        </Col>}
-                </Form>
+                    <Row>
+                        <Form inline className="input-options input-align" onSubmit={e => e.preventDefault()}>
+                            <Col md={3} lg={3}>
+                                <Label className="input-align">Display in <Input className="ml-2 mr-2 input-align" type="select" value={boardView} onChange={e => switchView(e)}>
+                                    {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                                </Input></Label>
+                            </Col>
+                            <Col md={3} lg={3}>
+                                <Label className="input-align">Show <Input className="ml-2 mr-2 input-align" type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                                    {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+                                </Input></Label>
+                            </Col>
+                            <Col md={4} lg={4}>
+                                <Label className="input-align">Sort by <Input className="ml-2 mr-2 input-align" type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
+                                    {Object.values(BoardOrder).map(order => <option key={order} value={order}>{orderName(order)}</option>)}
+                                </Input></Label>
+                            </Col>
+                        </Form>
+                    </Row>}
+                </Col>
                 <ShowLoading until={boards}>
                     {boards && boards.boards && <div>
                         {boardView == boardViews.card ?
@@ -297,9 +300,13 @@ export const MyGameboards = () => {
                             :
                             // Table view
                             <div>
-                                <Row/>
-                                <Col md={12}>
+                                <Col md={12} lg={12}>
                                     <Row>
+                                        <Col md={2} lg={2}>
+                                            <Label className="input-align">Display in <Input className="ml-2 mr-2 input-align" type="select" value={boardView} onChange={e => switchView(e)}>
+                                                {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                                            </Input></Label>
+                                        </Col>
                                         <Col md={2}>
                                             <Label className="input-align">Filter boards <Input className="ml-2 mr-2 input-align" type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/></Label>
                                         </Col>
