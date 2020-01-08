@@ -2,8 +2,9 @@ import React, {useState} from "react";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {api} from "../../services/api";
 import * as RS from "reactstrap";
-import {ChoiceDTO, FreeTextRuleDTO, TestCaseDTO} from "../../../IsaacApiTypes";
+import {FreeTextRuleDTO, TestCaseDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 interface AugmentedTestCase extends TestCaseDTO {
     match?: boolean;
@@ -68,14 +69,15 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
     const numberOfMatches = Object.values(augmentedTestCaseOutputMap).filter(testCase => testCase.match).length;
 
     return <RS.Container>
-        <RS.Card>
+        <TitleAndBreadcrumb currentPageTitle="Free-text question builder" />
+        <RS.Card className="my-5">
             <RS.CardBody>
                 <RS.Form onSubmit={async (event: React.FormEvent) => {
                     if (event) {event.preventDefault();}
                     const p = await api.tests.freeTextRules(choices, testCaseInputs);
                     setTestCaseOutputs(p.data);
                 }}>
-                    <h2>Question choices</h2>
+                    <h2>Matching rules</h2>
                     <RS.ListGroup>
                         {choices.map(choice => <RS.ListGroupItem key={JSON.stringify(choice)}>
                             <RS.Input type="text" value={choice.value} />
@@ -83,15 +85,15 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                         </RS.ListGroupItem>)}
                     </RS.ListGroup>
 
-                    <h2>Test cases</h2>
+                    <h2>Test answers</h2>
                     <RS.Table>
                         <thead>
                             <tr>
                                 <th>Value</th>
                                 <th className="w-10 text-center">Expected</th>
-                                <th className="w-10 text-center">Actual</th>
-                                <th className="w-20">Feedback</th>
-                                <th className="w-10 text-center">Match</th>
+                                <th className="bg-light w-10 text-center">Actual</th>
+                                <th className="bg-light w-20">Feedback</th>
+                                <th className="bg-light w-10 text-center">Match</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -104,13 +106,13 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                     <td className="w-10 text-center">
                                         {testCaseInput.expected !== undefined && (testCaseInput.expected ? "✔️" : "❌")}
                                     </td>
-                                    <td className="w-10 text-center">
+                                    <td className="bg-light w-10 text-center">
                                         {testCaseOutput && testCaseOutput.actual !== undefined && (testCaseOutput.actual ? "✔️" : "❌")}
                                     </td>
-                                    <td>
+                                    <td className="bg-light">
                                         {testCaseOutput && testCaseOutput.explanation && <IsaacContent doc={testCaseOutput.explanation} />}
                                     </td>
-                                    <td className="w-10 text-center">
+                                    <td className="bg-light w-10 text-center">
                                         {testCaseOutput && testCaseOutput.actual !== undefined && (testCaseOutput.expected == testCaseOutput.actual ? "✔️" : "❌")}
                                     </td>
                                 </tr>;
