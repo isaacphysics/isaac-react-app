@@ -40,7 +40,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms},
     {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms},
     {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.theoryOfComputation, title: "Theory of computation", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
+    {id: TAG_ID.theoryOfComputation, title: "Theory of computation (AQA)", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
     // Computer networks topics
     {id: TAG_ID.networking, title: "Networking", parent: TAG_ID.computerNetworks, new: true},
     {id: TAG_ID.networkHardware, title: "Network hardware", parent: TAG_ID.computerNetworks, new: true},
