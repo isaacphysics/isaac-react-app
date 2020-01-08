@@ -34,7 +34,8 @@
   font-size: 1.5em;
   text-align: center;
   position: relative;
-  top: 5px
+  top: 5px;
+  right: -0.25rem;
 }
 
 .myBoards-percentageCompleted h4::after {
@@ -53,6 +54,7 @@
   font-size: 1.5em;
   text-align: center;
   top: -15px;
+  right: -0.25rem;
   position: relative;
 }
 
@@ -61,7 +63,6 @@
   content: '%';
   position: relative;
   top: -20px;
-
 }
 
 .subject-physics {
@@ -192,6 +193,7 @@
   float: right;
   position: relative;
   margin-right: 10px;
+  margin-left: 10px;
   background-color: transparent;
 }
 

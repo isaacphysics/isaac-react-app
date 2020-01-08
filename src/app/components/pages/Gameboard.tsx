@@ -68,21 +68,23 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
         }
     }, [gameboard]);
 
-    const userButtons = user && isTeacher(user) ? <RS.Row className="col-8 offset-2">
-        <RS.Col className="mt-4">
-            <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                Set as assignment
-            </RS.Button>
-        </RS.Col>
-        <RS.Col className="mt-4">
-            <RS.Button
-                tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}}
-                color="primary" block outline
-            >
-                Duplicate and edit
-            </RS.Button>
-        </RS.Col>
-    </RS.Row>:
+    const userButtons = user && isTeacher(user) ?
+        <RS.Row className="col-8 offset-2">
+            <RS.Col className="mt-4">
+                <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
+                    Set as assignment
+                </RS.Button>
+            </RS.Col>
+            <RS.Col className="mt-4">
+                <RS.Button
+                    tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}}
+                    color="primary" block outline
+                >
+                    Duplicate and edit
+                </RS.Button>
+            </RS.Col>
+        </RS.Row>
+        :
         <RS.Row className="col-4 offset-2 offset-md-4">
             <RS.Col className="mt-4">
                 <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">

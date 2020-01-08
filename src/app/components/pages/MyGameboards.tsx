@@ -12,7 +12,7 @@ import {
     Col,
     Container,
     CustomInput,
-    Form,
+    Form, FormGroup,
     Input,
     Label,
     Row,
@@ -121,18 +121,22 @@ const Board = (props: BoardTableProps) => {
                 <td><div className="subject-compsci-table groups-assigned myBoardsTable-percentageCompleted" id={hexagonId}>
                     <h4>{board.percentageCompleted}</h4>
                 </div></td>}
-            <td><a href={boardLink}>{board.title}</a></td>
-            {/*<td className="text-center">{board.levels.join(' ')}</td>*/}
-            <td className="text-center">{formatBoardOwner(user, board)}</td>
-            <td className="text-center">{formatDate(board.creationDate)}</td>
-            <td className="text-center">{formatDate(board.lastVisited)}</td>
-            <td><div className={`share-link-table ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{boardLink}</div></div>
+            <td className="align-middle"><a href={boardLink}>{board.title}</a></td>
+            {/*<td className="text-center align-middle">{board.levels.join(' ')}</td>*/}
+            <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
+            <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
+            <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
+            <td className="align-middle">
+                <div className={`share-link-table ${showShareLink ? "d-block" : ""}`}>
+                    <div ref={shareLink}>{boardLink}</div>
+                </div>
                 <button className="ru_share" onClick={toggleShareLink}/></td>
             <td><CustomInput id={`board-delete-${board.id}`} type="checkbox" checked={board && (selectedBoards.some(e => e.id === board.id))}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     board && updateBoardSelection(board, event.target.checked)
                 }} aria-label="Delete gameboard"/></td>
-        </tr>:
+        </tr>
+        :
         <Card className="board-card card-neat">
             <CardBody className="pb-4 pt-4">
                 <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
@@ -180,19 +184,15 @@ export const MyGameboards = () => {
     const [boardCreator, setBoardCreator] = useState<boardCreators>(boardCreators.all);
     const [boardCompletion, setBoardCompletion] = useState<boardCompletions>(boardCompletions.any);
 
-    useEffect(() => {
-        console.log(boardCompletion)
-    }, [boardCompletion]);
-
     let actualBoardLimit: ActualBoardLimit = toActual(boardLimit);
 
     function loadInitial() {
         dispatch(loadBoards(0, actualBoardLimit, boardOrder));
         setLoading(true);
     }
-    useEffect( loadInitial, [boardOrder]);
+    useEffect(loadInitial, [boardOrder]);
 
-    useEffect( () => {
+    useEffect(() => {
         actualBoardLimit = toActual(boardLimit);
         loadInitial();
     }, [boardLimit]);
@@ -212,7 +212,7 @@ export const MyGameboards = () => {
         }
     }
 
-    function switchView(e: any) {
+    function switchView(e: React.ChangeEvent<HTMLInputElement>) {
         setSelectedBoards([]);
         setBoardView(e.target.value as boardViews);
     }
@@ -245,35 +245,42 @@ export const MyGameboards = () => {
         A summary of your gameboards
     </span>;
 
-    // @ts-ignore
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="My gameboards" intermediateCrumbs={[STUDENTS_CRUMB]} help={pageHelp} />
-        {boards && boards.totalResults == 0 ? <h3 className="text-center mt-4 mb-5">You have no gameboards to view.</h3> :
+        {boards && boards.totalResults == 0 ?
+            <h3 className="text-center mt-4 mb-5">You have no gameboards to view.</h3>
+            :
             <React.Fragment>
-                {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} saved...</h4>}
-                {!boards && <h4>You have <Spinner size="sm" /> saved gameboards...</h4>}
-                <Col>
-                    {boardView !== boardViews.table &&
-                    <Row>
-                        <Form inline className="input-options input-align" onSubmit={e => e.preventDefault()}>
-                            <Col md={3} lg={3}>
-                                <Label className="input-align">Display in <Input className="ml-2 mr-2 input-align" type="select" value={boardView} onChange={e => switchView(e)}>
+                <div className="mt-4 mb-2">
+                    {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} saved...</h4>}
+                    {!boards && <h4>You have <Spinner size="sm" /> saved gameboards...</h4>}
+                </div>
+                <div>
+                    {boardView !== boardViews.table && <Row>
+                        <Col sm={6} lg={3} xl={2}>
+                            <Label className="w-100">
+                                Display in <Input type="select" value={boardView} onChange={switchView}>
                                     {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
-                                </Input></Label>
-                            </Col>
-                            <Col md={3} lg={3}>
-                                <Label className="input-align">Show <Input className="ml-2 mr-2 input-align" type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                                </Input>
+                            </Label>
+                        </Col>
+                        <div className="d-lg-none w-100" />
+                        <Col xs={6} lg={{size: 2, offset: 3}} xl={{size: 2, offset: 4}}>
+                            <Label className="w-100">
+                                Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
-                                </Input></Label>
-                            </Col>
-                            <Col md={4} lg={4}>
-                                <Label className="input-align">Sort by <Input className="ml-2 mr-2 input-align" type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
+                                </Input>
+                            </Label>
+                        </Col>
+                        <Col xs={6} lg={4}>
+                            <Label className="w-100">
+                                Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
                                     {Object.values(BoardOrder).map(order => <option key={order} value={order}>{orderName(order)}</option>)}
-                                </Input></Label>
-                            </Col>
-                        </Form>
+                                </Input>
+                            </Label>
+                        </Col>
                     </Row>}
-                </Col>
+                </div>
                 <ShowLoading until={boards}>
                     {boards && boards.boards && <div>
                         {boardView == boardViews.card ?
@@ -292,7 +299,7 @@ export const MyGameboards = () => {
                                         />
                                     </div>)}
                                 </div>
-                                <div className="text-center mt-2 mb-4" style={{clear: "both"}}>
+                                <div className="text-center mt-2 mb-5" style={{clear: "both"}}>
                                     <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
                                     {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
                                 </div>
@@ -300,57 +307,68 @@ export const MyGameboards = () => {
                             :
                             // Table view
                             <div>
-                                <Col md={12} lg={12}>
-                                    <Row>
-                                        <Col md={2} lg={2}>
-                                            <Label className="input-align">Display in <Input className="ml-2 mr-2 input-align" type="select" value={boardView} onChange={e => switchView(e)}>
+                                <Row>
+                                    <Col sm={6} lg={3} xl={2}>
+                                        <Label className="w-100">
+                                            Display in <Input type="select" value={boardView} onChange={e => switchView(e)}>
                                                 {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
-                                            </Input></Label>
-                                        </Col>
-                                        <Col md={2}>
-                                            <Label className="input-align">Filter boards <Input className="ml-2 mr-2 input-align" type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/></Label>
-                                        </Col>
-                                        <Col md={2}>
-                                            <Label className="input-align">Creator <Input className="ml-2 mr-2 input-align" type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
-                                                {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-                                            </Input></Label>
-                                        </Col>
-                                        <Col md={2}>
-                                            <Label className="input-align">Completion <Input className="ml-2 mr-2 input-align" type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as boardCompletions)}>
-                                                {Object.values(boardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
-                                            </Input></Label>
-                                        </Col>
-                                        <Col md={3}>
-                                            {selectedBoards && selectedBoards.length > 0 && <div className="m-0"><Button className="float-right mt-4" onClick={confirmDeleteMultipleBoards}>Delete ({selectedBoards.length})</Button></div>}
-                                        </Col>
-                                    </Row>
-                                </Col>
-                                <Card className="my-2 mt-2 mb-4">
+                                            </Input>
+                                        </Label>
+                                    </Col>
+                                </Row>
+                                <Card className="mt-2 mb-5">
                                     <CardBody id="boards-table">
-                                        <div className="overflow-auto">
+                                        <Row>
+                                            <Col lg={5}>
+                                                <Label className="w-100">
+                                                    Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
+                                                </Label>
+                                            </Col>
+                                            <Col sm={6} lg={{size: 2, offset: 3}}>
+                                                <Label className="w-100">
+                                                    Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
+                                                        {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+                                                    </Input>
+                                                </Label>
+                                            </Col>
+                                            <Col sm={6} lg={2}>
+                                                <Label className="w-100">
+                                                    Completion <Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as boardCompletions)}>
+                                                        {Object.values(boardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
+                                                    </Input>
+                                                </Label>
+                                            </Col>
+                                        </Row>
+
+                                        <div className="overflow-auto mt-3">
                                             <Table className="mb-0">
                                                 <thead>
                                                     <tr>
-                                                        <th>Completion</th>
-                                                        <th className="pointer-cursor">
+                                                        <th className="align-middle">Completion</th>
+                                                        <th className="align-middle pointer-cursor">
                                                             <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
                                                                 Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                                                             </button>
                                                         </th>
                                                         {/*<th className="text-center">Levels</th>*/}
-                                                        <th className="text-center">Creator</th>
-                                                        <th className="text-center pointer-cursor">
+                                                        <th className="text-center align-middle">Creator</th>
+                                                        <th className="text-center align-middle pointer-cursor">
                                                             <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
                                                                 Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
                                                             </button>
                                                         </th>
-                                                        <th className="text-center pointer-cursor">
+                                                        <th className="text-center align-middle pointer-cursor">
                                                             <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
                                                                 Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
                                                             </button>
                                                         </th>
-                                                        <th></th>
-                                                        <th></th>
+                                                        <th colSpan={2}>
+                                                            <div className="text-right align-middle">
+                                                                <Button disabled={selectedBoards.length == 0} className="btn-sm" onClick={confirmDeleteMultipleBoards}>
+                                                                    {`Delete (${selectedBoards.length})`}
+                                                                </Button>
+                                                            </div>
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
