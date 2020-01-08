@@ -27,6 +27,7 @@ import {sortIcon, STUDENTS_CRUMB} from "../../services/constants";
 import {formatBoardOwner, boardCompletionSelection} from "../../services/gameboards";
 import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
+import {Redirect} from "react-router";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -100,8 +101,8 @@ const Board = (props: BoardTableProps) => {
                     const selection = window.getSelection();
                     const range = document.createRange();
                     range.selectNodeContents(shareLink.current);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
+                    selection && selection.removeAllRanges();
+                    selection && selection.addRange(range);
                 }
             });
         }
@@ -132,21 +133,19 @@ const Board = (props: BoardTableProps) => {
                     board && updateBoardSelection(board, event.target.checked)
                 }} aria-label="Delete gameboard"/></td>
         </tr>:
-        <Card className="board-card">
+        <Card className="board-card card-neat">
             <CardBody className="pb-4 pt-4">
                 <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
-                <Row>
-                    {(board.percentageCompleted == 100) ?
-                        <button className="subject-complete-card" id={hexagonId}/> :
-                        <button className="groups-assigned subject-compsci myBoards-percentageCompleted" id={hexagonId}>
-                            <h4>{board.percentageCompleted}</h4>
-                        </button>
-                    }
-                    <aside>
-                        <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
-                        <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                    </aside>
-                </Row>
+                {(board.percentageCompleted == 100) ?
+                    <button className="subject-complete-card" id={hexagonId}/> :
+                    <button className="groups-assigned subject-compsci myBoards-percentageCompleted" id={hexagonId}>
+                        <h4>{board.percentageCompleted}</h4>
+                    </button>
+                }
+                <aside>
+                    <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
+                    <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
+                </aside>
 
                 <div className="my-4">
                     <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{boardLink}</div></div>
@@ -253,62 +252,79 @@ export const MyGameboards = () => {
             <React.Fragment>
                 {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} saved...</h4>}
                 {!boards && <h4>You have <Spinner size="sm" /> saved gameboards...</h4>}
-                <Form inline className="input-options input-align" onSubmit={e => e.preventDefault()}>
-                    <span className="flex-grow-1" />
-                    <Label>Display in <Input className="ml-2 mr-2 input-align" type="select" value={boardView} onChange={e => switchView(e)}>
-                        {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
-                    </Input></Label>
+                <Col>
                     {boardView !== boardViews.table &&
-                        <Col md={2}>
-                            <Label className="input-align">Show <Input className="ml-2 mr-2 input-align" type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
-                                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
-                            </Input></Label>
-                        </Col>}
-                    {boardView !== boardViews.table &&
-                        <Col md={4}>
-                            <Label className="input-align">Sort by <Input className="ml-2 mr-2 input-align" type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
-                                {Object.values(BoardOrder).map(order => <option key={order} value={order}>{orderName(order)}</option>)}
-                            </Input></Label>
-                        </Col>}
-                </Form>
+                    <Row>
+                        <Form inline className="input-options input-align" onSubmit={e => e.preventDefault()}>
+                            <Col md={3} lg={3}>
+                                <Label className="input-align">Display in <Input className="ml-2 mr-2 input-align" type="select" value={boardView} onChange={e => switchView(e)}>
+                                    {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                                </Input></Label>
+                            </Col>
+                            <Col md={3} lg={3}>
+                                <Label className="input-align">Show <Input className="ml-2 mr-2 input-align" type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                                    {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+                                </Input></Label>
+                            </Col>
+                            <Col md={4} lg={4}>
+                                <Label className="input-align">Sort by <Input className="ml-2 mr-2 input-align" type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
+                                    {Object.values(BoardOrder).map(order => <option key={order} value={order}>{orderName(order)}</option>)}
+                                </Input></Label>
+                            </Col>
+                        </Form>
+                    </Row>}
+                </Col>
                 <ShowLoading until={boards}>
                     {boards && boards.boards && <div>
                         {boardView == boardViews.card ?
                             // Card view
-                            <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
-                                {boards.boards.map(board => <div key={board.id}>
-                                    <Board
-                                        key={board.id}
-                                        board={board}
-                                        selectedBoards={selectedBoards}
-                                        setSelectedBoards={setSelectedBoards}
-                                        boardView={boardView}
-                                        user={user}
-                                        boards={boards}
-                                    />
-                                </div>)}
+                            <div>
+                                <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
+                                    {boards.boards.map(board => <div key={board.id}>
+                                        <Board
+                                            key={board.id}
+                                            board={board}
+                                            selectedBoards={selectedBoards}
+                                            setSelectedBoards={setSelectedBoards}
+                                            boardView={boardView}
+                                            user={user}
+                                            boards={boards}
+                                        />
+                                    </div>)}
+                                </div>
+                                <div className="text-center mt-2 mb-4" style={{clear: "both"}}>
+                                    <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
+                                    {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
+                                </div>
                             </div>
                             :
                             // Table view
                             <div>
-                                <Row className="input-align">
-                                    <Col md={3}>
-                                        <Label className="input-align">Filter boards <Input className="ml-2 mr-2" type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/></Label>
-                                    </Col>
-                                    <Col md={2}>
-                                        <Label className="input-align">Creator <Input className="ml-2 mr-2" type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
-                                            {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-                                        </Input></Label>
-                                    </Col>
-                                    <Col md={2}>
-                                        <Label className="input-align">Completion <Input className="ml-2 mr-2" type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as boardCompletions)}>
-                                            {Object.values(boardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
-                                        </Input></Label>
-                                    </Col>
-                                    <Col md={5}>
-                                        {selectedBoards && selectedBoards.length > 0 && <div className="m-0"><Button className="float-right mt-4" onClick={confirmDeleteMultipleBoards}>Delete ({selectedBoards.length})</Button></div>}
-                                    </Col>
-                                </Row>
+                                <Col md={12} lg={12}>
+                                    <Row>
+                                        <Col md={2} lg={2}>
+                                            <Label className="input-align">Display in <Input className="ml-2 mr-2 input-align" type="select" value={boardView} onChange={e => switchView(e)}>
+                                                {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                                            </Input></Label>
+                                        </Col>
+                                        <Col md={2}>
+                                            <Label className="input-align">Filter boards <Input className="ml-2 mr-2 input-align" type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/></Label>
+                                        </Col>
+                                        <Col md={2}>
+                                            <Label className="input-align">Creator <Input className="ml-2 mr-2 input-align" type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
+                                                {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+                                            </Input></Label>
+                                        </Col>
+                                        <Col md={2}>
+                                            <Label className="input-align">Completion <Input className="ml-2 mr-2 input-align" type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as boardCompletions)}>
+                                                {Object.values(boardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
+                                            </Input></Label>
+                                        </Col>
+                                        <Col md={3}>
+                                            {selectedBoards && selectedBoards.length > 0 && <div className="m-0"><Button className="float-right mt-4" onClick={confirmDeleteMultipleBoards}>Delete ({selectedBoards.length})</Button></div>}
+                                        </Col>
+                                    </Row>
+                                </Col>
                                 <Card className="my-2 mt-2 mb-4">
                                     <CardBody id="boards-table">
                                         <div className="overflow-auto">
