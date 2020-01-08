@@ -12,7 +12,6 @@ import {
     Col,
     Container,
     CustomInput,
-    Form, FormGroup,
     Input,
     Label,
     Row,
@@ -24,10 +23,9 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {boards as ThisBoards} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {sortIcon, STUDENTS_CRUMB} from "../../services/constants";
-import {formatBoardOwner, boardCompletionSelection} from "../../services/gameboards";
+import {boardCompletionSelection, formatBoardOwner} from "../../services/gameboards";
 import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
-import {Redirect} from "react-router";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
