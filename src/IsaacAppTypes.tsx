@@ -242,6 +242,10 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
 
+    | {type: ACTION_TYPE.NEWS_REQUEST}
+    | {type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS; theNews: ApiTypes.IsaacPodDTO[]}
+    | {type: ACTION_TYPE.NEWS_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.EVENTS_REQUEST}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}

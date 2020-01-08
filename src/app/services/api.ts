@@ -329,6 +329,11 @@ export const api = {
             return endpoint.get(`/gameboards/${boardId}`);
         }
     },
+    news: {
+        get: (subject: string): AxiosPromise<{results: ApiTypes.IsaacPodDTO[]; totalResults: number}> => {
+            return endpoint.get(`/pages/pods/${subject}`)
+        }
+    },
     events: {
         get: (eventId: string): AxiosPromise<ApiTypes.IsaacEventPageDTO> => {
             return endpoint.get(`/events/${eventId}`);

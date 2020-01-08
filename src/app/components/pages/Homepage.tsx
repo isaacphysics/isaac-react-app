@@ -7,6 +7,7 @@ import {LoggedInUser} from "../../../IsaacAppTypes";
 import {WhySignUpTabs} from "../elements/WhySignUpTabs";
 import {FeaturedContentTabs} from "../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../elements/EventsCarousel";
+import {NewsCarousel} from "../elements/NewsCarousel";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
@@ -107,6 +108,15 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                     <Link to="/events">
                         See all Events
                     </Link>
+                </div>
+            </Container>
+        </section>
+
+        <section id="news">
+            <Container className="pt-4 pb-5">
+                <div className="eventList pt-5 pattern-03">
+                    <h2 className="h-title mb-4">News</h2>
+                    <NewsCarousel />
                 </div>
             </Container>
         </section>
