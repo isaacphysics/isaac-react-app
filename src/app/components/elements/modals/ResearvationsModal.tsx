@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { closeActiveModal, loadGroups, selectGroup, getGroupMembers, getEventBookingsForGroup, reserveUsersOnEvent } from "../../../state/actions";
+import { closeActiveModal, loadGroups, selectGroup, getGroupMembers, getEventBookingsForGroup, reserveUsersOnEvent, cancelUserBooking } from "../../../state/actions";
 import { store } from "../../../state/store";
 import {
     Button,
@@ -10,7 +10,7 @@ import {
     Table
 } from "reactstrap";
 import { RegisteredUserDTO, UserGroupDTO } from "../../../../IsaacApiTypes";
-import { AppState, user } from "../../../state/reducers";
+import { AppState, currentEvent } from "../../../state/reducers";
 import { groups } from '../../../state/selectors';
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { AppGroup, AppGroupMembership } from "../../../../IsaacAppTypes";
@@ -70,10 +70,11 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
         //   (i.e., the one with an email address attached) even when the
         //   request comes from a TEACHER.
         if (currentGroup && currentGroup.members) {
-            const bookedUserIds = eventBookingsForGroup.map(booking => booking.userBooked && booking.userBooked.id);
-            const newUnbookedUsers: AppGroupMembership[] = _orderBy(currentGroup.members.filter(member =>
-                !bookedUserIds.includes(member.id as number)),
-                ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']);
+            const bookedUserIds = eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => booking.userBooked && booking.userBooked.id);
+            const newUnbookedUsers = _orderBy(
+                currentGroup.members.filter(member => !bookedUserIds.includes(member.id as number)),
+                ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']
+                );
             let newUserCheckboxes: boolean[] = [];
             for (const user of newUnbookedUsers) {
                 if (!user.id || !user.authorisedFullAccess) continue;
@@ -104,10 +105,17 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
         setUserCheckboxes(checkboxes);
     }
 
-    const requestReservation = () => {
+    const requestReservations = () => {
         if (selectedEvent && selectedEvent.id && currentGroup && currentGroup.id) {
             const reservableIds = Object.entries(userCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
             dispatch(reserveUsersOnEvent(selectedEvent.id, reservableIds, currentGroup.id));
+        }
+    }
+
+    const cancelReservationForUserId = async (userId?: number) => {
+        if (selectedEvent && selectedEvent.id && currentGroup && currentGroup.id) {
+            await dispatch(cancelUserBooking(selectedEvent.id, userId));
+            dispatch(getEventBookingsForGroup(selectedEvent.id, currentGroup.id) as any);
         }
     }
 
@@ -155,8 +163,10 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {eventBookingsForGroup.length > 0 && eventBookingsForGroup.map(booking => {
-                            return (booking.userBooked && booking.userBooked.id && <tr>
+                        {/* af599 TODO: Probably find a better way of filtering these, but doing so on the useSelector above breaks things. */}
+                        {eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").length > 0 &&
+                         eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => {
+                            return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
                                 <td className="align-middle">
                                     {booking.userBooked &&
                                     (booking.reservedBy && booking.reservedBy.id === currentUser.id) &&
@@ -164,6 +174,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                                         <Button key={booking.userBooked.id}
                                                 id={`${booking.userBooked.id}`}
                                                 color="link" outline block className="btn-sm mb-1"
+                                                onClick={() => cancelReservationForUserId(booking.userBooked && booking.userBooked.id)}
                                         >Cancel</Button>}
                                 </td>
                                 <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)}</td>
@@ -171,7 +182,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                                 <td className="align-middle">{booking.reservedBy && (booking.reservedBy.givenName + " " + booking.reservedBy.familyName)}</td>
                             </tr>)
                         })}
-                        {eventBookingsForGroup.length == 0 && <td colSpan={4}>None of the members of this group are booked in for this event.</td>}
+                        {eventBookingsForGroup.length == 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
                     </tbody>
                 </Table>
 
@@ -197,7 +208,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                     </thead>
                     <tbody>
                         {unbookedUsers.length > 0 && unbookedUsers.map(user => {
-                            return (user.id && <tr>
+                            return (user.id && <tr key={user.id}>
                                 <td className="w-auto align-middle">
                                     <CustomInput key={user.id}
                                         id={`${user.id}`}
@@ -215,7 +226,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                 </Table>
 
                 <Row className="mb-5 toolbar">
-                    <Col><Button disabled={!Object.values(userCheckboxes).some(v => v)} onClick={requestReservation}>Reserve</Button></Col>
+                    <Col><Button disabled={!Object.values(userCheckboxes).some(v => v)} onClick={requestReservations}>Reserve</Button></Col>
                 </Row>
             </Col>}
         </Row>
