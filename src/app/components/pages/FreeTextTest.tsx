@@ -30,6 +30,10 @@ function testCaseHash(choices: FreeTextRuleDTO[], testCaseInput: TestCaseDTO) {
     return stringHash(choiceHashes.values() + testCaseHash);
 }
 
+function displayBoolean(boolean?: boolean) {
+    return boolean ? "✔️" : "❌"
+}
+
 export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
     const hardChoices = [
         {
@@ -78,12 +82,54 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                     setTestCaseOutputs(p.data);
                 }}>
                     <h2>Matching rules</h2>
-                    <RS.ListGroup>
-                        {choices.map(choice => <RS.ListGroupItem key={JSON.stringify(choice)}>
-                            <RS.Input type="text" value={choice.value} />
-                            {JSON.stringify(choice)}
-                        </RS.ListGroupItem>)}
-                    </RS.ListGroup>
+                    <RS.Table>
+                        <thead>
+                            <tr>
+                                <th className="border-right">Rule</th>
+                                <th colSpan={2}>Response</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {choices.map(choice => <tr key={JSON.stringify(choice)}>
+                                <td className="border-right">
+                                    <RS.Label className="w-100 mb-3">
+                                        Value
+                                        <RS.Input type="text" value={choice.value} />
+                                    </RS.Label>
+                                    <RS.Row>
+                                        <RS.Col xs={3} className="text-center">
+                                            <RS.Label>Ignore case {displayBoolean(choice.caseInsensitive)}</RS.Label>
+                                        </RS.Col>
+                                        <RS.Col xs={3} className="text-center">
+                                            <RS.Label>Any order {displayBoolean(choice.allowsAnyOrder)}</RS.Label>
+                                        </RS.Col>
+                                        <RS.Col xs={3} className="text-center">
+                                            <RS.Label>Extra words {displayBoolean(choice.allowsExtraWords)}</RS.Label>
+                                        </RS.Col>
+                                        <RS.Col xs={3} className="text-center">
+                                            <RS.Label>Misspelling {displayBoolean(choice.allowsMisspelling)}</RS.Label>
+                                        </RS.Col>
+                                    </RS.Row>
+                                </td>
+                                <td className="align-middle">
+                                    <RS.Label>
+                                        <div className="h4 px-4">{displayBoolean(choice.correct)}</div>
+                                    </RS.Label>
+                                </td>
+                                <td>
+                                    <RS.Label>
+                                        Feedback:
+                                        <RS.Input type="textarea" value={choice.explanation.children[0].value} />
+                                    </RS.Label>
+                                </td>
+                            </tr>)}
+                            <tr>
+                                <td colSpan={3} className="text-center">
+                                    Add rule
+                                </td>
+                            </tr>
+                        </tbody>
+                    </RS.Table>
 
                     <h2>Test answers</h2>
                     <RS.Table>
@@ -104,26 +150,28 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                         <RS.Input type="text" value={testCaseInput.choice && testCaseInput.choice.value}/>
                                     </td>
                                     <td className="w-10 text-center">
-                                        {testCaseInput.expected !== undefined && (testCaseInput.expected ? "✔️" : "❌")}
+                                        {testCaseInput.expected !== undefined && displayBoolean(testCaseInput.expected)}
                                     </td>
                                     <td className="bg-light w-10 text-center">
-                                        {testCaseOutput && testCaseOutput.actual !== undefined && (testCaseOutput.actual ? "✔️" : "❌")}
+                                        {testCaseOutput && testCaseOutput.actual !== undefined && displayBoolean(testCaseOutput.actual)}
                                     </td>
                                     <td className="bg-light">
                                         {testCaseOutput && testCaseOutput.explanation && <IsaacContent doc={testCaseOutput.explanation} />}
                                     </td>
                                     <td className="bg-light w-10 text-center">
-                                        {testCaseOutput && testCaseOutput.actual !== undefined && (testCaseOutput.expected == testCaseOutput.actual ? "✔️" : "❌")}
+                                        {testCaseOutput && testCaseOutput.actual !== undefined && displayBoolean(testCaseOutput.expected == testCaseOutput.actual)}
                                     </td>
                                 </tr>;
                             })}
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td />
-                                <td />
-                                <td />
-                                <td />
+                                <td colSpan={5} className="text-center">
+                                    Add answer
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colSpan={4} />
                                 <td className="text-center">{numberOfMatches} / {testCaseInputs.length}</td>
                             </tr>
                         </tfoot>
