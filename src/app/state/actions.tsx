@@ -1319,7 +1319,6 @@ export const getNewsPodList = (subject: string) => async (dispatch: Dispatch<Act
         dispatch({type: ACTION_TYPE.NEWS_REQUEST});
         const response = await api.news.get(subject);
         const newsList = response.data.results;
-        console.log(newsList);
         dispatch({type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS, theNews: newsList})
     } catch (e) {
         dispatch({type: ACTION_TYPE.NEWS_RESPONSE_FAILURE});
