@@ -49,8 +49,13 @@ rm -rf isaac-cs-app
 
 git clone -b $SEGUE_VERSION --depth 1 https://github.com/isaacphysics/isaac-api.git
 cd isaac-api
-docker build -t "docker.isaacscience.org/isaac-api:$SEGUE_VERSION" --pull .
+if [ -n "$UPDATE_API_DEPS" ]; then
+    docker build -f Dockerfile-base -t isaac-api-base . --pull
+fi
+docker build -f Dockerfile-api -t "docker.isaacscience.org/isaac-api:$SEGUE_VERSION" .
 docker push "docker.isaacscience.org/isaac-api:$SEGUE_VERSION"
+docker build -f Dockerfile-etl -t "docker.isaacscience.org/isaac-etl:$SEGUE_VERSION" .
+docker push "docker.isaacscience.org/isaac-etl:$SEGUE_VERSION"
 
 cd ..
 rm -rf isaac-api
