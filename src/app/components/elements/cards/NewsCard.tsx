@@ -16,7 +16,7 @@ export const NewsCard = ({newsItem, pod = false}: {newsItem: IsaacPodDTO; pod?: 
             />
         </div>}
         <RS.CardBody className="d-flex flex-column">
-            <RS.CardText className="m-0 my-auto card-date-time">
+            <RS.CardText className="m-0 my-auto">
                 <span className="d-block my-2">
                     <h3 className="card-title">
                         {value}
