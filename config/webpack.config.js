@@ -339,6 +339,8 @@ module.exports = function(webpackEnv) {
                 customize: require.resolve(
                   'babel-preset-react-app/webpack-overrides'
                 ),
+
+                presets: ["react-app"],
                 
                 plugins: [
                   [

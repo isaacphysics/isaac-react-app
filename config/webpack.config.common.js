@@ -27,8 +27,16 @@ module.exports = (isProd) => {
                 {
                     oneOf: [
                         {
-                            test: /\.tsx?$/,
-                            use: {
+                            test: /\.[jt]sx?$/,
+                            exclude: /node_modules/,
+                            use: [
+                                {
+                                    loader: 'babel-loader',
+                                    options: {
+                                        presets: ["@babel/preset-env", "@babel/preset-react"],
+                                    }
+                                },
+                                {
                                 loader: 'ts-loader',
                                 options: {
                                     compilerOptions: {
@@ -36,7 +44,20 @@ module.exports = (isProd) => {
                                         jsx: "react",
                                     },
                                 },
-                            },
+                                }
+                            ],
+                        },
+                        {
+                            test: /node_modules[\/\\](query-string|split-on-first|strict-uri-encode)[\/\\].*\.js$/,
+                            use: [
+                                {
+                                    loader: 'babel-loader',
+                                    options: {
+                                        presets: ["@babel/preset-env"],
+                                        plugins: ["@babel/plugin-transform-modules-commonjs"]
+                                    }
+                                },
+                            ],
                         },
                         {
                             test: /\.scss$/,
@@ -67,6 +88,8 @@ module.exports = (isProd) => {
             },
             runtimeChunk: true,
         },
+
+        devtool : "source-map",
 
         plugins: [
             isProd ? new CleanWebpackPlugin() : null, // Clear the build directory before writing output of a successful build.

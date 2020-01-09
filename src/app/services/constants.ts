@@ -502,6 +502,12 @@ export enum SortOrder {
     NONE = "NONE"
 }
 
+export enum sortIcon {
+    "sortable" = '⇕',
+    "ascending" = '⇑',
+    "descending" = '⇓'
+}
+
 export enum EventStatusFilter {
     "All events" = "all",
     "Upcoming events" = "upcoming",

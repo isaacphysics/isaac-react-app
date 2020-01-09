@@ -17,6 +17,7 @@ import {
     ActiveModal,
     ActualBoardLimit,
     AdditionalInformation,
+    AppGameBoard,
     AppGroup,
     AppGroupMembership,
     ATTENDANCE,
@@ -800,8 +801,7 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
         if (isTeacher(user)) {
             history.push(`/set_assignments#${gameboardId}`);
         } else {
-            // FIXME - update this to be correct when My Boards is launched!
-            history.push(`/gameboards#${gameboardId}`);
+            history.push(`/my_gameboards#${gameboardId}`);
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
@@ -1178,9 +1178,22 @@ export const loadGroupsForBoard = (board: GameboardDTO) => async (dispatch: Disp
     }
 };
 
-export const deleteBoard = (board: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
+export const deleteBoard = (board: AppGameBoard) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const reduxState = getState();
     dispatch({type: ACTION_TYPE.BOARDS_DELETE_REQUEST, board});
     try {
+        await loadGroupsForBoard(board);
+        const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
+        if (hasAssignedGroups) {
+            if (reduxState && reduxState.user && reduxState.user.loggedIn && (reduxState.user.role == "ADMIN" || reduxState.user.role == "EVENT_MANAGER")) {
+                if (!confirm(`Warning: You currently have groups assigned to ${board.title}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.`)) {
+                    return;
+                }
+            } else {
+                showToast({color: "failure", title: "Gameboard Deletion Not Allowed", body: `You have groups assigned to ${board.title}. To delete this gameboard, you must unassign all groups.`, timeout: 5000});
+                return;
+            }
+        }
         await api.boards.delete(board);
         dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, board});
         dispatch(showToast({color: "success", title: "Gameboard deleted", body: "You have deleted gameboard " + board.title, timeout: 5000}) as any);

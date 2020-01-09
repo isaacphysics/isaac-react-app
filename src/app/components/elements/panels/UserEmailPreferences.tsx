@@ -27,7 +27,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
     }
 
     return <CardBody className="pb-0">
-        <p>We know people don’t like getting unwanted spam, so we’ve made it easy to personalise and control the updates you receive from us.</p>
+        <p>Get important information about the Isaac Computer Science programme delivered to your inbox.</p>
         <FormGroup className="overflow-auto">
             <Table className="mb-0">
                 <thead>
@@ -79,6 +79,12 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     </tr>
                 </tbody>
             </Table>
+            <hr />
+            <div>
+                <small>
+                    <b>Frequency</b>: Expect one email every six weeks to two months from News and Events. Assignment notifications will be sent as needed by your teacher.
+                </small>
+            </div>
             {errorMessage && <h4 role="alert" className="text-danger text-center">
                 {errorMessage}
             </h4>}

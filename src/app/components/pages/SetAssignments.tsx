@@ -26,9 +26,11 @@ import {boards, groups} from "../../state/selectors";
 import {sortBy, range} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
-import {DATE_FORMATTER, TEACHERS_CRUMB} from "../../services/constants";
+import {TEACHERS_CRUMB} from "../../services/constants";
 import {withRouter} from "react-router-dom";
+import {formatBoardOwner} from "../../services/gameboards";
 import {connect} from "react-redux";
+import {formatDate} from "../elements/DateString";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -51,22 +53,6 @@ interface SetAssignmentsPageProps {
     showToast: (toast: Toast) => void;
     location: {hash: string};
 
-}
-
-function formatDate(date: number | Date | undefined) {
-    if (!date) return "Unknown";
-    const dateObject = new Date(date);
-    return DATE_FORMATTER.format(dateObject);
-}
-
-function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
-    if (board.tags && board.tags.includes("isaac")) {
-        return "Isaac CS";
-    }
-    if (user.id == board.ownerUserId) {
-        return "Me";
-    }
-    return "Someone else";
 }
 
 type BoardProps = SetAssignmentsPageProps & {
@@ -220,8 +206,10 @@ function toActual(limit: BoardLimit) {
 }
 
 const orderNames: {[key in BoardOrder]: string} = {
-    "created": "Date Created",
-    "visited": "Date Visited",
+    "created": "Date Created Ascending",
+    "-created": "Date Created Descending",
+    "visited": "Date Visited Ascending",
+    "-visited": "Date Visited Descending",
     "title": "Title Ascending",
     "-title": "Title Descending"
 };
