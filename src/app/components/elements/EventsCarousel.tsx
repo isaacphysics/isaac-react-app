@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import ResponsiveCarousel from "./Carousel";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {clearEventsList, getEventsPodList, getNewsPodList} from "../../state/actions";
+import {clearEventsList, getEventsPodList} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {EventCard} from "./cards/EventCard";
 
@@ -12,7 +12,6 @@ export const EventsCarousel = () => {
     const dispatch = useDispatch();
     const eventsState = useSelector((state: AppState) => state && state.events);
     useEffect(() => {
-        dispatch(getNewsPodList("news"));
         dispatch(getEventsPodList(NUMBER_OF_EVENTS_IN_CAROUSEL));
         return function cleanUp() { dispatch(clearEventsList); }
     }, []);
