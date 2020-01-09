@@ -8,9 +8,10 @@ import {AssignmentDTO} from "../../../IsaacApiTypes";
 import {Card, CardBody, Container, Row, Col, Nav, NavItem, NavLink} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {extractTeacherName} from "../../services/user";
-import {DATE_FORMATTER, STUDENTS_CRUMB} from "../../services/constants";
+import {STUDENTS_CRUMB} from "../../services/constants";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 import {ifKeyIsEnter} from "../../services/navigation";
+import {formatDate} from "../elements/DateString";
 
 const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
 const dispatchToProps = {loadMyAssignments, logAction};
@@ -19,11 +20,6 @@ interface MyAssignmentsPageProps {
     assignments: AssignmentDTO[] | null;
     loadMyAssignments: () => void;
     logAction: (eventDetails: object) => void;
-}
-
-function formatDate(date: number | Date) {
-    const dateObject = new Date(date);
-    return DATE_FORMATTER.format(dateObject);
 }
 
 const Assignments = ({assignments, showOld}: {assignments: AssignmentDTO[]; showOld?: (event: MouseEvent) => void}) => {

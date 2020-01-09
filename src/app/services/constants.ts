@@ -519,6 +519,13 @@ export const bookingStatusMap: {[status in BookingStatus]: string} = {
     "RESERVED": "Place reserved",
     "WAITING_LIST": "In waiting list"
 }
+
+export enum sortIcon {
+    "sortable" = '⇕',
+    "ascending" = '⇑',
+    "descending" = '⇓'
+}
+
 export enum EventStatusFilter {
     "All events" = "all",
     "Upcoming events" = "upcoming",
