@@ -85,6 +85,15 @@ export const HomepageComponent = ({user}: HomePageProps) => {
             </Container>
         </section>}
 
+        <section id="news">
+            <Container className="pt-4 pb-5">
+                <div className="eventList pt-5 pattern-03-reverse">
+                    <h2 className="h-title mb-4">News</h2>
+                    <NewsCarousel />
+                </div>
+            </Container>
+        </section>
+
         <section id="headline-content" className="row bg-primary pattern-05">
             <Container>
                 <Col className="py-5 pb-md-0">
@@ -111,16 +120,6 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                 </div>
             </Container>
         </section>
-
-        <section id="news">
-            <Container className="pt-4 pb-5">
-                <div className="eventList pt-5 pattern-03">
-                    <h2 className="h-title mb-4">News</h2>
-                    <NewsCarousel />
-                </div>
-            </Container>
-        </section>
-
 
         {!(user && user.loggedIn) && <section className="row">
             <Container>

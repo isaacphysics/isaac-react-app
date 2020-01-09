@@ -8,20 +8,19 @@ import {API_PATH} from "../../../services/constants";
 export const NewsCard = ({newsItem, pod = false}: {newsItem: IsaacPodDTO; pod?: boolean}) => {
     const {id, title, value, image, url} = newsItem;
 
-    return <RS.Card className={classnames({'card-neat': true, 'm-4': pod, 'mb-4': !pod})}>
-        {image && <div className={'card-image text-center mt-3'}>
+    return <RS.Card className={classnames({'card-neat': true, 'news-carousel': true, 'm-4': pod, 'mb-4': !pod})}>
+        {image && <div className={'card-image'}>
             <RS.CardImg
-                className={'m-auto rounded-circle'} top
-                src={API_PATH + "/" + image.src} alt={image.altText || `Illustration for ${title}`}
+                className={'news-card-image'} top
+                src={API_PATH + "/images/" + image.src} alt={image.altText || `Illustration for ${title}`}
             />
         </div>}
         <RS.CardBody className="d-flex flex-column">
-            {title && <RS.CardTitle tag="h3">{title}</RS.CardTitle>}
             <RS.CardText className="m-0 my-auto card-date-time">
                 <span className="d-block my-2">
-                    <span className="h5">
+                    <h3 className="card-title">
                         {value}
-                    </span>
+                    </h3>
                 </span>
             </RS.CardText>
             <RS.CardText>
