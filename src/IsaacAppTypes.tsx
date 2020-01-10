@@ -1,6 +1,7 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
+import {ContentDTO, FreeTextRuleDTO} from "./IsaacApiTypes";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -604,6 +605,15 @@ export interface UserProgress {
     correctByTag: { [tag: string]: number };
     userSnapshot?: UserSnapshot;
     userDetails?: ApiTypes.UserSummaryDTO;
+}
+
+export interface FreeTextRule extends FreeTextRuleDTO {
+    correct?: boolean;
+    explanation?: ContentDTO;
+    caseInsensitive?: boolean;
+    allowsAnyOrder?: boolean;
+    allowsExtraWords?: boolean;
+    allowsMisspelling?: boolean;
 }
 
 export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6

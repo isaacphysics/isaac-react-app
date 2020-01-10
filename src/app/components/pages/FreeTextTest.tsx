@@ -1,11 +1,10 @@
 import React, {useState} from "react";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {FreeTextRule, LoggedInUser} from "../../../IsaacAppTypes";
 import {api} from "../../services/api";
 import * as RS from "reactstrap";
-import {FreeTextRuleDTO, TestCaseDTO} from "../../../IsaacApiTypes";
+import {TestCaseDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {CardBody} from "reactstrap";
 
 interface AugmentedTestCase extends TestCaseDTO {
     match?: boolean;
@@ -22,66 +21,56 @@ function stringHash(input: string) {
     return hash;
 }
 
-function testCaseHash(choices: FreeTextRuleDTO[], testCaseInput: TestCaseDTO) {
+function choiceHash(choice: FreeTextRule) {
+    const {value, correct, explanation, caseInsensitive, allowsAnyOrder, allowsExtraWords, allowsMisspelling} = choice;
+    const definingProperties =
+        "" + value + correct + stringHash(JSON.stringify(explanation)) +
+        caseInsensitive + allowsAnyOrder + allowsExtraWords + allowsMisspelling;
+    return stringHash(definingProperties);
+}
+
+function testCaseHash(testCaseInput: TestCaseDTO) {
+    return (testCaseInput.choice && testCaseInput.choice.value || "") + testCaseInput.expected;
+}
+
+function testResponseHash(choices: FreeTextRule[], testCase: TestCaseDTO) {
     const choiceHashes = new Set();
     for (let choice of choices) {
-        choiceHashes.add(choice.value || "");
+        choiceHashes.add(choiceHash(choice));
     }
-    const testCaseHash = (testCaseInput.choice && testCaseInput.choice.value) || "" + testCaseInput.expected;
-    return stringHash(choiceHashes.values() + testCaseHash);
+    return stringHash(choiceHashes.values() + testCaseHash(testCase));
 }
 
 function displayBoolean(boolean?: boolean) {
     return boolean ? "✔️" : "❌"
 }
 
+let choiceNumber = 0;
+let testCaseNumber = 0;
+
 const defaultChoice = {
-    "type": "freeTextRule", "encoding": "markdown", "value": "", "correct": true,
-    "caseInsensitive": true, "allowsAnyOrder": false, "allowsExtraWords": false, "allowsMisspelling": false,
-    "explanation": {
-        "type": "content", "children": [{"type": "content", "value": "", "encoding": "markdown"}], "encoding": "markdown"
-    }
+    "type": "freeTextRule", "encoding": "markdown", "value": "", "correct": true, "caseInsensitive": true, "allowsAnyOrder": false, "allowsExtraWords": false, "allowsMisspelling": false,
+    "explanation": {"type": "content", "children": [{"type": "content", "value": "Match", "encoding": "markdown"}], "encoding": "markdown"}
 };
 const defaultTestCase = {choice: {type: "stringChoice", value: ""}, expected: true};
 
+
 export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
-    const hardChoices = [
-        {
-            "type": "freeTextRule",
-            "encoding": "markdown",
-            "value": "get to other side",
-            "caseInsensitive": true,
-            "allowsAnyOrder": false,
-            "allowsExtraWords": true,
-            "allowsMisspelling": false,
-            "correct": true,
-            "explanation": {
-                "type": "content",
-                "children": [{"type": "content", "value": "This is a correct answer!", "encoding": "markdown"}],
-                "encoding": "markdown"
-            }
-        }
-    ];
-
-    const hardTestCases = [
-        {choice: {type: "stringChoice", value: "get to the other side"}, expected: true},
-        {choice: {type: "stringChoice", value: "don't know"}, expected: false}
-    ];
-
-    const [choices, setChoices] = useState(hardChoices);
-    const [testCaseInputs, setTestCaseInputs] = useState<TestCaseDTO[]>(hardTestCases);
     const [testCaseOutputs, setTestCaseOutputs] = useState<TestCaseDTO[]>([]); // This will be deleted when it is in redux
 
-    const augmentedTestCaseOutputMap: {[key: string]: AugmentedTestCase} = {};
+    const [choices, setChoices] = useState<(FreeTextRule & {choiceNumber: number})[]>([{...defaultChoice, choiceNumber: choiceNumber}]);
+    const [testCaseInputs, setTestCaseInputs] = useState<(TestCaseDTO & {testNumber: number})[]>([{...defaultTestCase, testNumber: testCaseNumber}]);
+
+    const augmentedTestCaseResponseMap: {[key: string]: AugmentedTestCase} = {};
     for (const testCaseOutput of testCaseOutputs) {
         const augmentedTestCaseOutput: AugmentedTestCase = testCaseOutput;
         if (augmentedTestCaseOutput.expected !== undefined) {
             augmentedTestCaseOutput.match = augmentedTestCaseOutput.expected == augmentedTestCaseOutput.actual;
         }
         const testCaseInput = {choice: augmentedTestCaseOutput.choice, expected: augmentedTestCaseOutput.expected};
-        augmentedTestCaseOutputMap[testCaseHash(choices, testCaseInput)] = augmentedTestCaseOutput;
+        augmentedTestCaseResponseMap[testResponseHash(choices, testCaseInput)] = augmentedTestCaseOutput;
     }
-    const numberOfMatches = Object.values(augmentedTestCaseOutputMap).filter(testCase => testCase.match).length;
+    const numberOfMatches = Object.values(augmentedTestCaseResponseMap).filter(testCase => testCase.match).length;
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle="Free-text question builder" />
@@ -95,41 +84,51 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                     <h2 className="h4">Matching rules</h2>
                     <RS.Table>
                         <thead>
-                            <tr><th className="border-right">Rule</th><th colSpan={2}>Response</th></tr>
+                            <tr><th>Rule</th><th colSpan={2}>Response</th></tr>
                         </thead>
                         <tbody>
-                            {choices.map(choice => <tr key={JSON.stringify(choice)}>
-                                <td className="border-right">
+                            {choices.map(choice => <tr key={choice.choiceNumber}>
+                                <td>
                                     <RS.Label className="w-100 mb-3">
                                         Value
-                                        <RS.Input type="text" value={choice.value} />
+                                        <RS.Input type="text" value={choice.value} onChange={e => {setChoices(choices.map(c => choice == c ? {...c, value: e.target.value} : c))}}/>
                                     </RS.Label>
                                     <RS.Row>
                                         <RS.Col xs={3} className="text-center">
-                                            <RS.Label>Ignore case {displayBoolean(choice.caseInsensitive)}</RS.Label>
+                                            <RS.Button color="link" onClick={() => setChoices(choices.map(c => choice == c ? {...c, caseInsensitive: !c.caseInsensitive} : c))}>
+                                                <RS.Label>Ignore case {displayBoolean(choice.caseInsensitive)}</RS.Label>
+                                            </RS.Button>
                                         </RS.Col>
                                         <RS.Col xs={3} className="text-center">
-                                            <RS.Label>Any order {displayBoolean(choice.allowsAnyOrder)}</RS.Label>
+                                            <RS.Button color="link" onClick={() => setChoices(choices.map(c => choice == c ? {...c, allowsAnyOrder: !c.allowsAnyOrder} : c))}>
+                                                <RS.Label>Any order {displayBoolean(choice.allowsAnyOrder)}</RS.Label>
+                                            </RS.Button>
                                         </RS.Col>
                                         <RS.Col xs={3} className="text-center">
-                                            <RS.Label>Extra words {displayBoolean(choice.allowsExtraWords)}</RS.Label>
+                                            <RS.Button color="link" onClick={() => setChoices(choices.map(c => choice == c ? {...c, allowsExtraWords: !c.allowsExtraWords} : c))}>
+                                                <RS.Label>Extra words {displayBoolean(choice.allowsExtraWords)}</RS.Label>
+                                            </RS.Button>
                                         </RS.Col>
                                         <RS.Col xs={3} className="text-center">
-                                            <RS.Label>Misspelling {displayBoolean(choice.allowsMisspelling)}</RS.Label>
+                                            <RS.Button color="link" onClick={() => setChoices(choices.map(c => choice == c ? {...c, allowsMisspelling: !c.allowsMisspelling} : c))}>
+                                                <RS.Label>Misspelling {displayBoolean(choice.allowsMisspelling)}</RS.Label>
+                                            </RS.Button>
                                         </RS.Col>
                                     </RS.Row>
                                 </td>
                                 <td className="align-middle">
-                                    <div className="h4 px-4">{displayBoolean(choice.correct)}</div>
+                                    <RS.Button color="link" onClick={() => setChoices(choices.map(c => choice == c ? {...c, correct: !c.correct} : c))}>
+                                        <div className="h4 px-4">{displayBoolean(choice.correct)}</div>
+                                    </RS.Button>
                                 </td>
                                 <td>
                                     <RS.Label>
                                         Feedback:
-                                        <RS.Input type="textarea" value={choice.explanation.children[0].value} />
+                                        <RS.Input type="textarea" value={(choice as any).explanation.children[0].value} />
                                     </RS.Label>
                                     <button
                                         className="close" aria-label="Delete matching rule"
-                                        onClick={() => setChoices(choices.filter(c => c))}
+                                        onClick={() => setChoices(choices.filter(choiceInState => choice !== choiceInState))}
                                     >
                                         ×
                                     </button>
@@ -139,9 +138,8 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                 <td colSpan={3} className="text-center">
                                     <div className="img-center">
                                         <input
-                                            type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
-                                            alt="Add matching rule" title="Add question rule"
-                                            onClick={() => setChoices([...choices, defaultChoice])}
+                                            type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid" alt="Add matching rule" title="Add question rule"
+                                            onClick={() => setChoices([...choices, {...defaultChoice, choiceNumber: ++choiceNumber}])}
                                         />
                                     </div>
                                 </td>
@@ -161,27 +159,36 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {testCaseInputs.map(testCaseInput => {
-                                const testCaseOutput = augmentedTestCaseOutputMap[testCaseHash(choices, testCaseInput)];
-                                return <tr key={JSON.stringify(testCaseInput)}>
+                            {testCaseInputs.map(testCase => {
+                                const testCaseResponse = augmentedTestCaseResponseMap[testResponseHash(choices, testCase)];
+                                return <tr key={testCase.testNumber}>
                                     <td>
-                                        <RS.Input type="text" value={testCaseInput.choice && testCaseInput.choice.value}/>
+                                        <RS.Input
+                                            type="text" value={testCase.choice && testCase.choice.value}
+                                            onChange={event => setTestCaseInputs(testCaseInputs.map(testCaseInState =>
+                                                testCaseInState === testCase ?
+                                                    {...testCase, choice: {...testCase.choice, value: event.target.value}} :
+                                                    testCaseInState
+                                            ))}
+                                        />
                                     </td>
                                     <td className="w-10 text-center">
-                                        {testCaseInput.expected !== undefined && displayBoolean(testCaseInput.expected)}
+                                        <RS.Button color="link" onClick={() => setTestCaseInputs(testCaseInputs.map(tc => testCase == tc ? {...tc, expected: !tc.expected} : tc))}>
+                                            {testCase.expected !== undefined && displayBoolean(testCase.expected)}
+                                        </RS.Button>
                                     </td>
 
                                     <td className="bg-light w-10 text-center">
-                                        {testCaseOutput && testCaseOutput.actual !== undefined && displayBoolean(testCaseOutput.actual)}
+                                        {testCaseResponse && testCaseResponse.actual !== undefined && displayBoolean(testCaseResponse.actual)}
                                     </td>
                                     <td className="bg-light">
-                                        {testCaseOutput && testCaseOutput.explanation && <IsaacContent doc={testCaseOutput.explanation} />}
+                                        {testCaseResponse && testCaseResponse.explanation && <IsaacContent doc={testCaseResponse.explanation} />}
                                     </td>
                                     <td className="bg-light w-10 text-center">
-                                        {testCaseOutput && testCaseOutput.actual !== undefined && displayBoolean(testCaseOutput.expected == testCaseOutput.actual)}
+                                        {testCaseResponse && testCaseResponse.actual !== undefined && displayBoolean(testCaseResponse.expected == testCaseResponse.actual)}
                                         <button
                                             className="close" aria-label="Delete matching rule"
-                                            onClick={() => setTestCaseInputs(testCaseInputs.filter(t => t))}
+                                            onClick={() => setTestCaseInputs(testCaseInputs.filter(testCaseInState => testCase !== testCaseInState))}
                                         >
                                             ×
                                         </button>
@@ -194,9 +201,8 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                 <td colSpan={5} className="text-center">
                                     <div className="img-center">
                                         <input
-                                            type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
-                                            alt="Add test answer" title="Add test answer"
-                                            onClick={() => setTestCaseInputs([...testCaseInputs, defaultTestCase])}
+                                            type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid" alt="Add test answer" title="Add test answer"
+                                            onClick={() => setTestCaseInputs([...testCaseInputs, {...defaultTestCase, testNumber: ++testCaseNumber}])}
                                         />
                                     </div>
                                 </td>
@@ -209,3 +215,29 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
         </RS.Card>
     </RS.Container>;
 };
+
+
+
+
+// const hardChoices = [
+//     {
+//         "type": "freeTextRule",
+//         "encoding": "markdown",
+//         "value": "get to other side",
+//         "caseInsensitive": true,
+//         "allowsAnyOrder": false,
+//         "allowsExtraWords": true,
+//         "allowsMisspelling": false,
+//         "correct": true,
+//         "explanation": {
+//             "type": "content",
+//             "children": [{"type": "content", "value": "This is a correct answer!", "encoding": "markdown"}],
+//             "encoding": "markdown"
+//         }
+//     }
+// ];
+//
+// const hardTestCases = [
+//     {choice: {type: "stringChoice", value: "get to the other side"}, expected: true},
+//     {choice: {type: "stringChoice", value: "don't know"}, expected: false}
+// ];
