@@ -5,6 +5,7 @@ import * as RS from "reactstrap";
 import {FreeTextRuleDTO, TestCaseDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {CardBody} from "reactstrap";
 
 interface AugmentedTestCase extends TestCaseDTO {
     match?: boolean;
@@ -34,6 +35,15 @@ function displayBoolean(boolean?: boolean) {
     return boolean ? "✔️" : "❌"
 }
 
+const defaultChoice = {
+    "type": "freeTextRule", "encoding": "markdown", "value": "", "correct": true,
+    "caseInsensitive": true, "allowsAnyOrder": false, "allowsExtraWords": false, "allowsMisspelling": false,
+    "explanation": {
+        "type": "content", "children": [{"type": "content", "value": "", "encoding": "markdown"}], "encoding": "markdown"
+    }
+};
+const defaultTestCase = {choice: {type: "stringChoice", value: ""}, expected: true};
+
 export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
     const hardChoices = [
         {
@@ -52,6 +62,7 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
             }
         }
     ];
+
     const hardTestCases = [
         {choice: {type: "stringChoice", value: "get to the other side"}, expected: true},
         {choice: {type: "stringChoice", value: "don't know"}, expected: false}
@@ -81,13 +92,10 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                     const p = await api.tests.freeTextRules(choices, testCaseInputs);
                     setTestCaseOutputs(p.data);
                 }}>
-                    <h2>Matching rules</h2>
+                    <h2 className="h4">Matching rules</h2>
                     <RS.Table>
                         <thead>
-                            <tr>
-                                <th className="border-right">Rule</th>
-                                <th colSpan={2}>Response</th>
-                            </tr>
+                            <tr><th className="border-right">Rule</th><th colSpan={2}>Response</th></tr>
                         </thead>
                         <tbody>
                             {choices.map(choice => <tr key={JSON.stringify(choice)}>
@@ -112,26 +120,36 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                     </RS.Row>
                                 </td>
                                 <td className="align-middle">
-                                    <RS.Label>
-                                        <div className="h4 px-4">{displayBoolean(choice.correct)}</div>
-                                    </RS.Label>
+                                    <div className="h4 px-4">{displayBoolean(choice.correct)}</div>
                                 </td>
                                 <td>
                                     <RS.Label>
                                         Feedback:
                                         <RS.Input type="textarea" value={choice.explanation.children[0].value} />
                                     </RS.Label>
+                                    <button
+                                        className="close" aria-label="Delete matching rule"
+                                        onClick={() => setChoices(choices.filter(c => c))}
+                                    >
+                                        ×
+                                    </button>
                                 </td>
                             </tr>)}
-                            <tr>
+                            <tr className="border-bottom">
                                 <td colSpan={3} className="text-center">
-                                    Add rule
+                                    <div className="img-center">
+                                        <input
+                                            type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
+                                            alt="Add matching rule" title="Add question rule"
+                                            onClick={() => setChoices([...choices, defaultChoice])}
+                                        />
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
                     </RS.Table>
 
-                    <h2>Test answers</h2>
+                    <h2 className="h4">Test answers ({numberOfMatches}/{testCaseInputs.length})</h2>
                     <RS.Table>
                         <thead>
                             <tr>
@@ -152,6 +170,7 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                     <td className="w-10 text-center">
                                         {testCaseInput.expected !== undefined && displayBoolean(testCaseInput.expected)}
                                     </td>
+
                                     <td className="bg-light w-10 text-center">
                                         {testCaseOutput && testCaseOutput.actual !== undefined && displayBoolean(testCaseOutput.actual)}
                                     </td>
@@ -160,25 +179,31 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                     </td>
                                     <td className="bg-light w-10 text-center">
                                         {testCaseOutput && testCaseOutput.actual !== undefined && displayBoolean(testCaseOutput.expected == testCaseOutput.actual)}
+                                        <button
+                                            className="close" aria-label="Delete matching rule"
+                                            onClick={() => setTestCaseInputs(testCaseInputs.filter(t => t))}
+                                        >
+                                            ×
+                                        </button>
                                     </td>
                                 </tr>;
                             })}
                         </tbody>
                         <tfoot>
-                            <tr>
+                            <tr className="border-bottom">
                                 <td colSpan={5} className="text-center">
-                                    Add answer
+                                    <div className="img-center">
+                                        <input
+                                            type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
+                                            alt="Add test answer" title="Add test answer"
+                                            onClick={() => setTestCaseInputs([...testCaseInputs, defaultTestCase])}
+                                        />
+                                    </div>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td colSpan={4} />
-                                <td className="text-center">{numberOfMatches} / {testCaseInputs.length}</td>
                             </tr>
                         </tfoot>
                     </RS.Table>
-
                     <RS.Input type="submit" />
-
                 </RS.Form>
             </RS.CardBody>
         </RS.Card>
