@@ -3,7 +3,8 @@ const path = require('path');
 const BASE_DIRECTORY = path.resolve(__dirname, "..");
 const resolve = (p) => path.resolve(BASE_DIRECTORY, p);
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const configCommon = require('./webpack.config.common')
+const configCommon = require('./webpack.config.common');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const merge = require('webpack-merge');
 const webpack = require('webpack');
 
@@ -27,6 +28,10 @@ module.exports = env => {
             new webpack.DefinePlugin({
                ISAAC_SITE: '"physics"',
             }),
+            new CopyWebpackPlugin([{
+                from: resolve('public/manifest-phy.json'),
+                to: 'manifest-phy.json',
+            }]),
         ],
     };
 
