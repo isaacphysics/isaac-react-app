@@ -13,17 +13,16 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {ContentBase} from "../../../IsaacApiTypes";
-import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL, NOT_FOUND} from "../../services/constants";
+import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {EditContentButton} from "../elements/EditContentButton";
-import {questions} from "../../state/selectors";
+import {doc as selectDoc, questions} from "../../state/selectors";
 
 export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId: string}}}) => {
     const dispatch = useDispatch();
-    // Report 404 NOT_FOUND if quiz ID is not an accepted quiz ID
-    const doc = useSelector((state: AppState) => ACCEPTED_QUIZ_IDS.includes(match.params.quizId) ? (state && state.doc) || null : NOT_FOUND);
+    const doc = useSelector(selectDoc.ifQuizId(match.params.quizId));
     const allQuestionsAttempted = useSelector(questions.allQuestionsAttempted);
     const anyQuestionPreviouslyAttempted = useSelector(questions.anyQuestionPreviouslyAttempted);
     const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
@@ -33,7 +32,7 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
         dispatch(openActiveModal({
             title: "Quiz submission confirmation",
             body: <div className="text-center">
-                You are only allowed to submit answers to this quiz once. <br />
+                You can only submit answers to this quiz once. <br />
                 Please confirm whether or not you would like to submit your current answers to this quiz.
             </div>,
             buttons: [
@@ -44,7 +43,7 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
                     dispatch(submitQuizPage(match.params.quizId));
                     dispatch(closeActiveModal());
                 }}>
-                    Submit
+                    Submit answers
                 </RS.Button>
             ]
         }));
@@ -80,10 +79,10 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
 
                             <div className="simple-card text-center mt-4 py-4">
                                 {!allQuestionsAttempted && <div id="disabled-button-explanation" className="mb-3">
-                                    Please attempt every question before submitting.
+                                    You must attempt every question before submitting.
                                 </div>}
                                 <input
-                                    type="submit" value="Submit quiz" className="btn btn-xl btn-secondary border-0"
+                                    type="submit" value="Submit answers" className="btn btn-xl btn-secondary border-0"
                                     disabled={!allQuestionsAttempted} aria-describedby="disabled-button-explanation"
                                 />
                             </div>

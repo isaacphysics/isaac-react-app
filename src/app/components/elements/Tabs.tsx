@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo, useState, ReactNode} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);

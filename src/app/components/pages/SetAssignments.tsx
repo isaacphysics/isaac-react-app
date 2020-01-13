@@ -26,9 +26,11 @@ import {boards, groups} from "../../state/selectors";
 import {sortBy, range} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
-import {DATE_FORMATTER, TEACHERS_CRUMB} from "../../services/constants";
+import {TEACHERS_CRUMB} from "../../services/constants";
 import {withRouter} from "react-router-dom";
+import {formatBoardOwner} from "../../services/gameboards";
 import {connect} from "react-redux";
+import {formatDate} from "../elements/DateString";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -51,22 +53,6 @@ interface SetAssignmentsPageProps {
     showToast: (toast: Toast) => void;
     location: {hash: string};
 
-}
-
-function formatDate(date: number | Date | undefined) {
-    if (!date) return "Unknown";
-    const dateObject = new Date(date);
-    return DATE_FORMATTER.format(dateObject);
-}
-
-function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
-    if (board.tags && board.tags.includes("isaac")) {
-        return "Isaac CS";
-    }
-    if (user.id == board.ownerUserId) {
-        return "Me";
-    }
-    return "Someone else";
 }
 
 type BoardProps = SetAssignmentsPageProps & {
@@ -98,7 +84,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
         </Label>
         <Label className="w-100 pb-2">Due Date Reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate)} />
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
         </Label>
         <Button className="mt-3 mb-2" block color="primary" onClick={assign} disabled={groupId === null}>Assign to group</Button>
     </Container>;
@@ -125,10 +111,12 @@ const Board = (props: BoardProps) => {
                 if (shareLink.current) {
                     if (window.getSelection && shareLink.current) {
                         let selection = window.getSelection();
-                        let range = document.createRange();
-                        range.selectNodeContents(shareLink.current);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
+                        if (selection) {
+                            let range = document.createRange();
+                            range.selectNodeContents(shareLink.current);
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+                        }
                     }
                 }
             });
@@ -218,8 +206,10 @@ function toActual(limit: BoardLimit) {
 }
 
 const orderNames: {[key in BoardOrder]: string} = {
-    "created": "Date Created",
-    "visited": "Date Visited",
+    "created": "Date Created Ascending",
+    "-created": "Date Created Descending",
+    "visited": "Date Visited Ascending",
+    "-visited": "Date Visited Descending",
     "title": "Title Ascending",
     "-title": "Title Descending"
 };

@@ -108,7 +108,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                     <Input
                         type="select" name="select" id="exam-board-select"
                         value={
-                            (examPreferences && examPreferences[EXAM_BOARD.OCR]) ? EXAM_BOARD.OCR : EXAM_BOARD.AQA
+                            (examPreferences && examPreferences[EXAM_BOARD.AQA]) ? EXAM_BOARD.AQA : EXAM_BOARD.OCR
                         }
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
                             setExamPreferences(

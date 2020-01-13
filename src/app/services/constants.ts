@@ -31,7 +31,7 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
-export const ACCEPTED_QUIZ_IDS = ['quiz_test'];
+export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_nov19_aqa', 'class_test_nov19_ocr'];
 
 export const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB");
 export const DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
@@ -188,6 +188,10 @@ export enum ACTION_TYPE {
     EVENT_BOOKINGS_RESPONSE_SUCCESS = "EVENT_BOOKINGS_RESPONSE_SUCCESS",
     EVENT_BOOKINGS_RESPONSE_FAILURE = "EVENT_BOOKINGS_RESPONSE_FAILURE",
 
+    EVENT_BOOKING_CSV_REQUEST = "EVENT_BOOKING_CSV_REQUEST",
+    EVENT_BOOKING_CSV_RESPONSE_SUCCESS = "EVENT_BOOKING_CSV_RESPONSE_SUCCESS",
+    EVENT_BOOKING_CSV_RESPONSE_FAILURE = "EVENT_BOOKING_CSV_RESPONSE_FAILURE",
+
     EVENT_BOOKING_REQUEST = "EVENT_BOOKING_REQUEST",
     EVENT_BOOKING_RESPONSE_SUCCESS = "EVENT_BOOKING_RESPONSE_SUCCESS",
     EVENT_BOOKING_RESPONSE_FAILURE = "EVENT_BOOKING_RESPONSE_FAILURE",
@@ -227,6 +231,10 @@ export enum ACTION_TYPE {
     FRAGMENT_REQUEST = "FRAGMENT_REQUEST",
     FRAGMENT_RESPONSE_SUCCESS = "FRAGMENT_RESPONSE_SUCCESS",
     FRAGMENT_RESPONSE_FAILURE = "FRAGMENT_RESPONSE_FAILURE",
+
+    GLOSSARY_TERMS_REQUEST = "GLOSSARY_TERMS_REQUEST",
+    GLOSSARY_TERMS_RESPONSE_SUCCESS = "GLOSSARY_TERMS_RESPONSE_SUCCESS",
+    GLOSSARY_TERMS_RESPONSE_FAILURE = "GLOSSARY_TERMS_RESPONSE_FAILURE",
 
     QUESTION_REGISTRATION = "QUESTION_REGISTRATION",
     QUESTION_DEREGISTRATION = "QUESTION_DEREGISTRATION",
@@ -384,8 +392,7 @@ export enum TAG_ID {
     computerSystems = "computer_systems",
     dataAndInformation = "data_and_information",
     // Programming sub-categories
-    functionalProgramming = "functional_programming",
-    objectOrientedProgramming = "object_oriented_programming",
+    programmingParadigms = "programming_paradigms",
     programmingFundamentals = "programming_fundamentals",
     computingPracticalProject = "computing_practical_project",
 
@@ -398,7 +405,7 @@ export enum TAG_ID {
     // Data structures and algorithms topics
     searchingSortingPathfinding = "searching_sorting_pathfinding",
     complexity = "complexity",
-    theoryOfComputation = "models_of_computation",
+    theoryOfComputation = "theory_of_computation",
     planningAndDebugging = "planning_and_debugging",
     dataStructures = "data_structures",
     // Computer networks topics
@@ -406,7 +413,7 @@ export enum TAG_ID {
     networking = "networking",
     networkHardware = "network_hardware",
     communication = "communication",
-    internet = "internet",
+    theInternet = "the_internet",
     // Computer systems topics
     booleanLogic = "boolean_logic",
     architecture = "architecture",
@@ -423,15 +430,7 @@ export enum TAG_ID {
     compression = "compression",
     encryption = "encryption",
 
-    // Functional programming topics
-    functions = "functions",
-    lists = "lists",
-    higherOrderFunctions = "higher_order_functions",
-    // Object-oriented programming topics
-    creatingObjects = "creating_objects",
-    oopConcepts = "oop_concepts",
-    classDiagrams = "class_diagrams",
-    // Procedural programming topics
+    // Programming fundamentals topics
     programmingConcepts = "programming_concepts",
     subroutines = "subroutines",
     files = "files",
@@ -440,6 +439,9 @@ export enum TAG_ID {
     stringManipulation = "string_manipulation",
     guis = "guis",
     softwareEngineeringPrinciples = "software_engineering_principles",
+    // Programming paradigms topics
+    objectOrientedProgramming = "object_oriented_programming",
+    functionalProgramming = "functional_programming",
     // Computing practical project topics
     softwareProject = "software_project",
 }
@@ -500,4 +502,22 @@ export enum SortOrder {
     ASC = "ASC",
     DESC = "DESC",
     NONE = "NONE"
+}
+
+export enum sortIcon {
+    "sortable" = '⇕',
+    "ascending" = '⇑',
+    "descending" = '⇓'
+}
+
+export enum EventStatusFilter {
+    "All events" = "all",
+    "Upcoming events" = "upcoming",
+    "My booked events" = "showBookedOnly",
+}
+export enum EventTypeFilter {
+    "All events" = "all",
+    "Student events" = "student",
+    "Teacher events" = "teacher",
+    "Online tutorials" = "virtual",
 }

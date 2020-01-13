@@ -60,6 +60,13 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                     {relatedQuestions && atLeastOne(relatedQuestions.length) &&
                         <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
                     }
+                    {(!relatedQuestions || !atLeastOne(relatedQuestions.length)) &&
+                        (!relatedConcepts || !atLeastOne(relatedConcepts.length)) && <div className='text-center py-3'>
+                        <div className='alert alert-warning'>
+                            There is no material in this topic for the {examBoard} exam board.
+                        </div>
+                    </div>
+                    }
 
                     <Row>
                         <Col size={6} className="text-center">
@@ -67,7 +74,7 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                                 <span className="d-none d-md-inline">Back to</span> {" "} All topics
                             </Button>
                         </Col>
-                        {topicName != TAG_ID.softwareProject && <Col size={6} className="text-center">
+                        {relatedQuestions && atLeastOne(relatedQuestions.length) && <Col size={6} className="text-center">
                             <Button tag={Link} to={`/gameboards#${topicName}_july19_${examBoard.toLowerCase()}`} color="secondary" size="lg" className="my-4" block>
                                 Topic gameboard
                             </Button>

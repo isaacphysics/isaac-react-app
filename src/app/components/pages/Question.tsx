@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {Col, Container, Row} from "reactstrap";
 import {fetchDoc, goToSupersededByQuestion, setPrintingHints} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
+import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
@@ -17,6 +17,7 @@ import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
 import {isStudent, isTeacher} from "../../services/user";
+import {doc as selectDoc} from "../../state/selectors";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -36,7 +37,9 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, questionId));
+        if (!ACCEPTED_QUIZ_IDS.includes(questionId)) {
+            dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, questionId));
+        }
     }, [questionId, dispatch]);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {

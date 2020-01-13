@@ -231,11 +231,19 @@ export function katexify(html: string, userPreferences: UserPreferencesDTO | nul
                     let pauseChars = katexOptions.displayMode ? ". &nbsp;" : ",";  // trailing comma/full-stop for pause in speaking
                     screenreaderText = `${renderA11yString(latexMunged, katexOptions)}${pauseChars}`;
                 } catch (e) {
+                    // eslint-disable-next-line no-console
                     console.warn(`Unsupported equation for screenreader text: '${latexMunged}'`, e);
                     screenreaderText = "[[Unsupported equation]]";
                 }
-                output += katexRenderResult.replace('<span class="katex">',
+                katexRenderResult = katexRenderResult.replace('<span class="katex">',
                     `<span class="katex"><span class="sr-only">${screenreaderText}</span>`);
+
+                if (userPreferences && userPreferences.BETA_FEATURE && userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT) {
+                    katexRenderResult = katexRenderResult.replace('<span class="katex">',
+                        `<span class="katex" title="${screenreaderText.replace(/,/g, "").replace(/\s\s+/g, " ")}">`);
+                }
+
+                output += katexRenderResult;
 
                 index = match.index + match[0].length;
             } else {

@@ -20,10 +20,10 @@ const defaultPlaceholder = <div className="w-100 text-center">
 export const ShowLoading = < T extends {} >({until, children, thenRender, placeholder = defaultPlaceholder, ifNotFound = <NotFound />}: ShowLoadingProps<T>) => {
     const [duringLoad, setDuringLoad] = useState(false);
     useEffect( () => {
-        let timeout: NodeJS.Timeout;
+        let timeout: number;
         if (until == null) {
             setDuringLoad(true);
-            timeout = setTimeout(() => {
+            timeout = window.setTimeout(() => {
                 setDuringLoad(false);
             }, 200);
         }

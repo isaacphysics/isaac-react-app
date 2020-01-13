@@ -27,8 +27,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.computerSystems, title: "Computer systems", parent: TAG_ID.theory},
     // Programming sub-categories
     {id: TAG_ID.programmingFundamentals, title: "Programming fundamentals", parent: TAG_ID.programming},
-    {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programming},
-    {id: TAG_ID.functionalProgramming, title: "Functional programming", parent: TAG_ID.programming},
+    {id: TAG_ID.programmingParadigms, title: "Programming paradigms", parent: TAG_ID.programming},
     {id: TAG_ID.computingPracticalProject, title: "Computing practical project", parent: TAG_ID.programming},
 
     // GCSE to A level transition topics
@@ -36,54 +35,49 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.gcseDataRepresentation, title: "Data representation", parent: TAG_ID.gcseToALevel},
     {id: TAG_ID.gcseBooleanLogic, title: "Boolean logic", parent: TAG_ID.gcseToALevel},
     {id: TAG_ID.gcseSystems, title: "Systems", parent: TAG_ID.gcseToALevel},
-    {id: TAG_ID.gcseNetworking, title: "Networking", parent: TAG_ID.gcseToALevel, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.gcseNetworking, title: "Networking", parent: TAG_ID.gcseToALevel, new: true},
     // Data structures and algorithms topics
-    {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
+    {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms},
     {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms},
     {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.theoryOfComputation, title: "Theory of computation", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.theoryOfComputation, title: "Theory of computation (AQA)", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
     // Computer networks topics
-    {id: TAG_ID.networking, title: "Networking", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.networkHardware, title: "Network hardware", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.internet, title: "Internet", parent: TAG_ID.computerNetworks, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.networking, title: "Networking", parent: TAG_ID.computerNetworks, new: true},
+    {id: TAG_ID.networkHardware, title: "Network hardware", parent: TAG_ID.computerNetworks, new: true},
+    {id: TAG_ID.theInternet, title: "The internet", parent: TAG_ID.computerNetworks, new: true},
     {id: TAG_ID.security, title: "Security", parent: TAG_ID.computerNetworks, comingSoon: 'Apr 2020'},
     {id: TAG_ID.communication, title: "Communication (AQA)", parent: TAG_ID.computerNetworks, comingSoon: 'Apr 2020'},
     // Computer systems topics
     {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems},
     {id: TAG_ID.architecture, title: "Architecture", parent: TAG_ID.computerSystems, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems, comingSoon: 'Feb 2020'},
     {id: TAG_ID.operatingSystemsAndSoftware, title: "Operating systems and software", parent: TAG_ID.computerSystems},
-    {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems, new: true},
-    {id: TAG_ID.programmingLanguages, title: "Programming languages", parent: TAG_ID.computerSystems, new: true},
+    {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems},
+    {id: TAG_ID.programmingLanguages, title: "Programming languages", parent: TAG_ID.computerSystems},
     // Data and information topics
-    {id: TAG_ID.numberSystems, title: "Number systems (AQA)", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.numberSystems, title: "Number systems (AQA)", parent: TAG_ID.dataAndInformation, new: true},
     {id: TAG_ID.numberBases, title: "Number bases", parent: TAG_ID.dataAndInformation},
-    {id: TAG_ID.representation, title: "Representation", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.representation, title: "Representation", parent: TAG_ID.dataAndInformation, new: true},
     {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation, new: true},
+    {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation},
     {id: TAG_ID.databases, title: "Databases", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, comingSoon: 'Feb 2020'},
 
-    // Functional programming topics
-    {id: TAG_ID.functions, title: "Functions", parent: TAG_ID.functionalProgramming, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.lists, title: "Lists", parent: TAG_ID.functionalProgramming, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.higherOrderFunctions, title: "Higher order functions", parent: TAG_ID.functionalProgramming, comingSoon: 'Jan 2020'},
-    // Object-oriented programming topics
-    {id: TAG_ID.oopConcepts, title: "OOP concepts", parent: TAG_ID.objectOrientedProgramming, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.creatingObjects, title: "Creating objects", parent: TAG_ID.objectOrientedProgramming, comingSoon: 'Jan 2020'},
-    {id: TAG_ID.classDiagrams, title: "Class diagrams", parent: TAG_ID.objectOrientedProgramming, comingSoon: 'Jan 2020'},
     // Procedural programming topics
     {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.programmingFundamentals},
     {id: TAG_ID.stringManipulation, title: "String manipulation", parent: TAG_ID.programmingFundamentals},
     {id: TAG_ID.subroutines, title: "Subroutines", parent: TAG_ID.programmingFundamentals},
     {id: TAG_ID.files, title: "Files", parent: TAG_ID.programmingFundamentals},
     {id: TAG_ID.structureAndRobustness, title: "Structure & robustness", parent: TAG_ID.programmingFundamentals, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.programmingFundamentals, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.guis, title: "GUIs (OCR)", parent: TAG_ID.programmingFundamentals, comingSoon: 'Jan 2020'},
+    {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.programmingFundamentals, comingSoon: 'Feb 2020'},
+    {id: TAG_ID.guis, title: "GUIs (OCR)", parent: TAG_ID.programmingFundamentals, new: true},
     {id: TAG_ID.planningAndDebugging, title: "Planning and debugging", parent: TAG_ID.dataStructuresAndAlgorithms, comingSoon: 'Apr 2020'},
     {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.programmingFundamentals, comingSoon: 'Apr 2020'},
+    // Programming paradigms topics:
+    {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programmingParadigms, new: true},
+    {id: TAG_ID.functionalProgramming, title: "Functional programming (AQA)", parent: TAG_ID.programmingParadigms, new: true},
     // Software project topics
-    {id: TAG_ID.softwareProject, title: "Software project", parent: TAG_ID.computingPracticalProject, new: true},
+    {id: TAG_ID.softwareProject, title: "Software project", parent: TAG_ID.computingPracticalProject},
 ];
 
 const getBaseTagById = (id: TAG_ID) => {
