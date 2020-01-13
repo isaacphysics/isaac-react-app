@@ -5,6 +5,6 @@ import {PageFragment} from "../elements/PageFragment";
 
 export const ComingSoon = () => <Container>
     <TitleAndBreadcrumb currentPageTitle="Coming soon" />
-    <br/>
+    <div className="mt-4"/>
     <PageFragment fragmentId="comingSoon"/>
 </Container>;
