@@ -22,7 +22,7 @@ import {
     AppGroupMembership,
     ATTENDANCE,
     BoardOrder,
-    EmailUserRoles,
+    EmailUserRoles, FreeTextRule,
     LoggedInUser,
     LoggedInValidationUser,
     QuestionSearchQuery,
@@ -42,7 +42,7 @@ import {
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO,
-    GlossaryTermDTO
+    GlossaryTermDTO, TestCaseDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -776,6 +776,18 @@ export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<
         </div>
     }) as any);
     history.push(generatePostQuizUrl(quizId));
+};
+
+// Question testing
+export const testQuestion = (choices: FreeTextRule[], testCases: TestCaseDTO[]) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.TEST_QUESTION_REQUEST});
+        const testResponse = await api.tests.freeTextRules(choices, testCases);
+        dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS, testCaseResponses: testResponse.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to test question", e));
+    }
 };
 
 // Current gameboard

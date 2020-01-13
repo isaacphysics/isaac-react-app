@@ -36,7 +36,7 @@ import {
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
     UserSummaryWithGroupMembershipDTO,
-    GlossaryTermDTO
+    GlossaryTermDTO, TestCaseDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
@@ -206,7 +206,6 @@ export const constants = (constants: ConstantsState = null, action: Action) => {
     }
 };
 
-
 type DocState = ContentDTO | NOT_FOUND_TYPE | null;
 export const doc = (doc: DocState = null, action: Action) => {
     switch (action.type) {
@@ -294,6 +293,18 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
         }
         default: {
             return questions;
+        }
+    }
+};
+
+type TestQuestionsState = TestCaseDTO[] | null;
+export const testQuestions = (testQuestions: TestQuestionsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS: {
+            return action.testCaseResponses;
+        }
+        default: {
+            return testQuestions;
         }
     }
 };
@@ -785,7 +796,8 @@ const appReducer = combineReducers({
     eventOverviews,
     eventBookings,
     fragments,
-    glossaryTerms
+    glossaryTerms,
+    testQuestions
 });
 
 export type AppState = undefined | {
@@ -824,6 +836,7 @@ export type AppState = undefined | {
     eventBookings: EventBookingsState;
     fragments: FragmentsState;
     glossaryTerms: GlossaryTermsState;
+    testQuestions: TestQuestionsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

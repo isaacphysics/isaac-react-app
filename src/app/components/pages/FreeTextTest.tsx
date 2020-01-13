@@ -5,12 +5,15 @@ import * as RS from "reactstrap";
 import {TestCaseDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {useDispatch, useSelector} from "react-redux";
+import {testQuestion} from "../../state/actions";
+import {AppState} from "../../state/reducers";
 
 interface AugmentedTestCase extends TestCaseDTO {
     match?: boolean;
 }
 
-// JS implementation of something similar to Java's toHash(). Good and quick enough for our use here.
+// JS implementation of something similar to Java's toHash() - from StackOverflow. Good enough for our use here.
 function stringHash(input: string) {
     let hash = 0;
     for (let i = 0; i < input.length; i++) {
@@ -54,15 +57,15 @@ const defaultChoice = {
 };
 const defaultTestCase = {choice: {type: "stringChoice", value: ""}, expected: true};
 
-
 export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
-    const [testCaseOutputs, setTestCaseOutputs] = useState<TestCaseDTO[]>([]); // This will be deleted when it is in redux
+    const dispatch = useDispatch();
+    const testCaseResponses = useSelector((state: AppState) => state && state.testQuestions || []);
 
     const [choices, setChoices] = useState<(FreeTextRule & {choiceNumber: number})[]>([{...defaultChoice, choiceNumber: choiceNumber}]);
     const [testCaseInputs, setTestCaseInputs] = useState<(TestCaseDTO & {testNumber: number})[]>([{...defaultTestCase, testNumber: testCaseNumber}]);
 
     const augmentedTestCaseResponseMap: {[key: string]: AugmentedTestCase} = {};
-    for (const testCaseOutput of testCaseOutputs) {
+    for (const testCaseOutput of testCaseResponses) {
         const augmentedTestCaseOutput: AugmentedTestCase = testCaseOutput;
         if (augmentedTestCaseOutput.expected !== undefined) {
             augmentedTestCaseOutput.match = augmentedTestCaseOutput.expected == augmentedTestCaseOutput.actual;
@@ -70,28 +73,35 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
         const testCaseInput = {choice: augmentedTestCaseOutput.choice, expected: augmentedTestCaseOutput.expected};
         augmentedTestCaseResponseMap[testResponseHash(choices, testCaseInput)] = augmentedTestCaseOutput;
     }
-    const numberOfMatches = Object.values(augmentedTestCaseResponseMap).filter(testCase => testCase.match).length;
+    const numberOfResponseMatches = Object.values(augmentedTestCaseResponseMap).filter(testCase => testCase.match).length;
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle="Free-text question builder" />
         <RS.Card className="my-5">
             <RS.CardBody>
-                <RS.Form onSubmit={async (event: React.FormEvent) => {
+                <RS.Form onSubmit={(event: React.FormEvent) => {
                     if (event) {event.preventDefault();}
-                    const p = await api.tests.freeTextRules(choices, testCaseInputs);
-                    setTestCaseOutputs(p.data);
+                    const cleanedUpChoices = choices
+                        .map(c => {delete c.choiceNumber; return c;})
+                        .filter(c => choiceHash(c) != choiceHash(defaultChoice));
+                    const cleanedUpTestCases = testCaseInputs
+                        .map(tc => {delete tc.testNumber; return tc;})
+                        .filter(tc => testCaseHash(tc) != testCaseHash(defaultTestCase));
+                    dispatch(testQuestion(cleanedUpChoices, cleanedUpTestCases));
                 }}>
                     <h2 className="h4">Matching rules</h2>
                     <RS.Table>
                         <thead>
-                            <tr><th>Rule</th><th colSpan={2}>Response</th></tr>
+                            <tr><th>Rule</th><th colSpan={3}>Response</th></tr>
                         </thead>
                         <tbody>
                             {choices.map(choice => <tr key={choice.choiceNumber}>
                                 <td>
-                                    <RS.Label className="w-100 mb-3">
+                                    <RS.Label className="mb-3 w-100">
                                         Value
-                                        <RS.Input type="text" value={choice.value} onChange={e => {setChoices(choices.map(c => choice == c ? {...c, value: e.target.value} : c))}}/>
+                                        <RS.Input className="w-100" type="text" value={choice.value} onChange={e => {
+                                            setChoices(choices.map(c => choice == c ? {...c, value: e.target.value} : c))
+                                        }} />
                                     </RS.Label>
                                     <RS.Row>
                                         <RS.Col xs={3} className="text-center">
@@ -126,6 +136,8 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                         Feedback:
                                         <RS.Input type="textarea" value={(choice as any).explanation.children[0].value} />
                                     </RS.Label>
+                                </td>
+                                <td>
                                     <button
                                         className="close" aria-label="Delete matching rule"
                                         onClick={() => setChoices(choices.filter(choiceInState => choice !== choiceInState))}
@@ -135,7 +147,7 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                 </td>
                             </tr>)}
                             <tr className="border-bottom">
-                                <td colSpan={3} className="text-center">
+                                <td colSpan={4} className="text-center">
                                     <div className="img-center">
                                         <input
                                             type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid" alt="Add matching rule" title="Add question rule"
@@ -147,21 +159,29 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                         </tbody>
                     </RS.Table>
 
-                    <h2 className="h4">Test answers ({numberOfMatches}/{testCaseInputs.length})</h2>
+                    <h2 className="h4">Test answers ({numberOfResponseMatches}/{testCaseInputs.length})</h2>
                     <RS.Table>
                         <thead>
                             <tr>
-                                <th>Value</th>
                                 <th className="w-10 text-center">Expected</th>
+                                <th>Value</th>
                                 <th className="bg-light w-10 text-center">Actual</th>
                                 <th className="bg-light w-20">Feedback</th>
                                 <th className="bg-light w-10 text-center">Match</th>
+                                <th className="bg-light" />
                             </tr>
                         </thead>
                         <tbody>
                             {testCaseInputs.map(testCase => {
                                 const testCaseResponse = augmentedTestCaseResponseMap[testResponseHash(choices, testCase)];
                                 return <tr key={testCase.testNumber}>
+                                    <td className="w-10 text-center align-middle">
+                                        <RS.Button color="link" onClick={() =>
+                                            setTestCaseInputs(testCaseInputs.map(tc => testCase == tc ? {...tc, expected: !tc.expected} : tc))
+                                        }>
+                                            {testCase.expected !== undefined && displayBoolean(testCase.expected)}
+                                        </RS.Button>
+                                    </td>
                                     <td>
                                         <RS.Input
                                             type="text" value={testCase.choice && testCase.choice.value}
@@ -172,22 +192,18 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                             ))}
                                         />
                                     </td>
-                                    <td className="w-10 text-center">
-                                        <RS.Button color="link" onClick={() => setTestCaseInputs(testCaseInputs.map(tc => testCase == tc ? {...tc, expected: !tc.expected} : tc))}>
-                                            {testCase.expected !== undefined && displayBoolean(testCase.expected)}
-                                        </RS.Button>
-                                    </td>
 
-                                    <td className="bg-light w-10 text-center">
+                                    <td className="bg-light w-10 text-center align-middle">
                                         {testCaseResponse && testCaseResponse.actual !== undefined && displayBoolean(testCaseResponse.actual)}
                                     </td>
                                     <td className="bg-light">
                                         {testCaseResponse && testCaseResponse.explanation && <IsaacContent doc={testCaseResponse.explanation} />}
                                     </td>
-                                    <td className="bg-light w-10 text-center">
+                                    <td className="bg-light w-10 text-center align-middle">
                                         {testCaseResponse && testCaseResponse.actual !== undefined && displayBoolean(testCaseResponse.expected == testCaseResponse.actual)}
-                                        <button
-                                            className="close" aria-label="Delete matching rule"
+                                    </td>
+                                    <td className="bg-light">
+                                        <button className="close" aria-label="Delete matching rule"
                                             onClick={() => setTestCaseInputs(testCaseInputs.filter(testCaseInState => testCase !== testCaseInState))}
                                         >
                                             ×
@@ -198,7 +214,7 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                         </tbody>
                         <tfoot>
                             <tr className="border-bottom">
-                                <td colSpan={5} className="text-center">
+                                <td colSpan={6} className="text-center">
                                     <div className="img-center">
                                         <input
                                             type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid" alt="Add test answer" title="Add test answer"
@@ -209,35 +225,10 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                             </tr>
                         </tfoot>
                     </RS.Table>
+
                     <RS.Input type="submit" />
                 </RS.Form>
             </RS.CardBody>
         </RS.Card>
     </RS.Container>;
 };
-
-
-
-
-// const hardChoices = [
-//     {
-//         "type": "freeTextRule",
-//         "encoding": "markdown",
-//         "value": "get to other side",
-//         "caseInsensitive": true,
-//         "allowsAnyOrder": false,
-//         "allowsExtraWords": true,
-//         "allowsMisspelling": false,
-//         "correct": true,
-//         "explanation": {
-//             "type": "content",
-//             "children": [{"type": "content", "value": "This is a correct answer!", "encoding": "markdown"}],
-//             "encoding": "markdown"
-//         }
-//     }
-// ];
-//
-// const hardTestCases = [
-//     {choice: {type: "stringChoice", value: "get to the other side"}, expected: true},
-//     {choice: {type: "stringChoice", value: "don't know"}, expected: false}
-// ];

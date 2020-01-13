@@ -1,7 +1,7 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
-import {ContentDTO, FreeTextRuleDTO} from "./IsaacApiTypes";
+import {ContentDTO, FreeTextRuleDTO, TestCaseDTO} from "./IsaacApiTypes";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -158,6 +158,10 @@ export type Action =
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.TEST_QUESTION_REQUEST}
+    | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS; testCaseResponses: TestCaseDTO[]}
+    | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
