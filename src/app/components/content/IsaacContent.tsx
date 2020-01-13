@@ -5,6 +5,7 @@ import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
 import {IsaacVideo} from "./IsaacVideo";
 import {IsaacImage} from "./IsaacImage";
 import {IsaacFigure} from "./IsaacFigure";
+import {IsaacGlossaryTerm} from "./IsaacGlossaryTerm";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
 import {IsaacTabs} from "./IsaacTabs";
@@ -27,6 +28,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
         case "figure": selectedComponent = <IsaacFigure {...props} />; break;
         case "image": selectedComponent = <IsaacImage {...props} />; break;
         case "video": selectedComponent = <IsaacVideo {...props} />; break;
+        case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...props} />; break;
         // case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break; // TODO
         case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break;
         case "anvilApp": selectedComponent = <AnvilApp {...props} />; break;

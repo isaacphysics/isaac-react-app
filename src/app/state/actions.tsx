@@ -17,6 +17,7 @@ import {
     ActiveModal,
     ActualBoardLimit,
     AdditionalInformation,
+    AppGameBoard,
     AppGroup,
     AppGroupMembership,
     ATTENDANCE,
@@ -40,7 +41,8 @@ import {
     Role,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
+    UserSummaryWithEmailAddressDTO,
+    GlossaryTermDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -111,6 +113,9 @@ function showErrorToastIfNeeded(error: string, e: any) {
                 }) as any;
             }
         } else {
+            ReactGA.exception({
+                description: `load_fail: ${error}`
+            });
             return showToast({
                 color: "danger", title: error, timeout: 5000,
                 body: API_REQUEST_FAILURE_MESSAGE
@@ -636,6 +641,17 @@ export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) 
     }
 };
 
+// Glossary Terms
+export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST});
+    try {
+        const response = await api.glossary.getTerms();
+        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS, terms: response.data.results as GlossaryTermDTO[]});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE});
+    }
+};
+
 // Questions
 export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question});
@@ -785,8 +801,7 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
         if (isTeacher(user)) {
             history.push(`/set_assignments#${gameboardId}`);
         } else {
-            // FIXME - update this to be correct when My Boards is launched!
-            history.push(`/gameboards#${gameboardId}`);
+            history.push(`/my_gameboards#${gameboardId}`);
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
@@ -1163,9 +1178,22 @@ export const loadGroupsForBoard = (board: GameboardDTO) => async (dispatch: Disp
     }
 };
 
-export const deleteBoard = (board: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
+export const deleteBoard = (board: AppGameBoard) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const reduxState = getState();
     dispatch({type: ACTION_TYPE.BOARDS_DELETE_REQUEST, board});
     try {
+        await loadGroupsForBoard(board);
+        const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
+        if (hasAssignedGroups) {
+            if (reduxState && reduxState.user && reduxState.user.loggedIn && (reduxState.user.role == "ADMIN" || reduxState.user.role == "EVENT_MANAGER")) {
+                if (!confirm(`Warning: You currently have groups assigned to ${board.title}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.`)) {
+                    return;
+                }
+            } else {
+                showToast({color: "failure", title: "Gameboard Deletion Not Allowed", body: `You have groups assigned to ${board.title}. To delete this gameboard, you must unassign all groups.`, timeout: 5000});
+                return;
+            }
+        }
         await api.boards.delete(board);
         dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, board});
         dispatch(showToast({color: "success", title: "Gameboard deleted", body: "You have deleted gameboard " + board.title, timeout: 5000}) as any);
@@ -1310,6 +1338,17 @@ export const getEventBookings = (eventId: string) => async (dispatch: Dispatch<A
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
+    }
+};
+
+export const getEventBookingCSV = (eventId: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST});
+        const response = await api.eventBookings.getEventBookingCSV(eventId);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_SUCCESS, eventBookingCSV: response.data});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load event booking csv", error) as any);
     }
 };
 

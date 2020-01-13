@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo, useState, ReactNode} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
@@ -59,7 +59,7 @@ export const Tabs = (props: TabsProps) => {
             {Object.entries(tabs).map(([tabTitle, tabBody], mapIndex) => {
                 const tabIndex = mapIndex + 1;
                 return <TabPane key={tabTitle} tabId={tabIndex}>
-                    {tabBody}
+                    {tabBody as ReactNode}
                 </TabPane>;
             })}
         </TabContent>
