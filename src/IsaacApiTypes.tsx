@@ -131,6 +131,7 @@ export interface IsaacSymbolicQuestionDTO extends IsaacQuestionBaseDTO {
 }
 
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
+    linkedGameboards?: GameboardDTO[];
 }
 
 export interface IsaacWildcardDTO extends ContentDTO {
