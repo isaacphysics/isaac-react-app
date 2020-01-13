@@ -144,7 +144,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
                         {query != "" && <RS.CardBody>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0 ?
-                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults}/>
+                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} displayTopicTitle={true}/>
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </RS.CardBody>}

@@ -5,11 +5,11 @@ import katex from "katex";
 class MenuItem {
     constructor(public type: string,
                 public properties: any,
-                public menu: { label: string, texLabel: boolean, className: string }) {}
+                public menu: { label: string; texLabel: boolean; className: string }) {}
 }
 
 interface InequalityModalProps {
-    availableSymbols?: Array<string>;
+    availableSymbols?: string[];
     sketch?: Inequality;
     close: () => void;
     onEditorStateChange: (state: any) => void;
@@ -19,14 +19,14 @@ interface InequalityModalProps {
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
     state: {
-        sketch?: Inequality | null,
-        activeMenu: string,
-        activeSubMenu: string,
-        trashActive: boolean,
-        menuOpen: boolean,
-        editorState: any,
-        menuItems: { [key: string]: Array<MenuItem> },
-        defaultMenu: boolean
+        sketch?: Inequality | null;
+        activeMenu: string;
+        activeSubMenu: string;
+        trashActive: boolean;
+        menuOpen: boolean;
+        editorState: any;
+        menuItems: { [key: string]: MenuItem[] };
+        defaultMenu: boolean;
     };
 
     private _vHexagon = `
@@ -159,13 +159,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             inequalityElement.removeChild(inequalityElement.getElementsByTagName('canvas')[0]);
         }
 
-        document.documentElement.style.width = null;
-        document.documentElement.style.height = null;
-        document.documentElement.style.overflow = null;
+        document.documentElement.style.width = '';
+        document.documentElement.style.height = '';
+        document.documentElement.style.overflow = '';
         document.documentElement.style.touchAction = 'auto';
-        document.body.style.width = null;
-        document.body.style.height = null;
-        document.body.style.overflow = null;
+        document.body.style.width = '';
+        document.body.style.height = '';
+        document.body.style.overflow = '';
         document.body.style.touchAction = 'auto';
     }
 

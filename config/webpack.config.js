@@ -339,6 +339,8 @@ module.exports = function(webpackEnv) {
                 customize: require.resolve(
                   'babel-preset-react-app/webpack-overrides'
                 ),
+
+                presets: ["react-app"],
                 
                 plugins: [
                   [
@@ -473,6 +475,10 @@ module.exports = function(webpackEnv) {
       ],
     },
     plugins: [
+        new webpack.DefinePlugin({
+          ISAAC_SITE: '"cs"',
+        }),
+
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(

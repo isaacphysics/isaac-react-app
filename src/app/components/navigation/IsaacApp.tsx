@@ -21,7 +21,7 @@ import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
 import {NotFound} from "../pages/NotFound";
-import {requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
+import {fetchGlossaryTerms, requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
@@ -56,6 +56,7 @@ import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
 import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
+import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
 
@@ -71,6 +72,7 @@ export const IsaacApp = () => {
     useEffect(() => {
         dispatch(requestCurrentUser());
         dispatch(requestConstantsSegueEnvironment());
+        dispatch(fetchGlossaryTerms());
     }, []);
 
     // Render
@@ -106,6 +108,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/topics/:topicName" component={Topic} />
 
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
+                    <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
                     <TrackedRoute exact path="/gameboard_builder" ifUser={isTeacher} component={GameboardBuilder} />
                     <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
                     <TrackedRoute exact path="/add_gameboard/:gameboardId" ifUser={isLoggedIn} component={AddGameboard} />
@@ -126,7 +129,7 @@ export const IsaacApp = () => {
 
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
-                    <TrackedRoute exact path="/admin/usermanager" ifUser={isAdmin} component={AdminUserManager} />
+                    <TrackedRoute exact path="/admin/usermanager" ifUser={isAdminOrEventManager} component={AdminUserManager} />
                     <TrackedRoute exact path="/admin/events" ifUser={user => isAdminOrEventManager(user) || isEventLeader(user)} component={EventManager} />
                     <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
                     <TrackedRoute exact path="/admin/content_errors" ifUser={isStaff} component={AdminContentErrors} />

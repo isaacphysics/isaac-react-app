@@ -7,6 +7,7 @@ import {LoggedInUser} from "../../../IsaacAppTypes";
 import {WhySignUpTabs} from "../elements/WhySignUpTabs";
 import {FeaturedContentTabs} from "../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../elements/EventsCarousel";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
@@ -16,7 +17,7 @@ interface HomePageProps {
 }
 export const HomepageComponent = ({user}: HomePageProps) => {
     useEffect( () => {
-        document.title = "Isaac Computer Science";
+        document.title = "Isaac " + SITE_SUBJECT_TITLE;
     }, []);
     return <div id="homepage">
         <section id="call-to-action" className="homepageHero">
@@ -37,11 +38,11 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                                     <li>Use it for <strong>revision</strong></li>
                                 </ul>
                                 <p>
-                                    We also offer free <Link to="/events" target="_blank">teacher CPD events</Link> and {" "}
+                                    We also offer free <Link to="/events?types=teacher" target="_blank">teacher CPD events</Link> and {" "}
                                     <span className="text-nowrap">
-                                        <Link to="/events" target="_blank">student workshops</Link>.
+                                        <Link to="/events?types=student" target="_blank">student workshops</Link>.
                                     </span> {" "}
-                                    Isaac Computer Science is proud to be part of the Department for Education’s {" "}
+                                    Isaac Computer Science is proud to be part of the Department for Education&apos;s {" "}
                                     <span className="text-nowrap">
                                         <a href="https://teachcomputing.org/" target="_blank" rel="noopener noreferrer" >National Centre for Computing Education</a>.
                                     </span>

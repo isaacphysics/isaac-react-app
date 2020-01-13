@@ -5,7 +5,7 @@ import {AppState} from "../../state/reducers";
 import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {ContentSummaryDTO, IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardDTO, IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {filterAndSeparateRelatedContent} from "../../services/topics";
 import {Button, Col, Container, Row} from "reactstrap";
@@ -43,7 +43,7 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
             filterAndSeparateRelatedContent(topicPage.relatedContent, examBoard);
     }
     const searchQuery = `?topic=${topicName}`;
-    const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards.filter((gameboard) => {
+    const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards.filter((gameboard: GameboardDTO) => {
         return gameboard.tags && gameboard.tags.includes(examBoardTagMap[examBoard]);
     });
 
@@ -62,6 +62,13 @@ const TopicPageComponent = ({topicName, topicPage, fetchTopicSummary, userPrefer
                     }
                     {relatedQuestions && atLeastOne(relatedQuestions.length) &&
                         <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
+                    }
+                    {(!relatedQuestions || !atLeastOne(relatedQuestions.length)) &&
+                        (!relatedConcepts || !atLeastOne(relatedConcepts.length)) && <div className='text-center py-3'>
+                        <div className='alert alert-warning'>
+                            There is no material in this topic for the {examBoard} exam board.
+                        </div>
+                    </div>
                     }
 
                     <Row>
