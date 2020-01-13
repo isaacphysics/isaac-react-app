@@ -85,8 +85,8 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
     const numberOfResponseMatches = Object.values(augmentedTestCaseResponseMap).filter(testCase => testCase.match).length;
 
     return <RS.Container>
-        <TitleAndBreadcrumb currentPageTitle="Free-text question builder" />
-        <RS.Card className="my-5">
+        <TitleAndBreadcrumb className="mb-4" currentPageTitle="Free-text question builder" />
+        <RS.Card className="mb-5">
             <RS.CardBody>
                 <RS.Form onSubmit={(event: React.FormEvent) => {
                     if (event) {event.preventDefault();}
@@ -103,7 +103,7 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                     }
                 }}>
                     <h2 className="h3">Matching rules</h2>
-                    <RS.Table>
+                    <RS.Table className="mb-5">
                         <thead>
                             <tr><th>Rule</th><th colSpan={3}>Response</th></tr>
                         </thead>
@@ -166,6 +166,8 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                     </button>
                                 </td>
                             </tr>)}
+                        </tbody>
+                        <tfoot>
                             <tr className="border-bottom">
                                 <td colSpan={4} className="text-center pb-3">
                                     <RS.Button color="link" onClick={() => setChoices([...choices, generateDefaultChoice()])}>
@@ -173,11 +175,11 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                     </RS.Button>
                                 </td>
                             </tr>
-                        </tbody>
+                        </tfoot>
                     </RS.Table>
 
-                    <h2 className="h3 mt-5">Test answers ({numberOfResponseMatches}/{testCaseInputs.length})</h2>
-                    <RS.Table>
+                    <h2 className="h3">Test answers ({numberOfResponseMatches}/{testCaseInputs.length})</h2>
+                    <RS.Table className="mb-5">
                         <thead>
                             <tr>
                                 <th className="w-10 text-center">Expected</th>
