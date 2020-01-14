@@ -10,7 +10,7 @@ import {
     Table
 } from "reactstrap";
 import { RegisteredUserDTO, UserGroupDTO } from "../../../../IsaacApiTypes";
-import { AppState } from "../../../state/reducers";
+import { AppState, currentEvent } from "../../../state/reducers";
 import { groups } from '../../../state/selectors';
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { AppGroup, AppGroupMembership } from "../../../../IsaacAppTypes";
@@ -41,6 +41,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
     const [unbookedUsers, setUnbookedUsers] = useState<AppGroupMembership[]>([]);
     const [userCheckboxes, setUserCheckboxes] = useState<{[key: number]: boolean}>({});
     const [checkAllCheckbox, setCheckAllCheckbox] = useState<boolean>(false);
+    // const [reservationLimitReached, setReservationLimitReached] = useState<boolean>(false);
 
     const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
 
@@ -74,7 +75,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
             const newUnbookedUsers = _orderBy(
                 currentGroup.members.filter(member => !bookedUserIds.includes(member.id as number)),
                 ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']
-                );
+            );
             let newUserCheckboxes: boolean[] = [];
             for (const user of newUnbookedUsers) {
                 if (!user.id || !user.authorisedFullAccess) continue;
@@ -117,6 +118,19 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
             await dispatch(cancelUserBooking(selectedEvent.id, userId));
             dispatch(getEventBookingsForGroup(selectedEvent.id, currentGroup.id) as any);
         }
+    }
+
+    const isReservationLimitReached = () => {
+        if (eventBookingsForGroup && selectedEvent && selectedEvent.groupReservationLimit) {
+            // af599 TODO: Do we want a limit on currently open reservations, or a limit on how many reserved and confirmed students a teacher can reserve?
+            //             The following does the latter. The one commented does the former. Remember to change the API to match.
+            const bookings = eventBookingsForGroup.filter(booking => booking.reservedBy && booking.reservedBy.id === currentUser.id);
+            // const bookings = eventBookingsForGroup.filter(booking => booking.bookingStatus === 'RESERVED' && booking.reservedBy && booking.reservedBy.id === currentUser.id);
+            const candidateBookings = Object.values(userCheckboxes).filter(c => c);
+            return (candidateBookings.length + bookings.length) > selectedEvent.groupReservationLimit;
+        }
+        // By default, return true to disable all the checkboxes: prevents awkward situations.des
+        return true;
     }
 
     return <React.Fragment>
@@ -166,22 +180,22 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                         {/* af599 TODO: Probably find a better way of filtering these, but doing so on the useSelector above breaks things. */}
                         {eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").length > 0 &&
                          eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => {
-                            return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
-                                <td className="align-middle">
-                                    {booking.userBooked &&
-                                    (booking.reservedBy && booking.reservedBy.id === currentUser.id) &&
-                                    (booking.bookingStatus == 'RESERVED') &&
+                             return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
+                                 <td className="align-middle">
+                                     {booking.userBooked &&
+                                      (booking.reservedBy && booking.reservedBy.id === currentUser.id) &&
+                                      (booking.bookingStatus == 'RESERVED') &&
                                         <Button key={booking.userBooked.id}
-                                                id={`${booking.userBooked.id}`}
-                                                color="link" outline block className="btn-sm mb-1"
-                                                onClick={() => cancelReservationForUserId(booking.userBooked && booking.userBooked.id)}
+                                            id={`${booking.userBooked.id}`}
+                                            color="link" outline block className="btn-sm mb-1"
+                                            onClick={() => cancelReservationForUserId(booking.userBooked && booking.userBooked.id)}
                                         >Cancel</Button>}
-                                </td>
-                                <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)}</td>
-                                <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
-                                <td className="align-middle">{booking.reservedBy && (booking.reservedBy.givenName + " " + booking.reservedBy.familyName)}</td>
-                            </tr>)
-                        })}
+                                 </td>
+                                 <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)}</td>
+                                 <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
+                                 <td className="align-middle">{booking.reservedBy && (booking.reservedBy.givenName + " " + booking.reservedBy.familyName)}</td>
+                             </tr>)
+                         })}
                         {eventBookingsForGroup.length == 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
                     </tbody>
                 </Table>
@@ -193,12 +207,13 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                         </tr>
                         <tr>
                             <th className="w-auto text-nowrap align-middle">
-                                <CustomInput id="check_all_unbooked"
-                                             type="checkbox"
-                                             label="Select all"
-                                             checked={checkAllCheckbox}
-                                             onChange={() => toggleAllUnbooked()}
-                                             disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
+                                <CustomInput
+                                    id="check_all_unbooked"
+                                    type="checkbox"
+                                    label="Select all"
+                                    checked={checkAllCheckbox}
+                                    onChange={() => toggleAllUnbooked()}
+                                    disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
                                 />
                             </th>
                             <th className="w-100 align-middle">
@@ -210,7 +225,8 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                         {unbookedUsers.length > 0 && unbookedUsers.map(user => {
                             return (user.id && <tr key={user.id}>
                                 <td className="w-auto align-middle">
-                                    <CustomInput key={user.id}
+                                    <CustomInput
+                                        key={user.id}
                                         id={`${user.id}`}
                                         type="checkbox"
                                         name={`unbooked_student-${user.id}`}
@@ -226,7 +242,10 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                 </Table>
 
                 <Row className="mb-5 toolbar">
-                    <Col><Button disabled={!Object.values(userCheckboxes).some(v => v)} onClick={requestReservations}>Reserve</Button></Col>
+                    <Col>
+                        {isReservationLimitReached() && <p className="text-danger">You can only reserve a maximum of {selectedEvent && selectedEvent.groupReservationLimit} group members onto this event.</p>}
+                        <Button disabled={!Object.values(userCheckboxes).some(v => v) || isReservationLimitReached()} onClick={requestReservations}>Reserve</Button>
+                    </Col>
                 </Row>
             </Col>}
         </Row>
