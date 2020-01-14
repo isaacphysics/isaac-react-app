@@ -31,7 +31,7 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
-export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_nov19_aqa', 'class_test_nov19_ocr'];
+export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_jan20_aqa', 'class_test_jan20_ocr'];
 
 export const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB");
 export const DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
