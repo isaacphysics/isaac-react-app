@@ -9,14 +9,14 @@ import {AppState} from "../../../state/reducers";
 export const TempExamBoardPicker = ({className, hideLabel = true}: {className?: string; hideLabel?: boolean}) => {
     const dispatch = useDispatch();
     const user = useSelector((state: AppState) => state && state.user || null);
-    const examBoard = useCurrentExamBoard();
+    const currentExamBoard = useCurrentExamBoard();
 
     return <React.Fragment>
-        {(!(user && user.loggedIn) || user.examBoard == EXAM_BOARD.OTHER) && <FormGroup className={className}>
+        {(!user?.loggedIn || user.examBoard === undefined || user.examBoard === EXAM_BOARD.OTHER) && <FormGroup className={className}>
             {!hideLabel && <Label className="d-inline-block pr-2" for="examBoardSelect">Exam Board</Label>}
             <Input
                 className="w-auto d-inline-block pl-1 pr-0" type="select" name="select" id="examBoardSelect"
-                value={examBoard}
+                value={currentExamBoard}
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     const examBoard = event.target.value;
                     if (examBoard in EXAM_BOARD) {
