@@ -10,10 +10,10 @@ import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryLi
 import {filterAndSeparateRelatedContent} from "../../services/topics";
 import {Button, Col, Container, Row} from "reactstrap";
 import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID} from "../../services/constants";
+import {useCurrentExamBoard} from "../../services/examBoard";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {atLeastOne} from "../../services/validation";
-import {useCurrentExamBoard} from "../../services/examBoard";
 
 export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
     const dispatch = useDispatch();
@@ -51,6 +51,13 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     }
                     {relatedQuestions && atLeastOne(relatedQuestions.length) &&
                         <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
+                    }
+                    {(!relatedQuestions || !atLeastOne(relatedQuestions.length)) &&
+                        (!relatedConcepts || !atLeastOne(relatedConcepts.length)) && <div className='text-center py-3'>
+                        <div className='alert alert-warning'>
+                            There is no material in this topic for the {examBoard} exam board.
+                        </div>
+                    </div>
                     }
 
                     <Row>

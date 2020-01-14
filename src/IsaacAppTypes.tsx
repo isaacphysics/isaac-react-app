@@ -435,7 +435,9 @@ export interface ActiveModal {
 
 export enum BoardOrder {
     "created" = "created",
+    "-created" = "-created",
     "visited" = "visited",
+    "-visited" = "-visited",
     "title" = "title",
     "-title" = "-title"
 }
