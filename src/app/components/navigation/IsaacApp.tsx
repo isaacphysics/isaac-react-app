@@ -40,7 +40,7 @@ import {Header} from "./Header";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
-import {isAdmin, isEventLeader, isAdminOrEventManager, isLoggedIn, isStaff, isTeacher} from "../../services/user";
+import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {ActiveModals} from "../elements/modals/ActiveModals";
 import {Groups} from "../pages/Groups";
 import {Equality} from '../pages/Equality';
@@ -59,6 +59,8 @@ import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
+import {SITE_SUBJECT} from "../../services/siteConstants";
+import {HeaderPhy} from "./HeaderPhy";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -78,7 +80,7 @@ export const IsaacApp = () => {
     // Render
     return <Router history={history}>
         <React.Fragment>
-            <Header />
+            {SITE_SUBJECT == "physics" ? <HeaderPhy /> : <Header />}
             <Toasts />
             <ActiveModals />
             <CookieBanner />
