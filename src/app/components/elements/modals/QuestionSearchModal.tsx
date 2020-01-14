@@ -17,13 +17,14 @@ import {allTagIds, getSubcategoryTags} from "../../../services/tags";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
+import {useCurrentExamBoard} from "../../../services/examBoard";
 
 interface QuestionSearchModalProps {
     originalSelectedQuestions: Map<string, ContentSummaryDTO>;
     setOriginalSelectedQuestions: (m: Map<string, ContentSummaryDTO>) => void;
     originalQuestionOrder: string[];
     setOriginalQuestionOrder: (a: string[]) => void;
-    eventLog: any[];
+    eventLog: object[];
 }
 
 export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
@@ -39,7 +40,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
     const questions = useSelector((state: AppState) => state && state.gameboardEditorQuestions);
-    const userPreferences = useSelector((state: AppState) => state && state.userPreferences);
+    const user = useSelector((state: AppState) => state && state.user);
+    const examBoard = useCurrentExamBoard();
 
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], levels: string[], examBoard: string[], fasttrack: boolean, startIndex: number) => {
@@ -60,19 +62,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     };
 
     useMemo(() => {
-        if (userPreferences && userPreferences.EXAM_BOARD) {
-            let examBoard;
-            if (userPreferences.EXAM_BOARD[EXAM_BOARD.AQA]) {
-                examBoard = EXAM_BOARD.AQA;
-            } else if (userPreferences.EXAM_BOARD[EXAM_BOARD.OCR]) {
-                examBoard = EXAM_BOARD.OCR;
-            }
-
-            if (examBoard) {
-                setSearchExamBoards([examBoardTagMap[examBoard]]);
-            }
-        }
-    }, [userPreferences]);
+        setSearchExamBoards([examBoardTagMap[examBoard]]);
+    }, [user]);
 
     useEffect(() => {
         searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, false, 0);
