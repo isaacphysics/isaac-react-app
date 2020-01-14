@@ -70,6 +70,7 @@ type UserPreferencesState = UserPreferencesDTO | null;
 export const userPreferences = (userPreferences: UserPreferencesState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
+            return {...action.userPreferences};
         default:
             return userPreferences;
     }
