@@ -1,6 +1,5 @@
 import React, {useMemo, useState} from "react";
 import {FreeTextRule, LoggedInUser} from "../../../IsaacAppTypes";
-import {api} from "../../services/api";
 import * as RS from "reactstrap";
 import {TestCaseDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "../content/IsaacContent";
@@ -37,16 +36,17 @@ function testCaseHash(testCaseInput: TestCaseDTO) {
     return (testCaseInput.choice && testCaseInput.choice.value || "") + testCaseInput.expected;
 }
 
-function testResponseHash(choices: FreeTextRule[], testCase: TestCaseDTO) {
-    const choiceHashes = new Set();
-    for (let choice of choices) {
-        choiceHashes.add(choiceHash(choice));
-    }
-    return stringHash(choiceHashes.values() + testCaseHash(testCase));
+function choicesHash(choices: FreeTextRule[]) {
+    return stringHash(choices.map(c => choiceHash(c)).join(","));
 }
 
-function displayBoolean(boolean?: boolean) {
-    return boolean ? "✔️" : "❌"
+function checkMark(boolean?: boolean) {
+    switch (boolean) {
+        case true:
+            return "✔️";
+        case false:
+            return "❌";
+    }
 }
 
 let choiceNumber = 0;
@@ -84,17 +84,13 @@ function notEqualToDefaultTestCase(testCase: TestCaseDTO) {
     return testCaseHash(testCase) != testCaseHash(defaultTestCaseExample);
 }
 
-function convertTestCasesToCsv(testCases: (TestCaseDTO & {testCaseNumber: number})[]) {
+function convertTestCasesToCsv(testCases: TestCaseDTO[]) {
     return testCases.map(tc => `${tc.expected},${tc.choice?.value?.replace("\n", "\\n")}`).join("\n");
 }
 function convertCsvToTestCases(testCasesCsv: string) {
     return testCasesCsv.split("\n").map((testCaseString, index) => {
         const [expected, ...value] = testCaseString.split(",");
-        return {
-            testCaseNumber: index,
-            expected: expected === "true",
-            choice: {type: "stringChoice", value: value.join(",")}
-        };
+        return {testCaseNumber: index, expected: expected === "true", choice: {type: "stringChoice", value: value.join(",")}};
     })
 }
 
@@ -102,30 +98,31 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
     const dispatch = useDispatch();
     const testCaseResponses = useSelector((state: AppState) => state && state.testQuestions || []);
 
-    const [choices, setChoices] = useState<(FreeTextRule & {choiceNumber: number})[]>([{...JSON.parse(JSON.stringify(defaultChoiceExample))}]);
-    const [testCaseInputs, setTestCaseInputs] = useState<(TestCaseDTO & {testCaseNumber: number})[]>([{...JSON.parse(JSON.stringify(defaultTestCaseExample))}]);
-    const [testCasesCsv, setTestCasesCsv] = useState(convertTestCasesToCsv(testCaseInputs));
-    useMemo(() => {setTestCasesCsv(convertTestCasesToCsv(testCaseInputs))}, [testCaseInputs]);
+    const [choices, setChoices] = useState<(FreeTextRule & {choiceNumber: number})[]>([JSON.parse(JSON.stringify(defaultChoiceExample))]);
+    const [testCases, setTestCases] = useState<(TestCaseDTO & {testCaseNumber: number})[]>([JSON.parse(JSON.stringify(defaultTestCaseExample))]);
+    const [testCasesCsv, setTestCasesCsv] = useState(convertTestCasesToCsv(testCases));
+    const [choicesHashAtPreviousRequest, setChoicesHashAtPreviousRequest] = useState<number | null>(null);
+    useMemo(() => {setTestCasesCsv(convertTestCasesToCsv(testCases))}, [testCases]);
 
-    const augmentedTestCaseResponseMap: {[key: string]: AugmentedTestCase} = {};
-    for (const testCaseOutput of testCaseResponses) {
-        const augmentedTestCaseOutput: AugmentedTestCase = JSON.parse(JSON.stringify(testCaseOutput));
-        if (augmentedTestCaseOutput.expected !== undefined) {
-            augmentedTestCaseOutput.match = augmentedTestCaseOutput.expected == augmentedTestCaseOutput.actual;
-        }
-        const testCaseInput = {choice: augmentedTestCaseOutput.choice, expected: augmentedTestCaseOutput.expected};
-        augmentedTestCaseResponseMap[testResponseHash(choices, testCaseInput)] = augmentedTestCaseOutput;
+    const testCaseResponseMap: {[key: string]: AugmentedTestCase} = {};
+    if (choicesHashAtPreviousRequest === choicesHash(choices)) {
+        // augment response with whether or not there was a match between the expected and actual
+        // and populate the test case response map
+        testCaseResponses
+            .map(response => Object.assign(response, {match: response.expected !== undefined ? response.expected === response.actual : undefined}))
+            .forEach(testCaseResponse => testCaseResponseMap[testCaseHash(testCaseResponse)] = testCaseResponse);
     }
-    const numberOfResponseMatches = Object.values(augmentedTestCaseResponseMap).filter(testCase => testCase.match).length;
+    const numberOfResponseMatches = Object.values(testCaseResponseMap).filter(testCase => testCase.match).length;
 
     return <RS.Container>
         <TitleAndBreadcrumb className="mb-4" currentPageTitle="Free-text question builder" />
         <RS.Form onSubmit={(event: React.FormEvent) => {
             if (event) {event.preventDefault();}
-            const cleanedUpChoices = choices.map(removeChoiceNumber).filter(notEqualToDefaultChoice);
-            const cleanedUpTestCases = testCaseInputs.map(removeTestCaseNumber).filter(notEqualToDefaultTestCase);
-            if (cleanedUpChoices.length > 0 && cleanedUpTestCases.length > 0) {
-                dispatch(testQuestion(cleanedUpChoices, cleanedUpTestCases));
+            setChoicesHashAtPreviousRequest(choicesHash(choices));
+            const cleanChoices = choices.map(removeChoiceNumber).filter(notEqualToDefaultChoice);
+            const cleanTestCases = testCases.map(removeTestCaseNumber).filter(notEqualToDefaultTestCase);
+            if (cleanChoices.length > 0 && cleanTestCases.length > 0) {
+                dispatch(testQuestion(cleanChoices, cleanTestCases));
             }
         }}>
             <RS.Card className="mb-4">
@@ -134,12 +131,7 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                     <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
                         {{
                             'GUI': <RS.Table className="mb-3">
-                                <thead>
-                                    <tr>
-                                        <th>Rule</th>
-                                        <th colSpan={3}>Response</th>
-                                    </tr>
-                                </thead>
+                                <thead><tr><th>Rule</th><th colSpan={3}>Response</th></tr></thead>
                                 <tbody>
                                     {choices.map(choice => <tr key={choice.choiceNumber}>
                                         <td>
@@ -152,29 +144,29 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                             <RS.Row>
                                                 <RS.Col xs={3} className="text-center">
                                                     <RS.Button color="link" onClick={() => setChoices(choices.map(c => choice == c ? {...c, caseInsensitive: !c.caseInsensitive} : c))}>
-                                                        <RS.Label>Ignore case {displayBoolean(choice.caseInsensitive)}</RS.Label>
+                                                        <RS.Label>Ignore case {checkMark(choice.caseInsensitive)}</RS.Label>
                                                     </RS.Button>
                                                 </RS.Col>
                                                 <RS.Col xs={3} className="text-center">
                                                     <RS.Button color="link" onClick={() => setChoices(choices.map(c => choice == c ? {...c, allowsAnyOrder: !c.allowsAnyOrder} : c))}>
-                                                        <RS.Label>Any order {displayBoolean(choice.allowsAnyOrder)}</RS.Label>
+                                                        <RS.Label>Any order {checkMark(choice.allowsAnyOrder)}</RS.Label>
                                                     </RS.Button>
                                                 </RS.Col>
                                                 <RS.Col xs={3} className="text-center">
                                                     <RS.Button color="link" onClick={() => setChoices(choices.map(c => choice == c ? {...c, allowsExtraWords: !c.allowsExtraWords} : c))}>
-                                                        <RS.Label>Extra words {displayBoolean(choice.allowsExtraWords)}</RS.Label>
+                                                        <RS.Label>Extra words {checkMark(choice.allowsExtraWords)}</RS.Label>
                                                     </RS.Button>
                                                 </RS.Col>
                                                 <RS.Col xs={3} className="text-center">
                                                     <RS.Button color="link" onClick={() => setChoices(choices.map(c => choice == c ? {...c, allowsMisspelling: !c.allowsMisspelling} : c))}>
-                                                        <RS.Label>Misspelling {displayBoolean(choice.allowsMisspelling)}</RS.Label>
+                                                        <RS.Label>Misspelling {checkMark(choice.allowsMisspelling)}</RS.Label>
                                                     </RS.Button>
                                                 </RS.Col>
                                             </RS.Row>
                                         </td>
                                         <td className="align-middle">
                                             <RS.Button color="link" onClick={() => setChoices(choices.map(c => choice == c ? {...c, correct: !c.correct} : c))}>
-                                                <div className="h4 px-4">{displayBoolean(choice.correct)}</div>
+                                                <div className="h4 px-4">{checkMark(choice.correct)}</div>
                                             </RS.Button>
                                         </td>
                                         <td>
@@ -183,23 +175,23 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                                 <RS.Input
                                                     type="textarea" value={(choice.explanation as any).children[0].value}
                                                     onChange={event => {
-                                                        const newExplanation = JSON.parse(JSON.stringify(choice.explanation)) as any;
-                                                        newExplanation.children[0].value = event.target.value;
-                                                        setChoices(choices.map(c => choice == c ? {...c, explanation: newExplanation} : c));
+                                                        const explanation = choice.explanation as any;
+                                                        explanation.children[0].value = event.target.value;
+                                                        setChoices(choices.map(c => choice == c ? {...c, explanation} : c));
                                                     }}
                                                 />
                                             </RS.Label>
                                         </td>
                                         <td>
                                             <button
-                                                className="close" aria-label="Delete matching rule" type="button"
+                                                type="button" className="close" aria-label="Delete matching rule"
                                                 onClick={() => setChoices(choices.filter(choiceInState => choice !== choiceInState))}
                                             >×</button>
                                         </td>
                                     </tr>)}
                                 </tbody>
                                 <tfoot>
-                                    <tr className="border-bottom">
+                                    <tr>
                                         <td colSpan={4} className="text-center pb-3">
                                             <RS.Button color="link" onClick={() => setChoices([...choices, generateDefaultChoice()])}>
                                                 <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
@@ -212,12 +204,10 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                 <p>JSON for the choices part of your isaacFreeTextQuestion</p>
                                 <RS.Input
                                     type="textarea" rows={25}
-                                    value={JSON.stringify({choices: choices.map(removeChoiceNumber)}, null, 2)}
-                                    onChange={event => {
-                                        setChoices(JSON.parse(event.target.value).choices.map(
-                                            (choice: FreeTextRule, i: number) => Object.assign(choice, {choiceNumber: i})
-                                        ))
-                                    }}
+                                    value={JSON.stringify(choices.map(removeChoiceNumber), null, 2)}
+                                    onChange={event => setChoices(JSON.parse(event.target.value).map(
+                                        (choice: FreeTextRule, i: number) => Object.assign(choice, {choiceNumber: i})
+                                    ))}
                                 />
                             </div>
                         }}
@@ -227,7 +217,7 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
 
             <RS.Card className="mb-4">
                 <RS.CardBody>
-                    <h2 className="h3">Test answers ({numberOfResponseMatches}/{testCaseInputs.length})</h2>
+                    <h2 className="h3">Test answers ({numberOfResponseMatches}/{testCases.length})</h2>
                     <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
                         {{
                             'GUI': <RS.Table className="mb-2">
@@ -242,24 +232,19 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {testCaseInputs.map(testCase => {
-                                        const testCaseResponse = augmentedTestCaseResponseMap[testResponseHash(choices, testCase)];
+                                    {testCases.map(testCase => {
+                                        const testCaseResponse = testCaseResponseMap[testCaseHash(testCase)];
                                         return <tr key={testCase.testCaseNumber}>
                                             <td className="w-10 text-center align-middle">
-                                                <RS.Button color="link" onClick={() =>
-                                                    setTestCaseInputs(testCaseInputs.map(tc => testCase == tc ? {
-                                                        ...tc,
-                                                        expected: !tc.expected
-                                                    } : tc))
-                                                }>
-                                                    {testCase.expected !== undefined && displayBoolean(testCase.expected)}
+                                                <RS.Button color="link" onClick={() => setTestCases(testCases.map(tc => testCase == tc ? {...tc, expected: !tc.expected} : tc))}>
+                                                    {checkMark(testCase.expected)}
                                                 </RS.Button>
                                             </td>
                                             <td>
                                                 <RS.Input
-                                                    type="textarea" value={testCase.choice && testCase.choice.value}
-                                                    onChange={event => setTestCaseInputs(testCaseInputs.map(testCaseInState =>
-                                                        testCaseInState === testCase ?
+                                                    type="text" value={testCase.choice && testCase.choice.value}
+                                                    onChange={event => setTestCases(testCases.map(
+                                                        testCaseInState => testCaseInState === testCase ?
                                                             {...testCase, choice: {...testCase.choice, value: event.target.value}} :
                                                             testCaseInState
                                                     ))}
@@ -267,42 +252,40 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
                                             </td>
 
                                             <td className="bg-light w-10 text-center align-middle">
-                                                {testCaseResponse && testCaseResponse.actual !== undefined && displayBoolean(testCaseResponse.actual)}
+                                                {testCaseResponse && checkMark(testCaseResponse.actual)}
                                             </td>
                                             <td className="bg-light align-middle">
                                                 {testCaseResponse && testCaseResponse.explanation &&
                                                 <IsaacContent doc={testCaseResponse.explanation}/>}
                                             </td>
                                             <td className="bg-light w-10 text-center align-middle">
-                                                {testCaseResponse && testCaseResponse.actual !== undefined && displayBoolean(testCaseResponse.expected == testCaseResponse.actual)}
+                                                {testCaseResponse && checkMark(testCaseResponse.match)}
                                             </td>
                                             <td className="bg-light">
                                                 <button
-                                                    className="close" aria-label="Delete matching rule" type="button"
-                                                    onClick={() => setTestCaseInputs(testCaseInputs.filter(testCaseInState => testCase !== testCaseInState))}
+                                                    type="button" className="close" aria-label="Delete matching rule"
+                                                    onClick={() => setTestCases(testCases.filter(testCaseInState => testCase !== testCaseInState))}
                                                 >×</button>
                                             </td>
                                         </tr>;
                                     })}
                                 </tbody>
                                 <tfoot>
-                                    <tr className="border-bottom">
+                                    <tr>
                                         <td colSpan={6} className="text-center pb-3">
-                                            <RS.Button color="link" onClick={() => setTestCaseInputs([...testCaseInputs, generateDefaultTestCase()])}>
-                                                <img src="/assets/add_circle_outline.svg" alt="Add matching rule"/>
+                                            <RS.Button color="link" onClick={() => setTestCases([...testCases, generateDefaultTestCase()])}>
+                                                <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
                                             </RS.Button>
                                         </td>
                                     </tr>
                                 </tfoot>
                             </RS.Table>,
-                            'CSV': <div className="mb-3">
+                            'CSV': <div className="mb-3 text-center">
                                 <p>Enter test cases as CSV with the headers: expected(true/false), value</p>
                                 <RS.Input type="textarea" rows={10} value={testCasesCsv} onChange={event => setTestCasesCsv(event.target.value)} />
-                                <div className="my-2 text-center">
-                                    <RS.Button onClick={() => setTestCaseInputs(convertCsvToTestCases(testCasesCsv))}>
-                                        Submit
-                                    </RS.Button>
-                                </div>
+                                <RS.Button className="my-2" onClick={() => setTestCases(convertCsvToTestCases(testCasesCsv))}>
+                                    Submit
+                                </RS.Button>
                             </div>
                         }}
                     </Tabs>
@@ -310,7 +293,7 @@ export const FreeTextTest = ({user}: {user: LoggedInUser}) => {
             </RS.Card>
 
             <div className="mb-5 text-center">
-                <RS.Input type="submit" className="btn btn-xl btn-secondary border-0" />
+                <RS.Input type="submit" value="Test question" className="btn btn-xl btn-secondary border-0" />
             </div>
         </RS.Form>
     </RS.Container>;
