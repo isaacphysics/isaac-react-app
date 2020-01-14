@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import * as RS from "reactstrap";
 import {Col, Container, Row} from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchDoc, goToSupersededByQuestion, setPrintingHints} from "../../state/actions";
+import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
@@ -17,7 +17,8 @@ import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
 import {isStudent, isTeacher} from "../../services/user";
-import {doc as selectDoc} from "../../state/selectors";
+import {ShareLink} from "../elements/ShareLink";
+import {PrintButton} from "../elements/PrintButton";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -26,8 +27,6 @@ interface QuestionPageProps {
 
 export const Question = withRouter(({questionIdOverride, match}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
-    const [questionShareOpen, setQuestionShareOpen] = useState(false);
-    const [questionPrintOpen, setQuestionPrintOpen] = useState(false);
     const doc = useSelector((state: AppState) => state ? state.doc : null);
     const user = useSelector((state: AppState) => state && state.user);
     const segueEnvironment = useSelector((state: AppState) =>
@@ -59,44 +58,10 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                         <EditContentButton canonicalSourceFile={EDITOR_URL + doc.canonicalSourceFile} />
                     }
                     <div className="question-actions question-actions-leftmost mt-3">
-                        <input
-                            type="image"
-                            src="/assets/share.svg"
-                            alt='Show/Hide the question share link'
-                            className="question-actions-icon"
-                            onClick={() => setQuestionShareOpen(!questionShareOpen)}/>
-                        {questionShareOpen && <div className="question-actions-link-box">
-                            <div className="question-actions-link">
-                                {`${window.location.origin}/questions/${questionId}`}
-                            </div>
-                        </div>}
+                        <ShareLink linkUrl={`${window.location.origin}/questions/${questionId}`}/>
                     </div>
-                    <div className="question-actions mt-3">
-                        <input
-                            type="image"
-                            src="/assets/print.svg"
-                            alt='Show/Hide the question print buttons'
-                            className="question-actions-icon"
-                            onClick={() => setQuestionPrintOpen(!questionPrintOpen)}/>
-                        {questionPrintOpen && <div className="question-actions-link-box">
-                            <div className="question-actions-link">
-                                <button
-                                    className="a-alt btn btn-link btn-sm"
-                                    onClick={() => {
-                                        dispatch(setPrintingHints(true));
-                                        setTimeout(window.print, 100);
-                                    }}
-                                >With hints</button>
-                                /
-                                <button
-                                    className="a-alt btn btn-link btn-sm"
-                                    onClick={() => {
-                                        dispatch(setPrintingHints(false));
-                                        setTimeout(window.print, 100);
-                                    }}
-                                >Without hints</button>
-                            </div>
-                        </div>}
+                    <div className="question-actions mt-3 not_mobile">
+                        <PrintButton/>
                     </div>
                 </RS.Row>
                 <Row className="question-content-container">

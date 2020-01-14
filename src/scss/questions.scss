@@ -22,6 +22,30 @@
   min-width: auto;
 }
 
+button {
+  -webkit-appearance: none;
+  border: none;
+  outline: none !important;
+}
+.share-link {
+  display: none;
+  position: absolute;
+  padding: 4px;
+  border: 1px solid $gray-118;
+  right: 287px;
+  background: #fff;
+}
+.share-link div {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  user-select: all;
+  -webkit-user-select: all;
+  -moz-user-select: all;
+  -ms-user-select: all;
+  width: 100%;
+}
+
 .question-actions {
   margin-left: 2rem;
 
@@ -41,13 +65,13 @@
   .question-actions-link-box {
     float:right;
     border: 1px solid gray;
-    height: 3rem;
+    height: 3.6rem;
     border-right: none;
     padding-right: 2.5rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-right: -1.25rem;
+    margin-right: -2.2rem;
 
     .question-actions-link {
       background: lightgray;
