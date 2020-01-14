@@ -10,7 +10,7 @@ import {
     Table
 } from "reactstrap";
 import { RegisteredUserDTO, UserGroupDTO } from "../../../../IsaacApiTypes";
-import { AppState, currentEvent } from "../../../state/reducers";
+import { AppState } from "../../../state/reducers";
 import { groups } from '../../../state/selectors';
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { AppGroup, AppGroupMembership } from "../../../../IsaacAppTypes";
