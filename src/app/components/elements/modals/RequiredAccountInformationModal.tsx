@@ -82,17 +82,13 @@ const RequiredAccountInfoBody = () => {
                             </RS.Label>
                             <RS.Input
                                 type="select" name="select" id="exam-board-select"
-                                value={userToUpdate.examBoard}
-                                onChange={event =>
-                                    setUserToUpdate(
-                                        Object.assign({}, userToUpdate, {examBoard: event.target.value})
-                                    )
-                                }
+                                value={userToUpdate.examBoard} invalid={submissionAttempted && !validateExamBoard(userToUpdate)}
+                                onChange={event => setUserToUpdate(Object.assign({}, userToUpdate, {examBoard: event.target.value}))}
                             >
-                                <option value={undefined}></option>
-                                <option value={EXAM_BOARD.OTHER}>Other</option>
+                                <option value={undefined} />
                                 <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                                 <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
+                                <option value={EXAM_BOARD.OTHER}>Other</option>
                             </RS.Input>
                         </RS.FormGroup>
                     </div>}
@@ -116,7 +112,9 @@ const RequiredAccountInfoBody = () => {
             </RS.Row>
         </RS.CardBody>}
 
-        {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <hr className="text-center" />}
+        {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <RS.CardBody>
+            <hr className="text-center" />
+        </RS.CardBody>}
 
         {!validateEmailPreferences(initialEmailPreferencesValue) && <div>
             <UserEmailPreference
@@ -131,11 +129,13 @@ const RequiredAccountInfoBody = () => {
             </h4>
         </div>}
 
-        <RS.Row className="text-center border-top p-3 p-sm-4">
-            <RS.Col md={{size: 6, offset: 3}}>
-                <RS.Input value={isMobile() ? "Update" : "Update account"} type="submit" className="btn btn-secondary border-0 px-0 px-md-2 my-1" />
-            </RS.Col>
-        </RS.Row>
+        <RS.CardBody className="py-0">
+            <RS.Row className="text-center pb-3">
+                <RS.Col md={{size: 6, offset: 3}}>
+                    <RS.Input type="submit" value={isMobile() ? "Update" : "Update account"} className="btn btn-secondary border-0 px-0 px-md-2 my-1" />
+                </RS.Col>
+            </RS.Row>
+        </RS.CardBody>
     </RS.Form>;
 };
 
