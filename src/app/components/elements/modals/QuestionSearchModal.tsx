@@ -18,6 +18,7 @@ import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {useCurrentExamBoard} from "../../../services/examBoard";
+import {searchResultIsPublic} from "../../../services/search";
 
 interface QuestionSearchModalProps {
     originalSelectedQuestions: Map<string, ContentSummaryDTO>;
@@ -157,9 +158,12 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <tbody>
                     {
                         questions && sortQuestions(questionsSort)(questions.filter((question) => {
-                            return (searchLevels.length == 0 || (question.level && searchLevels.includes(question.level.toString()))) &&
-                                (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0)) &&
-                                (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0))
+                            let qIsPublic = searchResultIsPublic(question, user);
+                            let qLevelsMatch = (searchLevels.length == 0 || (question.level && searchLevels.includes(question.level.toString())));
+                            let qExamboardsMatch = (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0));
+                            let qTopicsMatch = (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0));
+
+                            return qIsPublic && qLevelsMatch && qExamboardsMatch && qTopicsMatch;
                         })).map((question) =>
                             <GameboardBuilderRow
                                 key={`question-search-modal-row-${question.id}`} question={question}
