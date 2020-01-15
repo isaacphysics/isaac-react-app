@@ -32,7 +32,7 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
-export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_nov19_aqa', 'class_test_nov19_ocr'];
+export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_jan20_aqa', 'class_test_jan20_ocr'];
 
 export const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB");
 export const DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
@@ -67,7 +67,7 @@ export enum ACTION_TYPE {
     USER_PREFERENCES_RESPONSE_SUCCESS= "USER_PREFERENCES_RESPONSE_SUCCESS",
     USER_PREFERENCES_RESPONSE_FAILURE = "USER_PREFERENCES_RESPONSE_FAILURE",
 
-    USER_PREFERENCES_SET_FOR_ANON = "USER_PREFERENCES_SET_FOR_ANON",
+    EXAM_BOARD_SET_TEMP = "EXAM_BOARD_SET_TEMP",
 
     USER_PASSWORD_RESET_REQUEST= "USER_PASSWORD_RESET_REQUEST",
     USER_PASSWORD_RESET_RESPONSE_SUCCESS ="USER_PASSWORD_RESET_RESPONSE_SUCCESS",
@@ -377,7 +377,8 @@ export enum ACTION_TYPE {
 
 export enum EXAM_BOARD {
     AQA = "AQA",
-    OCR = "OCR"
+    OCR = "OCR",
+    OTHER = "OTHER"
 }
 
 export const examBoardTagMap: {[examBoard: string]: string} = {

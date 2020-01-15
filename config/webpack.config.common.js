@@ -2,7 +2,7 @@
 const path = require('path');
 const BASE_DIRECTORY = path.resolve(__dirname, "..");
 const resolve = (p) => path.resolve(BASE_DIRECTORY, p);
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
