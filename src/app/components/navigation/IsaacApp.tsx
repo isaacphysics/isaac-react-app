@@ -36,7 +36,7 @@ import {Search} from "../pages/Search";
 import {CookieBanner} from "./CookieBanner";
 import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
-import {Header} from "./Header";
+import {HeaderCS} from "./HeaderCS";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
@@ -59,7 +59,7 @@ import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
-import {SITE_SUBJECT} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {HeaderPhy} from "./HeaderPhy";
 
 export const IsaacApp = () => {
@@ -80,7 +80,7 @@ export const IsaacApp = () => {
     // Render
     return <Router history={history}>
         <React.Fragment>
-            {SITE_SUBJECT == "physics" ? <HeaderPhy /> : <Header />}
+            {{[SITE.PHY]: <HeaderPhy />, [SITE.CS]: <HeaderCS />}[SITE_SUBJECT]}
             <Toasts />
             <ActiveModals />
             <CookieBanner />
