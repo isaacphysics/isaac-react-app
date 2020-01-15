@@ -55,7 +55,9 @@ const RequiredAccountInfoBody = () => {
         }
     }
 
-    const allUserFieldsAreValid = validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateSubjectInterests(initialSubjectInterestsValue);
+    const allUserFieldsAreValid =
+        validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) &&
+        validateExamBoard(initialUserValue) && validateSubjectInterests(initialSubjectInterestsValue);
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
@@ -68,7 +70,7 @@ const RequiredAccountInfoBody = () => {
             </div>
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {!(validateSubjectInterests(initialSubjectInterestsValue) && validateUserGender(initialUserValue)) && <RS.Col>
+                {!(validateUserGender(initialUserValue) && validateExamBoard(initialUserValue)) && <RS.Col>
                     {!validateUserGender(initialUserValue) && <div>
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
@@ -100,16 +102,16 @@ const RequiredAccountInfoBody = () => {
                     />
                 </RS.Col>}
             </RS.Row>
-            <RS.Row className="d-flex flex-wrap my-1">
+            {!validateSubjectInterests(initialSubjectInterestsValue) && <RS.Row className="d-flex flex-wrap my-1">
                 <RS.Col>
-                    {!validateSubjectInterests(initialSubjectInterestsValue) && <div>
+                    <div>
                         <StudyingCsInput
                             subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
                             submissionAttempted={submissionAttempted} idPrefix="modal-"
                         />
-                    </div>}
+                    </div>
                 </RS.Col>
-            </RS.Row>
+            </RS.Row>}
         </RS.CardBody>}
 
         {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <RS.CardBody>
