@@ -57,7 +57,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./_mixins";
 
 // Atoms
-@import "./logo";
+@import "./logo-phy";
 @import "./fonts";
 @import "./typography";
 @import "./headings";
@@ -81,7 +81,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 
 // Navigation
 @import "./navigation-bar";
-@import "./header";
+@import "./header-phy";
 @import "./footer";
 
 // Pages
