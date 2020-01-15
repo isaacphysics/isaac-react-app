@@ -506,6 +506,7 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     student?: boolean;
     virtual?: boolean;
     field?: "physics" | "maths";
+    userBookingStatus?: ApiTypes.BookingStatus;
 }
 
 export interface EventOverview {
