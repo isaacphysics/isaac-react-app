@@ -212,7 +212,7 @@ export interface TestCaseDTO {
 }
 
 export interface TestDTO {
-    choices?: ChoiceDTO[];
+    questionChoices?: ChoiceDTO[];
     testCases?: TestCaseDTO[];
 }
 

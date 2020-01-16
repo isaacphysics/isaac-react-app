@@ -779,10 +779,10 @@ export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<
 };
 
 // Question testing
-export const testQuestion = (choices: FreeTextRule[], testCases: TestCaseDTO[]) => async (dispatch: Dispatch<Action>) => {
+export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCaseDTO[]) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.TEST_QUESTION_REQUEST});
-        const testResponse = await api.tests.freeTextRules(choices, testCases);
+        const testResponse = await api.builder.testFreeTextQuestion(questionChoices, testCases);
         dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS, testCaseResponses: testResponse.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE});

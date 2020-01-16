@@ -59,7 +59,7 @@ import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
-import {FreeTextTest} from "../pages/FreeTextTest";
+import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -161,7 +161,7 @@ export const IsaacApp = () => {
 
                     {/* Test pages */}
                     <TrackedRoute exact path="/equality" component={Equality} />
-                    <TrackedRoute exact path="/free_text" ifUser={isStaff} component={FreeTextTest} />
+                    <TrackedRoute exact path="/free_text" ifUser={isStaff} component={FreeTextBuilder} />
 
                     {/* Error pages */}
                     <Route component={NotFound} />

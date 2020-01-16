@@ -396,9 +396,9 @@ export const api = {
             return endpoint.get(`/events/${eventId}/bookings/download`);
         }
     },
-    tests: {
-        freeTextRules: (choices: ChoiceDTO[], testCases: TestCaseDTO[]) => {
-            return endpoint.post("/tests/question?type=isaacFreeTextQuestion", {choices, testCases});
+    builder: {
+        testFreeTextQuestion: (questionChoices: ChoiceDTO[], testCases: TestCaseDTO[]) => {
+            return endpoint.post("/builder/test_question?type=isaacFreeTextQuestion", {questionChoices, testCases});
         }
     },
     logger: {
