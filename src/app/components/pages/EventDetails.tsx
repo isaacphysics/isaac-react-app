@@ -195,7 +195,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     >
                                         Reserve spaces
                                     </RS.Button>}
-                                    {event.userBookingStatus === "CONFIRMED" && !event.expired && <RS.Button
+                                    {event.userBookingStatus && ["CONFIRMED", "RESERVED"].includes(event.userBookingStatus) && !event.expired && <RS.Button
                                         color="primary" outline onClick={() => {dispatch(cancelMyBooking(eventId))}}
                                     >
                                         Cancel your booking
