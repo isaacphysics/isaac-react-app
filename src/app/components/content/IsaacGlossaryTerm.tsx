@@ -1,12 +1,10 @@
 import React, {useEffect} from 'react';
-import {useSelector} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {Col, Row} from "reactstrap";
-import {AppState} from "../../state/reducers";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
-import {determineExamBoardFrom} from "../../services/examBoard";
+import {useCurrentExamBoard} from "../../services/examBoard";
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
@@ -16,8 +14,7 @@ interface IsaacGlossaryTermProps {
 // TODO add figure counting and linking
 const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermProps) => {
     let anchorId: string | undefined = doc.id && doc.id.split('|')[1];
-    const userPreferences = useSelector((state: AppState) => state && state.userPreferences || null);
-    const examBoard = determineExamBoardFrom(userPreferences);
+    const examBoard = useCurrentExamBoard();
 
     useEffect(() => {
         if (hash.includes("#")) {

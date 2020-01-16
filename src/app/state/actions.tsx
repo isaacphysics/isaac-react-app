@@ -7,6 +7,7 @@ import {
     ACTION_TYPE,
     API_REQUEST_FAILURE_MESSAGE,
     DOCUMENT_TYPE,
+    EXAM_BOARD,
     MEMBERSHIP_STATUS,
     EventStatusFilter,
     TAG_ID,
@@ -157,10 +158,6 @@ export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const setAnonUserPreferences = (userPreferences: UserPreferencesDTO) => {
-    return {type: ACTION_TYPE.USER_PREFERENCES_SET_FOR_ANON, userPreferences};
-};
-
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_UPDATE_REQUEST});
     try {
@@ -224,6 +221,8 @@ export const updateCurrentUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
+
+export const setTempExamBoard = (examBoard: EXAM_BOARD) => ({type: ACTION_TYPE.EXAM_BOARD_SET_TEMP, examBoard});
 
 export const getProgress = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PROGRESS_REQUEST});

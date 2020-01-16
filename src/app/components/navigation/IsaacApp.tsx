@@ -36,11 +36,11 @@ import {Search} from "../pages/Search";
 import {CookieBanner} from "./CookieBanner";
 import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
-import {Header} from "./Header";
+import {HeaderCS} from "./HeaderCS";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
-import {isAdmin, isEventLeader, isAdminOrEventManager, isLoggedIn, isStaff, isTeacher} from "../../services/user";
+import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {ActiveModals} from "../elements/modals/ActiveModals";
 import {Groups} from "../pages/Groups";
 import {Equality} from '../pages/Equality';
@@ -60,6 +60,8 @@ import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {HeaderPhy} from "./HeaderPhy";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -79,7 +81,7 @@ export const IsaacApp = () => {
     // Render
     return <Router history={history}>
         <React.Fragment>
-            <Header />
+            {{[SITE.PHY]: <HeaderPhy />, [SITE.CS]: <HeaderCS />}[SITE_SUBJECT]}
             <Toasts />
             <ActiveModals />
             <CookieBanner />
