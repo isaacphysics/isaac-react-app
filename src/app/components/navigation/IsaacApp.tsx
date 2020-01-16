@@ -21,7 +21,7 @@ import {AllTopics} from "../pages/AllTopics";
 import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
 import {NotFound} from "../pages/NotFound";
-import {requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
+import {fetchGlossaryTerms, requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
@@ -36,11 +36,11 @@ import {Search} from "../pages/Search";
 import {CookieBanner} from "./CookieBanner";
 import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
-import {Header} from "./Header";
+import {HeaderCS} from "./HeaderCS";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
-import {isAdmin, isEventLeader, isAdminOrEventManager, isLoggedIn, isStaff, isTeacher} from "../../services/user";
+import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {ActiveModals} from "../elements/modals/ActiveModals";
 import {Groups} from "../pages/Groups";
 import {Equality} from '../pages/Equality';
@@ -56,8 +56,11 @@ import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
 import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
+import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {HeaderPhy} from "./HeaderPhy";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -71,12 +74,13 @@ export const IsaacApp = () => {
     useEffect(() => {
         dispatch(requestCurrentUser());
         dispatch(requestConstantsSegueEnvironment());
+        dispatch(fetchGlossaryTerms());
     }, []);
 
     // Render
     return <Router history={history}>
         <React.Fragment>
-            <Header />
+            {{[SITE.PHY]: <HeaderPhy />, [SITE.CS]: <HeaderCS />}[SITE_SUBJECT]}
             <Toasts />
             <ActiveModals />
             <CookieBanner />
@@ -106,6 +110,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/topics/:topicName" component={Topic} />
 
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
+                    <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
                     <TrackedRoute exact path="/gameboard_builder" ifUser={isTeacher} component={GameboardBuilder} />
                     <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
                     <TrackedRoute exact path="/add_gameboard/:gameboardId" ifUser={isLoggedIn} component={AddGameboard} />

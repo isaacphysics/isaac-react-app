@@ -73,4 +73,4 @@ const HeaderComponent = ({user}: HeaderProps) => {
     </header>;
 };
 
-export const Header = withRouter(connect(stateToProps)(HeaderComponent));
+export const HeaderCS = withRouter(connect(stateToProps)(HeaderComponent));

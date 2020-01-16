@@ -97,7 +97,7 @@ export const ForTeachers = () => {
                         <RS.ListGroup className="mb-4 d-block d-md-flex flex-row align-items-stretch link-list bg-transparent">
                             <RS.ListGroupItem className="bg-transparent">
                                 <LinkCard
-                                    title="Group progress" imageSource="/assets/card03.svg"
+                                    title="Group progress" imageSource="/assets/card03.png"
                                     linkDestination="/assignment_progress" linkText="View assignment progress"
                                 >
                                     Review your groups&apos; progress on the work which you have assigned to them.
@@ -106,7 +106,7 @@ export const ForTeachers = () => {
 
                             <RS.ListGroupItem className="bg-transparent">
                                 <LinkCard
-                                    title="CPD events" imageSource="/assets/card02.svg"
+                                    title="CPD events" imageSource="/assets/card02.png"
                                     linkDestination="/events" linkText="View our events"
                                 >
                                     Receive guidance on how to use isaaccomputerscience.org by attending our professional development events.
@@ -115,7 +115,7 @@ export const ForTeachers = () => {
 
                             <RS.ListGroupItem className="bg-transparent">
                                 <LinkCard
-                                    title="Topics" imageSource="/assets/card01.svg"
+                                    title="Topics" imageSource="/assets/card01.png"
                                     linkDestination="/topics" linkText="View all topics"
                                 >
                                     Review the site&apos;s material arranged by topic.

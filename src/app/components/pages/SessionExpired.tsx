@@ -1,8 +1,15 @@
 import React from "react";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import ReactGA from "react-ga";
 
 export const SessionExpired = () => {
+
+    ReactGA.exception({
+        description: 'session_expired',
+        fatal: true
+    });
+
     return <Container>
         <div>
             <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired error" currentPageTitle="Session expired"/>

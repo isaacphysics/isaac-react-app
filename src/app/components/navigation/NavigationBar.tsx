@@ -86,9 +86,9 @@ export const NavigationBar = () => {
                             {assignmentCount > 0 && <span className="badge badge-pill bg-grey ml-2">{assignmentCount}</span>}
                             {assignmentCount > 0 && <span className="sr-only">Incomplete assignments</span>}
                         </DropdownItem>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        <DropdownItem tag={Link} to="/my_gameboards" className="pl-4 py-3 p-md-3">
                             My gameboards
-                        </DropdownItemComingSoon>
+                        </DropdownItem>
                         <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
                             My progress
                         </DropdownItemComingSoon>
@@ -129,9 +129,12 @@ export const NavigationBar = () => {
                         <DropdownItem tag={Link} to="/teaching_order" className="pl-4 py-3 p-md-3">
                             Suggested teaching
                         </DropdownItem>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
-                            Syllabus view
-                        </DropdownItemComingSoon>
+                        <DropdownItem tag={Link} to="/pages/specification_page_aqa" className="pl-4 py-3 p-md-3">
+                            AQA specification view
+                        </DropdownItem>
+                        <DropdownItem tag={Link} to="/pages/specification_page_ocr" className="pl-4 py-3 p-md-3">
+                            OCR specification view
+                        </DropdownItem>
                     </DropdownMenu>
                 </UncontrolledDropdown>
 

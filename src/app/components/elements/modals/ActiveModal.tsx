@@ -19,7 +19,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
             >
                 {activeModal.title}
             </RS.ModalHeader>
-            <RS.ModalBody className="px-0 pb-2 mx-4">
+            <RS.ModalBody className="px-1 pb-2 mx-4">
                 {typeof ModalBody === "function" ? <ModalBody /> : ModalBody}
             </RS.ModalBody>
             {activeModal.buttons &&

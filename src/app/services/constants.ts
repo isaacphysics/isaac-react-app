@@ -31,7 +31,7 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
-export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_nov19_aqa', 'class_test_nov19_ocr'];
+export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_jan20_aqa', 'class_test_jan20_ocr'];
 
 export const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB");
 export const DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
@@ -66,7 +66,7 @@ export enum ACTION_TYPE {
     USER_PREFERENCES_RESPONSE_SUCCESS= "USER_PREFERENCES_RESPONSE_SUCCESS",
     USER_PREFERENCES_RESPONSE_FAILURE = "USER_PREFERENCES_RESPONSE_FAILURE",
 
-    USER_PREFERENCES_SET_FOR_ANON = "USER_PREFERENCES_SET_FOR_ANON",
+    EXAM_BOARD_SET_TEMP = "EXAM_BOARD_SET_TEMP",
 
     USER_PASSWORD_RESET_REQUEST= "USER_PASSWORD_RESET_REQUEST",
     USER_PASSWORD_RESET_RESPONSE_SUCCESS ="USER_PASSWORD_RESET_RESPONSE_SUCCESS",
@@ -193,6 +193,10 @@ export enum ACTION_TYPE {
     EVENT_BOOKINGS_RESPONSE_SUCCESS = "EVENT_BOOKINGS_RESPONSE_SUCCESS",
     EVENT_BOOKINGS_RESPONSE_FAILURE = "EVENT_BOOKINGS_RESPONSE_FAILURE",
 
+    EVENT_BOOKING_CSV_REQUEST = "EVENT_BOOKING_CSV_REQUEST",
+    EVENT_BOOKING_CSV_RESPONSE_SUCCESS = "EVENT_BOOKING_CSV_RESPONSE_SUCCESS",
+    EVENT_BOOKING_CSV_RESPONSE_FAILURE = "EVENT_BOOKING_CSV_RESPONSE_FAILURE",
+
     EVENT_BOOKING_REQUEST = "EVENT_BOOKING_REQUEST",
     EVENT_BOOKING_RESPONSE_SUCCESS = "EVENT_BOOKING_RESPONSE_SUCCESS",
     EVENT_BOOKING_RESPONSE_FAILURE = "EVENT_BOOKING_RESPONSE_FAILURE",
@@ -232,6 +236,10 @@ export enum ACTION_TYPE {
     FRAGMENT_REQUEST = "FRAGMENT_REQUEST",
     FRAGMENT_RESPONSE_SUCCESS = "FRAGMENT_RESPONSE_SUCCESS",
     FRAGMENT_RESPONSE_FAILURE = "FRAGMENT_RESPONSE_FAILURE",
+
+    GLOSSARY_TERMS_REQUEST = "GLOSSARY_TERMS_REQUEST",
+    GLOSSARY_TERMS_RESPONSE_SUCCESS = "GLOSSARY_TERMS_RESPONSE_SUCCESS",
+    GLOSSARY_TERMS_RESPONSE_FAILURE = "GLOSSARY_TERMS_RESPONSE_FAILURE",
 
     QUESTION_REGISTRATION = "QUESTION_REGISTRATION",
     QUESTION_DEREGISTRATION = "QUESTION_DEREGISTRATION",
@@ -365,7 +373,8 @@ export enum ACTION_TYPE {
 
 export enum EXAM_BOARD {
     AQA = "AQA",
-    OCR = "OCR"
+    OCR = "OCR",
+    OTHER = "OTHER"
 }
 
 export const examBoardTagMap: {[examBoard: string]: string} = {
@@ -408,7 +417,7 @@ export enum TAG_ID {
     networking = "networking",
     networkHardware = "network_hardware",
     communication = "communication",
-    internet = "internet",
+    theInternet = "the_internet",
     // Computer systems topics
     booleanLogic = "boolean_logic",
     architecture = "architecture",
@@ -497,6 +506,12 @@ export enum SortOrder {
     ASC = "ASC",
     DESC = "DESC",
     NONE = "NONE"
+}
+
+export enum sortIcon {
+    "sortable" = '⇕',
+    "ascending" = '⇑',
+    "descending" = '⇓'
 }
 
 export enum EventStatusFilter {

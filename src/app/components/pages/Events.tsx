@@ -49,14 +49,13 @@ export const Events = withRouter(({history, location}: {history: History; locati
         <TitleAndBreadcrumb currentPageTitle={"Events"} help="Follow the links below to find out more about our FREE events." />
         <div className="my-4">
             {/* Filters */}
-            <PageFragment fragmentId="event_type_descriptions" renderFragmentNotFound={false}/>
             <RS.Form inline className="d-flex justify-content-end">
                 <RS.Label>Filter by
                     <RS.Input className="ml-2 mr-3" type="select" value={statusFilter} onChange={e => {
                         const selectedFilter = e.target.value as EventStatusFilter;
                         query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
                         query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
-                        history.push({pathname: location.pathname, search: queryString.stringify(query)});
+                        history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
                     }}>
                         {Object.entries(EventStatusFilter)
                             .filter(([statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
@@ -68,7 +67,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
                     <RS.Input className="ml-2" type="select" value={typeFilter} onChange={e => {
                         const selectedType = e.target.value as EventTypeFilter;
                         query.types = selectedType !== EventTypeFilter["All events"] ? selectedType : undefined;
-                        history.push({pathname: location.pathname, search: queryString.stringify(query)});
+                        history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
                     }}>
                         {Object.entries(EventTypeFilter).map(([typeLabel, typeValue]) =>
                             <option key={typeValue} value={typeValue}>{typeLabel}</option>
@@ -121,6 +120,9 @@ export const Events = withRouter(({history, location}: {history: History; locati
                 </div>}
             </div>
             } />
+            <div className="mb-5">
+                <PageFragment fragmentId="event_type_descriptions" renderFragmentNotFound={false}/>
+            </div>
         </div>
     </RS.Container>
 });
