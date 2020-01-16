@@ -2,7 +2,8 @@ import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {invert} from "lodash";
 
-export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
+// eslint-disable-next-line no-undef
+export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
 export const IS_CS_PLATFORM = true;
 
