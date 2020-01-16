@@ -6,6 +6,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
+// Read in the .env file and put into `process.env`:
+require('dotenv').config();
+
 module.exports = (isProd) => {
 
     return {
