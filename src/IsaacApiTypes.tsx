@@ -1,6 +1,8 @@
 /* tslint:disable */
 // Generated using typescript-generator version 2.12.476 on 2019-05-15 20:09:01.
 
+import {EXAM_BOARD} from "./app/services/constants";
+
 export interface AssignmentDTO {
     gameboardId?: string;
     gameboard?: GameboardDTO;
@@ -131,6 +133,7 @@ export interface IsaacSymbolicQuestionDTO extends IsaacQuestionBaseDTO {
 }
 
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
+    linkedGameboards?: GameboardDTO[];
 }
 
 export interface IsaacWildcardDTO extends ContentDTO {
@@ -347,6 +350,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     registrationDate?: Date;
     schoolId?: string;
     role?: Role;
+    examBoard?: EXAM_BOARD;
     schoolOther?: string;
     firstLogin?: boolean;
     lastUpdated?: Date;

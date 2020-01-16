@@ -11,7 +11,7 @@ import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL} from "../../services/const
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
-import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
+import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
@@ -66,7 +66,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                 </RS.Row>
                 <Row className="question-content-container">
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
-                        <AnonUserExamBoardPicker className=" no-print text-right"/>
+                        <TempExamBoardPicker className="no-print text-right"/>
 
                         {doc.supersededBy && !isStudent(user) && <div className="alert alert-primary">
                             {isTeacher(user) && <React.Fragment>

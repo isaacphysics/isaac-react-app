@@ -14,7 +14,7 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {NavigationLinks} from "../elements/NavigationLinks";
-import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
+import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {EditContentButton} from "../elements/EditContentButton";
 
 const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
@@ -56,7 +56,7 @@ const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc, s
 
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4">
-                        <AnonUserExamBoardPicker className="text-right" />
+                        <TempExamBoardPicker className="text-right" />
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>
