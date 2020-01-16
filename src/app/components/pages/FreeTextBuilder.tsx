@@ -85,7 +85,7 @@ function notEqualToDefaultTestCase(testCase: TestCaseDTO) {
 }
 
 function convertTestCasesToCsv(testCases: TestCaseDTO[]) {
-    return testCases.map(tc => `${tc.expected},${tc.choice?.value?.replace("\n", "\\n")}`).join("\n");
+    return testCases.map(tc => `${tc.expected},${tc.choice?.value?.split("\n").join("\\n")}`).join("\n");
 }
 function convertCsvToTestCases(testCasesCsv: string) {
     return testCasesCsv.split("\n").map((testCaseString, index) => {

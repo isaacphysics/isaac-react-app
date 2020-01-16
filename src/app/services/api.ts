@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, MEMBERSHIP_STATUS, TAG_ID, EventTypeFilter} from "./constants";
+import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {ChoiceDTO, EventBookingDTO, GameboardDTO, TestCaseDTO, TestDTO} from "../../IsaacApiTypes";
+import {ChoiceDTO, EventBookingDTO, GameboardDTO, TestCaseDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
@@ -16,7 +16,6 @@ import {
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
-import {ContentSummaryDTO} from "../../IsaacApiTypes";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
