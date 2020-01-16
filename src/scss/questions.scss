@@ -29,14 +29,13 @@ button {
 }
 .share-link {
   display: none;
-  position: absolute;
+  position: relative;
   padding: 4px;
   border: 1px solid $gray-118;
-  right: 287px;
+  right: 35px;
   background: #fff;
 }
 .share-link div {
-  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   user-select: all;
