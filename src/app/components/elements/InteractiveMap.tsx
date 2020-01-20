@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {GoogleMap, InfoWindow, LoadScript, Marker, MarkerClusterer} from "@react-google-maps/api";
-import {AugmentedEvent, EventMapData} from "../../../IsaacAppTypes";
+import {EventMapData} from "../../../IsaacAppTypes";
 
 interface InteractiveMapProps {
     getInfoWindow: (data: EventMapData) => any;
