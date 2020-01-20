@@ -19,6 +19,7 @@ import {RelatedContent} from "../elements/RelatedContent";
 import {isStudent, isTeacher} from "../../services/user";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
+import {doc as selectDoc} from "../../state/selectors";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -27,7 +28,7 @@ interface QuestionPageProps {
 
 export const Question = withRouter(({questionIdOverride, match}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
-    const doc = useSelector((state: AppState) => state ? state.doc : null);
+    const doc = useSelector(selectDoc.ifNotAQuizId(questionId));
     const user = useSelector((state: AppState) => state && state.user);
     const segueEnvironment = useSelector((state: AppState) =>
         (state && state.constants && state.constants.segueEnvironment) || "unknown"

@@ -74,7 +74,7 @@ const IsaacVideoComponent = (props: IsaacVideoProps) => {
             }
         </div>
         <div className="only-print">
-            Video source: {altText || "No text description available"}
+            Video description: {altText || "No text description available"}
         </div>
     </div>;
 };
