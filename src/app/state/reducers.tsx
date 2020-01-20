@@ -27,16 +27,17 @@ import {
     EventBookingDTO,
     GameboardDTO,
     GameboardListDTO,
+    GlossaryTermDTO,
     IsaacTopicSummaryPageDTO,
     IsaacWildcard,
     ResultsWrapper,
+    TestCaseDTO,
     UserAuthenticationSettingsDTO,
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO,
-    GlossaryTermDTO, TestCaseDTO
+    UserSummaryWithGroupMembershipDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";

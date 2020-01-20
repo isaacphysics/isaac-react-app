@@ -207,15 +207,11 @@ export interface ChoiceDTO extends ContentDTO {
 export interface ChoiceQuestionDTO extends QuestionDTO {
 }
 
-export interface TestCaseDTO {
-    choice?: ChoiceDTO;
+export interface TestCaseDTO extends QuestionValidationResponseDTO {
     expected?: boolean;
-    actual?: boolean;
-    explanation?: Content;
 }
 
-export interface TestDTO {
-    questionChoices?: ChoiceDTO[];
+export interface TestQuestionDTO extends ChoiceQuestionDTO {
     testCases?: TestCaseDTO[];
 }
 

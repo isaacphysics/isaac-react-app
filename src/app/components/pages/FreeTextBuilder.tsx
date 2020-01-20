@@ -38,7 +38,7 @@ function choicesHash(choices: FreeTextRule[]) {
 }
 
 function testCaseHash(testCaseInput: TestCaseDTO) {
-    return (testCaseInput.choice && testCaseInput.choice.value || "") + testCaseInput.expected;
+    return (testCaseInput.answer && testCaseInput.answer.value || "") + testCaseInput.expected;
 }
 
 function checkMark(boolean?: boolean) {
@@ -72,7 +72,7 @@ function notEqualToDefaultChoice(choice: FreeTextRule) {
 let testCaseNumber = 0;
 function generateDefaultTestCase() {
     testCaseNumber++;
-    return {testCaseNumber: testCaseNumber, choice: {type: "stringChoice", value: ""}, expected: true}
+    return {testCaseNumber: testCaseNumber, expected: true, answer: {type: "stringChoice", value: ""}}
 }
 const defaultTestCaseExample = generateDefaultTestCase();
 function removeTestCaseNumber(testCase: TestCaseDTO & {testCaseNumber: number}) {
@@ -85,7 +85,7 @@ function notEqualToDefaultTestCase(testCase: TestCaseDTO) {
 }
 
 function convertTestCasesToCsv(testCases: TestCaseDTO[]) {
-    return testCases.map(tc => `${tc.expected},${tc.choice?.value?.split("\n").join("\\n")}`).join("\n");
+    return testCases.map(tc => `${tc.expected},${tc.answer?.value?.split("\n").join("\\n")}`).join("\n");
 }
 function convertCsvToTestCases(testCasesCsv: string) {
     return testCasesCsv.split("\n").map((testCaseString, index) => {
@@ -109,7 +109,7 @@ export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
     if (choicesHashAtPreviousRequest === choicesHash(questionChoices)) {
         // augment response with whether there was a match between the expected and actual and populate the test case response map
         testCaseResponses
-            .map(response => Object.assign(response, {match: response.expected !== undefined ? response.expected === response.actual : undefined}))
+            .map(response => Object.assign(response, {match: response.expected !== undefined ? response.expected === response.correct : undefined}))
             .forEach(testCaseResponse => testCaseResponseMap[testCaseHash(testCaseResponse)] = testCaseResponse);
     }
     const numberOfResponseMatches = Object.values(testCaseResponseMap).filter(testCase => testCase.match).length;
@@ -244,21 +244,20 @@ export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
                                             </td>
                                             <td>
                                                 <RS.Input
-                                                    type="text" value={testCase.choice && testCase.choice.value}
+                                                    type="text" value={testCase?.answer?.value || ""}
                                                     onChange={event => setTestCases(testCases.map(
                                                         testCaseInState => testCaseInState === testCase ?
-                                                            {...testCase, choice: {...testCase.choice, value: event.target.value}} :
+                                                            {...testCase, answer: {...testCase.answer, value: event.target.value}} :
                                                             testCaseInState
                                                     ))}
                                                 />
                                             </td>
 
                                             <td className="bg-light w-10 text-center align-middle">
-                                                {testCaseResponse && checkMark(testCaseResponse.actual)}
+                                                {testCaseResponse && checkMark(testCaseResponse.correct)}
                                             </td>
                                             <td className="bg-light align-middle">
-                                                {testCaseResponse && testCaseResponse.explanation &&
-                                                <IsaacContent doc={testCaseResponse.explanation}/>}
+                                                {testCaseResponse?.explanation && <IsaacContent doc={testCaseResponse.explanation}/>}
                                             </td>
                                             <td className="bg-light w-10 text-center align-middle">
                                                 {testCaseResponse && checkMark(testCaseResponse.match)}
@@ -287,8 +286,7 @@ export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
                                 <RS.Input type="textarea" rows={10} value={testCasesCsv} onChange={event => setTestCasesCsv(event.target.value)} />
                                 <div className="text-center">
                                     <RS.Button
-                                        className="my-2" disabled={
-                                            atLeastOne(questionChoices.filter(notEqualToDefaultChoice).length) }
+                                        className="my-2" disabled={atLeastOne(questionChoices.filter(notEqualToDefaultChoice).length)}
                                         onClick={() => setTestCases(convertCsvToTestCases(testCasesCsv))}
                                     >
                                         Submit

@@ -196,6 +196,9 @@ export const api = {
         },
         answer: (id: string, answer: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
+        },
+        testFreeTextQuestion: (choices: ChoiceDTO[], testCases: TestCaseDTO[]) => {
+            return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {choices, testCases});
         }
     },
     concepts: {
@@ -393,11 +396,6 @@ export const api = {
         },
         getEventBookingCSV: (eventId: string) => {
             return endpoint.get(`/events/${eventId}/bookings/download`);
-        }
-    },
-    builder: {
-        testFreeTextQuestion: (questionChoices: ChoiceDTO[], testCases: TestCaseDTO[]) => {
-            return endpoint.post("/builder/test_question?type=isaacFreeTextQuestion", {questionChoices, testCases});
         }
     },
     logger: {
