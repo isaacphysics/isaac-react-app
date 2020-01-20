@@ -22,7 +22,7 @@ interface EventsPageQueryParams {
     types?: EventTypeFilter;
 }
 
-const EVENTS_PER_PAGE = 600;
+const EVENTS_PER_PAGE = 6;
 
 export const Events = withRouter(({history, location}: {history: History; location: Location}) => {
     const query: EventsPageQueryParams = queryString.parse(location.search);

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {GoogleMap, InfoWindow, LoadScript, Marker} from "@react-google-maps/api";
+import {GoogleMap, InfoWindow, LoadScript, Marker, MarkerClusterer} from "@react-google-maps/api";
 import {AugmentedEvent, EventMapData} from "../../../IsaacAppTypes";
 
 interface InteractiveMapProps {
@@ -22,20 +22,25 @@ export const InteractiveMap = (props: InteractiveMapProps) => {
             zoom={5}
             center={mapCenter}
         >
-            {locationData.map((location, index) => <Marker
-                key={index}
-                position={{lat: location.latitude, lng: location.longitude}}
-                onLoad={(marker) => {
-                    setMarkerMap((prevState) => {
-                        return {...prevState, [index]: marker}
-                    });
-                }}
-                onClick={() => {
-                    setInfoOpen(false);
-                    selectedMarkerID != index ? setSelectedMarkerID(index) : setSelectedMarkerID(null);
-                    setInfoOpen(true);
-                }}
-            />)}
+            <MarkerClusterer maxZoom={11}>
+                {
+                    (clusterer) => locationData.map((location, index) => <Marker
+                        key={index}
+                        position={{lat: location.latitude, lng: location.longitude}}
+                        clusterer={clusterer}
+                        onLoad={(marker) => {
+                            setMarkerMap((prevState) => {
+                                return {...prevState, [index]: marker}
+                            });
+                        }}
+                        onClick={() => {
+                            setInfoOpen(false);
+                            selectedMarkerID != index ? setSelectedMarkerID(index) : setSelectedMarkerID(null);
+                            setInfoOpen(true);
+                        }}
+                    />)
+                }
+            </MarkerClusterer>
             {infoOpen && selectedMarkerID != null && <InfoWindow
                 anchor={markerMap[selectedMarkerID]}
                 onCloseClick={() => setInfoOpen(false)}>
