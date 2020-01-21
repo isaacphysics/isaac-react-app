@@ -16,6 +16,7 @@
       left: -1.45rem !important;
     }
   }
+  // Nomensa's image offset code, if we decide to use
   //.news-card-image {
   //  //margin-left: -1.45rem;
   //  //width: calc(100% - 0.5rem) !important;
@@ -54,6 +55,11 @@
       -webkit-filter: grayscale(100%);
     }
   }
+}
+
+.card-news {
+  margin: 10% !important;
+  width: 30% !important;
 }
 
 .sign-up-tabs {
