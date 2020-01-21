@@ -2,9 +2,13 @@
 const path = require('path');
 const BASE_DIRECTORY = path.resolve(__dirname, "..");
 const resolve = (p) => path.resolve(BASE_DIRECTORY, p);
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
+
+// Read in the .env file and put into `process.env`:
+require('dotenv').config();
 
 module.exports = (isProd) => {
 
@@ -27,8 +31,16 @@ module.exports = (isProd) => {
                 {
                     oneOf: [
                         {
-                            test: /\.tsx?$/,
-                            use: {
+                            test: /\.[jt]sx?$/,
+                            exclude: /node_modules/,
+                            use: [
+                                {
+                                    loader: 'babel-loader',
+                                    options: {
+                                        presets: ["@babel/preset-env", "@babel/preset-react"],
+                                    }
+                                },
+                                {
                                 loader: 'ts-loader',
                                 options: {
                                     compilerOptions: {
@@ -36,7 +48,20 @@ module.exports = (isProd) => {
                                         jsx: "react",
                                     },
                                 },
-                            },
+                                }
+                            ],
+                        },
+                        {
+                            test: /node_modules[\/\\](query-string|split-on-first|strict-uri-encode)[\/\\].*\.js$/,
+                            use: [
+                                {
+                                    loader: 'babel-loader',
+                                    options: {
+                                        presets: ["@babel/preset-env"],
+                                        plugins: ["@babel/plugin-transform-modules-commonjs"]
+                                    }
+                                },
+                            ],
                         },
                         {
                             test: /\.scss$/,
@@ -68,6 +93,8 @@ module.exports = (isProd) => {
             runtimeChunk: true,
         },
 
+        devtool : "source-map",
+
         plugins: [
             isProd ? new CleanWebpackPlugin() : null, // Clear the build directory before writing output of a successful build.
             new MiniCssExtractPlugin({
@@ -78,6 +105,9 @@ module.exports = (isProd) => {
                from: resolve('public/assets'),
                to: 'assets',
             }]),
+            new webpack.DefinePlugin({
+                REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
+            }),
         ].filter(Boolean),
     };
 };

@@ -1,7 +1,6 @@
 import katex from "katex";
 
 import {katexify} from '../../app/components/elements/TrustedHtml';
-import {EXAM_BOARD} from "../../app/services/constants";
 
 jest.mock("katex");
 
@@ -28,7 +27,7 @@ describe('TrustedHtml LaTeX locator', () => {
     it('can find basic delimiters', () => {
         delimiters.forEach(([open, displayMode, close]) => {
             const testcase = html[0] + wrapIn(open, math[0], close) + html[1];
-            const result = katexify(testcase, null);
+            const result = katexify(testcase, null, null, false);
 
             expect(result).toEqual(html[0] + LATEX + html[1]);
             // @ts-ignore
@@ -41,7 +40,7 @@ describe('TrustedHtml LaTeX locator', () => {
     it("unbalanced delimiters don't break everything but instead are just skipped", () => {
         delimiters.forEach(([open, , ]) => {
             const testcase = html[0] + wrapIn(open, math[0], "") + html[1];
-            const result = katexify(testcase, null);
+            const result = katexify(testcase, null, null, false);
 
             expect(result).toEqual(html[0] + open + math[0] + html[1]);
             expect(katex.renderToString).not.toHaveBeenCalled();
@@ -52,7 +51,7 @@ describe('TrustedHtml LaTeX locator', () => {
         nestedDollars.forEach((dollarMath) => {
             delimiters.forEach(([open, displayMode, close]) => {
                 const testcase = html[0] + wrapIn(open, dollarMath, close) + html[1];
-                const result = katexify(testcase, null);
+                const result = katexify(testcase, null, null, false);
 
                 expect(result).toEqual(html[0] + LATEX + html[1]);
                 // @ts-ignore
@@ -66,7 +65,7 @@ describe('TrustedHtml LaTeX locator', () => {
     it('can render environments', () => {
         const env = "\\begin{aligned}" + math[0] + "\\end{aligned}";
         const testcase = html[0] + env + html[1];
-        const result = katexify(testcase, null);
+        const result = katexify(testcase, null, null, false);
 
         expect(result).toEqual(html[0] + LATEX + html[1]);
         // @ts-ignore
@@ -78,7 +77,7 @@ describe('TrustedHtml LaTeX locator', () => {
     it('refs are currently ignored', () => {
         const ref = "\\ref{foo[234o89tdgfiuno34£\"$%^Y}";
         const testcase = html[0] + ref + html[1];
-        const result = katexify(testcase, null);
+        const result = katexify(testcase, null, null, false);
 
         expect(result).toEqual(html[0] + ref + html[1]);
         expect(katex.renderToString).not.toHaveBeenCalled();
@@ -88,7 +87,7 @@ describe('TrustedHtml LaTeX locator', () => {
         const escapedDollar = "\\$";
         const unescapedDollar = "$";
         const testcase = html[0] + escapedDollar + html[1];
-        const result = katexify(testcase, null);
+        const result = katexify(testcase, null, null, false);
 
         expect(result).toEqual(html[0] + unescapedDollar + html[1]);
         expect(katex.renderToString).not.toHaveBeenCalled();

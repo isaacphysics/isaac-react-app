@@ -39,7 +39,7 @@ const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, reset
     const [logInAttempted, setLoginAttempted] = useState(false);
 
     const isValidEmail = email.length > 0 && email.includes("@");
-    const isValidPassword = password.length > 5;
+    const isValidPassword = password.length > 0;
 
     const [passwordResetAttempted, setPasswordResetAttempted] = useState(false);
     const [passwordResetRequest, setPasswordResetRequest] = useState(false);
