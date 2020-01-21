@@ -2,8 +2,15 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import ReactGA from "react-ga";
 
 export const ServerError = () => {
+
+    ReactGA.exception({
+        description: 'server_error',
+        fatal: true
+    });
+
     return <Container>
         <div>
             <TitleAndBreadcrumb currentPageTitle="Error" />

@@ -5,11 +5,11 @@ import katex from "katex";
 class MenuItem {
     constructor(public type: string,
                 public properties: any,
-                public menu: { label: string, texLabel: boolean, className: string }) {}
+                public menu: { label: string; texLabel: boolean; className: string }) {}
 }
 
 interface InequalityModalProps {
-    availableSymbols?: Array<string>;
+    availableSymbols?: string[];
     sketch?: Inequality;
     close: () => void;
     onEditorStateChange: (state: any) => void;
@@ -20,14 +20,14 @@ interface InequalityModalProps {
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
     state: {
-        sketch?: Inequality | null,
-        activeMenu: string,
-        activeSubMenu: string,
-        trashActive: boolean,
-        menuOpen: boolean,
-        editorState: any,
-        menuItems: { [key: string]: Array<MenuItem> },
-        defaultMenu: boolean
+        sketch?: Inequality | null;
+        activeMenu: string;
+        activeSubMenu: string;
+        trashActive: boolean;
+        menuOpen: boolean;
+        editorState: any;
+        menuItems: { [key: string]: MenuItem[] };
+        defaultMenu: boolean;
     };
 
     private _vHexagon = `

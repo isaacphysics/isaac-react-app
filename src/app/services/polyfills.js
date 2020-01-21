@@ -1,6 +1,9 @@
 import React from "react";
+import matchAll from 'string.prototype.matchall';
 
 React;
+
+matchAll.shim();
 
 if (!Element.prototype.matches) {
     Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;

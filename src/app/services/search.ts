@@ -1,6 +1,9 @@
 import {History} from "history";
 
 import {DOCUMENT_TYPE} from "./constants";
+import {ContentSummaryDTO} from "../../IsaacApiTypes";
+import {isStaff} from "./user";
+import {LoggedInUser} from "../../IsaacAppTypes";
 
 export function calculateSearchTypes(problems: boolean, concepts: boolean) {
     const typesArray = [];
@@ -18,4 +21,9 @@ export const pushSearchToHistory = function(history: History, searchText: string
         pathname: "/search",
         search: `?query=${encodeURIComponent(searchText)}&types=${calculateSearchTypes(problems, concepts)}`,
     });
+};
+
+export const searchResultIsPublic = function(content: ContentSummaryDTO, user?: LoggedInUser | null) {
+    const isPublic = (content.id != "_regression_test_" && (!content.tags || content.tags.indexOf("nofilter") < 0 && !content.supersededBy));
+    return isPublic || isStaff(user);
 };

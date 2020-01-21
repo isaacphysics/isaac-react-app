@@ -47,7 +47,7 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
                         <RS.ListGroup className="mt-md-4 mb-3 d-block d-md-flex flex-wrap flex-row link-list align-items-stretch">
                             <RS.ListGroupItem className="bg-transparent">
                                 <LinkCard
-                                    title="Assignments" imageSource="/assets/card04.svg"
+                                    title="Assignments" imageSource="/assets/card04.png"
                                     linkDestination="/assignments" linkText="View your assignments"
                                 >
                                     View the current status of your assignments.
@@ -56,7 +56,7 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
 
                             <RS.ListGroupItem className="bg-transparent">
                                 <LinkCard
-                                    title="Topics" imageSource="/assets/card01.svg"
+                                    title="Topics" imageSource="/assets/card01.png"
                                     linkDestination="/topics" linkText="View all topics"
                                 >
                                     Work through one of your course&apos;s topics.
@@ -65,7 +65,7 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
 
                             <RS.ListGroupItem className="bg-transparent">
                                 <LinkCard
-                                    title="Events" imageSource="/assets/card02.svg"
+                                    title="Events" imageSource="/assets/card02.png"
                                     linkDestination="/events" linkText="View our events"
                                 >
                                     Attend one of our free student workshop events.
