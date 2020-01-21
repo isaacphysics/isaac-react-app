@@ -1,11 +1,22 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React from "react";
 import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import katex from "katex";
 
 class MenuItem {
-    constructor(public type: string,
-                public properties: any,
-                public menu: { label: string; texLabel: boolean; className: string }) {}
+    public type: string;
+    public properties: any;
+    public menu: { label: string; texLabel: boolean; className: string };
+
+    public constructor(
+        type: string,
+        properties: any,
+        menu: { label: string; texLabel: boolean; className: string }) {
+
+        this.type = type;
+        this.properties = properties;
+        this.menu = menu;
+    }
 }
 
 interface InequalityModalProps {
@@ -19,7 +30,7 @@ interface InequalityModalProps {
     visible: boolean;
 }
 export class InequalityModal extends React.Component<InequalityModalProps> {
-    state: {
+    public state: {
         sketch?: Inequality | null;
         activeMenu: string;
         activeSubMenu: string;
@@ -41,7 +52,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         </svg>
     `
 
-    private _previousCursor?: { x: number, y: number } | null = null;
+    private _previousCursor?: { x: number; y: number } | null = null;
 
     private _disappearingMenuItem?: HTMLElement | null = null;
     private _movingMenuItem?: HTMLElement | null = null;
@@ -51,9 +62,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private _greekLetterMap: { [letter: string]: string } = {"\\alpha": "α", "\\beta": "β", "\\gamma": "γ", "\\delta": "δ", "\\epsilon": "ε", "\\varepsilon": "ε", "\\zeta": "ζ", "\\eta": "η", "\\theta": "θ", "\\iota": "ι", "\\kappa": "κ", "\\lambda": "λ", "\\mu": "μ", "\\nu": "ν", "\\xi": "ξ", "\\omicron": "ο", "\\pi": "π", "\\rho": "ρ", "\\sigma": "σ", "\\tau": "τ", "\\upsilon": "υ", "\\phi": "ϕ", "\\chi": "χ", "\\psi": "ψ", "\\omega": "ω", "\\Gamma": "Γ", "\\Delta": "Δ", "\\Theta": "Θ", "\\Lambda": "Λ", "\\Xi": "Ξ", "\\Pi": "Π", "\\Sigma": "Σ", "\\Upsilon": "Υ", "\\Phi": "Φ", "\\Psi": "Ψ", "\\Omega": "Ω"};
 
     // Call this to close the editor
-    close: () => void;
+    public close: () => void;
 
-    constructor(props: InequalityModalProps) {
+    public constructor(props: InequalityModalProps) {
         super(props);
         this.state = {
             sketch: props.sketch,
@@ -97,7 +108,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         const inequalityElement = document.getElementById('inequality-modal') as HTMLElement;
         const { sketch, p } = makeInequality(
             inequalityElement,
@@ -131,7 +142,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         sketch.onNotifySymbolDrag = () => { }; // This is probably irrelevant now
         sketch.isTrashActive = () => this.state.trashActive;
 
-        this.state.sketch = sketch;
+        this.setState({ sketch });
 
         document.documentElement.style.overflow = "hidden";
         document.documentElement.style.width = '100vw';
@@ -151,7 +162,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.body.addEventListener('touchend', this.onCursorMoveEnd.bind(this), { passive: true } );
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         const inequalityElement = document.getElementById('inequality-modal') as HTMLElement;
         inequalityElement.removeEventListener('mousedown', this.onMouseDown.bind(this));
         inequalityElement.removeEventListener('touchstart', this.onTouchStart.bind(this));
@@ -162,12 +173,15 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.body.removeEventListener('touchend', this.onCursorMoveEnd.bind(this));
 
         if (this.state.sketch) {
-            this.state.sketch.onNewEditorState = (s: any) => null;
-            this.state.sketch.onCloseMenus = () => null;
-            this.state.sketch.isUserPrivileged = () => false; // TODO Integrate with currentUser object
-            this.state.sketch.onNotifySymbolDrag = () => null; // This is probably irrelevant now
-            this.state.sketch.isTrashActive = () => false;
-            this.state.sketch = null;
+            this.setState({ sketch: {
+                ...this.state.sketch,
+                onNewEditorState: (s: any) => null,
+                onCloseMenus: () => null,
+                isUserPrivileged: () => false, // TODO Integrate with currentUser object
+                onNotifySymbolDrag: () => null, // This is probably irrelevant now
+                isTrashActive: () => false,
+            }});
+            this.setState({ sketch: null });
         }
         if (inequalityElement) {
             inequalityElement.removeChild(inequalityElement.getElementsByTagName('canvas')[0]);
@@ -208,7 +222,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
     }
 
-    private generateLogicFunctionsItems(syntax = 'logic'): Array<MenuItem> {
+    private generateLogicFunctionsItems(syntax = 'logic'): MenuItem[] {
         let labels: any = {
             logic: { and: "\\land", or: "\\lor", not: "\\lnot", equiv: "\\equiv", True: "\\mathsf{T}", False: "\\mathsf{F}" },
             binary: { and: "\\cdot", or: "+", not: "\\overline{x}", equiv: "\\equiv", True: "1", False: "0" }
@@ -230,7 +244,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             data-item={JSON.stringify(item)} // TODO Come up with a better way than this.
             dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(item.menu.label) }}
             className={ item.menu.className }
-            />;
+        />;
     }
 
     // WARNING Cursor coordinates on mobile are floating point and this makes
@@ -316,6 +330,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         this._movingMenuItem = null;
         this._movingMenuBar = null;
         this._potentialSymbolSpec = null;
+        void e;
     }
 
     private handleMove(_target: HTMLElement, x: number, y: number) {
@@ -324,10 +339,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             const trashCanRect = trashCan.getBoundingClientRect();
             if (trashCanRect && x >= trashCanRect.left && x <= trashCanRect.right && y >= trashCanRect.top && y <= trashCanRect.bottom) {
                 trashCan.classList.add('active');
-                this.state.trashActive = true;
+                this.setState({ trashActive: true });
             } else {
                 trashCan.classList.remove('active');
-                this.state.trashActive = false;
+                this.setState({ trashActive: false });
             }
         }
 
@@ -338,7 +353,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
         if (this._previousCursor) {
             const dx =  x - this._previousCursor.x;
-            const dy = -y + this._previousCursor.y;
             if (this._movingMenuBar) {
                 const menuBarRect = this._movingMenuBar.getBoundingClientRect();
                 const menuItems = this._movingMenuBar.getElementsByClassName('menu-item');
@@ -369,18 +383,38 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
     }
 
-    render() {
+    private setSubMenuOpen(submenu: string) {
+        this.setState({ menuOpen: true, activeSubMenu: submenu})
+    }
+
+    public render() {
         let lettersMenu: JSX.Element;
         if (this.state.defaultMenu) {
             lettersMenu =
             <div className="top-menu letters">
                 <ul className="sub-menu-tabs">
-                    <li className={this.state.activeSubMenu == "upperCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("AB") }} onClick={(e) => { e.preventDefault(); this.setState({ menuOpen: true, activeSubMenu: "upperCaseLetters" }) }} />
-                    <li className={this.state.activeSubMenu == "lowerCaseLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("ab") }} onClick={(e) => { e.preventDefault(); this.setState({ menuOpen: true, activeSubMenu: "lowerCaseLetters" }) }} />
+                    <li className={this.state.activeSubMenu == "upperCaseLetters" ? 'active' : 'inactive'}
+                        dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("AB") }}
+                        onClick={() => this.setSubMenuOpen("upperCaseLetters") }
+                        onKeyUp={() => this.setSubMenuOpen("upperCaseLetters") }
+                    />
+                    <li className={this.state.activeSubMenu == "lowerCaseLetters" ? 'active' : 'inactive'}
+                        dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("ab") }}
+                        onClick={() => this.setSubMenuOpen("lowerCaseLetters") }
+                        onKeyUp={() => this.setSubMenuOpen("lowerCaseLetters") }
+                    />
                     {this.props.editorMode === 'maths' &&
-                        <li className={this.state.activeSubMenu == "upperCaseGreekLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("ΓΔ") }} onClick={(e) => { e.preventDefault(); this.setState({ menuOpen: true, activeSubMenu: "upperCaseGreekLetters" }) }} />}
+                        <li className={this.state.activeSubMenu == "upperCaseGreekLetters" ? 'active' : 'inactive'}
+                            dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("ΓΔ") }}
+                            onClick={() => this.setSubMenuOpen("upperCaseGreekLetters") }
+                            onKeyUp={() => this.setSubMenuOpen("upperCaseGreekLetters") }
+                        />}
                     {this.props.editorMode === 'maths' &&
-                        <li className={this.state.activeSubMenu == "lowerCaseGreekLetters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("αβ") }} onClick={(e) => { e.preventDefault(); this.setState({ menuOpen: true, activeSubMenu: "lowerCaseGreekLetters" }) }} />}
+                        <li className={this.state.activeSubMenu == "lowerCaseGreekLetters" ? 'active' : 'inactive'}
+                            dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("αβ") }}
+                            onClick={() => this.setSubMenuOpen("lowerCaseGreekLetters") }
+                            onKeyUp={() => this.setSubMenuOpen("lowerCaseGreekLetters") }
+                        />}
                 </ul>
                 {this.state.activeSubMenu == "upperCaseLetters" && <ul className="sub-menu uppercaseletters">{
                     this.state.menuItems.upperCaseLetters.map(this.menuItem)
@@ -417,8 +451,16 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             </div>
             <div id="inequality-menu-tabs" className="menu-tabs">
                 <ul>
-                    <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString("A\\ b") }} onClick={() => this.onMenuTabClick("letters")} />
-                    <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'} dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(this.props.logicSyntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }} onClick={(e) => { e.preventDefault(); this.onMenuTabClick("functions") } } />
+                    <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'}
+                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString("A\\ b") }}
+                        onClick={() => this.onMenuTabClick("letters")}
+                        onKeyUp={() => this.onMenuTabClick("letters")}
+                    />
+                    <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'}
+                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(this.props.logicSyntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }}
+                        onClick={() => this.onMenuTabClick("functions")}
+                        onKeyUp={() => this.onMenuTabClick("functions")}
+                    />
                 </ul>
             </div>
         </nav>
@@ -426,9 +468,18 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         const previewTexString = (this.state.editorState.result || { tex: ""}).tex;
 
         return <div id="inequality-modal">
-            <div className="inequality-ui confirm button" onClick={this.close}>OK</div>
+            <div
+                className="inequality-ui confirm button"
+                role="button" tabIndex={-1}
+                onClick={this.close}
+                onKeyUp={this.close}>OK</div>
             <div className={`inequality-ui katex-preview ${previewTexString === "" ? "empty" : ""}`} dangerouslySetInnerHTML={{ __html: katex.renderToString(previewTexString) }}></div>
-            <div className="inequality-ui centre button" onClick={() => { if (this.state.sketch) this.state.sketch.centre() }}>Centre</div>
+            <div
+                className="inequality-ui centre button"
+                role="button" tabIndex={-1}
+                onClick={() => { if (this.state.sketch) this.state.sketch.centre() }}
+                onKeyUp={() => { if (this.state.sketch) this.state.sketch.centre() }}
+            >Centre</div>
             <div id="inequality-trash" className="inequality-ui trash button">Trash</div>
             <div className="beta-badge">beta</div>
             { menu }
