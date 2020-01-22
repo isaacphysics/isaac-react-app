@@ -164,9 +164,10 @@
     position: absolute;
     padding: 4px;
     border: 1px solid $gray-118;
-    left: 20px;
-    right: 54px;
     background: #fff;
+    top: 117px;
+    right: 50px;
+    width: 70%;
   }
   .share-link div {
     overflow: hidden;
@@ -176,38 +177,25 @@
     -webkit-user-select: all;
     -moz-user-select: all;
     -ms-user-select: all;
-    width: 100%;
   }
   .unassign {
     cursor: pointer;
     min-width: 20px;
   }
 }
-
-.ru_share {
-  background-image: url(/assets/share.svg);
-  width: 50px;
-  height: 58px;
-  background-repeat: no-repeat;
-  z-index: 1;
-  float: right;
-  position: relative;
-  margin-right: 10px;
-  margin-left: 10px;
-  background-color: transparent;
-}
-
 .share-link-table {
+  display: none;
+  position: relative;
+  padding: 4px;
+  border: 1px solid $gray-118;
+  background: #fff;
+  top: 35px;
+  right: 30px;
+}
+.share-link-table div {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   user-select: all;
-  display: none;
-  position: absolute;
-  padding: 4px;
-  border: 1px solid $gray-118;
   width: 250px;
-  height: 40px;
-  right: 105px;
-  background: #fff;
 }

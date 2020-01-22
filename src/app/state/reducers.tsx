@@ -14,6 +14,7 @@ import {
     isValidatedChoice,
     LoggedInUser,
     NOT_FOUND_TYPE,
+    PrintingSettings,
     TemplateEmail,
     Toast,
     UserPreferencesDTO,
@@ -760,6 +761,19 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
     }
 };
 
+export type PrintingSettingsState = PrintingSettings | null;
+export const printingSettings = (printingSettingsState: PrintingSettingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.PRINTING_SET_HINTS: {
+            return {...printingSettingsState, hintsEnabled: action.hintsEnabled};
+        }
+        default: {
+            return printingSettingsState;
+        }
+    }
+};
+
+
 const appReducer = combineReducers({
     user,
     userAuthSettings,
@@ -796,6 +810,7 @@ const appReducer = combineReducers({
     eventOverviews,
     eventBookings,
     fragments,
+    printingSettings,
     glossaryTerms
 });
 
@@ -835,6 +850,7 @@ export type AppState = undefined | {
     eventOverviews: EventOverviewsState;
     eventBookings: EventBookingsState;
     fragments: FragmentsState;
+    printingSettings: PrintingSettingsState;
     glossaryTerms: GlossaryTermsState;
 }
 

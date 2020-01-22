@@ -58,7 +58,7 @@ export const Tabs = (props: TabsProps) => {
         <TabContent activeTab={activeTab} className={!specialCaseExamBoardTab ? tabContentClass : ""}>
             {Object.entries(tabs).map(([tabTitle, tabBody], mapIndex) => {
                 const tabIndex = mapIndex + 1;
-                return <TabPane key={tabTitle} tabId={tabIndex}>
+                return <TabPane key={tabTitle} tabId={tabIndex} className={specialCaseExamBoardTab && !(activeTab == tabIndex) ? "no-print" : ""}>
                     {tabBody as ReactNode}
                 </TabPane>;
             })}

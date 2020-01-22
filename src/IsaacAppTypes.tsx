@@ -325,6 +325,8 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
     | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
     | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
+
+    | {type: ACTION_TYPE.PRINTING_SET_HINTS, hintsEnabled: boolean}
 ;
 
 export type NOT_FOUND_TYPE = 404;
@@ -603,6 +605,10 @@ export interface UserProgress {
     correctByTag: { [tag: string]: number };
     userSnapshot?: UserSnapshot;
     userDetails?: ApiTypes.UserSummaryDTO;
+}
+
+export interface PrintingSettings {
+    hintsEnabled: boolean;
 }
 
 export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6

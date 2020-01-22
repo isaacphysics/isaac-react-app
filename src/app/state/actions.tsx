@@ -1509,6 +1509,10 @@ export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) =>
     }
 };
 
+export const setPrintingHints = (hintsEnabled: boolean) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.PRINTING_SET_HINTS, hintsEnabled});
+};
+
 
 // SERVICE ACTIONS (w/o dispatch)
 // Page change

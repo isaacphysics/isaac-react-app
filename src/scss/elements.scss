@@ -189,6 +189,36 @@ button.btn.btn-link.login-b,
   }
 }
 
+.ru_share {
+  background-image: url(/assets/share.svg);
+  width: 50px;
+  height: 58px;
+  background-repeat: no-repeat;
+  z-index: 1;
+  float: right;
+  position: relative;
+  margin-right: 5px;
+  margin-left: 10px;
+  background-color: transparent;
+}
+.ru_print {
+  background-image: url(/assets/print.svg);
+  width: 50px;
+  height: 58px;
+  background-repeat: no-repeat;
+  z-index: 1;
+  float: right;
+  position: relative;
+  margin-right: 10px;
+  margin-left: 5px;
+  background-color: transparent;
+}
+.not_mobile {
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
 .pointer-cursor {
   cursor: pointer;
 }
