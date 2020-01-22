@@ -81,6 +81,14 @@ export const UserDetails = (props: UserDetailsProps) => {
         </Row>
         <Row>
             <Col md={6}>
+                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+            </Col>
+            <Col md={6}>
+                <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+            </Col>
+        </Row>
+        <Row>
+            <Col md={6}>
                 <FormGroup>
                     <Label htmlFor="email-input" className="form-required">Email address</Label>
                     <Input
@@ -97,12 +105,19 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </FormGroup>
             </Col>
             <Col md={6}>
-                <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                <FormGroup>
+                    <Label htmlFor="linked-accounts">Linked Accounts</Label>
+                    <Row className="ml-3">
+                        <input type="button" className="linked-account-button google-button" onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}/>
+                        <div className="vertical-center ml-2">
+                            {authenticationProvidersUsed("GOOGLE") ? "Remove" : "Add"}
+                        </div>
+                    </Row>
+                </FormGroup>
             </Col>
         </Row>
         <Row>
             <Col md={6}>
-                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
                 <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
             <Col md={6}>
@@ -124,23 +139,13 @@ export const UserDetails = (props: UserDetailsProps) => {
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>
                 </FormGroup>
+            </Col>
+        </Row>
+        <Row>
+            <Col md={6}>
                 <div className="mt-5 pt-1">
                     <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
                 </div>
-            </Col>
-        </Row>
-
-        <Row>
-            <Col md={6}>
-                <FormGroup>
-                    <Label htmlFor="linked-accounts">Linked Accounts</Label>
-                    <Row className="ml-3">
-                        <input type="button" className="linked-account-button google-button" onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}/>
-                        <div className="vertical-center ml-2">
-                            {authenticationProvidersUsed("GOOGLE") ? "Remove" : "Add"}
-                        </div>
-                    </Row>
-                </FormGroup>
             </Col>
         </Row>
 
