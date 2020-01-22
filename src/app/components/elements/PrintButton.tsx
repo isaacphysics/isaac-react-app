@@ -14,7 +14,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
     return questionPage ?
         <React.Fragment>
             <button
-                className="ru_print"
+                className="ru_print btn-action"
                 onClick={() => setQuestionPrintOpen(!questionPrintOpen)}/>
             {
                 questionPrintOpen && <div className="question-actions-link-box">
@@ -41,7 +41,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
         </React.Fragment>
         :
         <React.Fragment><button
-            className="ru_print"
+            className="ru_print btn-action"
             onClick={() => {
                 dispatch(setPrintingHints(false));
                 setTimeout(window.print, 100);
