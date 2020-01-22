@@ -3,9 +3,11 @@ import katex from "katex";
 import 'katex/dist/contrib/mhchem.js';
 import renderA11yString from '../../services/katex-a11y';
 import he from "he";
-import {UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {LoggedInUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
-import {connect} from "react-redux";
+import {useSelector} from "react-redux";
+import {EXAM_BOARD} from "../../services/constants";
+import {useCurrentExamBoard} from "../../services/examBoard";
 
 type MathJaxMacro = string|[string, number];
 
@@ -196,7 +198,7 @@ function munge(latex: string) {
         .replace(/\\newline/g, "\\\\");
 }
 
-export function katexify(html: string, userPreferences: UserPreferencesDTO | null) {
+export function katexify(html: string, user: LoggedInUser | null, examBoard: EXAM_BOARD | null, screenReaderHoverText: boolean) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -220,7 +222,7 @@ export function katexify(html: string, userPreferences: UserPreferencesDTO | nul
                 const latexUnEntitied = he.decode(latex);
                 const latexMunged = munge(latexUnEntitied);
                 let macrosToUse = KatexMacrosWithMathsBool;
-                if (userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA) {
+                if (examBoard == EXAM_BOARD.AQA) {
                     macrosToUse = KatexMacrosWithEngineeringBool;
                 }
                 let katexOptions = {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse};
@@ -231,11 +233,19 @@ export function katexify(html: string, userPreferences: UserPreferencesDTO | nul
                     let pauseChars = katexOptions.displayMode ? ". &nbsp;" : ",";  // trailing comma/full-stop for pause in speaking
                     screenreaderText = `${renderA11yString(latexMunged, katexOptions)}${pauseChars}`;
                 } catch (e) {
+                    // eslint-disable-next-line no-console
                     console.warn(`Unsupported equation for screenreader text: '${latexMunged}'`, e);
                     screenreaderText = "[[Unsupported equation]]";
                 }
-                output += katexRenderResult.replace('<span class="katex">',
+                katexRenderResult = katexRenderResult.replace('<span class="katex">',
                     `<span class="katex"><span class="sr-only">${screenreaderText}</span>`);
+
+                if (screenReaderHoverText) {
+                    katexRenderResult = katexRenderResult.replace('<span class="katex">',
+                        `<span class="katex" title="${screenreaderText.replace(/,/g, "").replace(/\s\s+/g, " ")}">`);
+                }
+
+                output += katexRenderResult;
 
                 index = match.index + match[0].length;
             } else {
@@ -281,23 +291,14 @@ function manipulateHtml(html: string) {
     return htmlDom.innerHTML;
 }
 
-const stateToProps = (state: AppState) => ({
-    userPreferences: state ? state.userPreferences : null
-});
+export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
+    const user = useSelector((state: AppState) => state && state.user || null);
+    const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
+        state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
+    const examBoard = useCurrentExamBoard();
 
-interface TrustedHtmlProps {
-    html: string;
-    span?: boolean;
-    userPreferences: UserPreferencesDTO | null;
-}
+    html = manipulateHtml(katexify(html, user, examBoard, screenReaderHoverText));
 
-let TrustedHtmlComponent = ({html, span, userPreferences}: TrustedHtmlProps) => {
-    html = manipulateHtml(katexify(html, userPreferences));
-    if (span) {
-        return <span dangerouslySetInnerHTML={{__html: html}} />;
-    } else {
-        return <div dangerouslySetInnerHTML={{__html: html}} />;
-    }
+    const ElementType = span ? "span" : "div";
+    return <ElementType dangerouslySetInnerHTML={{__html: html}} />;
 };
-
-export const TrustedHtml = connect(stateToProps)(TrustedHtmlComponent);

@@ -199,5 +199,5 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                     }/>
             </RS.CardBody>
         </RS.Card>
-    </RS.Container>
+    </RS.Container>;
 };

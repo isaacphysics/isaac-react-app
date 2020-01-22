@@ -9,9 +9,9 @@ else
   VERSION_TO_DEPLOY="$1"
 fi
 
-BUILD_DIR=/tmp/isaacCSDeploy
+BUILD_DIR=/tmp/isaacAppsDeploy
 
-echo Building Isaac CS in $BUILD_DIR: $VERSION_TO_DEPLOY
+echo Building Isaac CS and Physics apps in $BUILD_DIR: $VERSION_TO_DEPLOY
 
 rm -rf $BUILD_DIR
 mkdir -p $BUILD_DIR
@@ -37,17 +37,25 @@ else
 fi
 
 npm install
-npm run build
-docker build -t "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION .
+npm run build-cs
+npm run build-phy
+docker build -t "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=cs .
+docker build -t "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=physics .
 docker push "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}"
+docker push "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}"
 
 cd ..
 rm -rf isaac-cs-app
 
 git clone -b $SEGUE_VERSION --depth 1 https://github.com/isaacphysics/isaac-api.git
 cd isaac-api
-docker build -t "docker.isaacscience.org/isaac-api:$SEGUE_VERSION" --pull .
+if [ -n "$UPDATE_API_DEPS" ]; then
+    docker build -f Dockerfile-base -t isaac-api-base . --pull
+fi
+docker build -f Dockerfile-api -t "docker.isaacscience.org/isaac-api:$SEGUE_VERSION" .
 docker push "docker.isaacscience.org/isaac-api:$SEGUE_VERSION"
+docker build -f Dockerfile-etl -t "docker.isaacscience.org/isaac-etl:$SEGUE_VERSION" .
+docker push "docker.isaacscience.org/isaac-etl:$SEGUE_VERSION"
 
 cd ..
 rm -rf isaac-api

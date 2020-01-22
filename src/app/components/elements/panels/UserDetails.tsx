@@ -1,5 +1,5 @@
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import {SubjectInterests, UserExamPreferences, ValidationUser} from "../../../../IsaacAppTypes";
+import {SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../../services/constants";
 import React, {ChangeEvent} from "react";
 import {
@@ -17,8 +17,6 @@ import {useDispatch} from "react-redux";
 import {linkAccount, unlinkAccount} from "../../../state/actions";
 
 interface UserDetailsProps {
-    examPreferences: UserExamPreferences;
-    setExamPreferences: (e: any) => void;
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
     subjectInterests: SubjectInterests;
@@ -31,7 +29,6 @@ export const UserDetails = (props: UserDetailsProps) => {
     const dispatch = useDispatch();
     const {
         userToUpdate, setUserToUpdate,
-        examPreferences, setExamPreferences,
         subjectInterests, setSubjectInterests,
         submissionAttempted,
         userAuthSettings
@@ -115,18 +112,14 @@ export const UserDetails = (props: UserDetailsProps) => {
                     </Label>
                     <Input
                         type="select" name="select" id="exam-board-select"
-                        value={
-                            (examPreferences && examPreferences[EXAM_BOARD.OCR]) ? EXAM_BOARD.OCR : EXAM_BOARD.AQA
-                        }
+                        value={userToUpdate.examBoard}
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                            setExamPreferences(
-                                event.target.value == EXAM_BOARD.AQA ?
-                                    {[EXAM_BOARD.AQA]: true, [EXAM_BOARD.OCR]: false} :
-                                    {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true}
+                            setUserToUpdate(
+                                Object.assign({}, userToUpdate, {examBoard: event.target.value})
                             )
                         }
                     >
-                        {/*<option></option> This was not an option although we should probably support it */}
+                        <option value={EXAM_BOARD.OTHER}>Other</option>
                         <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>

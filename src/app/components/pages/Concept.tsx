@@ -14,8 +14,10 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {NavigationLinks} from "../elements/NavigationLinks";
-import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
+import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {EditContentButton} from "../elements/EditContentButton";
+import {ShareLink} from "../elements/ShareLink";
+import {PrintButton} from "../elements/PrintButton";
 
 const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
     return {
@@ -50,13 +52,21 @@ const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc, s
                     currentPageTitle={doc.title as string}
                     collectionType={navigation.collectionType}
                 />
-                {segueEnvironment === "DEV" && (doc as ContentBase).canonicalSourceFile &&
+                <Row className="no-print">
+                    {segueEnvironment === "DEV" && (doc as ContentBase).canonicalSourceFile &&
                     <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
-                }
+                    }
+                    <div className="question-actions question-actions-leftmost mt-3">
+                        <ShareLink linkUrl={`${window.location.origin}/concepts/${doc.id}`}/>
+                    </div>
+                    <div className="question-actions mt-3 not_mobile">
+                        <PrintButton/>
+                    </div>
+                </Row>
 
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4">
-                        <AnonUserExamBoardPicker className="text-right" />
+                        <TempExamBoardPicker className="text-right" />
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>

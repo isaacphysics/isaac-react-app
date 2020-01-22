@@ -7,15 +7,14 @@ import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiT
 import { InequalityModal } from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {IsaacHints} from "./IsaacHints";
-import { determineExamBoardFrom } from "../../services/examBoard";
 import { EXAM_BOARD } from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
+import {useCurrentExamBoard} from "../../services/examBoard";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
-    const examBoard = state && determineExamBoardFrom(state.userPreferences);
-    let r: { currentAttempt?: LogicFormulaDTO | null; examBoard? : EXAM_BOARD | null } = { examBoard };
+    let r: {currentAttempt?: LogicFormulaDTO | null} = {};
     if (questionPart) {
         r.currentAttempt = questionPart.currentAttempt;
     }
@@ -28,14 +27,13 @@ interface IsaacSymbolicLogicQuestionProps {
     questionId: string;
     currentAttempt?: LogicFormulaDTO | null;
     setCurrentAttempt: (questionId: string, attempt: LogicFormulaDTO) => void;
-    examBoard?: EXAM_BOARD | null;
 }
 const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
-
+    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
+    const examBoard = useCurrentExamBoard();
 
-    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
         try {
@@ -74,7 +72,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols}
                 visible={modalVisible}
-                syntax={props.examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
+                syntax={examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
             />}
             <IsaacHints questionPartId={questionId} hints={doc.hints} />
         </div>

@@ -3,7 +3,7 @@ import {Tabs} from "./Tabs";
 import {Col, Row, Button} from "reactstrap";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
-import {AnonUserExamBoardPicker} from "./inputs/AnonUserExamBoardPicker";
+import {TempExamBoardPicker} from "./inputs/TempExamBoardPicker";
 
 export const FeaturedContentTabs = () => (
     <div className="tabs-featured-question">
@@ -26,7 +26,7 @@ export const FeaturedContentTabs = () => (
                     <Col md={6}>
                     </Col>
                     <Col md={6}>
-                        <AnonUserExamBoardPicker className="float-right pt-md-5 pr-md-5 pt-3 pr-3" hideLabel />
+                        <TempExamBoardPicker className="float-right pt-md-5 pr-md-5 pt-3 pr-3" hideLabel />
                         <div className="mb-5">
                             <IsaacContent doc={{
                                 "id": "sys_bool_07|d69ed9d9-2d76-4019-8022-358490d0c75d",
@@ -152,7 +152,7 @@ export const FeaturedContentTabs = () => (
                     <Col md={{size: 5, offset: 1}} className="feattab-image text-center" >
                         <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
                         <Button tag={Link} to="/topics" color="primary" outline className="mt-4 d-none d-md-inline-block">
-                            Explore by Topic
+                            Explore by topic
                         </Button>
                     </Col>
                 </Row>

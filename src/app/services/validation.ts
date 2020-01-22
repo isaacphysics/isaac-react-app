@@ -9,7 +9,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {NOT_FOUND} from "./constants";
+import {EXAM_BOARD, NOT_FOUND} from "./constants";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
@@ -45,6 +45,14 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
     );
 };
 
+export const validateExamBoard = (user: ValidationUser | null) => {
+    if (user && user.examBoard) {
+        return user.examBoard in EXAM_BOARD;
+    } else {
+        return false;
+    }
+};
+
 export const validateSubjectInterests = (subjectInterests?: SubjectInterests | null) => {
     return subjectInterests &&
         Object.values(subjectInterests).length > 0 &&
@@ -78,6 +86,7 @@ export function allRequiredInformationIsPresent(user?: ValidationUser | null, us
     return user && userPreferences &&
         validateUserSchool(user) &&
         validateUserGender(user) &&
+        validateExamBoard(user) &&
         validateEmailPreferences(userPreferences.EMAIL_PREFERENCE) &&
         validateSubjectInterests(userPreferences.SUBJECT_INTEREST);
 }

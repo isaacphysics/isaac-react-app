@@ -1,41 +1,24 @@
-import React, {ReactElement, useMemo, useState} from "react";
+import React, {ReactElement} from "react";
 import {Tabs} from "../elements/Tabs";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
-import {withRouter} from "react-router-dom";
-import {connect} from "react-redux";
-import {AppState} from "../../state/reducers";
-import {UserPreferencesDTO} from "../../../IsaacAppTypes";
-import {EXAM_BOARD} from "../../services/constants";
-
-const stateToProps = (state: AppState) => ({
-    userPreferences: state ? state.userPreferences : null
-});
+import {useCurrentExamBoard} from "../../services/examBoard";
 
 interface IsaacTabsProps {
-    doc: {
-        children: {
-            title?: string;
-            children?: ContentDTO[];
-        }[];
-    };
-    userPreferences: UserPreferencesDTO | null;
+    doc: {children: {title?: string; children?: ContentDTO[]}[]};
 }
 
-const IsaacTabsComponent = (props: any) => {
-    const {doc: {children}, userPreferences} = props as IsaacTabsProps;
-    const [examBoardFilter, setExamBoardFilter] = useState(userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA ? EXAM_BOARD.AQA : EXAM_BOARD.OCR);
-    useMemo(() => {
-        setExamBoardFilter(userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA ? EXAM_BOARD.AQA : EXAM_BOARD.OCR);
-    }, [userPreferences]);
+export const IsaacTabs = (props: any) => {
+    const {doc: {children}} = props as IsaacTabsProps;
+    const examBoardFilter = useCurrentExamBoard();
     const tabTitlesToContent: {[title: string]: ReactElement} = {};
+
     let activeTab = 1;
     children.forEach((child, index) => {
         const tabTitle = child.title || `Tab ${index + 1}`;
         if (examBoardFilter == tabTitle) {
             activeTab = index + 1;
         }
-
         tabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
     });
 
@@ -43,5 +26,3 @@ const IsaacTabsComponent = (props: any) => {
         {tabTitlesToContent}
     </Tabs>;
 };
-
-export const IsaacTabs = withRouter(connect(stateToProps)(IsaacTabsComponent));
