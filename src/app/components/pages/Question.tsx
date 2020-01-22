@@ -62,7 +62,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                         <ShareLink linkUrl={`${window.location.origin}/questions/${questionId}`}/>
                     </div>
                     <div className="question-actions mt-3 not_mobile">
-                        <PrintButton/>
+                        <PrintButton questionPage={true}/>
                     </div>
                 </RS.Row>
                 <Row className="question-content-container">

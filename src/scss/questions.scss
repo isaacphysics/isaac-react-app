@@ -28,14 +28,17 @@ button {
   outline: none !important;
 }
 .share-link {
+  font-family: $secondary-font !important;
   display: none;
   position: relative;
   padding: 4px;
-  border: 1px solid $gray-118;
-  right: 35px;
+  border: 1px solid gray;
+  right: 30px;
   background: #fff;
+  height: 58px;
 }
 .share-link div {
+  margin: 14px 30px 14px 6px;
   white-space: nowrap;
   text-overflow: ellipsis;
   user-select: all;
@@ -46,7 +49,6 @@ button {
 }
 
 .question-actions {
-  margin-left: 2rem;
 
   &.question-actions-leftmost {
     margin-left: auto;
@@ -70,10 +72,10 @@ button {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-right: -2.2rem;
+    margin-right: -1.9rem;
+    background: white;
 
     .question-actions-link {
-      background: lightgray;
       padding-left: 3px;
       padding-right: 3px;
       margin-left: 1rem;
