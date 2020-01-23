@@ -12,9 +12,7 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
-import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {useDispatch} from "react-redux";
-import {linkAccount, unlinkAccount} from "../../../state/actions";
+import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -26,12 +24,10 @@ interface UserDetailsProps {
 }
 
 export const UserDetails = (props: UserDetailsProps) => {
-    const dispatch = useDispatch();
     const {
         userToUpdate, setUserToUpdate,
         subjectInterests, setSubjectInterests,
-        submissionAttempted,
-        userAuthSettings
+        submissionAttempted
     } = props;
 
     const allRequiredFieldsValid = userToUpdate && subjectInterests &&
@@ -40,7 +36,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         validateUserSchool(userToUpdate) &&
         validateSubjectInterests(subjectInterests);
 
-    const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
+
 
     return <CardBody className="pt-0">
         <Row>
@@ -81,14 +77,6 @@ export const UserDetails = (props: UserDetailsProps) => {
         </Row>
         <Row>
             <Col md={6}>
-                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
-            </Col>
-            <Col md={6}>
-                <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
-            </Col>
-        </Row>
-        <Row>
-            <Col md={6}>
                 <FormGroup>
                     <Label htmlFor="email-input" className="form-required">Email address</Label>
                     <Input
@@ -105,20 +93,12 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </FormGroup>
             </Col>
             <Col md={6}>
-                <FormGroup>
-                    <Label htmlFor="linked-accounts">Linked Accounts</Label>
-                    <Row className="ml-3">
-                        <input type="button" className="linked-account-button google-button" onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}/>
-                        <div className="vertical-center ml-2">
-                            {authenticationProvidersUsed("GOOGLE") ? "Remove" : "Add"}
-                        </div>
-                    </Row>
-                </FormGroup>
+                <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
         </Row>
         <Row>
             <Col md={6}>
-                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
             <Col md={6}>
                 <FormGroup>
@@ -142,6 +122,9 @@ export const UserDetails = (props: UserDetailsProps) => {
             </Col>
         </Row>
         <Row>
+            <Col md={6}>
+                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+            </Col>
             <Col md={6}>
                 <div className="mt-5 pt-1">
                     <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
