@@ -104,7 +104,11 @@ export const UserPassword = (
                             </FormGroup>
                         </Col>
                     </Row>
-                    <hr className="text-center" />
+                    <Row>
+                        <Col md={{size: 6, offset: 3}}>
+                            <hr className="text-center" />
+                        </Col>
+                    </Row>
                     <Row>
                         <Col className="text-center">
                             <FormGroup>
@@ -140,7 +144,11 @@ export const UserPassword = (
                             </Button>
                         </Col>
                     </Row>
-                    <hr className="text-center" />
+                    <Row>
+                        <Col md={{size: 6, offset: 3}}>
+                            <hr className="text-center" />
+                        </Col>
+                    </Row>
                     <Row>
                         <Col className="text-center">
                             <FormGroup>
@@ -161,7 +169,11 @@ export const UserPassword = (
                         <strong className="d-block">Your password reset request is being processed.</strong>
                         <strong className="d-block">Please check your inbox.</strong>
                     </p>
-                    <hr className="text-center" />
+                    <Row>
+                        <Col md={{size: 6, offset: 3}}>
+                            <hr className="text-center" />
+                        </Col>
+                    </Row>
                     <Row>
                         <Col className="text-center">
                             <FormGroup>
