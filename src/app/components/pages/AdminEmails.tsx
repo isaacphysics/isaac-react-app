@@ -17,7 +17,7 @@ interface AdminEmailsProps {
     };
 }
 
-const RECIPIENT_NUMBER_WARNING_VALUE = 20000;
+const RECIPIENT_NUMBER_WARNING_VALUE = 2000;
 
 export const AdminEmails = (props: AdminEmailsProps) => {
     const dispatch = useDispatch();
@@ -201,8 +201,8 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                                 className={"btn btn-xl btn-secondary border-0 " + classnames({disabled: !canSubmit})}
                                 disabled={!canSubmit}
                                 onClick={() => {
-                                    const noUsers = numberOfUsers();
-                                    if (window.confirm(`Are you sure you want to send a ${emailType} email (${contentObjectID}) to ${noUsers} user${noUsers > 1 ? "s" : ""}?`)) {
+                                    const numUsers = numberOfUsers();
+                                    if (window.confirm(`Are you sure you want to send a ${emailType} email (${contentObjectID}) to ${numUsers} user${numUsers > 1 ? "s" : ""}?`)) {
                                         setEmailSent(true);
                                         if (selectionMode == "USER_FILTER") {
                                             dispatch(sendAdminEmail(contentObjectID, emailType, selectedRoles));
