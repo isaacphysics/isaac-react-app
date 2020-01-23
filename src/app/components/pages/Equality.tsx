@@ -6,6 +6,7 @@ import queryString from "query-string";
 import {fetchDoc} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {DOCUMENT_TYPE} from "../../services/constants";
+import {ifKeyIsEnter} from "../../services/navigation";
 
 import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
@@ -71,7 +72,11 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
                 <Col md={{size: 8}} className="py-4 question-panel">
                     <div className="symboliclogic-question">
                         <Label>&nbsp;</Label>
-                        <div className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} onClick={() => setModalVisible(true)} dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter a formula' }} />
+                        <div
+                            role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={0}
+                            onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
+                            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter a formula' }}
+                        />
                         {modalVisible && <InequalityModal
                             close={closeModal}
                             onEditorStateChange={(state: any) => {

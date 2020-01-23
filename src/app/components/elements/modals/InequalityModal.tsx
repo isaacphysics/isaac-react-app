@@ -59,7 +59,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private _movingMenuBar?: HTMLElement | null = null;
     private _potentialSymbolSpec?: MenuItem | null = null;
 
-    private _greekLetterMap: { [letter: string]: string } = {"\\alpha": "α", "\\beta": "β", "\\gamma": "γ", "\\delta": "δ", "\\epsilon": "ε", "\\varepsilon": "ε", "\\zeta": "ζ", "\\eta": "η", "\\theta": "θ", "\\iota": "ι", "\\kappa": "κ", "\\lambda": "λ", "\\mu": "μ", "\\nu": "ν", "\\xi": "ξ", "\\omicron": "ο", "\\pi": "π", "\\rho": "ρ", "\\sigma": "σ", "\\tau": "τ", "\\upsilon": "υ", "\\phi": "ϕ", "\\chi": "χ", "\\psi": "ψ", "\\omega": "ω", "\\Gamma": "Γ", "\\Delta": "Δ", "\\Theta": "Θ", "\\Lambda": "Λ", "\\Xi": "Ξ", "\\Pi": "Π", "\\Sigma": "Σ", "\\Upsilon": "Υ", "\\Phi": "Φ", "\\Psi": "Ψ", "\\Omega": "Ω"};
+    private _greekLetterMap: { [letter: string]: string } = {"alpha": "α", "beta": "β", "gamma": "γ", "delta": "δ", "epsilon": "ε", "varepsilon": "ε", "zeta": "ζ", "eta": "η", "theta": "θ", "iota": "ι", "kappa": "κ", "lambda": "λ", "mu": "μ", "nu": "ν", "xi": "ξ", "omicron": "ο", "pi": "π", "rho": "ρ", "sigma": "σ", "tau": "τ", "upsilon": "υ", "phi": "ϕ", "chi": "χ", "psi": "ψ", "omega": "ω", "Gamma": "Γ", "Delta": "Δ", "Theta": "Θ", "Lambda": "Λ", "Xi": "Ξ", "Pi": "Π", "Sigma": "Σ", "Upsilon": "Υ", "Phi": "Φ", "Psi": "Ψ", "Omega": "Ω"};
+    private _lowerCaseGreekLetters = ["alpha", "beta", "gamma", "delta", "varepsilon", "zeta", "eta", "theta", "iota", "kappa", "lambda", "mu", "nu", "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "chi", "psi", "omega"];
+    private _upperCaseGreekLetters = ["Gamma", "Delta", "Theta", "Lambda", "Xi", "Pi", "Sigma", "Upsilon", "Phi", "Psi", "Omega"];
+
 
     // Call this to close the editor
     public close: () => void;
@@ -86,7 +89,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
         if (props.availableSymbols && props.availableSymbols.length > 0) {
             // Assuming these are only letters... might become more complicated in the future.
-            this.state.menuItems.letters = props.availableSymbols.map( l => new MenuItem("Symbol", { letter: l.trim() }, { label: l.trim(), texLabel: true, className: `symbol-${l.trim()} menu-item` }) );
+            this.state.menuItems.letters = props.availableSymbols.map( l => {
+                let letter = l.trim();
+                return new MenuItem("Symbol", { letter: this._greekLetterMap[letter] || letter }, { label: this._greekLetterMap[letter] ? '\\' + letter : letter, texLabel: true, className: `symbol-${letter} menu-item` })
+            });
             this.state.defaultMenu = false;
         } else {
             if (props.editorMode === 'logic') {
@@ -97,10 +103,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 // Assuming editorMode === 'maths'
                 this.state.menuItems.upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map( letter => this.makeLetterMenuItem(letter) );
                 this.state.menuItems.lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz".split("").map( letter => this.makeLetterMenuItem(letter) );
-                const lowerCaseGreekLetters = ["\\alpha", "\\beta", "\\gamma", "\\delta", "\\varepsilon", "\\zeta", "\\eta", "\\theta", "\\iota", "\\kappa", "\\lambda", "\\mu", "\\nu", "\\xi", "\\omicron", "\\pi", "\\rho", "\\sigma", "\\tau", "\\upsilon", "\\phi", "\\chi", "\\psi", "\\omega"];
-                const upperCaseGreekLetters = ["\\Gamma", "\\Delta", "\\Theta", "\\Lambda", "\\Xi", "\\Pi", "\\Sigma", "\\Upsilon", "\\Phi", "\\Psi", "\\Omega"];
-                this.state.menuItems.upperCaseGreekLetters = upperCaseGreekLetters.map( letter => this.makeLetterMenuItem(this._greekLetterMap[letter] || letter, letter) );
-                this.state.menuItems.lowerCaseGreekLetters = lowerCaseGreekLetters.map( letter => this.makeLetterMenuItem(this._greekLetterMap[letter] || letter, letter) );
+                this.state.menuItems.upperCaseGreekLetters = this._upperCaseGreekLetters.map( letter => this.makeLetterMenuItem(this._greekLetterMap[letter] ? '\\' + letter : letter, letter) );
+                this.state.menuItems.lowerCaseGreekLetters = this._lowerCaseGreekLetters.map( letter => this.makeLetterMenuItem(this._greekLetterMap[letter] ? '\\' + letter : letter, letter) );
             }
         }
         this.close = () => {
@@ -133,6 +137,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         sketch.onNewEditorState = (s: any) => {
             const modal = document.getElementById('inequality-modal');
             if (modal) {
+                // TODO: Preprocess state to convert greek letters back to letter names
                 this.setState({ editorState: s });
                 this.props.onEditorStateChange(s);
             }
