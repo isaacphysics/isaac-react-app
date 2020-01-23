@@ -17,6 +17,8 @@ interface AdminEmailsProps {
     };
 }
 
+const RECIPIENT_NUMBER_WARNING_VALUE = 20000;
+
 export const AdminEmails = (props: AdminEmailsProps) => {
     const dispatch = useDispatch();
     const [selectionMode, setSelectionMode] = useState("USER_FILTER");
@@ -190,22 +192,28 @@ export const AdminEmails = (props: AdminEmailsProps) => {
             <RS.CardBody>
                 <div className="text-center">
                     {!emailSent ?
-                        <RS.Input
-                            type="button" value="Send emails"
-                            className={"btn btn-xl btn-secondary border-0 " + classnames({disabled: !canSubmit})}
-                            disabled={!canSubmit}
-                            onClick={() => {
-                                const noUsers = numberOfUsers();
-                                if (window.confirm(`Are you sure you want to send a ${emailType} email (${contentObjectID}) to ${noUsers} user${noUsers > 1 ? "s" : ""}?`)) {
-                                    setEmailSent(true);
-                                    if (selectionMode == "USER_FILTER") {
-                                        dispatch(sendAdminEmail(contentObjectID, emailType, selectedRoles));
-                                    } else {
-                                        dispatch(sendAdminEmailWithIds(contentObjectID, emailType, csvIDs));
+                        <React.Fragment>
+                            {numberOfUsers() >= RECIPIENT_NUMBER_WARNING_VALUE && <div className="alert alert-warning">
+                                <strong>Warning:</strong> There are currently <strong>{numberOfUsers()}</strong> selected recipients.
+                            </div>}
+                            <RS.Input
+                                type="button" value="Send emails"
+                                className={"btn btn-xl btn-secondary border-0 " + classnames({disabled: !canSubmit})}
+                                disabled={!canSubmit}
+                                onClick={() => {
+                                    const noUsers = numberOfUsers();
+                                    if (window.confirm(`Are you sure you want to send a ${emailType} email (${contentObjectID}) to ${noUsers} user${noUsers > 1 ? "s" : ""}?`)) {
+                                        setEmailSent(true);
+                                        if (selectionMode == "USER_FILTER") {
+                                            dispatch(sendAdminEmail(contentObjectID, emailType, selectedRoles));
+                                        } else {
+                                            dispatch(sendAdminEmailWithIds(contentObjectID, emailType, csvIDs));
+                                        }
                                     }
-                                }
-                            }}
-                        /> :
+                                }}
+                            />
+                        </React.Fragment>
+                        :
                         <React.Fragment>Request made, to send another refresh.</React.Fragment>
                     }
                 </div>
