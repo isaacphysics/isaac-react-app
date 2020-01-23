@@ -61,6 +61,7 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
                 <RS.ListGroup className="flex-row">
                     <RS.ListGroupItem className="w-auto"><Link to="/admin/usermanager">User Manager</Link></RS.ListGroupItem>
                     <RS.ListGroupItem className="w-auto"><Link to="/admin/emails">Admin emails</Link></RS.ListGroupItem>
+                    <RS.ListGroupItem className="w-auto"><Link to="/markdown">Markdown builder</Link></RS.ListGroupItem>
                 </RS.ListGroup>
             </RS.Card>
 
