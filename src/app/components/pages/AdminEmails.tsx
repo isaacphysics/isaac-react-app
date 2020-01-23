@@ -181,7 +181,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
             <RS.CardTitle tag="h2">Plain text preview</RS.CardTitle>
             <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
             <RS.CardBody>
-                {emailTemplateSelector && emailTemplateSelector.plainText}
+                <pre>{emailTemplateSelector && emailTemplateSelector.plainText}</pre>
             </RS.CardBody>
         </RS.Card>
 
