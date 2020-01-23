@@ -176,8 +176,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.passwordreset})} tabIndex={0}
                             onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                         >
-                            <span className="d-none d-lg-block">Change password</span>
-                            <span className="d-block d-lg-none">Password</span>
+                            Security
                         </NavLink>
                     </NavItem>
                     <NavItem>
@@ -208,6 +207,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                                 userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                 subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
                                 submissionAttempted={attemptedAccountUpdate}
+                                userAuthSettings={userAuthSettings}
                             />
                         </TabPane>
 
