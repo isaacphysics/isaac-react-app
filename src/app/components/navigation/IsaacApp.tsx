@@ -61,6 +61,7 @@ import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {HeaderPhy} from "./HeaderPhy";
+import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -157,6 +158,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/coming_soon" component={ComingSoon} />
                     <TrackedRoute exact path="/teaching_order" component={Generic} componentProps={{pageIdOverride: "teaching_order"}} />
                     <TrackedRoute exact path="/equality" component={Equality} />
+                    <TrackedRoute exact path="/markdown" ifUser={isStaff} component={MarkdownBuilder} />
 
                     {/* Support pages */}
                     <TrackedRoute exact path="/support/:type?/:category?" component={Support} />

@@ -47,5 +47,8 @@ module.exports = {
     "watchPlugins": [
         "<rootDir>node_modules/jest-watch-typeahead/filename.js",
         "<rootDir>node_modules/jest-watch-typeahead/testname.js"
-    ]
+    ],
+    "globals": {
+        REACT_APP_API_VERSION: "any",
+    }
 };

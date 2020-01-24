@@ -1,10 +1,11 @@
 import {Button, CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import React, {useState} from "react";
 import {ValidationUser, ZxcvbnResult} from "../../../../IsaacAppTypes";
-import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
+import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../../services/validation";
-import {resetPassword} from "../../../state/actions";
+import {linkAccount, resetPassword, unlinkAccount} from "../../../state/actions";
 import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../../services/passwordStrength";
+import {useDispatch} from "react-redux";
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -22,12 +23,15 @@ interface UserPasswordProps {
 export const UserPassword = (
     {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, userAuthSettings, setNewPassword, setNewPasswordConfirm, newPasswordConfirm}: UserPasswordProps) => {
 
+    const dispatch = useDispatch();
+    const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
+
     const [passwordResetRequested, setPasswordResetRequested] = useState(false);
     const [passwordFeedback, setPasswordFeedback] = useState<ZxcvbnResult | null>(null);
 
     const resetPasswordIfValidEmail = () => {
         if (currentUserEmail && validateEmail(currentUserEmail)) {
-            resetPassword({email: currentUserEmail});
+            dispatch(resetPassword({email: currentUserEmail}));
             setPasswordResetRequested(true);
         }
     };
@@ -100,6 +104,24 @@ export const UserPassword = (
                             </FormGroup>
                         </Col>
                     </Row>
+                    <Row>
+                        <Col md={{size: 6, offset: 3}}>
+                            <hr className="text-center" />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="text-center">
+                            <FormGroup>
+                                <Label htmlFor="linked-accounts"><h4>Linked Accounts</h4></Label>
+                                <Col className="text-center">
+                                    <div className="vertical-center ml-2">
+                                        <input type="button" id="linked-accounts" className="linked-account-button google-button" onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}/>
+                                        {authenticationProvidersUsed("GOOGLE") ? " Remove" : " Add"}
+                                    </div>
+                                </Col>
+                            </FormGroup>
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
             : !passwordResetRequested ?
@@ -122,12 +144,51 @@ export const UserPassword = (
                             </Button>
                         </Col>
                     </Row>
+                    <Row>
+                        <Col md={{size: 6, offset: 3}}>
+                            <hr className="text-center" />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="text-center">
+                            <FormGroup>
+                                <Label htmlFor="linked-accounts-no-passowrd" ><h4>Linked Accounts</h4></Label>
+                                <Col className="text-center">
+                                    <div className="vertical-center ml-2">
+                                        <input type="button" id="linked-accounts-no-password" className="linked-account-button google-button" onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}/>
+                                        {authenticationProvidersUsed("GOOGLE") ? " Remove" : " Add"}
+                                    </div>
+                                </Col>
+                            </FormGroup>
+                        </Col>
+                    </Row>
                 </React.Fragment>
                 :
-                <p>
-                    <strong className="d-block">Your password reset request is being processed.</strong>
-                    <strong className="d-block">Please check your inbox.</strong>
-                </p>
+                <React.Fragment>
+                    <p>
+                        <strong className="d-block">Your password reset request is being processed.</strong>
+                        <strong className="d-block">Please check your inbox.</strong>
+                    </p>
+                    <Row>
+                        <Col md={{size: 6, offset: 3}}>
+                            <hr className="text-center" />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="text-center">
+                            <FormGroup>
+                                <Label htmlFor="linked-accounts-no-passowrd" ><h4>Linked Accounts</h4></Label>
+                                <Col className="text-center">
+                                    <div className="vertical-center ml-2">
+                                        <input type="button" id="linked-accounts-no-password" className="linked-account-button google-button" onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}/>
+                                        {authenticationProvidersUsed("GOOGLE") ? " Remove" : " Add"}
+                                    </div>
+                                </Col>
+                            </FormGroup>
+                        </Col>
+                    </Row>
+                </React.Fragment>
+
         }
     </CardBody>
 };

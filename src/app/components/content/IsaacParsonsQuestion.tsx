@@ -187,7 +187,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             {/* TODO Accessibility */}
             <Row className="my-md-3">
                 <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
-                    <Col md={{size: 6}}>
+                    <Col md={{size: 6}} className="parsons-available-items">
                         <h4>Available items</h4>
                         <Droppable droppableId="availableItems">
                             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
@@ -215,7 +215,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                             }}
                         </Droppable>
                     </Col>
-                    <Col md={{size: 6}}>
+                    <Col md={{size: 6}} className="no-print">
                         <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
                         <Droppable droppableId="answerItems">
                             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {

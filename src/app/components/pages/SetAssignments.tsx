@@ -1,9 +1,5 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import * as RS from "reactstrap";
-import {Link} from "react-router-dom";
-import {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast} from "../../state/actions";
-import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState, Boards} from "../../state/reducers";
 import {
     Alert,
     Button,
@@ -19,18 +15,30 @@ import {
     Row,
     Spinner,
     UncontrolledTooltip
-} from 'reactstrap';
+} from "reactstrap";
+import {Link, withRouter} from "react-router-dom";
+import {
+    assignBoard,
+    deleteBoard,
+    loadBoards,
+    loadGroups,
+    loadGroupsForBoard,
+    showToast,
+    unassignBoard
+} from "../../state/actions";
+import {ShowLoading} from "../handlers/ShowLoading";
+import {AppState, Boards} from "../../state/reducers";
 import {ActualBoardLimit, AppGameBoard, BoardOrder, Toast} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {boards, groups} from "../../state/selectors";
-import {sortBy, range} from "lodash";
+import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {TEACHERS_CRUMB} from "../../services/constants";
-import {withRouter} from "react-router-dom";
 import {formatBoardOwner} from "../../services/gameboards";
 import {connect} from "react-redux";
 import {formatDate} from "../elements/DateString";
+import {ShareLink} from "../elements/ShareLink";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -97,31 +105,8 @@ const Board = (props: BoardProps) => {
     useEffect( () => {
         loadGroupsForBoard(board);
     }, [board.id]);
-    const [showShareLink, setShowShareLink] = useState(false);
-    const shareLink = useRef<HTMLInputElement>(null);
 
     const assignmentLink = `${location.origin}/assignment/${board.id}`;
-
-    function toggleShareLink() {
-        if (showShareLink) {
-            setShowShareLink(false);
-        } else {
-            setShowShareLink(true);
-            setImmediate(() => {
-                if (shareLink.current) {
-                    if (window.getSelection && shareLink.current) {
-                        let selection = window.getSelection();
-                        if (selection) {
-                            let range = document.createRange();
-                            range.selectNodeContents(shareLink.current);
-                            selection.removeAllRanges();
-                            selection.addRange(range);
-                        }
-                    }
-                }
-            });
-        }
-    }
 
     const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
 
@@ -167,8 +152,7 @@ const Board = (props: BoardProps) => {
             </aside>
 
             <div className="my-4">
-                <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{assignmentLink}</div></div>
-                <button className="ru_share" onClick={toggleShareLink}/>
+                <ShareLink linkUrl={assignmentLink}/>
                 <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
                 <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
             </div>

@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, MEMBERSHIP_STATUS, TAG_ID, EventTypeFilter} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
@@ -109,6 +109,12 @@ export const api = {
         },
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings`)
+        },
+        linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
+            return endpoint.get(`/auth/${provider}/link`)
+        },
+        unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
+            return endpoint.delete(`/auth/${provider}/link`);
         }
     },
     email: {
