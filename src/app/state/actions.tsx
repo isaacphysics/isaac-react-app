@@ -1359,6 +1359,25 @@ export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => a
     }
 };
 
+export const getEventMapData = (startIndex: number, eventsPerPage: number, typeFilter: EventTypeFilter, statusFilter: EventStatusFilter) => async (dispatch: Dispatch<Action>) => {
+    const filterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
+    const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
+    const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
+    const showInactiveOnly = false;
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_MAP_DATA_REQUEST});
+        const response = await api.events.getEventMapData(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly);
+        dispatch({
+            type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS,
+            eventMapData: response.data.results,
+            total: response.data.totalResults
+        });
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Event map data request failed", e));
+    }
+};
+
 export const getEventBookings = (eventId: string) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST});

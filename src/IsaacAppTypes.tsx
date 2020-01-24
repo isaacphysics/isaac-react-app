@@ -258,6 +258,10 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS; eventOverviews: EventOverview[]}
     | {type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.EVENT_MAP_DATA_REQUEST}
+    | {type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS; eventMapData: EventMapData[]; total: number}
+    | {type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.EVENT_REQUEST}
     | {type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS; augmentedEvent: AugmentedEvent}
     | {type: ACTION_TYPE.EVENT_RESPONSE_FAILURE}
@@ -521,6 +525,19 @@ export interface EventOverview {
     numberAttended: number;
     numberAbsent: number;
     numberOfPlaces: number;
+}
+
+export interface EventMapData {
+    id?: string;
+    title?: string;
+    subtitle?: string;
+    date?: Date;
+    bookingDeadline?: Date;
+    status?: ApiTypes.EventStatus;
+    address?: ApiTypes.Address;
+    latitude?: number;
+    longitude?: number;
+    deadline?: Date;
 }
 
 export interface AdditionalInformation {
