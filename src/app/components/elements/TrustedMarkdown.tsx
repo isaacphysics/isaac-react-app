@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import ReactDOMServer from "react-dom/server";
-import {useStore, useSelector, Provider} from "react-redux";
+import {Provider, useSelector, useStore} from "react-redux";
 import * as RS from "reactstrap";
 import {Router} from "react-router-dom";
 import {AppState} from "../../state/reducers";
@@ -12,7 +12,7 @@ import {escapeHtml, replaceEntities} from "remarkable/lib/common/utils";
 import {Token} from "remarkable";
 import uuid from "uuid";
 import {history} from "../../services/history";
-import {determineExamBoardFrom} from "../../services/examBoard";
+import {useCurrentExamBoard} from "../../services/examBoard";
 
 // eslint-disable-next-line @typescript-eslint/camelcase
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
@@ -39,8 +39,8 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
-    const userPreferences = useSelector((state: AppState) => state && state.userPreferences || null);
-    const examBoard = determineExamBoardFrom(userPreferences);
+    const examBoard = useCurrentExamBoard();
+
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));
 

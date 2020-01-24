@@ -7,6 +7,7 @@ import {
     ACTION_TYPE,
     API_REQUEST_FAILURE_MESSAGE,
     DOCUMENT_TYPE,
+    EXAM_BOARD,
     MEMBERSHIP_STATUS,
     EventStatusFilter,
     TAG_ID,
@@ -147,6 +148,40 @@ export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
+export const linkAccount = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_LINK_REQUEST});
+    try {
+        const redirectResponse = await api.authentication.linkAccount(provider);
+        const redirectUrl = redirectResponse.data.redirectUrl;
+        dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS, provider, redirectUrl: redirectUrl});
+        window.location.href = redirectUrl;
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+        dispatch(showErrorToastIfNeeded("Failed to link account", e));
+    }
+};
+
+export const unlinkAccount = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST});
+    try {
+        await api.authentication.unlinkAccount(provider);
+        dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS, provider});
+        await Promise.all([
+            dispatch(getUserAuthSettings() as any)
+        ]);
+        dispatch(showToast({
+            title: "Account unlinked",
+            body: "Your account settings were updated successfully.",
+            color: "success",
+            timeout: 5000,
+            closable: false,
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+        dispatch(showErrorToastIfNeeded("Failed to unlink account", e));
+    }
+};
+
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
     try {
@@ -155,10 +190,6 @@ export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
-};
-
-export const setAnonUserPreferences = (userPreferences: UserPreferencesDTO) => {
-    return {type: ACTION_TYPE.USER_PREFERENCES_SET_FOR_ANON, userPreferences};
 };
 
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
@@ -224,6 +255,8 @@ export const updateCurrentUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
+
+export const setTempExamBoard = (examBoard: EXAM_BOARD) => ({type: ACTION_TYPE.EXAM_BOARD_SET_TEMP, examBoard});
 
 export const getProgress = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PROGRESS_REQUEST});
@@ -1326,6 +1359,25 @@ export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => a
     }
 };
 
+export const getEventMapData = (startIndex: number, eventsPerPage: number, typeFilter: EventTypeFilter, statusFilter: EventStatusFilter) => async (dispatch: Dispatch<Action>) => {
+    const filterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
+    const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
+    const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
+    const showInactiveOnly = false;
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_MAP_DATA_REQUEST});
+        const response = await api.events.getEventMapData(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly);
+        dispatch({
+            type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS,
+            eventMapData: response.data.results,
+            total: response.data.totalResults
+        });
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Event map data request failed", e));
+    }
+};
+
 export const getEventBookings = (eventId: string) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST});
@@ -1508,6 +1560,10 @@ export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) =>
         dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Loading Content Errors Failed", e));
     }
+};
+
+export const setPrintingHints = (hintsEnabled: boolean) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.PRINTING_SET_HINTS, hintsEnabled});
 };
 
 

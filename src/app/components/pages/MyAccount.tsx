@@ -23,7 +23,6 @@ import {
     LoggedInValidationUser,
     SubjectInterests,
     UserEmailPreferences,
-    UserExamPreferences,
     UserPreferencesDTO
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
@@ -97,22 +96,18 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
     // - User preferences
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
-    const [examPreferences, setExamPreferences] = useState<UserExamPreferences>({});
     const [subjectInterests, setSubjectInterests] = useState<SubjectInterests>({});
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
 
     useMemo(() => {
         const currentEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
-        const currentExamPreferences = (userPreferences && userPreferences.EXAM_BOARD) ? userPreferences.EXAM_BOARD : {};
         const currentSubjectInterests = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
         const currentUserPreferences = {
             EMAIL_PREFERENCE: currentEmailPreferences,
-            EXAM_BOARD: currentExamPreferences,
             SUBJECT_INTEREST: currentSubjectInterests,
         };
 
         setEmailPreferences(currentEmailPreferences);
-        setExamPreferences(currentExamPreferences);
         setSubjectInterests(currentSubjectInterests);
         setMyUserPreferences(currentUserPreferences);
     }, [userPreferences]);
@@ -145,7 +140,6 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                 return; // early exit
             }
         }
-        Object.assign(myUserPreferences.EXAM_BOARD, examPreferences);
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
@@ -182,8 +176,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                             className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.passwordreset})} tabIndex={0}
                             onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                         >
-                            <span className="d-none d-lg-block">Change password</span>
-                            <span className="d-block d-lg-none">Password</span>
+                            Security
                         </NavLink>
                     </NavItem>
                     <NavItem>
@@ -212,9 +205,9 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
                         <TabPane tabId={ACCOUNT_TAB.account}>
                             <UserDetails
                                 userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                examPreferences={examPreferences} setExamPreferences={setExamPreferences}
                                 subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
                                 submissionAttempted={attemptedAccountUpdate}
+                                userAuthSettings={userAuthSettings}
                             />
                         </TabPane>
 

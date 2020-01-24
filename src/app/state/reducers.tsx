@@ -14,11 +14,13 @@ import {
     isValidatedChoice,
     LoggedInUser,
     NOT_FOUND_TYPE,
+    PrintingSettings,
     TemplateEmail,
     Toast,
     UserPreferencesDTO,
     UserProgress,
-    UserSchoolLookup
+    UserSchoolLookup,
+    EventMapData
 } from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
@@ -38,7 +40,7 @@ import {
     UserSummaryWithGroupMembershipDTO,
     GlossaryTermDTO
 } from "../../IsaacApiTypes";
-import {ACTION_TYPE, ContentVersionUpdatingStatus, NOT_FOUND} from "../services/constants";
+import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
 
 type UserState = LoggedInUser | null;
@@ -70,7 +72,6 @@ type UserPreferencesState = UserPreferencesDTO | null;
 export const userPreferences = (userPreferences: UserPreferencesState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
-        case ACTION_TYPE.USER_PREFERENCES_SET_FOR_ANON:
             return {...action.userPreferences};
         default:
             return userPreferences;
@@ -366,6 +367,17 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
     }
 };
 
+export type TempExamBoardState = EXAM_BOARD | null;
+export const tempExamBoard = (tempExamBoard: TempExamBoardState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EXAM_BOARD_SET_TEMP:
+            return action.examBoard;
+        default:
+            return tempExamBoard;
+    }
+};
+
+
 export type WildcardsState = IsaacWildcard[] | NOT_FOUND_TYPE | null;
 export const wildcards = (wildcards: WildcardsState = null, action: Action) => {
     switch (action.type) {
@@ -445,6 +457,18 @@ export const eventOverviews = (eventOverviews: EventOverviewsState = null, actio
             return [...action.eventOverviews];
         default:
             return eventOverviews;
+    }
+};
+
+type EventMapDataState = EventMapData[] | null;
+export const eventMapData = (eventMapData: EventMapDataState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_MAP_DATA_REQUEST:
+            return null;
+        case ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS:
+            return [...action.eventMapData];
+        default:
+            return eventMapData;
     }
 };
 
@@ -750,6 +774,19 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
     }
 };
 
+export type PrintingSettingsState = PrintingSettings | null;
+export const printingSettings = (printingSettingsState: PrintingSettingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.PRINTING_SET_HINTS: {
+            return {...printingSettingsState, hintsEnabled: action.hintsEnabled};
+        }
+        default: {
+            return printingSettingsState;
+        }
+    }
+};
+
+
 const appReducer = combineReducers({
     user,
     userAuthSettings,
@@ -768,6 +805,7 @@ const appReducer = combineReducers({
     questions,
     currentTopic,
     currentGameboard,
+    tempExamBoard,
     wildcards,
     gameboardEditorQuestions,
     assignments,
@@ -783,8 +821,10 @@ const appReducer = combineReducers({
     events,
     currentEvent,
     eventOverviews,
+    eventMapData,
     eventBookings,
     fragments,
+    printingSettings,
     glossaryTerms
 });
 
@@ -805,8 +845,9 @@ export type AppState = undefined | {
     questions: QuestionsState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
+    tempExamBoard: TempExamBoardState;
     wildcards: WildcardsState;
-    gameboardEditorQuestions: GameboardEditorQuestionsState,
+    gameboardEditorQuestions: GameboardEditorQuestionsState;
     assignments: AssignmentsState;
     contentVersion: ContentVersionState;
     search: SearchState;
@@ -821,8 +862,10 @@ export type AppState = undefined | {
     events: EventsState;
     currentEvent: CurrentEventState;
     eventOverviews: EventOverviewsState;
+    eventMapData: EventMapDataState;
     eventBookings: EventBookingsState;
     fragments: FragmentsState;
+    printingSettings: PrintingSettingsState;
     glossaryTerms: GlossaryTermsState;
 }
 

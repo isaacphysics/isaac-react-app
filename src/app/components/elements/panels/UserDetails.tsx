@@ -1,5 +1,5 @@
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import {SubjectInterests, UserExamPreferences, ValidationUser} from "../../../../IsaacAppTypes";
+import {SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../../services/constants";
 import React, {ChangeEvent} from "react";
 import {
@@ -12,21 +12,20 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
+import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 
 interface UserDetailsProps {
-    examPreferences: UserExamPreferences;
-    setExamPreferences: (e: any) => void;
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
     subjectInterests: SubjectInterests;
     setSubjectInterests: (si: SubjectInterests) => void;
     submissionAttempted: boolean;
+    userAuthSettings: UserAuthenticationSettingsDTO | null;
 }
 
 export const UserDetails = (props: UserDetailsProps) => {
     const {
         userToUpdate, setUserToUpdate,
-        examPreferences, setExamPreferences,
         subjectInterests, setSubjectInterests,
         submissionAttempted
     } = props;
@@ -36,6 +35,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         validateUserGender(userToUpdate) &&
         validateUserSchool(userToUpdate) &&
         validateSubjectInterests(subjectInterests);
+
+
 
     return <CardBody className="pt-0">
         <Row>
@@ -98,7 +99,6 @@ export const UserDetails = (props: UserDetailsProps) => {
         <Row>
             <Col md={6}>
                 <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
-                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
             <Col md={6}>
                 <FormGroup>
@@ -107,36 +107,30 @@ export const UserDetails = (props: UserDetailsProps) => {
                     </Label>
                     <Input
                         type="select" name="select" id="exam-board-select"
-                        value={
-                            (examPreferences && examPreferences[EXAM_BOARD.AQA]) ? EXAM_BOARD.AQA : EXAM_BOARD.OCR
-                        }
+                        value={userToUpdate.examBoard}
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                            setExamPreferences(
-                                event.target.value == EXAM_BOARD.AQA ?
-                                    {[EXAM_BOARD.AQA]: true, [EXAM_BOARD.OCR]: false} :
-                                    {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true}
+                            setUserToUpdate(
+                                Object.assign({}, userToUpdate, {examBoard: event.target.value})
                             )
                         }
                     >
-                        {/*<option></option> This was not an option although we should probably support it */}
+                        <option value={EXAM_BOARD.OTHER}>Other</option>
                         <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>
                 </FormGroup>
+            </Col>
+        </Row>
+        <Row>
+            <Col md={6}>
+                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+            </Col>
+            <Col md={6}>
                 <div className="mt-5 pt-1">
                     <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
                 </div>
             </Col>
         </Row>
-
-        {/*<Row>*/}
-        {/*    <Col md={6}>*/}
-        {/*        <FormGroup>*/}
-        {/*            <Label htmlFor="linked-accounts">Linked Accounts</Label>*/}
-        {/*            <Row>Placeholder</Row> /!* TODO add linked account control *!/*/}
-        {/*        </FormGroup>*/}
-        {/*    </Col>*/}
-        {/*</Row>*/}
 
         {userToUpdate && userToUpdate.role == "STUDENT" && <Row>
             <Col className="text-muted text-center mt-2">
