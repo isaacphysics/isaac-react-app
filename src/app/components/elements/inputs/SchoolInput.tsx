@@ -1,5 +1,5 @@
-import React, {MutableRefObject, useEffect, useRef, useState} from "react";
-import CreatableSelect from 'react-select/creatable';
+import React, {useEffect, useState} from "react";
+import AsyncCreatableSelect from "react-select/async-creatable";
 import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
 import {api} from "../../../services/api";
@@ -16,31 +16,7 @@ interface SchoolInputProps {
 const NOT_APPLICABLE = "N/A";
 export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput}: SchoolInputProps) => {
     let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
-    let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
-    let [schoolOptions, setSchoolOptions] = useState<any[]>();
-
-    function searchSchool(e?: Event) {
-        if (e) {
-            e.preventDefault();
-        }
-        if (schoolQueryText) {
-            api.schools.search(schoolQueryText).then(({data}) => {
-                setSchoolSearchResults(data);
-            }).catch((response) => {
-                console.error("Error searching for schools. ", response);
-            });
-        } else {
-            setSchoolSearchResults([]);
-        }
-    }
-
-    // Obtain user school search results as a list
-    useEffect(() => {
-        let temp: any = [];
-        schoolSearchResults && schoolSearchResults.length > 0 && schoolSearchResults.map((item: any) => (temp.push({value: item, label: item.name + ", " + item.postcode})));
-        setSchoolOptions(temp);
-    }, [schoolSearchResults]);
 
     // Get school associated with urn
     function fetchSchool(urn: string) {
@@ -57,17 +33,6 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         fetchSchool(userToUpdate.schoolId || "");
     }, [userToUpdate]);
 
-    // Search for schools when users entry a query
-    const timer: MutableRefObject<number | undefined> = useRef();
-    useEffect(() => {
-        timer.current = window.setTimeout(() => {
-            searchSchool();
-        }, 800);
-        return () => {
-            clearTimeout(timer.current);
-        }
-    }, [schoolQueryText]);
-
     // Called as user types
     function renderInput(queryValue: any) {
         setSchoolQueryText(queryValue);
@@ -80,12 +45,10 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school.urn, schoolOther: undefined}));
                 setSchoolQueryText(null);
                 setSelectedSchoolObject(school);
-                setSchoolSearchResults([]);
             } else if (school) {
                 setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: school, schoolId: undefined}));
                 setSchoolQueryText(null);
                 setSelectedSchoolObject(school);
-                setSchoolSearchResults([]);
             }
         }
     }
@@ -103,6 +66,17 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         }
     }
 
+    const promiseOptions = (inputOptions: string) =>
+        new Promise(resolve => {
+            setTimeout(() => {resolve(api.schools.search(inputOptions).then(({data}) => {
+                let temp: any = [];
+                data && data.length > 0 && data.map((item: any) => (temp.push({value: item, label: item.name + ", " + item.postcode})));
+                return temp;
+            }).catch((response) => {
+                console.error("Error searching for schools. ", response);
+            }))}, 800);
+        });
+
     const schoolValue = (
         schoolQueryText ?
             schoolQueryText :
@@ -118,7 +92,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     return <RS.FormGroup className={`school ${className}`}>
         <RS.Label htmlFor={`school-input-${randomNumber}`} className="form-required">School</RS.Label>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
-            <CreatableSelect
+            <AsyncCreatableSelect
                 isClearable
                 isDisabled={disableInput}
                 inputId={`school-input-${randomNumber}`}
@@ -128,8 +102,10 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 classNamePrefix="select"
                 onInputChange={renderInput}
                 onChange={handleSetSchool}
-                options={schoolOptions}
+                loadOptions={promiseOptions}
                 filterOption={() => true}
+                formatCreateLabel={(input) => <span>Use &quot;{input}&quot; as your school name</span>}
+                autoComplete="new-password"
             />
         </React.Fragment>}
 
