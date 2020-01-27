@@ -104,24 +104,6 @@ export const UserPassword = (
                             </FormGroup>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col md={{size: 6, offset: 3}}>
-                            <hr className="text-center" />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="text-center">
-                            <FormGroup>
-                                <Label htmlFor="linked-accounts"><h4>Linked Accounts</h4></Label>
-                                <Col className="text-center">
-                                    <div className="vertical-center ml-2">
-                                        <input type="button" id="linked-accounts" className="linked-account-button google-button" onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}/>
-                                        {authenticationProvidersUsed("GOOGLE") ? " Remove" : " Add"}
-                                    </div>
-                                </Col>
-                            </FormGroup>
-                        </Col>
-                    </Row>
                 </Col>
             </Row>
             : !passwordResetRequested ?
@@ -144,51 +126,43 @@ export const UserPassword = (
                             </Button>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col md={{size: 6, offset: 3}}>
-                            <hr className="text-center" />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="text-center">
-                            <FormGroup>
-                                <Label htmlFor="linked-accounts-no-passowrd" ><h4>Linked Accounts</h4></Label>
-                                <Col className="text-center">
-                                    <div className="vertical-center ml-2">
-                                        <input type="button" id="linked-accounts-no-password" className="linked-account-button google-button" onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}/>
-                                        {authenticationProvidersUsed("GOOGLE") ? " Remove" : " Add"}
-                                    </div>
-                                </Col>
-                            </FormGroup>
-                        </Col>
-                    </Row>
                 </React.Fragment>
                 :
                 <React.Fragment>
-                    <p>
-                        <strong className="d-block">Your password reset request is being processed.</strong>
-                        <strong className="d-block">Please check your inbox.</strong>
-                    </p>
-                    <Row>
-                        <Col md={{size: 6, offset: 3}}>
-                            <hr className="text-center" />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="text-center">
-                            <FormGroup>
-                                <Label htmlFor="linked-accounts-no-passowrd" ><h4>Linked Accounts</h4></Label>
-                                <Col className="text-center">
-                                    <div className="vertical-center ml-2">
-                                        <input type="button" id="linked-accounts-no-password" className="linked-account-button google-button" onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}/>
-                                        {authenticationProvidersUsed("GOOGLE") ? " Remove" : " Add"}
-                                    </div>
-                                </Col>
-                            </FormGroup>
-                        </Col>
-                    </Row>
+                    <Col md={{size: 6, offset: 3}}>
+                        <p>
+                            <strong className="d-block">Your password reset request is being processed.</strong>
+                            <strong className="d-block">Please check your inbox.</strong>
+                        </p>
+                    </Col>
                 </React.Fragment>
-
         }
+        <React.Fragment>
+            <Row>
+                <Col md={{size: 6, offset: 3}}>
+                    <hr className="text-center" />
+                </Col>
+            </Row>
+            <Row>
+                <Col md={{size: 6, offset: 3}}>
+                    <FormGroup>
+                        <h4>Linked Accounts</h4>
+                        <Col className="text-center">
+                            <div className="vertical-center ml-2">
+                                <input
+                                    type="button"
+                                    id="linked-accounts-no-password"
+                                    className="linked-account-button google-button"
+                                    onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}
+                                />
+                                <Label htmlFor="linked-accounts-no-passoword" className="ml-2 mb-0">
+                                    {authenticationProvidersUsed("GOOGLE") ? " Remove linked Google account" : " Add linked Google account"}
+                                </Label>
+                            </div>
+                        </Col>
+                    </FormGroup>
+                </Col>
+            </Row>
+        </React.Fragment>
     </CardBody>
 };
