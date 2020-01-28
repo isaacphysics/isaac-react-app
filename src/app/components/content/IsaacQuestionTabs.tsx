@@ -88,7 +88,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
 
             {((!validationResponse) || (!validationResponse.correct) || canSubmit) && <RS.Row>
                 <RS.Col xl={{size: 10, offset: 1}} >
-                    {doc.hints && <p className="text-center pt-2 mb-0">
+                    {doc.hints && <p className="no-print text-center pt-2 mb-0">
                         <small>{"Don't forget to use the hints above if you need help."}</small>
                     </p>}
                 </RS.Col>

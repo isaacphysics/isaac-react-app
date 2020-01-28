@@ -135,7 +135,7 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
                     {doc.children}
                 </IsaacContentValueOrChildren>
             </div>
-            <Row>
+            <Row className="no-print">
                 <Col sm={4}>
                     <Label className="w-100">
                         Value
