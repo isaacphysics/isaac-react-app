@@ -88,7 +88,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
         <RS.Row className="col-4 offset-2 offset-md-4">
             <RS.Col className="mt-4">
                 <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                    Save to my gameboards
+                    Save to My gameboards
                 </RS.Button>
             </RS.Col>
         </RS.Row>;

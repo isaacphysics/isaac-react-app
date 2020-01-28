@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, MEMBERSHIP_STATUS, TAG_ID, EventTypeFilter} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
@@ -109,6 +109,12 @@ export const api = {
         },
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings`)
+        },
+        linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
+            return endpoint.get(`/auth/${provider}/link`)
+        },
+        unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
+            return endpoint.delete(`/auth/${provider}/link`);
         }
     },
     email: {
@@ -358,6 +364,17 @@ export const api = {
                 Object.assign(params, {filter: eventOverviewFilter})
             }
             return endpoint.get('/events/overview', {params});
+        },
+        getEventMapData: (
+            startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
+            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
+        ): AxiosPromise<{results: AppTypes.EventMapData[]; totalResults: number}> => {
+            /* eslint-disable @typescript-eslint/camelcase */
+            return endpoint.get(`/events/map_data`, {params: {
+                start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
+                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
+            }});
+            /* eslint-enable @typescript-eslint/camelcase */
         }
     },
     eventBookings: {

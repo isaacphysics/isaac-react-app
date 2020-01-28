@@ -5,6 +5,10 @@ const resolve = (p) => path.resolve(BASE_DIRECTORY, p);
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
+
+// Read in the .env file and put into `process.env`:
+require('dotenv').config();
 
 module.exports = (isProd) => {
 
@@ -101,6 +105,9 @@ module.exports = (isProd) => {
                from: resolve('public/assets'),
                to: 'assets',
             }]),
+            new webpack.DefinePlugin({
+                REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
+            }),
         ].filter(Boolean),
     };
 };

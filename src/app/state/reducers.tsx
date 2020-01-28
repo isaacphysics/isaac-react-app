@@ -14,11 +14,13 @@ import {
     isValidatedChoice,
     LoggedInUser,
     NOT_FOUND_TYPE,
+    PrintingSettings,
     TemplateEmail,
     Toast,
     UserPreferencesDTO,
     UserProgress,
-    UserSchoolLookup
+    UserSchoolLookup,
+    EventMapData
 } from "../../IsaacAppTypes";
 import {
     AssignmentDTO,
@@ -469,6 +471,18 @@ export const eventOverviews = (eventOverviews: EventOverviewsState = null, actio
     }
 };
 
+type EventMapDataState = EventMapData[] | null;
+export const eventMapData = (eventMapData: EventMapDataState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_MAP_DATA_REQUEST:
+            return null;
+        case ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS:
+            return [...action.eventMapData];
+        default:
+            return eventMapData;
+    }
+};
+
 
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const error = (error: ErrorState = null, action: Action): ErrorState => {
@@ -771,6 +785,19 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
     }
 };
 
+export type PrintingSettingsState = PrintingSettings | null;
+export const printingSettings = (printingSettingsState: PrintingSettingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.PRINTING_SET_HINTS: {
+            return {...printingSettingsState, hintsEnabled: action.hintsEnabled};
+        }
+        default: {
+            return printingSettingsState;
+        }
+    }
+};
+
+
 const appReducer = combineReducers({
     user,
     userAuthSettings,
@@ -805,9 +832,11 @@ const appReducer = combineReducers({
     events,
     currentEvent,
     eventOverviews,
+    eventMapData,
     eventBookings,
     eventBookingsForGroup,
     fragments,
+    printingSettings,
     glossaryTerms
 });
 
@@ -845,9 +874,11 @@ export type AppState = undefined | {
     events: EventsState;
     currentEvent: CurrentEventState;
     eventOverviews: EventOverviewsState;
+    eventMapData: EventMapDataState;
     eventBookings: EventBookingsState;
     eventBookingsForGroup: EventBookingsState;
     fragments: FragmentsState;
+    printingSettings: PrintingSettingsState;
     glossaryTerms: GlossaryTermsState;
 }
 

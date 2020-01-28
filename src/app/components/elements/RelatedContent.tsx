@@ -65,7 +65,7 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
             </Link>
         </ListGroupItem>
     );
-    return <div className="d-flex align-items-stretch flex-wrap">
+    return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 w-lg-50 d-flex">
             <div className="flex-fill simple-card mr-lg-3 my-3 p-3 text-wrap">
                 <h2 className="mb-2"><small>Related questions</small></h2>

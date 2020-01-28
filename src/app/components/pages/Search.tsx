@@ -14,10 +14,10 @@ import {DOCUMENT_TYPE} from "../../services/constants";
 import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
+import {searchResultIsPublic} from "../../services/search"
 import {ShortcutResponses} from "../../../IsaacAppTypes";
 import {filterOnExamBoard, useCurrentExamBoard} from "../../services/examBoard";
 import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
-import {isStaff} from "../../services/user";
 
 
 export const Search = withRouter((props: {history: History; location: Location}) => {
@@ -79,12 +79,8 @@ export const Search = withRouter((props: {history: History; location: Location})
         doSearch();
     }, [searchFilterProblems, searchFilterConcepts]);
 
-    const filterResult = function(r: ContentSummaryDTO) {
-        const keepElement = (r.id != "_regression_test_" && (!r.tags || r.tags.indexOf("nofilter") < 0 && !r.supersededBy));
-        return keepElement || isStaff(user);
-    };
-
-    const filteredSearchResults = searchResults && searchResults.results && filterOnExamBoard(searchResults.results.filter(filterResult), examBoard);
+    const filteredSearchResults = searchResults && searchResults.results &&
+        filterOnExamBoard(searchResults.results.filter((result) => searchResultIsPublic(result, user)), examBoard);
 
     const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
 
@@ -119,8 +115,8 @@ export const Search = withRouter((props: {history: History; location: Location})
                             <Col md={7} xs={12}>
                                 <Form inline className="search-filters">
                                     <Label className="d-none d-sm-inline-block">Filter</Label>
-                                    <Label><CustomInput id="problem-search" type="checkbox" defaultChecked={searchFilterProblems} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterProblems(e.target.checked)} />Search problems</Label>
-                                    <Label><CustomInput id="concept-search" type="checkbox" defaultChecked={searchFilterConcepts} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterConcepts(e.target.checked)} />Search concepts</Label>
+                                    <Label><CustomInput id="problem-search" type="checkbox" defaultChecked={searchFilterProblems} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterProblems(e.target.checked)} />Search questions</Label>
+                                    <Label><CustomInput id="concept-search" type="checkbox" defaultChecked={searchFilterConcepts} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterConcepts(e.target.checked)} />Search content</Label>
                                     <Label><TempExamBoardPicker className="text-right" /></Label>
                                 </Form>
                             </Col>
