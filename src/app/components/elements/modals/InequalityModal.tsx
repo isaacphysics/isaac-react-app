@@ -6,6 +6,7 @@ import katex from "katex";
 class MenuItem {
     public type: string;
     public properties: any;
+    public children?: any;
     public menu: { label: string; texLabel: boolean; className: string };
 
     public constructor(
@@ -94,7 +95,16 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             // Assuming these are only letters... might become more complicated in the future.
             this.state.menuItems.letters = props.availableSymbols.map( l => {
                 let letter = l.trim();
-                return new MenuItem("Symbol", { letter: this._greekLetterMap[letter] || letter }, { label: this._greekLetterMap[letter] ? '\\' + letter : letter, texLabel: true, className: `symbol-${letter} menu-item` })
+                let parts = letter.split('_');
+                if (parts.length > 1) {
+                    let label = `${parts[0]}_${parts[1]}`.replace(new RegExp(`${Object.keys(this._greekLetterMap).join('|')}`), m => this._greekLetterMap[m]);
+                    let first = this.makeLetterMenuItem(this._greekLetterMap[parts[0]] || parts[0], label);
+                    let second = this.makeLetterMenuItem(this._greekLetterMap[parts[1]] || parts[1], this._greekLetterMap[parts[1]] ? '\\' + parts[1] : parts[1]);
+                    first['children'] = { subscript: second };
+                    return first;
+                } else {
+                    return this.makeLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter);
+                }
             });
             this.state.defaultMenu = false;
         } else {
@@ -106,8 +116,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 // Assuming editorMode === 'maths'
                 this.state.menuItems.upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map( letter => this.makeLetterMenuItem(letter) );
                 this.state.menuItems.lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz".split("").map( letter => this.makeLetterMenuItem(letter) );
-                this.state.menuItems.upperCaseGreekLetters = this._upperCaseGreekLetters.map( letter => this.makeLetterMenuItem(this._greekLetterMap[letter] ? letter : letter, letter) );
-                this.state.menuItems.lowerCaseGreekLetters = this._lowerCaseGreekLetters.map( letter => this.makeLetterMenuItem(this._greekLetterMap[letter] ? letter : letter, letter) );
+                this.state.menuItems.upperCaseGreekLetters = this._upperCaseGreekLetters.map( letter => this.makeLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) );
+                this.state.menuItems.lowerCaseGreekLetters = this._lowerCaseGreekLetters.map( letter => this.makeLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) );
             }
         }
         this.close = () => {
