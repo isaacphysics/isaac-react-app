@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {
-    cancelUserBooking,
+    cancelUserBookingThenUpdateBookings,
     deleteUserBooking, getEventBookingCSV,
     getEventBookings,
     promoteUserFromWaitingList,
@@ -119,7 +119,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                                             </RS.Button>
                                         }
                                         {(booking.bookingStatus == 'WAITING_LIST' || booking.bookingStatus == 'CONFIRMED') &&
-                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(cancelUserBooking(eventBookingId, userId))}>
+                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(cancelUserBookingThenUpdateBookings(eventBookingId, userId))}>
                                                 Cancel
                                             </RS.Button>
                                         }

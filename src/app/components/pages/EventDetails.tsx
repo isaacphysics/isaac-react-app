@@ -6,7 +6,14 @@ import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {EVENTS_CRUMB} from "../../services/constants";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
-import {addMyselfToWaitingList, bookMyselfOnEvent, cancelMyBooking, getEvent, showToast, openActiveModal} from "../../state/actions";
+import {
+    addMyselfToWaitingList,
+    bookMyselfOnEvent,
+    cancelMyBooking,
+    getEvent,
+    openActiveModal,
+    showToast
+} from "../../state/actions";
 import {DateString} from "../elements/DateString";
 import {IsaacContent} from "../content/IsaacContent";
 import {Link} from "react-router-dom";

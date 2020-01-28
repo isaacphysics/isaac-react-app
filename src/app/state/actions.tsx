@@ -7,11 +7,11 @@ import {
     ACTION_TYPE,
     API_REQUEST_FAILURE_MESSAGE,
     DOCUMENT_TYPE,
+    EventStatusFilter,
+    EventTypeFilter,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
-    EventStatusFilter,
-    TAG_ID,
-    EventTypeFilter
+    TAG_ID
 } from "../services/constants";
 import {
     Action,
@@ -36,14 +36,14 @@ import {
     AuthenticationProvider,
     ChoiceDTO,
     GameboardDTO,
+    GlossaryTermDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
     RegisteredUserDTO,
     Role,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO,
-    GlossaryTermDTO
+    UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -1535,7 +1535,7 @@ export const promoteUserFromWaitingList = (eventBookingId: string, userId?: numb
     }
 };
 
-export const cancelUserBooking = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
+export const cancelUserBookingThenUpdateBookings = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
     const cancelBooking = window.confirm('Are you sure you want to cancel this booking?');
     if (cancelBooking && userId) {
         try {

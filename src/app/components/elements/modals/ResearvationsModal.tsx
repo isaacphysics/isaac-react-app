@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { closeActiveModal, loadGroups, selectGroup, getGroupMembers, getEventBookingsForGroup, reserveUsersOnEvent, cancelUserBooking } from "../../../state/actions";
-import { store } from "../../../state/store";
+import React, {useEffect, useState} from "react";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {
-    Button,
-    Col,
-    CustomInput,
-    Row,
-    Table
-} from "reactstrap";
-import { RegisteredUserDTO, UserGroupDTO } from "../../../../IsaacApiTypes";
-import { AppState } from "../../../state/reducers";
-import { groups } from '../../../state/selectors';
-import { ShowLoading } from "../../handlers/ShowLoading";
-import { AppGroup, AppGroupMembership } from "../../../../IsaacAppTypes";
-import { NOT_FOUND, bookingStatusMap } from "../../../services/constants";
+    cancelUserBookingThenUpdateBookings,
+    closeActiveModal,
+    getEventBookingsForGroup,
+    getGroupMembers,
+    loadGroups,
+    reserveUsersOnEvent,
+    selectGroup
+} from "../../../state/actions";
+import {store} from "../../../state/store";
+import {Button, Col, CustomInput, Row, Table} from "reactstrap";
+import {RegisteredUserDTO, UserGroupDTO} from "../../../../IsaacApiTypes";
+import {AppState} from "../../../state/reducers";
+import {groups} from '../../../state/selectors';
+import {ShowLoading} from "../../handlers/ShowLoading";
+import {AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
+import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
 import _orderBy from "lodash/orderBy";
 
 const stateToProps = (state: AppState) => ({
@@ -22,7 +24,7 @@ const stateToProps = (state: AppState) => ({
     groups: groups.active(state),
     currentGroup: groups.current(state)
 });
-const dispatchToProps = { groups, loadGroups, selectGroup, getGroupMembers };
+const dispatchToProps = { loadGroups, selectGroup, getGroupMembers };
 
 interface ReservationsModalProps {
     user: RegisteredUserDTO;
@@ -41,7 +43,6 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
     const [unbookedUsers, setUnbookedUsers] = useState<AppGroupMembership[]>([]);
     const [userCheckboxes, setUserCheckboxes] = useState<{[key: number]: boolean}>({});
     const [checkAllCheckbox, setCheckAllCheckbox] = useState<boolean>(false);
-    // const [reservationLimitReached, setReservationLimitReached] = useState<boolean>(false);
 
     const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
 
@@ -62,7 +63,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
             dispatch(getEventBookingsForGroup(selectedEvent.id, currentGroup.id));
         }
     }, [currentGroup]);
-    
+
     const eventBookingsForGroup = useSelector((state: AppState) => state && state.eventBookingsForGroup || []);
 
     useEffect(() => {
@@ -85,7 +86,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
             setCheckAllCheckbox(false);
             setUnbookedUsers(newUnbookedUsers);
         }
-    }, [eventBookingsForGroup])
+    }, [eventBookingsForGroup]);
 
     const toggleCheckboxForUser = (userId?: number) => {
         if (!userId) return;
@@ -95,7 +96,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
         if (!Object.values(checkboxes).every(v => v)) {
             setCheckAllCheckbox(false);
         }
-    }
+    };
 
     const toggleAllUnbooked = () => {
         setCheckAllCheckbox(!checkAllCheckbox);
@@ -104,34 +105,30 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
             checkboxes[id] = !checkAllCheckbox;
         }
         setUserCheckboxes(checkboxes);
-    }
+    };
 
     const requestReservations = () => {
         if (selectedEvent && selectedEvent.id && currentGroup && currentGroup.id) {
             const reservableIds = Object.entries(userCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
             dispatch(reserveUsersOnEvent(selectedEvent.id, reservableIds, currentGroup.id));
         }
-    }
+    };
 
     const cancelReservationForUserId = async (userId?: number) => {
         if (selectedEvent && selectedEvent.id && currentGroup && currentGroup.id) {
-            await dispatch(cancelUserBooking(selectedEvent.id, userId));
-            dispatch(getEventBookingsForGroup(selectedEvent.id, currentGroup.id) as any);
+            dispatch(cancelUserBookingThenUpdateBookings(selectedEvent.id, userId));
         }
-    }
+    };
 
     const isReservationLimitReached = () => {
-        if (eventBookingsForGroup && selectedEvent && selectedEvent.groupReservationLimit) {
-            // af599 TODO: Do we want a limit on currently open reservations, or a limit on how many reserved and confirmed students a teacher can reserve?
-            //             The following does the latter. The one commented does the former. Remember to change the API to match.
+        if (selectedEvent && selectedEvent.groupReservationLimit) {
             const bookings = eventBookingsForGroup.filter(booking => booking.reservedBy && booking.reservedBy.id === currentUser.id);
-            // const bookings = eventBookingsForGroup.filter(booking => booking.bookingStatus === 'RESERVED' && booking.reservedBy && booking.reservedBy.id === currentUser.id);
             const candidateBookings = Object.values(userCheckboxes).filter(c => c);
             return (candidateBookings.length + bookings.length) > selectedEvent.groupReservationLimit;
         }
-        // By default, return true to disable all the checkboxes: prevents awkward situations.des
+        // By default, return true to disable all the checkboxes: prevents awkward situations.
         return true;
-    }
+    };
 
     return <React.Fragment>
         <Row>
@@ -177,25 +174,23 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* af599 TODO: Probably find a better way of filtering these, but doing so on the useSelector above breaks things. */}
-                        {eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").length > 0 &&
-                         eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => {
-                             return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
-                                 <td className="align-middle">
-                                     {booking.userBooked &&
-                                      (booking.reservedBy && booking.reservedBy.id === currentUser.id) &&
-                                      (booking.bookingStatus == 'RESERVED') &&
-                                        <Button key={booking.userBooked.id}
-                                            id={`${booking.userBooked.id}`}
-                                            color="link" outline block className="btn-sm mb-1"
-                                            onClick={() => cancelReservationForUserId(booking.userBooked && booking.userBooked.id)}
-                                        >Cancel</Button>}
-                                 </td>
-                                 <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)}</td>
-                                 <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
-                                 <td className="align-middle">{booking.reservedBy && (booking.reservedBy.givenName + " " + booking.reservedBy.familyName)}</td>
-                             </tr>)
-                         })}
+                        {eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => {
+                            return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
+                                <td className="align-middle">
+                                    {booking.userBooked &&
+                                    (booking.reservedBy && booking.reservedBy.id === currentUser.id) &&
+                                    (booking.bookingStatus == 'RESERVED') &&
+                                    <Button key={booking.userBooked.id}
+                                        id={`${booking.userBooked.id}`}
+                                        color="link" outline block className="btn-sm mb-1"
+                                        onClick={() => cancelReservationForUserId(booking.userBooked && booking.userBooked.id)}
+                                    >Cancel</Button>}
+                                </td>
+                                <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)}</td>
+                                <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
+                                <td className="align-middle">{booking.reservedBy && (booking.reservedBy.givenName + " " + booking.reservedBy.familyName)}</td>
+                            </tr>);
+                        })}
                         {eventBookingsForGroup.length == 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
                     </tbody>
                 </Table>
@@ -258,14 +253,6 @@ export const reservationsModal = () => {
         size: 'xl',
         title: "Groups and Reservations",
         body: <ReservationsModal />,
-        // af599 TODO: Wouldn't it be nice if we coul move the Reserve button
-        //             here instead of having it in the component? Would it even
-        //             be possible?
-        // buttons: [
-        //     <Button key={0} block color="primary" tag="a"  target="_blank" rel="noopener noreferer" onClick={requestReservation}>
-        //         Download CSV
-        //     </Button>,
-        // ]
     }
 };
 
