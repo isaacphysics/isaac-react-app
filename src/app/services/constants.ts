@@ -34,12 +34,6 @@ export const MARKDOWN_RENDERER = new Remarkable({
 
 export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_jan20_aqa', 'class_test_jan20_ocr'];
 
-export const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB");
-export const DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
-    year: "numeric", month: "numeric", day: "numeric",
-    hour: "numeric", minute: "numeric", second: "numeric", hour12: false
-});
-
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
 
