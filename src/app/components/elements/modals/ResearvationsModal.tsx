@@ -127,127 +127,129 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
     };
 
     return <React.Fragment>
-        <Row>
-            <Col md={4}>
-                <ShowLoading until={groups}>
-                    {groups && groups.map(group => (
-                        <Row key={group.id}>
-                            <Col>
-                                <div className="group-item p-2">
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <Button color="link text-left" className="flex-fill" onClick={() => {dispatch(selectGroup(group))}}>
-                                            {(currentGroup === group ? "»" : "")} {group.groupName}
-                                        </Button>
+        <Col>
+            <Row className="mb-5">
+                <Col md={4}>
+                    <ShowLoading until={groups}>
+                        {groups && groups.map(group => (
+                            <Row key={group.id}>
+                                <Col>
+                                    <div className="group-item p-2">
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <Button color="link text-left" className="flex-fill" onClick={() => {dispatch(selectGroup(group))}}>
+                                                {(currentGroup === group ? "»" : "")} {group.groupName}
+                                            </Button>
+                                        </div>
                                     </div>
-                                </div>
-                            </Col>
-                        </Row>
-                    ))}
-                </ShowLoading>
-            </Col>
-            {(!currentGroup || !currentGroup.members) && <Col>
-                <p>Select one of your groups from the list to see its members.</p>
-            </Col>}
-            {currentGroup && currentGroup.members && currentGroup.members.length == 0 && <Col>
-                <p>This group has no members. Please select another group.</p>
-            </Col>}
-            {currentGroup && currentGroup.members && currentGroup.members.length > 0 && <Col>
-                <Table bordered className="bg-white">
-                    <thead>
-                        <tr>
-                            <th className="align-middle">
-                                &nbsp;
-                            </th>
-                            <th className="align-middle">
-                                Student
-                            </th>
-                            <th className="align-middle">
-                                Booking Status
-                            </th>
-                            <th className="align-middle">
-                                Reserved By
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => {
-                            return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
-                                <td className="align-middle">
-                                    {booking.userBooked &&
-                                    (booking.reservedBy && booking.reservedBy.id === currentUser.id) &&
-                                    (booking.bookingStatus == 'RESERVED') &&
-                                    <Button key={booking.userBooked.id}
-                                        id={`${booking.userBooked.id}`}
-                                        color="link" outline block className="btn-sm mb-1"
-                                        onClick={() => cancelReservationForUserId(booking.userBooked && booking.userBooked.id)}
-                                    >Cancel</Button>}
-                                </td>
-                                <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)}</td>
-                                <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
-                                <td className="align-middle">{booking.reservedBy && (booking.reservedBy.givenName + " " + booking.reservedBy.familyName)}</td>
-                            </tr>);
-                        })}
-                        {eventBookingsForGroup.length == 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
-                    </tbody>
-                </Table>
+                                </Col>
+                            </Row>
+                        ))}
+                    </ShowLoading>
+                </Col>
+                {(!currentGroup || !currentGroup.members) && <Col>
+                    <p>Select one of your groups from the list to see its members.</p>
+                </Col>}
+                {currentGroup && currentGroup.members && currentGroup.members.length == 0 && <Col>
+                    <p>This group has no members. Please select another group.</p>
+                </Col>}
+                {currentGroup && currentGroup.members && currentGroup.members.length > 0 && <Col>
+                    <Table bordered className="bg-white">
+                        <thead>
+                            <tr>
+                                <th className="align-middle">
+                                    &nbsp;
+                                </th>
+                                <th className="align-middle">
+                                    Student
+                                </th>
+                                <th className="align-middle">
+                                    Booking Status
+                                </th>
+                                <th className="align-middle">
+                                    Reserved By
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => {
+                                return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
+                                    <td className="align-middle">
+                                        {booking.userBooked &&
+                                        (booking.reservedBy && booking.reservedBy.id === currentUser.id) &&
+                                        (booking.bookingStatus == 'RESERVED') &&
+                                        <Button key={booking.userBooked.id}
+                                            id={`${booking.userBooked.id}`}
+                                            color="link" outline block className="btn-sm mb-1"
+                                            onClick={() => cancelReservationForUserId(booking.userBooked && booking.userBooked.id)}
+                                        >Cancel</Button>}
+                                    </td>
+                                    <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)}</td>
+                                    <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
+                                    <td className="align-middle">{booking.reservedBy && (booking.reservedBy.givenName + " " + booking.reservedBy.familyName)}</td>
+                                </tr>);
+                            })}
+                            {eventBookingsForGroup.length == 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
+                        </tbody>
+                    </Table>
 
-                <Table bordered className="mt-3 bg-white">
-                    <thead>
-                        <tr>
-                            <th colSpan={2}>Other students in this group</th>
-                        </tr>
-                        <tr>
-                            <th className="w-auto text-nowrap align-middle">
-                                <CustomInput
-                                    id="check_all_unbooked"
-                                    type="checkbox"
-                                    label="Select all"
-                                    checked={checkAllCheckbox}
-                                    onChange={() => toggleAllUnbooked()}
-                                    disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
-                                />
-                            </th>
-                            <th className="w-100 align-middle">
-                                Student
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {unbookedUsers.length > 0 && unbookedUsers.map(user => {
-                            return (user.id && <tr key={user.id}>
-                                <td className="w-auto align-middle">
+                    <Table bordered className="mt-3 bg-white">
+                        <thead>
+                            <tr>
+                                <th colSpan={2}>Other students in this group</th>
+                            </tr>
+                            <tr>
+                                <th className="w-auto text-nowrap align-middle">
                                     <CustomInput
-                                        key={user.id}
-                                        id={`${user.id}`}
+                                        id="check_all_unbooked"
                                         type="checkbox"
-                                        name={`unbooked_student-${user.id}`}
-                                        checked={userCheckboxes[user.id]}
-                                        disabled={!user.authorisedFullAccess}
-                                        onChange={() => toggleCheckboxForUser(user.id)}
+                                        label="Select all"
+                                        checked={checkAllCheckbox}
+                                        onChange={() => toggleAllUnbooked()}
+                                        disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
                                     />
-                                </td>
-                                <td className="w-100 align-middle">{user.givenName + " " + user.familyName}</td>
-                            </tr>)
-                        })}
-                    </tbody>
-                </Table>
+                                </th>
+                                <th className="w-100 align-middle">
+                                    Student
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {unbookedUsers.length > 0 && unbookedUsers.map(user => {
+                                return (user.id && <tr key={user.id}>
+                                    <td className="w-auto align-middle">
+                                        <CustomInput
+                                            key={user.id}
+                                            id={`${user.id}`}
+                                            type="checkbox"
+                                            name={`unbooked_student-${user.id}`}
+                                            checked={userCheckboxes[user.id]}
+                                            disabled={!user.authorisedFullAccess}
+                                            onChange={() => toggleCheckboxForUser(user.id)}
+                                        />
+                                    </td>
+                                    <td className="w-100 align-middle">{user.givenName + " " + user.familyName}</td>
+                                </tr>)
+                            })}
+                        </tbody>
+                    </Table>
 
-                <Row className="mb-5 toolbar">
-                    <Col>
-                        {isReservationLimitReached() && <p className="text-danger">You can only reserve a maximum of {selectedEvent && selectedEvent.groupReservationLimit} group members onto this event.</p>}
-                        <Button disabled={!Object.values(userCheckboxes).some(v => v) || isReservationLimitReached()} onClick={requestReservations}>Reserve</Button>
-                    </Col>
-                </Row>
-            </Col>}
-        </Row>
+                    <Row className="toolbar">
+                        <Col>
+                            {isReservationLimitReached() && <p className="text-danger">You can only reserve a maximum of {selectedEvent && selectedEvent.groupReservationLimit} group members onto this event.</p>}
+                            <Button disabled={!Object.values(userCheckboxes).some(v => v) || isReservationLimitReached()} onClick={requestReservations}>Reserve</Button>
+                        </Col>
+                    </Row>
+                </Col>}
+            </Row>
+        </Col>
     </React.Fragment>
-}
+};
 
 export const reservationsModal = () => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         size: 'xl',
-        title: "Groups and Reservations",
+        title: "Group reservations",
         body: <ReservationsModal />,
     }
 };

@@ -198,7 +198,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                         Close booking form
                                     </RS.Button>}
                                     {event.eventStatus != 'CLOSED' && userIsNotAStudent && <RS.Button
-                                        color="primary" onClick={() => { dispatch(openActiveModal(reservationsModal())) }}
+                                        color="primary" onClick={() => {dispatch(openActiveModal(reservationsModal()))}}
                                     >
                                         Reserve spaces
                                     </RS.Button>}
