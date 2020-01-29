@@ -67,10 +67,6 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
     const eventBookingsForGroup = useSelector((state: AppState) => state && state.eventBookingsForGroup || []);
 
     useEffect(() => {
-        // af599 TODO:
-        //   Check the API (EventsFacade), it returns the wrong type of users
-        //   (i.e., the one with an email address attached) even when the
-        //   request comes from a TEACHER.
         if (currentGroup && currentGroup.members) {
             const bookedUserIds = eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => booking.userBooked && booking.userBooked.id);
             const newUnbookedUsers = _orderBy(
