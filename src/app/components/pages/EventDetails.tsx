@@ -186,8 +186,8 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                 </span>}
 
                                 {/* Options for logged-in users */}
-                                {user && user.loggedIn && <span>
-                                    {event.eventStatus != 'CLOSED' && !event.expired && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
+                                {user && user.loggedIn && !event.expired && <span>
+                                    {event.eventStatus != 'CLOSED' && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
                                         onClick={() => {setBookingFormOpen(true)}}
                                     >
                                         Open booking form
@@ -197,17 +197,17 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     >
                                         Close booking form
                                     </RS.Button>}
-                                    {user.role && ['TEACHER', 'EVENT_LEADER', 'EVENT_MANAGER', 'ADMIN'].includes(user.role) && <RS.Button
+                                    {event.eventStatus != 'CLOSED' && userIsNotAStudent && <RS.Button
                                         color="primary" onClick={() => { dispatch(openActiveModal(reservationsModal())) }}
                                     >
                                         Reserve spaces
                                     </RS.Button>}
-                                    {event.userBookingStatus && ["CONFIRMED", "RESERVED"].includes(event.userBookingStatus) && !event.expired && <RS.Button
+                                    {event.userBookingStatus && ["CONFIRMED", "RESERVED"].includes(event.userBookingStatus) && <RS.Button
                                         color="primary" outline onClick={() => {dispatch(cancelMyBooking(eventId))}}
                                     >
                                         Cancel your booking
                                     </RS.Button>}
-                                    {event.userOnWaitList && !event.expired && <RS.Button
+                                    {event.userOnWaitList && <RS.Button
                                         color="primary" outline onClick={() => {dispatch(cancelMyBooking(eventId))}}
                                     >
                                         Remove from waiting list
