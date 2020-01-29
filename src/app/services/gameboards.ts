@@ -40,9 +40,6 @@ const createGameboardHistory = (title: string, gameboardId: string) => {
 export const determineGameboardHistory = (currentGameboard: GameboardDTO) => {
     return createGameboardHistory(currentGameboard.title as string, currentGameboard.id as string);
 };
-export const makeAttemptAtGameboardHistory = (gamebaordId: string) => {
-    return createGameboardHistory("Gameboard", gamebaordId);
-};
 
 export const determineNextGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
     if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.questions) {

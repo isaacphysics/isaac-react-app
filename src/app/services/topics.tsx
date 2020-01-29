@@ -23,22 +23,26 @@ export const idIsPresent = (id: string, contents: {id?: string}[] | undefined) =
     return contents && !!contents.filter((content) => content.id === id);
 };
 
-export const determineTopicHistory = (currentTopic: CurrentTopicState) => {
+export const determineTopicHistory = (currentTopic: CurrentTopicState, currentDocId: string) => {
     const result: LinkInfo[] = [];
     if (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && currentTopic.title) {
+        const relatedContent: (string | undefined)[] = [];
+        currentTopic.relatedContent && currentTopic.relatedContent.map(content => relatedContent.push(content.id));
         result.push(ALL_TOPICS_CRUMB);
-        result.push({title: currentTopic.title, to: `/topics/${currentTopic.id.slice("topic_summary_".length)}`})
+        relatedContent.indexOf(currentDocId) > -1 && result.push({title: currentTopic.title, to: `/topics/${currentTopic.id.slice("topic_summary_".length)}`})
     }
     return result;
 };
 
 export const makeAttemptAtTopicHistory = () => {
-    return [ALL_TOPICS_CRUMB, {title: "Topic", to: "/topics/"}]
+    return [ALL_TOPICS_CRUMB]
 };
 
 
 export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, examBoard: EXAM_BOARD) => {
-    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
+    const relatedContent: (string | undefined)[] = [];
+    currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent && currentTopic.relatedContent.map(content => relatedContent.push(content.id));
+    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent && relatedContent.indexOf(contentId) > -1) {
         const [relatedConcepts, relatedQuestions] = filterAndSeparateRelatedContent(currentTopic.relatedContent, examBoard);
         const orderedRelatedContent = relatedConcepts.concat(relatedQuestions);
         const relatedContentIds = orderedRelatedContent.map((content) => content.id);
