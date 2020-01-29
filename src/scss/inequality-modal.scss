@@ -158,18 +158,15 @@
                         padding-top: 5px;
                     }
 
-                    svg {
+                    svg.v-hexagon {
                         position: absolute;
                         width: 48px;
                         left: 8px;
                         top: 4px;
                         overflow: visible;
-
-                        .v-hexagon {
-                            fill: white;
-                            stroke: darken(theme-color("primary"), 10%);
-                            stroke-width: 8px;
-                        }
+                        fill: white;
+                        stroke: darken(theme-color("primary"), 10%);
+                        stroke-width: 8px;
                     }
                 }
 
@@ -187,11 +184,9 @@
                     }
 
                     &.inactive {
-                        svg {
-                            .v-hexagon {
-                                fill: theme-color("primary");
-                                stroke-width: 0;
-                            }
+                        svg.v-hexagon {
+                            fill: theme-color("primary");
+                            stroke-width: 0;
                         }
                     }
                 }
@@ -213,10 +208,10 @@
                     box-sizing: content-box;
                     padding: 0px 8px;
                     text-indent: 0;
-                    width: 60px;
+                    width: 120px;
                     height: 36px;
                     text-align: center;
-                    font-size: 1.8em;
+                    font-size: 1.6em;
                     background: black;
                     color: white;
                     position: relative;
@@ -225,22 +220,19 @@
                         color: black;
                         background: theme-color("primary");
 
-                        svg .tab-triangle {
+                        svg.tab-triangle {
                             fill: theme-color("primary");
                         }
                     }
 
-                    svg {
+                    svg.tab-triangle {
                         position: absolute;
-                        width: 76px;
+                        width: 136px;
                         height: 23px;
                         left: 0;
                         top: 36px;
                         overflow: visible;
-
-                        .tab-triangle {
-                            fill: black;
-                        }
+                        fill: black;
                     }
                 }
             }
@@ -269,17 +261,14 @@ li#moving-menu-item {
         padding-top: 5px;
     }
 
-    svg {
+    svg.v-hexagon {
         position: absolute;
         width: 48px;
         left: 8px;
         top: 4px;
         overflow: visible;
-
-        .v-hexagon {
-            fill: white;
-            stroke: darken(theme-color("primary"), 10%);
-            stroke-width: 8px;
-        }
+        fill: white;
+        stroke: darken(theme-color("primary"), 10%);
+        stroke-width: 8px;
     }
 }

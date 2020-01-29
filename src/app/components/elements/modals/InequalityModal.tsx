@@ -43,13 +43,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     };
 
     private _vHexagon = `
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 173.5 200" style="enable-background:new 0 0 173.5 200;" xml:space="preserve">
-            <polygon class="v-hexagon" points="0.7,50 0.7,150 87.3,200 173.9,150 173.9,50 87.3,0 " />
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 173.5 200" style="enable-background:new 0 0 173.5 200;" class="v-hexagon" xml:space="preserve">
+            <polygon points="0.7,50 0.7,150 87.3,200 173.9,150 173.9,50 87.3,0 " />
         </svg>
     `;
     private _tabTriangle = `
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 76 23" style="enable-background:new 0 0 76 23;" xml:space="preserve">
-            <polygon points="0,0 76,0 38,23" class="tab-triangle"/>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 136 23" style="enable-background:new 0 0 76 23;" class="tab-triangle" xml:space="preserve">
+            <polygon points="0,0 136,0 68,23" />
         </svg>
     `
 
@@ -79,7 +79,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             menuOpen: false,
             editorState: {},
             menuItems: {
-                logicFunctionItems: this.generateLogicFunctionsItems(props.logicSyntax || "logic"),
+                logicFunctionsItems: this.generateLogicFunctionsItems(props.logicSyntax || "logic"),
+                mathsFunctionsItems: this.generateMathsFunctionsItems(),
                 upperCaseLetters: [],
                 lowerCaseLetters: [],
                 upperCaseGreekLetters: [],
@@ -151,16 +152,15 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             const modal = document.getElementById('inequality-modal');
             if (modal) {
                 // TODO: Preprocess state to convert greek letters back to letter names
-                if (s['result'] && s['result']['tex']) {
-                    s['result']['tex'] = s['result']['tex'].split('').map((l: string) => this._reverseGreekLetterMap[l] ? '\\' + this._reverseGreekLetterMap[l] : l).join('');
+                if (s.result && s.result.tex) {
+                    s.result.tex = s.result.tex.split('').map((l: string) => this._reverseGreekLetterMap[l] ? '\\' + this._reverseGreekLetterMap[l] : l).join('');
                 }
-                if (s['result'] && s['result']['python']) {
-                    s['result']['python'] = s['result']['python'].split('').map((l: string) => this._reverseGreekLetterMap[l] || l).join('');
+                if (s.result && s.result.python) {
+                    s.result.python = s.result.python.split('').map((l: string) => this._reverseGreekLetterMap[l] || l).join('');
                 }
-                if (s['result'] && s['result']['uniqueSymbols']) {
-                    s['result']['uniqueSymbols'] = s['result']['uniqueSymbols'].split('').map((l: string) => this._reverseGreekLetterMap[l] || l).join('');
+                if (s.result && s.result.uniqueSymbols) {
+                    s.result.uniqueSymbols = s.result.uniqueSymbols.split('').map((l: string) => this._reverseGreekLetterMap[l] || l).join('');
                 }
-                console.log(s);
                 this.setState({ editorState: s });
                 this.props.onEditorStateChange(s);
             }
@@ -264,6 +264,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             new MenuItem("LogicLiteral", { value: false }, { label: labels[syntax]['False'], texLabel: true, className: 'false menu-item' }),
             new MenuItem("Brackets", { type: "round" }, { label: "\\small{(x)}", texLabel: true, className: 'brackets menu-item' })
         ];
+    }
+
+    private generateMathsFunctionsItems(): MenuItem[] {
+        return [
+            
+        ]
     }
 
     // Fat arrow form for correct "this" binding (?!)
@@ -418,8 +424,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     public render() {
         let lettersMenu: JSX.Element;
         if (this.state.defaultMenu) {
-            lettersMenu =
-            <div className="top-menu letters">
+            lettersMenu = <div className="top-menu letters">
                 <ul className="sub-menu-tabs">
                     <li className={this.state.activeSubMenu == "upperCaseLetters" ? 'active' : 'inactive'}
                         dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("AB") }}
@@ -460,32 +465,45 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
             </div>
         } else {
-            lettersMenu =
-            <div className="top-menu function">
+            lettersMenu = <div className="top-menu letters">
                 <ul className="sub-menu letters">{
                     this.state.menuItems.letters.map(this.menuItem)
                 }</ul>
             </div>
         }
+        let functionsTabLabel = '';
+        if (this.props.editorMode === 'maths') {
+            functionsTabLabel = "+ - \\sqrt{x}";
+        } else if (this.props.editorMode === 'logic') {
+            if (this.props.logicSyntax === 'logic') {
+                functionsTabLabel = "\\wedge\\ \\lnot";
+            } else {
+                functionsTabLabel = "\\cdot\\ \\overline{x}";
+            }
+        }
+
         let menu: JSX.Element =
         <nav className="inequality-ui">
             <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
                 {this.state.activeMenu == "letters" && lettersMenu}
-                {this.state.activeMenu == "functions" && <div className="top-menu function">
-                    <ul className="sub-menu">{
-                        this.state.menuItems.logicFunctionItems.map(this.menuItem)
-                    }</ul>
+                {this.state.activeMenu == "functions" && <div className="top-menu functions">
+                    {this.props.editorMode === 'logic' && <ul className="sub-menu">{
+                        this.state.menuItems.logicFunctionsItems.map(this.menuItem)
+                    }</ul>}
+                    {this.props.editorMode === 'maths' && <ul className="sub-menu">{
+                        this.state.menuItems.mathsFunctionsItems.map(this.menuItem)
+                    }</ul>}
                 </div>}
             </div>
             <div id="inequality-menu-tabs" className="menu-tabs">
                 <ul>
                     <li className={this.state.activeMenu == "letters" ? 'active' : 'inactive'}
-                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString("A\\ b") }}
+                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString("Ab\\ \\Delta \\gamma") }}
                         onClick={() => this.onMenuTabClick("letters")}
                         onKeyUp={() => this.onMenuTabClick("letters")}
                     />
                     <li className={this.state.activeMenu == "functions" ? 'active' : 'inactive'}
-                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(this.props.logicSyntax == "logic" ? "\\wedge\\ \\lnot" : "\\cdot\\ \\overline{x}") }}
+                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(functionsTabLabel) }}
                         onClick={() => this.onMenuTabClick("functions")}
                         onKeyUp={() => this.onMenuTabClick("functions")}
                     />
