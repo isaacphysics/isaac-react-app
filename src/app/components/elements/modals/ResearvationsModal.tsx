@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {connect, useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
     cancelUserBookingThenUpdateBookings,
     closeActiveModal,
@@ -11,43 +11,28 @@ import {
 } from "../../../state/actions";
 import {store} from "../../../state/store";
 import {Button, Col, CustomInput, Row, Table} from "reactstrap";
-import {RegisteredUserDTO, UserGroupDTO} from "../../../../IsaacApiTypes";
 import {AppState} from "../../../state/reducers";
 import {groups} from '../../../state/selectors';
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
+import {AppGroupMembership} from "../../../../IsaacAppTypes";
 import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
 import _orderBy from "lodash/orderBy";
+import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {isLoggedIn} from "../../../services/user";
 
-const stateToProps = (state: AppState) => ({
-    user: (state && state.user) as RegisteredUserDTO,
-    groups: groups.active(state),
-    currentGroup: groups.current(state)
-});
-const dispatchToProps = { loadGroups, selectGroup, getGroupMembers };
-
-interface ReservationsModalProps {
-    user: RegisteredUserDTO;
-    groups: UserGroupDTO[] | null;
-    currentGroup: AppGroup | null;
-    loadGroups: (archivedGroupsOnly: boolean) => void;
-    selectGroup: (group: UserGroupDTO | null) => void;
-    getGroupMembers: (group: UserGroupDTO) => void;
-}
-
-const ReservationsModalComponent = (props: ReservationsModalProps) => {
-    const { groups, loadGroups, currentGroup } = props;
-    const currentUser = props.user;
+const ReservationsModal = () => {
     const dispatch = useDispatch();
-
+    const user = useSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
+    const activeGroups = useSelector(groups.active);
+    const currentGroup = useSelector(groups.current);
+    const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
+    const eventBookingsForGroup = useSelector((state: AppState) => state && state.eventBookingsForGroup || []);
     const [unbookedUsers, setUnbookedUsers] = useState<AppGroupMembership[]>([]);
     const [userCheckboxes, setUserCheckboxes] = useState<{[key: number]: boolean}>({});
     const [checkAllCheckbox, setCheckAllCheckbox] = useState<boolean>(false);
 
-    const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
-
     useEffect(() => {
-        loadGroups(false);
+        dispatch(loadGroups(false));
     }, []);
 
     useEffect(() => {
@@ -64,11 +49,12 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
         }
     }, [currentGroup]);
 
-    const eventBookingsForGroup = useSelector((state: AppState) => state && state.eventBookingsForGroup || []);
 
     useEffect(() => {
         if (currentGroup && currentGroup.members) {
-            const bookedUserIds = eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => booking.userBooked && booking.userBooked.id);
+            const bookedUserIds = eventBookingsForGroup
+                .filter(booking => booking.bookingStatus !== "CANCELLED")
+                .map(booking => booking.userBooked && booking.userBooked.id);
             const newUnbookedUsers = _orderBy(
                 currentGroup.members.filter(member => !bookedUserIds.includes(member.id as number)),
                 ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']
@@ -118,7 +104,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
 
     const isReservationLimitReached = () => {
         if (selectedEvent && selectedEvent.groupReservationLimit) {
-            const bookings = eventBookingsForGroup.filter(booking => booking.reservedBy && booking.reservedBy.id === currentUser.id);
+            const bookings = eventBookingsForGroup.filter(booking => booking.reservedBy && booking.reservedBy.id === user?.id);
             const candidateBookings = Object.values(userCheckboxes).filter(c => c);
             return (candidateBookings.length + bookings.length) > selectedEvent.groupReservationLimit;
         }
@@ -130,8 +116,8 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
         <Col>
             <Row className="mb-5">
                 <Col md={4}>
-                    <ShowLoading until={groups}>
-                        {groups && groups.map(group => (
+                    <ShowLoading until={activeGroups}>
+                        {activeGroups && activeGroups.map(group => (
                             <Row key={group.id}>
                                 <Col>
                                     <div className="group-item p-2">
@@ -175,7 +161,7 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
                                 return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
                                     <td className="align-middle">
                                         {booking.userBooked &&
-                                        (booking.reservedBy && booking.reservedBy.id === currentUser.id) &&
+                                        (booking.reservedBy && booking.reservedBy.id === user?.id) &&
                                         (booking.bookingStatus == 'RESERVED') &&
                                         <Button key={booking.userBooked.id}
                                             id={`${booking.userBooked.id}`}
@@ -235,8 +221,12 @@ const ReservationsModalComponent = (props: ReservationsModalProps) => {
 
                     <Row className="toolbar">
                         <Col>
-                            {isReservationLimitReached() && <p className="text-danger">You can only reserve a maximum of {selectedEvent && selectedEvent.groupReservationLimit} group members onto this event.</p>}
-                            <Button disabled={!Object.values(userCheckboxes).some(v => v) || isReservationLimitReached()} onClick={requestReservations}>Reserve</Button>
+                            {isReservationLimitReached() && <p className="text-danger">
+                                You can only reserve a maximum of {selectedEvent && selectedEvent.groupReservationLimit} group members onto this event.
+                            </p>}
+                            <Button disabled={!Object.values(userCheckboxes).some(v => v) || isReservationLimitReached()} onClick={requestReservations}>
+                                Reserve
+                            </Button>
                         </Col>
                     </Row>
                 </Col>}
@@ -253,5 +243,3 @@ export const reservationsModal = () => {
         body: <ReservationsModal />,
     }
 };
-
-export const ReservationsModal = connect(stateToProps, dispatchToProps)(ReservationsModalComponent);
