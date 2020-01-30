@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    cancelUserBookingThenUpdateBookings,
+    cancelUserBooking,
     closeActiveModal,
     getEventBookingsForGroup,
     getGroupMembers,
@@ -98,7 +98,8 @@ const ReservationsModal = () => {
 
     const cancelReservationForUserId = async (userId?: number) => {
         if (selectedEvent && selectedEvent.id && currentGroup && currentGroup.id) {
-            dispatch(cancelUserBookingThenUpdateBookings(selectedEvent.id, userId));
+            await dispatch(cancelUserBooking(selectedEvent.id, userId));
+            dispatch(getEventBookingsForGroup(selectedEvent.id, currentGroup.id));
         }
     };
 
