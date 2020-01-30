@@ -18,7 +18,7 @@ export const FeaturedContentTabs = () => (
                                 <IsaacContent doc={{
                                     "type": "content",
                                     "encoding": "markdown",
-                                    "value": "An internet host has the IP address `192.168.100.4/17` — the address is written in CIDR form."
+                                    "value": "An internet host has the IP address <code class='bg-transparent shadow-none'>192.168.100.4/17</code> — the address is written in CIDR form."
                                 }} />
                             </div>
                         </h2>
