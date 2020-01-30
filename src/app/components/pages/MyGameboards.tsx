@@ -73,7 +73,11 @@ type BoardTableProps = MyBoardsPageProps & {
 const Board = (props: BoardTableProps) => {
     const {user, board, setSelectedBoards, selectedBoards, boardView} = props;
 
-    const boardLink = `${window.location.origin}/gameboards#${board.id}`;
+    const segueEnvironment = useSelector((state: AppState) =>
+        (state && state.constants && state.constants.segueEnvironment) || "unknown"
+    );
+
+    const boardLink = segueEnvironment !== "DEV" ? `https://isaaccs.org/g/${board.id}` : `${window.location.origin}/gameboards#${board.id}`;
 
     const dispatch = useDispatch();
     const [showShareLink, setShowShareLink] = useState(false);

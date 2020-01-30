@@ -36,7 +36,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {TEACHERS_CRUMB} from "../../services/constants";
 import {formatBoardOwner} from "../../services/gameboards";
-import {connect} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 
@@ -102,11 +102,15 @@ const Board = (props: BoardProps) => {
     const {user, board, loadGroupsForBoard, deleteBoard, unassignBoard, showToast, location: {hash}} = props;
     const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
 
+    const segueEnvironment = useSelector((state: AppState) =>
+        (state && state.constants && state.constants.segueEnvironment) || "unknown"
+    );
+
     useEffect( () => {
         loadGroupsForBoard(board);
     }, [board.id]);
 
-    const assignmentLink = `${location.origin}/assignment/${board.id}`;
+    const assignmentLink = segueEnvironment !== "DEV" ? `https://isaaccs.org/a/${board.id}` : `${location.origin}/assignment/${board.id}`;
 
     const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
 
