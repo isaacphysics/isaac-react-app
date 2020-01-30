@@ -18,7 +18,7 @@ export const FeaturedContentTabs = () => (
                                 <IsaacContent doc={{
                                     "type": "content",
                                     "encoding": "markdown",
-                                    "value": "Simplify this Boolean expression:\n\n$ \\or{\\or{\\or{\\bracketnot{\\not{(\\and{A}{B})}}}{A}}{B}}{C} $"
+                                    "value": "An internet host has the IP address `192.168.100.4/17` — the address is written in CIDR form."
                                 }} />
                             </div>
                         </h2>
@@ -26,43 +26,55 @@ export const FeaturedContentTabs = () => (
                     <Col md={6}>
                     </Col>
                     <Col md={6}>
-                        <TempExamBoardPicker className="float-right pt-md-5 pr-md-5 pt-3 pr-3" hideLabel />
+                        {/*TODO FEATURED_QUESTION_UPDATE uncomment TempExamBoardPicker if featured question needs it
+                         <TempExamBoardPicker className="float-right pt-md-5 pr-md-5 pt-3 pr-3" hideLabel />*/}
                         <div className="mb-5">
-                            <IsaacContent doc={{
-                                "id": "sys_bool_07|d69ed9d9-2d76-4019-8022-358490d0c75d",
-                                "type": "isaacMultiChoiceQuestion",
+                            <IsaacContent doc={{ /* Search for: TODO FEATURED_QUESTION_UPDATE  */
+                                "value": "Tick all of the facts in the list below that can be determined by the specified address:",
                                 "encoding": "markdown",
-                                "children": [
+                                "type": "isaacItemQuestion",
+                                "id": "net_internet_06|ba3863df-32e3-4bee-8587-eccc6eeb1b7a",
+                                "items": [
                                     {
-                                        "type": "content",
-                                        "encoding": "markdown",
-                                        "children": [],
-                                        "value": "The expression simplifies to:",
-                                        "published": false,
-                                        "tags": []
+                                        "type": "item",
+                                        "value": "The host has a non-routable IP address",
+                                        "id": "52dc"
+                                    },
+                                    {
+                                        "type": "item",
+                                        "value": "The network (subnet) address is `192.168.100.0`",
+                                        "id": "c3a8"
+                                    },
+                                    {
+                                        "type": "item",
+                                        "value": "The broadcast address is `192.168.255.255`",
+                                        "id": "f064"
+                                    },
+                                    {
+                                        "type": "item",
+                                        "value": "The network (subnet) can support 32,768 hosts",
+                                        "id": "631c"
+                                    },
+                                    {
+                                        "type": "item",
+                                        "value": "The subnet mask could be expressed as `255.255.128.0`",
+                                        "id": "37ea"
+                                    },
+                                    {
+                                        "type": "item",
+                                        "value": "Host `192.168.120.4` is on the same network (subnet)",
+                                        "id": "f315"
                                     }
                                 ],
-                                "published": true,
                                 "hints": [
                                     {
                                         "type": "content",
                                         "children": [
                                             {
                                                 "type": "content",
-                                                "encoding": "markdown",
-                                                "children": [
-
-                                                ],
-                                                "value": "**Boolean algebra** \u2014 a formal notation for describing logical relations.\n\n**Boolean identity** \u2014 a rule which allows you to simplify expressions using Boolean algebra.",
-                                                "published": false,
-                                                "tags": [
-
-                                                ]
+                                                "value": "**IP address:** Internet Protocol address — a 32-bit number (IPv4) assigned to each device that uses the Internet Protocol for communication.<br>\n**Subnet Mask:** a 32-bit number that masks an IP address so that the network and/or host address can be extracted.<br>\n**CIDR IP address:** IP address that ends with a slash followed by a number (the IP network prefix).",
+                                                "encoding": "markdown"
                                             }
-                                        ],
-                                        "published": false,
-                                        "tags": [
-
                                         ]
                                     },
                                     {
@@ -70,79 +82,10 @@ export const FeaturedContentTabs = () => (
                                         "children": [
                                             {
                                                 "type": "content",
-                                                "encoding": "markdown",
-                                                "children": [
-
-                                                ],
-                                                "value": "**Goal**\n\nSimplify the expression shown to one of the four options provided.\n\n**Information given**\n\n- A Boolean expression\n\n**Information assumed**\n\n- [Rules of Boolean algebra](concepts/sys_bool_boolean_laws)\n- [How to simplify Boolean expressions](concepts/sys_bool_simplifying_expressions)",
-                                                "published": false,
-                                                "tags": [
-
-                                                ]
+                                                "value": "#### Goal\nIdentify what information is revealed by an IP address that uses the CIDR format.\n\n#### Information given\n* The internet host has the IP address `192.168.100.4/17`\n* The address is in CIDR format\n* The address reveals at least one fact\n\n#### Knowledge assumed\n* [How networks use the subnet mask](/concepts/net_internet_ip_addresses#how)",
+                                                "encoding": "markdown"
                                             }
-                                        ],
-                                        "published": false,
-                                        "tags": [
-
                                         ]
-                                    },
-                                    {
-                                        "type": "content",
-                                        "children": [
-                                            {
-                                                "id": "sys_bool_07|d69ed9d9-2d76-4019-8022-358490d0c75d|sys_bool_07|d69ed9d9-2d76-4019-8022-358490d0c75d|aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj10bjlnUUpkMGdmSQ==",
-                                                "type": "video",
-                                                "encoding": "markdown",
-                                                "children": [
-
-                                                ],
-                                                "value": "_Add video caption here_",
-                                                "published": true,
-                                                "src": "https://www.youtube.com/watch?v=tn9gQJd0gfI"
-                                            }
-                                        ],
-                                        "published": false,
-                                        "tags": [
-
-                                        ]
-                                    }
-                                ],
-                                "choices": [
-                                    {
-                                        "type": "choice",
-                                        "encoding": "markdown",
-                                        "children": [
-
-                                        ],
-                                        "value": "$\\or{(\\and{A}{B})}{C}$",
-                                        "published": false
-                                    },
-                                    {
-                                        "type": "choice",
-                                        "encoding": "markdown",
-                                        "children": [
-
-                                        ],
-                                        "value": "$\\false$",
-                                        "published": false
-                                    },
-                                    {
-                                        "type": "choice",
-                                        "encoding": "markdown",
-                                        "children": [
-
-                                        ],
-                                        "value": "$\\or{A}{\\or{B}{C}}$",
-                                        "published": false
-                                    },
-                                    {
-                                        "type": "choice",
-                                        "encoding": "markdown",
-                                        "children": [
-
-                                        ],
-                                        "value": "$\\not{C}$",
-                                        "published": false
                                     }
                                 ]
                             }} />
