@@ -41,18 +41,20 @@ export const makeAttemptAtTopicHistory = () => {
 
 export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, examBoard: EXAM_BOARD) => {
     const relatedContent: (string | undefined)[] = [];
-    currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent && currentTopic.relatedContent.map(content => relatedContent.push(content.id));
-    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent && relatedContent.indexOf(contentId) > -1) {
-        const [relatedConcepts, relatedQuestions] = filterAndSeparateRelatedContent(currentTopic.relatedContent, examBoard);
-        const orderedRelatedContent = relatedConcepts.concat(relatedQuestions);
-        const relatedContentIds = orderedRelatedContent.map((content) => content.id);
-        const nextIndex = relatedContentIds.indexOf(contentId) + 1;
-        if (nextIndex < relatedContentIds.length) {
-            const nextContent = orderedRelatedContent[nextIndex];
-            return {
-                title: nextContent.title as string,
-                to: `/${documentTypePathPrefix[nextContent.type as DOCUMENT_TYPE]}/${nextContent.id}`
-            };
+    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
+        currentTopic.relatedContent.map(content => relatedContent.push(content.id));
+        if (relatedContent.includes(contentId)) {
+            const [relatedConcepts, relatedQuestions] = filterAndSeparateRelatedContent(currentTopic.relatedContent, examBoard);
+            const orderedRelatedContent = relatedConcepts.concat(relatedQuestions);
+            const relatedContentIds = orderedRelatedContent.map((content) => content.id);
+            const nextIndex = relatedContentIds.indexOf(contentId) + 1;
+            if (nextIndex < relatedContentIds.length) {
+                const nextContent = orderedRelatedContent[nextIndex];
+                return {
+                    title: nextContent.title as string,
+                    to: `/${documentTypePathPrefix[nextContent.type as DOCUMENT_TYPE]}/${nextContent.id}`
+                };
+            }
         }
     }
 };

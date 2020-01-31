@@ -42,13 +42,17 @@ export const determineGameboardHistory = (currentGameboard: GameboardDTO) => {
 };
 
 export const determineNextGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
+    const boardQuestions: (string | undefined)[] = [];
     if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.questions) {
-        const gameboardContentIds = currentGameboard.questions.map(q => q.id);
-        if (gameboardContentIds.includes(currentDocId)) {
-            const nextIndex = gameboardContentIds.indexOf(currentDocId) + 1;
-            if (nextIndex < gameboardContentIds.length) {
-                const nextContent = currentGameboard.questions[nextIndex];
-                return {title: nextContent.title as string, to: `/questions/${nextContent.id}`};
+        currentGameboard.questions.map(question => boardQuestions.push(question.id));
+        if ( boardQuestions.includes(currentDocId)) {
+            const gameboardContentIds = currentGameboard.questions.map(q => q.id);
+            if (gameboardContentIds.includes(currentDocId)) {
+                const nextIndex = gameboardContentIds.indexOf(currentDocId) + 1;
+                if (nextIndex < gameboardContentIds.length) {
+                    const nextContent = currentGameboard.questions[nextIndex];
+                    return {title: nextContent.title as string, to: `/questions/${nextContent.id}`};
+                }
             }
         }
     }
