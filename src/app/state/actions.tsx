@@ -1535,7 +1535,7 @@ export const promoteUserFromWaitingList = (eventBookingId: string, userId?: numb
     }
 };
 
-export const cancelUserBookingThenUpdateBookings = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
+export const cancelUserBooking = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
     const cancelBooking = window.confirm('Are you sure you want to cancel this booking?');
     if (cancelBooking && userId) {
         try {
