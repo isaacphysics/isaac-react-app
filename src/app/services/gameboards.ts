@@ -45,7 +45,7 @@ export const determineNextGameboardItem = (currentGameboard: CurrentGameboardSta
     const boardQuestions: (string | undefined)[] = [];
     if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.questions) {
         currentGameboard.questions.map(question => boardQuestions.push(question.id));
-        if ( boardQuestions.includes(currentDocId)) {
+        if (boardQuestions.includes(currentDocId)) {
             const gameboardContentIds = currentGameboard.questions.map(q => q.id);
             if (gameboardContentIds.includes(currentDocId)) {
                 const nextIndex = gameboardContentIds.indexOf(currentDocId) + 1;
