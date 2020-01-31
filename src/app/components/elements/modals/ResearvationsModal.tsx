@@ -104,7 +104,10 @@ const ReservationsModal = () => {
 
     const isReservationLimitReached = () => {
         if (selectedEvent && selectedEvent.groupReservationLimit) {
-            const bookings = eventBookingsForGroup.filter(booking => booking.reservedBy && booking.reservedBy.id === user?.id);
+            const bookings = eventBookingsForGroup.filter(booking =>
+                (booking.bookingStatus === "CONFIRMED" || booking.bookingStatus === "RESERVED" || booking.bookingStatus ==="WAITING_LIST")
+                && booking.reservedBy && booking.reservedBy.id === user?.id
+            );
             const candidateBookings = Object.values(userCheckboxes).filter(c => c);
             return (candidateBookings.length + bookings.length) > selectedEvent.groupReservationLimit;
         }
