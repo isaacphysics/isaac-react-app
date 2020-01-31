@@ -4,6 +4,7 @@ import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
 import {api} from "../../../services/api";
 import {validateUserSchool} from "../../../services/validation";
+import {throttle} from "lodash";
 
 interface SchoolInputProps {
     userToUpdate: ValidationUser;
@@ -14,6 +15,21 @@ interface SchoolInputProps {
     disableInput?: boolean;
 }
 const NOT_APPLICABLE = "N/A";
+
+
+const getSchoolPromise = (schoolSearchText: string) =>
+    new Promise(resolve => {
+        resolve(api.schools.search(schoolSearchText).then(({data}) => {
+            let temp: any = [];
+            data && data.length > 0 && data.map((item: any) => (temp.push({value: item, label: item.name + ", " + item.postcode})));
+            return temp;
+        }).catch((response) => {
+            console.error("Error searching for schools. ", response);
+        }));
+    });
+// Must define this throttle function _outside_ the component to ensure it doesn't get overwritten each rerender!
+const throttledSchoolSearch = throttle(getSchoolPromise, 450);
+
 export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput}: SchoolInputProps) => {
     let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
@@ -66,17 +82,6 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         }
     }
 
-    const promiseOptions = (inputOptions: string) =>
-        new Promise(resolve => {
-            setTimeout(() => {resolve(api.schools.search(inputOptions).then(({data}) => {
-                let temp: any = [];
-                data && data.length > 0 && data.map((item: any) => (temp.push({value: item, label: item.name + ", " + item.postcode})));
-                return temp;
-            }).catch((response) => {
-                console.error("Error searching for schools. ", response);
-            }))}, 800);
-        });
-
     const schoolValue = (
         schoolQueryText ?
             schoolQueryText :
@@ -102,7 +107,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 classNamePrefix="select"
                 onInputChange={renderInput}
                 onChange={handleSetSchool}
-                loadOptions={promiseOptions}
+                loadOptions={throttledSchoolSearch}
                 filterOption={() => true}
                 formatCreateLabel={(input) => <span>Use &quot;{input}&quot; as your school name</span>}
                 autoComplete="new-password"
