@@ -34,6 +34,8 @@ export const MARKDOWN_RENDERER = new Remarkable({
 
 export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_jan20_aqa', 'class_test_jan20_ocr'];
 
+export const COMPETITION_QUESTION_TARGET = 20;
+
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
 
@@ -391,7 +393,7 @@ export const examBoardTagMap: {[examBoard: string]: string} = {
     [EXAM_BOARD.OCR]: "examboard_ocr",
 };
 
-export const tagExamboardMap: {[tag: string]: string} = invert(examBoardTagMap);
+export const tagExamBoardMap: {[tag: string]: string} = invert(examBoardTagMap);
 
 export enum TAG_ID {
     // Categories

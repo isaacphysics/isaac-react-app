@@ -1,9 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {bb} from "billboard.js";
-import {StreakRecord} from "../../../IsaacAppTypes";
+import {StreakRecord} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../state/reducers";
-import {getAnsweredQuestionsByDate} from "../../state/actions";
+import {AppState} from "../../../state/reducers";
+import {getAnsweredQuestionsByDate} from "../../../state/actions";
 import moment from "moment";
 
 export const ActivityGraph = () => {

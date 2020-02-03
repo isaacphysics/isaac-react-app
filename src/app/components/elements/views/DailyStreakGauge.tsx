@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {bb} from "billboard.js";
-import {StreakRecord} from "../../../IsaacAppTypes";
+import {StreakRecord} from "../../../../IsaacAppTypes";
 
 interface DailyStreakGaugeProps {
     streakRecord: StreakRecord | null | undefined;

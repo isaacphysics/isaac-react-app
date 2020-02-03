@@ -1,23 +1,20 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {
-    getProgress
-} from "../../state/actions";
+import {getProgress} from "../../state/actions";
 import {AppState} from "../../state/reducers";
-import {ProgressBar} from "../elements/ProgressBar";
+import {ProgressBar} from "../elements/views/ProgressBar";
 import {Tabs} from "../elements/Tabs";
 import {QuestionProgressGraphs} from "../elements/QuestionProgressGraphs";
-import {DailyStreakGauge} from "../elements/DailyStreakGauge";
+import {DailyStreakGauge} from "../elements/views/DailyStreakGauge";
 import {HUMAN_QUESTION_TYPES, QUESTION_TYPES} from "../../services/questions";
-import {ActivityGraph} from "../elements/ActivityGraph";
+import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {Assignments} from "../elements/Assignments";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 import {isTeacher} from "../../services/user";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
-import {IS_CS_PLATFORM} from "../../services/constants";
-
+import {COMPETITION_QUESTION_TARGET, IS_CS_PLATFORM} from "../../services/constants";
 
 
 export const MyProgress = () => {
@@ -33,12 +30,6 @@ export const MyProgress = () => {
         }
     }, [userProgress]);
 
-    // useEffect(() => {
-    //     if (!myAssignments) {
-    //         dispatch(loadMyAssignments());
-    //     }
-    // }, [myAssignments]);
-
     const safePercentage = (correct: number | null | undefined, attempts: number | null | undefined) => (!(correct || correct == 0) || !attempts) ? null : correct / attempts * 100;
 
     const fullCorrect = userProgress?.totalQuestionsCorrect;
@@ -53,7 +44,7 @@ export const MyProgress = () => {
     const fullPercentageThisYear = safePercentage(fullCorrectThisYear, fullAttemptThisYear);
     const partPercentage = safePercentage(partCorrect, partAttempt);
     const partPercentageThisYear = safePercentage(partCorrectThisYear, partAttemptThisYear);
-
+    const academicYearQuestionTarget = !!fullCorrectThisYear && fullCorrectThisYear >= COMPETITION_QUESTION_TARGET;
 
     return <RS.Container id="my-progress">
         <TitleAndBreadcrumb currentPageTitle="My Progress"/>
@@ -68,19 +59,25 @@ export const MyProgress = () => {
                             Questions completed correctly this academic year
                         </RS.Row>
                         <RS.Row className={"mt-2"}>
-                            <ProgressBar percentage={fullPercentageThisYear || 0} description={fullPercentageThisYear == null ? "No data" : `${fullCorrectThisYear} of ${fullAttemptThisYear}`}/>
+                            <ProgressBar percentage={fullPercentageThisYear || 0} targetAchieved={academicYearQuestionTarget}>
+                                {fullPercentageThisYear == null ? "No data" : `${fullCorrectThisYear} of ${fullAttemptThisYear}`}
+                            </ProgressBar>
                         </RS.Row>
                         <RS.Row>
                             Questions completed correctly of those attempted
                         </RS.Row>
                         <RS.Row className={"mt-2"}>
-                            <ProgressBar percentage={fullPercentage || 0} description={fullPercentage == null ? "No data" : `${fullCorrect} of ${fullAttempt}`}/>
+                            <ProgressBar percentage={fullPercentage || 0}>
+                                {fullPercentage == null ? "No data" : `${fullCorrect} of ${fullAttempt}`}
+                            </ProgressBar>
                         </RS.Row>
                         <RS.Row className={"mt-3"}>
                             Question parts correct of those attempted
                         </RS.Row>
                         <RS.Row className={"mt-2"}>
-                            <ProgressBar percentage={partPercentage || 0} description={partPercentage == null ? "No data" : `${partCorrect} of ${partAttempt}`}/>
+                            <ProgressBar percentage={partPercentage || 0}>
+                                {partPercentage == null ? "No data" : `${partCorrect} of ${partAttempt}`}
+                            </ProgressBar>
                         </RS.Row>
                     </RS.Col>
                     <RS.Col className={"col-md-4"}>
@@ -97,7 +94,7 @@ export const MyProgress = () => {
                                 Longest streak: {userProgress?.userSnapshot?.streakRecord?.largestStreak || 0} days
                             </div>
                             <RS.UncontrolledTooltip placement="bottom" target="streak-help">
-                                <div  className="text-left">
+                                <div className="text-left">
                                     The daily streak indicates the number of consecutive days you have been active on Isaac.<br/>
                                     Answer at least <b>three question parts</b> correctly per day to fill up your daily progress bar and increase your streak!
                                 </div>
@@ -119,15 +116,17 @@ export const MyProgress = () => {
                 </RS.Row>
                 <RS.Row>
                     {(Array.from(QUESTION_TYPES.keys()) as string[]).filter((qType: string) => qType != "default").map((qType: string) => {
-                        const correct = userProgress && userProgress.correctByType && userProgress.correctByType[qType] || null;
-                        const attempts = userProgress && userProgress.attemptsByType && userProgress.attemptsByType[qType] || null;
+                        const correct = userProgress?.correctByType?.[qType] || null;
+                        const attempts = userProgress?.attemptsByType?.[qType] || null;
                         const percentage = safePercentage(correct, attempts);
                         return <RS.Col key={qType} className={"col-lg-4 mt-2 type-progress-bar"}>
                             <RS.Row className={"px-2"}>
                                 {HUMAN_QUESTION_TYPES.get(qType)} questions correct
                             </RS.Row>
                             <RS.Row className={"px-2"}>
-                                <ProgressBar percentage={percentage || 0} description={percentage == null ? "No data" : `${correct} of ${attempts}`}/>
+                                <ProgressBar percentage={percentage || 0}>
+                                    {percentage == null ? "No data" : `${correct} of ${attempts}`}
+                                </ProgressBar>
                             </RS.Row>
                         </RS.Col>
                     })}
@@ -196,7 +195,7 @@ export const MyProgress = () => {
                 Current assignments
             </RS.CardTitle>
             <RS.CardBody>
-                <Assignments assignments={filterAssignmentsByStatus(myAssignments).inProgressRecent}/>
+                <Assignments assignments={filterAssignmentsByStatus(myAssignments).inProgressRecent} />
             </RS.CardBody>
         </RS.Card>
     </RS.Container>
