@@ -17,6 +17,8 @@ interface AdminEmailsProps {
     };
 }
 
+const RECIPIENT_NUMBER_WARNING_VALUE = 2000;
+
 export const AdminEmails = (props: AdminEmailsProps) => {
     const dispatch = useDispatch();
     const [selectionMode, setSelectionMode] = useState("USER_FILTER");
@@ -32,6 +34,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
     const [csvIDs, setCSVIDs] = useState([] as number[]);
     const [emailType, setEmailType] = useState("null");
     const [contentObjectID, setContentObjectID] = useState("");
+    const [emailSent, setEmailSent] = useState(false);
     const userRolesSelector = useSelector((state: AppState) => state && state.adminStats && state.adminStats.userRoles);
     const emailTemplateSelector = useSelector((state: AppState) => state && state.adminEmailTemplate && state.adminEmailTemplate);
 
@@ -181,23 +184,40 @@ export const AdminEmails = (props: AdminEmailsProps) => {
             <RS.CardTitle tag="h2">Plain text preview</RS.CardTitle>
             <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
             <RS.CardBody>
-                {emailTemplateSelector && emailTemplateSelector.plainText}
+                <pre>{emailTemplateSelector && emailTemplateSelector.plainText}</pre>
             </RS.CardBody>
         </RS.Card>
 
-        <RS.Card className="p-3 my-3">
+        <RS.Card className="mb-5">
             <RS.CardBody>
-                <RS.Input type="button" value="Send emails"
-                    className={"btn btn-block btn-secondary border-0 " + classnames({disabled: !canSubmit})}
-                    disabled={!canSubmit}
-                    onClick={() => {
-                        if (selectionMode == "USER_FILTER") {
-                            dispatch(sendAdminEmail(contentObjectID, emailType, selectedRoles));
-                        } else {
-                            dispatch(sendAdminEmailWithIds(contentObjectID, emailType, csvIDs));
-                        }}
-                    }/>
+                <div className="text-center">
+                    {!emailSent ?
+                        <React.Fragment>
+                            {numberOfUsers() >= RECIPIENT_NUMBER_WARNING_VALUE && <div className="alert alert-warning">
+                                <strong>Warning:</strong> There are currently <strong>{numberOfUsers()}</strong> selected recipients.
+                            </div>}
+                            <RS.Input
+                                type="button" value="Send emails"
+                                className={"btn btn-xl btn-secondary border-0 " + classnames({disabled: !canSubmit})}
+                                disabled={!canSubmit}
+                                onClick={() => {
+                                    const numUsers = numberOfUsers();
+                                    if (window.confirm(`Are you sure you want to send a ${emailType} email (${contentObjectID}) to ${numUsers} user${numUsers > 1 ? "s" : ""}?`)) {
+                                        setEmailSent(true);
+                                        if (selectionMode == "USER_FILTER") {
+                                            dispatch(sendAdminEmail(contentObjectID, emailType, selectedRoles));
+                                        } else {
+                                            dispatch(sendAdminEmailWithIds(contentObjectID, emailType, csvIDs));
+                                        }
+                                    }
+                                }}
+                            />
+                        </React.Fragment>
+                        :
+                        <React.Fragment>Request made, to send another refresh.</React.Fragment>
+                    }
+                </div>
             </RS.CardBody>
         </RS.Card>
-    </RS.Container>
+    </RS.Container>;
 };

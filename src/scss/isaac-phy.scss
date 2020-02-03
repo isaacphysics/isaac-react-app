@@ -1,7 +1,7 @@
 // NOMENSA variables.scss
 //Colours
-$primary: #ffb53f;
-$secondary: #ff3369;
+$primary: #509e2e;
+$secondary: #944cbe;
 
 //Greys
 $gray-103: #f8f8f8;
@@ -57,7 +57,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./_mixins";
 
 // Atoms
-@import "./logo";
+@import "./logo-phy";
 @import "./fonts";
 @import "./typography";
 @import "./headings";
@@ -78,10 +78,11 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./boards";
 @import "./focus";
 @import "./progress-bar";
+@import "./anvil";
 
 // Navigation
 @import "./navigation-bar";
-@import "./header";
+@import "./header-phy";
 @import "./footer";
 
 // Pages

@@ -7,6 +7,7 @@ import {logAction} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {TrustedHtml} from "./TrustedHtml";
+import {AccordionSectionContext} from "../../../IsaacAppTypes";
 
 interface AccordionsProps {
     id?: string;
@@ -103,11 +104,13 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
             </RS.Button>
         </div>
         <RS.Collapse isOpen={open} className="mt-1">
-            <RS.Card>
-                <RS.CardBody>
-                    {children}
-                </RS.CardBody>
-            </RS.Card>
+            <AccordionSectionContext.Provider value={id}>
+                <RS.Card>
+                    <RS.CardBody>
+                        {children}
+                    </RS.CardBody>
+                </RS.Card>
+            </AccordionSectionContext.Provider>
         </RS.Collapse>
     </div>;
 };

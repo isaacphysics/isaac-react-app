@@ -1,6 +1,6 @@
-import {ContentDTO, QuestionDTO} from "../../../IsaacApiTypes";
+import {ContentDTO} from "../../../IsaacApiTypes";
 import {FigureNumberingContext, FigureNumbersById} from "../../../IsaacAppTypes";
-import React, {useEffect} from "react";
+import React from "react";
 
 interface WithFigureNumberingProps {
     doc: ContentDTO;

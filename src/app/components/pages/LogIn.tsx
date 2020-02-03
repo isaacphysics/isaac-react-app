@@ -8,6 +8,7 @@ import {AppState} from "../../state/reducers";
 import {history} from "../../services/history";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {Redirect} from "react-router";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null,
@@ -30,7 +31,7 @@ interface LogInPageProps {
 
 const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, resetPassword, errorMessage}: LogInPageProps) => {
     useEffect( () => {
-        document.title = "Login — Isaac Computer Science";
+        document.title = "Login — Isaac " + SITE_SUBJECT_TITLE;
     }, []);
 
     const [email, setEmail] = useState("");
@@ -38,7 +39,7 @@ const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, reset
     const [logInAttempted, setLoginAttempted] = useState(false);
 
     const isValidEmail = email.length > 0 && email.includes("@");
-    const isValidPassword = password.length > 5;
+    const isValidPassword = password.length > 0;
 
     const [passwordResetAttempted, setPasswordResetAttempted] = useState(false);
     const [passwordResetRequest, setPasswordResetRequest] = useState(false);

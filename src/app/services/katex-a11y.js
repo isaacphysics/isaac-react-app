@@ -25,9 +25,12 @@ const stringMap = {
     "]": "close square bracket",
     "\\{": "left curly bracket",
     "\\}": "right curly bracket",
+    "\\lbrace": "left curly bracket",
+    "\\rbrace": "right curly bracket",
     "\\lvert": "open vertical bar",
     "\\rvert": "close vertical bar",
     "|": "vertical bar",
+    "\\vert": "vertical bar",
     "\\uparrow": "up arrow",
     "\\Uparrow": "up arrow",
     "\\downarrow": "down arrow",
@@ -60,6 +63,7 @@ const stringMap = {
     ":": "colon",
     "?": "question mark",
     "'": "apostrophe",
+    "\\#": "hash symbol",
     "\\%": "percent",
     " ": "space",
     "\\ ": "space",
@@ -89,6 +93,7 @@ const stringMap = {
     "\\ldots": "dots",
     "\\@cdots": "dots",
     "\\lnot": "not",
+    "\\emptyset": "empty set",
     // TODO: add entries for all accents
     "\\hat": "hat",
     "\\acute": "acute",
@@ -125,13 +130,16 @@ const binMap = {
     "\\bullet": "bullet",
     "\\land": "and",
     "\\lor": "or",
-    "\\veebar": "xor"
+    "\\veebar": "xor",
+    "\\cup": "union",
+    "\\cap": "intersection",
+    "\\setminus": "difference",
 };
 
 const relMap = {
     "=": "equals",
     "\\approx": "approximately equals",
-    "≠": "is not equal to",
+    "\\neq": "is not equal to",
     "\\geq": "is greater than or equal to",
     "\\ge": "is greater than or equal to",
     "\\leq": "is less than or equal to",
@@ -143,6 +151,12 @@ const relMap = {
     "\\rightarrow": "right arrow",
     "\\Rightarrow": "right arrow",
     ":": "colon",
+    "\\in": "in",
+    "\\notin": "not in",
+    "\\subset": "proper subset of",
+    "\\subseteq": "subset of",
+    "\\supset": "proper superset of",
+    "\\supseteq": "superset of",
 };
 
 const accentUnderMap = {
@@ -187,16 +201,14 @@ const buildString = (str, type, a11yStrings) => {
         ret = stringMap[str] || str;
     }
 
-    // If the text to add is a number and there is already a string
-    // in the list and the last string is a number then we should
-    // combine them into a single number
+    // If the text to add is a number and the last string is a number, then
+    // combine them into a single number. Do similar if this text is inside a
+    // 'start text' region.
+    let numRegex = /^\d+$/;
+    let startTextRegex = /^start ((bold|italic) )?text$/;
     if (
-        /^\d+$/.test(ret) &&
-        a11yStrings.length > 0 &&
-        // TODO(kevinb): check that the last item in a11yStrings is a string
-        // I think we might be able to drop the nested arrays, which would make
-        // this easier to type - $FlowFixMe
-        /^\d+$/.test(a11yStrings[a11yStrings.length - 1])
+        (a11yStrings.length > 0 && numRegex.test(ret) && numRegex.test(a11yStrings[a11yStrings.length - 1])) ||
+        (a11yStrings.length > 1 && type === "normal" && startTextRegex.test(a11yStrings[a11yStrings.length - 2]))
     ) {
         a11yStrings[a11yStrings.length - 1] += ret;
     } else if (ret) {
@@ -534,19 +546,19 @@ const handleObject = (tree, a11yStrings, atomType) => {
 
         case "text": {
             // TODO: handle other fonts
-            // FIXME: "\text{Example}" becomes "begin text, E, x, a, m, p, l, e, end text"
-            if (tree.font === "\\textbf") {
-                buildRegion(a11yStrings, function(regionStrings) {
-                    regionStrings.push("start bold text");
-                    buildA11yStrings(tree.body, regionStrings, atomType);
-                    regionStrings.push("end bold text");
-                });
-                break;
+            let modifier;
+            switch (tree.font) {
+                case "\\textbf":
+                    modifier = "bold"; break;
+                case "\\textit":
+                    modifier = "italic"; break;
+                default:
+                    modifier = "";
             }
             buildRegion(a11yStrings, function(regionStrings) {
-                regionStrings.push("start text");
+                regionStrings.push(`start ${modifier} text`.replace(/\s+/, " "));
                 buildA11yStrings(tree.body, regionStrings, atomType);
-                regionStrings.push("end text");
+                regionStrings.push(`end ${modifier} text`.replace(/\s+/, " "));
             });
             break;
         }

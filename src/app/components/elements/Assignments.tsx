@@ -4,12 +4,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {extractTeacherName} from "../../services/user";
-import {DATE_FORMATTER} from "../../services/constants";
-
-function formatDate(date: number | Date) {
-    const dateObject = new Date(date);
-    return DATE_FORMATTER.format(dateObject);
-}
+import {formatDate} from "./DateString";
 
 interface AssignmentsProps {
     assignments: AssignmentDTO[];

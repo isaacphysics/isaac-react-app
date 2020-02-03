@@ -1,14 +1,12 @@
 import React, {MouseEvent, useEffect, useState} from "react";
 import {connect} from "react-redux";
-import {Link} from "react-router-dom";
 import {loadMyAssignments, logAction} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
-import {Card, CardBody, Container, Row, Col, Nav, NavItem, NavLink} from 'reactstrap';
+import {Card, CardBody, Col, Container, Nav, NavItem, NavLink, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {extractTeacherName} from "../../services/user";
-import {DATE_FORMATTER, STUDENTS_CRUMB} from "../../services/constants";
+import {STUDENTS_CRUMB} from "../../services/constants";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {Assignments} from "../elements/Assignments";
@@ -21,7 +19,6 @@ interface MyAssignmentsPageProps {
     loadMyAssignments: () => void;
     logAction: (eventDetails: object) => void;
 }
-
 const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}: MyAssignmentsPageProps) => {
     useEffect(() => {loadMyAssignments();}, []);
     useEffect(() => {logAction({type: "VIEW_MY_ASSIGNMENTS"})}, []);

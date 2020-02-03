@@ -1,41 +1,27 @@
 import React, {useEffect, useState} from 'react';
-import {connect} from "react-redux";
-import {Alert, Container, Card, CardBody, CardFooter, Col, Form, FormGroup, Input, Row, Label} from "reactstrap";
-import {AppState, ErrorState} from "../../state/reducers";
-import {submitMessage} from "../../state/actions";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {useDispatch, useSelector} from "react-redux";
+import {Alert, Card, CardBody, CardFooter, Col, Container, Form, FormGroup, Input, Label, Row} from "reactstrap";
+import {AppState} from "../../state/reducers";
+import {fetchFragment, requestEmailVerification, submitMessage} from "../../state/actions";
 import {validateEmail} from "../../services/validation";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {api} from "../../services/api";
-import {requestEmailVerification} from "../../state/actions";
 import {Link} from "react-router-dom";
 import {isTeacher} from "../../services/user";
+import {IsaacContent} from "../content/IsaacContent";
 
+const warningFragmentId = "teacher_registration_warning_message";
+const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
 
+export const TeacherRequest = () => {
+    const dispatch = useDispatch();
+    const user = useSelector((state: AppState) => (state && state.user) || null);
+    const errorMessage = useSelector((state: AppState) => (state && state.error) || null);
+    const warningFragment = useSelector((state: AppState) => state && state.fragments && state.fragments[warningFragmentId] || null);
 
-const stateToProps = (state: AppState) => {
-    return {
-        user: state ? state.user : null,
-        errorMessage: state ? state.error : null,
-    };
-};
-
-const dispatchToProps = {
-    requestEmailVerification,
-    submitMessage
-};
-
-interface TeacherAccountPageProps {
-    user: LoggedInUser | null;
-    submitMessage: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string}) => void;
-    errorMessage: ErrorState;
-    requestEmailVerification: () => void;
-}
-
-const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, requestEmailVerification}: TeacherAccountPageProps) => {
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName || "");
-    const [email, setEmail] = useState(user && user.loggedIn && user.email || "");
+    const [emailAddress, setEmailAddress] = useState(user && user.loggedIn && user.email || "");
     const [school, setSchool] = useState();
     const [otherInformation, setOtherInformation] = useState("");
     const [verificationDetails, setVerificationDetails] = useState();
@@ -44,22 +30,9 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
     const [allowedDomain, setAllowedDomain] = useState();
 
     const urn = user && user.loggedIn && user.schoolId || "";
-    const presetSubject = "Teacher Account Request";
-    const presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: " + school + "\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\nAny other information: " + otherInformation + "\n\nThanks, \n\n" + firstName + " " + lastName;
-    const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
-
-    const isValidEmail = validateEmail(email);
-
-    const sendForm = () => {
-        submitMessage(
-            {
-                firstName: firstName,
-                lastName: lastName,
-                emailAddress: email,
-                subject: presetSubject,
-                message: presetMessage
-            })
-    };
+    const subject = "Teacher Account Request";
+    const message = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: " + school + "\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\nAny other information: " + otherInformation + "\n\nThanks, \n\n" + firstName + " " + lastName;
+    const isValidEmail = validateEmail(emailAddress);
 
     function isEmailDomainAllowed(email: string) {
         for (let domain in nonSchoolDomains) {
@@ -81,24 +54,28 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
         }
     }
 
-    function clickVerify() {
-        requestEmailVerification();
-    }
+    useEffect(() => {
+        dispatch(fetchFragment(warningFragmentId));
+    }, []);
 
     useEffect(() => {
         setFirstName(user && user.loggedIn && user.givenName || "");
         setLastName(user && user.loggedIn && user.familyName || "");
-        setEmail(user && user.loggedIn && user.email || "");
+        setEmailAddress(user && user.loggedIn && user.email || "");
         setEmailVerified(user && user.loggedIn && user.emailVerificationStatus == "VERIFIED");
         fetchSchool(urn);
-        isEmailDomainAllowed(email);
+        isEmailDomainAllowed(emailAddress);
     }, [user]);
+
 
     return <Container id="contact-page" className="pb-5">
         <TitleAndBreadcrumb currentPageTitle="Teacher Account request" />
         <div className="pt-4">
             <Row>
                 <Col size={9}>
+                    {warningFragment && warningFragment != 404 && <Alert color="warning">
+                        <IsaacContent doc={warningFragment} />
+                    </Alert>}
                     <Card>
                         {isTeacher(user) &&
                             <Row>
@@ -128,7 +105,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                             :
                             <Form name="contact" onSubmit={e => {
                                 e.preventDefault();
-                                sendForm();
+                                dispatch(submitMessage({firstName, lastName, emailAddress, subject, message}));
                                 setMessageSent(true)
                             }}>
                                 <CardBody>
@@ -163,7 +140,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                                 <Input disabled invalid={!isValidEmail || !emailVerified || allowedDomain == false} id="email-input"
                                                     type="email" name="email"
                                                     defaultValue={user && user.loggedIn ? user.email : ""}
-                                                    onChange={e => setEmail(e.target.value)}
+                                                    onChange={e => setEmailAddress(e.target.value)}
                                                     aria-describedby="emailValidationMessage" required/>
                                             </FormGroup>
                                         </Col>
@@ -197,7 +174,7 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
                                         <Col>
                                             <small className="text-danger text-left">Your email address is not verified —
                                                 please click on the link in the verification email to confirm your
-                                                email address. You can <Link onClick={clickVerify} to={"#"}>request a
+                                                email address. You can <Link onClick={() => dispatch(requestEmailVerification())} to={"#"}>request a
                                                     new verification email</Link> if necessary.
                                             </small>
                                         </Col>
@@ -245,5 +222,3 @@ const TeacherAccountRequestPageComponent = ({user, submitMessage, errorMessage, 
         </div>
     </Container>;
 };
-
-export const TeacherRequest = connect(stateToProps, dispatchToProps)(TeacherAccountRequestPageComponent);

@@ -35,7 +35,7 @@ const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps)
 
             <ul>{doc.choices && doc.choices.map((choice, index) =>
                 <li key={choice.value} className="list-unstyled">
-                    <Label className="label-radio multichoice-option">
+                    <Label className="label-radio multichoice-option d-flex">
                         <CustomInput
                             id={`${questionId}${index}`}
                             color="secondary"
@@ -43,7 +43,9 @@ const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps)
                             checked={currentAttemptValue == choice.value}
                             onChange={() => setCurrentAttempt(questionId, choice)}
                         />
-                        <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} />
+                        <div className="flex-fill">
+                            <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} />
+                        </div>
                     </Label>
                 </li>)
             }</ul>

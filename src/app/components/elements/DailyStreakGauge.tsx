@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {bb} from "billboard.js";
-import "billboard.js/dist/theme/insight.css"; //TODO remove this??
 import {StreakRecord} from "../../../IsaacAppTypes";
 
 interface DailyStreakGaugeProps {

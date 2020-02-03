@@ -143,3 +143,13 @@
     }
   }
 }
+
+.linked-account-button {
+  border: none;
+  width: 46px;
+  height: 46px;
+
+  &.google-button {
+    background: url("/assets/logos/btn_google_light_normal_ios.svg") no-repeat;
+  }
+}
