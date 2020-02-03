@@ -17,20 +17,22 @@ import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {COMPETITION_QUESTION_TARGET, IS_CS_PLATFORM} from "../../services/constants";
 
 
+function safePercentage(correct: number | null | undefined, attempts: number | null | undefined) {
+    return (!(correct || correct == 0) || !attempts) ? null : correct / attempts * 100;
+}
+
 export const MyProgress = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state: AppState) => state && state.user);
-    const userProgress = useSelector((state: AppState) => state && state.userProgress);
-    const myAssignments = useSelector((state: AppState) => state && state.assignments || null);
-    const achievementsSelector = useSelector((state: AppState) => state && state.userProgress && state.userProgress.userSnapshot && state.userProgress.userSnapshot.achievementsRecord);
+    const user = useSelector((state: AppState) => state?.user);
+    const userProgress = useSelector((state: AppState) => state?.userProgress);
+    const myAssignments = useSelector((state: AppState) => state?.assignments || null);
+    const achievementsSelector = useSelector((state: AppState) => state?.userProgress?.userSnapshot?.achievementsRecord);
 
     useEffect(() => {
         if (!userProgress) {
             dispatch(getProgress());
         }
     }, [userProgress]);
-
-    const safePercentage = (correct: number | null | undefined, attempts: number | null | undefined) => (!(correct || correct == 0) || !attempts) ? null : correct / attempts * 100;
 
     const fullCorrect = userProgress?.totalQuestionsCorrect;
     const fullCorrectThisYear = userProgress?.totalQuestionsCorrectThisAcademicYear;
