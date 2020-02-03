@@ -41,12 +41,18 @@ export const MyProgress = () => {
 
     const safePercentage = (correct: number | null | undefined, attempts: number | null | undefined) => (!(correct || correct == 0) || !attempts) ? null : correct / attempts * 100;
 
-    const fullCorrect = userProgress && userProgress.totalQuestionsCorrect;
-    const fullAttempt = userProgress && userProgress.totalQuestionsAttempted;
-    const partCorrect = userProgress && userProgress.totalQuestionsCorrect;
-    const partAttempt = userProgress && userProgress.totalQuestionsAttempted;
+    const fullCorrect = userProgress?.totalQuestionsCorrect;
+    const fullCorrectThisYear = userProgress?.totalQuestionsCorrectThisAcademicYear;
+    const fullAttempt = userProgress?.totalQuestionsAttempted;
+    const fullAttemptThisYear = userProgress?.totalQuestionsAttemptedThisAcademicYear;
+    const partCorrect = userProgress?.totalQuestionsCorrect;
+    const partCorrectThisYear = userProgress?.totalQuestionPartsCorrectThisAcademicYear;
+    const partAttempt = userProgress?.totalQuestionsAttempted;
+    const partAttemptThisYear = userProgress?.totalQuestionPartsAttemptedThisAcademicYear;
     const fullPercentage = safePercentage(fullCorrect, fullAttempt);
+    const fullPercentageThisYear = safePercentage(fullCorrectThisYear, fullAttemptThisYear);
     const partPercentage = safePercentage(partCorrect, partAttempt);
+    const partPercentageThisYear = safePercentage(partCorrectThisYear, partAttemptThisYear);
 
 
     return <RS.Container id="my-progress">
@@ -58,6 +64,12 @@ export const MyProgress = () => {
             <RS.CardBody>
                 <RS.Row>
                     <RS.Col className={"col-md-8 pr-5 mt-2"}>
+                        <RS.Row>
+                            Questions completed correctly this academic year
+                        </RS.Row>
+                        <RS.Row className={"mt-2"}>
+                            <ProgressBar percentage={fullPercentageThisYear || 0} description={fullPercentageThisYear == null ? "No data" : `${fullCorrectThisYear} of ${fullAttemptThisYear}`}/>
+                        </RS.Row>
                         <RS.Row>
                             Questions completed correctly of those attempted
                         </RS.Row>
@@ -82,7 +94,7 @@ export const MyProgress = () => {
                         </RS.Row>
                         <RS.Row>
                             <div id="streak-help" className={"text-center-width"}>
-                                Longest streak: {userProgress && userProgress.userSnapshot && userProgress.userSnapshot.streakRecord && userProgress.userSnapshot.streakRecord.largestStreak} days
+                                Longest streak: {userProgress?.userSnapshot?.streakRecord?.largestStreak || 0} days
                             </div>
                             <RS.UncontrolledTooltip placement="bottom" target="streak-help">
                                 <div  className="text-left">

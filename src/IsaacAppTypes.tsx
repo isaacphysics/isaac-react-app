@@ -627,6 +627,10 @@ export interface UserProgress {
     totalQuestionsCorrect?: number;
     totalQuestionPartsCorrect: number;
     totalQuestionPartsAttempted?: number;
+    totalQuestionsCorrectThisAcademicYear?: number;
+    totalQuestionsAttemptedThisAcademicYear?: number;
+    totalQuestionPartsCorrectThisAcademicYear?: number;
+    totalQuestionPartsAttemptedThisAcademicYear?: number;
     attemptsByType?: { [type: string]: number };
     correctByType?: { [type: string]: number };
     attemptsByTag?: { [tag: string]: number };
