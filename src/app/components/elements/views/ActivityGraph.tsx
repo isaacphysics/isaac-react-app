@@ -1,10 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect} from 'react';
 import {bb} from "billboard.js";
-import {StreakRecord} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {getAnsweredQuestionsByDate} from "../../../state/actions";
-import moment from "moment";
+import {NUMERIC_DATE} from "../DateString";
 
 export const ActivityGraph = () => {
     const dispatch = useDispatch();
@@ -35,7 +34,8 @@ export const ActivityGraph = () => {
             if (nonZeroDates.length > 0) {
                 const minNonZeroDate = nonZeroDates.reduce((min, date) => date < min ? date : min);
                 const maxDate = foundDates.reduce((max, date) => date > max ? date : max);
-                selectedDates = generateDateArray(new Date(minNonZeroDate), new Date(maxDate)).map((date) => moment(date).format("YYYY-MM-DD"));
+                selectedDates = generateDateArray(new Date(minNonZeroDate), new Date(maxDate))
+                    .map((date) => NUMERIC_DATE.format(date).split("/").reverse().join("-"));
             }
         }
         var chart = bb.generate({
