@@ -19,37 +19,41 @@ export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], e
     return [relatedConcepts, relatedQuestions];
 };
 
-export const idIsPresent = (id: string, contents: {id?: string}[] | undefined) => {
-    return contents && !!contents.filter((content) => content.id === id);
+const isValidIdForTopic = (contentId: string, currentTopic: CurrentTopicState) => {
+    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
+        return !!currentTopic.relatedContent.filter((content) => content.id === contentId);
+    }
 };
 
-export const determineTopicHistory = (currentTopic: CurrentTopicState) => {
+export const determineTopicHistory = (currentTopic: CurrentTopicState, currentDocId: string) => {
     const result: LinkInfo[] = [];
-    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && currentTopic.title) {
+    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && currentTopic.title && currentTopic.relatedContent) {
         result.push(ALL_TOPICS_CRUMB);
-        result.push({title: currentTopic.title, to: `/topics/${currentTopic.id.slice("topic_summary_".length)}`})
+        if (isValidIdForTopic(currentDocId, currentTopic)) {
+            result.push({title: currentTopic.title, to: `/topics/${currentTopic.id.slice("topic_summary_".length)}`});
+        }
     }
     return result;
 };
 
 export const makeAttemptAtTopicHistory = () => {
-    return [ALL_TOPICS_CRUMB, {title: "Topic", to: "/topics/"}]
+    return [ALL_TOPICS_CRUMB]
 };
-
 
 export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, examBoard: EXAM_BOARD) => {
     if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
-        const [relatedConcepts, relatedQuestions] = filterAndSeparateRelatedContent(currentTopic.relatedContent, examBoard);
-        const orderedRelatedContent = relatedConcepts.concat(relatedQuestions);
-        const relatedContentIds = orderedRelatedContent.map((content) => content.id);
-        const nextIndex = relatedContentIds.indexOf(contentId) + 1;
-        if (nextIndex < relatedContentIds.length) {
-            const nextContent = orderedRelatedContent[nextIndex];
-            return {
-                title: nextContent.title as string,
-                to: `/${documentTypePathPrefix[nextContent.type as DOCUMENT_TYPE]}/${nextContent.id}`
-            };
+        if (isValidIdForTopic(contentId, currentTopic)) {
+            const [relatedConcepts, relatedQuestions] = filterAndSeparateRelatedContent(currentTopic.relatedContent, examBoard);
+            const orderedRelatedContent = relatedConcepts.concat(relatedQuestions);
+            const relatedContentIds = orderedRelatedContent.map((content) => content.id);
+            const nextIndex = relatedContentIds.indexOf(contentId) + 1;
+            if (nextIndex < relatedContentIds.length) {
+                const nextContent = orderedRelatedContent[nextIndex];
+                return {
+                    title: nextContent.title as string,
+                    to: `/${documentTypePathPrefix[nextContent.type as DOCUMENT_TYPE]}/${nextContent.id}`
+                };
+            }
         }
     }
 };
-
