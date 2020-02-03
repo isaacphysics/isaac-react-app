@@ -25,11 +25,13 @@ export const idIsPresent = (id: string, contents: {id?: string}[] | undefined) =
 
 export const determineTopicHistory = (currentTopic: CurrentTopicState, currentDocId: string) => {
     const result: LinkInfo[] = [];
-    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && currentTopic.title) {
+    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && currentTopic.title && currentTopic.relatedContent) {
         const relatedContent: (string | undefined)[] = [];
-        currentTopic.relatedContent && currentTopic.relatedContent.map(content => relatedContent.push(content.id));
+        currentTopic.relatedContent.map(content => relatedContent.push(content.id));
         result.push(ALL_TOPICS_CRUMB);
-        relatedContent.indexOf(currentDocId) > -1 && result.push({title: currentTopic.title, to: `/topics/${currentTopic.id.slice("topic_summary_".length)}`})
+        if (relatedContent.includes(currentDocId)) {
+            result.push({title: currentTopic.title, to: `/topics/${currentTopic.id.slice("topic_summary_".length)}`});
+        }
     }
     return result;
 };
