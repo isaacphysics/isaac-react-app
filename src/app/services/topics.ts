@@ -19,17 +19,17 @@ export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], e
     return [relatedConcepts, relatedQuestions];
 };
 
-export const idIsPresent = (id: string, contents: {id?: string}[] | undefined) => {
-    return contents && !!contents.filter((content) => content.id === id);
+const isValidIdForTopic = (contentId: string, currentTopic: CurrentTopicState) => {
+    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
+        return !!currentTopic.relatedContent.filter((content) => content.id === contentId);
+    }
 };
 
 export const determineTopicHistory = (currentTopic: CurrentTopicState, currentDocId: string) => {
     const result: LinkInfo[] = [];
     if (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && currentTopic.title && currentTopic.relatedContent) {
-        const relatedContent: (string | undefined)[] = [];
-        currentTopic.relatedContent.map(content => relatedContent.push(content.id));
         result.push(ALL_TOPICS_CRUMB);
-        if (relatedContent.includes(currentDocId)) {
+        if (isValidIdForTopic(currentDocId, currentTopic)) {
             result.push({title: currentTopic.title, to: `/topics/${currentTopic.id.slice("topic_summary_".length)}`});
         }
     }
@@ -40,12 +40,9 @@ export const makeAttemptAtTopicHistory = () => {
     return [ALL_TOPICS_CRUMB]
 };
 
-
 export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, examBoard: EXAM_BOARD) => {
-    const relatedContent: (string | undefined)[] = [];
     if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
-        currentTopic.relatedContent.map(content => relatedContent.push(content.id));
-        if (relatedContent.includes(contentId)) {
+        if (isValidIdForTopic(contentId, currentTopic)) {
             const [relatedConcepts, relatedQuestions] = filterAndSeparateRelatedContent(currentTopic.relatedContent, examBoard);
             const orderedRelatedContent = relatedConcepts.concat(relatedQuestions);
             const relatedContentIds = orderedRelatedContent.map((content) => content.id);
@@ -60,4 +57,3 @@ export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | 
         }
     }
 };
-
