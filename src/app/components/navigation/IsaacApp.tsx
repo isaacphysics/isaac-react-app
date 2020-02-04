@@ -124,6 +124,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/students" component={ForStudents} />
                     <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
                     <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
+                    <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
 
                     {/* Teacher pages */}
                     <TrackedRoute exact path="/teachers" component={ForTeachers} />

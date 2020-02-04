@@ -1,21 +1,9 @@
 import React, {useEffect} from 'react';
 import {bb} from "billboard.js";
-import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../../state/reducers";
-import {getAnsweredQuestionsByDate} from "../../../state/actions";
 import {NUMERIC_DATE} from "../DateString";
+import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
 
-export const ActivityGraph = () => {
-    const dispatch = useDispatch();
-    const user = useSelector((state: AppState) => state && state.user);
-    const answeredQuestionsByDate = useSelector((state: AppState) => state && state.answeredQuestionsByDate);
-
-    useEffect(() => {
-        if (user && user.loggedIn && user.id) {
-            dispatch(getAnsweredQuestionsByDate(user.id, 0, Date.now(), true));
-        }
-    }, [user]);
-
+export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDate: AnsweredQuestionsByDate}) => {
     const generateDateArray = (min: Date, max: Date) => {
         const current = new Date(min);
         const dates = [];
@@ -38,43 +26,24 @@ export const ActivityGraph = () => {
                     .map((date) => NUMERIC_DATE.format(date).split("/").reverse().join("-"));
             }
         }
-        var chart = bb.generate({
+        bb.generate({
             data: {
                 x: "x",
                 columns: [
                     ["x", ...selectedDates],
                     ["activity", ...selectedDates.map((date) => answeredQuestionsByDate ? answeredQuestionsByDate[date] || 0 : 0)]
                 ],
-                types: {
-                    activity: "area-spline"
-                },
-                colors: {
-                    activity: "#ffb53f"
-                },
+                types: {activity: "area-spline"},
+                colors: {activity: "#ffb53f"},
                 xFormat: "%Y-%m-%d"
             },
-            axis: {
-                x: {
-                    type: "timeseries",
-                    tick: {
-                        fit: false,
-                        count: 8
-                    }
-                }
-            },
-            zoom: {
-                enabled: true
-            },
-            legend: {
-                show: false
-            },
-            spline: {
-                interpolation: {
-                    type: "monotone-x"
-                }
-            },
+            axis: {x: {type: "timeseries", tick: {fit: false, count: 8}}},
+            zoom: {enabled: true},
+            legend: {show: false},
+            spline: {interpolation: {type: "monotone-x"}},
             bindto: "#activityGraph"
         });
     }, [answeredQuestionsByDate]);
+
     return <div id="activityGraph"/>
 };

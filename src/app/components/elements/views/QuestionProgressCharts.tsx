@@ -1,24 +1,19 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as RS from "reactstrap";
-import {LevelAttempts} from "../../../IsaacAppTypes";
+import {LevelAttempts} from "../../../../IsaacAppTypes";
 import bb from "billboard.js";
-import {
-    allTagIds,
-    getCategoryTags,
-    getDescendents,
-    getSubcategoryTags,
-} from "../../services/tags";
+import {allTagIds, getCategoryTags, getDescendents, getSubcategoryTags,} from "../../../services/tags";
 import Select from "react-select";
 import {ValueType} from "react-select/src/types";
-import {TAG_ID} from "../../services/constants";
+import {TAG_ID} from "../../../services/constants";
 
-interface QuestionProgressGraphsProps {
+interface QuestionProgressChartsProps {
     subId: string;
     questionsByTag: { [tag: string]: number };
     questionsByLevel: LevelAttempts<number>;
 }
 
-export const QuestionProgressGraphs = (props: QuestionProgressGraphsProps) => {
+export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     const {subId, questionsByTag, questionsByLevel} = props;
     const defaultSubcategoryChoiceTag = getSubcategoryTags(allTagIds)[0];
     const [subcategoryChoice, setSubcategoryChoice] = useState(defaultSubcategoryChoiceTag.id);
