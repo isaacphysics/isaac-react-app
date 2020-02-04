@@ -42,11 +42,9 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
     return <RS.Container id="my-progress" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="My Progress" />
         <RS.Card className="p-3 mt-4">
-            <RS.CardTitle tag="h2">
-                Question statistics
-            </RS.CardTitle>
 
             <RS.CardBody>
+                {/*<h2>Question statistics</h2>*/}
                 <RS.Row>
                     <RS.Col>
                         <AggregateQuestionStats userProgress={userProgress} />
@@ -56,6 +54,10 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                     {/*    <DailyStreakPanel userProgress={userProgress} />*/}
                     {/*</RS.Col>*/}
                 </RS.Row>
+
+                <div className="mt-2 mb-0 alert alert-warning text-center">
+                    More progress statistics coming soon.
+                </div>
 
                 {/* TODO FULL PROGRESS question breakdown */}
                 {/*<Tabs className={"my-3"}>*/}

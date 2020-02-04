@@ -5,12 +5,12 @@ interface ProgressBarProps {
     children: string;
 }
 
-export const ProgressBar = (props: ProgressBarProps) => {
-    const {percentage, children} = props;
-
+export const ProgressBar = ({percentage, children}: ProgressBarProps) => {
     return <div className="progress-bar-outer mb-2">
         <div className="progress-bar-inner" style={{width: `${percentage}%`}}>
-            <span className={"pl-2"}>{children}</span>
+            <span className="pl-3">
+                {children}
+            </span>
         </div>
     </div>
 };

@@ -19,40 +19,35 @@ export const AggregateQuestionStats = ({userProgress}: {userProgress?: UserProgr
     const partPercentageThisYear = safePercentage(partCorrectThisYear, partAttemptThisYear);
 
     return <div>
-        <RS.Row>
+        <h2 className="h4">Correct questions</h2>
+        <RS.Row className="mb-3">
             <RS.Col md={6}>
-                Questions completed correctly this academic year
-                <div className={"mt-2"}>
-                    <ProgressBar percentage={fullPercentageThisYear || 0}>
-                        {fullPercentageThisYear == null ? "No data" : `${fullCorrectThisYear} of ${fullAttemptThisYear}`}
-                    </ProgressBar>
-                </div>
+                <h3 className="h6">This academic year:</h3>
+                <ProgressBar percentage={fullPercentageThisYear || 0}>
+                    {fullPercentageThisYear == null ? "No data" : `${fullCorrectThisYear} of ${fullAttemptThisYear}`}
+                </ProgressBar>
             </RS.Col>
             <RS.Col md={6}>
-                Question parts completed correctly this academic year
-                <div className={"mt-2"}>
-                    <ProgressBar percentage={partPercentageThisYear || 0}>
-                        {partPercentageThisYear == null ? "No data" : `${partCorrectThisYear} of ${partAttemptThisYear}`}
-                    </ProgressBar>
-                </div>
+                <h3 className="h6">Since account creation:</h3>
+                <ProgressBar percentage={fullPercentage || 0}>
+                    {fullPercentage == null ? "No data" : `${fullCorrect} of ${fullAttempt}`}
+                </ProgressBar>
             </RS.Col>
         </RS.Row>
-        <RS.Row className="mt-3">
+
+        <h2 className="h4">Correct question parts</h2>
+        <RS.Row className="mb-3">
             <RS.Col md={6}>
-                Questions completed correctly of those attempted
-                <div className={"mt-2"}>
-                    <ProgressBar percentage={fullPercentage || 0}>
-                        {fullPercentage == null ? "No data" : `${fullCorrect} of ${fullAttempt}`}
-                    </ProgressBar>
-                </div>
+                <h3 className="h6">This academic year:</h3>
+                <ProgressBar percentage={partPercentageThisYear || 0}>
+                    {partPercentageThisYear == null ? "No data" : `${partCorrectThisYear} of ${partAttemptThisYear}`}
+                </ProgressBar>
             </RS.Col>
             <RS.Col md={6}>
-                Question parts correct of those attempted
-                <div className={"mt-2"}>
-                    <ProgressBar percentage={partPercentage || 0}>
-                        {partPercentage == null ? "No data" : `${partCorrect} of ${partAttempt}`}
-                    </ProgressBar>
-                </div>
+                <h3 className="h6">Since account creation:</h3>
+                <ProgressBar percentage={partPercentage || 0}>
+                    {partPercentage == null ? "No data" : `${partCorrect} of ${partAttempt}`}
+                </ProgressBar>
             </RS.Col>
         </RS.Row>
     </div>
