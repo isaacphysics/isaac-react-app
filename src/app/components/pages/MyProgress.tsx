@@ -14,7 +14,7 @@ import {Assignments} from "../elements/Assignments";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 import {isStaff, isTeacher} from "../../services/user";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
-import {COMPETITION_QUESTION_TARGET, IS_CS_PLATFORM} from "../../services/constants";
+import {IS_CS_PLATFORM} from "../../services/constants";
 import {withRouter} from "react-router-dom";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {Unauthorised} from "./Unauthorised";
@@ -63,7 +63,6 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
     const fullPercentageThisYear = safePercentage(fullCorrectThisYear, fullAttemptThisYear);
     const partPercentage = safePercentage(partCorrect, partAttempt);
     const partPercentageThisYear = safePercentage(partCorrectThisYear, partAttemptThisYear);
-    const academicYearQuestionTarget = !!fullCorrectThisYear && fullCorrectThisYear >= COMPETITION_QUESTION_TARGET;
 
     return <RS.Container id="my-progress" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="My Progress" />
@@ -79,7 +78,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                             Questions completed correctly this academic year
                         </RS.Row>
                         <RS.Row className={"mt-2"}>
-                            <ProgressBar percentage={fullPercentageThisYear || 0} targetAchieved={academicYearQuestionTarget}>
+                            <ProgressBar percentage={fullPercentageThisYear || 0}>
                                 {fullPercentageThisYear == null ? "No data" : `${fullCorrectThisYear} of ${fullAttemptThisYear}`}
                             </ProgressBar>
                         </RS.Row>
