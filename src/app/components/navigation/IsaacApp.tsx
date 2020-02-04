@@ -59,6 +59,7 @@ import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
+import {MyProgress} from "../pages/MyProgress";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {HeaderPhy} from "./HeaderPhy";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
@@ -122,7 +123,8 @@ export const IsaacApp = () => {
                     {/* Student pages */}
                     <TrackedRoute exact path="/students" component={ForStudents} />
                     <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
-                    <TrackedRoute exact path="/progress" component={ComingSoon} />
+                    <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
+                    <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
 
                     {/* Teacher pages */}
                     <TrackedRoute exact path="/teachers" component={ForTeachers} />

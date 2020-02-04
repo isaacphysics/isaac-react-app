@@ -89,9 +89,9 @@ export const NavigationBar = () => {
                         <DropdownItem tag={Link} to="/my_gameboards" className="pl-4 py-3 p-md-3">
                             My gameboards
                         </DropdownItem>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        <DropdownItem tag={Link} to="/progress" className="pl-4 py-3 p-md-3">
                             My progress
-                        </DropdownItemComingSoon>
+                        </DropdownItem>
                         {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
                         {/*    Problem-solving*/}
                         {/*</DropdownItemComingSoon>*/}
