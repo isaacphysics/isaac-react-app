@@ -55,7 +55,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                     {/*</RS.Col>*/}
                 </RS.Row>
 
-                <div className="mt-2 mb-0 alert alert-warning text-center">
+                <div className="mt-4 mb-0 alert alert-info text-center">
                     More progress statistics coming soon.
                 </div>
 
