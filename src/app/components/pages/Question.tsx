@@ -69,7 +69,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
                         <TempExamBoardPicker className="no-print text-right"/>
 
-                        {doc.supersededBy && !isStudent(user) && <div className="alert alert-primary">
+                        {doc.supersededBy && !isStudent(user) && <div className="alert alert-warning">
                             {isTeacher(user) && <React.Fragment>
                                 <strong>
                                     <span id="superseded-help" className="icon-help" />
@@ -94,7 +94,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                             <IsaacContent doc={doc}/>
                         </WithFigureNumbering>
 
-                        {doc.supersededBy && isStudent(user) && <div className="alert alert-primary">
+                        {doc.supersededBy && isStudent(user) && <div className="alert alert-warning">
                             This question {" "}
                             <RS.Button color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
                                 has been replaced
