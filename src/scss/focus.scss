@@ -6,6 +6,11 @@
 
 /** Focus styles **/
 
+//.book-chapter button:focus {
+//  //box-shadow: none;
+//  outline: 0.2rem solid $black;
+//}
+
 .form-control:focus {
   box-shadow: none;
   outline: 0.2rem solid $focus-blue;
@@ -69,6 +74,12 @@
 .btn-secondary:focus {
   box-shadow: 0 0 0 2pt black !important;
   border-radius: 8px;
+  outline: none !important;
+}
+
+.book-chapter:focus {
+  box-shadow: 0 0 0 2pt black !important;
+  border-radius: 1px;
   outline: none !important;
 }
 

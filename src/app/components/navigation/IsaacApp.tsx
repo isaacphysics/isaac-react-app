@@ -62,6 +62,11 @@ import {Quiz} from "../pages/Quiz";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {HeaderPhy} from "./HeaderPhy";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
+import {PhysicsSkills19} from "../pages/books/physics_skills_19";
+import {PhysBookGcse} from "../pages/books/phys_book_gcse";
+import {PhysicsSkills14} from "../pages/books/physics_skills_14";
+import {PreUniMaths} from "../pages/books/pre_uni_maths";
+import {Chemistry16} from "../pages/books/chemistry_16";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -159,6 +164,15 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/teaching_order" component={Generic} componentProps={{pageIdOverride: "teaching_order"}} />
                     <TrackedRoute exact path="/equality" component={Equality} />
                     <TrackedRoute exact path="/markdown" ifUser={isStaff} component={MarkdownBuilder} />
+
+                    {/* Books */}
+                    <TrackedRoute exact path="/books/physics_skills_19" component={PhysicsSkills19}/>
+                    <TrackedRoute exact path="/books/phys_book_gcse" component={PhysBookGcse}/>
+                    <TrackedRoute exact path="/books/physics_skills_14" component={PhysicsSkills14}/>
+                    <TrackedRoute exact path="/books/pre_uni_maths" component={PreUniMaths}/>
+                    <TrackedRoute exact path="/books/chemistry_16" component={Chemistry16}/>
+
+
 
                     {/* Support pages */}
                     <TrackedRoute exact path="/support/:type?/:category?" component={Support} />
