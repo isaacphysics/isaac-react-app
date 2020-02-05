@@ -79,15 +79,15 @@ function daysInMonth(month?: number, year?: number) {
 export const currentYear = new Date().getFullYear();
 
 function extractDay(date: Date | undefined) {
-    return date && date.getDate();
+    return date && date.getUTCDate();
 }
 
 function extractMonth(date: Date | undefined) {
-    return date && (date.getMonth() + 1);
+    return date && (date.getUTCMonth() + 1);
 }
 
 function extractYear(date: Date | undefined) {
-    return date && date.getFullYear();
+    return date && date.getUTCFullYear();
 }
 
 export const DateInput = (props: DateInputProps) => {
@@ -130,7 +130,7 @@ export const DateInput = (props: DateInputProps) => {
         const month = values.month.get();
         const day = values.day.get();
         if (year && month && day) {
-            return new Date(year, month - 1, day);
+            return new Date(Date.UTC(year, month - 1, day));
         }
     }
 
