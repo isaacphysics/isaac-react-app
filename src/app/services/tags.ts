@@ -61,7 +61,7 @@ const baseTags: BaseTag[] = [
     {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
     {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation},
     {id: TAG_ID.databases, title: "Databases", parent: TAG_ID.dataAndInformation, comingSoon: 'Apr 2020'},
-    {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, new: true},
+    {id: TAG_ID.bigData, title: "Big Data (AQA)", parent: TAG_ID.dataAndInformation, new: true},
 
     // Procedural programming topics
     {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.programmingFundamentals},
