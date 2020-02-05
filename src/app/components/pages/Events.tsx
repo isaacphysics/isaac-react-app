@@ -79,7 +79,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
             {/* Results */}
             <ShowLoading until={eventsState} thenRender={({events, total}) => <div className="my-4">
                 {/* Map */}
-                <div className="mb-3">
+                <div className="mb-3" hidden={total == 0 || (statusFilter === EventStatusFilter["My booked events"])}>
                     <InteractiveMap
                         getInfoWindow={(event) => {
                             return <div className="event-map-info">
