@@ -2,13 +2,13 @@ import React, {useMemo, useState} from "react";
 import {FreeTextRule, LoggedInUser} from "../../../IsaacAppTypes";
 import * as RS from "reactstrap";
 import {TestCaseDTO} from "../../../IsaacApiTypes";
-import {IsaacContent} from "../content/IsaacContent";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useDispatch, useSelector} from "react-redux";
 import {testQuestion} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {Tabs} from "../elements/Tabs";
 import {atLeastOne} from "../../services/validation";
+import {IsaacContent} from "../content/IsaacContent";
 
 interface AugmentedTestCase extends TestCaseDTO {
     match?: boolean;
@@ -93,7 +93,6 @@ function convertCsvToTestCases(testCasesCsv: string) {
         return {testCaseNumber: index, expected: expected === "true", choice: {type: "stringChoice", value: value.join(",")}};
     })
 }
-
 
 export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
     const dispatch = useDispatch();
@@ -236,6 +235,7 @@ export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
                                 <tbody>
                                     {testCases.map(testCase => {
                                         const testCaseResponse = testCaseResponseMap[testCaseHash(testCase)];
+                                        const matchFailure = !!testCaseResponse && testCaseResponse.match == false;
                                         return <tr key={testCase.testCaseNumber}>
                                             <td className="w-10 text-center align-middle">
                                                 <RS.Button color="link" onClick={() => setTestCases(testCases.map(tc => testCase == tc ? {...tc, expected: !tc.expected} : tc))}>
@@ -253,16 +253,16 @@ export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
                                                 />
                                             </td>
 
-                                            <td className="bg-light w-10 text-center align-middle">
+                                            <td className={`w-10 text-center align-middle ${matchFailure ? "alert-danger" : "bg-light"}`}>
                                                 {testCaseResponse && checkMark(testCaseResponse.correct)}
                                             </td>
-                                            <td className="bg-light align-middle">
+                                            <td className={`align-middle ${matchFailure ? "alert-danger" : "bg-light"}`}>
                                                 {testCaseResponse?.explanation && <IsaacContent doc={testCaseResponse.explanation}/>}
                                             </td>
-                                            <td className="bg-light w-10 text-center align-middle">
+                                            <td className={`w-10 text-center align-middle ${matchFailure ? "alert-danger" : "bg-light"}`}>
                                                 {testCaseResponse && checkMark(testCaseResponse.match)}
                                             </td>
-                                            <td className="bg-light">
+                                            <td className={`${matchFailure ? "alert-danger" : "bg-light"}`}>
                                                 <button
                                                     type="button" className="close" aria-label="Delete matching rule"
                                                     onClick={() => setTestCases(testCases.filter(testCaseInState => testCase !== testCaseInState))}
