@@ -137,11 +137,35 @@ export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
                                         <td>
                                             <RS.Label className="mb-3 w-100">
                                                 Value
-                                                <RS.Input
-                                                    className="w-100" type="text" value={choice.value}
-                                                    onChange={e => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, value: e.target.value} : c))}
-                                                />
+                                                <div className="d-flex align-items-center">
+                                                    <RS.Input
+                                                        className="w-100" type="text" value={choice.value}
+                                                        onChange={e => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, value: e.target.value} : c))}
+                                                    />
+                                                    <span id={`choice-help-${choice.choiceNumber}`} className="icon-help mr-2" />
+                                                </div>
                                             </RS.Label>
+                                            <RS.UncontrolledTooltip target={`choice-help-${choice.choiceNumber}`} placement="bottom" innerClassName="">
+                                                <div className="text-left">
+                                                    <RS.Table>
+                                                        <thead>
+                                                            <tr><th className="text-light" colSpan={2}>In-word wildcards:</th></tr>
+                                                        </thead>
+                                                        <tr>
+                                                            <td><strong><code className="text-dark">|</code></strong></td>
+                                                            <td className="text-light">Separate an OR list of word choices.</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong><code className="text-dark">.</code></strong></td>
+                                                            <td className="text-light">Match only one character.</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><strong><code className="text-dark">*</code></strong></td>
+                                                            <td className="text-light">Match zero or more characters.</td>
+                                                        </tr>
+                                                    </RS.Table>
+                                                </div>
+                                            </RS.UncontrolledTooltip>
                                             <RS.Row>
                                                 <RS.Col xs={3} className="text-center">
                                                     <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, caseInsensitive: !c.caseInsensitive} : c))}>
