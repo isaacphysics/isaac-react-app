@@ -73,10 +73,6 @@ type BoardTableProps = MyBoardsPageProps & {
 const Board = (props: BoardTableProps) => {
     const {user, board, setSelectedBoards, selectedBoards, boardView} = props;
 
-    const segueEnvironment = useSelector((state: AppState) =>
-        (state && state.constants && state.constants.segueEnvironment) || "unknown"
-    );
-
     const boardLink = `/gameboards#${board.id}`;
 
     const dispatch = useDispatch();

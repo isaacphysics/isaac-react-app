@@ -102,10 +102,6 @@ const Board = (props: BoardProps) => {
     const {user, board, loadGroupsForBoard, deleteBoard, unassignBoard, showToast, location: {hash}} = props;
     const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
 
-    const segueEnvironment = useSelector((state: AppState) =>
-        (state && state.constants && state.constants.segueEnvironment) || "unknown"
-    );
-
     useEffect( () => {
         loadGroupsForBoard(board);
     }, [board.id]);
