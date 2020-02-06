@@ -1,4 +1,4 @@
-import {SortOrder, tagExamboardMap} from "./constants";
+import {SortOrder, tagExamBoardMap} from "./constants";
 import {orderBy} from "lodash";
 import {getDescendents, Tag} from "./tags";
 import {ContentSummaryDTO, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
@@ -89,7 +89,7 @@ export const groupTagSelectionsByParent = (parent: Tag) => {
 };
 
 export const convertExamBoardToOption = (examBoard: string) => {
-    return {value: examBoard, label: tagExamboardMap[examBoard]};
+    return {value: examBoard, label: tagExamBoardMap[examBoard]};
 };
 
 export const multiSelectOnChange = (setValue: Dispatch<SetStateAction<string[]>>) => (e: ValueType<{value: string; label: string}>) => {

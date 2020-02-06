@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {GoogleMap, InfoWindow, LoadScript, Marker, MarkerClusterer} from "@react-google-maps/api";
+import {GoogleMap, InfoWindow, Marker, MarkerClusterer} from "@react-google-maps/api";
 import {EventMapData} from "../../../IsaacAppTypes";
 
 interface InteractiveMapProps {
@@ -13,39 +13,34 @@ export const InteractiveMap = (props: InteractiveMapProps) => {
     const [mapCenter, setMapCenter] = useState({lat: 52.205, lng: 0.119});
     const [selectedMarkerID, setSelectedMarkerID] = useState();
     const [infoOpen, setInfoOpen] = useState(false);
-    return  <LoadScript
-        id="script-loader"
-        googleMapsApiKey="AIzaSyBcVr1HZ_JUR92xfQZSnODvvlSpNHYbi4Y"
+    return <GoogleMap
+        id='events-map'
+        zoom={5}
+        center={mapCenter}
     >
-        <GoogleMap
-            id='events-map'
-            zoom={5}
-            center={mapCenter}
-        >
-            <MarkerClusterer maxZoom={11}>
-                {
-                    (clusterer) => locationData.map((location, index) => <Marker
-                        key={index}
-                        position={{lat: location.latitude, lng: location.longitude}}
-                        clusterer={clusterer}
-                        onLoad={(marker) => {
-                            setMarkerMap((prevState) => {
-                                return {...prevState, [index]: marker}
-                            });
-                        }}
-                        onClick={() => {
-                            setInfoOpen(false);
-                            selectedMarkerID != index ? setSelectedMarkerID(index) : setSelectedMarkerID(null);
-                            setInfoOpen(true);
-                        }}
-                    />)
-                }
-            </MarkerClusterer>
-            {infoOpen && selectedMarkerID != null && <InfoWindow
-                anchor={markerMap[selectedMarkerID]}
-                onCloseClick={() => setInfoOpen(false)}>
-                {getInfoWindow(locationData[selectedMarkerID])}
-            </InfoWindow>}
-        </GoogleMap>
-    </LoadScript>
+        <MarkerClusterer maxZoom={11}>
+            {
+                (clusterer) => locationData.map((location, index) => <Marker
+                    key={index}
+                    position={{lat: location.latitude, lng: location.longitude}}
+                    clusterer={clusterer}
+                    onLoad={(marker) => {
+                        setMarkerMap((prevState) => {
+                            return {...prevState, [index]: marker}
+                        });
+                    }}
+                    onClick={() => {
+                        setInfoOpen(false);
+                        selectedMarkerID != index ? setSelectedMarkerID(index) : setSelectedMarkerID(null);
+                        setInfoOpen(true);
+                    }}
+                />)
+            }
+        </MarkerClusterer>
+        {infoOpen && selectedMarkerID != null && <InfoWindow
+            anchor={markerMap[selectedMarkerID]}
+            onCloseClick={() => setInfoOpen(false)}>
+            {getInfoWindow(locationData[selectedMarkerID])}
+        </InfoWindow>}
+    </GoogleMap>
 };

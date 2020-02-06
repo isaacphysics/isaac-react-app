@@ -161,6 +161,10 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST}
+    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; answeredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
+    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE}
@@ -623,6 +627,10 @@ export interface UserProgress {
     totalQuestionsCorrect?: number;
     totalQuestionPartsCorrect: number;
     totalQuestionPartsAttempted?: number;
+    totalQuestionsCorrectThisAcademicYear?: number;
+    totalQuestionsAttemptedThisAcademicYear?: number;
+    totalQuestionPartsCorrectThisAcademicYear?: number;
+    totalQuestionPartsAttemptedThisAcademicYear?: number;
     attemptsByType?: { [type: string]: number };
     correctByType?: { [type: string]: number };
     attemptsByTag?: { [tag: string]: number };
