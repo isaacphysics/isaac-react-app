@@ -1,5 +1,4 @@
-import * as RS from "reactstrap";
-import {Col, Row} from "reactstrap";
+import {Col, Row, Container} from "reactstrap";
 import React from "react";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {STUDENTS_CRUMB, SUBJECTS} from "../../../services/constants";
@@ -12,7 +11,7 @@ export const PreUniMaths = () => {
         The Isaac Physics Pre-University Mathematics for Sciences book
     </span>;
 
-    return <RS.Container className="maths">
+    return <Container className="maths">
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb currentPageTitle="Pre-University Mathematics for Sciences" intermediateCrumbs={[STUDENTS_CRUMB]} help={pageHelp} />
@@ -53,5 +52,5 @@ export const PreUniMaths = () => {
                 </Row>
             </div>
         </Col>
-    </RS.Container>
+    </Container>
 };
