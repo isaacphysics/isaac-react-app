@@ -59,7 +59,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                         <EditContentButton canonicalSourceFile={EDITOR_URL + doc.canonicalSourceFile} />
                     }
                     <div className="question-actions question-actions-leftmost mt-3">
-                        <ShareLink linkUrl={segueEnvironment !== "DEV" ? `https://isaaccs.org/q/${doc.id}` : `${window.location.origin}/questions/${questionId}`}/>
+                        <ShareLink linkUrl={`/questions/${questionId}`}/>
                     </div>
                     <div className="question-actions mt-3 not_mobile">
                         <PrintButton questionPage={true}/>
