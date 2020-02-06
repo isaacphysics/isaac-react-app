@@ -9,7 +9,7 @@ import {BookChapter} from "../../elements/BookChapter";
 export const PhysicsSkills19 = () => {
 
     const pageHelp = <span>
-        The Isaac Physics Mastering Essential Pre-University Physics book
+        The Isaac Physics Mastering Essential Pre-University Physics book 3rd edition
     </span>;
 
     return <RS.Container>
