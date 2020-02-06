@@ -3,7 +3,7 @@ import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {connect, useDispatch, useSelector} from "react-redux";
-import {adminModifyUserRoles, adminUserSearch, adminUserDelete, getUserIdSchoolLookup} from "../../state/actions";
+import {adminModifyUserRoles, adminUserDelete, adminUserSearch, getUserIdSchoolLookup} from "../../state/actions";
 import {AdminUserSearchState, AppState} from "../../state/reducers";
 import {Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
@@ -206,7 +206,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
         {/* Result panel */}
         <RS.Card className="my-4">
             <RS.CardTitle tag="h4" className="pl-4 pt-3 mb-0">
-                Manage Users ({searchResults && searchResults.length || 0})<br />
+                Manage users ({searchResults && searchResults.length || 0})<br />
                 Selected ({selectedUserIds.length})
             </RS.CardTitle>
 
@@ -272,10 +272,14 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                                         }}
                                                     />
                                                 </td>
-                                                <td>
-                                                    {/*View*/}
+                                                <td className="text-center">
+                                                    <RS.Button color="secondary btn-sm m-1" tag={Link} to={`/progress/${user.id}`} target="_blank">
+                                                        View
+                                                    </RS.Button>
                                                     {/*Edit*/}
-                                                    <RS.Input type="button" value="Delete" onClick={() => deleteUser(user.id)} className="btn btn-sm btn-secondary border-0 p-0"/>
+                                                    <RS.Button color="secondary btn-sm m-1" onClick={() => deleteUser(user.id)}>
+                                                        Delete
+                                                    </RS.Button>
                                                 </td>
                                                 <td>{user.familyName}, {user.givenName}</td>
                                                 <td>{user.email}</td>

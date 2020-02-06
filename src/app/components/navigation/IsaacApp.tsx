@@ -60,8 +60,11 @@ import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
+import {MyProgress} from "../pages/MyProgress";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {HeaderPhy} from "./HeaderPhy";
+import {MarkdownBuilder} from "../pages/MarkdownBuilder";
+import {LoadScript} from "@react-google-maps/api";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -80,7 +83,10 @@ export const IsaacApp = () => {
 
     // Render
     return <Router history={history}>
-        <React.Fragment>
+        <LoadScript
+            id="script-loader"
+            googleMapsApiKey="AIzaSyBcVr1HZ_JUR92xfQZSnODvvlSpNHYbi4Y"
+        >
             {{[SITE.PHY]: <HeaderPhy />, [SITE.CS]: <HeaderCS />}[SITE_SUBJECT]}
             <Toasts />
             <ActiveModals />
@@ -122,7 +128,8 @@ export const IsaacApp = () => {
                     {/* Student pages */}
                     <TrackedRoute exact path="/students" component={ForStudents} />
                     <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
-                    <TrackedRoute exact path="/progress" component={ComingSoon} />
+                    <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
+                    <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
 
                     {/* Teacher pages */}
                     <TrackedRoute exact path="/teachers" component={ForTeachers} />
@@ -158,12 +165,13 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/coming_soon" component={ComingSoon} />
                     <TrackedRoute exact path="/teaching_order" component={Generic} componentProps={{pageIdOverride: "teaching_order"}} />
 
+                    {/* Builder pages */}
+                    <TrackedRoute exact path="/equality" component={Equality} />
+                    <TrackedRoute exact path="/markdown" ifUser={isStaff} component={MarkdownBuilder} />
+                    <TrackedRoute exact path="/free_text" ifUser={isStaff} component={FreeTextBuilder} />
+
                     {/* Support pages */}
                     <TrackedRoute exact path="/support/:type?/:category?" component={Support} />
-
-                    {/* Test pages */}
-                    <TrackedRoute exact path="/equality" component={Equality} />
-                    <TrackedRoute exact path="/free_text" ifUser={isStaff} component={FreeTextBuilder} />
 
                     {/* Error pages */}
                     <Route component={NotFound} />
@@ -171,6 +179,6 @@ export const IsaacApp = () => {
             </main>
             <Footer />
             <ConsistencyErrorModal consistencyError={consistencyError} />
-        </React.Fragment>
+        </LoadScript>
     </Router>;
 };

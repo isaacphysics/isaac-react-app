@@ -9,11 +9,13 @@ import {
     AppQuestionDTO,
     AugmentedEvent,
     ContentErrorsResponse,
+    EventMapData,
     EventOverview,
     GroupMembershipDetailDTO,
     isValidatedChoice,
     LoggedInUser,
     NOT_FOUND_TYPE,
+    PrintingSettings,
     TemplateEmail,
     Toast,
     UserPreferencesDTO,
@@ -21,6 +23,7 @@ import {
     UserSchoolLookup
 } from "../../IsaacAppTypes";
 import {
+    AnsweredQuestionsByDate,
     AssignmentDTO,
     ContentDTO,
     ContentSummaryDTO,
@@ -309,6 +312,21 @@ export const testQuestions = (testQuestions: TestQuestionsState = null, action: 
     }
 };
 
+type AnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
+export const answeredQuestionsByDate = (answeredQuestionsByDateState: AnsweredQuestionsByDateState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST: {
+            return null;
+        }
+        case ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
+            return action.answeredQuestionsByDate;
+        }
+        default: {
+            return answeredQuestionsByDateState;
+        }
+    }
+};
+
 type GameboardEditorQuestionsState = ContentSummaryDTO[] | null;
 export const gameboardEditorQuestions = (gameboardEditorQuestions: GameboardEditorQuestionsState = null, action: Action) => {
     switch(action.type) {
@@ -467,6 +485,18 @@ export const eventOverviews = (eventOverviews: EventOverviewsState = null, actio
             return [...action.eventOverviews];
         default:
             return eventOverviews;
+    }
+};
+
+type EventMapDataState = EventMapData[] | null;
+export const eventMapData = (eventMapData: EventMapDataState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_MAP_DATA_REQUEST:
+            return null;
+        case ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS:
+            return [...action.eventMapData];
+        default:
+            return eventMapData;
     }
 };
 
@@ -772,6 +802,19 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
     }
 };
 
+export type PrintingSettingsState = PrintingSettings | null;
+export const printingSettings = (printingSettingsState: PrintingSettingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.PRINTING_SET_HINTS: {
+            return {...printingSettingsState, hintsEnabled: action.hintsEnabled};
+        }
+        default: {
+            return printingSettingsState;
+        }
+    }
+};
+
+
 const appReducer = combineReducers({
     user,
     userAuthSettings,
@@ -788,6 +831,7 @@ const appReducer = combineReducers({
     constants,
     doc,
     questions,
+    answeredQuestionsByDate,
     currentTopic,
     currentGameboard,
     tempExamBoard,
@@ -806,10 +850,12 @@ const appReducer = combineReducers({
     events,
     currentEvent,
     eventOverviews,
+    eventMapData,
     eventBookings,
     fragments,
     glossaryTerms,
-    testQuestions
+    testQuestions,
+    printingSettings
 });
 
 export type AppState = undefined | {
@@ -827,6 +873,7 @@ export type AppState = undefined | {
     groupMemberships: GroupMembershipsState;
     doc: DocState;
     questions: QuestionsState;
+    answeredQuestionsByDate: AnsweredQuestionsByDateState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
     tempExamBoard: TempExamBoardState;
@@ -846,8 +893,10 @@ export type AppState = undefined | {
     events: EventsState;
     currentEvent: CurrentEventState;
     eventOverviews: EventOverviewsState;
+    eventMapData: EventMapDataState;
     eventBookings: EventBookingsState;
     fragments: FragmentsState;
+    printingSettings: PrintingSettingsState;
     glossaryTerms: GlossaryTermsState;
     testQuestions: TestQuestionsState;
 }

@@ -65,8 +65,11 @@ declare module '*.module.sass' {
 
 // TODO check if correctly versioned types have been added
 declare module "react-router-dom";
+declare module "react-select";
+declare module "react-select/creatable";
 declare module "bootstrap";
 declare module "math-random-seed";
 
 declare var MathJax: any;
 declare var ISAAC_SITE: string;
+declare var REACT_APP_API_VERSION: string;

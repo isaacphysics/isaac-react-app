@@ -17,6 +17,8 @@ import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
 import {isStudent, isTeacher} from "../../services/user";
+import {ShareLink} from "../elements/ShareLink";
+import {PrintButton} from "../elements/PrintButton";
 import {doc as selectDoc} from "../../state/selectors";
 
 interface QuestionPageProps {
@@ -52,14 +54,22 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     collectionType={navigation.collectionType}
                 />
-                {segueEnvironment === "DEV" && doc.canonicalSourceFile &&
-                    <EditContentButton canonicalSourceFile={EDITOR_URL + doc.canonicalSourceFile} />
-                }
-                <Row>
+                <RS.Row className="no-print">
+                    {segueEnvironment === "DEV" && doc.canonicalSourceFile &&
+                        <EditContentButton canonicalSourceFile={EDITOR_URL + doc.canonicalSourceFile} />
+                    }
+                    <div className="question-actions question-actions-leftmost mt-3">
+                        <ShareLink linkUrl={`${window.location.origin}/questions/${questionId}`}/>
+                    </div>
+                    <div className="question-actions mt-3 not_mobile">
+                        <PrintButton questionPage={true}/>
+                    </div>
+                </RS.Row>
+                <Row className="question-content-container">
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
-                        <TempExamBoardPicker className="text-right"/>
+                        <TempExamBoardPicker className="no-print text-right"/>
 
-                        {doc.supersededBy && !isStudent(user) && <div className="alert alert-primary">
+                        {doc.supersededBy && !isStudent(user) && <div className="alert alert-warning">
                             {isTeacher(user) && <React.Fragment>
                                 <strong>
                                     <span id="superseded-help" className="icon-help" />
@@ -84,7 +94,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                             <IsaacContent doc={doc}/>
                         </WithFigureNumbering>
 
-                        {doc.supersededBy && isStudent(user) && <div className="alert alert-primary">
+                        {doc.supersededBy && isStudent(user) && <div className="alert alert-warning">
                             This question {" "}
                             <RS.Button color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
                                 has been replaced

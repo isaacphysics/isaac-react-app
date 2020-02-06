@@ -4,7 +4,7 @@ import queryString from "query-string";
 import {fetchTopicSummary, loadGameboard} from "../state/actions";
 import {useDispatch, useSelector} from 'react-redux'
 import {AppState} from "../state/reducers";
-import {determineGameboardHistory, determineNextGameboardItem, makeAttemptAtGameboardHistory} from "./gameboards";
+import {determineGameboardHistory, determineNextGameboardItem} from "./gameboards";
 import {NOT_FOUND, TAG_ID} from "./constants";
 import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopicHistory} from "./topics";
 import {useCurrentExamBoard} from "./examBoard";
@@ -39,7 +39,7 @@ export const useNavigation = (currentDocId: string): PageNavigation => {
     if (queryParams.board) {
         const gameboardHistory = (currentGameboard && currentGameboard != 404 && queryParams.board === currentGameboard.id) ?
             determineGameboardHistory(currentGameboard) :
-            makeAttemptAtGameboardHistory(queryParams.board as string);
+            [];
         return {
             collectionType: "Gameboard",
             breadcrumbHistory: gameboardHistory,
@@ -51,7 +51,7 @@ export const useNavigation = (currentDocId: string): PageNavigation => {
 
     if (queryParams.topic) {
         const topicHistory = (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && queryParams.topic === currentTopic.id.slice("topic_summary_".length)) ?
-            determineTopicHistory(currentTopic) :
+            determineTopicHistory(currentTopic, currentDocId) :
             makeAttemptAtTopicHistory();
         return {
             collectionType: "Topic",
