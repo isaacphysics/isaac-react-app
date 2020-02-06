@@ -36,7 +36,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {TEACHERS_CRUMB} from "../../services/constants";
 import {formatBoardOwner} from "../../services/gameboards";
-import {connect, useSelector} from "react-redux";
+import {connect} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 
