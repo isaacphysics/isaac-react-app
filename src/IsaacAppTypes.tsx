@@ -1,6 +1,6 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
-import {ContentDTO, FreeTextRuleDTO, TestCaseDTO} from "./IsaacApiTypes";
+import {ChoiceDTO, ContentBase, TestCaseDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 
 export type Action =
@@ -610,15 +610,19 @@ export interface UserProgress {
     userDetails?: ApiTypes.UserSummaryDTO;
 }
 
-export interface FreeTextRule extends FreeTextRuleDTO {
+export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
+
+export type LevelAttempts<T> = { [level in Levels]?: T; }
+
+export interface Choice extends ChoiceDTO {
     correct?: boolean;
-    explanation?: ContentDTO;
+    explanation?: ContentBase;
+}
+
+export interface FreeTextRule extends Choice {
     caseInsensitive?: boolean;
     allowsAnyOrder?: boolean;
     allowsExtraWords?: boolean;
     allowsMisspelling?: boolean;
 }
 
-export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
-
-export type LevelAttempts<T> = { [level in Levels]?: T; }

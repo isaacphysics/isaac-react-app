@@ -1,13 +1,14 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {ChoiceDTO, EventBookingDTO, GameboardDTO, TestCaseDTO} from "../../IsaacApiTypes";
+import {EventBookingDTO, GameboardDTO, TestCaseDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
     AdditionalInformation,
     ATTENDANCE,
     BoardOrder,
+    Choice,
     EmailUserRoles,
     LoggedInUser,
     QuestionSearchQuery,
@@ -197,8 +198,8 @@ export const api = {
         answer: (id: string, answer: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
         },
-        testFreeTextQuestion: (choices: ChoiceDTO[], testCases: TestCaseDTO[]) => {
-            return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {choices, testCases});
+        testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
+            return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
         }
     },
     concepts: {
