@@ -12,6 +12,7 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
+import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -19,6 +20,7 @@ interface UserDetailsProps {
     subjectInterests: SubjectInterests;
     setSubjectInterests: (si: SubjectInterests) => void;
     submissionAttempted: boolean;
+    userAuthSettings: UserAuthenticationSettingsDTO | null;
 }
 
 export const UserDetails = (props: UserDetailsProps) => {
@@ -33,6 +35,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         validateUserGender(userToUpdate) &&
         validateUserSchool(userToUpdate) &&
         validateSubjectInterests(subjectInterests);
+
+
 
     return <CardBody className="pt-0">
         <Row>
@@ -95,7 +99,6 @@ export const UserDetails = (props: UserDetailsProps) => {
         <Row>
             <Col md={6}>
                 <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
-                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
             <Col md={6}>
                 <FormGroup>
@@ -116,20 +119,18 @@ export const UserDetails = (props: UserDetailsProps) => {
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>
                 </FormGroup>
+            </Col>
+        </Row>
+        <Row>
+            <Col md={6}>
+                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+            </Col>
+            <Col md={6}>
                 <div className="mt-5 pt-1">
                     <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
                 </div>
             </Col>
         </Row>
-
-        {/*<Row>*/}
-        {/*    <Col md={6}>*/}
-        {/*        <FormGroup>*/}
-        {/*            <Label htmlFor="linked-accounts">Linked Accounts</Label>*/}
-        {/*            <Row>Placeholder</Row> /!* TODO add linked account control *!/*/}
-        {/*        </FormGroup>*/}
-        {/*    </Col>*/}
-        {/*</Row>*/}
 
         {userToUpdate && userToUpdate.role == "STUDENT" && <Row>
             <Col className="text-muted text-center mt-2">

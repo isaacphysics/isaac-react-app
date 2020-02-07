@@ -17,7 +17,7 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
         </Link>
     </div>;
 
-    return <div className="mt-4 d-flex justify-content-between align-items-stretch">
+    return <div className="mt-4 d-flex justify-content-between align-items-stretch no-print">
         {backToCollectionLink}
         {nextItemLink}
     </div>
