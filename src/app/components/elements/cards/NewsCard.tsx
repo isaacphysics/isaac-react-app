@@ -8,7 +8,7 @@ import {apiHelper} from "../../../services/api";
 export const NewsCard = ({newsItem}: {newsItem: IsaacPodDTO}) => {
     const {title, value, image, url} = newsItem;
 
-    return <RS.Card className={classnames({'card-neat': true, 'card-news': true, 'news-carousel': true, 'm-4': true})}>
+    return <RS.Card className={classnames({'card-neat': true, 'news-carousel': true, 'm-4': true})}>
         {image && <div className={'card-image'}>
             <RS.CardImg
                 className={'news-card-image'}
@@ -18,7 +18,7 @@ export const NewsCard = ({newsItem}: {newsItem: IsaacPodDTO}) => {
             />
         </div>}
         <RS.CardBody className="d-flex flex-column">
-            <RS.CardText className="m-0 my-auto">
+            <RS.CardText className="m-0 mb-auto">
                 <span className="d-block my-2">
                     <h3 className="card-title">
                         {value}
@@ -27,7 +27,7 @@ export const NewsCard = ({newsItem}: {newsItem: IsaacPodDTO}) => {
             </RS.CardText>
             <RS.CardText>
                 <Link className="focus-target" to={`${url}`}>
-                    Read More
+                    Read more
                 </Link>
             </RS.CardText>
         </RS.CardBody>

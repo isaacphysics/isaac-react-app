@@ -14,7 +14,7 @@ export const NewsCarousel = () => {
     }, []);
 
     return <ShowLoading until={newsState} thenRender={({news}) => <div>
-        <ResponsiveCarousel groupingLimit={2}>
+        <ResponsiveCarousel groupingLimit={3}>
             {news.map((newsItem, index) => <NewsCard newsItem={newsItem} key={index} />)}
         </ResponsiveCarousel>
     </div>} />
