@@ -422,7 +422,6 @@ export const events = (events: EventsState = null, action: Action) => {
 
 type NewsState = {news: IsaacPodDTO[]} | null;
 export const news = (news: NewsState = null, action: Action) => {
-    const currentNews = news ? news.news : [];
     switch (action.type) {
         case ACTION_TYPE.NEWS_RESPONSE_SUCCESS:
             return {news: Array.from(action.theNews)};

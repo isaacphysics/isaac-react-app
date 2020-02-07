@@ -6,7 +6,7 @@ import {IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper} from "../../../services/api";
 
 export const NewsCard = ({newsItem}: {newsItem: IsaacPodDTO}) => {
-    const {id, title, value, image, url} = newsItem;
+    const {title, value, image, url} = newsItem;
 
     return <RS.Card className={classnames({'card-neat': true, 'card-news': true, 'news-carousel': true, 'm-4': true})}>
         {image && <div className={'card-image'}>
