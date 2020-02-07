@@ -1358,6 +1358,18 @@ export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dis
     }
 };
 
+export const getNewsPodList = (subject: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.NEWS_REQUEST});
+        const response = await api.news.get(subject);
+        const newsList = response.data.results;
+        dispatch({type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS, theNews: newsList})
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.NEWS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Unable to display news", e));
+    }
+}
+
 export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST});
