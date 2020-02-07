@@ -11,8 +11,10 @@ export const NewsCard = ({newsItem}: {newsItem: IsaacPodDTO}) => {
     return <RS.Card className={classnames({'card-neat': true, 'card-news': true, 'news-carousel': true, 'm-4': true})}>
         {image && <div className={'card-image'}>
             <RS.CardImg
-                className={'news-card-image'} top
-                src={image.src && apiHelper.determineImageUrl(image.src)} alt={image.altText || `Illustration for ${title}`}
+                className={'news-card-image'}
+                top
+                src={image.src && apiHelper.determineImageUrl(image.src)}
+                alt={image.altText || `Illustration for ${title}`}
             />
         </div>}
         <RS.CardBody className="d-flex flex-column">
