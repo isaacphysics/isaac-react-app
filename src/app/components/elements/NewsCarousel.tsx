@@ -16,7 +16,7 @@ export const NewsCarousel = () => {
 
     return <ShowLoading until={newsState} thenRender={({news}) => <div>
         <ResponsiveCarousel groupingLimit={3}>
-            {newsState?.news?.sort((a: IsaacPodDTO, b: IsaacPodDTO) => {
+            {news?.sort((a: IsaacPodDTO, b: IsaacPodDTO) => {
                 if (a.id && b.id) {
                     if (a.id > b.id) {
                         return 1;
@@ -25,8 +25,6 @@ export const NewsCarousel = () => {
                     if (a.id <b.id) {
                         return -1;
                     }
-
-                    return 0;
                 }
 
                 return 0;
