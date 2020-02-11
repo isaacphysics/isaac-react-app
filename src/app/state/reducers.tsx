@@ -39,7 +39,8 @@ import {
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
     UserSummaryWithGroupMembershipDTO,
-    GlossaryTermDTO
+    GlossaryTermDTO,
+    IsaacPodDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
@@ -434,6 +435,16 @@ export const events = (events: EventsState = null, action: Action) => {
             return null;
         default:
             return events;
+    }
+};
+
+type NewsState = {news: IsaacPodDTO[]} | null;
+export const news = (news: NewsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.NEWS_RESPONSE_SUCCESS:
+            return {news: Array.from(action.theNews)};
+        default:
+            return news;
     }
 };
 
@@ -836,6 +847,7 @@ const appReducer = combineReducers({
     assignmentsByMe,
     progress,
     events,
+    news,
     currentEvent,
     eventOverviews,
     eventMapData,
@@ -878,6 +890,7 @@ export type AppState = undefined | {
     assignmentsByMe: AssignmentsState;
     progress: ProgressState;
     events: EventsState;
+    news: NewsState;
     currentEvent: CurrentEventState;
     eventOverviews: EventOverviewsState;
     eventMapData: EventMapDataState;
