@@ -1,7 +1,7 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 import {AuthenticationProvider} from "./IsaacApiTypes";
+import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -557,6 +557,15 @@ export interface AdditionalInformation {
     emergencyNumber?: string;
     authorisation?: string;
     authorisationOther?: string;
+}
+
+export interface Credentials {
+    email: string;
+    password: string;
+}
+
+export interface PaddedCredentials extends Credentials {
+    _randomPadding: string;
 }
 
 export interface ZxcvbnResult {

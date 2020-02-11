@@ -7,11 +7,11 @@ import {
     ACTION_TYPE,
     API_REQUEST_FAILURE_MESSAGE,
     DOCUMENT_TYPE,
+    EventStatusFilter,
+    EventTypeFilter,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
-    EventStatusFilter,
-    TAG_ID,
-    EventTypeFilter
+    TAG_ID
 } from "../services/constants";
 import {
     Action,
@@ -23,6 +23,7 @@ import {
     AppGroupMembership,
     ATTENDANCE,
     BoardOrder,
+    Credentials,
     EmailUserRoles,
     LoggedInUser,
     LoggedInValidationUser,
@@ -36,14 +37,14 @@ import {
     AuthenticationProvider,
     ChoiceDTO,
     GameboardDTO,
+    GlossaryTermDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
     RegisteredUserDTO,
     Role,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO,
-    GlossaryTermDTO
+    UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -278,12 +279,12 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const logInUser = (provider: AuthenticationProvider, params: {email: string; password: string}) => async (dispatch: Dispatch<Action>) => {
+export const logInUser = (provider: AuthenticationProvider, credentials: Credentials) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
     persistence.remove(KEY.AFTER_AUTH_PATH);
     try {
-        const result = await api.authentication.login(provider, params);
+        const result = await api.authentication.login(provider, credentials);
         await dispatch(requestCurrentUser() as any); // Request user preferences
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         history.push(afterAuthPath);
@@ -313,7 +314,7 @@ export const verifyPasswordReset = (token: string | null) => async (dispatch: Di
     }
 };
 
-export const handlePasswordReset = (params: {token: string | null; password: string | null}) => async (dispatch: Dispatch<Action>) => {
+export const handlePasswordReset = (params: {token: string; password: string}) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
         await api.users.handlePasswordReset(params);
