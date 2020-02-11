@@ -14,13 +14,16 @@ import {
     isValidatedChoice,
     LoggedInUser,
     NOT_FOUND_TYPE,
+    PrintingSettings,
     TemplateEmail,
     Toast,
     UserPreferencesDTO,
     UserProgress,
-    UserSchoolLookup
+    UserSchoolLookup,
+    EventMapData
 } from "../../IsaacAppTypes";
 import {
+    AnsweredQuestionsByDate,
     AssignmentDTO,
     ContentDTO,
     ContentSummaryDTO,
@@ -36,9 +39,11 @@ import {
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO
+    UserSummaryWithGroupMembershipDTO,
+    GlossaryTermDTO,
+    IsaacPodDTO
 } from "../../IsaacApiTypes";
-import {ACTION_TYPE, ContentVersionUpdatingStatus, NOT_FOUND} from "../services/constants";
+import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
 
 type UserState = LoggedInUser | null;
@@ -80,7 +85,6 @@ type UserPreferencesState = UserPreferencesDTO | null;
 export const userPreferences = (userPreferences: UserPreferencesState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
-        case ACTION_TYPE.USER_PREFERENCES_SET_FOR_ANON:
             return {...action.userPreferences};
         default:
             return userPreferences;
@@ -257,6 +261,17 @@ export const fragments = (fragments: FragmentsState = null, action: Action) => {
     }
 };
 
+type GlossaryTermsState = GlossaryTermDTO[] | null;
+export const glossaryTerms = (glossaryTerms: GlossaryTermsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS:
+            return action.terms;
+        case ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE:
+        default:
+            return glossaryTerms;
+    }
+}
+
 export const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
@@ -305,6 +320,21 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
         }
         default: {
             return questions;
+        }
+    }
+};
+
+type AnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
+export const answeredQuestionsByDate = (answeredQuestionsByDateState: AnsweredQuestionsByDateState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST: {
+            return null;
+        }
+        case ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
+            return action.answeredQuestionsByDate;
+        }
+        default: {
+            return answeredQuestionsByDateState;
         }
     }
 };
@@ -377,6 +407,17 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
     }
 };
 
+export type TempExamBoardState = EXAM_BOARD | null;
+export const tempExamBoard = (tempExamBoard: TempExamBoardState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EXAM_BOARD_SET_TEMP:
+            return action.examBoard;
+        default:
+            return tempExamBoard;
+    }
+};
+
+
 export type WildcardsState = IsaacWildcard[] | NOT_FOUND_TYPE | null;
 export const wildcards = (wildcards: WildcardsState = null, action: Action) => {
     switch (action.type) {
@@ -420,6 +461,16 @@ export const events = (events: EventsState = null, action: Action) => {
     }
 };
 
+type NewsState = {news: IsaacPodDTO[]} | null;
+export const news = (news: NewsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.NEWS_RESPONSE_SUCCESS:
+            return {news: Array.from(action.theNews)};
+        default:
+            return news;
+    }
+};
+
 export type CurrentEventState = AugmentedEvent | NOT_FOUND_TYPE | null;
 export const currentEvent = (currentEvent: CurrentEventState = null, action: Action) => {
     switch (action.type) {
@@ -456,6 +507,18 @@ export const eventOverviews = (eventOverviews: EventOverviewsState = null, actio
             return [...action.eventOverviews];
         default:
             return eventOverviews;
+    }
+};
+
+type EventMapDataState = EventMapData[] | null;
+export const eventMapData = (eventMapData: EventMapDataState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_MAP_DATA_REQUEST:
+            return null;
+        case ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS:
+            return [...action.eventMapData];
+        default:
+            return eventMapData;
     }
 };
 
@@ -761,6 +824,19 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
     }
 };
 
+export type PrintingSettingsState = PrintingSettings | null;
+export const printingSettings = (printingSettingsState: PrintingSettingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.PRINTING_SET_HINTS: {
+            return {...printingSettingsState, hintsEnabled: action.hintsEnabled};
+        }
+        default: {
+            return printingSettingsState;
+        }
+    }
+};
+
+
 const appReducer = combineReducers({
     adminUserGet,
     user,
@@ -778,8 +854,10 @@ const appReducer = combineReducers({
     constants,
     doc,
     questions,
+    answeredQuestionsByDate,
     currentTopic,
     currentGameboard,
+    tempExamBoard,
     wildcards,
     gameboardEditorQuestions,
     assignments,
@@ -793,10 +871,14 @@ const appReducer = combineReducers({
     assignmentsByMe,
     progress,
     events,
+    news,
     currentEvent,
     eventOverviews,
+    eventMapData,
     eventBookings,
-    fragments
+    fragments,
+    printingSettings,
+    glossaryTerms
 });
 
 export type AppState = undefined | {
@@ -816,8 +898,10 @@ export type AppState = undefined | {
     groupMemberships: GroupMembershipsState;
     doc: DocState;
     questions: QuestionsState;
+    answeredQuestionsByDate: AnsweredQuestionsByDateState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
+    tempExamBoard: TempExamBoardState;
     wildcards: WildcardsState;
     gameboardEditorQuestions: GameboardEditorQuestionsState;
     assignments: AssignmentsState;
@@ -832,10 +916,14 @@ export type AppState = undefined | {
     assignmentsByMe: AssignmentsState;
     progress: ProgressState;
     events: EventsState;
+    news: NewsState;
     currentEvent: CurrentEventState;
     eventOverviews: EventOverviewsState;
+    eventMapData: EventMapDataState;
     eventBookings: EventBookingsState;
     fragments: FragmentsState;
+    printingSettings: PrintingSettingsState;
+    glossaryTerms: GlossaryTermsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

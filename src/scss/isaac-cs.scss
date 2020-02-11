@@ -51,6 +51,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "~bootstrap/scss/bootstrap";
 @import "~katex/dist/katex.min.css";
 @import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
+@import "~billboard.js/dist/theme/insight.css";
 
 // Utility
 @import "./_preload";
@@ -77,6 +78,8 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./icons";
 @import "./boards";
 @import "./focus";
+@import "./progress-bar";
+@import "./anvil";
 
 // Navigation
 @import "./navigation-bar";
@@ -92,6 +95,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./topic";
 @import "./search";
 @import "./my-assignments";
+@import "./my-progress";
 @import "./gameboard";
 @import "./assignment-progress";
 @import "./groups";
@@ -197,6 +201,23 @@ body {
     @include respond-above(md) {
         background-image: url('/assets/pattern03.svg');
         background-position: left 0;
+        background-repeat: no-repeat;
+    }
+}
+
+.pattern-03-reverse {
+    background-image: url('/assets/pattern01.svg');
+    background-position: right top;
+    background-repeat: repeat-y;
+
+    @include respond-above(sm) {
+        background-image: url('/assets/pattern01.svg');
+        background-position: right 0;
+        background-repeat: no-repeat;
+    }
+    @include respond-above(md) {
+        background-image: url('/assets/pattern01.svg');
+        background-position: right 0;
         background-repeat: no-repeat;
     }
 }

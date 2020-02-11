@@ -1,6 +1,7 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
+import {Spinner} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ContentSummaryDTO, GameboardItem} from "../../../IsaacApiTypes";
 import {
@@ -22,15 +23,16 @@ import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
     loadGameboardSelectedQuestions,
-    logEvent
+    logEvent,
+    multiSelectOnChange
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
-import {IS_CS_PLATFORM, NOT_FOUND} from "../../services/constants";
+import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM, NOT_FOUND} from "../../services/constants";
 import {history} from "../../services/history"
+import Select from "react-select";
 import {withRouter} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {Spinner} from "reactstrap";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -43,7 +45,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
     const baseGameboard = useSelector((state: AppState) => state && state.currentGameboard);
 
     const [gameboardTitle, setGameboardTitle] = useState("");
-    const [gameboardTag, setGameboardTag] = useState("null");
+    const [gameboardTags, setGameboardTags] = useState<string[]>([]);
     const [gameboardURL, setGameboardURL] = useState();
     const [questionOrder, setQuestionOrder] = useState<string[]>( []);
     const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
@@ -111,13 +113,18 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                 {isStaff(user) && <RS.Row className="mt-2">
                     <RS.Col>
                         <RS.Label htmlFor="gameboard-builder-tag-as">Tag as</RS.Label>
-                        <RS.Input id="gameboard-builder-tag-as"
-                            type="select" defaultValue={gameboardTag}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setGameboardTag(e.target.value);}}
-                        >
-                            <option value="null">None</option>
-                            <option value="ISAAC_BOARD">Created by Isaac</option>
-                        </RS.Input>
+                        <Select inputId="question-search-level"
+                            isMulti
+                            options={[
+                                { value: examBoardTagMap[EXAM_BOARD.AQA], label: 'AQA' },
+                                { value: examBoardTagMap[EXAM_BOARD.OCR], label: 'OCR' },
+                                { value: 'ISAAC_BOARD', label: 'Created by Isaac' }]}
+                            name="colors"
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                            placeholder="None"
+                            onChange={multiSelectOnChange(setGameboardTags)}
+                        />
                     </RS.Col>
                     <RS.Col>
                         <RS.Label htmlFor="gameboard-builder-url">Gameboard URL</RS.Label>
@@ -229,7 +236,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             wildCard: wildcard,
                             wildCardPosition: 0,
                             gameFilter: {subjects: ["computer_science"]},
-                            tags: gameboardTag == "ISAAC_BOARD" ? ["ISAAC_BOARD"] : []
+                            tags: gameboardTags
                         }));
 
                         dispatch(openActiveModal({
@@ -252,5 +259,5 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
             </RS.CardBody>
         </RS.Card>
-    </RS.Container>
+    </RS.Container>;
 });

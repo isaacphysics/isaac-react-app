@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
+import {API_PATH, MEMBERSHIP_STATUS, TAG_ID, EventTypeFilter} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
@@ -9,13 +9,13 @@ import {
     ATTENDANCE,
     BoardOrder,
     EmailUserRoles,
+    LoggedInUser,
     QuestionSearchQuery,
     QuestionSearchResponse,
     UserPreferencesDTO,
     ValidationUser
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
-import {TypeFilter} from "../components/pages/Events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 
 export const endpoint = axios.create({
@@ -91,8 +91,8 @@ export const api = {
         getUserIdSchoolLookup: (userIds: number[]): AxiosPromise<AppTypes.UserSchoolLookup> => {
             return endpoint.get(`/users/school_lookup?user_ids=${userIds.join(",")}`);
         },
-        getProgress: (): AxiosPromise<AppTypes.UserProgress> => {
-            return endpoint.get(`/users/current_user/progress`);
+        getProgress: (userIdOfInterest = "current_user"): AxiosPromise<AppTypes.UserProgress> => {
+            return endpoint.get(`users/${userIdOfInterest}/progress`);
         }
     },
     authentication: {
@@ -113,6 +113,12 @@ export const api = {
         },
         getSelectedUserAuthSettings: (userId: number): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings/${userId}`)
+        },
+        linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
+            return endpoint.get(`/auth/${provider}/link`)
+        },
+        unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
+            return endpoint.delete(`/auth/${provider}/link`);
         }
     },
     email: {
@@ -183,6 +189,18 @@ export const api = {
             return endpoint.delete(`/authorisations/release/`);
         }
     },
+    glossary: {
+        getTerms: (): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.GlossaryTermDTO>> => {
+            // FIXME: Magic number. This needs to go through pagination with
+            // limit and start_index query parameters.
+            return endpoint.get('/glossary/terms', {
+                params: { limit: 10000 }
+            });
+        },
+        getTermById: (id: string): AxiosPromise<ApiTypes.GlossaryTermDTO> => {
+            return endpoint.get(`/glossary/terms/${id}`);
+        }
+    },
     questions: {
         get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
             return endpoint.get(`/pages/questions/${id}`);
@@ -194,6 +212,15 @@ export const api = {
         },
         answer: (id: string, answer: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
+        },
+        answeredQuestionsByDate: (userId: number | string, fromDate: number, toDate: number, perDay: boolean): AxiosPromise<ApiTypes.AnsweredQuestionsByDate> => {
+            return endpoint.get(`/questions/answered_questions/${userId}`, {
+                params: {
+                    "from_date": fromDate,
+                    "to_date": toDate,
+                    "per_day": perDay
+                }
+            })
         }
     },
     concepts: {
@@ -326,12 +353,17 @@ export const api = {
             return endpoint.get(`/gameboards/${boardId}`);
         }
     },
+    news: {
+        get: (subject: string): AxiosPromise<{results: ApiTypes.IsaacPodDTO[]; totalResults: number}> => {
+            return endpoint.get(`/pages/pods/${subject}`)
+        }
+    },
     events: {
         get: (eventId: string): AxiosPromise<ApiTypes.IsaacEventPageDTO> => {
             return endpoint.get(`/events/${eventId}`);
         },
         getEvents: (
-            startIndex: number, eventsPerPage: number, filterEventsByType: TypeFilter | null,
+            startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
             showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
             /* eslint-disable @typescript-eslint/camelcase */
@@ -355,6 +387,17 @@ export const api = {
                 Object.assign(params, {filter: eventOverviewFilter})
             }
             return endpoint.get('/events/overview', {params});
+        },
+        getEventMapData: (
+            startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
+            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
+        ): AxiosPromise<{results: AppTypes.EventMapData[]; totalResults: number}> => {
+            /* eslint-disable @typescript-eslint/camelcase */
+            return endpoint.get(`/events/map_data`, {params: {
+                start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
+                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
+            }});
+            /* eslint-enable @typescript-eslint/camelcase */
         }
     },
     eventBookings: {
@@ -388,6 +431,9 @@ export const api = {
         recordEventAttendance: (eventId: string, userId: number, attendance: ATTENDANCE) => {
             const attended = attendance === ATTENDANCE.ATTENDED;
             return endpoint.post(`/events/${eventId}/bookings/${userId}/record_attendance?attended=${attended}`);
+        },
+        getEventBookingCSV: (eventId: string) => {
+            return endpoint.get(`/events/${eventId}/bookings/download`);
         }
     },
     logger: {

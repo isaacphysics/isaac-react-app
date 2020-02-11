@@ -154,11 +154,12 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                         updateQuery({role: role !== "null" ? role : null})
                                     }}
                                 >
-                                    <option value="null">Any Role</option>
+                                    <option value="null">Any role</option>
                                     <option value="STUDENT">Student</option>
                                     <option value="TEACHER">Teacher</option>
-                                    <option value="CONTENT_EDITOR">Content Editor</option>
-                                    <option value="EVENT_ADMIN">Event Admin</option>
+                                    <option value="CONTENT_EDITOR">Content editor</option>
+                                    <option value="EVENT_LEADER">Event leader</option>
+                                    <option value="EVENT_MANAGER">Event manager</option>
                                     <option value="ADMIN">Admin</option>
                                 </RS.Input>
                             </RS.FormGroup>
@@ -176,12 +177,12 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                             id="postcode-radius-search" type="select" defaultValue={searchQuery.postcodeRadius}
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({postcodeRadius: e.target.value})}
                                         >
-                                            <option value="FIVE_MILES">5 Miles</option>
-                                            <option value="TEN_MILES">10 Miles</option>
-                                            <option value="FIFTEEN_MILES">15 Miles</option>
-                                            <option value="TWENTY_MILES">20 Miles</option>
-                                            <option value="TWENTY_FIVE_MILES">25 Miles</option>
-                                            <option value="FIFTY_MILES">50 Miles</option>
+                                            <option value="FIVE_MILES">5 miles</option>
+                                            <option value="TEN_MILES">10 miles</option>
+                                            <option value="FIFTEEN_MILES">15 miles</option>
+                                            <option value="TWENTY_MILES">20 miles</option>
+                                            <option value="TWENTY_FIVE_MILES">25 miles</option>
+                                            <option value="FIFTY_MILES">50 miles</option>
                                         </RS.Input>
                                     </RS.Col>
                                 </RS.Row>
@@ -209,7 +210,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
         {/* Result panel */}
         <RS.Card className="my-4">
             <RS.CardTitle tag="h4" className="pl-4 pt-3 mb-0">
-                Manage Users ({searchResults && searchResults.length || 0})<br />
+                Manage users ({searchResults && searchResults.length || 0})<br />
                 Selected ({selectedUserIds.length})
             </RS.CardTitle>
 
@@ -275,10 +276,16 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                                         }}
                                                     />
                                                 </td>
-                                                <td>
-                                                    {/*View*/}
-                                                    <RS.Input type="button" value="Edit" onClick={() => editUser(user.id)} className="btn btn-sm btn-secondary border-0 p-0 mb-2"/>
-                                                    <RS.Input type="button" value="Delete" onClick={() => deleteUser(user.id)} className="btn btn-sm btn-secondary border-0 p-0"/>
+                                                <td className="text-center">
+                                                    <RS.Button color="secondary btn-sm m-1" tag={Link} to={`/progress/${user.id}`} target="_blank">
+                                                        View
+                                                    </RS.Button>
+                                                    <RS.Button color="secondary btn-sm m-1" onClick={() => editUser(user.id)}>
+                                                        Edit
+                                                    </RS.Button>
+                                                    <RS.Button color="secondary btn-sm m-1" onClick={() => deleteUser(user.id)}>
+                                                        Delete
+                                                    </RS.Button>
                                                 </td>
                                                 <td>{user.familyName}, {user.givenName}</td>
                                                 <td>{user.email}</td>
@@ -299,7 +306,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                 }
             </RS.CardBody>
         </RS.Card>
-    </RS.Container>
+    </RS.Container>;
 };
 
 export const AdminUserManager = connect(stateToProps, dispatchToProps)(AdminUserManagerComponent);

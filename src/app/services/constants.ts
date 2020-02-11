@@ -2,7 +2,8 @@ import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {invert} from "lodash";
 
-export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
+// eslint-disable-next-line no-undef
+export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
 export const IS_CS_PLATFORM = true;
 
@@ -31,13 +32,7 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
-export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_nov19_aqa', 'class_test_nov19_ocr'];
-
-export const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB");
-export const DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
-    year: "numeric", month: "numeric", day: "numeric",
-    hour: "numeric", minute: "numeric", second: "numeric", hour12: false
-});
+export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_jan20_aqa', 'class_test_jan20_ocr'];
 
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
@@ -66,11 +61,19 @@ export enum ACTION_TYPE {
     SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS = "SELECTED_USER_AUTH_SETTINGS_REQUEST_SUCCESS",
     SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE = "SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE",
 
+    USER_AUTH_LINK_REQUEST = "USER_AUTH_LINK_REQUEST",
+    USER_AUTH_LINK_RESPONSE_SUCCESS = "USER_AUTH_LINK_RESPONSE_SUCCESS",
+    USER_AUTH_LINK_RESPONSE_FAILURE = "USER_AUTH_LINK_RESPONSE_FAILURE",
+
+    USER_AUTH_UNLINK_REQUEST = "USER_AUTH_UNLINK_REQUEST",
+    USER_AUTH_UNLINK_RESPONSE_SUCCESS = "USER_AUTH_UNLINK_RESPONSE_SUCCESS",
+    USER_AUTH_UNLINK_RESPONSE_FAILURE = "USER_AUTH_UNLINK_RESPONSE_FAILURE",
+
     USER_PREFERENCES_REQUEST = "USER_PREFERENCES_REQUEST",
     USER_PREFERENCES_RESPONSE_SUCCESS= "USER_PREFERENCES_RESPONSE_SUCCESS",
     USER_PREFERENCES_RESPONSE_FAILURE = "USER_PREFERENCES_RESPONSE_FAILURE",
 
-    USER_PREFERENCES_SET_FOR_ANON = "USER_PREFERENCES_SET_FOR_ANON",
+    EXAM_BOARD_SET_TEMP = "EXAM_BOARD_SET_TEMP",
 
     USER_PASSWORD_RESET_REQUEST= "USER_PASSWORD_RESET_REQUEST",
     USER_PASSWORD_RESET_RESPONSE_SUCCESS ="USER_PASSWORD_RESET_RESPONSE_SUCCESS",
@@ -191,9 +194,18 @@ export enum ACTION_TYPE {
     EVENT_OVERVIEWS_RESPONSE_SUCCESS = "EVENT_OVERVIEWS_RESPONSE_SUCCESS",
     EVENT_OVERVIEWS_RESPONSE_FAILURE = "EVENT_OVERVIEWS_RESPONSE_FAILURE",
 
+    EVENT_MAP_DATA_REQUEST = "EVENT_MAP_DATA_REQUEST",
+    EVENT_MAP_DATA_RESPONSE_SUCCESS = "EVENT_MAP_DATA_RESPONSE_SUCCESS",
+    EVENT_MAP_DATA_RESPONSE_FAILURE = "EVENT_MAP_DATA_RESPONSE_FAILURE",
+
+
     EVENT_BOOKINGS_REQUEST = "EVENT_BOOKINGS_REQUEST",
     EVENT_BOOKINGS_RESPONSE_SUCCESS = "EVENT_BOOKINGS_RESPONSE_SUCCESS",
     EVENT_BOOKINGS_RESPONSE_FAILURE = "EVENT_BOOKINGS_RESPONSE_FAILURE",
+
+    EVENT_BOOKING_CSV_REQUEST = "EVENT_BOOKING_CSV_REQUEST",
+    EVENT_BOOKING_CSV_RESPONSE_SUCCESS = "EVENT_BOOKING_CSV_RESPONSE_SUCCESS",
+    EVENT_BOOKING_CSV_RESPONSE_FAILURE = "EVENT_BOOKING_CSV_RESPONSE_FAILURE",
 
     EVENT_BOOKING_REQUEST = "EVENT_BOOKING_REQUEST",
     EVENT_BOOKING_RESPONSE_SUCCESS = "EVENT_BOOKING_RESPONSE_SUCCESS",
@@ -231,9 +243,17 @@ export enum ACTION_TYPE {
     EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS = "EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS",
     EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE = "EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE",
 
+    NEWS_REQUEST = "NEWS_REQUEST",
+    NEWS_RESPONSE_SUCCESS = "NEWS_RESPONSE_SUCCESS",
+    NEWS_RESPONSE_FAILURE = "NEWS_RESPONSE_FAILURE",
+
     FRAGMENT_REQUEST = "FRAGMENT_REQUEST",
     FRAGMENT_RESPONSE_SUCCESS = "FRAGMENT_RESPONSE_SUCCESS",
     FRAGMENT_RESPONSE_FAILURE = "FRAGMENT_RESPONSE_FAILURE",
+
+    GLOSSARY_TERMS_REQUEST = "GLOSSARY_TERMS_REQUEST",
+    GLOSSARY_TERMS_RESPONSE_SUCCESS = "GLOSSARY_TERMS_RESPONSE_SUCCESS",
+    GLOSSARY_TERMS_RESPONSE_FAILURE = "GLOSSARY_TERMS_RESPONSE_FAILURE",
 
     QUESTION_REGISTRATION = "QUESTION_REGISTRATION",
     QUESTION_DEREGISTRATION = "QUESTION_DEREGISTRATION",
@@ -246,6 +266,10 @@ export enum ACTION_TYPE {
     QUESTION_SEARCH_REQUEST = "QUESTION_SEARCH_REQUEST",
     QUESTION_SEARCH_RESPONSE_SUCCESS = "QUESTION_SEARCH_RESPONSE_SUCCESS",
     QUESTION_SEARCH_RESPONSE_FAILURE = "QUESTION_SEARCH_RESPONSE_FAILURE",
+
+    QUESTION_ANSWERS_BY_DATE_REQUEST = "QUESTION_ANSWERS_BY_DATE_REQUEST",
+    QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS = "QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS",
+    QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE = "QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE",
 
     QUIZ_SUBMISSION_REQUEST = "QUIZ_SUBMISSION_REQUEST",
     QUIZ_SUBMISSION_RESPONSE_SUCCESS = "QUIZ_SUBMISSION_RESPONSE_SUCCESS",
@@ -362,12 +386,21 @@ export enum ACTION_TYPE {
     BOARDS_ASSIGN_RESPONSE_SUCCESS = "BOARDS_ASSIGN_RESPONSE_SUCCESS",
     BOARDS_ASSIGN_RESPONSE_FAILURE = "BOARDS_ASSIGN_RESPONSE_FAILURE",
 
+    PRINTING_SET_HINTS = "PRINTING_SET_HINTS",
+
     LOG_EVENT = "LOG_EVENT"
 }
 
 export enum EXAM_BOARD {
     AQA = "AQA",
-    OCR = "OCR"
+    OCR = "OCR",
+    OTHER = "OTHER"
+}
+
+export enum SUBJECTS {
+    PHYSICS = 'physics',
+    MATHS = 'maths',
+    CHEMISTRY = 'chemistry'
 }
 
 export const examBoardTagMap: {[examBoard: string]: string} = {
@@ -375,7 +408,7 @@ export const examBoardTagMap: {[examBoard: string]: string} = {
     [EXAM_BOARD.OCR]: "examboard_ocr",
 };
 
-export const tagExamboardMap: {[tag: string]: string} = invert(examBoardTagMap);
+export const tagExamBoardMap: {[tag: string]: string} = invert(examBoardTagMap);
 
 export enum TAG_ID {
     // Categories
@@ -389,8 +422,7 @@ export enum TAG_ID {
     computerSystems = "computer_systems",
     dataAndInformation = "data_and_information",
     // Programming sub-categories
-    functionalProgramming = "functional_programming",
-    objectOrientedProgramming = "object_oriented_programming",
+    programmingParadigms = "programming_paradigms",
     programmingFundamentals = "programming_fundamentals",
     computingPracticalProject = "computing_practical_project",
 
@@ -403,7 +435,7 @@ export enum TAG_ID {
     // Data structures and algorithms topics
     searchingSortingPathfinding = "searching_sorting_pathfinding",
     complexity = "complexity",
-    theoryOfComputation = "models_of_computation",
+    theoryOfComputation = "theory_of_computation",
     planningAndDebugging = "planning_and_debugging",
     dataStructures = "data_structures",
     // Computer networks topics
@@ -411,7 +443,7 @@ export enum TAG_ID {
     networking = "networking",
     networkHardware = "network_hardware",
     communication = "communication",
-    internet = "internet",
+    theInternet = "the_internet",
     // Computer systems topics
     booleanLogic = "boolean_logic",
     architecture = "architecture",
@@ -428,15 +460,7 @@ export enum TAG_ID {
     compression = "compression",
     encryption = "encryption",
 
-    // Functional programming topics
-    functions = "functions",
-    lists = "lists",
-    higherOrderFunctions = "higher_order_functions",
-    // Object-oriented programming topics
-    creatingObjects = "creating_objects",
-    oopConcepts = "oop_concepts",
-    classDiagrams = "class_diagrams",
-    // Procedural programming topics
+    // Programming fundamentals topics
     programmingConcepts = "programming_concepts",
     subroutines = "subroutines",
     files = "files",
@@ -445,6 +469,9 @@ export enum TAG_ID {
     stringManipulation = "string_manipulation",
     guis = "guis",
     softwareEngineeringPrinciples = "software_engineering_principles",
+    // Programming paradigms topics
+    objectOrientedProgramming = "object_oriented_programming",
+    functionalProgramming = "functional_programming",
     // Computing practical project topics
     softwareProject = "software_project",
 }
@@ -505,4 +532,22 @@ export enum SortOrder {
     ASC = "ASC",
     DESC = "DESC",
     NONE = "NONE"
+}
+
+export enum sortIcon {
+    "sortable" = '⇕',
+    "ascending" = '⇑',
+    "descending" = '⇓'
+}
+
+export enum EventStatusFilter {
+    "All events" = "all",
+    "Upcoming events" = "upcoming",
+    "My booked events" = "showBookedOnly",
+}
+export enum EventTypeFilter {
+    "All events" = "all",
+    "Student events" = "student",
+    "Teacher events" = "teacher",
+    "Online tutorials" = "virtual",
 }

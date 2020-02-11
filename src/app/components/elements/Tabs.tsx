@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo, useState, ReactNode} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
@@ -58,8 +58,8 @@ export const Tabs = (props: TabsProps) => {
         <TabContent activeTab={activeTab} className={!specialCaseExamBoardTab ? tabContentClass : ""}>
             {Object.entries(tabs).map(([tabTitle, tabBody], mapIndex) => {
                 const tabIndex = mapIndex + 1;
-                return <TabPane key={tabTitle} tabId={tabIndex}>
-                    {tabBody}
+                return <TabPane key={tabTitle} tabId={tabIndex} className={specialCaseExamBoardTab && !(activeTab == tabIndex) ? "no-print" : ""}>
+                    {tabBody as ReactNode}
                 </TabPane>;
             })}
         </TabContent>

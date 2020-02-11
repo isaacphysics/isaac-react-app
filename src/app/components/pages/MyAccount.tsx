@@ -20,11 +20,10 @@ import {AdminUserGetState, AppState, ErrorState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
     LoggedInUser,
+    UserPreferencesDTO,
+    ValidationUser,
     SubjectInterests,
     UserEmailPreferences,
-    UserExamPreferences,
-    UserPreferencesDTO,
-    ValidationUser
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
@@ -117,7 +116,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     // - User preferences
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
-    const [examPreferences, setExamPreferences] = useState<UserExamPreferences>({});
     const [subjectInterests, setSubjectInterests] = useState<SubjectInterests>({});
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
 
@@ -125,16 +123,13 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     useMemo(() => {
         const currentEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
-        const currentExamPreferences = (userPreferences && userPreferences.EXAM_BOARD) ? userPreferences.EXAM_BOARD : {};
         const currentSubjectInterests = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
         const currentUserPreferences = {
             EMAIL_PREFERENCE: currentEmailPreferences,
-            EXAM_BOARD: currentExamPreferences,
             SUBJECT_INTEREST: currentSubjectInterests,
         };
 
         setEmailPreferences(currentEmailPreferences);
-        setExamPreferences(currentExamPreferences);
         setSubjectInterests(currentSubjectInterests);
         setMyUserPreferences(currentUserPreferences);
     }, [userPreferences]);
@@ -166,7 +161,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                 return; // early exit
             }
         }
-        Object.assign(myUserPreferences.EXAM_BOARD, examPreferences);
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
@@ -240,11 +234,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                             <TabPane tabId={ACCOUNT_TAB.account}>
                                 <UserDetails
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                    examPreferences={examPreferences} setExamPreferences={setExamPreferences}
                                     subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
+                                    userAuthSettings={userAuthSettings}
                                 />
                             </TabPane>
+
                             <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                                 <UserPassword
                                     currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}

@@ -4,11 +4,11 @@ import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
 import * as ApiTypes from "../../../IsaacApiTypes";
-import {DATE_TIME_FORMATTER} from "../../services/constants";
 import {questions} from "../../state/selectors";
 import classnames from "classnames";
 import * as RS from "reactstrap";
 import {QUESTION_TYPES} from "../../services/questions";
+import {DateString, NUMERIC_DATE_AND_TIME} from "../elements/DateString";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     const questionPart = questions.selectQuestionPart(doc.id)(state);
@@ -26,10 +26,6 @@ interface IsaacQuestionTabsProps {
     canSubmit?: boolean;
     locked?: Date;
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
-}
-
-function showTime(date: Date) {
-    return DATE_TIME_FORMATTER.format(date);
 }
 
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
@@ -74,7 +70,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
             </div>}
 
             {locked && <RS.Alert color="danger">
-                This question is locked until at least {showTime(locked)} to prevent repeated guessing.
+                This question is locked until at least {<DateString formatter={NUMERIC_DATE_AND_TIME}>{locked}</DateString>} to prevent repeated guessing.
             </RS.Alert>}
 
             {((!validationResponse) || (!validationResponse.correct) || canSubmit) && (!locked) && <RS.Row>
@@ -88,7 +84,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
 
             {((!validationResponse) || (!validationResponse.correct) || canSubmit) && <RS.Row>
                 <RS.Col xl={{size: 10, offset: 1}} >
-                    {doc.hints && <p className="text-center pt-2 mb-0">
+                    {doc.hints && <p className="no-print text-center pt-2 mb-0">
                         <small>{"Don't forget to use the hints above if you need help."}</small>
                     </p>}
                 </RS.Col>

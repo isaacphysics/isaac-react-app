@@ -6,6 +6,63 @@
   height: 82px;
   background: url(/assets/my-boards-sprite.png) no-repeat 0 0;
   padding: 20px 0 0;
+  z-index: 999;
+}
+
+.subject-compsci-table {
+  position: relative;
+  width: 71px;
+  height: 82px;
+  background: url(/assets/my-boards-sprite.png) no-repeat -70px 0;
+  padding: 20px 0 0;
+  z-index: 999;
+  padding-top: 35px !important;
+}
+
+.input-align {
+  @media only screen and (min-resolution: 192dpi) {
+    width: 100%;
+    align-self: center;
+  }
+}
+
+.myBoards-percentageCompleted {
+  align-self: center;
+}
+
+.myBoards-percentageCompleted h4{
+  font-size: 1.5em;
+  text-align: center;
+  position: relative;
+  top: 5px;
+  right: -0.25rem;
+}
+
+.myBoards-percentageCompleted h4::after {
+  font-size: 0.5em;
+  content: '%';
+  position: relative;
+  top: -20px;
+
+}
+
+.myBoardsTable-percentageCompleted {
+  text-align: center;
+}
+
+.myBoardsTable-percentageCompleted h4{
+  font-size: 1.5em;
+  text-align: center;
+  top: -15px;
+  right: -0.25rem;
+  position: relative;
+}
+
+.myBoardsTable-percentageCompleted h4::after {
+  font-size: 0.5em;
+  content: '%';
+  position: relative;
+  top: -20px;
 }
 
 .subject-physics {
@@ -15,10 +72,40 @@
   background-position: -71px 0;
 }
 .subject-complete {
-  background-position: -142px 0;
+  position: relative;
+  top: 0;
+  left: 0;
+  background: url(/assets/my-boards-sprite.png) no-repeat -142px 0;
+}
+.subject-complete-card {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 71px;
+  height: 82px;
+  background: url(/assets/my-boards-sprite.png) no-repeat -142px 0;
 }
 .subject-compsci {
   background-position: -71px 0;
+}
+
+.table-button {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  font-weight: bold;
+}
+
+.input-options {
+  float: right;
+  @media only screen and (max-width:800px) {
+    float: unset !important;
+    flex-direction: column;
+  }
+}
+
+.delete-button {
+  top: -50px;
 }
 
 .groups-assigned {
@@ -77,9 +164,10 @@
     position: absolute;
     padding: 4px;
     border: 1px solid $gray-118;
-    left: 20px;
-    right: 54px;
     background: #fff;
+    top: 117px;
+    right: 50px;
+    width: 70%;
   }
   .share-link div {
     overflow: hidden;
@@ -89,22 +177,25 @@
     -webkit-user-select: all;
     -moz-user-select: all;
     -ms-user-select: all;
-    width: 100%;
   }
   .unassign {
     cursor: pointer;
     min-width: 20px;
   }
 }
-
-.ru_share {
-  background-image: url(/assets/share.svg);
-  width: 50px;
-  height: 58px;
-  background-repeat: no-repeat;
-  z-index: 1;
-  float: right;
+.share-link-table {
+  display: none;
   position: relative;
-  margin-right: 10px;
-  background-color: transparent;
+  padding: 4px;
+  border: 1px solid $gray-118;
+  background: #fff;
+  top: 35px;
+  right: 30px;
+}
+.share-link-table div {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  user-select: all;
+  width: 250px;
 }

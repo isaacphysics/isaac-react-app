@@ -5,7 +5,7 @@ import {requestConstantsUnits, setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {IsaacNumericQuestionDTO, QuantityDTO} from "../../../IsaacApiTypes";
-import {Input, Row, Col, Label, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from "reactstrap";
+import {Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Row} from "reactstrap";
 import {TrustedHtml} from "../elements/TrustedHtml";
 import {IsaacHints} from "./IsaacHints";
 
@@ -135,7 +135,7 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
                     {doc.children}
                 </IsaacContentValueOrChildren>
             </div>
-            <Row>
+            <Row className="no-print">
                 <Col sm={4}>
                     <Label className="w-100">
                         Value

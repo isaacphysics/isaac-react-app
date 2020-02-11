@@ -7,6 +7,7 @@ import {LoggedInUser} from "../../../IsaacAppTypes";
 import {WhySignUpTabs} from "../elements/WhySignUpTabs";
 import {FeaturedContentTabs} from "../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../elements/EventsCarousel";
+import {NewsCarousel} from "../elements/NewsCarousel";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
@@ -38,11 +39,11 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                                     <li>Use it for <strong>revision</strong></li>
                                 </ul>
                                 <p>
-                                    We also offer free <Link to="/events" target="_blank">teacher CPD events</Link> and {" "}
+                                    We also offer free <Link to="/events?types=teacher" target="_blank">teacher CPD events</Link> and {" "}
                                     <span className="text-nowrap">
-                                        <Link to="/events" target="_blank">student workshops</Link>.
+                                        <Link to="/events?types=student" target="_blank">student workshops</Link>.
                                     </span> {" "}
-                                    Isaac Computer Science is proud to be part of the Department for Education’s {" "}
+                                    Isaac Computer Science is proud to be part of the Department for Education&apos;s {" "}
                                     <span className="text-nowrap">
                                         <a href="https://teachcomputing.org/" target="_blank" rel="noopener noreferrer" >National Centre for Computing Education</a>.
                                     </span>
@@ -84,6 +85,15 @@ export const HomepageComponent = ({user}: HomePageProps) => {
             </Container>
         </section>}
 
+        <section id="news">
+            <Container className="pt-4 pb-5">
+                <div className="eventList pt-5 pattern-03-reverse">
+                    <h2 className="h-title mb-4">News</h2>
+                    <NewsCarousel />
+                </div>
+            </Container>
+        </section>
+
         <section id="headline-content" className="row bg-primary pattern-05">
             <Container>
                 <Col className="py-5 pb-md-0">
@@ -110,7 +120,6 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                 </div>
             </Container>
         </section>
-
 
         {!(user && user.loggedIn) && <section className="row">
             <Container>
