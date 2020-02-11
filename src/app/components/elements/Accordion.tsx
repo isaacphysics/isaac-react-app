@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import * as RS from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {ALPHABET} from "../../services/constants";
@@ -8,6 +8,7 @@ import {AppState} from "../../state/reducers";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {TrustedHtml} from "./TrustedHtml";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
+import {questions} from "../../state/selectors";
 
 interface AccordionsProps {
     id?: string;
@@ -18,6 +19,7 @@ interface AccordionsProps {
     logAction: (eventDetails: object) => void;
 }
 
+let nextClientId = 0;
 
 const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}}: AccordionsProps) => {
     // Toggle
@@ -82,11 +84,41 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
         }
     }
 
+    // Question result summarization
+    const clientId = useRef('c' + nextClientId++);
+
+    // Check results of questions in this accordion
+    let accordianIcon;
+    const questionsInsideThis = useSelector((state: AppState) => {
+        return questions.filter(q => q.accordionClientId === clientId.current)(state);
+    });
+    if (questionsInsideThis.length > 0) {
+        let allCorrect = true;
+        let allWrong = true;
+        let allValidated = true;
+        questionsInsideThis.forEach(question => {
+            if (question) {
+                if (question.validationResponse) {
+                    const correct = question.validationResponse.correct;
+                    if (correct) {
+                        allWrong = false;
+                    } else {
+                        allCorrect = false;
+                    }
+                } else {
+                    allValidated = false;
+                }
+            }
+        });
+        if (allValidated && allCorrect) accordianIcon = "tick";
+        if (allValidated && allWrong) accordianIcon = "cross";
+    }
+
     return <div className="accordion">
         <div className="accordion-header">
             <RS.Button
                 id={anchorId || ""} block color="link"
-                className={open ? 'active p-3 pr-5 text-left' : 'p-3 pr-5 text-left'}
+                className={open ? 'active p-3 text-left' : 'p-3 text-left'}
                 onClick={(event: any) => {
                     const nextState = !open;
                     setOpen(nextState);
@@ -97,14 +129,15 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
                 }}
                 aria-expanded={open ? "true" : "false"}
             >
-                <span className="accordion-part text-secondary pr-2">
-                    Part {ALPHABET[index % ALPHABET.length]}
-                </span> {" "}
-                {trustedTitle && <TrustedHtml html={trustedTitle} />}
+                <div className="accordion-part">
+                    <span className="text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
+                    {trustedTitle && <TrustedHtml html={trustedTitle} />}
+                </div>
+                {accordianIcon && <span className={"accordion-icon accordion-icon-" + accordianIcon} />}
             </RS.Button>
         </div>
         <RS.Collapse isOpen={open} className="mt-1">
-            <AccordionSectionContext.Provider value={id}>
+            <AccordionSectionContext.Provider value={{id, clientId: clientId.current}}>
                 <RS.Card>
                     <RS.CardBody>
                         {children}
