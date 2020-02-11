@@ -106,7 +106,7 @@ const Board = (props: BoardProps) => {
         loadGroupsForBoard(board);
     }, [board.id]);
 
-    const assignmentLink = `${location.origin}/assignment/${board.id}`;
+    const assignmentLink = `/assignment/${board.id}`;
 
     const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
 

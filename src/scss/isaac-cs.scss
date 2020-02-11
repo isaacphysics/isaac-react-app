@@ -205,6 +205,23 @@ body {
     }
 }
 
+.pattern-03-reverse {
+    background-image: url('/assets/pattern01.svg');
+    background-position: right top;
+    background-repeat: repeat-y;
+
+    @include respond-above(sm) {
+        background-image: url('/assets/pattern01.svg');
+        background-position: right 0;
+        background-repeat: no-repeat;
+    }
+    @include respond-above(md) {
+        background-image: url('/assets/pattern01.svg');
+        background-position: right 0;
+        background-repeat: no-repeat;
+    }
+}
+
 .pattern-04 {
     background-image: url('/assets/pattern04.svg');
     background-position: center 164px;
