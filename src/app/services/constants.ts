@@ -390,6 +390,12 @@ export enum EXAM_BOARD {
     OTHER = "OTHER"
 }
 
+export enum SUBJECTS {
+    PHYSICS = 'physics',
+    MATHS = 'maths',
+    CHEMISTRY = 'chemistry'
+}
+
 export const examBoardTagMap: {[examBoard: string]: string} = {
     [EXAM_BOARD.AQA]: "examboard_aqa",
     [EXAM_BOARD.OCR]: "examboard_ocr",
