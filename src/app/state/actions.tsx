@@ -247,9 +247,6 @@ export const updateCurrentUser = (
 
     const editingOtherUser = currentUser.loggedIn && currentUser.id != updatedUser.id;
 
-    console.log(editingOtherUser);
-    console.log(updatedUser);
-
     try {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
         const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent);
@@ -263,7 +260,7 @@ export const updateCurrentUser = (
             if ((afterAuthPath).includes('account')) {
                 history.push(afterAuthPath, {firstLogin: isFirstLogin});
             }
-            history.push('/account', {firstLogin: isFirstLogin});
+            // history.push('/account', {firstLogin: isFirstLogin});
         }
 
         if (!editingOtherUser) {
@@ -276,7 +273,13 @@ export const updateCurrentUser = (
             }) as any);
         }
         if (editingOtherUser) {
-            history.push("/");
+            dispatch(showToast({
+                title: "Account settings updated",
+                body: "The user's account settings were updated successfully.",
+                color: "success",
+                timeout: 5000,
+                closable: false,
+            }) as any);
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
