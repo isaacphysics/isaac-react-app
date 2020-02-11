@@ -17,7 +17,7 @@ figure {
   }
 }
 
-@media (min-width: 992px) {
+@include respond-above(md) {
   .align-left {
     float: left;
     width: 300px;
