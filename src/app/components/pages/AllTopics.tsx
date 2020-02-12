@@ -1,14 +1,13 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {Badge, Col, Container, Row} from "reactstrap";
-import "../../services/tags";
+import "../../services/tagsPhy";
 import * as Tags from "../../services/tags";
-import {Tag} from "../../services/tags";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 export const AllTopics = () => {
 
-    const renderTopic = (topic: Tag) => {
+    const renderTopic = (topic: Tags.Tag) => {
         const TextTag = topic.comingSoon ? "span" : "strong";
         return <React.Fragment>
             <Link

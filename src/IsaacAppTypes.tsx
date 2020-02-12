@@ -1,7 +1,7 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 import {AuthenticationProvider} from "./IsaacApiTypes";
+import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -650,3 +650,11 @@ export interface PrintingSettings {
 export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 export type LevelAttempts<T> = { [level in Levels]?: T; }
+
+export interface BaseTag {
+    id: TAG_ID;
+    title: string;
+    parent?: TAG_ID;
+    comingSoon?: string;
+    new?: boolean;
+}

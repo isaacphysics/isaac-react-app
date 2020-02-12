@@ -44,6 +44,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO;
+        debugger;
         return <div className="pattern-01">
             <Container>
                 {/*FastTrack progress bar*/}
