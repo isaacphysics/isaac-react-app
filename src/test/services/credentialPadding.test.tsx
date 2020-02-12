@@ -1,4 +1,4 @@
-import {securePadCredentials, utf8ByteLength} from '../../app/services/credentialPadding';
+import {securePadCredentials, securePadPasswordReset, utf8ByteLength} from '../../app/services/credentialPadding';
 
 describe("Unicode string lengths in Bytes",  () => {
     it("length of ASCII string", async () => {
@@ -39,5 +39,23 @@ describe("Credentials are securely padded",  () => {
         let log2OfLength = Math.log2(paddedLength);
         let intergerPowerOfTwo = Math.floor(log2OfLength);
         expect(log2OfLength).toEqual(intergerPowerOfTwo);
+    });
+});
+
+describe("Password resets are securely padded",  () => {
+    const credentials = {password: "test"};
+    const paddedCredentials = securePadPasswordReset(credentials);
+
+    it("password reset padding added", async () => {
+        expect(paddedCredentials._randomPadding).toEqual(expect.anything());
+    });
+
+    it("password reset padding length >= 0", () => {
+        expect(paddedCredentials._randomPadding.length).toBeGreaterThan(0);
+    });
+
+    it("password reset padded length = 256", () => {
+        let paddedLength = utf8ByteLength(JSON.stringify(paddedCredentials));
+        expect(paddedLength).toEqual(256);
     });
 });
