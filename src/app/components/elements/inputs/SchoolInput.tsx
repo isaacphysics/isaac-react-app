@@ -103,7 +103,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 inputId={`school-input-${randomNumber}`}
                 placeholder={"Type your school name"}
                 value={schoolValue}
-                className="basic-multi-select"
+                className={(submissionAttempted && !validateUserSchool(userToUpdate) ? "error " : "") + "basic-multi-select"}
                 classNamePrefix="select"
                 onInputChange={renderInput}
                 onChange={handleSetSchool}
@@ -131,8 +131,8 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             </RS.Label>
         </div>}
 
-        <RS.FormFeedback id="school-input">
-            Please specify your school association
-        </RS.FormFeedback>
+        <div id={`school-input-${randomNumber}`} className="invalid-school">
+            {submissionAttempted && !validateUserSchool(userToUpdate) ? "Please specify your school association" : null}
+        </div>
     </RS.FormGroup>
 };

@@ -18,6 +18,22 @@
   }
 }
 
+.error {
+  box-shadow: 0 0 0 1px #dc3545 !important;
+  outline: none !important;
+  border-radius: 3px;
+  .select__control {
+    border: none !important;
+  }
+}
+
+.invalid-school {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #dc3545;
+}
+
 .form-group.school {
   position: relative;
 
