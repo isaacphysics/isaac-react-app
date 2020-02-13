@@ -7,6 +7,10 @@
   min-width: 136px;
   padding: 0.5rem 2.1rem;
 
+  &.question-actions-link {
+    font-family: $secondary-font !important;
+  }
+
   @include respond-above(sm) {
     min-width: 180px;
   }

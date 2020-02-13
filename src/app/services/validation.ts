@@ -61,7 +61,7 @@ export const validateSubjectInterests = (subjectInterests?: SubjectInterests | n
 
 export const validateUserSchool = (user?: ValidationUser | null) => {
     return !!user && (
-        (user.schoolId !== null && user.schoolId !== undefined) ||
+        (!!user.schoolId) ||
         (!!user.schoolOther && user.schoolOther.length > 0)
     );
 };
@@ -118,3 +118,7 @@ export function validateBookingSubmission(event: AugmentedEvent, user: UserSumma
 export const resourceFound = <T>(resource: undefined | null | NOT_FOUND_TYPE | T): resource is T => {
     return resource !== undefined && resource !== null && resource !== NOT_FOUND;
 };
+
+export function safePercentage(correct: number | null | undefined, attempts: number | null | undefined) {
+    return (!(correct || correct == 0) || !attempts) ? null : correct / attempts * 100;
+}

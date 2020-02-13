@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import * as RS from "reactstrap";
-import {examBoardTagMap, IS_CS_PLATFORM, TAG_ID, TAG_LEVEL, tagExamboardMap} from "../../services/constants";
+import {examBoardTagMap, IS_CS_PLATFORM, TAG_ID, TAG_LEVEL, tagExamBoardMap} from "../../services/constants";
 import React from "react";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
@@ -83,7 +83,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
             {question.level}
         </td>}
         <td className="w-15">
-            {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagIcon(tagExamboardMap[tag]))}
+            {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagIcon(tagExamBoardMap[tag]))}
         </td>
     </tr>
 };

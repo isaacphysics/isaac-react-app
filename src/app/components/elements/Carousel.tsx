@@ -58,14 +58,18 @@ const ControlledCarouselInstance = ({children, collectionTag}: any) => {
     );
 };
 
-export const ResponsiveCarousel = ({children, collectionTag = 'div'}: any) => {
-    const triplets: any = [];
+export const ResponsiveCarousel = ({groupingLimit, children, collectionTag = 'div'}: any) => {
+    const tuple: any = [];
+
+    if (!groupingLimit || groupingLimit == 0) {
+        groupingLimit = 3
+    }
 
     children.forEach((child: any, index: number) => {
-        if (index % 3 === 0) {
-            triplets.push([]);
+        if (index % groupingLimit === 0) {
+            tuple.push([]);
         }
-        triplets[Math.floor(index / 3)].push (child);
+        tuple[Math.floor(index / groupingLimit)].push (child);
     });
 
     return (
@@ -77,7 +81,7 @@ export const ResponsiveCarousel = ({children, collectionTag = 'div'}: any) => {
             </div>
             <div className="d-none d-md-block">
                 <ControlledCarouselInstance collectionTag={collectionTag}>
-                    {triplets}
+                    {tuple}
                 </ControlledCarouselInstance>
             </div>
         </React.Fragment>

@@ -148,6 +148,40 @@ export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
+export const linkAccount = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_LINK_REQUEST});
+    try {
+        const redirectResponse = await api.authentication.linkAccount(provider);
+        const redirectUrl = redirectResponse.data.redirectUrl;
+        dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS, provider, redirectUrl: redirectUrl});
+        window.location.href = redirectUrl;
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+        dispatch(showErrorToastIfNeeded("Failed to link account", e));
+    }
+};
+
+export const unlinkAccount = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST});
+    try {
+        await api.authentication.unlinkAccount(provider);
+        dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS, provider});
+        await Promise.all([
+            dispatch(getUserAuthSettings() as any)
+        ]);
+        dispatch(showToast({
+            title: "Account unlinked",
+            body: "Your account settings were updated successfully.",
+            color: "success",
+            timeout: 5000,
+            closable: false,
+        }) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+        dispatch(showErrorToastIfNeeded("Failed to unlink account", e));
+    }
+};
+
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
     try {
@@ -224,10 +258,10 @@ export const updateCurrentUser = (
 
 export const setTempExamBoard = (examBoard: EXAM_BOARD) => ({type: ACTION_TYPE.EXAM_BOARD_SET_TEMP, examBoard});
 
-export const getProgress = () => async (dispatch: Dispatch<Action>) => {
+export const getProgress = (userIdOfInterest?: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PROGRESS_REQUEST});
     try {
-        const response = await api.users.getProgress();
+        const response = await api.users.getProgress(userIdOfInterest);
         dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, progress: response.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE});
@@ -729,6 +763,17 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to search for questions", e));
+    }
+};
+
+export const getAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST});
+    try {
+        const answeredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
+        dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, answeredQuestionsByDate: answeredQuestionsByDate.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE})
+        dispatch(showErrorToastIfNeeded("Failed to get answered question activity data", e));
     }
 };
 
@@ -1313,6 +1358,18 @@ export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dis
     }
 };
 
+export const getNewsPodList = (subject: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.NEWS_REQUEST});
+        const response = await api.news.get(subject);
+        const newsList = response.data.results;
+        dispatch({type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS, theNews: newsList})
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.NEWS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Unable to display news", e));
+    }
+}
+
 export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST});
@@ -1322,6 +1379,25 @@ export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => a
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to load event overviews", error) as any);
+    }
+};
+
+export const getEventMapData = (startIndex: number, eventsPerPage: number, typeFilter: EventTypeFilter, statusFilter: EventStatusFilter) => async (dispatch: Dispatch<Action>) => {
+    const filterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
+    const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
+    const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
+    const showInactiveOnly = false;
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_MAP_DATA_REQUEST});
+        const response = await api.events.getEventMapData(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly);
+        dispatch({
+            type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS,
+            eventMapData: response.data.results,
+            total: response.data.totalResults
+        });
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Event map data request failed", e));
     }
 };
 
@@ -1507,6 +1583,10 @@ export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) =>
         dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Loading Content Errors Failed", e));
     }
+};
+
+export const setPrintingHints = (hintsEnabled: boolean) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.PRINTING_SET_HINTS, hintsEnabled});
 };
 
 

@@ -73,7 +73,7 @@ type BoardTableProps = MyBoardsPageProps & {
 const Board = (props: BoardTableProps) => {
     const {user, board, setSelectedBoards, selectedBoards, boardView} = props;
 
-    const boardLink = `${window.location.origin}/gameboards#${board.id}`;
+    const boardLink = `/gameboards#${board.id}`;
 
     const dispatch = useDispatch();
     const [showShareLink, setShowShareLink] = useState(false);

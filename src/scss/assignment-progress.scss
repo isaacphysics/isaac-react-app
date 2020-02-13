@@ -468,6 +468,7 @@ $failed-bg-size: 25%;
     &:after {
       @include after-border;
       border-right: 1px solid $gray-118;
+      pointer-events: none; // don't intercept clicks as we want links in the th element
     }
   }
 
