@@ -55,9 +55,7 @@ export interface IsaacEventPageDTO extends ContentDTO {
     numberOfPlaces?: number;
     eventStatus?: EventStatus;
     placesAvailable?: number;
-    userOnWaitList?: boolean;
     endDate?: Date;
-    userBooked?: boolean;
     groupReservationLimit?: number;
 }
 

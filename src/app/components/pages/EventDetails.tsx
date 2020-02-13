@@ -50,7 +50,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
         const userIsNotAStudent = user && user.loggedIn && user.role !== "STUDENT";
         const isStudentEvent = event.tags !== undefined && event.tags.indexOf('student') != -1;
         const canMakeABooking = event.withinBookingDeadline && event.eventStatus != 'WAITING_LIST_ONLY' && (atLeastOne(event.placesAvailable) || (isStudentEvent && userIsNotAStudent));
-        const canBeAddedToWaitingList = !event.userOnWaitList && (event.eventStatus == 'WAITING_LIST_ONLY' || zeroOrLess(event.placesAvailable) || !event.withinBookingDeadline) && !(isStudentEvent && userIsNotAStudent);
+        const canBeAddedToWaitingList = event.userBookingStatus !== "WAITING_LIST" && (event.eventStatus == 'WAITING_LIST_ONLY' || zeroOrLess(event.placesAvailable) || !event.withinBookingDeadline) && !(isStudentEvent && userIsNotAStudent);
         const submissionTitle = canMakeABooking ? "Book now" : event.withinBookingDeadline ? "Apply" : "Apply -deadline past";
 
         function submitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
@@ -125,8 +125,8 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             </div>}
                                             {user && user.loggedIn && user.email && event.userBookingStatus === 'CONFIRMED' && <span> - <span className="text-success">You are booked on this event!</span></span>}
                                             {user && user.loggedIn && user.email && event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">You have been reserved a place on this event! Scroll down to complete your registration.</span></span>}
-                                            {!event.userBooked && !event.userOnWaitList && zeroOrLess(event.placesAvailable) && !(event.tags && event.tags.indexOf('student') != -1 && user && isTeacher(user)) && <span> - Waiting list booking is available!</span>}
-                                            {user && user.loggedIn && user.email && event.userOnWaitList && <span> - You are on the waiting list for this event.</span>}
+                                            {event.userBookingStatus !== "CONFIRMED" && event.userBookingStatus !== "WAITING_LIST" && zeroOrLess(event.placesAvailable) && !(event.tags && event.tags.indexOf('student') != -1 && user && isTeacher(user)) && <span> - Waiting list booking is available!</span>}
+                                            {user && user.loggedIn && user.email && event.userBookingStatus === "WAITING_LIST" && <span> - You are on the waiting list for this event.</span>}
                                         </td>
                                     </tr>}
                                     {event.bookingDeadline && <tr>
@@ -145,7 +145,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                             </div>
 
                             {/* Booking form */}
-                            {user && user.loggedIn && event.eventStatus != 'CLOSED' && !event.expired && bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <span>
+                            {user && user.loggedIn && event.eventStatus != 'CLOSED' && !event.expired && bookingFormOpen && !(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST") && <span>
                                 <RS.Card className="mb-4">
                                     <RS.CardBody>
                                         <h3>Event booking form</h3>
@@ -154,7 +154,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                 additionalInformation={additionalInformation} updateAdditionalInformation={updateAdditionalInformation}
                                             />
                                             <div>
-                                                {atLeastOne(event.numberOfPlaces) && !event.userBooked && event.withinBookingDeadline &&
+                                                {atLeastOne(event.numberOfPlaces) && event.withinBookingDeadline &&
                                                 (atLeastOne(event.placesAvailable) || (isStudentEvent && userIsNotAStudent)) && <p className="mb-3">
                                                     <small>
                                                         By requesting to book on this event, you are granting event organisers access to the information provided in the form above.
@@ -165,7 +165,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                     </small>
                                                 </p>}
 
-                                                {atLeastOne(event.numberOfPlaces) && !event.userBooked && (canMakeABooking || canBeAddedToWaitingList) && <div className="text-center mt-4 mb-2">
+                                                {atLeastOne(event.numberOfPlaces) && (canMakeABooking || canBeAddedToWaitingList) && <div className="text-center mt-4 mb-2">
                                                     <RS.Input type="submit" value={submissionTitle} className="btn btn-xl btn-secondary border-0" />
                                                 </div>}
                                             </div>
@@ -187,12 +187,12 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
                                 {/* Options for logged-in users */}
                                 {user && user.loggedIn && !event.expired && <span>
-                                    {event.eventStatus != 'CLOSED' && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
+                                    {event.eventStatus != 'CLOSED' && !bookingFormOpen && !(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST") && <RS.Button
                                         onClick={() => {setBookingFormOpen(true)}}
                                     >
                                         Open booking form
                                     </RS.Button>}
-                                    {bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
+                                    {bookingFormOpen && !(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST") && <RS.Button
                                         color="primary" outline onClick={() => {setBookingFormOpen(false)}}
                                     >
                                         Close booking form
@@ -207,7 +207,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     >
                                         Cancel your booking
                                     </RS.Button>}
-                                    {event.userOnWaitList && <RS.Button
+                                    {event.userBookingStatus === "WAITING_LIST" && <RS.Button
                                         color="primary" outline onClick={() => {dispatch(cancelMyBooking(eventId))}}
                                     >
                                         Remove from waiting list
