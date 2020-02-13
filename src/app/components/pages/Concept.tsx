@@ -18,6 +18,7 @@ import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
+import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 
 const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
     return {
@@ -73,7 +74,7 @@ const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc, s
 
                         {/* Superseded notice */}
 
-                        <p>{doc.attribution}</p>
+                        {doc.attribution && <span className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></span>}
 
                         <NavigationLinks navigation={navigation} />
 

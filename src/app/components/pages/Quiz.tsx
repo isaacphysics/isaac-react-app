@@ -19,6 +19,7 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {EditContentButton} from "../elements/EditContentButton";
 import {doc as selectDoc, questions} from "../../state/selectors";
+import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 
 export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId: string}}}) => {
     const dispatch = useDispatch();
@@ -87,7 +88,7 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
                                 />
                             </div>
 
-                            <p className="text-muted">{doc.attribution}</p>
+                            {doc.attribution && <span className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></span>}
                         </RS.Form>
 
                         {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
