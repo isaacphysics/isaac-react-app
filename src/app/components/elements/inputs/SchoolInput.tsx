@@ -131,7 +131,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             </RS.Label>
         </div>}
 
-        <div id={`school-input-${randomNumber}`} className="invalid-school">
+        <div className="invalid-school">
             {submissionAttempted && !validateUserSchool(userToUpdate) ? "Please specify your school association" : null}
         </div>
     </RS.FormGroup>
