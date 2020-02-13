@@ -28,6 +28,12 @@ code {
   padding: 0 0.05rem;
 }
 
+.text-muted {
+  a {
+    color: $text-muted !important;
+  }
+}
+
 // NOMENSA typography.scss
 // REPLACE ./assets WITH /assets
 p {
