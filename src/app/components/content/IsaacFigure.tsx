@@ -3,6 +3,7 @@ import {FigureDTO} from "../../../IsaacApiTypes";
 import {apiHelper} from "../../services/api";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {FigureNumberingContext} from "../../../IsaacAppTypes";
+import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 
 interface IsaacFigureProps {
     doc: FigureDTO;
@@ -24,7 +25,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                     <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value && doc.id && `**Figure ${figureNumbers[doc.id]}:** ${doc.value}`}>
                         {doc.children}
                     </IsaacContentValueOrChildren>
-                    {doc.attribution && <div className="text-muted">{doc.attribution}</div>}
+                    {doc.attribution && <span className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></span>}
                 </div>
             </figure>}
         </FigureNumberingContext.Consumer>
