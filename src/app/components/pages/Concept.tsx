@@ -74,7 +74,7 @@ const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc, s
 
                         {/* Superseded notice */}
 
-                        {doc.attribution && <span className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></span>}
+                        {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
 
                         <NavigationLinks navigation={navigation} />
 

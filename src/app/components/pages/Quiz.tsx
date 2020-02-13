@@ -88,7 +88,7 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
                                 />
                             </div>
 
-                            {doc.attribution && <span className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></span>}
+                            {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
                         </RS.Form>
 
                         {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}

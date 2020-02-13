@@ -103,7 +103,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                             However, if you were assigned this version, you should complete it.
                         </div>}
 
-                        {doc.attribution && <span className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></span>}
+                        {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
 
                         <NavigationLinks navigation={navigation}/>
 
