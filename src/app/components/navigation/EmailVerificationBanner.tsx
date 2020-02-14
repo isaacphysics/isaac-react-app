@@ -35,7 +35,7 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
 
     const show = user != null && user.loggedIn && status != "VERIFIED" && !hidden;
 
-    return show ? <div className="banner d-print-none">
+    return show ? <div className="banner d-print-none" id="email-status-banner">
         <RS.Container className="py-3">
 
             <RS.Row style={{alignItems: "center"}}>
@@ -47,14 +47,20 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
                 </RS.Col>
                 {(status == null || status == "NOT_VERIFIED") && <React.Fragment>
                     <RS.Col xs={12} sm={10} md={8}>
-                        <small>Your email address is not verified -
-                            please find our email in your inbox and follow the verification link. You can <Link onClick={clickVerify}>request a new
-                                verification email</Link> if necessary. To change
+                        <small>Your email address is not verified - please find our email in your inbox and follow the
+                            verification link. You can
+                        <Link onClick={clickVerify} id="email-verification-request">
+                            request a new verification email
+                        </Link> if necessary. To change
                             your account email, go to <Link to="/account">My account</Link>.
                         </small>
                     </RS.Col>
                     <RS.Col xs={12} md={3} className="text-center">
-                        <RS.Button color="primary" outline className="mt-3 mb-2 d-block d-md-inline-block banner-button" onClick={clickSnooze}>Snooze</RS.Button>
+                        <RS.Button color="primary" outline className="mt-3 mb-2 d-block d-md-inline-block banner-button"
+                            onClick={clickSnooze} id="email-verification-snooze"
+                        >
+                            Snooze
+                        </RS.Button>
                     </RS.Col>
                 </React.Fragment>}
                 {(status == "DELIVERY_FAILED") &&
