@@ -9,6 +9,7 @@ import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {TrustedHtml} from "./TrustedHtml";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {questions} from "../../state/selectors";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface AccordionsProps {
     id?: string;
@@ -133,7 +134,7 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
                     <span className="text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
                     {trustedTitle && <TrustedHtml html={trustedTitle} />}
                 </div>
-                {accordianIcon && <span className={"accordion-icon accordion-icon-" + accordianIcon}>
+                {accordianIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon accordion-icon-" + accordianIcon}>
                     <span className="sr-only">{accordianIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
                 </span>}
             </RS.Button>
