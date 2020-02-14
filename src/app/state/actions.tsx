@@ -686,8 +686,8 @@ export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
 };
 
 // Questions
-export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question});
+export const registerQuestion = (question: QuestionDTO, accordionClientId?: string) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question, accordionClientId});
 };
 
 export const deregisterQuestion = (questionId: string) => (dispatch: Dispatch<Action>) => {

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useContext, useEffect } from "react";
 import {connect, useDispatch} from "react-redux";
 import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
@@ -9,6 +9,7 @@ import classnames from "classnames";
 import * as RS from "reactstrap";
 import {QUESTION_TYPES} from "../../services/questions";
 import {DateString, NUMERIC_DATE_AND_TIME} from "../elements/DateString";
+import {AccordionSectionContext} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     const questionPart = questions.selectQuestionPart(doc.id)(state);
@@ -32,8 +33,10 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
     const {doc, validationResponse, currentAttempt, canSubmit, locked} = props;
     const dispatch = useDispatch();
 
+    const accordion = useContext(AccordionSectionContext);
+
     useEffect((): (() => void) => {
-        dispatch(registerQuestion(doc));
+        dispatch(registerQuestion(doc, accordion.clientId));
         return () => dispatch(deregisterQuestion(doc.id as string));
     }, [doc.id]);
 
