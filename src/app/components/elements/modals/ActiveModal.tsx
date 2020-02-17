@@ -20,7 +20,9 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
                 {activeModal.title}
             </RS.ModalHeader>
             <RS.ModalBody className="px-1 pb-2 mx-4">
-                {typeof ModalBody === "function" ? <ModalBody /> : ModalBody}
+                <RS.Col>
+                    {typeof ModalBody === "function" ? <ModalBody /> : ModalBody}
+                </RS.Col>
             </RS.ModalBody>
             {activeModal.buttons &&
                 <RS.ModalFooter className="mb-4 mx-2 align-self-center">
