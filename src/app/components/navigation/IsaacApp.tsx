@@ -75,7 +75,9 @@ export const IsaacApp = () => {
 
     // Run once on component mount
     useEffect(() => {
-        dispatch(requestCurrentUser());
+        if (window.location.pathname !== "/logout") {
+            dispatch(requestCurrentUser());
+        }
         dispatch(requestConstantsSegueEnvironment());
         dispatch(fetchGlossaryTerms());
     }, []);
@@ -83,10 +85,7 @@ export const IsaacApp = () => {
     // Render
     return <Router history={history}>
         <React.Fragment>
-            <LoadScript
-                id="script-loader"
-                googleMapsApiKey="AIzaSyBcVr1HZ_JUR92xfQZSnODvvlSpNHYbi4Y"
-            >
+            <LoadScript googleMapsApiKey="AIzaSyBcVr1HZ_JUR92xfQZSnODvvlSpNHYbi4Y" id="script-loader">
                 {{[SITE.PHY]: <HeaderPhy />, [SITE.CS]: <HeaderCS />}[SITE_SUBJECT]}
                 <Toasts />
                 <ActiveModals />
