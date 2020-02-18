@@ -75,9 +75,7 @@ export const IsaacApp = () => {
 
     // Run once on component mount
     useEffect(() => {
-        if (window.location.pathname !== "/logout") {
-            dispatch(requestCurrentUser());
-        }
+        dispatch(requestCurrentUser());
         dispatch(requestConstantsSegueEnvironment());
         dispatch(fetchGlossaryTerms());
     }, []);
