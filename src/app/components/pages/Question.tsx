@@ -20,6 +20,7 @@ import {isStudent, isTeacher} from "../../services/user";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {doc as selectDoc} from "../../state/selectors";
+import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -102,7 +103,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                             However, if you were assigned this version, you should complete it.
                         </div>}
 
-                        <p className="text-muted">{doc.attribution}</p>
+                        {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
 
                         <NavigationLinks navigation={navigation}/>
 

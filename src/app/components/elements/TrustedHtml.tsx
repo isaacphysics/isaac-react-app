@@ -1,9 +1,9 @@
-import React from "react";
+import React, {useContext} from "react";
 import katex from "katex";
 import 'katex/dist/contrib/mhchem.js';
 import renderA11yString from '../../services/katex-a11y';
 import he from "he";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {LoggedInUser, FigureNumberingContext, FigureNumbersById} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
 import {EXAM_BOARD} from "../../services/constants";
@@ -198,7 +198,7 @@ function munge(latex: string) {
         .replace(/\\newline/g, "\\\\");
 }
 
-export function katexify(html: string, user: LoggedInUser | null, examBoard: EXAM_BOARD | null, screenReaderHoverText: boolean) {
+export function katexify(html: string, user: LoggedInUser | null, examBoard: EXAM_BOARD | null, screenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -255,7 +255,16 @@ export function katexify(html: string, user: LoggedInUser | null, examBoard: EXA
             }
         } else {
             // It's a ref
-            output += match[0];
+            let result = "unknown reference " + match[0];
+            const ref = match[0].match(/ref\{([^}]*)\}/);
+            if (ref && ref[1]) {
+                const number = figureNumbers[ref[1]];
+                if (number) {
+                    result = "Figure " + number;
+                }
+            }
+
+            output += result;
             index = match.index + match[0].length;
         }
         start.lastIndex = index;
@@ -297,7 +306,9 @@ export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
     const examBoard = useCurrentExamBoard();
 
-    html = manipulateHtml(katexify(html, user, examBoard, screenReaderHoverText));
+    const figureNumbers = useContext(FigureNumberingContext);
+
+    html = manipulateHtml(katexify(html, user, examBoard, screenReaderHoverText, figureNumbers));
 
     const ElementType = span ? "span" : "div";
     return <ElementType dangerouslySetInnerHTML={{__html: html}} />;
