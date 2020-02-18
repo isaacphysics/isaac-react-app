@@ -73,8 +73,17 @@ function convertQuestionChoicesToJson(questionChoices: (FreeTextRule & {choiceNu
     return JSON.stringify(questionChoices.map(removeChoiceNumber), null, 2)
 }
 
-function convertJsonToQuestionChoices(jsonChoices: string) {
-    return JSON.parse(jsonChoices).map(
+function convertJsonToQuestionChoices(jsonString: string) {
+    let parsedJson = JSON.parse(jsonString);
+    let choicesArray;
+    if (Array.isArray(parsedJson)) {
+        choicesArray = parsedJson;
+    } else if (parsedJson.hasOwnProperty("type") && parsedJson.type == "isaacFreeTextQuestion") {
+        choicesArray = parsedJson.choices;
+    } else {
+        throw TypeError("Neither a Choices array nor a FreeTextQuestion");
+    }
+    return choicesArray.map(
         (choice: FreeTextRule, i: number) => Object.assign(choice, {choiceNumber: i})
     );
 }
