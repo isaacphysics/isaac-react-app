@@ -9,6 +9,7 @@ import {AppState} from "../../state/reducers";
 import {Tabs} from "../elements/Tabs";
 import {atLeastOne} from "../../services/validation";
 import {IsaacContent} from "../content/IsaacContent";
+import {notificationCheckerMiddleware} from "../../services/notificationManager";
 
 interface AugmentedTestCase extends TestCaseDTO {
     match?: boolean;
@@ -68,6 +69,15 @@ function notEqualToDefaultChoice(choice: FreeTextRule) {
     return choiceHash(choice) != choiceHash(defaultChoiceExample);
 }
 
+function convertQuestionChoicesToJson(questionChoices: (FreeTextRule & {choiceNumber: number})[]) {
+    return JSON.stringify(questionChoices.map(removeChoiceNumber), null, 2)
+}
+
+function convertJsonToQuestionChoices(jsonChoices: string) {
+    return JSON.parse(jsonChoices).map(
+        (choice: FreeTextRule, i: number) => Object.assign(choice, {choiceNumber: i})
+    );
+}
 
 let testCaseNumber = 0;
 function generateDefaultTestCase() {
@@ -94,15 +104,25 @@ function convertCsvToTestCases(testCasesCsv: string) {
     })
 }
 
+function isEditableExplanation(explanation?: any) {
+    return explanation?.children && explanation.children.length > 0 && explanation.children[0].value !== undefined;
+}
+
 export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
     const dispatch = useDispatch();
     const testCaseResponses = useSelector((state: AppState) => state && state.testQuestions || []);
 
     const [questionChoices, setQuestionChoices] = useState<(FreeTextRule & {choiceNumber: number})[]>([JSON.parse(JSON.stringify(defaultChoiceExample))]);
+    const [questionChoicesJson, setQuestionChoicesJson] = useState(convertQuestionChoicesToJson(questionChoices));
+    const [jsonParseError, setJsonParseError] = useState(false);
+    useMemo(() => {setQuestionChoicesJson(convertQuestionChoicesToJson(questionChoices))}, [questionChoices]);
+
     const [testCases, setTestCases] = useState<(TestCaseDTO & {testCaseNumber: number})[]>([JSON.parse(JSON.stringify(defaultTestCaseExample))]);
     const [testCasesCsv, setTestCasesCsv] = useState(convertTestCasesToCsv(testCases));
-    const [choicesHashAtPreviousRequest, setChoicesHashAtPreviousRequest] = useState<number | null>(null);
+    const [csvParseError, setCsvParseError] = useState(false);
     useMemo(() => {setTestCasesCsv(convertTestCasesToCsv(testCases))}, [testCases]);
+
+    const [choicesHashAtPreviousRequest, setChoicesHashAtPreviousRequest] = useState<number | null>(null);
 
     const testCaseResponseMap: {[key: string]: AugmentedTestCase} = {};
     if (choicesHashAtPreviousRequest === choicesHash(questionChoices)) {
@@ -197,14 +217,18 @@ export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
                                         <td>
                                             <RS.Label>
                                                 Feedback:
-                                                <RS.Input
-                                                    type="textarea" value={(choice.explanation as any).children[0].value}
-                                                    onChange={event => {
-                                                        const explanation = choice.explanation as any;
-                                                        explanation.children[0].value = event.target.value;
-                                                        setQuestionChoices(questionChoices.map(c => choice == c ? {...c, explanation} : c));
-                                                    }}
-                                                />
+                                                {isEditableExplanation(choice.explanation) ?
+                                                    <RS.Input
+                                                        type="textarea" value={(choice.explanation as any).children[0].value}
+                                                        onChange={event => {
+                                                            const explanation = choice.explanation as any;
+                                                            explanation.children[0].value = event.target.value;
+                                                            setQuestionChoices(questionChoices.map(c => choice == c ? {...c, explanation} : c));
+                                                        }}
+                                                    />
+                                                    :
+                                                    <IsaacContent doc={choice.explanation}/>
+                                                }
                                             </RS.Label>
                                         </td>
                                         <td>
@@ -226,14 +250,28 @@ export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
                                 </tfoot>
                             </RS.Table>,
                             "JSON": <div className="mb-3">
-                                <p>JSON for the choices part of your isaacFreeTextQuestion</p>
+                                <p>JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion</p>
                                 <RS.Input
-                                    type="textarea" rows={25}
-                                    value={JSON.stringify(questionChoices.map(removeChoiceNumber), null, 2)}
-                                    onChange={event => setQuestionChoices(JSON.parse(event.target.value).map(
-                                        (choice: FreeTextRule, i: number) => Object.assign(choice, {choiceNumber: i})
-                                    ))}
+                                    type="textarea" rows={25} className={jsonParseError ? "alert-danger" : ""}
+                                    value={questionChoicesJson}
+                                    onChange={event => {
+                                        setQuestionChoicesJson(event.target.value);
+                                        setJsonParseError(false);
+                                    }}
                                 />
+                                <div className="text-center">
+                                    <RS.Button
+                                        className="my-2" onClick={() => {
+                                            try {
+                                                setQuestionChoices(convertJsonToQuestionChoices(questionChoicesJson));
+                                            } catch (e) {
+                                                setJsonParseError(true);
+                                            }
+                                        }}
+                                    >
+                                        Submit
+                                    </RS.Button>
+                                </div>
                             </div>
                         }}
                     </Tabs>
@@ -307,11 +345,20 @@ export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
                             </RS.Table>,
                             'CSV': <div className="mb-3">
                                 <p>Enter test cases as CSV with the headers: expected(true/false), value</p>
-                                <RS.Input type="textarea" rows={10} value={testCasesCsv} onChange={event => setTestCasesCsv(event.target.value)} />
+                                <RS.Input type="textarea" rows={10} value={testCasesCsv} onChange={event => {
+                                    setCsvParseError(false);
+                                    setTestCasesCsv(event.target.value);
+                                }} />
                                 <div className="text-center">
                                     <RS.Button
-                                        className="my-2" disabled={atLeastOne(questionChoices.filter(notEqualToDefaultChoice).length)}
-                                        onClick={() => setTestCases(convertCsvToTestCases(testCasesCsv))}
+                                        className={`my-2 ${csvParseError ? "alert-danger" : ""}`}
+                                        onClick={() => {
+                                            try {
+                                                setTestCases(convertCsvToTestCases(testCasesCsv));
+                                            } catch (e) {
+                                                setCsvParseError(true);
+                                            }
+                                        }}
                                     >
                                         Submit
                                     </RS.Button>
