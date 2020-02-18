@@ -107,7 +107,7 @@ const ReservationsModal = () => {
         if (selectedEvent && selectedEvent.groupReservationLimit) {
             const bookings = eventBookingsForGroup.filter(booking =>
                 (booking.bookingStatus === "CONFIRMED" || booking.bookingStatus === "RESERVED" || booking.bookingStatus ==="WAITING_LIST")
-                && booking.reservedBy && booking.reservedBy.id === user?.id
+                && booking.reservedById === user?.id
             );
             const candidateBookings = Object.values(userCheckboxes).filter(c => c);
             return (candidateBookings.length + bookings.length) > selectedEvent.groupReservationLimit;
@@ -165,8 +165,8 @@ const ReservationsModal = () => {
                                 return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
                                     <td className="align-middle">
                                         {booking.userBooked &&
-                                        (booking.reservedBy && booking.reservedBy.id === user?.id) &&
-                                        (booking.bookingStatus == 'RESERVED') &&
+                                        (booking.reservedById === user?.id) &&
+                                        (booking.bookingStatus === 'RESERVED') &&
                                         <Button key={booking.userBooked.id}
                                             id={`${booking.userBooked.id}`}
                                             color="link" outline block className="btn-sm mb-1"
@@ -175,7 +175,7 @@ const ReservationsModal = () => {
                                     </td>
                                     <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)}</td>
                                     <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
-                                    <td className="align-middle">{booking.reservedBy && (booking.reservedBy.givenName + " " + booking.reservedBy.familyName)}</td>
+                                    <td className="align-middle">{booking.reservedById === user?.id ? "You" : "Someone else"}</td>
                                 </tr>);
                             })}
                             {eventBookingsForGroup.length == 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
