@@ -149,7 +149,7 @@ export type Action =
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO}
+    | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO; accordionClientId?: string}
     | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionId: string}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: ApiTypes.ChoiceDTO}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}
@@ -160,6 +160,10 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST}
+    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; answeredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
+    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
@@ -248,6 +252,10 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
+
+    | {type: ACTION_TYPE.NEWS_REQUEST}
+    | {type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS; theNews: ApiTypes.IsaacPodDTO[]}
+    | {type: ACTION_TYPE.NEWS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.EVENTS_REQUEST}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
@@ -355,6 +363,7 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     currentAttempt?: ApiTypes.ChoiceDTO;
     canSubmit?: boolean;
     locked?: Date;
+    accordionClientId?: string;
 }
 
 export interface AppGroup extends ApiTypes.UserGroupDTO {
@@ -494,7 +503,7 @@ export interface AdminStatsResponse {
 
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
-export const AccordionSectionContext = React.createContext<string | undefined>(undefined);
+export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string}>({id: undefined, clientId: "unknown"});
 export const QuestionContext = React.createContext<string | undefined>(undefined);
 
 export interface AppAssignmentProgress {
@@ -632,6 +641,10 @@ export interface UserProgress {
     totalQuestionsCorrect?: number;
     totalQuestionPartsCorrect: number;
     totalQuestionPartsAttempted?: number;
+    totalQuestionsCorrectThisAcademicYear?: number;
+    totalQuestionsAttemptedThisAcademicYear?: number;
+    totalQuestionPartsCorrectThisAcademicYear?: number;
+    totalQuestionPartsAttemptedThisAcademicYear?: number;
     attemptsByType?: { [type: string]: number };
     correctByType?: { [type: string]: number };
     attemptsByTag?: { [tag: string]: number };

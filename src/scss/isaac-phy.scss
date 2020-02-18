@@ -31,6 +31,15 @@ $green: #208838;
 $reddish: #d7335f; // Used as an active colour on secondary buttons
 $focus-blue: #3E59A3; // Used as focus indicator colour on inputs
 
+// Physics colours
+$phy_orangered: #ef3e36;
+$phy_blue: #009acd;
+$phy_purple: #944cbe;
+$phy_burgundy: #991846;
+$phy_chemistry: $phy_orangered;
+$phy_maths: $phy_blue;
+$phy_physics: $phy_purple;
+
 // Button sizing
 $input-btn-padding-y-lg: 0.5rem;
 $input-btn-padding-x-lg: 3rem;
@@ -77,6 +86,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./icons";
 @import "./boards";
 @import "./focus";
+@import "./progress-bar";
 @import "./anvil";
 
 // Navigation
@@ -93,10 +103,12 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "./topic";
 @import "./search";
 @import "./my-assignments";
+@import "./my-progress";
 @import "./gameboard";
 @import "./assignment-progress";
 @import "./groups";
 @import "./events";
+@import "./books";
 
 // Print
 @import "./print";

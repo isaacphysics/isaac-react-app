@@ -53,7 +53,7 @@ export const NavigationBar = () => {
         </NavbarToggler>
 
         <Collapse isOpen={menuOpen} navbar className="px-0 mx-0 px-xl-5 mx-xl-5">
-            <Nav navbar className="justify-content-between">
+            <Nav navbar className="justify-content-between" id="main-menu">
 
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret className="p-3 ml-3 mr-3">
@@ -89,9 +89,9 @@ export const NavigationBar = () => {
                         <DropdownItem tag={Link} to="/my_gameboards" className="pl-4 py-3 p-md-3">
                             My gameboards
                         </DropdownItem>
-                        <DropdownItemComingSoon className="pl-4 py-3 p-md-3">
+                        <DropdownItem tag={Link} to="/progress" className="pl-4 py-3 p-md-3">
                             My progress
-                        </DropdownItemComingSoon>
+                        </DropdownItem>
                         {/*<DropdownItemComingSoon className="pl-4 py-3 p-md-3">*/}
                         {/*    Problem-solving*/}
                         {/*</DropdownItemComingSoon>*/}

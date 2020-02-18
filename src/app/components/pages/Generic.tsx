@@ -48,7 +48,7 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc, 
                     <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
                     }
                     <div className="question-actions question-actions-leftmost mt-3">
-                        <ShareLink linkUrl={`${window.location.origin}/pages/${doc.id}`}/>
+                        <ShareLink linkUrl={`/pages/${doc.id}`}/>
                     </div>
                     <div className="question-actions mt-3 not_mobile">
                         <PrintButton/>

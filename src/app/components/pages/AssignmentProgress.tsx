@@ -1,32 +1,29 @@
 import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {
-    Container,
-    Row,
+    Button,
     Col,
-    UncontrolledButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
+    Container,
     DropdownItem,
-    Label, Spinner, Button
+    DropdownMenu,
+    DropdownToggle,
+    Label,
+    Row,
+    Spinner,
+    UncontrolledButtonDropdown
 } from "reactstrap"
-import {
-    loadGroups,
-    loadAssignmentsOwnedByMe,
-    loadBoard,
-    loadProgress,
-    openActiveModal
-} from "../../state/actions";
+import {loadAssignmentsOwnedByMe, loadBoard, loadGroups, loadProgress, openActiveModal} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {sortBy, orderBy} from "lodash";
-import {AppGroup, AppAssignmentProgress, ActiveModal} from "../../../IsaacAppTypes";
+import {orderBy, sortBy} from "lodash";
+import {ActiveModal, AppAssignmentProgress, AppGroup} from "../../../IsaacAppTypes";
 import {groups} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {API_PATH, DATE_FORMATTER, TEACHERS_CRUMB} from "../../services/constants";
+import {API_PATH, TEACHERS_CRUMB} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
+import {formatDate} from "../elements/DateString";
 
 const stateFromProps = (state: AppState) => {
     if (state != null) {
@@ -125,12 +122,6 @@ type ProgressDetailsProps = AssignmentDetailsProps & {
 };
 
 const passMark = 0.75;
-
-function formatDate(date: number | Date | undefined) {
-    if (!date) return "Unknown";
-    const dateObject = new Date(date);
-    return DATE_FORMATTER.format(dateObject);
-}
 
 function formatMark(numerator: number, denominator: number, formatAsPercentage: boolean) {
     let result;
@@ -350,8 +341,10 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
                         {sortedProgress.map((studentProgress) => {
                             const fullAccess = studentProgress.user.authorisedFullAccess;
                             return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " revoked"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
-                                <th className="student-name">{studentProgress.user.givenName}<span
-                                    className="d-none d-lg-inline"> {studentProgress.user.familyName}</span></th>
+                                <th className="student-name">
+                                    {studentProgress.user.givenName}
+                                    <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                </th>
                                 {questions.map((q, index) =>
                                     <td key={q.id} className={markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestion(index)}>
                                         {fullAccess ? formatMark(studentProgress.correctPartResults[index],

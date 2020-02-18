@@ -1,14 +1,15 @@
-import React, {useEffect} from "react";
+import React, { useContext, useEffect } from "react";
 import {connect, useDispatch} from "react-redux";
 import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
 import * as ApiTypes from "../../../IsaacApiTypes";
-import {DATE_TIME_FORMATTER} from "../../services/constants";
 import {questions} from "../../state/selectors";
 import classnames from "classnames";
 import * as RS from "reactstrap";
 import {QUESTION_TYPES} from "../../services/questions";
+import {DateString, NUMERIC_DATE_AND_TIME} from "../elements/DateString";
+import {AccordionSectionContext} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     const questionPart = questions.selectQuestionPart(doc.id)(state);
@@ -28,16 +29,14 @@ interface IsaacQuestionTabsProps {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
 }
 
-function showTime(date: Date) {
-    return DATE_TIME_FORMATTER.format(date);
-}
-
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
     const {doc, validationResponse, currentAttempt, canSubmit, locked} = props;
     const dispatch = useDispatch();
 
+    const accordion = useContext(AccordionSectionContext);
+
     useEffect((): (() => void) => {
-        dispatch(registerQuestion(doc));
+        dispatch(registerQuestion(doc, accordion.clientId));
         return () => dispatch(deregisterQuestion(doc.id as string));
     }, [doc.id]);
 
@@ -74,7 +73,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
             </div>}
 
             {locked && <RS.Alert color="danger">
-                This question is locked until at least {showTime(locked)} to prevent repeated guessing.
+                This question is locked until at least {<DateString formatter={NUMERIC_DATE_AND_TIME}>{locked}</DateString>} to prevent repeated guessing.
             </RS.Alert>}
 
             {((!validationResponse) || (!validationResponse.correct) || canSubmit) && (!locked) && <RS.Row>

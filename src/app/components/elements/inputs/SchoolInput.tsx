@@ -1,8 +1,10 @@
-import React, {MutableRefObject, useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
+import AsyncCreatableSelect from "react-select/async-creatable";
 import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
 import {api} from "../../../services/api";
 import {validateUserSchool} from "../../../services/validation";
+import {throttle} from "lodash";
 
 interface SchoolInputProps {
     userToUpdate: ValidationUser;
@@ -10,28 +12,29 @@ interface SchoolInputProps {
     submissionAttempted: boolean;
     className?: string;
     idPrefix?: string;
+    disableInput?: boolean;
 }
 const NOT_APPLICABLE = "N/A";
-export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school"}: SchoolInputProps) => {
+
+
+const getSchoolPromise = (schoolSearchText: string) =>
+    new Promise(resolve => {
+        resolve(api.schools.search(schoolSearchText).then(({data}) => {
+            let temp: any = [];
+            data && data.length > 0 && data.map((item: any) => (temp.push({value: item, label: item.name + ", " + item.postcode})));
+            return temp;
+        }).catch((response) => {
+            console.error("Error searching for schools. ", response);
+        }));
+    });
+// Must define this throttle function _outside_ the component to ensure it doesn't get overwritten each rerender!
+const throttledSchoolSearch = throttle(getSchoolPromise, 450);
+
+export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput}: SchoolInputProps) => {
     let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
-    let [schoolSearchResults, setSchoolSearchResults] = useState<School[]>();
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
-    function searchSchool(e?: Event) {
-        if (e) {
-            e.preventDefault();
-        }
-        if (schoolQueryText) {
-            api.schools.search(schoolQueryText).then(({data}) => {
-                setSchoolSearchResults(data);
-            }).catch((response) => {
-                console.error("Error searching for schools. ", response);
-            });
-        } else {
-            setSchoolSearchResults([]);
-        }
-    }
-
+    // Get school associated with urn
     function fetchSchool(urn: string) {
         if (urn != "") {
             api.schools.getByUrn(urn).then(({data}) => {
@@ -46,73 +49,72 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         fetchSchool(userToUpdate.schoolId || "");
     }, [userToUpdate]);
 
-    const timer: MutableRefObject<number | undefined> = useRef();
-    useEffect(() => {
-        timer.current = window.setTimeout(() => {
-            searchSchool();
-        }, 800);
-        return () => {
-            clearTimeout(timer.current);
-        }
-    }, [schoolQueryText]);
+    // Called as user types
+    function renderInput(queryValue: any) {
+        setSchoolQueryText(queryValue);
+    }
 
+    // Set schoolId or schoolOther
     function setUserSchool(school: any) {
         if (setUserToUpdate) {
-            setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school && school.urn}));
-            setSchoolQueryText(null);
-            setSelectedSchoolObject(school);
-            setSchoolSearchResults([]);
+            if (school.urn) {
+                setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school.urn, schoolOther: undefined}));
+                setSchoolQueryText(null);
+                setSelectedSchoolObject(school);
+            } else if (school) {
+                setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: school, schoolId: undefined}));
+                setSchoolQueryText(null);
+                setSelectedSchoolObject(school);
+            }
         }
     }
 
-    const schoolSpecified = (
-        userToUpdate.schoolId !== undefined ||
-        (userToUpdate.schoolOther !== undefined && userToUpdate.schoolOther !== "" && userToUpdate.schoolOther !== NOT_APPLICABLE)
+    // Called when school input box option selected
+    function handleSetSchool(newValue: any) {
+        if (newValue == null) {
+            setSchoolQueryText(null);
+            setSelectedSchoolObject(undefined);
+            userToUpdate.schoolOther = undefined;
+        } else if (newValue && newValue.value) {
+            setUserSchool(newValue.value);
+        } else if (newValue) {
+            setUserSchool(newValue);
+        }
+    }
+
+    const schoolValue = (
+        schoolQueryText ?
+            schoolQueryText :
+            (selectedSchoolObject && selectedSchoolObject.urn ?
+                {value: selectedSchoolObject.urn, label: selectedSchoolObject.name + ", " + selectedSchoolObject.postcode} :
+                (userToUpdate.schoolOther ?
+                    {value: "manually entered school", label: userToUpdate.schoolOther} :
+                    undefined))
     );
 
+    let randomNumber = Math.random();
+
     return <RS.FormGroup className={`school ${className}`}>
-        <RS.Label htmlFor="school-input" className="form-required">School</RS.Label>
+        <RS.Label htmlFor={`school-input-${randomNumber}`} className="form-required">School</RS.Label>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
-            <RS.Input
-                id="school-input" type="text" name="school" placeholder="Type a UK school name..." autoComplete="isaac-off"
-                invalid={submissionAttempted && !validateUserSchool(userToUpdate)}
-                disabled={!setUserToUpdate}
-                value={
-                    schoolQueryText !== null ?
-                        schoolQueryText :
-                        (selectedSchoolObject && (selectedSchoolObject.name + ", " + selectedSchoolObject.postcode) || "")
-                }
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    const queryValue = e.target.value;
-                    setSchoolQueryText(queryValue);
-                    if (queryValue === "") {
-                        setUserSchool(undefined);
-                    }
-                }}
+            <AsyncCreatableSelect
+                isClearable
+                isDisabled={disableInput}
+                inputId={`school-input-${randomNumber}`}
+                placeholder={"Type your school name"}
+                value={schoolValue}
+                className={(submissionAttempted && !validateUserSchool(userToUpdate) ? "react-select-error " : "") + "basic-multi-select"}
+                classNamePrefix="select"
+                onInputChange={renderInput}
+                onChange={handleSetSchool}
+                loadOptions={throttledSchoolSearch}
+                filterOption={() => true}
+                formatCreateLabel={(input) => <span>Use &quot;{input}&quot; as your school name</span>}
+                autoComplete="new-password"
             />
-            {schoolSearchResults && schoolSearchResults.length > 0 && <ul className="school-search-results">
-                {schoolSearchResults.map((item: any) =>
-                    <li key={item.urn} onClick={() => {
-                        setUserSchool(item)
-                    }}>
-                        {item.name + ", " + item.postcode}
-                    </li>
-                )}
-            </ul>}
-            {!userToUpdate.schoolId && <RS.Input
-                type="text" name="school-other" placeholder="...or enter a non-UK school."
-                id="school-other-input" className="my-2" maxLength={255}
-                value={userToUpdate.schoolOther || ""} disabled={!setUserToUpdate}
-                invalid={submissionAttempted && !validateUserSchool(userToUpdate)}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    if (setUserToUpdate) {
-                        setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.value}));
-                    }
-                }}
-            />}
         </React.Fragment>}
 
-        {!schoolSpecified && <div className="d-flex">
+        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex">
             <RS.CustomInput
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
@@ -120,7 +122,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 disabled={!setUserToUpdate}
                 onChange={(e => {
                     if (setUserToUpdate) {
-                        setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : ""}));
+                        setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : undefined, schoolId: e.target.checked && undefined}));
                     }
                 })}
             />
@@ -129,8 +131,8 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             </RS.Label>
         </div>}
 
-        <RS.FormFeedback id="school-input">
-            Please specify your school association
-        </RS.FormFeedback>
+        <div className="invalid-school">
+            {submissionAttempted && !validateUserSchool(userToUpdate) ? "Please specify your school association" : null}
+        </div>
     </RS.FormGroup>
 };

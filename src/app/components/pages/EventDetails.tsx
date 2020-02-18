@@ -6,15 +6,8 @@ import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {EVENTS_CRUMB} from "../../services/constants";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
-import {
-    addMyselfToWaitingList,
-    bookMyselfOnEvent,
-    cancelMyBooking,
-    getEvent,
-    openActiveModal,
-    showToast
-} from "../../state/actions";
-import {DateString} from "../elements/DateString";
+import {addMyselfToWaitingList, bookMyselfOnEvent, cancelMyBooking, getEvent, showToast} from "../../state/actions";
+import {DateString, TIME_ONLY} from "../elements/DateString";
 import {IsaacContent} from "../content/IsaacContent";
 import {Link} from "react-router-dom";
 import {EventBookingForm} from "../elements/EventBookingForm";
@@ -104,8 +97,10 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     <tr>
                                         <td>When:</td>
                                         <td>
-                                            <><DateString>{event.date}</DateString> {event.date != event.endDate && <span> &#8212; </span>}</>
-                                            {event.date != event.endDate && <><DateString>{event.endDate}</DateString></>}{/* TODO short dates if not multiDay would be nice here */}
+                                            {event.multiDay ?
+                                                <><DateString>{event.date}</DateString>{" — "}<DateString>{event.endDate}</DateString></> :
+                                                <><DateString>{event.date}</DateString>{" — "}<DateString formatter={TIME_ONLY}>{event.endDate}</DateString></>
+                                            }
                                             {event.expired && <div className="alert-danger text-center">This event is in the past.</div>}
                                         </td>
                                     </tr>

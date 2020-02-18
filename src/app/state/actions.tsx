@@ -258,10 +258,10 @@ export const updateCurrentUser = (
 
 export const setTempExamBoard = (examBoard: EXAM_BOARD) => ({type: ACTION_TYPE.EXAM_BOARD_SET_TEMP, examBoard});
 
-export const getProgress = () => async (dispatch: Dispatch<Action>) => {
+export const getProgress = (userIdOfInterest?: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PROGRESS_REQUEST});
     try {
-        const response = await api.users.getProgress();
+        const response = await api.users.getProgress(userIdOfInterest);
         dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, progress: response.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE});
@@ -686,8 +686,8 @@ export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
 };
 
 // Questions
-export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question});
+export const registerQuestion = (question: QuestionDTO, accordionClientId?: string) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question, accordionClientId});
 };
 
 export const deregisterQuestion = (questionId: string) => (dispatch: Dispatch<Action>) => {
@@ -763,6 +763,17 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to search for questions", e));
+    }
+};
+
+export const getAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST});
+    try {
+        const answeredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
+        dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, answeredQuestionsByDate: answeredQuestionsByDate.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE})
+        dispatch(showErrorToastIfNeeded("Failed to get answered question activity data", e));
     }
 };
 
@@ -1346,6 +1357,18 @@ export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dis
         dispatch(showErrorToastIfNeeded("Unable to display events", e));
     }
 };
+
+export const getNewsPodList = (subject: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.NEWS_REQUEST});
+        const response = await api.news.get(subject);
+        const newsList = response.data.results;
+        dispatch({type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS, theNews: newsList})
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.NEWS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Unable to display news", e));
+    }
+}
 
 export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
     try {

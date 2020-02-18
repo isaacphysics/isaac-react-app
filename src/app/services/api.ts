@@ -90,8 +90,8 @@ export const api = {
         getUserIdSchoolLookup: (userIds: number[]): AxiosPromise<AppTypes.UserSchoolLookup> => {
             return endpoint.get(`/users/school_lookup?user_ids=${userIds.join(",")}`);
         },
-        getProgress: (): AxiosPromise<AppTypes.UserProgress> => {
-            return endpoint.get(`/users/current_user/progress`);
+        getProgress: (userIdOfInterest = "current_user"): AxiosPromise<AppTypes.UserProgress> => {
+            return endpoint.get(`users/${userIdOfInterest}/progress`);
         }
     },
     authentication: {
@@ -203,6 +203,15 @@ export const api = {
         },
         answer: (id: string, answer: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
+        },
+        answeredQuestionsByDate: (userId: number | string, fromDate: number, toDate: number, perDay: boolean): AxiosPromise<ApiTypes.AnsweredQuestionsByDate> => {
+            return endpoint.get(`/questions/answered_questions/${userId}`, {
+                params: {
+                    "from_date": fromDate,
+                    "to_date": toDate,
+                    "per_day": perDay
+                }
+            })
         }
     },
     concepts: {
@@ -333,6 +342,11 @@ export const api = {
         },
         getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${boardId}`);
+        }
+    },
+    news: {
+        get: (subject: string): AxiosPromise<{results: ApiTypes.IsaacPodDTO[]; totalResults: number}> => {
+            return endpoint.get(`/pages/pods/${subject}`)
         }
     },
     events: {

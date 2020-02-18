@@ -1,0 +1,20 @@
+.progress-bar-outer {
+  position: relative;
+  height: 30px;
+  width: 100%;
+  background: $gray-110;
+
+  span {
+    vertical-align: middle;
+    color: $gray-194;
+    font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .progress-bar-inner {
+    background: $primary;
+    height: 100%;
+    //transition: width .2s ease-in;
+  }
+}

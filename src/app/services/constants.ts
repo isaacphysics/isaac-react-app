@@ -35,12 +35,6 @@ export const MARKDOWN_RENDERER = new Remarkable({
 
 export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_jan20_aqa', 'class_test_jan20_ocr'];
 
-export const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB");
-export const DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
-    year: "numeric", month: "numeric", day: "numeric",
-    hour: "numeric", minute: "numeric", second: "numeric", hour12: false
-});
-
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
 
@@ -251,6 +245,10 @@ export enum ACTION_TYPE {
     EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS = "EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS",
     EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE = "EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE",
 
+    NEWS_REQUEST = "NEWS_REQUEST",
+    NEWS_RESPONSE_SUCCESS = "NEWS_RESPONSE_SUCCESS",
+    NEWS_RESPONSE_FAILURE = "NEWS_RESPONSE_FAILURE",
+
     FRAGMENT_REQUEST = "FRAGMENT_REQUEST",
     FRAGMENT_RESPONSE_SUCCESS = "FRAGMENT_RESPONSE_SUCCESS",
     FRAGMENT_RESPONSE_FAILURE = "FRAGMENT_RESPONSE_FAILURE",
@@ -270,6 +268,10 @@ export enum ACTION_TYPE {
     QUESTION_SEARCH_REQUEST = "QUESTION_SEARCH_REQUEST",
     QUESTION_SEARCH_RESPONSE_SUCCESS = "QUESTION_SEARCH_RESPONSE_SUCCESS",
     QUESTION_SEARCH_RESPONSE_FAILURE = "QUESTION_SEARCH_RESPONSE_FAILURE",
+
+    QUESTION_ANSWERS_BY_DATE_REQUEST = "QUESTION_ANSWERS_BY_DATE_REQUEST",
+    QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS = "QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS",
+    QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE = "QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE",
 
     QUIZ_SUBMISSION_REQUEST = "QUIZ_SUBMISSION_REQUEST",
     QUIZ_SUBMISSION_RESPONSE_SUCCESS = "QUIZ_SUBMISSION_RESPONSE_SUCCESS",
@@ -397,12 +399,18 @@ export enum EXAM_BOARD {
     OTHER = "OTHER"
 }
 
+export enum SUBJECTS {
+    PHYSICS = 'physics',
+    MATHS = 'maths',
+    CHEMISTRY = 'chemistry'
+}
+
 export const examBoardTagMap: {[examBoard: string]: string} = {
     [EXAM_BOARD.AQA]: "examboard_aqa",
     [EXAM_BOARD.OCR]: "examboard_ocr",
 };
 
-export const tagExamboardMap: {[tag: string]: string} = invert(examBoardTagMap);
+export const tagExamBoardMap: {[tag: string]: string} = invert(examBoardTagMap);
 
 export enum TAG_ID {
     // Categories
