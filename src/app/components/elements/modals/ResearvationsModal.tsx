@@ -19,6 +19,7 @@ import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
 import _orderBy from "lodash/orderBy";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {isLoggedIn} from "../../../services/user";
+import { UserDetails } from "../panels/UserDetails";
 
 const ReservationsModal = () => {
     const dispatch = useDispatch();
@@ -30,6 +31,8 @@ const ReservationsModal = () => {
     const [unbookedUsers, setUnbookedUsers] = useState<AppGroupMembership[]>([]);
     const [userCheckboxes, setUserCheckboxes] = useState<{[key: number]: boolean}>({});
     const [checkAllCheckbox, setCheckAllCheckbox] = useState<boolean>(false);
+    const [cancelReservationCheckboxes, setCancelReservationCheckboxes] = useState<{[key: number]: boolean}>({});
+    const [checkAllCancelReservationsCheckbox, setCheckAllCancelReservationsCheckbox] = useState<boolean>();
 
     useEffect(() => {
         dispatch(loadGroups(false));
@@ -55,6 +58,13 @@ const ReservationsModal = () => {
             const bookedUserIds = eventBookingsForGroup
                 .filter(booking => booking.bookingStatus !== "CANCELLED")
                 .map(booking => booking.userBooked && booking.userBooked.id);
+            let newCancelReservationCheckboxes: boolean[] = [];
+            for (const userId of bookedUserIds) {
+                if (userId) {
+                    newCancelReservationCheckboxes[userId] = false;
+                }
+            }
+            setCancelReservationCheckboxes(newCancelReservationCheckboxes);
             const newUnbookedUsers = _orderBy(
                 currentGroup.members.filter(member => !bookedUserIds.includes(member.id as number)),
                 ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']
@@ -89,6 +99,25 @@ const ReservationsModal = () => {
         setUserCheckboxes(checkboxes);
     };
 
+    const toggleCancelReservationCheckboxeForUser = (userId?: number) => {
+        if (!userId) return;
+        let checkboxes = { ...cancelReservationCheckboxes };
+        checkboxes[userId] = !checkboxes[userId];
+        setCancelReservationCheckboxes(checkboxes);
+        if (!Object.values(checkboxes).every(v => v)) {
+            setCheckAllCancelReservationsCheckbox(false);
+        }
+    };
+
+    const toggleAllCancelReservationCheckboxes = () => {
+        setCheckAllCancelReservationsCheckbox(!checkAllCancelReservationsCheckbox);
+        let checkboxes = { ...cancelReservationCheckboxes };
+        for (const id in cancelReservationCheckboxes) {
+            checkboxes[id] = !checkAllCancelReservationsCheckbox;
+        }
+        setCancelReservationCheckboxes(checkboxes);
+    };
+
     const requestReservations = () => {
         if (selectedEvent && selectedEvent.id && currentGroup && currentGroup.id) {
             const reservableIds = Object.entries(userCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
@@ -96,12 +125,12 @@ const ReservationsModal = () => {
         }
     };
 
-    const cancelReservationForUserId = async (userId?: number) => {
-        if (selectedEvent && selectedEvent.id && currentGroup && currentGroup.id) {
-            await dispatch(cancelUserBooking(selectedEvent.id, userId));
-            dispatch(getEventBookingsForGroup(selectedEvent.id, currentGroup.id));
-        }
-    };
+    // const cancelReservationForUserId = async (userId?: number) => {
+    //     if (selectedEvent && selectedEvent.id && currentGroup && currentGroup.id) {
+    //         await dispatch(cancelUserBooking(selectedEvent.id, userId));
+    //         dispatch(getEventBookingsForGroup(selectedEvent.id, currentGroup.id));
+    //     }
+    // };
 
     const isReservationLimitReached = () => {
         if (selectedEvent && selectedEvent.groupReservationLimit) {
@@ -147,7 +176,14 @@ const ReservationsModal = () => {
                         <thead>
                             <tr>
                                 <th className="align-middle">
-                                    &nbsp;
+                                    <CustomInput
+                                        id="check_all_unbooked"
+                                        type="checkbox"
+                                        label="Select all"
+                                        checked={checkAllCancelReservationsCheckbox}
+                                        onChange={() => toggleAllCancelReservationCheckboxes()}
+                                        // TBD: disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
+                                    />
                                 </th>
                                 <th className="align-middle">
                                     Student
@@ -167,11 +203,14 @@ const ReservationsModal = () => {
                                         {booking.userBooked &&
                                         (booking.reservedById === user?.id) &&
                                         (booking.bookingStatus === 'RESERVED') &&
-                                        <Button key={booking.userBooked.id}
+                                        <CustomInput key={booking.userBooked.id}
                                             id={`${booking.userBooked.id}`}
-                                            color="link" outline block className="btn-sm mb-1"
-                                            onClick={() => cancelReservationForUserId(booking.userBooked && booking.userBooked.id)}
-                                        >Cancel</Button>}
+                                            type="checkbox"
+                                            name={`reserved_student-${booking.userBooked.id}`}
+                                            checked={cancelReservationCheckboxes[booking.userBooked.id]}
+                                            // TBD: disabled={!booking.userBooked.authorisedFullAccess}
+                                            onChange={() => toggleCancelReservationCheckboxeForUser(booking.userBooked?.id)}
+                                        />}
                                     </td>
                                     <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)}</td>
                                     <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>

@@ -411,7 +411,10 @@ export const api = {
             return endpoint.post(`/events/${eventId}/bookings/${userId}`, additionalInformation);
         },
         reserveUsersOnEvent: (eventId: string, userIds: number[]) => {
-            return endpoint.post(`/events/${eventId}/reserve`, userIds);
+            return endpoint.post(`/events/${eventId}/reservations`, userIds);
+        },
+        cancelUsersReservationsOnEvent: (eventId: string, userIds: number[]) => {
+            return endpoint.post(`/events/${eventId}/reservations/cancel`, userIds);
         },
         resendUserConfirmationEmail: (eventId: string, userId: number) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}/resend_confirmation`);
