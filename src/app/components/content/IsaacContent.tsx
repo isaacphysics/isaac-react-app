@@ -22,6 +22,15 @@ interface IsaacContentProps {
 export const IsaacContent = withRouter((props: IsaacContentProps) => {
     const {doc: {type, layout, encoding, value, children}, match} = props;
 
+    let contentLayout;
+    if (layout == 'left') {
+        contentLayout = "align-left";
+    } else if (layout == 'right') {
+        contentLayout = "align-right";
+    } else if (layout == "righthalf") {
+        contentLayout = "align-right-half";
+    }
+
     let selectedComponent;
     let tempSelectedComponent;
     switch (type) {
@@ -61,5 +70,5 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
                     </IsaacContentValueOrChildren>;
             }
     }
-    return selectedComponent;
+    return <div className={contentLayout}>{selectedComponent}</div>;
 });

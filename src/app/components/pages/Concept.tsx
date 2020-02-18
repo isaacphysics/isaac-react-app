@@ -18,6 +18,7 @@ import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
+import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 
 const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
     return {
@@ -57,7 +58,7 @@ const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc, s
                     <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
                     }
                     <div className="question-actions question-actions-leftmost mt-3">
-                        <ShareLink linkUrl={`${window.location.origin}/concepts/${doc.id}`}/>
+                        <ShareLink linkUrl={`/concepts/${doc.id}`}/>
                     </div>
                     <div className="question-actions mt-3 not_mobile">
                         <PrintButton/>
@@ -73,7 +74,7 @@ const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc, s
 
                         {/* Superseded notice */}
 
-                        <p>{doc.attribution}</p>
+                        {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
 
                         <NavigationLinks navigation={navigation} />
 

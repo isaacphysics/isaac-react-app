@@ -688,8 +688,8 @@ export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
 };
 
 // Questions
-export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question});
+export const registerQuestion = (question: QuestionDTO, accordionClientId?: string) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question, accordionClientId});
 };
 
 export const deregisterQuestion = (questionId: string) => (dispatch: Dispatch<Action>) => {
@@ -1371,6 +1371,18 @@ export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dis
         dispatch(showErrorToastIfNeeded("Unable to display events", e));
     }
 };
+
+export const getNewsPodList = (subject: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.NEWS_REQUEST});
+        const response = await api.news.get(subject);
+        const newsList = response.data.results;
+        dispatch({type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS, theNews: newsList})
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.NEWS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Unable to display news", e));
+    }
+}
 
 export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
     try {

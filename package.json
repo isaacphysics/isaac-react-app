@@ -1,6 +1,6 @@
 {
   "name": "isaac-cs-app",
-  "version": "1.1.7-SNAPSHOT",
+  "version": "1.1.8-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@babel/core": "7.2.2",
@@ -78,7 +78,7 @@
     "lodash": "^4.17.15",
     "math-random-seed": "^2.0.0",
     "mini-css-extract-plugin": "0.8.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "npm-overlapping-marker-spiderfier": "^1.0.3",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.2.1",

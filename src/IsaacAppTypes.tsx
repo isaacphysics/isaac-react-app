@@ -150,7 +150,7 @@ export type Action =
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO}
+    | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO; accordionClientId?: string}
     | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionId: string}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: ApiTypes.ChoiceDTO}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}
@@ -258,6 +258,10 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
 
+    | {type: ACTION_TYPE.NEWS_REQUEST}
+    | {type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS; theNews: ApiTypes.IsaacPodDTO[]}
+    | {type: ACTION_TYPE.NEWS_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.EVENTS_REQUEST}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}
@@ -356,6 +360,7 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     currentAttempt?: ApiTypes.ChoiceDTO;
     canSubmit?: boolean;
     locked?: Date;
+    accordionClientId?: string;
 }
 
 export interface AppGroup extends ApiTypes.UserGroupDTO {
@@ -495,7 +500,7 @@ export interface AdminStatsResponse {
 
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
-export const AccordionSectionContext = React.createContext<string | undefined>(undefined);
+export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string}>({id: undefined, clientId: "unknown"});
 export const QuestionContext = React.createContext<string | undefined>(undefined);
 
 export interface AppAssignmentProgress {

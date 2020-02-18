@@ -31,6 +31,7 @@ import {
     GameboardDTO,
     GameboardListDTO,
     GlossaryTermDTO,
+    IsaacPodDTO,
     IsaacTopicSummaryPageDTO,
     IsaacWildcard,
     ResultsWrapper,
@@ -246,15 +247,15 @@ export const glossaryTerms = (glossaryTerms: GlossaryTermsState = null, action: 
         default:
             return glossaryTerms;
     }
-}
+};
 
 export const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
             if (isValidatedChoice(action.attempt)) {
-                return {...question, currentAttempt: action.attempt.choice, canSubmit: action.attempt.frontEndValidation, validationResponse: null};
+                return {...question, currentAttempt: action.attempt.choice, canSubmit: action.attempt.frontEndValidation, validationResponse: undefined};
             } else {
-                return {...question, currentAttempt: action.attempt, canSubmit: true, validationResponse: null};
+                return {...question, currentAttempt: action.attempt, canSubmit: true, validationResponse: undefined};
             }
         case ACTION_TYPE.QUESTION_ATTEMPT_REQUEST:
             return {...question, canSubmit: false};
@@ -277,9 +278,9 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
         case ACTION_TYPE.QUESTION_REGISTRATION: {
             const currentQuestions = questions !== null ? [...questions] : [];
             const bestAttempt = action.question.bestAttempt;
-            const newQuestion = bestAttempt ?
-                {...action.question, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer} :
-                action.question;
+            const newQuestion: AppQuestionDTO = bestAttempt ?
+                {...action.question, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer, accordionClientId: action.accordionClientId} :
+                {...action.question, accordionClientId: action.accordionClientId};
             return [...currentQuestions, newQuestion];
         }
         case ACTION_TYPE.QUESTION_DEREGISTRATION: {
@@ -446,6 +447,16 @@ export const events = (events: EventsState = null, action: Action) => {
             return null;
         default:
             return events;
+    }
+};
+
+type NewsState = {news: IsaacPodDTO[]} | null;
+export const news = (news: NewsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.NEWS_RESPONSE_SUCCESS:
+            return {news: Array.from(action.theNews)};
+        default:
+            return news;
     }
 };
 
@@ -848,6 +859,7 @@ const appReducer = combineReducers({
     assignmentsByMe,
     progress,
     events,
+    news,
     currentEvent,
     eventOverviews,
     eventMapData,
@@ -891,6 +903,7 @@ export type AppState = undefined | {
     assignmentsByMe: AssignmentsState;
     progress: ProgressState;
     events: EventsState;
+    news: NewsState;
     currentEvent: CurrentEventState;
     eventOverviews: EventOverviewsState;
     eventMapData: EventMapDataState;

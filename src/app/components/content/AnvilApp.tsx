@@ -19,7 +19,7 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
 
     let iframeRef = React.useRef() as RefObject<HTMLIFrameElement>;
 
-    let accordionSectionId = useContext(AccordionSectionContext);
+    let accordionSectionId = useContext(AccordionSectionContext).id;
     let questionId = useContext(QuestionContext);
 
     let parentQuestion = useSelector((state: AppState) => questions.selectQuestionPart(questionId)(state)) || undefined;
