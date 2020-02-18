@@ -9,7 +9,6 @@ import {AppState} from "../../state/reducers";
 import {Tabs} from "../elements/Tabs";
 import {atLeastOne} from "../../services/validation";
 import {IsaacContent} from "../content/IsaacContent";
-import {notificationCheckerMiddleware} from "../../services/notificationManager";
 
 interface AugmentedTestCase extends TestCaseDTO {
     match?: boolean;
