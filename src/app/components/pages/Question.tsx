@@ -20,6 +20,7 @@ import {isStudent, isTeacher} from "../../services/user";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {doc as selectDoc} from "../../state/selectors";
+import {DocumentSubject} from "../../../IsaacAppTypes";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -43,9 +44,8 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
     }, [questionId, dispatch]);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
-        const doc = supertypedDoc as IsaacQuestionPageDTO;
-        debugger;
-        return <div className="pattern-01">
+        const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+        return <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <Container>
                 {/*FastTrack progress bar*/}
                 {/*Print options*/}

@@ -658,3 +658,7 @@ export interface BaseTag {
     comingSoon?: string;
     new?: boolean;
 }
+
+export interface DocumentSubject {
+    subjectId?: string;
+}

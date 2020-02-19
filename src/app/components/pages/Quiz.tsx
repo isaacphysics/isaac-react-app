@@ -12,13 +12,14 @@ import {
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
-import {ContentBase} from "../../../IsaacApiTypes";
+import {ContentBase, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {EditContentButton} from "../elements/EditContentButton";
 import {doc as selectDoc, questions} from "../../state/selectors";
+import {DocumentSubject} from "../../../IsaacAppTypes";
 
 export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId: string}}}) => {
     const dispatch = useDispatch();
@@ -61,8 +62,9 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
         }
     }, [anyQuestionPreviouslyAttempted, match.params.quizId]);
 
-    return <ShowLoading until={doc} thenRender={doc =>
-        <div className="pattern-01">
+    return <ShowLoading until={doc} thenRender={supertypedDoc => {
+        const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+        return <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <RS.Container>
                 <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
 
@@ -95,5 +97,5 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
                 </RS.Row>
             </RS.Container>
         </div>
-    }/>;
+    }}/>;
 });

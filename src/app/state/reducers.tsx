@@ -9,6 +9,7 @@ import {
     AppQuestionDTO,
     AugmentedEvent,
     ContentErrorsResponse,
+    EventMapData,
     EventOverview,
     GroupMembershipDetailDTO,
     isValidatedChoice,
@@ -19,8 +20,7 @@ import {
     Toast,
     UserPreferencesDTO,
     UserProgress,
-    UserSchoolLookup,
-    EventMapData
+    UserSchoolLookup
 } from "../../IsaacAppTypes";
 import {
     AnsweredQuestionsByDate,
@@ -30,6 +30,8 @@ import {
     EventBookingDTO,
     GameboardDTO,
     GameboardListDTO,
+    GlossaryTermDTO,
+    IsaacPodDTO,
     IsaacTopicSummaryPageDTO,
     IsaacWildcard,
     ResultsWrapper,
@@ -38,12 +40,11 @@ import {
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO,
-    GlossaryTermDTO,
-    IsaacPodDTO
+    UserSummaryWithGroupMembershipDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
+import {augmentDocWithSubject} from "../services/tags";
 
 type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -216,7 +217,7 @@ export const doc = (doc: DocState = null, action: Action) => {
         case ACTION_TYPE.DOCUMENT_REQUEST:
             return null;
         case ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS:
-            return {...action.doc};
+            return {...augmentDocWithSubject(action.doc)};
         case ACTION_TYPE.ROUTER_PAGE_CHANGE:
             return null;
         case ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE:

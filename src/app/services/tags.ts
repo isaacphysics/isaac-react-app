@@ -4,6 +4,7 @@ import {BaseTag} from "../../IsaacAppTypes";
 import * as csTags from "./tagsCS";
 import * as phyTags from "./tagsPhy";
 import subject from "./subject";
+import {ContentDTO} from "../../IsaacApiTypes";
 
 const baseTags = {[SITE.CS]: csTags.baseTags, [SITE.PHY]: phyTags.baseTags}[SITE_SUBJECT];
 const tagHierarchy = {[SITE.CS]: csTags.tagHierarchy, [SITE.PHY]: phyTags.tagHierarchy}[SITE_SUBJECT];
@@ -50,10 +51,11 @@ export const getSpecifiedTag = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) 
 };
 
 const getSpecifiedTags = function(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
+
     // Return all TAG_ID an object has of a given type!
     if (tagArray == null) return [];
     let tags = [];
-    for (let i in tagArray) {
+    for (const i in tagArray) {
         let tag = getById(tagArray[i]);
         if (tag != null && tag.type === tagType) {
             tags.push(tag);
@@ -80,6 +82,10 @@ const getPageSubjectTag = function(tagArray: TAG_ID[]) {
     }
     return subjectTags[0];
 };
+export function augmentDocWithSubject(doc: ContentDTO) {
+    const documentSubject = getPageSubjectTag((doc.tags || []) as TAG_ID[]);
+    return Object.assign(doc, {subjectId: documentSubject.id});
+}
 
 export const getCategoryTag = getSpecifiedTag.bind(null, TAG_LEVEL.category);
 export const getCategoryTags = getSpecifiedTags.bind(null, TAG_LEVEL.category);

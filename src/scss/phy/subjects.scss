@@ -1,9 +1,37 @@
-div.physcis {
-  background-color: $phy_physics;
+@mixin apply-subject-classes($color) {
+  /* background classes */
+  @include bg-variant(".bg-secondary", $color);
+
+  /* btn classes */
+  .btn-secondary {
+    @include button-variant($color, $color);
+  }
+
+  //.btn-outline-primary {
+  //  @include button-outline-variant($color);
+  //}
+
+  /* text- classes */
+  @include text-emphasis-variant(".text-secondary", $color);
+
+  /* badge classes */
+  .badge-secondary {
+    @include badge-variant($color);
+  }
+
+  /* borders */
+  .border-secondary {
+    border-color: $color !important;
+  }
+}
+
+
+div.physics {
+  @include apply-subject-classes($phy_physics);
 }
 div.maths {
-  background-color: $phy_maths;
+  @include apply-subject-classes($phy_maths);
 }
 div.chemistry {
-  background-color: $phy_chemistry;
+  @include apply-subject-classes($phy_chemistry);
 }

@@ -1,7 +1,7 @@
 import {TAG_ID, TAG_LEVEL} from "./constants";
 import {BaseTag} from "../../IsaacAppTypes";
 
-export const tagHierarchy = [TAG_LEVEL.category, TAG_LEVEL.subcategory, TAG_LEVEL.topic];
+export const tagHierarchy = [TAG_LEVEL.subject, TAG_LEVEL.field, TAG_LEVEL.topic];
 
 export const baseTags: BaseTag[] = [
     // Subjects
