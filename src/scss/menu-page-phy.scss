@@ -1,0 +1,84 @@
+.teacher-feature-body {
+
+  col {
+    padding-right: 200px;
+  }
+
+  .row {
+    margin-bottom: 15px;
+  }
+
+  a.hexagon, div.hexagon {
+    background-image:url(/assets/top-boards-hexagon.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    color: black;
+    width:220px;
+    height:258px;
+    overflow:hidden;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+    &:focus {
+      background-image:url(/assets/top-boards-hexagon-focus.svg);
+      outline: none;
+    }
+
+    &.disabled{
+      color: #ccc;
+      background-image:url(/assets/top-boards-hexagon-grey.svg);
+      &:hover .hexagon-title {
+        color: #ccc;
+      }
+    }
+  }
+
+  a.hexagon {
+    &:hover .hexagon-title {
+      color: $green;
+    }
+  }
+
+  img.hexagon-field {
+    display: block;
+    width:80px;
+    height:80px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+
+    &.disabled {
+      -webkit-filter: grayscale(100%);
+      -webkit-filter: grayscale(1);
+      filter: grayscale(100%);
+      filter:gray;
+      opacity: .5;
+    }
+  }
+
+  div.hexagon-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    font-family: exo_2regular, 'sans-serif';
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    line-height: 1.6rem;
+    height: 85px;
+  }
+
+}
+
+.hexagon-offset {
+  @include respond-above(sm) {
+    padding-left: 170px;
+  }
+}
+
+.hexagon-offset-large {
+  @include respond-above(sm) {
+    margin-top: -55px;
+  }
+}
