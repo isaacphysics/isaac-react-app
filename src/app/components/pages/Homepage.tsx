@@ -89,7 +89,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
             <Container className="pt-4 pb-5">
                 <div className="eventList pt-5 pattern-03-reverse">
                     <h2 className="h-title mb-4">News</h2>
-                    <NewsCarousel />
+                    <NewsCarousel descending={true}/>
                 </div>
             </Container>
         </section>
