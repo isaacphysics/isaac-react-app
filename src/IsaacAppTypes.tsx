@@ -1,5 +1,6 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
+import {ChoiceDTO, ContentBase, TestCaseDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
 import {AuthenticationProvider} from "./IsaacApiTypes";
 
@@ -168,6 +169,10 @@ export type Action =
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.TEST_QUESTION_REQUEST}
+    | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS; testCaseResponses: TestCaseDTO[]}
+    | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
@@ -651,3 +656,16 @@ export interface PrintingSettings {
 export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 export type LevelAttempts<T> = { [level in Levels]?: T; }
+
+export interface Choice extends ChoiceDTO {
+    correct?: boolean;
+    explanation?: ContentBase;
+}
+
+export interface FreeTextRule extends Choice {
+    caseInsensitive?: boolean;
+    allowsAnyOrder?: boolean;
+    allowsExtraWords?: boolean;
+    allowsMisspelling?: boolean;
+}
+

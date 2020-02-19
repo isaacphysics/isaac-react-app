@@ -1,13 +1,14 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, MEMBERSHIP_STATUS, TAG_ID, EventTypeFilter} from "./constants";
+import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {AuthenticationProvider, EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, EventBookingDTO, GameboardDTO, TestCaseDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
     AdditionalInformation,
     ATTENDANCE,
     BoardOrder,
+    Choice,
     EmailUserRoles,
     LoggedInUser,
     QuestionSearchQuery,
@@ -41,7 +42,6 @@ endpoint.interceptors.response.use((response) => {
     }
     return Promise.reject(error);
 });
-
 
 export const apiHelper = {
     determineImageUrl: (path: string) => {
@@ -212,6 +212,9 @@ export const api = {
                     "per_day": perDay
                 }
             })
+        },
+        testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
+            return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
         }
     },
     concepts: {

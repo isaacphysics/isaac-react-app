@@ -9,6 +9,7 @@ import {
     AppQuestionDTO,
     AugmentedEvent,
     ContentErrorsResponse,
+    EventMapData,
     EventOverview,
     GroupMembershipDetailDTO,
     isValidatedChoice,
@@ -19,8 +20,7 @@ import {
     Toast,
     UserPreferencesDTO,
     UserProgress,
-    UserSchoolLookup,
-    EventMapData
+    UserSchoolLookup
 } from "../../IsaacAppTypes";
 import {
     AnsweredQuestionsByDate,
@@ -30,17 +30,18 @@ import {
     EventBookingDTO,
     GameboardDTO,
     GameboardListDTO,
+    GlossaryTermDTO,
+    IsaacPodDTO,
     IsaacTopicSummaryPageDTO,
     IsaacWildcard,
     ResultsWrapper,
+    TestCaseDTO,
     UserAuthenticationSettingsDTO,
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO,
-    GlossaryTermDTO,
-    IsaacPodDTO
+    UserSummaryWithGroupMembershipDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
@@ -209,7 +210,6 @@ export const constants = (constants: ConstantsState = null, action: Action) => {
     }
 };
 
-
 type DocState = ContentDTO | NOT_FOUND_TYPE | null;
 export const doc = (doc: DocState = null, action: Action) => {
     switch (action.type) {
@@ -297,6 +297,18 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
         }
         default: {
             return questions;
+        }
+    }
+};
+
+type TestQuestionsState = TestCaseDTO[] | null;
+export const testQuestions = (testQuestions: TestQuestionsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS: {
+            return action.testCaseResponses;
+        }
+        default: {
+            return testQuestions;
         }
     }
 };
@@ -853,8 +865,9 @@ const appReducer = combineReducers({
     eventMapData,
     eventBookings,
     fragments,
-    printingSettings,
-    glossaryTerms
+    glossaryTerms,
+    testQuestions,
+    printingSettings
 });
 
 export type AppState = undefined | {
@@ -898,6 +911,7 @@ export type AppState = undefined | {
     fragments: FragmentsState;
     printingSettings: PrintingSettingsState;
     glossaryTerms: GlossaryTermsState;
+    testQuestions: TestQuestionsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {
