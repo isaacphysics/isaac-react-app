@@ -260,7 +260,7 @@ export const updateCurrentUser = (
             if ((afterAuthPath).includes('account')) {
                 history.push(afterAuthPath, {firstLogin: isFirstLogin});
             }
-            // history.push('/account', {firstLogin: isFirstLogin});
+            history.push('/account', {firstLogin: isFirstLogin});
         }
 
         if (!editingOtherUser) {
@@ -273,6 +273,7 @@ export const updateCurrentUser = (
             }) as any);
         }
         if (editingOtherUser) {
+            history.push('/');
             dispatch(showToast({
                 title: "Account settings updated",
                 body: "The user's account settings were updated successfully.",
