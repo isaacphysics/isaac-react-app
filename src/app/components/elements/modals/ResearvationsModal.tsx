@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    cancelUserBooking,
     closeActiveModal,
     getEventBookingsForGroup,
     getGroupMembers,
@@ -19,7 +18,6 @@ import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
 import _orderBy from "lodash/orderBy";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {isLoggedIn} from "../../../services/user";
-import { UserDetails } from "../panels/UserDetails";
 
 const ReservationsModal = () => {
     const dispatch = useDispatch();
@@ -177,7 +175,7 @@ const ReservationsModal = () => {
                             <tr>
                                 <th className="align-middle">
                                     <CustomInput
-                                        id="check_all_unbooked"
+                                        id="check_all_reserved"
                                         type="checkbox"
                                         label="Select all"
                                         checked={checkAllCancelReservationsCheckbox}
