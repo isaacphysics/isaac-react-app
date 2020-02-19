@@ -64,6 +64,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
         function openAndScrollToBookingForm() {
             document.getElementById("open_booking_form_button")?.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById("booking_form")?.scrollIntoView({ behavior: 'smooth' });
             setBookingFormOpen(true);
         }
 
@@ -151,7 +152,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
                             {/* Booking form */}
                             {user && user.loggedIn && event.eventStatus != 'CLOSED' && !event.expired && bookingFormOpen && !(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST") && <span>
-                                <RS.Card className="mb-4">
+                                <RS.Card className="mb-4" id="booking_form">
                                     <RS.CardBody>
                                         <h3>Event booking form</h3>
                                         <RS.Form onSubmit={submitBooking}>
