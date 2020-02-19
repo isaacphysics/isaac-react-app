@@ -276,7 +276,7 @@ const ReservationsModal = () => {
                             </p>}
                             <div className="text-center">
                                 <Button color="primary" disabled={!Object.values(userCheckboxes).some(v => v) || isReservationLimitReached()} onClick={requestReservations}>
-                                    Reserve
+                                    Reserve places
                                 </Button>
                             </div>
                         </Col>
