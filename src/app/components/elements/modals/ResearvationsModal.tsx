@@ -11,7 +11,7 @@ import {
 } from "../../../state/actions";
 import {store} from "../../../state/store";
 import {Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Col, CustomInput, Row, Table} from "reactstrap";
-import {AppState} from "../../../state/reducers";
+import {AppState, currentEvent} from "../../../state/reducers";
 import {groups} from '../../../state/selectors';
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {AppGroupMembership} from "../../../../IsaacAppTypes";
@@ -148,7 +148,8 @@ const ReservationsModal = () => {
     };
 
     return <React.Fragment>
-        <Col>
+        {!selectedEvent?.allowGroupReservations && <p>This event does not allow group reservations.</p>}
+        {selectedEvent?.allowGroupReservations && <Col>
             <Row className="mb-5">
                 <Col md={3}>
                     <ShowLoading until={activeGroups}>
@@ -284,7 +285,7 @@ const ReservationsModal = () => {
                     </Row>
                 </Col>}
             </Row>
-        </Col>
+        </Col>}
     </React.Fragment>
 };
 

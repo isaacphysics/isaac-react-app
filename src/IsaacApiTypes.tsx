@@ -57,6 +57,7 @@ export interface IsaacEventPageDTO extends ContentDTO {
     placesAvailable?: number;
     endDate?: Date;
     groupReservationLimit?: number;
+    allowGroupReservations?: boolean;
 }
 
 export interface IsaacFastTrackQuestionPageDTO extends IsaacQuestionPageDTO {
