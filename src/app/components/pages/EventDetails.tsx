@@ -62,6 +62,11 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
             }
         }
 
+        function openAndScrollToBookingForm() {
+            document.getElementById("open_booking_form_button")?.scrollIntoView({ behavior: 'smooth' });
+            setBookingFormOpen(true);
+        }
+
         return <RS.Container className="events mb-5">
             <TitleAndBreadcrumb
                 currentPageTitle={event.title as string} subTitle={event.subtitle}
@@ -119,7 +124,12 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                 {event.tags && !event.tags.includes('student') && user && user.loggedIn && user.role != 'STUDENT' && <span> - for student bookings</span>}
                                             </div>}
                                             {user && user.loggedIn && user.email && event.userBookingStatus === 'CONFIRMED' && <span> - <span className="text-success">You are booked on this event!</span></span>}
-                                            {user && user.loggedIn && user.email && event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">You have been reserved a place on this event! Scroll down to complete your registration.</span></span>}
+                                            {user && user.loggedIn && user.email && event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
+                                                You have been reserved a place on this event!
+                                                <RS.Button color="link text-success" onClick={openAndScrollToBookingForm}>
+                                                    <u>Complete your registration below</u>.
+                                                </RS.Button>
+                                            </span></span>}
                                             {event.userBookingStatus !== "CONFIRMED" && event.userBookingStatus !== "WAITING_LIST" && zeroOrLess(event.placesAvailable) && !(event.tags && event.tags.indexOf('student') != -1 && user && isTeacher(user)) && <span> - Waiting list booking is available!</span>}
                                             {user && user.loggedIn && user.email && event.userBookingStatus === "WAITING_LIST" && <span> - You are on the waiting list for this event.</span>}
                                         </td>
@@ -182,7 +192,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
                                 {/* Options for logged-in users */}
                                 {user && user.loggedIn && !event.expired && <span>
-                                    {event.eventStatus != 'CLOSED' && !bookingFormOpen && !(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST") && <RS.Button
+                                    {event.eventStatus != 'CLOSED' && !bookingFormOpen && !(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST") && <RS.Button id="open_booking_form_button"
                                         onClick={() => {setBookingFormOpen(true)}}
                                     >
                                         Open booking form
