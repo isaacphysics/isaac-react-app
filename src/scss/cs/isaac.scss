@@ -1,0 +1,278 @@
+// NOMENSA variables.scss
+//Custom Colours
+$mustard: #ffb53f;
+$hot-pink: #ff3369;
+$reddish: #d7335f; // Used as an active colour on secondary buttons
+$focus-blue: #3E59A3; // Used as focus indicator colour on inputs
+
+// Colour Overrides
+$purple: #9148bc;
+$cyan: #0f8294;
+$green: #208838;
+
+// Theme
+$theme-colors: (
+    "primary": $mustard,
+    "secondary": $hot-pink
+);
+
+//Greys
+$gray-103: #f8f8f8;
+$gray-107: #ececec;
+$gray-110: #e7e7e7;
+$gray-118: #d2d2d2;
+$gray-120: #c9cad1;
+$gray-136: #a3a3a3;
+$gray-142: #949494;
+$gray-160: #666;
+$gray-194: #0f0f0f;
+
+$gray-blue: #636c73;
+
+// Shadows
+$shadow-3: rgba(0, 0, 0, 0.3);
+$shadow-25: rgba(0, 0, 0, 0.25);
+$shadow-08: rgba(0, 0, 0, 0.08);
+$shadow-black: rgb(0, 0, 0);
+
+// Button sizing
+$input-btn-padding-y-lg: 0.5rem;
+$input-btn-padding-x-lg: 3rem;
+$border-radius-lg: 0.25rem;
+
+// fonts
+$primary-font: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+$secondary-font: 'exo_2regular', sans-serif;
+$secondary-font-bold: 'exo_2bold', sans-serif;
+$secondary-font-semi-bold: 'exo_2semi_bold', sans-serif;
+$secondary-font-medium: 'exo_2medium', sans-serif;
+$tertiary-font: 'arconrounded-regular', sans-serif;
+
+// ISAAC
+// Node module imports
+@import "~bootstrap/scss/bootstrap";
+@import "~katex/dist/katex.min.css";
+@import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
+@import "~billboard.js/dist/theme/insight.css";
+
+// Utility
+@import "../common/preload";
+@import "../common/mixins";
+
+// Atoms
+@import "logo";
+@import "../common/fonts";
+@import "../common/typography";
+@import "../common/headings";
+@import "../common/button";
+@import "../common/modals";
+@import "../common/questions";
+@import "../common/forms";
+@import "../common/elements";
+@import "../common/breadcrumbs";
+@import "../common/media";
+@import "../common/tabs";
+@import "../common/accordions";
+@import "../common/cards";
+@import "../common/list-groups";
+@import "../common/inequality-modal";
+@import "../common/carousel";
+@import "../common/icons";
+@import "../common/boards";
+@import "../common/focus";
+@import "../common/progress-bar";
+@import "../common/anvil";
+
+// Navigation
+@import "header";
+@import "../common/navigation-bar";
+@import "../common/footer";
+
+// Pages
+@import "../common/pages";
+@import "../common/homepage";
+@import "../common/login";
+@import "../common/registration";
+@import "../common/my-account";
+@import "../common/topic";
+@import "../common/search";
+@import "../common/my-assignments";
+@import "../common/my-progress";
+@import "../common/gameboard";
+@import "../common/assignment-progress";
+@import "../common/groups";
+@import "../common/events";
+
+// Print
+@import "../common/print";
+
+a.disabled {
+    color: $gray-600;
+    pointer-events: none;
+    cursor: default;
+}
+
+.list-group-item {
+    border-width: 0;
+    width: 100%;
+}
+
+p small {
+    border: 0;
+}
+
+.bg-light-grey {
+    > div {
+        background: rgba(#f7f7f7, 0.9);
+        position: relative;
+        z-index: 1;
+    }
+}
+
+// Double class to give this more specifity
+.katex.katex { font-size: 1.1em; }
+
+
+body {
+    color: $black;
+    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    line-height: 1.625;
+    display: -ms-flexbox;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.content-body {
+    background-color: rgba($gray-107, 0.4);
+}
+.pattern-01 {
+    background-image: url('/assets/pattern_sm.svg');
+    background-position: left top;
+    background-repeat: repeat;
+    @include respond-above(md) {
+        background-image: none;
+    }
+    > .container {
+        @include respond-above(md) {
+            background-image: url('/assets/pattern01a.svg');
+            background-position: left top;
+            background-repeat: repeat-y;
+        }
+    }
+}
+
+.pattern-02 {
+    position: relative;
+
+    &:after,
+    &:before {
+        @include pseudo-element;
+        background-image: url('/assets/pattern01.svg');
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        display: none;
+        width: 600px;
+        height: 600px;
+        z-index: 0;
+    }
+
+    &:after {
+        @include respond-above(sm) {
+            display: block;
+            right: -9%;
+            top: 250px;
+        }
+    }
+
+    &:before {
+        @include respond-above(sm) {
+            display: block;
+            left: -9%;
+            top: 800px;
+        }
+    }
+}
+
+.pattern-03 {
+    background-image: url('/assets/pattern04.svg');
+    background-position: 0 63%;
+    background-repeat: repeat-x;
+
+    @include respond-above(sm) {
+        background-image: url('/assets/pattern03.svg');
+        background-position: left 0;
+        background-repeat: no-repeat;
+    }
+    @include respond-above(md) {
+        background-image: url('/assets/pattern03.svg');
+        background-position: left 0;
+        background-repeat: no-repeat;
+    }
+}
+
+.pattern-03-reverse {
+    background-image: url('/assets/pattern01.svg');
+    background-position: right top;
+    background-repeat: repeat-y;
+
+    @include respond-above(sm) {
+        background-image: url('/assets/pattern01.svg');
+        background-position: right 0;
+        background-repeat: no-repeat;
+    }
+    @include respond-above(md) {
+        background-image: url('/assets/pattern01.svg');
+        background-position: right 0;
+        background-repeat: no-repeat;
+    }
+}
+
+.pattern-04 {
+    background-image: url('/assets/pattern04.svg');
+    background-position: center 164px;
+    background-repeat: repeat-x;
+
+    @include respond-above(md) {
+        background-image: url('/assets/pattern04a.svg');
+        background-position: right 187px;
+        background-repeat: no-repeat;
+    }
+}
+
+.pattern-05 {
+    background-image: url('/assets/pattern05.svg');
+    background-position: left top;
+    background-repeat: repeat-x;
+}
+
+.pattern-06 {
+    background-image: url('/assets/pattern06.svg');
+    background-position: 96.5% 65%;
+    background-repeat: no-repeat;
+    margin: auto -15px;
+    padding: 0 15px;
+    @include respond-above(sm) {
+        background-position: 96.5% 87%;
+        margin: 0;
+        padding: 0;
+    }
+}
+.pattern-07 {
+    background-image: url('/assets/pattern06.svg');
+    background-position: 0 24px;
+    background-repeat: no-repeat;
+    margin: auto -15px;
+    padding: 0 15px;
+    @include respond-above(sm) {
+        background-position: 0.3rem 1.6rem;
+        margin: 0;
+        padding: 0;
+    }
+}
+.pattern-08 {
+    @include respond-above(md) {
+        background-image: url('/assets/pattern04a.svg');
+        background-position: right 39px;
+        background-repeat: no-repeat;
+    }
+}

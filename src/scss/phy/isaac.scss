@@ -1,7 +1,28 @@
 // NOMENSA variables.scss
+// Physics colours
+$phy_green: #509e2e;
+$phy_orangered: #ef3e36;
+$phy_blue: #009acd;
+$phy_purple: #944cbe;
+$phy_burgundy: #991846;
+$phy_chemistry: $phy_orangered;
+$phy_maths: $phy_blue;
+$phy_physics: $phy_purple;
+
+// Colour Overrides
+$purple: #9148bc;
+$cyan: #0f8294;
+$green: #208838;
+
+//Custom Colours
+$reddish: #d7335f; // Used as an active colour on secondary buttons
+$focus-blue: #3E59A3; // Used as focus indicator colour on inputs
+
 //Colours
-$primary: #509e2e;
-$secondary: #944cbe;
+$theme-colors: (
+    "primary": $phy_green,
+    "secondary": $phy_purple
+);
 
 //Greys
 $gray-103: #f8f8f8;
@@ -22,23 +43,6 @@ $shadow-25: rgba(0, 0, 0, 0.25);
 $shadow-08: rgba(0, 0, 0, 0.08);
 $shadow-black: rgb(0, 0, 0);
 
-// Colour Overrides
-$purple: #9148bc;
-$cyan: #0f8294;
-$green: #208838;
-
-//Custom Colours
-$reddish: #d7335f; // Used as an active colour on secondary buttons
-$focus-blue: #3E59A3; // Used as focus indicator colour on inputs
-
-// Physics colours
-$phy_orangered: #ef3e36;
-$phy_blue: #009acd;
-$phy_purple: #944cbe;
-$phy_burgundy: #991846;
-$phy_chemistry: $phy_orangered;
-$phy_maths: $phy_blue;
-$phy_physics: $phy_purple;
 
 // Button sizing
 $input-btn-padding-y-lg: 0.5rem;
@@ -54,64 +58,64 @@ $secondary-font-medium: 'exo_2medium', sans-serif;
 $tertiary-font: 'arconrounded-regular', sans-serif;
 
 // ISAAC
-//$body-bg: rgba(#ececec, 0.4);
-
 // Node module imports
 @import "~bootstrap/scss/bootstrap";
 @import "~katex/dist/katex.min.css";
 @import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
 
 // Utility
-@import "./_preload";
-@import "./_mixins";
+@import "../common/preload";
+@import "../common/mixins";
 
 // Atoms
-@import "./logo-phy";
-@import "./fonts";
-@import "./typography";
-@import "./headings";
-@import "./button";
-@import "./modals";
-@import "./questions";
-@import "./forms";
-@import "./elements";
-@import "./breadcrumbs";
-@import "./media";
-@import "./tabs";
-@import "./accordions";
-@import "./cards";
-@import "./list-groups";
-@import "./inequality-modal";
-@import "./carousel";
-@import "./icons";
-@import "./boards";
-@import "./focus";
-@import "./progress-bar";
-@import "./anvil";
+@import "../common/fonts";
+@import "../common/typography";
+@import "../common/headings";
+@import "../common/button";
+@import "../common/modals";
+@import "../common/questions";
+@import "../common/forms";
+@import "../common/elements";
+@import "../common/breadcrumbs";
+@import "../common/media";
+@import "../common/tabs";
+@import "../common/accordions";
+@import "../common/cards";
+@import "../common/list-groups";
+@import "../common/inequality-modal";
+@import "../common/carousel";
+@import "../common/icons";
+@import "../common/boards";
+@import "../common/focus";
+@import "../common/progress-bar";
+@import "../common/anvil";
+@import "logo";
+
 
 // Navigation
-@import "./navigation-bar";
-@import "./header-phy";
-@import "./footer";
+@import "../common/navigation-bar";
+@import "../common/footer";
+@import "header";
 
 // Pages
-@import "./pages";
-@import "./homepage";
-@import "./login";
-@import "./registration";
-@import "./my-account";
-@import "./topic";
-@import "./search";
-@import "./my-assignments";
-@import "./my-progress";
-@import "./gameboard";
-@import "./assignment-progress";
-@import "./groups";
-@import "./events";
-@import "./books";
+@import "subjects";
+@import "../common/pages";
+@import "../common/homepage";
+@import "../common/login";
+@import "../common/registration";
+@import "../common/my-account";
+@import "../common/topic";
+@import "../common/search";
+@import "../common/my-assignments";
+@import "../common/my-progress";
+@import "../common/gameboard";
+@import "../common/assignment-progress";
+@import "../common/groups";
+@import "../common/events";
+@import "books";
 
 // Print
-@import "./print";
+@import "../common/print";
 
 a.disabled {
     color: $gray-600;
@@ -119,23 +123,25 @@ a.disabled {
     cursor: default;
 }
 
+.list-group-item {
+    border-width: 0;
+    width: 100%;
+}
+
+p small {
+    border: 0;
+}
+
+.bg-light-grey {
+    > div {
+        background: rgba(#f7f7f7, 0.9);
+        position: relative;
+        z-index: 1;
+    }
+}
+
 // Double class to give this more specifity
 .katex.katex { font-size: 1.1em; }
-
-// NOMENSA global.scss
-// REMEMBER TO REPLACE "./assets" WITH "/assets"
-// REMOVE THE &s FROM THE .patterns
-// ALTER PATTERN 2
-//
-//         .bg-light-grey {
-//            > div {
-//                background: rgba(#f7f7f7, 0.9);
-//                position: relative;
-//                z-index: 1;
-//            }
-//        }
-//
-
 
 body {
     color: $black;
@@ -261,29 +267,5 @@ body {
         background-image: url('/assets/pattern04a.svg');
         background-position: right 39px;
         background-repeat: no-repeat;
-    }
-}
-.list-group-item {
-    border-width: 0;
-    width: 100%;
-}
-
-p small {
-    border: 0;
-}
-
-//.bg-light-grey {
-//    background: $gray-107;
-//    > div {
-//        background: $gray-107;
-//        position: relative;
-//        z-index: 1;
-//    }
-//}
-.bg-light-grey {
-    > div {
-        background: rgba(#f7f7f7, 0.9);
-        position: relative;
-        z-index: 1;
     }
 }

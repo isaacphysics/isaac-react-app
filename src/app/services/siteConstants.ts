@@ -1,7 +1,4 @@
-export enum SITE {
-    PHY = "physics",
-    CS = "cs",
-}
+export enum SITE {PHY = "physics", CS = "cs"}
 // eslint-disable-next-line no-undef
 export const SITE_SUBJECT = ISAAC_SITE as SITE;
 
