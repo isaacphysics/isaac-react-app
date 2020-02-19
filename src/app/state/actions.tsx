@@ -1471,6 +1471,23 @@ export const reserveUsersOnEvent = (eventId: string, userIds: number[], groupId:
     }
 };
 
+export const cancelReservationsOnEvent = (eventId: string, userIds: number[], groupId: number) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_REQUEST});
+        await api.eventBookings.cancelUsersReservationsOnEvent(eventId, userIds);
+        await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
+        await dispatch(getEvent(eventId) as any);
+        dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            title: "Reservations cancelled", body: "You have successfully cancelled students reservations for this event.",
+            color: "success", timeout: 5000, closable: false,
+        }) as any);
+    } catch (error) {
+        dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Unable to cancel some of the reservations", error) as any);
+    }
+};
+
 export const addMyselfToWaitingList = (eventId: string, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_REQUEST});

@@ -6,7 +6,8 @@ import {
     getGroupMembers,
     loadGroups,
     reserveUsersOnEvent,
-    selectGroup
+    selectGroup,
+    cancelReservationsOnEvent
 } from "../../../state/actions";
 import {store} from "../../../state/store";
 import {Button, Col, CustomInput, Row, Table} from "reactstrap";
@@ -121,14 +122,16 @@ const ReservationsModal = () => {
             const reservableIds = Object.entries(userCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
             dispatch(reserveUsersOnEvent(selectedEvent.id, reservableIds, currentGroup.id));
         }
+        setCheckAllCheckbox(false);
     };
 
-    // const cancelReservationForUserId = async (userId?: number) => {
-    //     if (selectedEvent && selectedEvent.id && currentGroup && currentGroup.id) {
-    //         await dispatch(cancelUserBooking(selectedEvent.id, userId));
-    //         dispatch(getEventBookingsForGroup(selectedEvent.id, currentGroup.id));
-    //     }
-    // };
+    const cancelReservations = () => {
+        if (selectedEvent && selectedEvent.id && currentGroup && currentGroup.id) {
+            const cancellableIds = Object.entries(cancelReservationCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
+            dispatch(cancelReservationsOnEvent(selectedEvent.id, cancellableIds, currentGroup.id));
+        }
+        setCheckAllCancelReservationsCheckbox(false);
+    }
 
     const isReservationLimitReached = () => {
         if (selectedEvent && selectedEvent.groupReservationLimit) {
@@ -219,6 +222,12 @@ const ReservationsModal = () => {
                         </tbody>
                     </Table>
 
+                    <div className="text-center">
+                        <Button color="primary" outline disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
+                            Cancel reservations
+                        </Button>
+                    </div>
+
                     <Table bordered className="mt-3 bg-white">
                         <thead>
                             <tr>
@@ -265,9 +274,11 @@ const ReservationsModal = () => {
                             {isReservationLimitReached() && <p className="text-danger">
                                 You can only reserve a maximum of {selectedEvent && selectedEvent.groupReservationLimit} group members onto this event.
                             </p>}
-                            <Button disabled={!Object.values(userCheckboxes).some(v => v) || isReservationLimitReached()} onClick={requestReservations}>
-                                Reserve
-                            </Button>
+                            <div className="text-center">
+                                <Button color="primary" disabled={!Object.values(userCheckboxes).some(v => v) || isReservationLimitReached()} onClick={requestReservations}>
+                                    Reserve
+                                </Button>
+                            </div>
                         </Col>
                     </Row>
                 </Col>}
