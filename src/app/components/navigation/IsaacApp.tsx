@@ -54,6 +54,7 @@ import {AddGameboard} from "../handlers/AddGameboard";
 import {isTest} from "../../services/constants";
 import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
+import {RedirectToEvent} from "../navigation/RedirectToEvent";
 import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
@@ -124,6 +125,7 @@ export const IsaacApp = () => {
 
                         <TrackedRoute exact path='/events' component={Events}/>
                         <TrackedRoute exact path='/events/:eventId' component={EventDetails}/>
+                        <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />
 
                         {/* Student pages */}
                         <TrackedRoute exact path="/students" component={ForStudents} />
