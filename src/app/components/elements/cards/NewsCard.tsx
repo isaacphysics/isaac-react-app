@@ -9,7 +9,7 @@ export const NewsCard = ({newsItem}: {newsItem: IsaacPodDTO}) => {
     const {title, value, image, url} = newsItem;
 
     return <RS.Card className={classnames({'card-neat': true, 'news-carousel': true, 'm-4': true})}>
-        {image && <div className={'card-image'}>
+        {image && <div>
             <RS.CardImg
                 className={'news-card-image'}
                 top
