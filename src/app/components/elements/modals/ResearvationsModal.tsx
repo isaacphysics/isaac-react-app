@@ -10,7 +10,7 @@ import {
     cancelReservationsOnEvent
 } from "../../../state/actions";
 import {store} from "../../../state/store";
-import {Button, Col, CustomInput, Row, Table} from "reactstrap";
+import {Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Col, CustomInput, Row, Table} from "reactstrap";
 import {AppState} from "../../../state/reducers";
 import {groups} from '../../../state/selectors';
 import {ShowLoading} from "../../handlers/ShowLoading";
@@ -32,6 +32,7 @@ const ReservationsModal = () => {
     const [checkAllCheckbox, setCheckAllCheckbox] = useState<boolean>(false);
     const [cancelReservationCheckboxes, setCancelReservationCheckboxes] = useState<{[key: number]: boolean}>({});
     const [checkAllCancelReservationsCheckbox, setCheckAllCancelReservationsCheckbox] = useState<boolean>();
+    const [groupDropdownOpen, setGroupDropdownOpen] = useState(false);
 
     useEffect(() => {
         dispatch(loadGroups(false));
@@ -149,25 +150,25 @@ const ReservationsModal = () => {
     return <React.Fragment>
         <Col>
             <Row className="mb-5">
-                <Col md={4}>
+                <Col md={3}>
                     <ShowLoading until={activeGroups}>
-                        {activeGroups && activeGroups.map(group => (
-                            <Row key={group.id}>
-                                <Col>
-                                    <div className="group-item p-2">
-                                        <div className="d-flex justify-content-between align-items-center">
-                                            <Button color="link text-left" className="flex-fill" onClick={() => {dispatch(selectGroup(group))}}>
-                                                {(currentGroup === group ? "»" : "")} {group.groupName}
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </Col>
-                            </Row>
-                        ))}
+                        {activeGroups && <Dropdown isOpen={groupDropdownOpen} toggle={() => setGroupDropdownOpen(!groupDropdownOpen)}>
+                            <DropdownToggle caret color="primary">
+                                {currentGroup ? currentGroup.groupName : "Select group"}
+                            </DropdownToggle>
+                            <DropdownMenu>{
+                                activeGroups.filter(group => !group.archived).map(group =>
+                                    <DropdownItem onClick={() => dispatch(selectGroup(group))}
+                                        key={group.id}
+                                        active={currentGroup === group}
+                                    >{group.groupName}</DropdownItem>
+                                )
+                            }</DropdownMenu>
+                        </Dropdown>}
                     </ShowLoading>
                 </Col>
                 {(!currentGroup || !currentGroup.members) && <Col>
-                    <p>Select one of your groups from the list to see its members.</p>
+                    <p>Select one of your groups from the dropdown menu to see its members.</p>
                 </Col>}
                 {currentGroup && currentGroup.members && currentGroup.members.length == 0 && <Col>
                     <p>This group has no members. Please select another group.</p>
