@@ -83,10 +83,7 @@ export const IsaacApp = () => {
 
     // Render
     return <Router history={history}>
-        <LoadScript
-            id="script-loader"
-            googleMapsApiKey="AIzaSyBcVr1HZ_JUR92xfQZSnODvvlSpNHYbi4Y"
-        >
+        <LoadScript googleMapsApiKey="AIzaSyBcVr1HZ_JUR92xfQZSnODvvlSpNHYbi4Y" id="script-loader">
             {{[SITE.PHY]: <HeaderPhy />, [SITE.CS]: <HeaderCS />}[SITE_SUBJECT]}
             <Toasts />
             <ActiveModals />
