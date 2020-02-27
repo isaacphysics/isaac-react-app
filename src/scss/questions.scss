@@ -109,7 +109,7 @@ button {
   }
 }
 
-.symboliclogic-question {
+.symbolic-question {
   .eqn-editor-preview {
     border: solid 1px $black;
     padding: 0.15em 0.6em;
@@ -119,6 +119,10 @@ button {
     &.empty {
       color: $gray-500;
     }
+  }
+
+  .eqn-editor-input input {
+    font-family: monospace;
   }
 }
 
