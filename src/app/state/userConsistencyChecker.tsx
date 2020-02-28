@@ -52,11 +52,12 @@ const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
 const clearCurrentUser = () => {
     clearTimeout(timeoutHandle);
     setUserId(undefined);
+    window.document.location.href = "/";
 };
 
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
     switch (action.type) {
-        case ACTION_TYPE.USER_LOG_OUT_REQUEST:
+        case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
             clearCurrentUser();
             break;
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
