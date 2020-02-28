@@ -2,12 +2,13 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {Badge, Col, Container, Row} from "reactstrap";
 import "../../services/tagsPhy";
-import * as Tags from "../../services/tags";
+import tags from "../../services/tags";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {Tag} from "../../../IsaacAppTypes";
 
 export const AllTopics = () => {
 
-    const renderTopic = (topic: Tags.Tag) => {
+    const renderTopic = (topic: Tag) => {
         const TextTag = topic.comingSoon ? "span" : "strong";
         return <React.Fragment>
             <Link
@@ -32,14 +33,14 @@ export const AllTopics = () => {
 
             <Row>
                 <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
-                    {Tags.allCategoryTags.map((category) => {
-                        const categoryDescendentIds = Tags.getDescendents(category.id).map(t => t.id);
-                        const subcategoryTags = Tags.getSubcategoryTags(categoryDescendentIds);
+                    {tags.allCategoryTags.map((category) => {
+                        const categoryDescendentIds = tags.getDescendents(category.id).map(t => t.id);
+                        const subcategoryTags = tags.getSubcategoryTags(categoryDescendentIds);
                         return <Col key={category.id} md={6}>
                             <h2>{category.title}</h2>
                             {subcategoryTags.map((subcategory) => {
-                                const subcategoryDescendentIds = Tags.getDescendents(subcategory.id).map(t => t.id);
-                                const topicTags = Tags.getTopicTags(subcategoryDescendentIds);
+                                const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
+                                const topicTags = tags.getTopicTags(subcategoryDescendentIds);
                                 return <React.Fragment key={subcategory.id}>
                                     <h3>{subcategory.title}</h3>
                                     <ul className="list-unstyled mb-3 link-list">
