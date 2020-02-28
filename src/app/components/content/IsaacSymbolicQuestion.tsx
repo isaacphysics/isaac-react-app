@@ -100,8 +100,8 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             [],
             {
                 textEntry: true,
-                fontItalicPath: 'assets/STIXGeneral-Italic.ttf',
-                fontRegularPath: 'assets/STIXGeneral-Regular.ttf',
+                fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
+                fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf',
             }
         );
         sketch.log = { initialState: [], actions: [] };
@@ -127,8 +127,6 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             debounceTimer.current = null;
         }
         debounceTimer.current = window.setTimeout(() => {
-            console.log(parseExpression);
-            debugger;
             let parsedExpression = parseExpression(pycode);
 
             if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
