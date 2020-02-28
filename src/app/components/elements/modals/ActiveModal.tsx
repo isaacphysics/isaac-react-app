@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import * as AppTypes from "../../../../IsaacAppTypes";
-import {store} from "../../../state/store";
 import {closeActiveModal} from "../../../state/actions";
+import {useDispatch} from "react-redux";
 
 interface ActiveModalProps {
     activeModal?: AppTypes.ActiveModal | null;
@@ -10,6 +10,7 @@ interface ActiveModalProps {
 
 export const ActiveModal = ({activeModal}: ActiveModalProps) => {
     const ModalBody = activeModal && activeModal.body;
+    const dispatch = useDispatch();
     const [isOpen, setIsOpen] = useState(true);
 
     const toggle = () => {
@@ -19,7 +20,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
 
     useEffect(() => {
         if (!isOpen) {
-            store.dispatch(closeActiveModal());
+            dispatch(closeActiveModal());
         }
     }, [isOpen]);
 
@@ -34,10 +35,8 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
             >
                 {activeModal.title}
             </RS.ModalHeader>
-            <RS.ModalBody className="px-1 pb-2 mx-4">
-                <RS.Col>
-                    {typeof ModalBody === "function" ? <ModalBody /> : ModalBody}
-                </RS.Col>
+            <RS.ModalBody className="pb-2 mx-4">
+                {typeof ModalBody === "function" ? <ModalBody /> : ModalBody}
             </RS.ModalBody>
             {activeModal.buttons &&
                 <RS.ModalFooter className="mb-4 mx-2 align-self-center">
