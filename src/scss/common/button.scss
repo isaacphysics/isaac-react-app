@@ -62,7 +62,7 @@
 
   //Button Secondary
   &.btn-secondary:not(:disabled):not(.disabled):active {
-    background-color: $reddish;
+    background-color: $cs-reddish;
     border: 1px solid transparent;
     color: $black;
     text-decoration: underline;

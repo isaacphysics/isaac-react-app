@@ -1,8 +1,8 @@
 // NOMENSA variables.scss
 //Custom Colours
-$mustard: #ffb53f;
-$hot-pink: #ff3369;
-$reddish: #d7335f; // Used as an active colour on secondary buttons
+$cs-mustard: #ffb53f;
+$cs-hot-pink: #ff3369;
+$cs-reddish: #d7335f; // Used as an active colour on secondary buttons
 $focus-blue: #3E59A3; // Used as focus indicator colour on inputs
 
 // Colour Overrides
@@ -11,9 +11,11 @@ $cyan: #0f8294;
 $green: #208838;
 
 // Theme
+$primary: $cs-mustard;
+$secondary: $cs-hot-pink;
 $theme-colors: (
-    "primary": $mustard,
-    "secondary": $hot-pink
+    "primary": $primary,
+    "secondary": $secondary
 );
 
 //Greys
@@ -54,6 +56,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "~katex/dist/katex.min.css";
 @import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
 @import "~billboard.js/dist/theme/insight.css";
+
 
 // Utility
 @import "../common/preload";

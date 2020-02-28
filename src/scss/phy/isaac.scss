@@ -19,9 +19,11 @@ $reddish: #d7335f; // Used as an active colour on secondary buttons
 $focus-blue: #3E59A3; // Used as focus indicator colour on inputs
 
 //Colours
+$primary: $phy_green;
+$secondary: $phy_purple;
 $theme-colors: (
-    "primary": $phy_green,
-    "secondary": $phy_purple
+    "primary": $primary,
+    "secondary": $secondary
 );
 
 //Greys
