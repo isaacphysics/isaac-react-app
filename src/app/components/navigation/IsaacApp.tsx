@@ -65,6 +65,7 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {HeaderPhy} from "./HeaderPhy";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import {LoadScript} from "@react-google-maps/api";
+import {PhyGameboardBuilder} from "../pages/PhyGameboardBuilder";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -114,6 +115,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/topics/:topicName" component={Topic} />
 
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
+                    <TrackedRoute exact path="/gameboards_builder" component={PhyGameboardBuilder} />
                     <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
                     <TrackedRoute exact path="/gameboard_builder" ifUser={isTeacher} component={GameboardBuilder} />
                     <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />

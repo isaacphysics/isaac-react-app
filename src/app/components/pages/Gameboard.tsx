@@ -56,6 +56,18 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     </RS.ListGroupItem>;
 };
 
+export const GameboardViewer = ({gameboard}: {gameboard: GameboardDTO}) => {
+    return <RS.Row>
+        <RS.Col lg={{size: 10, offset: 1}}>
+            <RS.ListGroup className="mt-4 mt-lg-5 link-list list-group-links list-gameboard">
+                {gameboard && gameboard.questions && gameboard.questions.map(
+                    gameboardItem.bind(null, gameboard)
+                )}
+            </RS.ListGroup>
+        </RS.Col>
+    </RS.Row>;
+}
+
 const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboard, logAction}: GameboardPageProps) => {
     let gameboardId = hash ? hash.slice(1) : null;
 
@@ -111,23 +123,14 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
                 thenRender={gameboard => <React.Fragment>
                     <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
                     <div className="mb-5">
-                        <RS.Row>
-                            <RS.Col lg={{size: 10, offset: 1}}>
-                                <RS.ListGroup className="mt-4 mt-lg-5 link-list list-group-links list-gameboard">
-                                    {gameboard && gameboard.questions && gameboard.questions.map(
-                                        gameboardItem.bind(null, gameboard)
-                                    )}
-                                </RS.ListGroup>
-                            </RS.Col>
-                        </RS.Row>
+                        <GameboardViewer gameboard={gameboard} />
                         {userButtons}
                     </div>
                 </React.Fragment>}
                 ifNotFound={notFoundComponent}
             />
         </RS.Container>
-        :
-        <Redirect to="/gameboards#example-gameboard" />
+        : <Redirect to="/gameboards_builder" />
 };
 
 export const Gameboard = withRouter(connect(stateFromProps, dispatchFromProps)(GameboardPageComponent));
