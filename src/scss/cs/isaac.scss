@@ -63,11 +63,9 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/mixins";
 
 // Atoms
-@import "logo";
 @import "../common/fonts";
 @import "../common/typography";
 @import "../common/headings";
-@import "../common/button";
 @import "../common/modals";
 @import "../common/questions";
 @import "../common/forms";
@@ -85,6 +83,8 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/focus";
 @import "../common/progress-bar";
 @import "../common/anvil";
+@import "button";
+@import "logo";
 
 // Navigation
 @import "header";
