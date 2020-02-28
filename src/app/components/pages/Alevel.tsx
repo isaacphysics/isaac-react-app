@@ -91,7 +91,7 @@ export const Alevel = () => {
                 <h3>Extension Resources</h3>
             </Col>
         </Row>
-        <Row className="teacher-feature-body">
+        <Row className="teacher-feature-body mb-5">
             <Col md="auto"/>
             <Col md="auto">
                 <a href="/events?types=student" className="hexagon">

@@ -45,7 +45,7 @@ export const Gcse = () => {
             </Col>
             <Col md="auto"/>
         </Row>
-        <Row className="teacher-feature-body">
+        <Row className="teacher-feature-body mb-5">
             <Col className="hexagon-offset hexagon-offset-large" md="auto">
                 <a href="/pages/gcse_quizzes" className="hexagon">
                     <img className="hexagon-field" src="/assets/key_stage_sprite.svg#question" alt="Isaac hexagon"></img>
