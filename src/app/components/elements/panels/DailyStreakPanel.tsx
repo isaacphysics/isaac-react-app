@@ -11,11 +11,11 @@ export const DailyStreakPanel = ({userProgress}: {userProgress?: UserProgress | 
             </div>
         </RS.Row>
         <RS.Row>
-            <DailyStreakGauge streakRecord={userProgress?.userSnapshot?.streakRecord}/>
+            <DailyStreakGauge streakRecord={userProgress?.userSnapshot?.dailyStreakRecord}/>
         </RS.Row>
         <RS.Row>
             <div id="streak-help" className={"text-center-width"}>
-                Longest streak: {userProgress?.userSnapshot?.streakRecord?.largestStreak || 0} days
+                Longest streak: {userProgress?.userSnapshot?.dailyStreakRecord?.largestStreak || 0} days
             </div>
             <RS.UncontrolledTooltip placement="bottom" target="streak-help">
                 <div className="text-left">

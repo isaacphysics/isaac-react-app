@@ -63,7 +63,7 @@ export abstract class AbstractBaseTagService {
         return descendents;
     }
 
-    protected getSpecifiedTags(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
+    public getSpecifiedTags(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
         // Return all TAG_ID an object has of a given type!
         if (tagArray == null) return [];
         let tags = [];
