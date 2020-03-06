@@ -9,7 +9,7 @@ import {NOT_FOUND, TAG_ID} from "./constants";
 import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopicHistory} from "./topics";
 import {useCurrentExamBoard} from "./examBoard";
 
-export interface LinkInfo {title: string; to: string}
+export interface LinkInfo {title: string; to?: string}
 export type CollectionType = "Gameboard" | "Topic";
 export interface PageNavigation {
     collectionType?: CollectionType;
