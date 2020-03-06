@@ -8,11 +8,13 @@ import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
-import {NOT_FOUND} from "../../services/constants";
+import {NOT_FOUND, TAG_ID} from "../../services/constants";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {Container} from "reactstrap";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import tags from "../../services/tags";
 
 const stateFromProps = (state: AppState) => {
     return state && {
@@ -28,6 +30,15 @@ interface GameboardPageProps {
     loadGameboard: (gameboardId: string | null) => void;
     logAction: (eventDetails: object) => void;
     user: LoggedInUser | null;
+}
+
+function getTags(docTags?: string[]) {
+    if (SITE_SUBJECT !== SITE.PHY) {
+        return [];
+    }
+    if (!docTags) return [];
+
+    return tags.getByIdsAsHeirarchy(docTags as TAG_ID[]);
 }
 
 const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
@@ -47,11 +58,19 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
             break;
     }
 
+    const tags = getTags(question.tags);
+
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`}>
             <span>{icon}</span>
-            <span>{question.title}</span>
-            {tryAgain && <span className="try-again">try again!</span>}
+            <div className="flex-grow-1">{question.title}
+                {tryAgain && <span className="try-again">try again!</span>}
+                {tags && <div className="gameboard-tags">
+                    {tags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
+                </div>}
+            </div>
+            {question.level !== undefined && question.level !== 0 &&
+                <span className="gameboard-tags">Level {question.level}</span>}
         </Link>
     </RS.ListGroupItem>;
 };
