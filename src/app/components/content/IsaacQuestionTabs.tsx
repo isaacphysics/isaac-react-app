@@ -59,7 +59,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         <div className={
             classnames({"question-component p-md-5": true, "parsons-layout": doc.type === 'isaacParsonsQuestion'})
         }>
-            <QuestionComponent questionId={doc.id as string} doc={doc} />
+            <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
 
             {validationResponse && !canSubmit && <div className={
                 classnames({"validation-response-panel p-3 mt-3": true,  "correct": validationResponse.correct})
