@@ -1603,6 +1603,17 @@ export const setPrintingHints = (hintsEnabled: boolean) => (dispatch: Dispatch<A
     dispatch({type: ACTION_TYPE.PRINTING_SET_HINTS, hintsEnabled});
 };
 
+// Concepts
+export const fetchConcepts = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.CONCEPTS_REQUEST});
+    try {
+        const concepts = await api.concepts.list();
+        dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS, concepts: concepts.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Loading Concepts Failed", e));
+    }};
+
 
 // SERVICE ACTIONS (w/o dispatch)
 // Page change

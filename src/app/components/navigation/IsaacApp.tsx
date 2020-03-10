@@ -65,6 +65,7 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {HeaderPhy} from "./HeaderPhy";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import {LoadScript} from "@react-google-maps/api";
+import {Concepts} from '../pages/Concepts';
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -104,6 +105,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />
 
                     <TrackedRoute exact path="/search" component={Search} />
+                    <TrackedRoute exact path="/concepts" component={Concepts} />
 
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                     <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
