@@ -65,6 +65,8 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {HeaderPhy} from "./HeaderPhy";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import {LoadScript} from "@react-google-maps/api";
+import StaticPageRoute from "./StaticPageRoute";
+import {Redirect} from "react-router";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -113,6 +115,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/topics" component={AllTopics} />
                     <TrackedRoute exact path="/topics/:topicName" component={Topic} />
 
+                    {/* TODO: gameboard URLs need checking over */}
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
                     <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
                     <TrackedRoute exact path="/gameboard_builder" ifUser={isTeacher} component={GameboardBuilder} />
@@ -161,6 +164,47 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
                     <TrackedRoute exact path="/coming_soon" component={ComingSoon} />
                     <TrackedRoute exact path="/teaching_order" component={Generic} componentProps={{pageIdOverride: "teaching_order"}} />
+
+                    {/* Physics pages and redirects */}
+                    <StaticPageRoute exact path="/glossary" />
+                    <StaticPageRoute exact path="/apply_uni" />
+                    <StaticPageRoute exact path="/solving_problems" />
+                    <StaticPageRoute exact path="/extraordinary_problems" pageId="extraordinary_problems_index" />
+                    <StaticPageRoute exact path="/challenge_problems" pageId="challenge_problems_index" />
+                    <StaticPageRoute exact path="/bios" />
+                    <StaticPageRoute exact path="/why_physics" />
+                    <StaticPageRoute exact path="/fast_track_14" pageId="fast_track_14_index" />
+                    <StaticPageRoute exact path="/prize_draws" />
+                    <StaticPageRoute exact path="/spc" />
+                    <StaticPageRoute exact path="/chemistry" pageId="chemistry_landing_page" />
+                    <StaticPageRoute exact path="/survey" />
+                    <StaticPageRoute exact path="/book/question" pageId="book_question" />
+                    <StaticPageRoute exact path="/exam_uni_help" />
+                    <StaticPageRoute exact path="/gcse" />
+                    <StaticPageRoute exact path="/alevel" />
+
+                    <Redirect exact from="/mission" to="/about" />
+                    <Redirect exact from="/boards" to="/my_gameboards" />
+
+                    <Redirect exact from="/board/:id" to="/gameboards#:id" />
+
+                    {/*
+                    // TODO: Books
+                    <Redirect exact path="/qmp" to="/book_quantum_mechanics_primer" />
+                    <Redirect exact path="/gcsebook" to="/book_phys_book_gcse" />
+                    <Redirect exact path="/physics_skills_14" to="/book_physics_skills_14" />
+                    <Redirect exact path="/book" to="/book_physics_skills_14" />
+                    // TODO: short link and external redirect
+                    */}
+
+                    <StaticPageRoute exact ifUser={isTeacher} path="/teachermentoring_gcse" pageId="fragments/teacher_mentoring_gcse_page_frag" />
+                    <StaticPageRoute exact ifUser={isTeacher} path="/teachermentoring_alevel" pageId="fragments/teacher_mentoring_alevel_page_frag" />
+
+                    {/*
+                    // TODO: schools and other admin stats
+                    */}
+
+                    <Redirect exact from="/game_builder" to="/gameboard_builder" />
 
                     {/* Builder pages */}
                     <TrackedRoute exact path="/equality" component={Equality} />
