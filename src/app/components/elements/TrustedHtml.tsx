@@ -198,11 +198,28 @@ function munge(latex: string) {
         .replace(/\\newline/g, "\\\\");
 }
 
+const REF = "==REF==yzskvUeunVc==";
+const ENDREF = "==ENDREF==";
+const REF_REGEXP = new RegExp(REF + "(.*?)" + ENDREF, "g");
+const SR_REF_REGEXP = new RegExp("start text, " + REF_REGEXP.source + ", end text,", "g");
+
 export function katexify(html: string, user: LoggedInUser | null, examBoard: EXAM_BOARD | null, screenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
     let index = 0;
+
+    function createReference(ref: string | null, ifMissing: string, format: boolean = true) {
+        if (ref) {
+            const number = figureNumbers[ref];
+            if (number) {
+                const figure = `Figure ${number}`;
+                return format ? `<strong class="text-secondary">${figure}</strong>` : figure;
+            }
+        }
+        return ifMissing;
+    }
+
     while ((match = start.exec(html)) !== null) {
         output += html.substring(index, match.index);
         index = match.index;
@@ -225,13 +242,24 @@ export function katexify(html: string, user: LoggedInUser | null, examBoard: EXA
                 if (examBoard == EXAM_BOARD.AQA) {
                     macrosToUse = KatexMacrosWithEngineeringBool;
                 }
+                macrosToUse = {...macrosToUse, "\\ref": (context: {consumeArgs: (n: number) => {text: string}[][]}) => {
+                    const args = context.consumeArgs(1);
+                    const reference = args[0].reverse().map((t: {text: string}) => t.text).join("");
+                    return "\\text{" + REF + reference + ENDREF + "}";
+                }};
                 let katexOptions = {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse};
                 let katexRenderResult = katex.renderToString(latexMunged, katexOptions);
+                katexRenderResult = katexRenderResult.replace(REF_REGEXP, (_, match) => {
+                    return createReference(match, "unknown reference " + match);
+                });
 
                 let screenreaderText;
                 try {
                     let pauseChars = katexOptions.displayMode ? ". &nbsp;" : ",";  // trailing comma/full-stop for pause in speaking
                     screenreaderText = `${renderA11yString(latexMunged, katexOptions)}${pauseChars}`;
+                    screenreaderText = screenreaderText.replace(SR_REF_REGEXP, (_, match) => {
+                        return createReference(match, "unknown reference " + match, false);
+                    });
                 } catch (e) {
                     // eslint-disable-next-line no-console
                     console.warn(`Unsupported equation for screenreader text: '${latexMunged}'`, e);
@@ -255,14 +283,8 @@ export function katexify(html: string, user: LoggedInUser | null, examBoard: EXA
             }
         } else {
             // It's a ref
-            let result = "unknown reference " + match[0];
             const ref = match[0].match(/ref\{([^}]*)\}/);
-            if (ref && ref[1]) {
-                const number = figureNumbers[ref[1]];
-                if (number) {
-                    result = "Figure " + number;
-                }
-            }
+            const result = createReference(ref && ref[1], "unknown reference " + match[0]);
 
             output += result;
             index = match.index + match[0].length;

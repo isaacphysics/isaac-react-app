@@ -26,8 +26,8 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                     {doc.clickUrl && <a href={doc.clickUrl}><img src={path} alt={doc.altText} /></a>}
                 </div>
                 <div className="text-center figure-caption">
-                    {doc.children && doc.children.length > 0 && figId && <div><strong>Figure {figureNumbers[figId]}</strong></div>}
-                    <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value && figId && `**Figure ${figureNumbers[figId]}:** ${doc.value}`}>
+                    {doc.children && doc.children.length > 0 && figId && <div><strong className="text-secondary">Figure {figureNumbers[figId]}</strong></div>}
+                    <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value && figId && `<strong class="text-secondary">Figure ${figureNumbers[figId]}:</strong> ${doc.value}`}>
                         {doc.children}
                     </IsaacContentValueOrChildren>
                     {doc.attribution && <span className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></span>}
