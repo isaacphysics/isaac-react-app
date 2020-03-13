@@ -4,13 +4,14 @@ import * as reduxLogger from "redux-logger";
 import {rootReducer} from "./reducers";
 import {userConsistencyCheckerMiddleware} from "./userConsistencyChecker";
 import {notificationCheckerMiddleware} from "../services/notificationManager";
+import {SITE, SITE_SUBJECT} from "../services/siteConstants";
 
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export const middleware: Middleware[] = [
     userConsistencyCheckerMiddleware,
-    notificationCheckerMiddleware,
+    ...(SITE_SUBJECT === SITE.CS ? [notificationCheckerMiddleware] : []),
     thunk,
 ];
 
