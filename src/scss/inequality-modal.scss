@@ -144,8 +144,8 @@
                     box-sizing: content-box;
                     padding: 8px;
                     text-indent: 0;
-                    width: 48px;
-                    height: 48px;
+                    width: 64px;
+                    height: 70px;
                     text-align: center;
                     font-size: 1.8em;
 
@@ -156,11 +156,21 @@
                     .katex {
                         display: block;
                         padding-top: 5px;
+
+                        span.base {
+                            line-height: 52px;
+                        }
+                    }
+
+                    &.radix, &.fraction, &.derivative {
+                        .katex span.base {
+                            line-height: 36px;
+                        }
                     }
 
                     svg.v-hexagon {
                         position: absolute;
-                        width: 48px;
+                        width: 64px;
                         left: 8px;
                         top: 4px;
                         overflow: visible;
@@ -181,6 +191,12 @@
 
                     .katex {
                         padding-top: 8px;
+                    }
+
+                    &.derivatives {
+                        .katex span.base {
+                            line-height: 32px;
+                        }
                     }
 
                     &.inactive {
