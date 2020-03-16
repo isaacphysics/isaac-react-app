@@ -1,0 +1,12 @@
+@import "../common/header";
+
+a.skip-main:focus, a.skip-main:active {
+  left: 7%;
+  top: 70px;
+}
+header {
+  background-image: url('/assets/phy/line.svg');
+  @include respond-above(sm) {
+    background-size: 100% 65%;
+  }
+}
