@@ -156,9 +156,13 @@
                     .katex {
                         display: block;
                         padding-top: 5px;
+                        line-height: 52px;
+                        max-height: 52px;
+                        overflow: visible;
 
                         span.base {
-                            line-height: 52px;
+                            max-height: 38px;
+                            vertical-align: top;
                         }
                     }
 

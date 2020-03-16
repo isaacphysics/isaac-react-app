@@ -2,6 +2,7 @@
 import React from "react";
 import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import katex from "katex";
+import Menu from "react-select/src/components/Menu";
 
 class MenuItem {
     public type: string;
@@ -112,6 +113,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             // Assuming these are only letters... might become more complicated in the future.
             let customMenuItems = {
                 letters: new Array<MenuItem>(),
+                basicFunctions: new Array<MenuItem>(),
                 otherFunctions: new Array<MenuItem>()
             };
             for (let l of props.availableSymbols) {
@@ -129,6 +131,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                         // What
                         console.warn(`Could not parse available symbol "${availableSymbol} as a function"`);
                     }
+                    // } else if (availableSymbol.startsWith('Derivative(')) {
+
                 } else {
                     // Everything else is a letter
                     const letter = availableSymbol;
@@ -400,7 +404,60 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             ]
         }
 
-        // TODO Add custom derivatives and differentials
+        if (this.props.availableSymbols) {
+            for (const derivative of this.props.availableSymbols.filter((s: string)=> s.startsWith('Derivative('))) {
+                const pieces = derivative.split(';').map(s => s.replace(/[()\s]/g, '')).slice(1); // FIXME Is this regex just a trim()?
+                let orders: { [piece: string]: number } = {};
+                // Count how many times one should derive each variable
+                for (const piece of pieces) {
+                    orders[piece] = orders[piece] + 1 || 1;
+                }
+                const derivativeOrder = Object.values(orders).reduce((a, c) => a + c, 0);
+                const denominatorObjects: any[] = [];
+                let texBottom = '';
+                for (const p of Object.entries(orders)) {
+                    const letter = p[0];
+                    const order = p[1];
+                    const o = {
+                        type: 'Differential',
+                        properties: { letter: 'd' }, // TODO Support other types of differentials
+                        children: {
+                            argument: {
+                                type: 'Symbol',
+                                properties: { letter: letter }
+                            },
+                            order: null as any | null
+                        }
+                    };
+                    texBottom += `d${letter}`;
+                    if (order > 1) {
+                        o.children = { ...o.children, order: {
+                            type: 'Num',
+                            properties: { significand: `${order}` }
+                        }};
+                        texBottom += `^{${order}}`;
+                    }
+                    denominatorObjects.push(o);
+                }
+                // This sure would look a lot better as a reduce but I can't figure it out.
+                let denominator = denominatorObjects.pop();
+                while (denominatorObjects.length > 0) {
+                    let acc = denominatorObjects.pop();
+                    acc.children.right = denominator;
+                    denominator = acc;
+                }
+                // Build up the object
+                let texLabel = '\\frac{\\mathrm{d}' + (derivativeOrder > 1 ? `^{${derivativeOrder}}` : '') + `}{${texBottom}}`;
+                let derivativeObject = new MenuItem('Derivative', { }, { label: texLabel, texLabel: true, fontSize: '1.5em', className: '' });
+                let numerator = {
+                    type: 'Differential',
+                    properties: { letter: 'd' },
+                    children: derivativeOrder > 1 ? { order: { type: 'Num', properties: { significand: `${derivativeOrder}` } } } : { }
+                };                
+                derivativeObject.children = { numerator, denominator };
+                items.push(derivativeObject);
+            }
+        }
 
         return items;
     }
@@ -646,6 +703,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             mathsOtherFunctionsMenu = <div className="top-menu maths other-functions">
                 <ul className="sub-menu functions">
                     {this.state.menuItems.otherFunctions.map(this.menuItem)}
+                    {this.state.menuItems.mathsDerivatives.map(this.menuItem)}
                 </ul>
             </div>
         }
