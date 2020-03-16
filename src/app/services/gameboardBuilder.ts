@@ -1,9 +1,10 @@
 import {SortOrder, tagExamBoardMap} from "./constants";
 import {orderBy} from "lodash";
-import {getDescendents, Tag} from "./tags";
+import tags from "./tags";
 import {ContentSummaryDTO, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
 import {Dispatch, SetStateAction} from "react";
 import {ValueType} from "react-select/src/types";
+import {Tag} from "../../IsaacAppTypes";
 
 export const sortQuestions = (sortState: { [s: string]: string }) => (questions: ContentSummaryDTO[]) => {
     if (sortState["title"] && sortState["title"] != SortOrder.NONE) {
@@ -84,7 +85,7 @@ export const convertTagToSelectionOption = (tag: Tag) => {
 export const groupTagSelectionsByParent = (parent: Tag) => {
     return {
         label: parent.title,
-        options: getDescendents(parent.id).map(convertTagToSelectionOption)
+        options: tags.getDescendents(parent.id).map(convertTagToSelectionOption)
     };
 };
 

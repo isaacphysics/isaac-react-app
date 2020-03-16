@@ -15,11 +15,13 @@ import {withRouter} from "react-router-dom";
 import {IsaacQuizTabs} from "./IsaacQuizTabs";
 import {QuestionContext} from "../../../IsaacAppTypes";
 
-interface IsaacContentProps {
-    doc: ContentDTO;
-    match: {path: string};
-}
-export const IsaacContent = withRouter((props: IsaacContentProps) => {
+const classBasedLayouts = {
+    left: "align-left",
+    right: "align-right",
+    righthalf: "align-right-half"
+};
+
+export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: string}}) => {
     const {doc: {type, layout, encoding, value, children}, match} = props;
 
     let selectedComponent;
@@ -61,5 +63,13 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
                     </IsaacContentValueOrChildren>;
             }
     }
-    return selectedComponent;
+
+    if (layout && classBasedLayouts.hasOwnProperty(layout)) {
+        // @ts-ignore because we do the check with hasOwnProperty
+        return <div className={classBasedLayouts[layout]}>
+            {selectedComponent}
+        </div>;
+    } else {
+        return selectedComponent;
+    }
 });

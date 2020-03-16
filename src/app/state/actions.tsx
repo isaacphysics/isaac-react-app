@@ -25,6 +25,7 @@ import {
     BoardOrder,
     Credentials,
     EmailUserRoles,
+    FreeTextRule,
     LoggedInUser,
     LoggedInValidationUser,
     QuestionSearchQuery,
@@ -42,6 +43,7 @@ import {
     QuestionDTO,
     RegisteredUserDTO,
     Role,
+    TestCaseDTO,
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
@@ -687,8 +689,8 @@ export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
 };
 
 // Questions
-export const registerQuestion = (question: QuestionDTO) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question});
+export const registerQuestion = (question: QuestionDTO, accordionClientId?: string) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question, accordionClientId});
 };
 
 export const deregisterQuestion = (questionId: string) => (dispatch: Dispatch<Action>) => {
@@ -821,6 +823,18 @@ export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<
         </div>
     }) as any);
     history.push(generatePostQuizUrl(quizId));
+};
+
+// Question testing
+export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCaseDTO[]) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.TEST_QUESTION_REQUEST});
+        const testResponse = await api.questions.testFreeTextQuestion(questionChoices, testCases);
+        dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS, testCaseResponses: testResponse.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to test question", e));
+    }
 };
 
 // Current gameboard
