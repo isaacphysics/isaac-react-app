@@ -21,8 +21,7 @@ export const TeacherFeatures = () => {
                 <h3>Isaac For Teachers</h3>
             </Col>
         </Row>
-        <Row className="teacher-feature-body">
-            <Col md="auto"/>
+        <Row className="teacher-feature-body justify-content-md-center">
             {isStudent(user) || !isLoggedIn(user) ?
                 <Col md="auto">
                     <a href="/teacher_account_request" className="hexagon">
@@ -65,15 +64,13 @@ export const TeacherFeatures = () => {
                     </div>
                 </a>
             </Col>
-            <Col md="auto"/>
         </Row>
         <Row>
             <Col>
                 <h3>Isaac Activities</h3>
             </Col>
         </Row>
-        <Row className="teacher-feature-body mb-5">
-            <Col md="auto"/>
+        <Row className="teacher-feature-body mb-5 justify-content-md-center">
             <Col md="auto">
                 <a href="/supportTeacher" className="hexagon">
                     <img className="hexagon-field" src="/assets/teacher_features_sprite.svg#use-with-class" alt="Isaac hexagon"></img>
@@ -106,7 +103,6 @@ export const TeacherFeatures = () => {
                     </div>
                 </a>
             </Col>
-            <Col md="auto"/>
         </Row>
     </Container>
 };

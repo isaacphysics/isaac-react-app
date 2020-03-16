@@ -9,8 +9,7 @@ export const Alevel = () => {
                 <TitleAndBreadcrumb currentPageTitle={"A Level Resources"} breadcrumbTitleOverride="A Level Resources" />
             </Col>
         </Row>
-        <Row className="teacher-feature-body">
-            <Col md="auto"/>
+        <Row className="teacher-feature-body justify-content-md-center">
             <Col md="auto">
                 <a href="/gameboards?filter=true#c052917f-5b7b-4b7f-b2a3-41d9de0a17c4" className="hexagon">
                     <img className="hexagon-field" src="/assets/key_stage_sprite.svg#question" alt="Isaac hexagon"></img>
@@ -43,15 +42,13 @@ export const Alevel = () => {
                     </div>
                 </a>
             </Col>
-            <Col md="auto"/>
         </Row>
         <Row>
             <Col>
                 <h3>Isaac Books</h3>
             </Col>
         </Row>
-        <Row className="teacher-feature-body">
-            <Col md="auto"/>
+        <Row className="teacher-feature-body justify-content-md-center">
             <Col md="auto">
                 <a href="/books/pre_uni_maths" className="hexagon">
                     <img className="hexagon-field" src="/assets/key_stage_sprite.svg#skills-book-cover" alt="Isaac hexagon"></img>
@@ -84,15 +81,13 @@ export const Alevel = () => {
                     </div>
                 </a>
             </Col>
-            <Col md="auto"/>
         </Row>
         <Row>
             <Col>
                 <h3>Extension Resources</h3>
             </Col>
         </Row>
-        <Row className="teacher-feature-body mb-5">
-            <Col md="auto"/>
+        <Row className="teacher-feature-body mb-5 justify-content-md-center">
             <Col md="auto">
                 <a href="/events?types=student" className="hexagon">
                     <img className="hexagon-field" src="/assets/key_stage_sprite.svg#groups" alt="Isaac hexagon"></img>
@@ -125,7 +120,6 @@ export const Alevel = () => {
                     </div>
                 </a>
             </Col>
-            <Col md="auto"/>
         </Row>
     </Container>
 };

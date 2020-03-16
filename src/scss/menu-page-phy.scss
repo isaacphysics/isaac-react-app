@@ -72,13 +72,13 @@
 }
 
 .hexagon-offset {
-  @include respond-above(sm) {
-    padding-left: 170px;
+  @include respond-above(lg) {
+    margin-left: -250px;
   }
 }
 
 .hexagon-offset-large {
-  @include respond-above(sm) {
+  @include respond-above(lg) {
     margin-top: -55px;
   }
 }

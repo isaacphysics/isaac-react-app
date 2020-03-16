@@ -9,8 +9,7 @@ export const Gcse = () => {
                 <TitleAndBreadcrumb currentPageTitle={"GCSE Resources"} breadcrumbTitleOverride="GCSE Resources" />
             </Col>
         </Row>
-        <Row className="teacher-feature-body">
-            <Col md="auto"/>
+        <Row className="teacher-feature-body justify-content-md-center">
             <Col md="auto">
                 <a href="/gcsebook" className="hexagon">
                     <img className="hexagon-field" src="/assets/key_stage_sprite.svg#skills-book-cover" alt="Isaac hexagon"></img>
@@ -43,9 +42,8 @@ export const Gcse = () => {
                     </div>
                 </a>
             </Col>
-            <Col md="auto"/>
         </Row>
-        <Row className="teacher-feature-body mb-5">
+        <Row className="teacher-feature-body mb-5 justify-content-md-center">
             <Col className="hexagon-offset hexagon-offset-large" md="auto">
                 <a href="/pages/gcse_quizzes" className="hexagon">
                     <img className="hexagon-field" src="/assets/key_stage_sprite.svg#question" alt="Isaac hexagon"></img>
