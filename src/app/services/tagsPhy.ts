@@ -68,7 +68,8 @@ export class PhysicsTagService extends AbstractBaseTagService {
     public getBaseTags() {return PhysicsTagService.baseTags;}
     public augmentDocWithSubject(doc: ContentDTO) {
         const documentSubject = this.getPageSubjectTag((doc.tags || []) as TAG_ID[]);
-        return Object.assign(doc, {subjectId: documentSubject.id});
+        return Object.assign(doc, {subjectId: documentSubject ? documentSubject.id
+            : TAG_ID.physics});
     }
 
     private getPageSubjectTag(tagArray: TAG_ID[]) {

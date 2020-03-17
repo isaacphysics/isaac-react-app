@@ -1,12 +1,12 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
-import {AppState} from "../../state/reducers";
+import {AppState} from "../../../state/reducers";
 import {Col, Container, Row} from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router";
-import {LoggedInUser} from "../../../IsaacAppTypes";
-import {NavigationBar} from "./NavigationBar";
-import {MainSearch} from "../elements/MainSearch";
+import {LoggedInUser} from "../../../../IsaacAppTypes";
+import {NavigationBar} from "../../navigation/NavigationBar";
+import {MainSearch} from "../../elements/MainSearch";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
@@ -20,16 +20,17 @@ const HeaderComponent = ({user}: HeaderProps) => {
         <Container className="container-fluid px-0">
             <Row>
                 <Col>
-                    <div className="header-bar mx-3 mx-md-0 py-3 d-md-flex">
+                    <div className="header-bar mx-3 mx-md-0 d-md-flex">
                         <div className="header-logo">
                             <Link to="/home">
-                                <img src="/assets/logo.svg" alt="Isaac Computer Science" />
+                                <img src="/assets/phy/logo.svg" alt="Isaac Physics" className="d-none d-md-block"/>
+                                <img src="/assets/phy/logo-small.svg" alt="Isaac Physics" className="d-sm-block d-md-none"/>
                             </Link>
                         </div>
 
                         <a href="#main" className="skip-main">Skip to main content</a>
 
-                        <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none">
+                        <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none pt-3">
                             {user &&
                                 (!user.loggedIn ?
                                     <React.Fragment>
@@ -61,7 +62,7 @@ const HeaderComponent = ({user}: HeaderProps) => {
                             }
                         </div>
 
-                        <div className="header-search m-md-0 ml-md-auto align-items-center d-print-none">
+                        <div className="header-search m-md-0 ml-md-auto align-items-center d-print-none pt-3">
                             <MainSearch />
                         </div>
                     </div>
@@ -73,4 +74,4 @@ const HeaderComponent = ({user}: HeaderProps) => {
     </header>;
 };
 
-export const HeaderCS = withRouter(connect(stateToProps)(HeaderComponent));
+export const HeaderPhy = withRouter(connect(stateToProps)(HeaderComponent));

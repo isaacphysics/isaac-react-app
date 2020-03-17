@@ -4,7 +4,6 @@ import "../../services/polyfills"; // important
 import {useDispatch, useSelector} from "react-redux";
 import {Route, Router, Switch} from "react-router-dom";
 import {Footer} from "./Footer";
-import {Homepage} from "../pages/Homepage";
 import {Question} from "../pages/Question";
 import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
@@ -36,7 +35,6 @@ import {Search} from "../pages/Search";
 import {CookieBanner} from "./CookieBanner";
 import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
-import {HeaderCS} from "./HeaderCS";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
@@ -61,11 +59,11 @@ import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MyProgress} from "../pages/MyProgress";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {HeaderPhy} from "./HeaderPhy";
+import {SITE_SUBJECT} from "../../services/siteConstants";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import {LoadScript} from "@react-google-maps/api";
 import {PhyGameboardBuilder} from "../pages/PhyGameboardBuilder";
+import SiteSpecific from "../site/siteSpecific";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -82,10 +80,13 @@ export const IsaacApp = () => {
         dispatch(fetchGlossaryTerms());
     }, []);
 
+
+    const {Homepage, Header} = SiteSpecific[SITE_SUBJECT];
+
     // Render
     return <Router history={history}>
         <LoadScript googleMapsApiKey="AIzaSyBcVr1HZ_JUR92xfQZSnODvvlSpNHYbi4Y" id="script-loader">
-            {{[SITE.PHY]: <HeaderPhy />, [SITE.CS]: <HeaderCS />}[SITE_SUBJECT]}
+            <Header />
             <Toasts />
             <ActiveModals />
             <CookieBanner />

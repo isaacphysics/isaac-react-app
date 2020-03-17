@@ -2,13 +2,13 @@ import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
-import {AppState} from "../../state/reducers";
-import {LoggedInUser} from "../../../IsaacAppTypes";
-import {WhySignUpTabs} from "../elements/WhySignUpTabs";
-import {FeaturedContentTabs} from "../elements/FeaturedContentTabs";
-import {EventsCarousel} from "../elements/EventsCarousel";
-import {NewsCarousel} from "../elements/NewsCarousel";
-import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {AppState} from "../../../state/reducers";
+import {LoggedInUser} from "../../../../IsaacAppTypes";
+import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
+import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
+import {EventsCarousel} from "../../elements/EventsCarousel";
+import {NewsCarousel} from "../../elements/NewsCarousel";
+import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
 const dispatchToProps = null;
@@ -89,7 +89,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
             <Container className="pt-4 pb-5">
                 <div className="eventList pt-5 pattern-03-reverse">
                     <h2 className="h-title mb-4">News</h2>
-                    <NewsCarousel descending={true}/>
+                    <NewsCarousel descending={true} subject="news" />
                 </div>
             </Container>
         </section>
@@ -136,4 +136,4 @@ export const HomepageComponent = ({user}: HomePageProps) => {
     </div>
 };
 
-export const Homepage = connect(stateToProps, dispatchToProps)(HomepageComponent);
+export const HomepageCS = connect(stateToProps, dispatchToProps)(HomepageComponent);
