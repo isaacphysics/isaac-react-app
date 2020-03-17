@@ -170,6 +170,11 @@
     }
   }
 }
+.news-carousel {
+  @include media-breakpoint-up(md) {
+    max-width: 322px;
+  }
+}
 .news-carousel + a,
 .events-carousel + a {
   display: block;
