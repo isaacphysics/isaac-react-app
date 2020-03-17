@@ -59,7 +59,7 @@ import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MyProgress} from "../pages/MyProgress";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {SITE_SUBJECT} from "../../services/siteConstants";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import {LoadScript} from "@react-google-maps/api";
 import SiteSpecific from "../site/siteSpecific";
