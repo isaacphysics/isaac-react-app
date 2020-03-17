@@ -8,6 +8,7 @@ import {
     AdditionalInformation,
     ATTENDANCE,
     BoardOrder,
+    Credentials,
     Choice,
     EmailUserRoles,
     LoggedInUser,
@@ -17,6 +18,7 @@ import {
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
+import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -77,8 +79,8 @@ export const api = {
         verifyPasswordReset: (token: string | null) => {
             return endpoint.get(`/users/resetpassword/${token}`)
         },
-        handlePasswordReset: (params: {token: string | null; password: string | null}) => {
-            return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
+        handlePasswordReset: (params: {token: string; password: string}) => {
+            return endpoint.post(`/users/resetpassword/${params.token}`, securePadPasswordReset({password: params.password}));
         },
         updateCurrent: (registeredUser: LoggedInUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent});
@@ -104,8 +106,8 @@ export const api = {
         logout: (): AxiosPromise => {
             return endpoint.post(`/auth/logout`);
         },
-        login: (provider: ApiTypes.AuthenticationProvider, params: {email: string; password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
-            return endpoint.post(`/auth/${provider}/authenticate`, params);
+        login: (provider: ApiTypes.AuthenticationProvider, credentials: Credentials): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+            return endpoint.post(`/auth/${provider}/authenticate`, securePadCredentials(credentials));
         },
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings`)

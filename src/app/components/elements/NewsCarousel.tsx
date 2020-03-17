@@ -8,15 +8,16 @@ import {NewsCard} from "./cards/NewsCard";
 import {IsaacPodDTO} from "../../../IsaacApiTypes";
 
 interface NewsCarouselProps {
+    subject: "news" | "physics";
     descending?: boolean;
 }
 
 export const NewsCarousel = (props: NewsCarouselProps) => {
-    const {descending} = props;
+    const {descending, subject} = props;
     const dispatch = useDispatch();
     const newsState = useSelector((state: AppState) => state && state.news);
     useEffect(() => {
-        dispatch(getNewsPodList("news"));
+        dispatch(getNewsPodList(subject));
     }, []);
 
     function compare(a: IsaacPodDTO, b: IsaacPodDTO) {
