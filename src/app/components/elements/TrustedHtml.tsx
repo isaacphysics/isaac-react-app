@@ -213,7 +213,7 @@ export function katexify(html: string, user: LoggedInUser | null, examBoard: EXA
         if (ref) {
             const number = figureNumbers[ref];
             if (number) {
-                const figure = `Figure ${number}`;
+                const figure = `Figure&nbsp;${number}`;
                 return format ? `<strong class="text-secondary">${figure}</strong>` : figure;
             }
         }
