@@ -44,6 +44,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         editorState: any;
         menuItems: { [key: string]: MenuItem[] };
         defaultMenu: boolean;
+        disableLetters: boolean;
     };
 
     private _vHexagon = `
@@ -73,6 +74,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private _hypFunctionsNames = ["sinh", "cosh", "tanh", "cosech", "sech", "coth", "arccosech", "arcsech", "arccoth", "arcsinh", "arccosh", "arctanh"];
     private _logFunctionNames = ["ln", "log"];
 
+    private _differentialRegex = /^(Delta|delta|d)\s*(?:\^([0-9]+))?\s*([a-zA-Z]+(?:(?:_|\^).+)?)/;
+    private _availableSymbols?: string[];
+
     // Call this to close the editor
     public close: () => void;
 
@@ -82,20 +86,23 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
     public constructor(props: InequalityModalProps) {
         super(props);
+
+        this._availableSymbols = this.parsePseudoSymbols(props.availableSymbols);
+
         this.state = {
             sketch: props.sketch,
-            activeMenu: "letters",
+            activeMenu: "",
             activeSubMenu: props.editorMode === 'logic' ? "upperCaseLetters" : "lowerCaseLetters",
             trashActive: false,
             menuOpen: false,
             editorState: {},
             menuItems: {
-                logicFunctionsItems: this.generateLogicFunctionsItems(props.logicSyntax || "logic"),
-                mathsBasicFunctionsItems: this.generateMathsBasicFunctionsItems(),
-                mathsTrigFunctions: this.generateMathsTrigFunctionsItems(),
-                mathsHypFunctions: this.generateMathsHypFunctionsItems(),
-                mathsLogFunctions: this.generateMathsLogFunctionsItems(),
-                mathsDerivatives: this.generateMathsDerivativesItems(),
+                logicFunctionsItems: [], // this.generateLogicFunctionsItems(props.logicSyntax || "logic"),
+                mathsBasicFunctionsItems: [], // this.generateMathsBasicFunctionsItems(),
+                mathsTrigFunctions: [], // this.generateMathsTrigFunctionsItems(),
+                mathsHypFunctions: [], // this.generateMathsHypFunctionsItems(),
+                mathsLogFunctions: [], // this.generateMathsLogFunctionsItems(),
+                mathsDerivatives: [], // this.generateMathsDerivativesItems(),
                 upperCaseLetters: [],
                 lowerCaseLetters: [],
                 upperCaseGreekLetters: [],
@@ -105,53 +112,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 otherFunctions: [],
             },
             defaultMenu: true,
+            disableLetters: this._availableSymbols?.includes('_no_alphabet') || false,
         }
 
         this._reverseGreekLetterMap = Object.fromEntries(Object.entries(this._greekLetterMap).map(e => [e[1], e[0]]));
 
-        if (props.availableSymbols && props.availableSymbols.length > 0) {
-            // Assuming these are only letters... might become more complicated in the future.
-            let customMenuItems = {
-                letters: new Array<MenuItem>(),
-                basicFunctions: new Array<MenuItem>(),
-                otherFunctions: new Array<MenuItem>()
-            };
-            for (let l of props.availableSymbols) {
-                const availableSymbol = l.trim();
-                if (availableSymbol.endsWith('()')) {
-                    // Functions
-                    const functionName = availableSymbol.replace('()', '');
-                    if (this._trigFunctionNames.includes(functionName)) {
-                        customMenuItems.otherFunctions.push(this.makeMathsTrigFunctionItem(functionName));
-                    } else if (this._hypFunctionsNames.includes(functionName)) {
-                        customMenuItems.otherFunctions.push(this.makeMathsTrigFunctionItem(functionName));
-                    } else if (this._logFunctionNames.includes(functionName)) {
-                        customMenuItems.otherFunctions.push(this.makeMathsLogFunctionItem(functionName));
-                    } else {
-                        // What
-                        console.warn(`Could not parse available symbol "${availableSymbol} as a function"`);
-                    }
-                } else {
-                    // Everything else is a letter
-                    customMenuItems.letters.push(this.makeLetterMenuItem(availableSymbol));
-                }
-            }
-            this.state.menuItems = { ...this.state.menuItems, ...customMenuItems };
-
-            this.state.defaultMenu = false;
-        } else {
-            if (props.editorMode === 'logic') {
-                // T and F are reserved in logic. The jury is still out on t and f.
-                this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( letter => this.makeSingleLetterMenuItem(letter) );
-                this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( letter => this.makeSingleLetterMenuItem(letter) );
-            } else {
-                // Assuming editorMode === 'maths'
-                this.state.menuItems.upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map( letter => this.makeSingleLetterMenuItem(letter) );
-                this.state.menuItems.lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz".split("").map( letter => this.makeSingleLetterMenuItem(letter) );
-                this.state.menuItems.upperCaseGreekLetters = this._upperCaseGreekLetters.map( letter => this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) );
-                this.state.menuItems.lowerCaseGreekLetters = this._lowerCaseGreekLetters.map( letter => this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) );
-            }
-        }
         this.close = () => {
             props.close();
         }
@@ -219,6 +184,80 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         // MouseUp and TouchEnd on body because they are not intercepted by inequalityElement (I blame dark magic)
         document.body.addEventListener('mouseup', this.onCursorMoveEnd.bind(this), { passive: true } );
         document.body.addEventListener('touchend', this.onCursorMoveEnd.bind(this), { passive: true } );
+        
+        let defaultMenuItems = {
+            // ...this.state.menuItems,
+            logicFunctionsItems: [ ...this.state.menuItems.logicFunctionsItems, ...(this.generateLogicFunctionsItems(this.props.logicSyntax || "logic")) ],
+            mathsBasicFunctionsItems: this.generateMathsBasicFunctionsItems(),
+            mathsTrigFunctions: [ ...this.state.menuItems.mathsTrigFunctions, ...this.generateMathsTrigFunctionsItems() ],
+            mathsHypFunctions: [ ...this.state.menuItems.mathsHypFunctions, ...this.generateMathsHypFunctionsItems() ],
+            mathsLogFunctions: [ ...this.state.menuItems.mathsLogFunctions, ...this.generateMathsLogFunctionsItems() ],
+            mathsDerivatives: [ ...this.state.menuItems.mathsDerivatives, ...this.generateMathsDerivativesItems() ],
+            upperCaseLetters: [ ...(this.state.menuItems.upperCaseLetters || []) ],
+            lowerCaseLetters: [ ...(this.state.menuItems.lowerCaseLetters || []) ],
+            upperCaseGreekLetters: [ ...(this.state.menuItems.upperCaseGreekLetters || []) ],
+            lowerCaseGreekLetters: [ ...(this.state.menuItems.lowerCaseGreekLetters || []) ],
+            // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
+            letters: [],
+            otherFunctions: [],
+        };
+
+        this.setState({ menuItems: { ...this.state.menuItems, ...defaultMenuItems } });
+
+        if (this._availableSymbols && this._availableSymbols.length > 0) {
+            // ~~~ Assuming these are only letters... might become more complicated in the future.
+            // THE FUTURE IS HERE! Sorry.
+            let customMenuItems = {
+                letters: new Array<MenuItem>(),
+                basicFunctions: new Array<MenuItem>(),
+                otherFunctions: new Array<MenuItem>()
+            };
+
+            for (let l of this._availableSymbols) {
+                const availableSymbol = l.trim();
+                if (availableSymbol.endsWith('()')) {
+                    // Functions
+                    const functionName = availableSymbol.replace('()', '');
+                    if (this._trigFunctionNames.includes(functionName)) {
+                        customMenuItems.otherFunctions.push(this.makeMathsTrigFunctionItem(functionName));
+                    } else if (this._hypFunctionsNames.includes(functionName)) {
+                        customMenuItems.otherFunctions.push(this.makeMathsTrigFunctionItem(functionName));
+                    } else if (this._logFunctionNames.includes(functionName)) {
+                        customMenuItems.otherFunctions.push(this.makeMathsLogFunctionItem(functionName));
+                    } else {
+                        // What
+                        console.warn(`Could not parse available symbol "${availableSymbol} as a function"`);
+                    }
+                } else {
+                    // Everything else is a letter
+                    if (!this._differentialRegex.test(availableSymbol)) {
+                        customMenuItems.letters.push(this.makeLetterMenuItem(availableSymbol));
+                    }
+                }
+            }
+            this.setState({
+                menuItems: { ...this.state.menuItems, ...customMenuItems },
+                defaultMenu: false
+            });
+        } else {
+            if (this.props.editorMode === 'logic') {
+                // T and F are reserved in logic. The jury is still out on t and f.
+                this.setState({ menuItems: {
+                    ...this.state.menuItems,
+                    upperCaseLetters: "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
+                    lowerCaseLetters: "abcdeghijklmnopqrsuvwxyz".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
+                }});
+            } else {
+                // Assuming editorMode === 'maths'
+                this.setState({ menuItems: {
+                    ...this.state.menuItems,
+                    upperCaseLetters: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
+                    lowerCaseLetters: "abcdefghijklmnopqrstuvwxyz".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
+                    upperCaseGreekLetters: this._upperCaseGreekLetters.map( letter => this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) ),
+                    lowerCaseGreekLetters: this._lowerCaseGreekLetters.map( letter => this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) ),
+                }});
+            }
+        }
     }
 
     public componentWillUnmount() {
@@ -254,6 +293,41 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.body.style.height = '';
         document.body.style.overflow = '';
         document.body.style.touchAction = 'auto';
+    }
+
+    private parsePseudoSymbols(availableSymbols?: string[]) {
+        if (!availableSymbols) return;
+        let theseSymbols = availableSymbols.slice(0).map(s => s.trim());
+        let i = 0;
+
+        // Note: _no_alphabet is already taken care of in the constructor.
+        while (i < theseSymbols.length) {
+            if (theseSymbols[i] === '_trigs') {
+                theseSymbols.splice(i, 1, 'cos()', 'sin()', 'tan()');
+                i += 3;
+            } else if (theseSymbols[i] === '_1/trigs') {
+                theseSymbols.splice(i, 1, 'cosec()', 'sec()', 'cot()');
+                i += 3;
+            } else if (theseSymbols[i] === '_inv_trigs') {
+                theseSymbols.splice(i, 1, 'arccos()', 'arcsin()', 'arctan()');
+                i += 3;
+            } else if (theseSymbols[i] === '_inv_1/trigs') {
+                theseSymbols.splice(i, 1, 'arccosec()', 'arcsec()', 'arccot()');
+                i += 3;
+            } else if (theseSymbols[i] === '_hyp_trigs') {
+                theseSymbols.splice(i, 1, 'cosh()', 'sinh()', 'tanh()', 'cosech()', 'sech()', 'coth()');
+                i += 6;
+            } else if (theseSymbols[i] === '_inv_hyp_trigs') {
+                theseSymbols.splice(i, 1, 'arccosh()', 'arcsinh()', 'arctanh()', 'arccosech()', 'arcsech()', 'arccoth()');
+                i += 6;
+            } else if (theseSymbols[i] === '_logs') {
+                theseSymbols.splice(i, 1, 'log()', 'ln()');
+                i += 2;
+            } else {
+                i += 1;
+            }
+        }
+        return Array.from(new Set(theseSymbols));
     }
 
     private makeSingleLetterMenuItem(letter: string, label?: string) {
@@ -411,7 +485,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             differentialSymbol.menu.label = differentialSymbol.menu.label + "^{" + differentialOrder + "}";
         }
 
-        if (null != differentialArgument) {
+        if (differentialArgument) {
             differentialSymbol.children = { ...differentialSymbol.children, argument: this.makeLetterMenuItem(differentialArgument) };
             differentialSymbol.menu.label = differentialSymbol.menu.label + differentialSymbol.children.argument.menu.label;
         }
@@ -423,7 +497,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         const items: MenuItem[] = [];
 
         // Do we need to generate special derivatives?
-        if (this.isUserPrivileged()) {
+        if (this.isUserPrivileged() && (!this._availableSymbols || this._availableSymbols.length === 0)) {
             const derivativeItem = new MenuItem('Derivative', {}, { label: '\\frac{\\mathrm{d}\\ \\cdot}{\\mathrm{d}\\ \\cdots}', texLabel: true, className: 'derivative' });
             derivativeItem.children = {
                 numerator: { type: 'Differential', properties: { letter: 'd' } },
@@ -437,9 +511,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             );
         }
 
-        if (this.props.availableSymbols) {
-            const differentialRegex = /^(Delta|delta|d)\s*(?:\^([0-9]+))?\s*([a-zA-Z]+(?:(?:_|\^).+)?)?/;
-            for (const symbol of this.props.availableSymbols) {
+        if (this._availableSymbols) {
+            for (const symbol of this._availableSymbols) {
                 if (symbol.startsWith('Derivative(')) {
                     const pieces = symbol.split(';').map(s => s.replace(/[()\s]/g, '')).slice(1); // FIXME Is this regex just a trim()?
                     let orders: { [piece: string]: number } = {};
@@ -491,8 +564,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                     };                
                     derivativeObject.children = { numerator, denominator };
                     items.push(derivativeObject);
-                } else if (differentialRegex.test(symbol)) {
-                    const parsedDifferential = differentialRegex.exec(symbol);
+                } else if (this._differentialRegex.test(symbol)) {
+                    const parsedDifferential = this._differentialRegex.exec(symbol);
                     if (!parsedDifferential) continue; // this should not be necessary as we wouldn't be here if the regex didn't parse in the first place
                     const differentialType = parsedDifferential[1];
                     const differentialOrder = parsedDifferential[2] || 0;
@@ -500,9 +573,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
                     if (differentialType === "d" && differentialOrder === 0 && differentialArgument == null) {
                         // We parse this as a letter d, plus optional subscript, ignoring order.
-                        this.state.menuItems.letters.push(this.makeSingleLetterMenuItem(symbol))
+                        this.setState({ menuItems: { ...this.state.menuItems, letters: [ ...this.state.menuItems.letters, this.makeSingleLetterMenuItem(symbol) ]}});
                     } else {
                         items.push(this.makeMathsDifferentialItem(parsedDifferential as string[]));
+                        if (differentialArgument) {
+                            this.setState({ menuItems: { ...this.state.menuItems, letters: [ ...this.state.menuItems.letters, this.makeSingleLetterMenuItem(differentialArgument) ]}});
+                        }
                     }
                 }
             }
@@ -662,53 +738,55 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     public render() {
-        let lettersMenu: JSX.Element;
-        if (this.state.defaultMenu) {
-            lettersMenu = <div className="top-menu letters">
-                <ul className="sub-menu-tabs">
-                    <li className={this.state.activeSubMenu === "lowerCaseLetters" ? 'active' : 'inactive'}
-                        dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("ab") }}
-                        onClick={() => this.setSubMenuOpen("lowerCaseLetters") }
-                        onKeyUp={() => this.setSubMenuOpen("lowerCaseLetters") }
-                    />
-                    <li className={this.state.activeSubMenu === "upperCaseLetters" ? 'active' : 'inactive'}
-                        dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("AB") }}
-                        onClick={() => this.setSubMenuOpen("upperCaseLetters") }
-                        onKeyUp={() => this.setSubMenuOpen("upperCaseLetters") }
-                    />
-                    {this.props.editorMode === 'maths' &&
-                        <li className={this.state.activeSubMenu === "lowerCaseGreekLetters" ? 'active' : 'inactive'}
-                            dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("αβ") }}
-                            onClick={() => this.setSubMenuOpen("lowerCaseGreekLetters") }
-                            onKeyUp={() => this.setSubMenuOpen("lowerCaseGreekLetters") }
-                        />}
-                    {this.props.editorMode === 'maths' &&
-                        <li className={this.state.activeSubMenu === "upperCaseGreekLetters" ? 'active' : 'inactive'}
-                            dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("ΓΔ") }}
-                            onClick={() => this.setSubMenuOpen("upperCaseGreekLetters") }
-                            onKeyUp={() => this.setSubMenuOpen("upperCaseGreekLetters") }
-                        />}
-                </ul>
-                {this.state.activeSubMenu === "upperCaseLetters" && <ul className="sub-menu uppercaseletters">{
-                    this.state.menuItems.upperCaseLetters.map(this.menuItem)
-                }</ul>}
-                {this.state.activeSubMenu === "lowerCaseLetters" && <ul className="sub-menu lowercaseletters">{
-                    this.state.menuItems.lowerCaseLetters.map(this.menuItem)
-                }</ul>}
+        let lettersMenu: JSX.Element | null = null;
+        if (!this.state.disableLetters) {
+            if (this.state.defaultMenu) {
+                lettersMenu = <div className="top-menu letters">
+                    <ul className="sub-menu-tabs">
+                        <li className={this.state.activeSubMenu === "lowerCaseLetters" ? 'active' : 'inactive'}
+                            dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("ab") }}
+                            onClick={() => this.setSubMenuOpen("lowerCaseLetters") }
+                            onKeyUp={() => this.setSubMenuOpen("lowerCaseLetters") }
+                        />
+                        <li className={this.state.activeSubMenu === "upperCaseLetters" ? 'active' : 'inactive'}
+                            dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("AB") }}
+                            onClick={() => this.setSubMenuOpen("upperCaseLetters") }
+                            onKeyUp={() => this.setSubMenuOpen("upperCaseLetters") }
+                        />
+                        {this.props.editorMode === 'maths' &&
+                            <li className={this.state.activeSubMenu === "lowerCaseGreekLetters" ? 'active' : 'inactive'}
+                                dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("αβ") }}
+                                onClick={() => this.setSubMenuOpen("lowerCaseGreekLetters") }
+                                onKeyUp={() => this.setSubMenuOpen("lowerCaseGreekLetters") }
+                            />}
+                        {this.props.editorMode === 'maths' &&
+                            <li className={this.state.activeSubMenu === "upperCaseGreekLetters" ? 'active' : 'inactive'}
+                                dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("ΓΔ") }}
+                                onClick={() => this.setSubMenuOpen("upperCaseGreekLetters") }
+                                onKeyUp={() => this.setSubMenuOpen("upperCaseGreekLetters") }
+                            />}
+                    </ul>
+                    {this.state.activeSubMenu === "upperCaseLetters" && <ul className="sub-menu uppercaseletters">{
+                        this.state.menuItems.upperCaseLetters.map(this.menuItem)
+                    }</ul>}
+                    {this.state.activeSubMenu === "lowerCaseLetters" && <ul className="sub-menu lowercaseletters">{
+                        this.state.menuItems.lowerCaseLetters.map(this.menuItem)
+                    }</ul>}
 
-                {this.props.editorMode === 'maths' && this.state.activeSubMenu === "upperCaseGreekLetters" && <ul className="sub-menu uppercasegreekletters">{
-                    this.state.menuItems.upperCaseGreekLetters.map(this.menuItem)
-                }</ul>}
-                {this.props.editorMode === 'maths' && this.state.activeSubMenu === "lowerCaseGreekLetters" && <ul className="sub-menu lowercasegreekletters">{
-                    this.state.menuItems.lowerCaseGreekLetters.map(this.menuItem)
-                }</ul>}
-            </div>
-        } else {
-            lettersMenu = <div className="top-menu letters">
-                <ul className="sub-menu letters">
-                    {this.state.menuItems.letters.map(this.menuItem)}
-                </ul>
-            </div>
+                    {this.props.editorMode === 'maths' && this.state.activeSubMenu === "upperCaseGreekLetters" && <ul className="sub-menu uppercasegreekletters">{
+                        this.state.menuItems.upperCaseGreekLetters.map(this.menuItem)
+                    }</ul>}
+                    {this.props.editorMode === 'maths' && this.state.activeSubMenu === "lowerCaseGreekLetters" && <ul className="sub-menu lowercasegreekletters">{
+                        this.state.menuItems.lowerCaseGreekLetters.map(this.menuItem)
+                    }</ul>}
+                </div>
+            } else {
+                lettersMenu = <div className="top-menu letters">
+                    <ul className="sub-menu letters">
+                        {this.state.menuItems.letters.map(this.menuItem)}
+                    </ul>
+                </div>
+            }
         }
         let mathsOtherFunctionsMenu: JSX.Element;
         if (this.state.defaultMenu) {
@@ -785,11 +863,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             </div>
             <div id="inequality-menu-tabs" className="menu-tabs">
                 <ul>
-                    <li className={this.state.activeMenu === "letters" ? 'active' : 'inactive'}
+                    {!this.state.disableLetters && <li className={this.state.activeMenu === "letters" ? 'active' : 'inactive'}
                         dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString("Ab\\ \\Delta \\gamma") }}
                         onClick={() => { this.onMenuTabClick("letters"); this.setSubMenuOpen(this.props.editorMode === 'logic' ? "upperCaseLetters" : "lowerCaseLetters"); } }
                         onKeyUp={() => { this.onMenuTabClick("letters"); this.setSubMenuOpen(this.props.editorMode === 'logic' ? "upperCaseLetters" : "lowerCaseLetters"); } }
-                    />
+                    />}
                     <li className={this.state.activeMenu === "basicFunctions" ? 'active' : 'inactive'}
                         dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(functionsTabLabel) }}
                         onClick={() => this.onMenuTabClick("basicFunctions")}
