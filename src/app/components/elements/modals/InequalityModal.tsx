@@ -131,21 +131,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                         // What
                         console.warn(`Could not parse available symbol "${availableSymbol} as a function"`);
                     }
-                    // } else if (availableSymbol.startsWith('Derivative(')) {
-
                 } else {
                     // Everything else is a letter
-                    const letter = availableSymbol;
-                    const parts = letter.split('_');
-                    if (parts.length > 1) {
-                        const label = `${parts[0]}_${parts[1]}`.replace(new RegExp(`${Object.keys(this._greekLetterMap).join('|')}`), m => this._greekLetterMap[m]);
-                        const first = this.makeLetterMenuItem(this._greekLetterMap[parts[0]] || parts[0], label);
-                        const second = this.makeLetterMenuItem(this._greekLetterMap[parts[1]] || parts[1], this._greekLetterMap[parts[1]] ? '\\' + parts[1] : parts[1]);
-                        first['children'] = { subscript: second };
-                        customMenuItems.letters.push(first);
-                    } else {
-                        customMenuItems.letters.push(this.makeLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter));
-                    }
+                    customMenuItems.letters.push(this.makeLetterMenuItem(availableSymbol));
                 }
             }
             this.state.menuItems = { ...this.state.menuItems, ...customMenuItems };
@@ -154,14 +142,14 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         } else {
             if (props.editorMode === 'logic') {
                 // T and F are reserved in logic. The jury is still out on t and f.
-                this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( letter => this.makeLetterMenuItem(letter) );
-                this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( letter => this.makeLetterMenuItem(letter) );
+                this.state.menuItems.upperCaseLetters = "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( letter => this.makeSingleLetterMenuItem(letter) );
+                this.state.menuItems.lowerCaseLetters = "abcdeghijklmnopqrsuvwxyz".split("").map( letter => this.makeSingleLetterMenuItem(letter) );
             } else {
                 // Assuming editorMode === 'maths'
-                this.state.menuItems.upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map( letter => this.makeLetterMenuItem(letter) );
-                this.state.menuItems.lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz".split("").map( letter => this.makeLetterMenuItem(letter) );
-                this.state.menuItems.upperCaseGreekLetters = this._upperCaseGreekLetters.map( letter => this.makeLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) );
-                this.state.menuItems.lowerCaseGreekLetters = this._lowerCaseGreekLetters.map( letter => this.makeLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) );
+                this.state.menuItems.upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map( letter => this.makeSingleLetterMenuItem(letter) );
+                this.state.menuItems.lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz".split("").map( letter => this.makeSingleLetterMenuItem(letter) );
+                this.state.menuItems.upperCaseGreekLetters = this._upperCaseGreekLetters.map( letter => this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) );
+                this.state.menuItems.lowerCaseGreekLetters = this._lowerCaseGreekLetters.map( letter => this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) );
             }
         }
         this.close = () => {
@@ -268,8 +256,21 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.body.style.touchAction = 'auto';
     }
 
-    private makeLetterMenuItem(letter: string, label?: string) {
+    private makeSingleLetterMenuItem(letter: string, label?: string) {
         return new MenuItem("Symbol", { letter: letter }, { label: label || letter, texLabel: true, className: `symbol-${letter}` });
+    }
+
+    private makeLetterMenuItem(letter: string): MenuItem {
+        const parts = letter.split('_');
+        if (parts.length > 1) {
+            const label = `${parts[0]}_${parts[1]}`.replace(new RegExp(`${Object.keys(this._greekLetterMap).join('|')}`), m => this._greekLetterMap[m]);
+            const first = this.makeSingleLetterMenuItem(this._greekLetterMap[parts[0]] || parts[0], label);
+            const second = this.makeSingleLetterMenuItem(this._greekLetterMap[parts[1]] || parts[1], this._greekLetterMap[parts[1]] ? '\\' + parts[1] : parts[1]);
+            first['children'] = { subscript: second };
+            return first;
+        } else {
+            return this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter);
+        }
     }
 
     private prepareAbsoluteElement(element?: Element | null) {
@@ -386,76 +387,124 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         return this._logFunctionNames.map(this.makeMathsLogFunctionItem);
     }
 
+    private makeMathsDifferentialItem(parsedDifferential: string[]): MenuItem {
+        const nameToLetterMap: { [name: string]: string } = {"delta":"δ","Delta":"∆","d":"d"};
+        const nameToLatexMap: { [name: string]: string } = {"delta":"\\delta","Delta":"\\Delta","d":"d"};
+        const differentialType: string = parsedDifferential[1];
+        const differentialOrder = parsedDifferential[2] || 0;
+        const differentialArgument = parsedDifferential[3] || null;
+        const differentialLetter = nameToLetterMap[differentialType] || "?";
+        const differentialLatex = "\\mathrm{" + ( nameToLatexMap[differentialType] || "?" ) + "}";
+
+        let differentialSymbol = new MenuItem('Differential', { letter: differentialLetter }, { label: differentialLatex, texLabel: true, className: '' });
+
+        if (differentialOrder > 1) {
+            differentialSymbol.children = {
+                ...differentialSymbol.children,
+                order: {
+                    type: "Num",
+                    properties: {
+                        significand: `${differentialOrder}`,
+                    }
+                }
+            };
+            differentialSymbol.menu.label = differentialSymbol.menu.label + "^{" + differentialOrder + "}";
+        }
+
+        if (null != differentialArgument) {
+            differentialSymbol.children = { ...differentialSymbol.children, argument: this.makeLetterMenuItem(differentialArgument) };
+            differentialSymbol.menu.label = differentialSymbol.menu.label + differentialSymbol.children.argument.menu.label;
+        }
+
+        return differentialSymbol;
+    }
+
     private generateMathsDerivativesItems(): MenuItem[] {
-        let items: MenuItem[] = [];
+        const items: MenuItem[] = [];
 
         // Do we need to generate special derivatives?
         if (this.isUserPrivileged()) {
-            let derivativeItem = new MenuItem('Derivative', {}, { label: '\\frac{\\mathrm{d}\\ \\cdot}{\\mathrm{d}\\ \\cdots}', texLabel: true, className: 'derivative' });
+            const derivativeItem = new MenuItem('Derivative', {}, { label: '\\frac{\\mathrm{d}\\ \\cdot}{\\mathrm{d}\\ \\cdots}', texLabel: true, className: 'derivative' });
             derivativeItem.children = {
                 numerator: { type: 'Differential', properties: { letter: 'd' } },
                 denominator: { type: 'Differential', properties: { letter: 'd' } }
             }
-            items = [
+            items.push(
                 new MenuItem('Differential', { letter: 'd' }, { label: '\\mathrm{d}^{\\circ}\\circ', texLabel: true, className: 'differential-d' }),
                 new MenuItem('Differential', { letter: '∆' }, { label: '\\mathrm{\\Delta}^{\\circ}\\circ', texLabel: true, className: 'differential-upper-delta' }),
                 new MenuItem('Differential', { letter: 'δ' }, { label: '\\mathrm{\\delta}^{\\circ}\\circ', texLabel: true, className: 'differential-lower-delta' }),
                 derivativeItem
-            ]
+            );
         }
 
         if (this.props.availableSymbols) {
-            for (const derivative of this.props.availableSymbols.filter((s: string)=> s.startsWith('Derivative('))) {
-                const pieces = derivative.split(';').map(s => s.replace(/[()\s]/g, '')).slice(1); // FIXME Is this regex just a trim()?
-                let orders: { [piece: string]: number } = {};
-                // Count how many times one should derive each variable
-                for (const piece of pieces) {
-                    orders[piece] = orders[piece] + 1 || 1;
-                }
-                const derivativeOrder = Object.values(orders).reduce((a, c) => a + c, 0);
-                const denominatorObjects: any[] = [];
-                let texBottom = '';
-                for (const p of Object.entries(orders)) {
-                    const letter = p[0];
-                    const order = p[1];
-                    const o = {
-                        type: 'Differential',
-                        properties: { letter: 'd' }, // TODO Support other types of differentials
-                        children: {
-                            argument: {
-                                type: 'Symbol',
-                                properties: { letter: letter }
-                            },
-                            order: null as any | null
-                        }
-                    };
-                    texBottom += `d${letter}`;
-                    if (order > 1) {
-                        o.children = { ...o.children, order: {
-                            type: 'Num',
-                            properties: { significand: `${order}` }
-                        }};
-                        texBottom += `^{${order}}`;
+            const differentialRegex = /^(Delta|delta|d)\s*(?:\^([0-9]+))?\s*([a-zA-Z]+(?:(?:_|\^).+)?)?/;
+            for (const symbol of this.props.availableSymbols) {
+                if (symbol.startsWith('Derivative(')) {
+                    const pieces = symbol.split(';').map(s => s.replace(/[()\s]/g, '')).slice(1); // FIXME Is this regex just a trim()?
+                    let orders: { [piece: string]: number } = {};
+                    // Count how many times one should derive each variable
+                    for (const piece of pieces) {
+                        orders[piece] = orders[piece] + 1 || 1;
                     }
-                    denominatorObjects.push(o);
+                    const derivativeOrder = Object.values(orders).reduce((a, c) => a + c, 0);
+                    const denominatorObjects: any[] = [];
+                    let texBottom = '';
+                    for (const p of Object.entries(orders)) {
+                        const letter = p[0];
+                        const order = p[1];
+                        const o = {
+                            type: 'Differential',
+                            properties: { letter: 'd' }, // TODO Support other types of differentials
+                            children: {
+                                argument: {
+                                    type: 'Symbol',
+                                    properties: { letter: letter }
+                                },
+                                order: null as any | null
+                            }
+                        };
+                        texBottom += `d${letter}`;
+                        if (order > 1) {
+                            o.children = { ...o.children, order: {
+                                type: 'Num',
+                                properties: { significand: `${order}` }
+                            }};
+                            texBottom += `^{${order}}`;
+                        }
+                        denominatorObjects.push(o);
+                    }
+                    // This sure would look a lot better as a reduce but I can't figure it out.
+                    let denominator = denominatorObjects.pop();
+                    while (denominatorObjects.length > 0) {
+                        let acc = denominatorObjects.pop();
+                        acc.children.right = denominator;
+                        denominator = acc;
+                    }
+                    // Build up the object
+                    const texLabel = '\\frac{\\mathrm{d}' + (derivativeOrder > 1 ? `^{${derivativeOrder}}` : '') + `}{${texBottom}}`;
+                    const derivativeObject = new MenuItem('Derivative', { }, { label: texLabel, texLabel: true, fontSize: '1.5em', className: '' });
+                    const numerator = {
+                        type: 'Differential',
+                        properties: { letter: 'd' },
+                        children: derivativeOrder > 1 ? { order: { type: 'Num', properties: { significand: `${derivativeOrder}` } } } : { }
+                    };                
+                    derivativeObject.children = { numerator, denominator };
+                    items.push(derivativeObject);
+                } else if (differentialRegex.test(symbol)) {
+                    const parsedDifferential = differentialRegex.exec(symbol);
+                    if (!parsedDifferential) continue; // this should not be necessary as we wouldn't be here if the regex didn't parse in the first place
+                    const differentialType = parsedDifferential[1];
+                    const differentialOrder = parsedDifferential[2] || 0;
+                    const differentialArgument = parsedDifferential[3] || null;
+
+                    if (differentialType === "d" && differentialOrder === 0 && differentialArgument == null) {
+                        // We parse this as a letter d, plus optional subscript, ignoring order.
+                        this.state.menuItems.letters.push(this.makeSingleLetterMenuItem(symbol))
+                    } else {
+                        items.push(this.makeMathsDifferentialItem(parsedDifferential as string[]));
+                    }
                 }
-                // This sure would look a lot better as a reduce but I can't figure it out.
-                let denominator = denominatorObjects.pop();
-                while (denominatorObjects.length > 0) {
-                    let acc = denominatorObjects.pop();
-                    acc.children.right = denominator;
-                    denominator = acc;
-                }
-                // Build up the object
-                let texLabel = '\\frac{\\mathrm{d}' + (derivativeOrder > 1 ? `^{${derivativeOrder}}` : '') + `}{${texBottom}}`;
-                let derivativeObject = new MenuItem('Derivative', { }, { label: texLabel, texLabel: true, fontSize: '1.5em', className: '' });
-                let numerator = {
-                    type: 'Differential',
-                    properties: { letter: 'd' },
-                    children: derivativeOrder > 1 ? { order: { type: 'Num', properties: { significand: `${derivativeOrder}` } } } : { }
-                };                
-                derivativeObject.children = { numerator, denominator };
-                items.push(derivativeObject);
             }
         }
 
