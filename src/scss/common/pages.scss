@@ -41,8 +41,10 @@ main {
 .homepagePhyTable {
   width: 100%;
   background: $white;
+  border: 1px solid $gray-107;
+
   th {
-    width: 40px;
+    width: 50px;
     text-align: center;
     color: white;
     text-transform: uppercase;
@@ -55,11 +57,16 @@ main {
       transform-origin: 13% 75%;
     }
   }
+  tr + tr {
+    border-top: 1px solid $gray-107;
+  }
   td {
-    height: 40px;
+    height: 60px;
     position: relative;
-    line-height: 40px;
+    line-height: 60px;
     padding: 0;
+    padding-left: 15px;
+    font-family: $secondary-font-bold;
   }
   td:hover {
     background: $gray-107;
@@ -71,9 +78,9 @@ main {
   }
   td:hover:before {
     content: '';
-    border-top: 20px solid #ececec;
+    border-top: 30px solid #ececec;
     border-left: 15px solid #ececec;
-    border-bottom: 20px solid #ececec;
+    border-bottom: 30px solid #ececec;
     display: inline-block;
     position: absolute;
     top: 0;
