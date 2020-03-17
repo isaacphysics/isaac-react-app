@@ -6,12 +6,12 @@ import {safePercentage} from "../../../services/validation";
 
 export const AggregateQuestionStats = ({userProgress}: {userProgress?: UserProgress | null}) => {
     const fullCorrect = userProgress?.totalQuestionsCorrect;
-    const fullCorrectThisYear = userProgress?.totalQuestionsCorrectThisAcademicYear;
     const fullAttempt = userProgress?.totalQuestionsAttempted;
+    const fullCorrectThisYear = userProgress?.totalQuestionsCorrectThisAcademicYear;
     const fullAttemptThisYear = userProgress?.totalQuestionsAttemptedThisAcademicYear;
-    const partCorrect = userProgress?.totalQuestionsCorrect;
+    const partCorrect = userProgress?.totalQuestionPartsCorrect;
+    const partAttempt = userProgress?.totalQuestionPartsAttempted;
     const partCorrectThisYear = userProgress?.totalQuestionPartsCorrectThisAcademicYear;
-    const partAttempt = userProgress?.totalQuestionsAttempted;
     const partAttemptThisYear = userProgress?.totalQuestionPartsAttemptedThisAcademicYear;
     const fullPercentage = safePercentage(fullCorrect, fullAttempt);
     const fullPercentageThisYear = safePercentage(fullCorrectThisYear, fullAttemptThisYear);

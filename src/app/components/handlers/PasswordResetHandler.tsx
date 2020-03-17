@@ -18,7 +18,7 @@ const dispatchToProps = {
 
 interface PasswordResetHandlerProps {
     urlToken: string;
-    handleResetPassword: (params: {token: string | null; password: string | null}) => void;
+    handleResetPassword: (params: {token: string; password: string}) => void;
     verifyPasswordReset: (token: string | null) => void;
     errorMessage: ErrorState;
 }

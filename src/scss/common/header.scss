@@ -1,6 +1,6 @@
 // ISAAC
 
-@import "./_mixins";
+@import "mixins";
 
 .banner {
   background: rgba($gray-blue, 0.1);
@@ -97,15 +97,9 @@ a.skip-main:focus, a.skip-main:active {
 // !important used to override bootstraps use of !important :(
 
 header {
-  background-image: url('/assets/Line.svg');
   background-size: 100%;
   background-repeat: no-repeat;
   position: relative;
-
-  @include respond-above(sm) {
-    background-image: url('/assets/Line-alt.svg');
-    background-size: 100% 60%;
-  }
 
   > .container {
     @include respond-below(sm) {
@@ -124,7 +118,6 @@ header {
 
   .header-links {
     justify-content: flex-end !important;
-    margin-top: .7rem;
 
     @include respond-below(xs) {
       padding-right: 33% !important;

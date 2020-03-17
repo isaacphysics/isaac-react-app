@@ -208,6 +208,14 @@ export interface ChoiceDTO extends ContentDTO {
 export interface ChoiceQuestionDTO extends QuestionDTO {
 }
 
+export interface TestCaseDTO extends QuestionValidationResponseDTO {
+    expected?: boolean;
+}
+
+export interface TestQuestionDTO extends ChoiceQuestionDTO {
+    testCases?: TestCaseDTO[];
+}
+
 export interface GlossaryTermDTO extends ContentDTO {
     explanation?: ContentDTO;
     examBoard: string;

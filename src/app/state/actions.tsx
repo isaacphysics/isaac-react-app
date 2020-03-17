@@ -23,7 +23,9 @@ import {
     AppGroupMembership,
     ATTENDANCE,
     BoardOrder,
+    Credentials,
     EmailUserRoles,
+    FreeTextRule,
     LoggedInUser,
     LoggedInValidationUser,
     QuestionSearchQuery,
@@ -41,6 +43,7 @@ import {
     QuestionDTO,
     RegisteredUserDTO,
     Role,
+    TestCaseDTO,
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
@@ -278,12 +281,12 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const logInUser = (provider: AuthenticationProvider, params: {email: string; password: string}) => async (dispatch: Dispatch<Action>) => {
+export const logInUser = (provider: AuthenticationProvider, credentials: Credentials) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
     persistence.remove(KEY.AFTER_AUTH_PATH);
     try {
-        const result = await api.authentication.login(provider, params);
+        const result = await api.authentication.login(provider, credentials);
         await dispatch(requestCurrentUser() as any); // Request user preferences
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         history.push(afterAuthPath);
@@ -313,7 +316,7 @@ export const verifyPasswordReset = (token: string | null) => async (dispatch: Di
     }
 };
 
-export const handlePasswordReset = (params: {token: string | null; password: string | null}) => async (dispatch: Dispatch<Action>) => {
+export const handlePasswordReset = (params: {token: string; password: string}) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
         await api.users.handlePasswordReset(params);
@@ -820,6 +823,18 @@ export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<
         </div>
     }) as any);
     history.push(generatePostQuizUrl(quizId));
+};
+
+// Question testing
+export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCaseDTO[]) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.TEST_QUESTION_REQUEST});
+        const testResponse = await api.questions.testFreeTextQuestion(questionChoices, testCases);
+        dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS, testCaseResponses: testResponse.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to test question", e));
+    }
 };
 
 // Current gameboard
