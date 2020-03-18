@@ -34,18 +34,35 @@ interface InequalityModalProps {
     logicSyntax?: string;
     visible: boolean;
 }
+
+interface InequalityModalState {
+    sketch: Inequality;
+    activeMenu: string;
+    activeSubMenu: string;
+    trashActive: boolean;
+    menuOpen: boolean;
+    editorState: any;
+    menuItems: {
+        logicFunctionsItems: MenuItem[];
+        mathsBasicFunctionsItems: MenuItem[];
+        mathsTrigFunctions: MenuItem[];
+        mathsHypFunctions: MenuItem[];
+        mathsLogFunctions: MenuItem[];
+        mathsDerivatives: MenuItem[];
+        upperCaseLetters: MenuItem[];
+        lowerCaseLetters: MenuItem[];
+        upperCaseGreekLetters: MenuItem[];
+        lowerCaseGreekLetters: MenuItem[];
+        // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
+        letters: MenuItem[];
+        otherFunctions: MenuItem[];
+    },
+    defaultMenu: boolean;
+    disableLetters: boolean;
+}
+
 export class InequalityModal extends React.Component<InequalityModalProps> {
-    public state: {
-        sketch?: Inequality | null;
-        activeMenu: string;
-        activeSubMenu: string;
-        trashActive: boolean;
-        menuOpen: boolean;
-        editorState: any;
-        menuItems: { [key: string]: MenuItem[] };
-        defaultMenu: boolean;
-        disableLetters: boolean;
-    };
+    public state: InequalityModalState;
 
     private _vHexagon = `
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 173.5 200" style="enable-background:new 0 0 173.5 200;" class="v-hexagon" xml:space="preserve">
@@ -90,7 +107,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         this._availableSymbols = this.parsePseudoSymbols(props.availableSymbols);
 
         this.state = {
-            sketch: props.sketch,
+            sketch: props.sketch as Inequality,
             activeMenu: "",
             activeSubMenu: props.editorMode === 'logic' ? "upperCaseLetters" : "lowerCaseLetters",
             trashActive: false,
@@ -157,7 +174,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 if (s.result && s.result.uniqueSymbols) {
                     s.result.uniqueSymbols = s.result.uniqueSymbols.split('').map((l: string) => this._reverseGreekLetterMap[l] || l).join('');
                 }
-                this.setState({ editorState: s });
+                this.setState((prevState: InequalityModalState) => ({ editorState: { ...prevState.editorState, ...s } }));
                 this.props.onEditorStateChange(s);
             }
         };
@@ -202,7 +219,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             otherFunctions: [],
         };
 
-        this.setState({ menuItems: { ...this.state.menuItems, ...defaultMenuItems } });
+        this.setState((prevState: InequalityModalState) => ({
+            menuItems: {
+                ...prevState.menuItems,
+                ...defaultMenuItems
+            }
+        }));
 
         if (this._availableSymbols && this._availableSymbols.length > 0) {
             // ~~~ Assuming these are only letters... might become more complicated in the future.
@@ -235,27 +257,31 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                     }
                 }
             }
-            this.setState({
-                menuItems: { ...this.state.menuItems, ...customMenuItems },
+            this.setState((prevState: InequalityModalState) => ({
+                menuItems: { ...prevState.menuItems, ...customMenuItems },
                 defaultMenu: false
-            });
+            }));
         } else {
             if (this.props.editorMode === 'logic') {
                 // T and F are reserved in logic. The jury is still out on t and f.
-                this.setState({ menuItems: {
-                    ...this.state.menuItems,
-                    upperCaseLetters: "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
-                    lowerCaseLetters: "abcdeghijklmnopqrsuvwxyz".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
-                }});
+                this.setState((prevState: InequalityModalState) => ({
+                    menuItems: {
+                        ...prevState.menuItems,
+                        upperCaseLetters: "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
+                        lowerCaseLetters: "abcdeghijklmnopqrsuvwxyz".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
+                    }
+                }));
             } else {
                 // Assuming editorMode === 'maths'
-                this.setState({ menuItems: {
-                    ...this.state.menuItems,
-                    upperCaseLetters: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
-                    lowerCaseLetters: "abcdefghijklmnopqrstuvwxyz".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
-                    upperCaseGreekLetters: this._upperCaseGreekLetters.map( letter => this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) ),
-                    lowerCaseGreekLetters: this._lowerCaseGreekLetters.map( letter => this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) ),
-                }});
+                this.setState((prevState: InequalityModalState) => ({
+                    menuItems: {
+                        ...prevState.menuItems,
+                        upperCaseLetters: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
+                        lowerCaseLetters: "abcdefghijklmnopqrstuvwxyz".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
+                        upperCaseGreekLetters: this._upperCaseGreekLetters.map( letter => this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) ),
+                        lowerCaseGreekLetters: this._lowerCaseGreekLetters.map( letter => this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter) ),
+                    }
+                }));
             }
         }
     }
@@ -271,14 +297,16 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.body.removeEventListener('touchend', this.onCursorMoveEnd.bind(this));
 
         if (this.state.sketch) {
-            this.setState({ sketch: {
-                ...this.state.sketch,
-                onNewEditorState: (s: any) => null,
-                onCloseMenus: () => null,
-                isUserPrivileged: () => this.isUserPrivileged(), // TODO Integrate with currentUser object
-                onNotifySymbolDrag: () => null, // This is probably irrelevant now
-                isTrashActive: () => false,
-            }});
+            this.setState((prevState: InequalityModalState) => ({
+                sketch: {
+                    ...prevState.sketch,
+                    onNewEditorState: (s: any) => null,
+                    onCloseMenus: () => null,
+                    isUserPrivileged: () => this.isUserPrivileged(), // TODO Integrate with currentUser object
+                    onNotifySymbolDrag: () => null, // This is probably irrelevant now
+                    isTrashActive: () => false,
+                }
+            }));
             this.setState({ sketch: null });
         }
         if (inequalityElement) {
@@ -573,11 +601,21 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
                     if (differentialType === "d" && differentialOrder === 0 && differentialArgument == null) {
                         // We parse this as a letter d, plus optional subscript, ignoring order.
-                        this.setState({ menuItems: { ...this.state.menuItems, letters: [ ...this.state.menuItems.letters, this.makeSingleLetterMenuItem(symbol) ]}});
+                        this.setState((prevState: InequalityModalState) => ({
+                            menuItems: {
+                                ...prevState.menuItems,
+                                letters: [ ...this.state.menuItems.letters, this.makeSingleLetterMenuItem(symbol) ]
+                            }
+                        }));
                     } else {
                         items.push(this.makeMathsDifferentialItem(parsedDifferential as string[]));
                         if (differentialArgument) {
-                            this.setState({ menuItems: { ...this.state.menuItems, letters: [ ...this.state.menuItems.letters, this.makeSingleLetterMenuItem(differentialArgument) ]}});
+                            this.setState((prevState: InequalityModalState) => ({
+                                menuItems: {
+                                    ...prevState.menuItems,
+                                    letters: [ ...this.state.menuItems.letters, this.makeSingleLetterMenuItem(differentialArgument) ]
+                                }
+                            }));
                         }
                     }
                 }
