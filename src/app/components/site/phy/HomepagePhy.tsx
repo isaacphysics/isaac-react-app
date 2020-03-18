@@ -85,7 +85,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
 
         {!(user && user.loggedIn) && <section className="row">
             <Container>
-                <Col className="mt-4 py-4 px-5 d-flex align-items-center flex-column flex-md-row border border-dark bg-white">
+                <Col className="mt-4 py-4 px-5 d-flex align-items-center flex-column flex-md-row border bg-white">
                     <h3 className="text-center text-md-left mr-md-4 mr-lg-0 mb-3 mb-md-0">
                         Sign up to track your progress
                     </h3>
