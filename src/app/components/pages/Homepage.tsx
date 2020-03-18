@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Alert, Button, Col, Container, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {WhySignUpTabs} from "../elements/WhySignUpTabs";
@@ -21,6 +21,13 @@ export const HomepageComponent = ({user}: HomePageProps) => {
         document.title = "Isaac " + SITE_SUBJECT_TITLE;
     }, []);
     return <div id="homepage">
+        <Alert color="warning" className="mb-0">
+            <Container>
+                Isaac Computer Science events are cancelled due to concerns related to coronavirus. {" "}
+                <Link to="/pages/2020_events_coronavirus_update">Find out more here</Link>.
+            </Container>
+        </Alert>
+
         <section id="call-to-action" className="homepageHero">
             <Container>
                 <Row>
