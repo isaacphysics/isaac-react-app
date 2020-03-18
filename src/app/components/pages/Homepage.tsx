@@ -23,8 +23,8 @@ export const HomepageComponent = ({user}: HomePageProps) => {
     return <div id="homepage">
         <Alert color="warning" className="mb-0">
             <Container>
-                Isaac Computer Science events are cancelled due to concerns related to coronavirus. {" "}
-                <Link to="/pages/2020_events_coronavirus_update">Find out more here</Link>.
+                All Isaac Computer Science face-to-face events are suspended due to concerns related to coronavirus.{" "}
+                <Link to="/pages/2020_events_coronavirus_update">Find out more <span className="sr-only"> about event cancellations</span> here</Link>.
             </Container>
         </Alert>
 
