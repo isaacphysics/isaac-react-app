@@ -56,9 +56,10 @@ interface InequalityModalState {
         // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
         letters: MenuItem[];
         otherFunctions: MenuItem[];
-    },
+    };
     defaultMenu: boolean;
     disableLetters: boolean;
+    numberInputValue?: number;
 }
 
 export class InequalityModal extends React.Component<InequalityModalProps> {
@@ -130,6 +131,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             },
             defaultMenu: true,
             disableLetters: this._availableSymbols?.includes('_no_alphabet') || false,
+            numberInputValue: void 0,
         }
 
         this._reverseGreekLetterMap = Object.fromEntries(Object.entries(this._greekLetterMap).map(e => [e[1], e[0]]));
@@ -398,8 +400,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
     private generateLogicFunctionsItems(syntax = 'logic'): MenuItem[] {
         let labels: any = {
-            logic: { and: "\\land", or: "\\lor", not: "\\lnot", equiv: "\\equiv", True: "\\mathsf{T}", False: "\\mathsf{F}" },
-            binary: { and: "\\cdot", or: "+", not: "\\overline{x}", equiv: "\\equiv", True: "1", False: "0" }
+            logic: { and: "\\land", or: "\\lor", not: "\\lnot", equiv: "=", True: "\\mathsf{T}", False: "\\mathsf{F}" },
+            binary: { and: "\\cdot", or: "+", not: "\\overline{x}", equiv: "=", True: "1", False: "0" }
         };
         return [
             new MenuItem("LogicBinaryOperation", { operation: "and" }, { label: labels[syntax]['and'], texLabel: true, className: 'and' }),
@@ -639,6 +641,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     // math sad, therefore ROUND EVERYTHING OR FACE MADNESS
 
     private onMouseDown(e: MouseEvent) {
+        if ((e.target as any).id === 'numeric-input') return; // this works but a cast to any is probably not an acceptable solution.
         // preventDefault here to stop selection on desktop
         e.preventDefault();
         if (!this.state.sketch) {
@@ -653,6 +656,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onTouchStart(e: TouchEvent) {
+        if ((e.target as any).id === 'numeric-input') return; // this works but a cast to any is probably not an acceptable solution.
         // DO NOT preventDefault here
         if (!this.state.sketch) {
             return;
@@ -888,6 +892,17 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         let menu: JSX.Element =
         <nav className="inequality-ui">
             <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
+                {this.state.activeMenu === 'numbers' && <div className="top-menu numbers">
+                    <div className="input-box">
+                        <input id="numeric-input" name="numeric-input" type="number"
+                            value={this.state.numberInputValue}
+                            onChange={(v) => console.log(v)}
+                        />
+                    </div>
+                    <div className="keypad-box">
+                        1 2 3 4 5 6 7 8 9 0 ±
+                    </div>
+                </div>}
                 {this.state.activeMenu === "letters" && lettersMenu}
                 {this.state.activeMenu === "basicFunctions" && <div className="top-menu basic-functions">
                     {this.props.editorMode === 'logic' && <ul className="sub-menu">{
@@ -901,6 +916,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             </div>
             <div id="inequality-menu-tabs" className="menu-tabs">
                 <ul>
+                    {this.props.editorMode === 'maths' &&
+                    <li className={this.state.activeMenu === 'numbers' ? 'active' : 'inactive'}
+                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString('1\\, 2\\, 3') }}
+                        onClick={() => this.onMenuTabClick('numbers')}
+                        onKeyUp={() => this.onMenuTabClick('numbers')}
+                    />}
                     {!this.state.disableLetters && <li className={this.state.activeMenu === "letters" ? 'active' : 'inactive'}
                         dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString("Ab\\ \\Delta \\gamma") }}
                         onClick={() => { this.onMenuTabClick("letters"); this.setSubMenuOpen(this.props.editorMode === 'logic' ? "upperCaseLetters" : "lowerCaseLetters"); } }
