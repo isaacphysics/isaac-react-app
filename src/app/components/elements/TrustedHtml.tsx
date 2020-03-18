@@ -43,7 +43,7 @@ const BooleanLogicMathsMacros: {[key: string]: MathJaxMacro} = {
     "not": ["\\lnot{#1}", 1],
     "bracketnot": ["\\lnot{(#1)}", 1],
     "xor": ["{#1} \\veebar {#2}", 2],
-    "equivalent": "\\equiv"
+    "equivalent": "=", // Fall back to equals rather than the more correct "\\equiv"
 };
 const BooleanLogicEngineeringMacros: {[key: string]: MathJaxMacro} = {
     "and" : ["{#1} \\cdot {#2}", 2],
