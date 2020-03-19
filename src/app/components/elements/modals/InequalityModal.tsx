@@ -379,7 +379,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
     private prepareAbsoluteElement(element?: Element | null) {
         if (element) {
-            const menuItem = element.closest('li.menu-item');
+            const menuItem = element.closest('.menu-item');
             if (menuItem) {
                 this._potentialSymbolSpec = JSON.parse(menuItem.getAttribute('data-item') || '');
                 this._movingMenuItem = (menuItem.cloneNode(true) as HTMLElement);
@@ -641,6 +641,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     // math sad, therefore ROUND EVERYTHING OR FACE MADNESS
 
     private onMouseDown(e: MouseEvent) {
+        // debugger;
         if ((e.target as any).id === 'numeric-input') return; // this works but a cast to any is probably not an acceptable solution.
         // preventDefault here to stop selection on desktop
         e.preventDefault();
@@ -900,7 +901,20 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                         />
                     </div>
                     <div className="keypad-box">
-                        1 2 3 4 5 6 7 8 9 0 ±
+                        <div className="top-row">
+                            {'123456'.split('').map(n => <div key={n} className="key menu-item"
+                                data-item={JSON.stringify({ type: 'Num', properties: { significand: `${n}` } })}
+                                dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(`${n}`) }}
+                            >
+                            </div>)}
+                        </div>
+                        <div className="bottom-row">
+                            {'7890±'.split('').map(n => <div key={n} className="key menu-item"
+                                data-item={JSON.stringify({ type: 'Num', properties: { significand: `${n}` } })}
+                                dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(`${n}`) }}
+                            >
+                            </div>)}
+                        </div>
                     </div>
                 </div>}
                 {this.state.activeMenu === "letters" && lettersMenu}
