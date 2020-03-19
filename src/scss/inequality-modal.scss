@@ -134,21 +134,49 @@
                 &.numbers {
                     display: flex;
                     flex-direction: row;
-                    max-width: 50%;
+                    max-width: 401px;
                     margin: 0 auto;
                     padding: 16px 0;
 
                     & > div {
                         &.input-box {
-                            flex-grow: 1;
+                            .menu-item {
+                                &.inactive {
+                                    opacity: 0.5;
+                                }
 
-                            input {
-                                width: 100%;
+                                position: relative;
+                                display: inline-block;
+                                text-align: center;
+                                font-size: 1.8em;
+
+                                .katex {
+                                    text-align: center;
+                                    display: block;
+                                    line-height: 90px;
+                                    height: 90px;
+                                    width: 100%;
+                                    margin: 0 auto;
+                                    overflow: visible;
+                                }
+
+                                svg.v-hexagon {
+                                    position: absolute;
+                                    padding-top: 6px;
+                                    width: 90px;
+                                    height: 90px;
+                                    left: 0;
+                                    top: 0;
+                                    overflow: visible;
+                                    fill: white;
+                                    stroke: darken(theme-color("primary"), 10%);
+                                    stroke-width: 8px;
+                                }
                             }
                         }
+
                         &.keypad-box {
-                            flex-grow: 3;
-                            padding-left: 16px;
+                            padding-right: 16px;
 
                             .bottom-row {
                                 padding-left: 26px;
@@ -321,6 +349,7 @@
 }
 
 // TODO: Find a better way to unify this and the identical above (around line 137)
+// ... yeah, this is going to be a lost cause.
 #moving-menu-item {
     position: relative; // this will become absolute in InequalityModal.tsx
     display: inline-block;

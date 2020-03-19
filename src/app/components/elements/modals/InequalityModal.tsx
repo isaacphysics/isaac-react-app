@@ -780,6 +780,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         this.setState({ menuOpen: true, activeSubMenu: submenu})
     }
 
+    private updateNumberInputValue(n: number) {
+        this.setState((prevState: InequalityModalState) => ({ numberInputValue: (prevState.numberInputValue || 0)*10 + n }));
+    }
+
     public render() {
         let lettersMenu: JSX.Element | null = null;
         if (!this.state.disableLetters) {
@@ -894,27 +898,29 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         <nav className="inequality-ui">
             <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
                 {this.state.activeMenu === 'numbers' && <div className="top-menu numbers">
-                    <div className="input-box">
-                        <input id="numeric-input" name="numeric-input" type="number"
-                            value={this.state.numberInputValue}
-                            onChange={(v) => console.log(v)}
-                        />
-                    </div>
                     <div className="keypad-box">
                         <div className="top-row">
                             {'123456'.split('').map(n => <div key={n} className="key menu-item"
-                                data-item={JSON.stringify({ type: 'Num', properties: { significand: `${n}` } })}
-                                dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(`${n}`) }}
+                                data-item={JSON.stringify({ type: 'Num', properties: { significand: n } })}
+                                dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(n) }}
+                                onClick={() => this.updateNumberInputValue(parseInt(n))}
+                                onKeyUp={() => this.updateNumberInputValue(parseInt(n))}
                             >
                             </div>)}
                         </div>
                         <div className="bottom-row">
                             {'7890±'.split('').map(n => <div key={n} className="key menu-item"
-                                data-item={JSON.stringify({ type: 'Num', properties: { significand: `${n}` } })}
-                                dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(`${n}`) }}
+                                data-item={JSON.stringify({ type: 'Num', properties: { significand: n } })}
+                                dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(n) }}
                             >
                             </div>)}
                         </div>
+                    </div>
+                    <div className="input-box">
+                        <div className={`menu-item ${this.state.numberInputValue ? 'active' : 'inactive'}`}
+                            data-item={this.state.numberInputValue ? JSON.stringify({ type: 'Num', properties: { significand: `${this.state.numberInputValue}`} }) : null}
+                            dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(`${this.state.numberInputValue || ''}`)}}
+                        />
                     </div>
                 </div>}
                 {this.state.activeMenu === "letters" && lettersMenu}
