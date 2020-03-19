@@ -10,7 +10,9 @@
     margin-top: 1rem; // this would ideally be more specific
   }
   .restrict-height {
-    height: 150px;
+    max-height: 150px;
+    display: block;
+    width: auto;
   }
 }
 .event-key-info {
