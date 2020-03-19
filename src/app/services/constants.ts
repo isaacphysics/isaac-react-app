@@ -1,11 +1,12 @@
 import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {invert} from "lodash";
+import {SITE_SUBJECT, SITE} from "./siteConstants";
 
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
-export const IS_CS_PLATFORM = true;
+export const IS_CS_PLATFORM = SITE_SUBJECT === SITE.CS;
 
 /*
  * Configure the api provider with the server running the API:

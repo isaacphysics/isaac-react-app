@@ -758,15 +758,27 @@ export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|Validat
     dispatch({type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
 };
 
+let questionSearchCounter = 0;
+
 export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: Dispatch<Action>) => {
+    const searchCount = ++questionSearchCounter;
     dispatch({type: ACTION_TYPE.QUESTION_SEARCH_REQUEST});
     try {
         const questionsResponse = await api.questions.search(query);
-        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results});
+        // Because some searches might take longer to return that others, check this is the most recent search still.
+        // Otherwise, we just discard the data.
+        if (searchCount === questionSearchCounter) {
+            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results});
+        }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to search for questions", e));
     }
+};
+
+export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
+    questionSearchCounter++;
+    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: []});
 };
 
 export const getAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {

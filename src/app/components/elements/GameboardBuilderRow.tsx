@@ -82,8 +82,8 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
         {!IS_CS_PLATFORM && <td className="w-15">
             {question.level}
         </td>}
-        <td className="w-15">
+        {IS_CS_PLATFORM && <td className="w-15">
             {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagIcon(tagExamBoardMap[tag]))}
-        </td>
+        </td>}
     </tr>
 };

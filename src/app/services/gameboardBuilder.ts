@@ -85,7 +85,7 @@ export const convertTagToSelectionOption = (tag: Tag) => {
 export const groupTagSelectionsByParent = (parent: Tag) => {
     return {
         label: parent.title,
-        options: tags.getDescendents(parent.id).map(convertTagToSelectionOption)
+        options: tags.getChildren(parent.id).map(convertTagToSelectionOption)
     };
 };
 
@@ -97,6 +97,15 @@ export const multiSelectOnChange = (setValue: Dispatch<SetStateAction<string[]>>
     if (e && (e as {value: string; label: string}[]).map) {
         const arr = e as {value: string; label: string}[];
         setValue(arr.map((item) => item.value));
+    } else {
+        setValue([]);
+    }
+};
+
+export const selectOnChange = (setValue: Dispatch<SetStateAction<string[]>>) => (e: ValueType<{value: string; label: string}>) => {
+    if (e && (e as {value: string; label: string}).value) {
+        const item = e as {value: string; label: string};
+        setValue([item.value]);
     } else {
         setValue([]);
     }

@@ -1,24 +1,19 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {closeActiveModal, searchQuestions} from "../../../state/actions";
+import {clearQuestionSearch, closeActiveModal, searchQuestions} from "../../../state/actions";
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {debounce, range} from "lodash";
 import Select from "react-select";
-import {
-    convertExamBoardToOption,
-    groupTagSelectionsByParent,
-    logEvent,
-    multiSelectOnChange,
-    sortQuestions
-} from "../../../services/gameboardBuilder";
+import {convertExamBoardToOption, groupTagSelectionsByParent, logEvent, multiSelectOnChange, sortQuestions, selectOnChange, bookSort} from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
-import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM} from "../../../services/constants";
+import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM, SortOrder} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {useCurrentExamBoard} from "../../../services/examBoard";
 import {searchResultIsPublic} from "../../../services/search";
+import {isStaff} from "../../../services/user";
 
 interface QuestionSearchModalProps {
     originalSelectedQuestions: Map<string, ContentSummaryDTO>;
@@ -30,11 +25,17 @@ interface QuestionSearchModalProps {
 
 export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useDispatch();
+
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
 
     const [searchQuestionName, setSearchQuestionName] = useState("");
     const [searchLevels, setSearchLevels] = useState<string[]>([]);
     const [searchExamBoards, setSearchExamBoards] = useState<string[]>([]);
+
+    const [searchBook, setSearchBook] = useState<string[]>([]);
+    const isBookSearch = searchBook.length > 0;
+
+    const [searchFasttrack, setSearchFasttrack] = useState<boolean>(false);
 
     const [questionsSort, setQuestionsSort] = useState({});
     const [selectedQuestions, setSelectedQuestions] = useState(new Map(originalSelectedQuestions));
@@ -45,13 +46,24 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const examBoard = useCurrentExamBoard();
 
     const searchDebounce = useCallback(
-        debounce((searchString: string, topics: string[], levels: string[], examBoard: string[], fasttrack: boolean, startIndex: number) => {
+        debounce((searchString: string, topics: string[], levels: string[], examBoard: string[], book: string[], fasttrack: boolean, startIndex: number) => {
+            const isBookSearch = book.length > 0; // Tasty.
+            if (searchString.length === 0 && topics.length === 0 && levels.length === 0 && book.length === 0 && !fasttrack) {
+                // Nothing to search for
+                dispatch(clearQuestionSearch);
+                return;
+            }
             dispatch(searchQuestions({
-                searchString: [searchString, ...([topics, levels, examBoard].map((tags) => tags.join(" ")))].filter((query) => query != "").join(" "),
-                tags: "", fasttrack, startIndex, limit: 50
+                searchString: searchString,
+                // N.B. This endpoint claims to support multiple levels, but it doesn't seem to work, so we restrict the select below to only pick one level.
+                levels: !isBookSearch && levels.length > 0 ? levels.join(",") : undefined,
+                tags: (isBookSearch ? book : [...([topics, examBoard].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" "),
+                fasttrack,
+                startIndex,
+                limit: -1
             }));
 
-            logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, levels, examBoard, fasttrack, startIndex});
+            logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, levels, examBoard, book, fasttrack, startIndex});
         }, 250),
         []
     );
@@ -63,28 +75,46 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     };
 
     useMemo(() => {
-        setSearchExamBoards([examBoardTagMap[examBoard]]);
+        setSearchExamBoards([examBoardTagMap[examBoard]].filter(tag => !!tag));
     }, [user]);
 
     useEffect(() => {
-        searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, false, 0);
-    },[searchQuestionName, searchTopics, searchLevels, searchExamBoards]);
+        searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchFasttrack, 0);
+    },[searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchFasttrack]);
 
     return <div>
         <div className="row">
-            <div className="text-wrap col-lg-6 mt-2">
+            {!IS_CS_PLATFORM && <div className="text-wrap col-lg-3 my-2">
+                <RS.Label htmlFor="question-search-book">Book</RS.Label>
+                <Select inputId="question-search-book"
+                    options={[
+                        {value: "physics_skills_14", label: "A Level Physics (Pre 3rd Edition)"},
+                        {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
+                        {value: "phys_book_gcse", label: "GCSE Physics"},
+                        {value: "maths_book", label: "Pre-Uni Maths"},
+                        {value: "chemistry_16", label: "A-Level Physical Chemistry"},
+                    ]}
+                    name="books"
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    placeholder="None"
+                    onChange={selectOnChange(setSearchBook)}
+                    isClearable
+                />
+            </div>}
+            {!isBookSearch && <div className={`text-wrap col-lg-6 mt-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                 <Select inputId="question-search-topic"
                     isMulti
-                    options={tags.getSubcategoryTags(tags.allTagIds).map(groupTagSelectionsByParent)}
+                    options={tags.allTags.map(groupTagSelectionsByParent)}
                     name="colors"
                     className="basic-multi-select"
                     classNamePrefix="select"
                     placeholder="Any"
                     onChange={multiSelectOnChange(setSearchTopics)}
                 />
-            </div>
-            <div className={"text-wrap my-2 " + (IS_CS_PLATFORM ? "col-lg-6" : "col-lg-3")}>
+            </div>}
+            {IS_CS_PLATFORM && <div className="text-wrap my-2 col-lg-6">
                 <RS.Label htmlFor="question-search-exam-board">Exam board</RS.Label>
                 <Select inputId="question-search-exam-board"
                     isMulti
@@ -98,11 +128,10 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     value={searchExamBoards.map(convertExamBoardToOption)}
                     onChange={multiSelectOnChange(setSearchExamBoards)}
                 />
-            </div>
-            {!IS_CS_PLATFORM && <div className="text-wrap col-lg-3 my-2">
+            </div>}
+            {!IS_CS_PLATFORM && <div className={`text-wrap col-lg-3 my-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-level">Level</RS.Label>
                 <Select inputId="question-search-level"
-                    isMulti
                     options={[
                         ...(range(1,6).map((i) => {return { value: i.toString(), label: i.toString() }})),
                         { value: '6', label: '6 (Post A-Level)' }]}
@@ -110,8 +139,16 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     className="basic-multi-select"
                     classNamePrefix="select"
                     placeholder="Any"
-                    onChange={multiSelectOnChange(setSearchLevels)}
+                    onChange={selectOnChange(setSearchLevels)}
+                    isClearable
                 />
+            </div>}
+        </div>
+        <div className="row">
+            {!IS_CS_PLATFORM && isStaff(user) && <div className="text-wrap col">
+                <RS.Form>
+                    <RS.Label check><input type="checkbox" checked={searchFasttrack} onChange={e => setSearchFasttrack(e.target.checked)} />{' '}Show Fasttrack questions</RS.Label>
+                </RS.Form>
             </div>}
         </div>
         <div className="row">
@@ -146,19 +183,22 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         <SortableTableHeader
                             className="w-40" title="Question title"
                             updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
+                            enabled={!isBookSearch}
                         />
                         <th className="w-25">Topic</th>
                         {!IS_CS_PLATFORM && <SortableTableHeader
                             className="w-15" title="Level"
                             updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "level")}
+                            enabled={!isBookSearch}
                         />}
-                        <th className="w-15">Exam boards</th>
+                        {IS_CS_PLATFORM && <th className="w-15">Exam boards</th>}
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        questions && sortQuestions(questionsSort)(questions.filter((question) => {
+                        questions && sortQuestions(searchBook.length === 0 ? questionsSort : {title: SortOrder.ASC})(questions.filter((question) => {
                             let qIsPublic = searchResultIsPublic(question, user);
+                            if (isBookSearch) return qIsPublic;
                             let qLevelsMatch = (searchLevels.length == 0 || (question.level && searchLevels.includes(question.level.toString())));
                             let qExamboardsMatch = (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0));
                             let qTopicsMatch = (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0));
