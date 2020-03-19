@@ -3,16 +3,15 @@ import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom"
 import {loadGameboard, logAction} from "../../state/actions";
 import * as RS from "reactstrap"
+import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {LoggedInUser, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {NOT_FOUND} from "../../services/constants";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
-import {Container} from "reactstrap";
 
 const stateFromProps = (state: AppState) => {
     return state && {

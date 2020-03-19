@@ -23,7 +23,7 @@ function toCSV<T>(items: Item<T>[]) {
     return items.map(item => item.value).join(",");
 }
 
-export const PhyGameboardBuilder = withRouter((props: {location: {hash?: string}}) => {
+export const GameboardFilter = withRouter((props: {location: {hash?: string}}) => {
     const dispatch = useDispatch();
 
     const gameboard = useSelector((state: AppState) => state && state.currentGameboard);
