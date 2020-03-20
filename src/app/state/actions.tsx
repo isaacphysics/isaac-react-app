@@ -890,6 +890,17 @@ export const getWildcards = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
+export const generateTemporaryGameboard = (params: {[key: string]: string}) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST});
+    try {
+        const gameboardResponse = await api.gameboards.generateTemporary(params);
+        dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS, gameboard: gameboardResponse.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Error creating temporary gameboard", e));
+    }
+};
+
 // Assignments
 export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ASSIGNMENTS_REQUEST});

@@ -251,6 +251,9 @@ export const api = {
         },
         getWildcards: (): AxiosPromise<ApiTypes.IsaacWildcard[]> => {
             return endpoint.get(`gameboards/wildcards`);
+        },
+        generateTemporary: (params: {[key: string]: string}): AxiosPromise<ApiTypes.GameboardDTO> => {
+            return endpoint.get(`/gameboards`, {params});
         }
     },
     assignments: {
