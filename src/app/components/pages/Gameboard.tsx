@@ -12,6 +12,7 @@ import {LoggedInUser, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {NOT_FOUND} from "../../services/constants";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 const stateFromProps = (state: AppState) => {
     return state && {
@@ -65,7 +66,7 @@ export const GameboardViewer = ({gameboard}: {gameboard: GameboardDTO}) => {
             </RS.ListGroup>
         </RS.Col>
     </RS.Row>;
-}
+};
 
 const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboard, logAction}: GameboardPageProps) => {
     let gameboardId = hash ? hash.slice(1) : null;
@@ -87,10 +88,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
                 </RS.Button>
             </RS.Col>
             <RS.Col className="mt-4">
-                <RS.Button
-                    tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}}
-                    color="primary" block outline
-                >
+                <RS.Button tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}} color="primary" block outline>
                     Duplicate and edit
                 </RS.Button>
             </RS.Col>
@@ -108,10 +106,13 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
         <TitleAndBreadcrumb breadcrumbTitleOverride="Gameboard" currentPageTitle="Gameboard not found" />
         <h3 className="my-4">
             <small>
-                {"We're sorry, we were not able to find a gameboard with the id "}
-                <code>{gameboardId}</code>
-                {"."}
+                {"We're sorry, we were not able to find a gameboard with the id "}<code>{gameboardId}</code>{"."}
             </small>
+            {SITE.PHY === SITE_SUBJECT && <div className="mt-4 text-center">
+                <RS.Button tag={Link} to={`/gameboards/generate`} color="primary" outline className="btn-lg">
+                    Generate a new gamebaord
+                </RS.Button>
+            </div>}
         </h3>
     </Container>;
 
@@ -129,7 +130,8 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
                 ifNotFound={notFoundComponent}
             />
         </RS.Container>
-        : <Redirect to="/gameboards_builder" />
+        :
+        <Redirect to={{[SITE.PHY]: "/gameboards/generate", [SITE.CS]: "/gameboards#example-gameboard"}[SITE_SUBJECT]} />
 };
 
 export const Gameboard = withRouter(connect(stateFromProps, dispatchFromProps)(GameboardPageComponent));

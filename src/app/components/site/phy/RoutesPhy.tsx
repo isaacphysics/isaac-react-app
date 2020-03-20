@@ -10,7 +10,7 @@ import {Chemistry16} from "../../pages/books/chemistry_16";
 let key = 0;
 export const RoutesPhy = [
     // Gameboard filter
-    <TrackedRoute key={key++} exact path="/gameboards_builder" component={GameboardFilter} />,
+    <TrackedRoute key={key++} exact path="/gameboards/generate" component={GameboardFilter} />,
 
     // Books
     <TrackedRoute key={key++} exact path="/books/physics_skills_19" component={PhysicsSkills19}/>,
