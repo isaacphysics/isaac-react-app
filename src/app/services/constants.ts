@@ -404,7 +404,8 @@ export enum ACTION_TYPE {
 export enum EXAM_BOARD {
     AQA = "AQA",
     OCR = "OCR",
-    OTHER = "OTHER"
+    OTHER = "OTHER",
+    NONE = ""
 }
 
 export enum SUBJECTS {

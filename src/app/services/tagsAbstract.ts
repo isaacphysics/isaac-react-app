@@ -29,6 +29,9 @@ export abstract class AbstractBaseTagService {
     public getById(id: TAG_ID) {
         return this.allTags.filter((tag) => tag.id === id)[0];
     }
+    private getByIds(ids: TAG_ID[]) {
+        return this.allTags.filter((tag) => ids.includes(tag.id));
+    }
     public getSpecifiedTag(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
         // Return the first (as ordered in TAG_ID) TAG_ID an object has of a given type!
         if (tagArray != null) {
@@ -76,16 +79,33 @@ export abstract class AbstractBaseTagService {
         return tags;
     }
 
-    private getDeepestTag(tagArray: TAG_ID[]) {
+    private getDeepestTagById(tagArray: TAG_ID[]) {
         if (tagArray == null) return null;
+        return this.getDeepestTag(this.getByIds(tagArray));
+    }
 
+    private getDeepestTag(tagArray: Tag[]): Tag | null {
         let deepestTag = null;
-        for (let i in tagArray) {
-            let tag = this.getById(tagArray[i]);
+        for (let tag of tagArray) {
             if (tag != null && (deepestTag == null || tag.level > deepestTag.level)) {
                 deepestTag = tag;
             }
         }
         return deepestTag;
+    }
+
+    public getByIdsAsHeirarchy(tagArray: TAG_ID[]) {
+        const tags = this.getByIds(tagArray);
+        const deepestTag = this.getDeepestTag(tags);
+        if (!deepestTag) return [];
+        const result = [deepestTag];
+        let tagId = deepestTag.parent;
+        while (tagId !== null) {
+            const tag = tags.find(t => t.id === tagId);
+            if (!tag) break;
+            result.unshift(tag);
+            tagId = tag.parent;
+        }
+        return result;
     }
 }
