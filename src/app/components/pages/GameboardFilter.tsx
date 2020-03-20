@@ -118,34 +118,62 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
         return (value: ValueType<Item<T>>) => f(Array.isArray(value) ? value : !value ? [] : [value]);
     }
 
-    return <RS.Container id="phy-gameboard-builder">
-        <TitleAndBreadcrumb currentPageTitle="Gameboard builder" help={pageHelp}/>
+    return <RS.Container id="gameboard-generator" className="mb-5">
+        <TitleAndBreadcrumb currentPageTitle="Gameboard Generator" help={pageHelp}/>
+
         <RS.Row>
-            <RS.Col>
-                <h5>Choose your questions</h5>
-                {levels.map((level, i) => (
-                    <><RS.Label for={level.for} className="pt-1 pb-0">{level.name}: </RS.Label><Select name={level.for} onChange={unwrapValue(setSelection(i))} isMulti={true} options={choices[i]} value={selections[i]} /></>
-                ))}
-            </RS.Col>
-            <RS.Col>
-                <h5>Levels</h5>
-                <img width={180} height={30} className="mb-2" style={{marginLeft: "calc(50% - 90px)"}} alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/difficulty-guide.png" />
-                <Select onChange={unwrapValue(setDifficulty)} isMulti={true} value={difficulty} options={difficulties} />
+            <RS.Col  lg={{size: 10, offset: 1}}>
+                <div className="pt-3"><strong>Select your questions filters</strong></div>
+                <RS.Row>
+                    <RS.Col lg={6}>
+                        {levels.map((level, i) => (
+                            <React.Fragment key={level.for}>
+                                <RS.Label for={level.for} className="pt-2 pb-0">{level.name}: </RS.Label>
+                                <Select name={level.for} onChange={unwrapValue(setSelection(i))} isMulti={true} options={choices[i]} value={selections[i]} />
+                            </React.Fragment>
+                        ))}
+                    </RS.Col>
+                    <RS.Col lg={6}>
+                        <div className="d-flex justify-content-between mt-0 mt-sm-4 mt-lg-0">
+                            <RS.Label className="pt-2 pb-0" for="level-selector">Levels: </RS.Label>
+                            <img width={270} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/difficulty-guide.png" />
+                        </div>
+                        <Select name="level-selector" onChange={unwrapValue(setDifficulty)} isMulti={true} value={difficulty} options={difficulties} />
+                    </RS.Col>
+                </RS.Row>
+
+                <RS.Row className="mt-4">
+                    <RS.Col>
+                        {boardStack.length > 0 && <RS.Button size="sm" color="primary" outline onClick={previousBoard}>
+                            <span className="d-md-inline d-none">Previous Gameboard</span> &#9100;
+                        </RS.Button>}
+                    </RS.Col>
+                    <RS.Col className="text-right">
+                        <RS.Button size="sm" color="primary" outline onClick={refresh}>
+                            <span className="d-md-inline d-none">Generate Gamebaord</span> ⟳
+                        </RS.Button>
+                    </RS.Col>
+                </RS.Row>
+
+                <RS.Row className="mt-4 mt-md-5 mb-3">
+                    <RS.Col>
+                        <h3>{boardName}</h3>
+                    </RS.Col>
+                    <RS.Col className="text-right">
+                        {gameboard && gameboard !== NOT_FOUND && <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}`}>
+                            Save to My&nbsp;Gameboards
+                        </RS.Button>}
+                    </RS.Col>
+                </RS.Row>
             </RS.Col>
         </RS.Row>
-        <RS.Row className="mt-4">
-            <RS.Col>
-                <h4>{boardName}</h4>
-                <div className="gameboard-builder-banner">
-                    {boardStack.length > 0 && <RS.Button size="sm" className="gameboard-builder-undo" onClick={previousBoard}>Undo Refresh</RS.Button>}
-                    {gameboard && gameboard !== NOT_FOUND && <Link to={`/add_gameboard/${gameboard.id}`}>Save to My Boards</Link>}
-                    <RS.Button size="sm" className="gameboard-builder-refresh" onClick={refresh}>Refresh Board</RS.Button>
-                </div>
-            </RS.Col>
-        </RS.Row>
-        <div className="mb-4">
+
+        <div className="pb-4">
             <ShowLoading until={gameboard}>
-                {gameboard && gameboard !== NOT_FOUND ? <GameboardViewer gameboard={gameboard} />: <RS.Alert color="warning">No questions found matching the criteria.</RS.Alert>}
+                {gameboard && gameboard !== NOT_FOUND ?
+                    <GameboardViewer gameboard={gameboard} /> :
+                    <RS.Alert color="warning">No questions found matching the criteria.</RS.Alert>
+                }
             </ShowLoading>
         </div>
     </RS.Container>;
