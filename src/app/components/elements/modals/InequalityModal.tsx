@@ -43,16 +43,17 @@ interface InequalityModalState {
     menuOpen: boolean;
     editorState: any;
     menuItems: {
+        upperCaseLetters: MenuItem[];
+        lowerCaseLetters: MenuItem[];
+        upperCaseGreekLetters: MenuItem[];
+        lowerCaseGreekLetters: MenuItem[];
         logicFunctionsItems: MenuItem[];
         mathsBasicFunctionsItems: MenuItem[];
         mathsTrigFunctions: MenuItem[];
         mathsHypFunctions: MenuItem[];
         mathsLogFunctions: MenuItem[];
         mathsDerivatives: MenuItem[];
-        upperCaseLetters: MenuItem[];
-        lowerCaseLetters: MenuItem[];
-        upperCaseGreekLetters: MenuItem[];
-        lowerCaseGreekLetters: MenuItem[];
+        chemicalElements: MenuItem[];
         // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
         letters: MenuItem[];
         otherFunctions: MenuItem[];
@@ -92,6 +93,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private _hypFunctionsNames = ["sinh", "cosh", "tanh", "cosech", "sech", "coth", "arccosech", "arcsech", "arccoth", "arcsinh", "arccosh", "arctanh"];
     private _logFunctionNames = ["ln", "log"];
 
+    private _chemicalElements = ["H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"];
+
     private _differentialRegex = /^(Delta|delta|d)\s*(?:\^([0-9]+))?\s*([a-zA-Z]+(?:(?:_|\^).+)?)/;
     private _availableSymbols?: string[];
 
@@ -115,19 +118,20 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             menuOpen: false,
             editorState: {},
             menuItems: {
-                logicFunctionsItems: [], // this.generateLogicFunctionsItems(props.logicSyntax || "logic"),
-                mathsBasicFunctionsItems: [], // this.generateMathsBasicFunctionsItems(),
-                mathsTrigFunctions: [], // this.generateMathsTrigFunctionsItems(),
-                mathsHypFunctions: [], // this.generateMathsHypFunctionsItems(),
-                mathsLogFunctions: [], // this.generateMathsLogFunctionsItems(),
-                mathsDerivatives: [], // this.generateMathsDerivativesItems(),
                 upperCaseLetters: [],
                 lowerCaseLetters: [],
                 upperCaseGreekLetters: [],
                 lowerCaseGreekLetters: [],
+                logicFunctionsItems: [],
+                mathsBasicFunctionsItems: [],
+                mathsTrigFunctions: [],
+                mathsHypFunctions: [],
+                mathsLogFunctions: [],
+                mathsDerivatives: [],
                 // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
                 letters: [],
                 otherFunctions: [],
+                chemicalElements: [],
             },
             defaultMenu: true,
             disableLetters: this._availableSymbols?.includes('_no_alphabet') || false,
@@ -206,19 +210,20 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         
         let defaultMenuItems = {
             // ...this.state.menuItems,
+            upperCaseLetters: [ ...(this.state.menuItems.upperCaseLetters || []) ],
+            lowerCaseLetters: [ ...(this.state.menuItems.lowerCaseLetters || []) ],
+            upperCaseGreekLetters: [ ...(this.state.menuItems.upperCaseGreekLetters || []) ],
+            lowerCaseGreekLetters: [ ...(this.state.menuItems.lowerCaseGreekLetters || []) ],
             logicFunctionsItems: [ ...this.state.menuItems.logicFunctionsItems, ...(this.generateLogicFunctionsItems(this.props.logicSyntax || "logic")) ],
             mathsBasicFunctionsItems: this.generateMathsBasicFunctionsItems(),
             mathsTrigFunctions: [ ...this.state.menuItems.mathsTrigFunctions, ...this.generateMathsTrigFunctionsItems() ],
             mathsHypFunctions: [ ...this.state.menuItems.mathsHypFunctions, ...this.generateMathsHypFunctionsItems() ],
             mathsLogFunctions: [ ...this.state.menuItems.mathsLogFunctions, ...this.generateMathsLogFunctionsItems() ],
             mathsDerivatives: [ ...this.state.menuItems.mathsDerivatives, ...this.generateMathsDerivativesItems() ],
-            upperCaseLetters: [ ...(this.state.menuItems.upperCaseLetters || []) ],
-            lowerCaseLetters: [ ...(this.state.menuItems.lowerCaseLetters || []) ],
-            upperCaseGreekLetters: [ ...(this.state.menuItems.upperCaseGreekLetters || []) ],
-            lowerCaseGreekLetters: [ ...(this.state.menuItems.lowerCaseGreekLetters || []) ],
             // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
             letters: [],
             otherFunctions: [],
+            chemicalElements: [],
         };
 
         this.setState((prevState: InequalityModalState) => ({
@@ -234,7 +239,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             let customMenuItems = {
                 letters: new Array<MenuItem>(),
                 basicFunctions: new Array<MenuItem>(),
-                otherFunctions: new Array<MenuItem>()
+                otherFunctions: new Array<MenuItem>(),
+                chemicalElements: new Array<MenuItem>(),
             };
 
             for (let l of this._availableSymbols) {
@@ -253,9 +259,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                         console.warn(`Could not parse available symbol "${availableSymbol} as a function"`);
                     }
                 } else {
-                    // Everything else is a letter
-                    if (!this._differentialRegex.test(availableSymbol)) {
-                        customMenuItems.letters.push(this.makeLetterMenuItem(availableSymbol));
+                    // Everything else is a letter, unless we are doing chemistry
+                    if (this.props.editorMode === 'chemistry') {
+                        // TODO: Available chemical elements
+                    } else {
+                        if (!this._differentialRegex.test(availableSymbol)) {
+                            customMenuItems.letters.push(this.makeLetterMenuItem(availableSymbol));
+                        }
                     }
                 }
             }
@@ -271,6 +281,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                         ...prevState.menuItems,
                         upperCaseLetters: "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
                         lowerCaseLetters: "abcdeghijklmnopqrsuvwxyz".split("").map( letter => this.makeSingleLetterMenuItem(letter) ),
+                    }
+                }));
+            } else if (this.props.editorMode === 'chemistry') {
+                this.setState((prevState: InequalityModalState) => ({
+                    menuItems: {
+                        ...prevState.menuItems,
+                        chemicalElements: this._chemicalElements.map( element => this.makeChemicalElementMenuItem(element) ),
                     }
                 }));
             } else {
@@ -627,6 +644,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         return items;
     }
 
+    private makeChemicalElementMenuItem(symbol: string) {
+        return new MenuItem('ChemicalElement', { element: symbol }, { label: `\\text{${symbol}}`, texLabel: true, className: `chemical-element ${symbol}` });
+    }
+
     // Fat arrow form for correct "this" binding (?!)
     private menuItem = (item: MenuItem, index: number) => {
         return <li key={index}
@@ -900,7 +921,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 {this.state.activeMenu === 'numbers' && <div className="top-menu numbers">
                     <div className="keypad-box">
                         <div className="top-row">
-                            {'123456'.split('').map(n => <div key={n} className="key menu-item"
+                            {'123456'.split('').map(n => <div key={n} className="key menu-item" role="button" tabIndex={0}
                                 data-item={JSON.stringify({ type: 'Num', properties: { significand: n } })}
                                 dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(n) }}
                                 onClick={() => this.updateNumberInputValue(parseInt(n))}
@@ -933,30 +954,57 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                     }</ul>}
                 </div>}
                 {this.props.editorMode === 'maths' && this.state.activeMenu === 'mathsOtherFunctions' && mathsOtherFunctionsMenu}
+                {this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu elements">
+                    <ul className="sub-menu elements">
+                        {this.state.menuItems.chemicalElements.map(this.menuItem)}
+                    </ul>
+                </div>}
             </div>
             <div id="inequality-menu-tabs" className="menu-tabs">
                 <ul>
-                    {this.props.editorMode === 'maths' &&
+                    {['maths', 'chemistry'].includes(this.props.editorMode || '') &&
                     <li className={this.state.activeMenu === 'numbers' ? 'active' : 'inactive'}
                         dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString('1\\, 2\\, 3') }}
                         onClick={() => this.onMenuTabClick('numbers')}
                         onKeyUp={() => this.onMenuTabClick('numbers')}
                     />}
-                    {!this.state.disableLetters && <li className={this.state.activeMenu === "letters" ? 'active' : 'inactive'}
+                    {!this.state.disableLetters &&
+                     ['maths', 'logic'].includes(this.props.editorMode || '') &&
+                    <li className={this.state.activeMenu === "letters" ? 'active' : 'inactive'}
                         dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString("Ab\\ \\Delta \\gamma") }}
                         onClick={() => { this.onMenuTabClick("letters"); this.setSubMenuOpen(this.props.editorMode === 'logic' ? "upperCaseLetters" : "lowerCaseLetters"); } }
                         onKeyUp={() => { this.onMenuTabClick("letters"); this.setSubMenuOpen(this.props.editorMode === 'logic' ? "upperCaseLetters" : "lowerCaseLetters"); } }
                     />}
+                    {['maths', 'logic'].includes(this.props.editorMode || '') &&
                     <li className={this.state.activeMenu === "basicFunctions" ? 'active' : 'inactive'}
                         dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(functionsTabLabel) }}
                         onClick={() => this.onMenuTabClick("basicFunctions")}
                         onKeyUp={() => this.onMenuTabClick("basicFunctions")}
-                    />
+                    />}
                     {this.props.editorMode === 'maths' &&
                     <li className={this.state.activeMenu === 'mathsOtherFunctions' ? 'active' : 'inactive'}
                         dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(mathsOtherFunctionsTabLabel) }}
                         onClick={() => { this.onMenuTabClick('mathsOtherFunctions'); this.setSubMenuOpen('trigFunctions'); } }
                         onKeyUp={() => { this.onMenuTabClick('mathsOtherFunctions'); this.setSubMenuOpen('trigFunctions'); } }
+                    />}
+                    {/* Chemistry below */}
+                    {this.props.editorMode === 'chemistry' &&
+                    <li className={this.state.activeMenu === 'elements' ? 'active' : 'inactive'}
+                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString('\\text{H He Li}') }}
+                        onClick={() => this.onMenuTabClick('elements')}
+                        onKeyUp={() => this.onMenuTabClick('elements')}
+                    />}
+                    {this.props.editorMode === 'chemistry' &&
+                    <li className={this.state.activeMenu === 'states' ? 'active' : 'inactive'}
+                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString('(aq)\\, (g)\\, (l)') }}
+                        onClick={() => this.onMenuTabClick('states')}
+                        onKeyUp={() => this.onMenuTabClick('states')}
+                    />}
+                    {this.props.editorMode === 'chemistry' &&
+                    <li className={this.state.activeMenu === 'relations' ? 'active' : 'inactive'}
+                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString('\\rightarrow\\, \\rightleftharpoons\\, +') }}
+                        onClick={() => this.onMenuTabClick('relations')}
+                        onKeyUp={() => this.onMenuTabClick('relations')}
                     />}
                 </ul>
             </div>
