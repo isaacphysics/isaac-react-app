@@ -29,6 +29,26 @@
     align-self: center;
     padding-left: 1.5rem;
   }
+  .gameboard-tags {
+    font-size: 0.875rem;
+    color: $gray-160;
+    align-self: center;
+
+    .gameboard-tag:not(:first-child) {
+      padding-left: 12px;
+      &::before {
+        background-image: url(/assets/chevron_right.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+        content: ' ';
+        height: 10px;
+        margin-left: -9px;
+        margin-top: 6px;
+        width: 10px;
+        position: absolute;
+      }
+    }
+  }
 }
 
 .modal-body {

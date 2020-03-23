@@ -49,6 +49,9 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
 
     const QuestionComponent = QUESTION_TYPES.get(doc.type) || QUESTION_TYPES.get("default");
 
+    const sigFigsError = validationResponse && validationResponse.explanation &&
+        (validationResponse.explanation.tags || []).includes("sig_figs");
+
     return <RS.Form onSubmit={submitCurrentAttempt}>
         {/* <h2 className="h-question d-flex pb-3">
             <span className="mr-3">{questionIndex !== undefined ? `Q${questionIndex + 1}` : "Question"}</span>
@@ -59,13 +62,13 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
         <div className={
             classnames({"question-component p-md-5": true, "parsons-layout": doc.type === 'isaacParsonsQuestion'})
         }>
-            <QuestionComponent questionId={doc.id as string} doc={doc} />
+            <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
 
             {validationResponse && !canSubmit && <div className={
                 classnames({"validation-response-panel p-3 mt-3": true,  "correct": validationResponse.correct})
             }>
                 <div className="pb-1">
-                    <h1 className="m-0">{validationResponse.correct ? "Correct!" : "Incorrect"}</h1>
+                    <h1 className="m-0">{sigFigsError ? "Significant Figures" : validationResponse.correct ? "Correct!" : "Incorrect"}</h1>
                 </div>
                 <div>
                     {validationResponse.explanation && <IsaacContent doc={validationResponse.explanation} />}
