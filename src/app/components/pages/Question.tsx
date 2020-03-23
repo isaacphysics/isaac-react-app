@@ -7,7 +7,7 @@ import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
+import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL, TAG_ID} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
@@ -20,10 +20,24 @@ import {isStudent, isTeacher} from "../../services/user";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {doc as selectDoc} from "../../state/selectors";
+import {DocumentSubject} from "../../../IsaacAppTypes";
+import {TrustedMarkdown} from "../elements/TrustedMarkdown";
+import tags from "../../services/tags";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
     match: {params: {questionId: string}};
+}
+
+function getTags(docTags?: string[]) {
+    if (SITE_SUBJECT !== SITE.PHY) {
+        return [];
+    }
+    if (!docTags) return [];
+
+    return tags.getByIdsAsHeirarchy(docTags as TAG_ID[])
+        .map(tag => ({title: tag.title}));
 }
 
 export const Question = withRouter(({questionIdOverride, match}: QuestionPageProps) => {
@@ -43,16 +57,20 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
     }, [questionId, dispatch]);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
-        const doc = supertypedDoc as IsaacQuestionPageDTO;
-        return <div className="pattern-01">
+        const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+        return <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <Container>
                 {/*FastTrack progress bar*/}
                 {/*Print options*/}
                 {/*High contrast option*/}
                 <TitleAndBreadcrumb
                     currentPageTitle={doc.title as string}
-                    intermediateCrumbs={navigation.breadcrumbHistory}
+                    intermediateCrumbs={[
+                        ...navigation.breadcrumbHistory,
+                        ...getTags(doc.tags)
+                    ]}
                     collectionType={navigation.collectionType}
+                    level={doc.level}
                 />
                 <RS.Row className="no-print">
                     {segueEnvironment === "DEV" && doc.canonicalSourceFile &&
@@ -102,7 +120,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                             However, if you were assigned this version, you should complete it.
                         </div>}
 
-                        <p className="text-muted">{doc.attribution}</p>
+                        {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
 
                         <NavigationLinks navigation={navigation}/>
 

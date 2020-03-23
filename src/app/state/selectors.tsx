@@ -1,6 +1,7 @@
 import {AppState} from "./reducers";
 import {sortBy} from "lodash";
 import {ACCEPTED_QUIZ_IDS, NOT_FOUND} from "../services/constants";
+import {AppQuestionDTO} from "../../IsaacAppTypes";
 
 export const groups = {
     current: (state: AppState) => {
@@ -69,5 +70,8 @@ export const questions = {
     },
     anyQuestionPreviouslyAttempted: (state: AppState) => {
         return !!state && !!state.questions && state.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
+    },
+    filter: (predicate: (q: AppQuestionDTO) => boolean) => (state: AppState) => {
+        return state && state.questions && state.questions.filter(predicate) || [];
     }
 };

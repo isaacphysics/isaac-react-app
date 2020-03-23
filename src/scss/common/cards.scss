@@ -10,22 +10,22 @@
   @include respond-above(sm) {
     box-shadow: 0 2px 30px 0 $shadow-08;
   }
-  .news-carousel & .card-image {
+  .news-card-image {
     @include aspect-ratio(100, 59);
-    > .card-image img {
-      left: -1.45rem !important;
-    }
   }
   // Nomensa's image offset code, if we decide to use
   //.news-card-image {
   //  //margin-left: -1.45rem;
   //  //width: calc(100% - 0.5rem) !important;
   //}
-  .events-carousel & .card-image {
+  .event-card-image {
     img {
       display: block;
       height: 150px;
       width: 150px;
+      border-radius: 50%;
+      margin: auto;
+      margin-top: 1rem;
     }
   }
 
@@ -171,6 +171,11 @@
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+.news-carousel {
+  @include media-breakpoint-up(md) {
+    max-width: 322px;
   }
 }
 .news-carousel + a,

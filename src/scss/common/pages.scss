@@ -1,0 +1,108 @@
+// ISAAC
+main {
+  min-height: 450px;
+}
+
+// NOMENSA pages.scss
+// COMMENT OUT THE BACKGROUND GRADIENTS
+.question-difficulty {
+  background-color: white;
+  box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
+  width: 223px;
+  h3 {
+    font-size: 1.25rem;
+  }
+}
+
+.homepageHero {
+  //background: rgb(246, 246, 246); /* Old browsers */
+  //background: -moz-linear-gradient(
+  //                top,
+  //                rgba(246, 246, 246, 1) 0%,
+  //                rgba(255, 255, 255, 1) 6%
+  //); /* FF3.6-15 */
+  //background: -webkit-linear-gradient(
+  //                top,
+  //                rgba(246, 246, 246, 1) 0%,
+  //                rgba(255, 255, 255, 1) 6%
+  //); /* Chrome10-25,Safari5.1-6 */
+  //background: linear-gradient(
+  //                to bottom,
+  //                rgba(246, 246, 246, 1) 0%,
+  //                rgba(255, 255, 255, 1) 6%
+  //); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  //filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f6f6', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+  //
+  button {
+    margin-top: 1rem;
+  }
+}
+
+.homepagePhyTable {
+  width: 100%;
+  background: $white;
+  border: 1px solid $gray-107;
+
+  th {
+    width: 50px;
+    text-align: center;
+    color: white;
+    text-transform: uppercase;
+    font-size: 19px;
+    font-family: $secondary-font-bold;
+    font-weight: 700;
+    span {
+      position: absolute;
+      transform: rotate(-90deg);
+      transform-origin: 13% 75%;
+    }
+  }
+  tr + tr {
+    border-top: 1px solid $gray-107;
+  }
+  td {
+    height: 60px;
+    position: relative;
+    line-height: 60px;
+    padding: 0;
+    padding-left: 15px;
+    font-family: $secondary-font-bold;
+  }
+  td:hover {
+    background: $gray-107;
+  }
+  a {
+    display: block;
+    padding-left: 18px;
+    text-decoration: none;
+  }
+  td:hover:before {
+    content: '';
+    border-top: 30px solid #ececec;
+    border-left: 15px solid #ececec;
+    border-bottom: 30px solid #ececec;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
+}
+
+.homepageLearn {
+  th {
+    background: theme-color("primary");
+  }
+  td:hover:before {
+    border-left-color: theme-color("primary");
+  }
+}
+
+.homepageTeach {
+  th {
+    background: $black;
+  }
+  td:hover:before {
+    border-left-color: $black;
+  }
+}

@@ -1,6 +1,7 @@
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {FigureNumberingContext, FigureNumbersById} from "../../../IsaacAppTypes";
 import React from "react";
+import {extractFigureId} from "../content/IsaacFigure";
 
 interface WithFigureNumberingProps {
     doc: ContentDTO;
@@ -16,7 +17,7 @@ export const WithFigureNumbering = ({doc, children}: WithFigureNumberingProps) =
             // Nothing to see here. Move along.
             return;
         } else if (d.type == "figure" && d.id) {
-            figureNumbers[d.id] = n++;
+            figureNumbers[extractFigureId(d.id)] = n++;
         } else {
             // Walk all the things that might possibly contain figures. Doesn't blow up if they don't exist.
             for (let c of d.children || []) {

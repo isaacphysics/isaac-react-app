@@ -1,7 +1,7 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
-import {AuthenticationProvider} from "./IsaacApiTypes";
+import {AuthenticationProvider, ChoiceDTO, ContentBase, TestCaseDTO} from "./IsaacApiTypes";
+import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -35,7 +35,6 @@ export type Action =
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST}
     | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST}
     | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS}
     | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE; errorMessage: string}
@@ -149,7 +148,7 @@ export type Action =
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO}
+    | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO; accordionClientId?: string}
     | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionId: string}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: ApiTypes.ChoiceDTO}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}
@@ -168,6 +167,10 @@ export type Action =
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.TEST_QUESTION_REQUEST}
+    | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS; testCaseResponses: TestCaseDTO[]}
+    | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
@@ -355,6 +358,7 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     currentAttempt?: ApiTypes.ChoiceDTO;
     canSubmit?: boolean;
     locked?: Date;
+    accordionClientId?: string;
 }
 
 export interface AppGroup extends ApiTypes.UserGroupDTO {
@@ -494,7 +498,7 @@ export interface AdminStatsResponse {
 
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
-export const AccordionSectionContext = React.createContext<string | undefined>(undefined);
+export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string}>({id: undefined, clientId: "unknown"});
 export const QuestionContext = React.createContext<string | undefined>(undefined);
 
 export interface AppAssignmentProgress {
@@ -557,6 +561,15 @@ export interface AdditionalInformation {
     emergencyNumber?: string;
     authorisation?: string;
     authorisationOther?: string;
+}
+
+export interface Credentials {
+    email: string;
+    password: string;
+}
+
+export interface PaddedCredentials extends Credentials {
+    _randomPadding: string;
 }
 
 export interface ZxcvbnResult {
@@ -650,3 +663,32 @@ export interface PrintingSettings {
 export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 export type LevelAttempts<T> = { [level in Levels]?: T; }
+
+export interface BaseTag {
+    id: TAG_ID;
+    title: string;
+    parent?: TAG_ID;
+    comingSoon?: string;
+    new?: boolean;
+}
+
+export interface Tag extends BaseTag {
+    type: TAG_LEVEL;
+    level: number;
+}
+
+export interface DocumentSubject {
+    subjectId?: string;
+}
+
+export interface Choice extends ChoiceDTO {
+    correct?: boolean;
+    explanation?: ContentBase;
+}
+
+export interface FreeTextRule extends Choice {
+    caseInsensitive?: boolean;
+    allowsAnyOrder?: boolean;
+    allowsExtraWords?: boolean;
+    allowsMisspelling?: boolean;
+}

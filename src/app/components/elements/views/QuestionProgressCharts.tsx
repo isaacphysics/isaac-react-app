@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import * as RS from "reactstrap";
 import {LevelAttempts} from "../../../../IsaacAppTypes";
 import bb from "billboard.js";
-import {allTagIds, getCategoryTags, getDescendents, getSubcategoryTags,} from "../../../services/tags";
+import tags from "../../../services/tags";
 import Select from "react-select";
 import {ValueType} from "react-select/src/types";
 import {TAG_ID} from "../../../services/constants";
@@ -15,12 +15,12 @@ interface QuestionProgressChartsProps {
 
 export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     const {subId, questionsByTag, questionsByLevel} = props;
-    const defaultSubcategoryChoiceTag = getSubcategoryTags(allTagIds)[0];
+    const defaultSubcategoryChoiceTag = tags.getSubcategoryTags(tags.allTagIds)[0];
     const [subcategoryChoice, setSubcategoryChoice] = useState(defaultSubcategoryChoiceTag.id);
 
     const isAllZero = (arr: (string | number)[][]) => arr.filter((elem) => elem[1] > 0).length == 0;
-    const categoryColumns = getCategoryTags(allTagIds).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
-    const topicColumns = getDescendents(subcategoryChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
+    const categoryColumns = tags.getCategoryTags(tags.allTagIds).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
+    const topicColumns = tags.getDescendents(subcategoryChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
     const levelColumns = [["Level 0", questionsByLevel["0"] || 0],
         ["Level 1", questionsByLevel["1"] || 0],
         ["Level 2", questionsByLevel["2"] || 0],
@@ -110,7 +110,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     name="subcategory"
                     classNamePrefix="select"
                     defaultValue={{value: defaultSubcategoryChoiceTag.id, label: defaultSubcategoryChoiceTag.title}}
-                    options={getSubcategoryTags(allTagIds).map((tag) => {return {value: tag.id, label: tag.title}})}
+                    options={tags.getSubcategoryTags(tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title}})}
                     onChange={(e: ValueType<{value: TAG_ID; label: string}>) => setSubcategoryChoice((e as {value: TAG_ID; label: string}).value)}
                 />
             </RS.Row>

@@ -34,7 +34,7 @@ const MainSearchComponent = ({history}: MainSearchProps) => {
             onClick={() => setShowSearchBox(!showSearchBox)}
         />
         <Collapse navbar isOpen={showSearchBox}>
-            <Nav className='ml-auto' navbar>
+            <Nav className='ml-auto' navbar id="search-menu">
                 <NavItem>
                     <Form inline onSubmit={doSearch}>
                         <FormGroup className='search--main-group'>
