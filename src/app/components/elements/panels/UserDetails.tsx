@@ -126,11 +126,11 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
-            <Col md={6}>
+            {SITE_SUBJECT === SITE.CS && <Col md={6}>
                 <div className="mt-2 mb-2 pt-1">
                     <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
                 </div>
-            </Col>
+            </Col>}
         </Row>
 
         {userToUpdate && userToUpdate.role == "STUDENT" && <Row>
