@@ -54,6 +54,8 @@ interface InequalityModalState {
         mathsLogFunctions: MenuItem[];
         mathsDerivatives: MenuItem[];
         chemicalElements: MenuItem[];
+        chemicalStates: MenuItem[];
+        chemicalOperations: MenuItem[];
         // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
         letters: MenuItem[];
         otherFunctions: MenuItem[];
@@ -132,6 +134,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 letters: [],
                 otherFunctions: [],
                 chemicalElements: [],
+                chemicalStates: [],
+                chemicalOperations: [],
             },
             defaultMenu: true,
             disableLetters: this._availableSymbols?.includes('_no_alphabet') || false,
@@ -224,6 +228,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             letters: [],
             otherFunctions: [],
             chemicalElements: [],
+            chemicalStates: this.makeChemicalStatesMenuItems(),
+            chemicalOperations: this.makeChemicalOperationsMenuItems(),
         };
 
         this.setState((prevState: InequalityModalState) => ({
@@ -260,8 +266,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                     }
                 } else {
                     // Everything else is a letter, unless we are doing chemistry
-                    if (this.props.editorMode === 'chemistry') {
-                        // TODO: Available chemical elements
+                    if (this.props.editorMode === 'chemistry' && /^[A-Z]/.test(availableSymbol)) {
+                        // Available chemical elements
+                        customMenuItems.chemicalElements.push(this.makeChemicalElementMenuItem(availableSymbol));
                     } else {
                         if (!this._differentialRegex.test(availableSymbol)) {
                             customMenuItems.letters.push(this.makeLetterMenuItem(availableSymbol));
@@ -648,6 +655,29 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         return new MenuItem('ChemicalElement', { element: symbol }, { label: `\\text{${symbol}}`, texLabel: true, className: `chemical-element ${symbol}` });
     }
 
+    private makeChemicalStatesMenuItems() {
+        return [
+            new MenuItem('StateSymbol', { state: 'gas' }, { label: '\\text{(g)}', texLabel: true, className: 'chemical-state gas' }),
+            new MenuItem('StateSymbol', { state: 'liquid' }, { label: '\\text{(l)}', texLabel: true, className: 'chemical-state liquid' }),
+            new MenuItem('StateSymbol', { state: 'aqueous' }, { label: '\\text{(aq)}', texLabel: true, className: 'chemical-state aqueous' }),
+            new MenuItem('StateSymbol', { state: 'solid' }, { label: '\\text{(s)}', texLabel: true, className: 'chemical-state solid' }),
+            new MenuItem('StateSymbol', { state: 'metal' }, { label: '\\text{(m)}', texLabel: true, className: 'chemical-state metal' }),
+        ]
+    }
+
+    private makeChemicalOperationsMenuItems() {
+        return [
+            new MenuItem('BinaryOperation', { operation: '+' }, { label: '+', texLabel: true, className: 'chemical-operations plus' }),
+            new MenuItem('BinaryOperation', { operation: '-' }, { label: '-', texLabel: true, className: 'chemical-operations minus' }),
+            new MenuItem('Fraction', { }, { label: '\\frac{a}{b}', texLabel: true, className: 'chemical-operations fraction' }),
+            new MenuItem('Relation', { relation: 'rightarrow' }, { label: '\\rightarrow', texLabel: true, className: 'chemical-operations rightarrow' }),
+            new MenuItem('Relation', { relation: 'equilibrium' }, { label: '\\rightleftharpoons', texLabel: true, className: 'chemical-operations equilibrium' }),
+            new MenuItem('Brackets', { type: 'round', mode: 'chemistry' }, { label: '(x)', texLabel: true, className: 'chemical-operations brackets round' }),
+            new MenuItem('Brackets', { type: 'square', mode: 'chemistry' }, { label: '[x]', texLabel: true, className: 'chemical-operations brackets square' }),
+            new MenuItem('Relation', { relation: '.' }, { label: '\\cdot', texLabel: true, className: 'chemical-operations dot' }),
+        ]
+    }
+
     // Fat arrow form for correct "this" binding (?!)
     private menuItem = (item: MenuItem, index: number) => {
         return <li key={index}
@@ -954,9 +984,19 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                     }</ul>}
                 </div>}
                 {this.props.editorMode === 'maths' && this.state.activeMenu === 'mathsOtherFunctions' && mathsOtherFunctionsMenu}
-                {this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu elements">
+                {this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements">
                     <ul className="sub-menu elements">
                         {this.state.menuItems.chemicalElements.map(this.menuItem)}
+                    </ul>
+                </div>}
+                {this.props.editorMode === 'chemistry' && this.state.activeMenu === 'states' && <div className="top-menu chemistry states">
+                    <ul className="sub-menu states">
+                        {this.state.menuItems.chemicalStates.map(this.menuItem)}
+                    </ul>
+                </div>}
+                {this.props.editorMode === 'chemistry' && this.state.activeMenu === 'operations' && <div className="top-menu chemistry operations">
+                    <ul className="sub-menu operations">
+                        {this.state.menuItems.chemicalOperations.map(this.menuItem)}
                     </ul>
                 </div>}
             </div>
@@ -1001,10 +1041,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                         onKeyUp={() => this.onMenuTabClick('states')}
                     />}
                     {this.props.editorMode === 'chemistry' &&
-                    <li className={this.state.activeMenu === 'relations' ? 'active' : 'inactive'}
+                    <li className={this.state.activeMenu === 'operations' ? 'active' : 'inactive'}
                         dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString('\\rightarrow\\, \\rightleftharpoons\\, +') }}
-                        onClick={() => this.onMenuTabClick('relations')}
-                        onKeyUp={() => this.onMenuTabClick('relations')}
+                        onClick={() => this.onMenuTabClick('operations')}
+                        onKeyUp={() => this.onMenuTabClick('operations')}
                     />}
                 </ul>
             </div>
