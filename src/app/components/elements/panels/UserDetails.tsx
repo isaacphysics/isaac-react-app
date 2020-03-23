@@ -13,6 +13,7 @@ import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -100,7 +101,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
-            <Col md={6}>
+            {SITE_SUBJECT === SITE.CS && <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2" htmlFor="exam-board-select">
                         Exam board
@@ -119,7 +120,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>
                 </FormGroup>
-            </Col>
+            </Col>}
         </Row>
         <Row>
             <Col md={6}>

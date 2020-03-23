@@ -3,6 +3,7 @@ import {Tabs} from "../elements/Tabs";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {useCurrentExamBoard} from "../../services/examBoard";
+import {IS_CS_PLATFORM} from "../../services/constants";
 
 interface IsaacTabsProps {
     doc: {children: {title?: string; children?: ContentDTO[]}[]};
@@ -16,7 +17,7 @@ export const IsaacTabs = (props: any) => {
     let activeTab = 1;
     children.forEach((child, index) => {
         const tabTitle = child.title || `Tab ${index + 1}`;
-        if (examBoardFilter == tabTitle) {
+        if (IS_CS_PLATFORM && examBoardFilter == tabTitle) {
             activeTab = index + 1;
         }
         tabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
