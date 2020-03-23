@@ -150,7 +150,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
                     </RS.Col>
                     <RS.Col className="text-right">
                         <RS.Button size="sm" color="primary" outline onClick={refresh}>
-                            <span className="d-md-inline d-none">Generate Gamebaord</span> ⟳
+                            <span className="d-md-inline d-none">Generate Gameboard</span> ⟳
                         </RS.Button>
                     </RS.Col>
                 </RS.Row>

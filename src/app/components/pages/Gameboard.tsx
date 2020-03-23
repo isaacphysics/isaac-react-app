@@ -127,7 +127,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
                 {"We're sorry, we were not able to find a gameboard with the id "}<code>{gameboardId}</code>{"."}
             </small>
             {SITE.PHY === SITE_SUBJECT && <div className="mt-4 text-center">
-                <RS.Button tag={Link} to={`/gameboards/generate`} color="primary" outline className="btn-lg">
+                <RS.Button tag={Link} to={`/gameboards/new`} color="primary" outline className="btn-lg">
                     Generate a new gamebaord
                 </RS.Button>
             </div>}
@@ -147,7 +147,7 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
             />
         </RS.Container>
         :
-        <Redirect to={{[SITE.PHY]: "/gameboards/generate", [SITE.CS]: "/gameboards#example-gameboard"}[SITE_SUBJECT]} />
+        <Redirect to={{[SITE.PHY]: "/gameboards/new", [SITE.CS]: "/gameboards#example-gameboard"}[SITE_SUBJECT]} />
 };
 
 export const Gameboard = withRouter(connect(stateFromProps, dispatchFromProps)(GameboardPageComponent));
