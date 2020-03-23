@@ -50,6 +50,18 @@ export const Footer = () => (
                                     />
                                 </Link>
                             </div>
+                            <div className="pt-5 footer-links logo-text pt-3">
+                                A&nbsp;<ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">
+                                    <strong>Department for Education</strong>
+                                </ExternalLink> project at the {' '}
+                                <ExternalLink href="https://www.cam.ac.uk">
+                                    <strong>University&nbsp;of&nbsp;Cambridge</strong>
+                                </ExternalLink>,
+                                <br />supported by {' '}
+                                <ExternalLink href="https://www.ogdentrust.com/">
+                                    <strong>The&nbsp;Ogden&nbsp;Trust</strong>
+                                </ExternalLink>.
+                            </div>
                         </Col>
                     }
                     <Col

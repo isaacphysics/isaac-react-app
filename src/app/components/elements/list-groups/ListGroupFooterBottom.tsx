@@ -31,18 +31,11 @@ export const ListGroupFooterBottom = () => (
         </div>
         :
         <div className="w-100">
-            <div className='float-md-right text-right'>
-                All materials on this site are licensed under the<br />
+            <div className='text-center'>
+                All materials on this site are licensed under the {" "}
                 <ExternalLink href="https://creativecommons.org/licenses/by/4.0/">
-                    <strong>Creative Commons license</strong>
+                    <strong>Creative&nbsp;Commons&nbsp;license</strong>
                 </ExternalLink>, unless stated otherwise.
-            </div>
-            <div className='left'>
-                A&nbsp;<ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">
-                    <strong>Department for Education</strong></ExternalLink> project <br /> at the{' '}
-                <ExternalLink href="https://www.cam.ac.uk"><strong>University of Cambridge</strong></ExternalLink>,
-                <br />supported by{' '}
-                <ExternalLink href="https://www.ogdentrust.com/"><strong>The Ogden Trust</strong></ExternalLink>.
             </div>
         </div>
 );
