@@ -22,6 +22,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/books/pre_uni_maths" component={PreUniMaths}/>,
     <TrackedRoute key={key++} exact path="/books/chemistry_16" component={Chemistry16}/>,
 
+    // Static pages
     <StaticPageRoute key={key++} exact path="/glossary" />,
     <StaticPageRoute key={key++} exact path="/apply_uni" />,
     <StaticPageRoute key={key++} exact path="/solving_problems" />,
@@ -39,11 +40,12 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/gcse" />,
     <StaticPageRoute key={key++} exact path="/alevel" />,
 
+    // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,
     <Redirect key={key++} exact from="/boards" to="/my_gameboards" />,
-
     <Redirect key={key++} exact from="/board/:id" to="/gameboards#:id" />,
 
+    // Teacher Pages
     <StaticPageRoute key={key++} exact ifUser={isTeacher} path="/teachermentoring_gcse" pageId="fragments/teacher_mentoring_gcse_page_frag" />,
     <StaticPageRoute key={key++} exact ifUser={isTeacher} path="/teachermentoring_alevel" pageId="fragments/teacher_mentoring_alevel_page_frag" />,
 ];

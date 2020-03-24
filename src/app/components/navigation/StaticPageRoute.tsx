@@ -20,7 +20,7 @@ function StaticPageRoute({pageId, ifUser, ...rest}: StaticPageRouteProps & Route
         }
         pageId = rest.path.substr(1);
     }
-    return <TrackedRoute {...rest} component={Generic} componentProps={{pageIdOverride: pageId}} />;
+    return <TrackedRoute {...rest} ifUser={ifUser} component={Generic} componentProps={{pageIdOverride: pageId}} />;
 }
 
 export default StaticPageRoute;
