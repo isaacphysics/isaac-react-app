@@ -1,5 +1,6 @@
 import React, {ChangeEvent, useEffect, useState, useRef, useLayoutEffect} from "react";
 import {connect} from "react-redux";
+import * as RS from "reactstrap";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
@@ -112,7 +113,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         sketch.isTrashActive = () => { return false; };
 
         sketchRef.current = sketch;
-    });
+    }, [hiddenEditorRef.current]);
 
     let [errors, setErrors] = useState<string[]>();
 
@@ -134,7 +135,6 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 let closeBracketsCount = pycode.split(')').length - 1;
                 let regexStr = "[^ (-)*-/0-9<->A-Z^-_a-z±²-³¼-¾×÷]+";
                 let badCharacters = new RegExp(regexStr);
-                let goodCharacters = new RegExp(regexStr.replace("^", ""), 'g');
                 errors = [];
                 if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
                     errors.push('LaTeX syntax is not supported.');
@@ -178,6 +178,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         }, 250);
     };
 
+    const helpTooltipId = `eqn-editor-help-${(doc.id || "").split('|').pop()}`;
     return (
         <div className="symbolic-question">
             <div className="question-content">
@@ -201,8 +202,24 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 editorMode='maths'
             />}
             <div className="eqn-editor-input">
-                <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden"}} />
-                <input onChange={updateEquation} value={inputState.pythonExpression} />
+                <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
+                <RS.InputGroup className="my-2">
+                    <RS.Input type="text" onChange={updateEquation} value={inputState.pythonExpression}
+                        placeholder="or type your formula here"/>
+                    <RS.InputGroupAddon addonType="append">
+                        <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</RS.Button>
+                        <RS.UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
+                            Here are some examples of expressions you can type:<br />
+                            <br />
+                            a*x**2 + b x + c<br />
+                            c == sqrt(a**2 + b**2)<br />
+                            (1/2) mv**2<br />
+                            x_3 = x_1 + x_2<br />
+                            <br />
+                            As you type, the box above will preview the result.
+                        </RS.UncontrolledTooltip>
+                    </RS.InputGroupAddon>
+                </RS.InputGroup>
                 {errors && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
                     {errors.map(e => (<li key={e}>{e}</li>))}
                 </ul></div>}
