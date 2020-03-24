@@ -59,7 +59,6 @@ import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MyProgress} from "../pages/MyProgress";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import {LoadScript} from "@react-google-maps/api";
-import StaticPageRoute from "./StaticPageRoute";
 import {Redirect} from "react-router";
 import SiteSpecific from "../site/siteSpecific";
 
