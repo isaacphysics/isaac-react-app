@@ -59,6 +59,7 @@ import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MyProgress} from "../pages/MyProgress";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import {LoadScript} from "@react-google-maps/api";
+import {Redirect} from "react-router";
 import SiteSpecific from "../site/siteSpecific";
 
 export const IsaacApp = () => {
@@ -155,6 +156,12 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
                     <TrackedRoute exact path="/coming_soon" component={ComingSoon} />
                     <TrackedRoute exact path="/teaching_order" component={Generic} componentProps={{pageIdOverride: "teaching_order"}} />
+
+                    {/*
+                    // TODO: schools and other admin stats
+                    */}
+
+                    <Redirect exact from="/game_builder" to="/gameboard_builder" />
 
                     {/* Builder pages */}
                     <TrackedRoute exact path="/equality" component={Equality} />
