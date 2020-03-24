@@ -109,8 +109,6 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/questions/:questionId" component={Question} />
                     <TrackedRoute exact path="/quizzes/:quizId" ifUser={isLoggedIn} component={Quiz} />
 
-                    {/* TODO: gameboard URLs need checking over */}
-
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
                     <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
                     <TrackedRoute exact path="/gameboard_builder" ifUser={isTeacher} component={GameboardBuilder} />
