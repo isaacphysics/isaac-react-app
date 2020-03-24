@@ -39,6 +39,7 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/exam_uni_help" />,
     <StaticPageRoute key={key++} exact path="/gcse" />,
     <StaticPageRoute key={key++} exact path="/alevel" />,
+    <StaticPageRoute key={key++} exact path="/coronavirus" pageId="2020_03_coronavirus" />,
 
     // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,
