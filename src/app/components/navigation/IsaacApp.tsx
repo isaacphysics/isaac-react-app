@@ -4,7 +4,6 @@ import "../../services/polyfills"; // important
 import {useDispatch, useSelector} from "react-redux";
 import {Route, Router, Switch} from "react-router-dom";
 import {Footer} from "./Footer";
-import {Homepage} from "../pages/Homepage";
 import {Question} from "../pages/Question";
 import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
@@ -17,8 +16,6 @@ import {ProviderCallbackHandler} from "../handlers/ProviderCallbackHandler";
 import {MyAccount} from "../pages/MyAccount";
 import {MyAssignments} from "../pages/MyAssignments";
 import {Gameboard} from "../pages/Gameboard";
-import {AllTopics} from "../pages/AllTopics";
-import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
 import {NotFound} from "../pages/NotFound";
 import {fetchGlossaryTerms, requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
@@ -36,7 +33,6 @@ import {Search} from "../pages/Search";
 import {CookieBanner} from "./CookieBanner";
 import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
-import {HeaderCS} from "./HeaderCS";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
@@ -61,10 +57,9 @@ import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MyProgress} from "../pages/MyProgress";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {HeaderPhy} from "./HeaderPhy";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import {LoadScript} from "@react-google-maps/api";
+import SiteSpecific from "../site/siteSpecific";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -84,7 +79,7 @@ export const IsaacApp = () => {
     // Render
     return <Router history={history}>
         <LoadScript googleMapsApiKey="AIzaSyBcVr1HZ_JUR92xfQZSnODvvlSpNHYbi4Y" id="script-loader">
-            {{[SITE.PHY]: <HeaderPhy />, [SITE.CS]: <HeaderCS />}[SITE_SUBJECT]}
+            <SiteSpecific.Header />
             <Toasts />
             <ActiveModals />
             <CookieBanner />
@@ -96,22 +91,21 @@ export const IsaacApp = () => {
                     <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
                     <TrackedRoute exact path={"/auth_error"} component={AuthError} />
 
+                    {/* Site specific pages */}
+                    {SiteSpecific.Routes}
+
                     {/* Special case */}
                     <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
 
                     {/* Application pages */}
-                    <TrackedRoute exact path="/(home)?" component={Homepage} />
+                    <TrackedRoute exact path="/(home)?" component={SiteSpecific.Homepage} />
                     <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />
-
                     <TrackedRoute exact path="/search" component={Search} />
 
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                     <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                     <TrackedRoute exact path="/questions/:questionId" component={Question} />
                     <TrackedRoute exact path="/quizzes/:quizId" ifUser={isLoggedIn} component={Quiz} />
-
-                    <TrackedRoute exact path="/topics" component={AllTopics} />
-                    <TrackedRoute exact path="/topics/:topicName" component={Topic} />
 
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
                     <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />

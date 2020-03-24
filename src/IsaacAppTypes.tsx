@@ -563,6 +563,15 @@ export interface AdditionalInformation {
     authorisationOther?: string;
 }
 
+export interface Credentials {
+    email: string;
+    password: string;
+}
+
+export interface PaddedCredentials extends Credentials {
+    _randomPadding: string;
+}
+
 export interface ZxcvbnResult {
     calc_time: number;
     crack_times_display: { [key: string]: string };

@@ -22,8 +22,8 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.statics, title: "Statics", parent: TAG_ID.mechanics},
         {id: TAG_ID.dynamics, title: "Dynamics", parent: TAG_ID.mechanics},
         {id: TAG_ID.shm, title: "SHM", parent: TAG_ID.mechanics},
-        {id: TAG_ID.angularMotion, title: "Angular_motion", parent: TAG_ID.mechanics},
-        {id: TAG_ID.circularMotion, title: "Circular_motion", parent: TAG_ID.mechanics},
+        {id: TAG_ID.angularMotion, title: "Angular Motion", parent: TAG_ID.mechanics},
+        {id: TAG_ID.circularMotion, title: "Circular Motion", parent: TAG_ID.mechanics},
         {id: TAG_ID.kinematics, title: "Kinematics", parent: TAG_ID.mechanics},
         // Fields topics
         {id: TAG_ID.electric, title: "Electric Fields", parent: TAG_ID.fields},
@@ -61,14 +61,15 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.manipulation, title: "Manipulation", parent: TAG_ID.algebra},
         {id: TAG_ID.series, title: "Series", parent: TAG_ID.algebra},
         // Functions topics
-        {id: TAG_ID.generalFunctions, title: "General_functions", parent: TAG_ID.functions},
-        {id: TAG_ID.graphSketching, title: "Graph_sketching", parent: TAG_ID.functions},
+        {id: TAG_ID.generalFunctions, title: "General Functions", parent: TAG_ID.functions},
+        {id: TAG_ID.graphSketching, title: "Graph Sketching", parent: TAG_ID.functions},
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}
     public augmentDocWithSubject(doc: ContentDTO) {
         const documentSubject = this.getPageSubjectTag((doc.tags || []) as TAG_ID[]);
-        return Object.assign(doc, {subjectId: documentSubject.id});
+        return Object.assign(doc, {subjectId: documentSubject ? documentSubject.id
+            : TAG_ID.physics});
     }
 
     private getPageSubjectTag(tagArray: TAG_ID[]) {
