@@ -123,6 +123,11 @@ button {
 
   .eqn-editor-input input {
     font-family: monospace;
+    height: auto;
+  }
+
+  .eqn-editor-help {
+    min-width: 0;
   }
 }
 
