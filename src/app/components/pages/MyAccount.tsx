@@ -242,7 +242,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
                             <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                                 <UserPassword
-                                    currentUserEmail={user && user.email && user.email} userAuthSettings={userAuthSettings}
+                                    currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
                                     myUser={userToUpdate} setMyUser={setUserToUpdate}
                                     setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
                                     isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
