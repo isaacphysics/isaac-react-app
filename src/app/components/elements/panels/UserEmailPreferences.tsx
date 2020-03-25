@@ -5,6 +5,7 @@ import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {validateEmailPreferences} from "../../../services/validation";
+import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences;
@@ -27,7 +28,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
     }
 
     return <CardBody className="pb-0">
-        <p>Get important information about the Isaac Computer Science programme delivered to your inbox.</p>
+        <p>Get important information about the Isaac {SITE_SUBJECT_TITLE} programme delivered to your inbox.</p>
         <FormGroup className="overflow-auto">
             <Table className="mb-0">
                 <thead>
