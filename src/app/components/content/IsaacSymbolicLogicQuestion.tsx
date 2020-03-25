@@ -52,7 +52,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
     return (
-        <div className="symboliclogic-question">
+        <div className="symbolic-question">
             <div className="question-content">
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
