@@ -1,0 +1,54 @@
+// ISAAC
+
+figure {
+  background-color: white;
+  img {
+    max-width: 100%;
+    padding: 2rem;
+  }
+}
+.figure-caption {
+  font-size: 1rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  background-color: $gray-103;
+  p {
+    margin: 0;
+  }
+}
+
+@include respond-above(md) {
+  .align-left {
+    float: left;
+    width: 300px;
+    padding-right: 30px;
+  }
+
+  .align-right {
+    float: right;
+    width: 300px;
+    padding-left: 30px;
+  }
+
+  .align-right-half {
+    float: right;
+    width: 50%;
+    padding-left: 30px;
+  }
+}
+
+// NOMENSA figures.scss
+.img-thumbnail {
+  border-width: 0;
+}
+
+figure {
+  box-shadow: 0 2px 30px 0 $shadow-08;
+
+  .figure-caption {
+    border-top: 1px solid $gray-110;
+    color: $black;
+    font-size: .8125rem;
+    padding: .5rem;
+  }
+}

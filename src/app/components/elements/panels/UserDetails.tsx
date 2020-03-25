@@ -127,7 +127,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
             </Col>
             <Col md={6}>
-                <div className="mt-5 pt-1">
+                <div className="mt-2 mb-2 pt-1">
                     <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
                 </div>
             </Col>

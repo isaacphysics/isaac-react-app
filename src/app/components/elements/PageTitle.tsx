@@ -1,15 +1,16 @@
 import React, {ReactElement, useEffect, useRef} from "react";
 import {UncontrolledTooltip} from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 export interface PageTitleProps {
     currentPageTitle: string;
     subTitle?: string;
     help?: string | ReactElement;
     className?: string;
+    level?: number;
 }
 
-export const PageTitle = ({currentPageTitle, subTitle, help, className}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, subTitle, help, className, level}: PageTitleProps) => {
     const headerRef = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {
@@ -22,6 +23,8 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className}: PageTit
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
         {currentPageTitle}
+        {SITE_SUBJECT === SITE.PHY && level !== undefined && level !== 0 &&
+            <span className="float-right h-subtitle">Level {level}</span>}
         {help && <span id="title-help">Help</span>}
         {help && <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>}
         {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}

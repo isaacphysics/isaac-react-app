@@ -13,7 +13,7 @@ import {
     multiSelectOnChange,
     sortQuestions
 } from "../../../services/gameboardBuilder";
-import {allTagIds, getSubcategoryTags} from "../../../services/tags";
+import tags from "../../../services/tags";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
@@ -76,7 +76,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                 <Select inputId="question-search-topic"
                     isMulti
-                    options={getSubcategoryTags(allTagIds).map(groupTagSelectionsByParent)}
+                    options={tags.getSubcategoryTags(tags.allTagIds).map(groupTagSelectionsByParent)}
                     name="colors"
                     className="basic-multi-select"
                     classNamePrefix="select"

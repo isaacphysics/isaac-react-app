@@ -7,7 +7,7 @@ import {closeActiveModal, openActiveModal} from "../../state/actions";
 import {store} from "../../state/store";
 import {useDispatch} from "react-redux";
 import {DraggableProvided} from "react-beautiful-dnd";
-import {getSpecifiedTag} from "../../services/tags";
+import tags from "../../services/tags";
 import {Question} from "../pages/Question";
 
 interface GameboardBuilderRowInterface {
@@ -23,7 +23,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
     const dispatch = useDispatch();
 
     const topicTag = () => {
-        const tag = question.tags && getSpecifiedTag(TAG_LEVEL.topic, question.tags as TAG_ID[]);
+        const tag = question.tags && tags.getSpecifiedTag(TAG_LEVEL.topic, question.tags as TAG_ID[]);
         return tag && tag.title;
     };
     const tagIcon = (tag: string) => {

@@ -9,6 +9,7 @@ import {
     AppQuestionDTO,
     AugmentedEvent,
     ContentErrorsResponse,
+    EventMapData,
     EventOverview,
     GroupMembershipDetailDTO,
     isValidatedChoice,
@@ -19,8 +20,7 @@ import {
     Toast,
     UserPreferencesDTO,
     UserProgress,
-    UserSchoolLookup,
-    EventMapData
+    UserSchoolLookup
 } from "../../IsaacAppTypes";
 import {
     AnsweredQuestionsByDate,
@@ -30,21 +30,23 @@ import {
     EventBookingDTO,
     GameboardDTO,
     GameboardListDTO,
+    GlossaryTermDTO,
+    IsaacPodDTO,
     IsaacTopicSummaryPageDTO,
     IsaacWildcard,
     RegisteredUserDTO,
     ResultsWrapper,
+    TestCaseDTO,
     UserAuthenticationSettingsDTO,
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO,
-    GlossaryTermDTO,
-    IsaacPodDTO
+    UserSummaryWithGroupMembershipDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
+import tags from "../services/tags";
 
 type UserState = LoggedInUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -232,14 +234,13 @@ export const constants = (constants: ConstantsState = null, action: Action) => {
     }
 };
 
-
 type DocState = ContentDTO | NOT_FOUND_TYPE | null;
 export const doc = (doc: DocState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.DOCUMENT_REQUEST:
             return null;
         case ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS:
-            return {...action.doc};
+            return {...tags.augmentDocWithSubject(action.doc)};
         case ACTION_TYPE.ROUTER_PAGE_CHANGE:
             return null;
         case ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE:
@@ -270,15 +271,15 @@ export const glossaryTerms = (glossaryTerms: GlossaryTermsState = null, action: 
         default:
             return glossaryTerms;
     }
-}
+};
 
 export const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
             if (isValidatedChoice(action.attempt)) {
-                return {...question, currentAttempt: action.attempt.choice, canSubmit: action.attempt.frontEndValidation, validationResponse: null};
+                return {...question, currentAttempt: action.attempt.choice, canSubmit: action.attempt.frontEndValidation, validationResponse: undefined};
             } else {
-                return {...question, currentAttempt: action.attempt, canSubmit: true, validationResponse: null};
+                return {...question, currentAttempt: action.attempt, canSubmit: true, validationResponse: undefined};
             }
         case ACTION_TYPE.QUESTION_ATTEMPT_REQUEST:
             return {...question, canSubmit: false};
@@ -301,9 +302,9 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
         case ACTION_TYPE.QUESTION_REGISTRATION: {
             const currentQuestions = questions !== null ? [...questions] : [];
             const bestAttempt = action.question.bestAttempt;
-            const newQuestion = bestAttempt ?
-                {...action.question, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer} :
-                action.question;
+            const newQuestion: AppQuestionDTO = bestAttempt ?
+                {...action.question, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer, accordionClientId: action.accordionClientId} :
+                {...action.question, accordionClientId: action.accordionClientId};
             return [...currentQuestions, newQuestion];
         }
         case ACTION_TYPE.QUESTION_DEREGISTRATION: {
@@ -320,6 +321,18 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
         }
         default: {
             return questions;
+        }
+    }
+};
+
+type TestQuestionsState = TestCaseDTO[] | null;
+export const testQuestions = (testQuestions: TestQuestionsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS: {
+            return action.testCaseResponses;
+        }
+        default: {
+            return testQuestions;
         }
     }
 };
@@ -877,8 +890,9 @@ const appReducer = combineReducers({
     eventMapData,
     eventBookings,
     fragments,
-    printingSettings,
-    glossaryTerms
+    glossaryTerms,
+    testQuestions,
+    printingSettings
 });
 
 export type AppState = undefined | {
@@ -924,6 +938,7 @@ export type AppState = undefined | {
     fragments: FragmentsState;
     printingSettings: PrintingSettingsState;
     glossaryTerms: GlossaryTermsState;
+    testQuestions: TestQuestionsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

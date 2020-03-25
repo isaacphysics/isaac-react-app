@@ -1,0 +1,81 @@
+// ISAAC
+
+.accordion-part {
+  display: none;
+  .question-panel & {
+    display: inline;
+  }
+}
+
+.accordion-icon {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: right;
+  width: 25px;
+  height: 20px;
+  margin-right: 0.25rem;
+  &-tick {
+    background-image: url(/assets/tick.svg);
+  }
+  &-cross {
+    background-image: url(/assets/untick.svg);
+  }
+}
+
+// Nomensa accordions.scss
+.accordion {
+  box-shadow: 0 2px 30px 0 $shadow-08;
+
+  background: transparent;
+  &:first-of-type {
+    border-top: 0;
+  }
+  &:last-of-type {
+    //border-bottom: 1px solid $gray-120;
+    margin-bottom: 1rem;
+  }
+  background: rgba(white, 0.4);
+  border-top: 1px solid $shadow-08;//$gray-120;
+
+  .accordion-header {
+    background: rgba(white, 1);
+    //border-color: $gray-120;
+    //border-style: solid;
+    //border-width: 0 1px;
+    button {
+      border-radius: 0;
+      font-family: $secondary-font-semi-bold;
+      font-size: 1.25rem !important;
+      transition: all 0.5s ease;
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .accordion-part {
+        flex-grow: 1;
+      }
+
+      &:after {
+        content: "";
+        background-image: url('/assets/chevron_down.svg');
+        background-repeat: no-repeat;
+        background-position: right;
+        width: 20px;
+        height: 10px;
+      }
+
+      &.active {
+        border-bottom: 1px solid $shadow-08;
+        &:after {
+          background-image: url('/assets/chevron_up.svg');
+        }
+      }
+    }
+  }
+
+  .card {
+    background: transparent;
+    border-width: 0;
+  }
+}
