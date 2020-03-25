@@ -134,12 +134,14 @@
                 &.numbers {
                     display: flex;
                     flex-direction: row;
-                    max-width: 401px;
+                    max-width: 450px;
                     margin: 0 auto;
                     padding: 16px 0;
 
                     & > div {
                         &.input-box {
+                            position: relative;
+
                             .menu-item {
                                 &.inactive {
                                     opacity: 0.5;
@@ -149,21 +151,20 @@
                                 display: inline-block;
                                 text-align: center;
                                 font-size: 1.8em;
+                                top: 6px;
 
                                 .katex {
                                     text-align: center;
                                     display: block;
                                     line-height: 90px;
                                     height: 90px;
-                                    width: 100%;
+                                    width: 78px;
                                     margin: 0 auto;
                                     overflow: visible;
                                 }
 
                                 svg.v-hexagon {
                                     position: absolute;
-                                    padding-top: 6px;
-                                    width: 90px;
                                     height: 90px;
                                     left: 0;
                                     top: 0;
@@ -171,7 +172,18 @@
                                     fill: white;
                                     stroke: darken(theme-color("primary"), 10%);
                                     stroke-width: 8px;
+                                    margin: 0 auto;
                                 }
+                            }
+
+                            .clear-number {
+                                position: absolute;
+                                top: -10px;
+                                right: -15px;
+                                width: 30px;
+                                height: 30px;
+                                background: url('/assets/inequality-clear.svg');
+                                background-size: 30px;
                             }
                         }
 
@@ -360,10 +372,6 @@
     height: 48px;
     text-align: center;
     font-size: 1.8em;
-
-    &.active {
-        background: theme-color("primary");
-    }
 
     .katex {
         display: block;

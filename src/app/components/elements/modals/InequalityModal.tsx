@@ -862,7 +862,15 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private updateNumberInputValue(n: number) {
-        this.setState((prevState: InequalityModalState) => ({ numberInputValue: (prevState.numberInputValue || 0)*10 + n }));
+        if (n === -1) {
+            this.setState((prevState: InequalityModalState) => ({ numberInputValue: -(prevState.numberInputValue || 0) }));
+        } else {
+            this.setState((prevState: InequalityModalState) => ({ numberInputValue: (prevState.numberInputValue || 0)*10 + n }));
+        }
+    }
+
+    private clearNumberInputValue() {
+        this.setState({ numberInputValue: void 0 });
     }
 
     public render() {
@@ -981,7 +989,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 {this.state.activeMenu === 'numbers' && <div className="top-menu numbers">
                     <div className="keypad-box">
                         <div className="top-row">
-                            {'123456'.split('').map(n => <div key={n} className="key menu-item" role="button" tabIndex={0}
+                            {'123456'.split('').map(n => <div key={n} className="key menu-item number" role="button" tabIndex={0}
                                 data-item={JSON.stringify({ type: 'Num', properties: { significand: n } })}
                                 dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(n) }}
                                 onClick={() => this.updateNumberInputValue(parseInt(n))}
@@ -990,11 +998,18 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                             </div>)}
                         </div>
                         <div className="bottom-row">
-                            {'7890±'.split('').map(n => <div key={n} className="key menu-item"
+                            {'7890'.split('').map(n => <div key={n} className="key menu-item number" role="button" tabIndex={0}
                                 data-item={JSON.stringify({ type: 'Num', properties: { significand: n } })}
                                 dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(n) }}
-                            >
-                            </div>)}
+                                onClick={() => this.updateNumberInputValue(parseInt(n))}
+                                onKeyUp={() => this.updateNumberInputValue(parseInt(n))}
+                            />)}
+                            <div className="key plus-minus" role="button" tabIndex={0}
+                                // data-item={JSON.stringify({ type: 'Num', properties: { significand: n } })}
+                                dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString('\\pm') }}
+                                onClick={() => this.updateNumberInputValue(-1)}
+                                onKeyUp={() => this.updateNumberInputValue(-1)}
+                            />
                         </div>
                     </div>
                     <div className="input-box">
@@ -1002,6 +1017,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                             data-item={this.state.numberInputValue ? JSON.stringify({ type: 'Num', properties: { significand: `${this.state.numberInputValue}`} }) : null}
                             dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(`${this.state.numberInputValue || ''}`)}}
                         />
+                        {this.state.numberInputValue && <div className="clear-number" role="button" tabIndex={0}
+                            onClick={() => this.clearNumberInputValue()}
+                            onKeyUp={() => this.clearNumberInputValue()}
+                        />}
                     </div>
                 </div>}
                 {this.state.activeMenu === "letters" && lettersMenu}
