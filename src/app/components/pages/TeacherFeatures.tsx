@@ -5,15 +5,20 @@ import {useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {isLoggedIn, isStudent} from "../../services/user";
 import classNames from "classnames";
+import {Hexagon} from "../elements/Hexagon";
 
 export const TeacherFeatures = () => {
 
     const user = useSelector((state: AppState) => state && state.user);
 
+    const isDisabled = (isStudent(user) || !isLoggedIn(user));
+    const teacherLinkClass = classNames({"hexagon": true, "disabled": isDisabled});
+    const teacherImgClass = classNames({"hexagon-field": true, "disabled": isDisabled});
+
     return<Container>
         <Row className="pb-4">
             <Col>
-                <TitleAndBreadcrumb currentPageTitle={"Teacher Features"} breadcrumbTitleOverride="Teacher Features" />
+                <TitleAndBreadcrumb currentPageTitle={"Teacher Features"} />
             </Col>
         </Row>
         <Row className="pb-4">
@@ -24,12 +29,9 @@ export const TeacherFeatures = () => {
         <Row className="teacher-feature-body justify-content-md-center">
             {isStudent(user) || !isLoggedIn(user) ?
                 <Col md="auto">
-                    <a href="/teacher_account_request" className="hexagon">
-                        <img className="hexagon-field" src="/assets/teacher_features_sprite.svg#teacher-hat" alt="Isaac hexagon"></img>
-                        <div className="hexagon-title">
-                            1. Tell us you are a teacher
-                        </div>
-                    </a>
+                    <Hexagon link={"/teacher_account_request"}
+                        imageSrc={"/assets/teacher_features_sprite.svg#teacher-hat"}
+                        title={"1. Tell us you are a teacher"}/>
                 </Col> :
                 <Col md="auto">
                     <div className="hexagon">
@@ -41,24 +43,24 @@ export const TeacherFeatures = () => {
                 </Col>
             }
             <Col md="auto">
-                <a href="groups" className={classNames({"hexagon": true, "disabled": (isStudent(user) || !isLoggedIn(user))})}>
-                    <img className={classNames({"hexagon-field": true, "disabled": (isStudent(user) || !isLoggedIn(user))})} src="/assets/teacher_features_sprite.svg#groups" alt="Isaac hexagon"></img>
+                <a href="groups" className={teacherLinkClass}>
+                    <img className={teacherImgClass} src="/assets/teacher_features_sprite.svg#groups" alt="Isaac hexagon"></img>
                     <div className="hexagon-title">
                         2. Create and manage groups
                     </div>
                 </a>
             </Col>
             <Col md="auto">
-                <a href="/set_assignments" className={classNames({"hexagon": true, "disabled": (isStudent(user) || !isLoggedIn(user))})}>
-                    <img className={classNames({"hexagon-field": true, "disabled": (isStudent(user) || !isLoggedIn(user))})} src="/assets/teacher_features_sprite.svg#set-assignments" alt="Isaac hexagon"></img>
+                <a href="/set_assignments" className={teacherLinkClass}>
+                    <img className={teacherImgClass} src="/assets/teacher_features_sprite.svg#set-assignments" alt="Isaac hexagon"></img>
                     <div className="hexagon-title">
                         3. Set Assignments
                     </div>
                 </a>
             </Col>
             <Col md="auto">
-                <a href="/assignment_progress" className={classNames({"hexagon": true, "disabled": (isStudent(user) || !isLoggedIn(user))})}>
-                    <img className={classNames({"hexagon-field": true, "disabled": (isStudent(user) || !isLoggedIn(user))})} src="/assets/teacher_features_sprite.svg#track-progress" alt="Isaac hexagon"></img>
+                <a href="/assignment_progress" className={teacherLinkClass}>
+                    <img className={teacherImgClass} src="/assets/teacher_features_sprite.svg#track-progress" alt="Isaac hexagon"></img>
                     <div className="hexagon-title">
                         4. Track group progress
                     </div>
@@ -72,36 +74,24 @@ export const TeacherFeatures = () => {
         </Row>
         <Row className="teacher-feature-body mb-5 justify-content-md-center">
             <Col md="auto">
-                <a href="/supportTeacher" className="hexagon">
-                    <img className="hexagon-field" src="/assets/teacher_features_sprite.svg#use-with-class" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Teacher Support
-                    </div>
-                </a>
+                <Hexagon link={"/supportTeacher"}
+                    imageSrc={"/assets/teacher_features_sprite.svg#use-with-class"}
+                    title={"Teacher Support"}/>
             </Col>
             <Col md="auto">
-                <a href="/events" className="hexagon">
-                    <img className="hexagon-field" src="/assets/teacher_features_sprite.svg#calendar" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Teacher and Student Events
-                    </div>
-                </a>
+                <Hexagon link={"/events"}
+                    imageSrc={"/assets/teacher_features_sprite.svg#calendar"}
+                    title={"Teacher and Student Events"}/>
             </Col>
             <Col md="auto">
-                <a href="/books" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#skills-book-cover" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Books of core skills problems
-                    </div>
-                </a>
+                <Hexagon link={"/books"}
+                    imageSrc={"/assets/key_stage_sprite.svg#skills-book-cover"}
+                    title={"Books of core skills problems"}/>
             </Col>
             <Col md="auto">
-                <a href="http://www.talkphysics.org/groups/isaac-physics/" target="_blank" rel="noopener noreferrer" className="hexagon">
-                    <img className="hexagon-field" src="/assets/teacher_features_sprite.svg#teacher-forum" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Teacher Forum (TalkPhysics)
-                    </div>
-                </a>
+                <Hexagon link={"http://www.talkphysics.org/groups/isaac-physics/"}
+                    imageSrc={"/assets/teacher_features_sprite.svg#teacher-forum"}
+                    title={"Teacher Forum (TalkPhysics)"}/>
             </Col>
         </Row>
     </Container>

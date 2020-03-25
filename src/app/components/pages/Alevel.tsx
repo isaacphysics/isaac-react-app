@@ -1,46 +1,35 @@
 import React from "react";
 import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {Hexagon} from "../elements/Hexagon";
 
 export const Alevel = () => {
     return <Container>
         <Row className="pb-4">
             <Col>
-                <TitleAndBreadcrumb currentPageTitle={"A Level Resources"} breadcrumbTitleOverride="A Level Resources" />
+                <TitleAndBreadcrumb currentPageTitle={"A Level Resources"} />
             </Col>
         </Row>
         <Row className="teacher-feature-body justify-content-md-center">
             <Col md="auto">
-                <a href="/gameboards?filter=true#c052917f-5b7b-4b7f-b2a3-41d9de0a17c4" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#question" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Problem Solving
-                    </div>
-                </a>
+                <Hexagon link={"/gameboards?filter=true#c052917f-5b7b-4b7f-b2a3-41d9de0a17c4"}
+                    imageSrc={"/assets/key_stage_sprite.svg#question"}
+                    title={"Problem Solving"}/>
             </Col>
             <Col md="auto">
-                <a href="/pages/master_maths" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#teacher-hat" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Master Mathematics
-                    </div>
-                </a>
+                <Hexagon link={"/pages/master_maths"}
+                    imageSrc={"/assets/key_stage_sprite.svg#teacher-hat"}
+                    title={"Master Mathematics"}/>
             </Col>
             <Col md="auto">
-                <a href="/pages/pre_made_gameboards" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#triple" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Browse Questions by Lessons
-                    </div>
-                </a>
+                <Hexagon link={"/pages/pre_made_gameboards"}
+                    imageSrc={"/assets/key_stage_sprite.svg#triple"}
+                    title={"Browse Questions by Lessons"}/>
             </Col>
             <Col md="auto">
-                <a href="/pages/mentor_menu" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#teacher-hat" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Mentoring Schemes
-                    </div>
-                </a>
+                <Hexagon link={"/pages/mentor_menu"}
+                    imageSrc={"/assets/key_stage_sprite.svg#teacher-hat"}
+                    title={"Mentoring Schemes"}/>
             </Col>
         </Row>
         <Row>
@@ -50,36 +39,24 @@ export const Alevel = () => {
         </Row>
         <Row className="teacher-feature-body justify-content-md-center">
             <Col md="auto">
-                <a href="/books/physics_skills_19" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#skills-book-cover" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Physics Skills Mastery
-                    </div>
-                </a>
+                <Hexagon link={"/books/physics_skills_19"}
+                    imageSrc={"/assets/key_stage_sprite.svg#skills-book-cover"}
+                    title={"Physics Skills Mastery"}/>
             </Col>
             <Col md="auto">
-                <a href="/books/pre_uni_maths" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#skills-book-cover" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Mathematics for Sciences
-                    </div>
-                </a>
+                <Hexagon link={"/books/pre_uni_maths"}
+                    imageSrc={"/assets/key_stage_sprite.svg#skills-book-cover"}
+                    title={"Mathematics for Sciences"}/>
             </Col>
             <Col md="auto">
-                <a href="/books/chemistry_16" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#skills-book-cover" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Physical Chemistry Mastery
-                    </div>
-                </a>
+                <Hexagon link={"/books/chemistry_16"}
+                    imageSrc={"/assets/key_stage_sprite.svg#skills-book-cover"}
+                    title={"Physical Chemistry Mastery"}/>
             </Col>
             <Col md="auto">
-                <a href="/books/pre_uni_maths" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#skills-book-cover" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Solving Physics Problems
-                    </div>
-                </a>
+                <Hexagon link={"/books/solve_physics_problems"}
+                    imageSrc={"/assets/key_stage_sprite.svg#skills-book-cover"}
+                    title={"Solving Physics Problems"}/>
             </Col>
         </Row>
         <Row>
@@ -89,36 +66,24 @@ export const Alevel = () => {
         </Row>
         <Row className="teacher-feature-body mb-5 justify-content-md-center">
             <Col md="auto">
-                <a href="/events?types=student" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#groups" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Workshops
-                    </div>
-                </a>
+                <Hexagon link={"/events?types=student"}
+                    imageSrc={"/assets/key_stage_sprite.svg#groups"}
+                    title={"Workshops"}/>
             </Col>
             <Col md="auto">
-                <a href="/extraordinary_problems" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#lightning" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Extraordinary Problems
-                    </div>
-                </a>
+                <Hexagon link={"/extraordinary_problems"}
+                    imageSrc={"/assets/key_stage_sprite.svg#lightning"}
+                    title={"Extraordinary Problems"}/>
             </Col>
             <Col md="auto">
-                <a href="/pages/spc" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#groups" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Senior Physics Challenge
-                    </div>
-                </a>
+                <Hexagon link={"/pages/spc"}
+                    imageSrc={"/assets/key_stage_sprite.svg#groups"}
+                    title={"Senior Physics Challenge"}/>
             </Col>
             <Col md="auto">
-                <a href="/books/pre_uni_maths" className="hexagon">
-                    <img className="hexagon-field" src="/assets/key_stage_sprite.svg#skills-book-cover" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        Quantum Mechanics Primer
-                    </div>
-                </a>
+                <Hexagon link={"/books/quantum_mechanics_primer"}
+                    imageSrc={"/assets/key_stage_sprite.svg#skills-book-cover"}
+                    title={"Quantum Mechanics Primer"}/>
             </Col>
         </Row>
     </Container>

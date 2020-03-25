@@ -12,6 +12,8 @@ import {isTeacher} from "../../../services/user";
 import {Alevel} from "../../pages/Alevel";
 import {Gcse} from "../../pages/Gcse";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
+import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
+import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
 
 let key = 0;
 export const RoutesPhy = [
@@ -24,6 +26,8 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/books/physics_skills_14" component={PhysicsSkills14}/>,
     <TrackedRoute key={key++} exact path="/books/pre_uni_maths" component={PreUniMaths}/>,
     <TrackedRoute key={key++} exact path="/books/chemistry_16" component={Chemistry16}/>,
+    <TrackedRoute key={key++} exact path="/books/quantum_mechanics_primer" component={QuantumMechanicsPrimer}/>,
+    <TrackedRoute key={key++} exact path="/books/solve_physics_problems" component={SolvingPhysProblems}/>,
 
     // Static pages
     <StaticPageRoute key={key++} exact path="/glossary" />,
