@@ -264,14 +264,19 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                         // What
                         console.warn(`Could not parse available symbol "${availableSymbol} as a function"`);
                     }
+                } else if (availableSymbol.startsWith('Derivative')) {
+                    // Do nothing
+                } else if (this._differentialRegex.test(availableSymbol)) {
+                    // Do nothing
                 } else {
                     // Everything else is a letter, unless we are doing chemistry
                     if (this.props.editorMode === 'chemistry' && /^[A-Z]/.test(availableSymbol)) {
                         // Available chemical elements
                         customMenuItems.chemicalElements.push(this.makeChemicalElementMenuItem(availableSymbol));
                     } else {
-                        if (!this._differentialRegex.test(availableSymbol)) {
-                            customMenuItems.letters.push(this.makeLetterMenuItem(availableSymbol));
+                        const item = this.makeLetterMenuItem(availableSymbol);
+                        if (item) {
+                            customMenuItems.letters.push(item);
                         }
                     }
                 }
@@ -384,21 +389,46 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         return Array.from(new Set(theseSymbols));
     }
 
+    private convertToLatexIfGreek(s: string): string {
+        if (s == "epsilon") {
+            return "\\varepsilon";
+        }
+        if (this._lowerCaseGreekLetters.includes(s) || this._upperCaseGreekLetters.includes(s)) {
+            return `\\${s}`;
+        }
+        return s;
+    }
+
     private makeSingleLetterMenuItem(letter: string, label?: string) {
         return new MenuItem("Symbol", { letter: letter }, { label: label || letter, texLabel: true, className: `symbol-${letter}` });
     }
 
-    private makeLetterMenuItem(letter: string): MenuItem {
+    private makeLetterMenuItem(l: string): MenuItem|null|undefined {
+        if (!/^[a-zA-Z]/.test(l)) return;
+        const letter = l === 'epsilon' ? 'varepsilon' : l;
         const parts = letter.split('_');
+        const modifiers = ['prime'];
+        // This is going to generate many broken symbols...
+        const item = this.makeSingleLetterMenuItem(this._greekLetterMap[parts[0]] || parts[0], this._greekLetterMap[parts[0]] ? `\\${parts[0]}` : parts[0]);
+        // ... but that's OK because we are going to fix them now!
         if (parts.length > 1) {
-            const label = `${parts[0]}_${parts[1]}`.replace(new RegExp(`${Object.keys(this._greekLetterMap).join('|')}`), m => this._greekLetterMap[m]);
-            const first = this.makeSingleLetterMenuItem(this._greekLetterMap[parts[0]] || parts[0], label);
-            const second = this.makeSingleLetterMenuItem(this._greekLetterMap[parts[1]] || parts[1], this._greekLetterMap[parts[1]] ? '\\' + parts[1] : parts[1]);
-            first['children'] = { subscript: second };
-            return first;
-        } else {
-            return this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter);
+            if (modifiers.includes(parts[1])) {
+                item.properties.modifier = parts[1];
+                item.menu.label += "'";
+            }
+            if (!modifiers.includes(parts[parts.length - 1])) {
+                const subscriptLetter = parts[parts.length - 1];
+                let subscriptSymbol;
+                if (isNaN(parseInt(subscriptLetter))) {
+                    subscriptSymbol = { type: 'Symbol', properties: { letter: this._greekLetterMap[subscriptLetter] || subscriptLetter, upright: subscriptLetter.length > 1 } }
+                } else {
+                    subscriptSymbol = { type: 'Num', properties: { significand: subscriptLetter } };
+                }
+                item.children = { subscript: subscriptSymbol };
+                item.menu.label += `_{${this._greekLetterMap[subscriptLetter] ? `\\${subscriptLetter}` : subscriptLetter}}`
+            }
         }
+        return item;
     }
 
     private prepareAbsoluteElement(element?: Element | null) {
