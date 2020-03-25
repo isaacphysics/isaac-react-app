@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
-import {Button, Card, CardBody, Col, Container, Form, FormGroup, FormFeedback, Input, Row, Label} from "reactstrap";
-import {handleProviderLoginRedirect} from "../../state/actions";
-import {logInUser, resetPassword} from "../../state/actions";
+import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {handleProviderLoginRedirect, logInUser, resetPassword} from "../../state/actions";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {history} from "../../services/history";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {Credentials, LoggedInUser} from "../../../IsaacAppTypes";
 import {Redirect} from "react-router";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
@@ -24,7 +23,7 @@ const dispatchToProps = {
 interface LogInPageProps {
     user: LoggedInUser | null;
     handleProviderLoginRedirect: (provider: AuthenticationProvider) => void;
-    logInUser: (provider: AuthenticationProvider, params: {email: string; password: string}) => void;
+    logInUser: (provider: AuthenticationProvider, credentials: Credentials) => void;
     resetPassword: (params: {email: string}) => void;
     errorMessage: string | null;
 }

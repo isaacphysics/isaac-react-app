@@ -31,7 +31,6 @@ const getSchoolPromise = (schoolSearchText: string) =>
 const throttledSchoolSearch = throttle(getSchoolPromise, 450);
 
 export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput}: SchoolInputProps) => {
-    let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
     // Get school associated with urn
@@ -49,21 +48,14 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         fetchSchool(userToUpdate.schoolId || "");
     }, [userToUpdate]);
 
-    // Called as user types
-    function renderInput(queryValue: any) {
-        setSchoolQueryText(queryValue);
-    }
-
     // Set schoolId or schoolOther
     function setUserSchool(school: any) {
         if (setUserToUpdate) {
             if (school.urn) {
                 setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school.urn, schoolOther: undefined}));
-                setSchoolQueryText(null);
                 setSelectedSchoolObject(school);
             } else if (school) {
                 setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: school, schoolId: undefined}));
-                setSchoolQueryText(null);
                 setSelectedSchoolObject(school);
             }
         }
@@ -72,7 +64,6 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     // Called when school input box option selected
     function handleSetSchool(newValue: any) {
         if (newValue == null) {
-            setSchoolQueryText(null);
             setSelectedSchoolObject(undefined);
             userToUpdate.schoolOther = undefined;
         } else if (newValue && newValue.value) {
@@ -83,13 +74,11 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     }
 
     const schoolValue = (
-        schoolQueryText ?
-            schoolQueryText :
-            (selectedSchoolObject && selectedSchoolObject.urn ?
-                {value: selectedSchoolObject.urn, label: selectedSchoolObject.name + ", " + selectedSchoolObject.postcode} :
-                (userToUpdate.schoolOther ?
-                    {value: "manually entered school", label: userToUpdate.schoolOther} :
-                    undefined))
+        (selectedSchoolObject && selectedSchoolObject.urn ?
+            {value: selectedSchoolObject.urn, label: selectedSchoolObject.name + ", " + selectedSchoolObject.postcode} :
+            (userToUpdate.schoolOther ?
+                {value: "manually entered school", label: userToUpdate.schoolOther} :
+                undefined))
     );
 
     let randomNumber = Math.random();
@@ -105,7 +94,6 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 value={schoolValue}
                 className={(submissionAttempted && !validateUserSchool(userToUpdate) ? "react-select-error " : "") + "basic-multi-select"}
                 classNamePrefix="select"
-                onInputChange={renderInput}
                 onChange={handleSetSchool}
                 loadOptions={throttledSchoolSearch}
                 filterOption={() => true}
