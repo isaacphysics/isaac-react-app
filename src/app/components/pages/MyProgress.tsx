@@ -18,8 +18,6 @@ import {ProgressBar} from "../elements/views/ProgressBar";
 import {safePercentage} from "../../services/validation";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {IS_CS_PLATFORM} from "../../services/constants";
-import {Assignments} from "../elements/Assignments";
-import {filterAssignmentsByStatus} from "../../services/assignments";
 
 interface MyProgressProps {
     user: LoggedInUser;
@@ -31,7 +29,6 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
     const dispatch = useDispatch();
     const userProgress = useSelector((state: AppState) => state?.userProgress);
     const achievements = useSelector((state: AppState) => state?.userProgress?.userSnapshot?.achievementsRecord);
-    const myAssignments = useSelector((state: AppState) => state?.assignments || null);
     const answeredQuestionsByDate = useSelector((state: AppState) => state?.answeredQuestionsByDate);
 
     useEffect(() => {
@@ -148,9 +145,6 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                     createMoreLink="/events"
                     iconClassName="cpd-badge"/>
             </div>}),
-            ...(viewingOwnData && {"Current assignments":
-                    <Assignments assignments={filterAssignmentsByStatus(myAssignments).inProgressRecent} />
-            })
         }}</Tabs>
     </RS.Container>
 });
