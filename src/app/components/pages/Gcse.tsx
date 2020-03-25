@@ -11,7 +11,7 @@ export const Gcse = () => {
         </Row>
         <Row className="teacher-feature-body justify-content-md-center">
             <Col md="auto">
-                <a href="/gcsebook" className="hexagon">
+                <a href="/books/phys_book_gcse" className="hexagon">
                     <img className="hexagon-field" src="/assets/key_stage_sprite.svg#skills-book-cover" alt="Isaac hexagon"></img>
                     <div className="hexagon-title">
                         Physics Skills Mastery

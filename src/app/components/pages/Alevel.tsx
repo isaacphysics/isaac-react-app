@@ -3,7 +3,7 @@ import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 export const Alevel = () => {
-    return<Container>
+    return <Container>
         <Row className="pb-4">
             <Col>
                 <TitleAndBreadcrumb currentPageTitle={"A Level Resources"} breadcrumbTitleOverride="A Level Resources" />
@@ -19,7 +19,7 @@ export const Alevel = () => {
                 </a>
             </Col>
             <Col md="auto">
-                <a href="/pages/university_preparation" className="hexagon">
+                <a href="/pages/master_maths" className="hexagon">
                     <img className="hexagon-field" src="/assets/key_stage_sprite.svg#teacher-hat" alt="Isaac hexagon"></img>
                     <div className="hexagon-title">
                         Master Mathematics
@@ -50,7 +50,7 @@ export const Alevel = () => {
         </Row>
         <Row className="teacher-feature-body justify-content-md-center">
             <Col md="auto">
-                <a href="/books/pre_uni_maths" className="hexagon">
+                <a href="/books/physics_skills_19" className="hexagon">
                     <img className="hexagon-field" src="/assets/key_stage_sprite.svg#skills-book-cover" alt="Isaac hexagon"></img>
                     <div className="hexagon-title">
                         Physics Skills Mastery
