@@ -49,11 +49,28 @@ export abstract class AbstractBaseTagService {
     public getCategoryTags = this.getSpecifiedTags.bind(this, TAG_LEVEL.category);
     public allCategoryTags = this.getCategoryTags(this.allTagIds);
 
+    public getSubjectTag = this.getSpecifiedTag.bind(this, TAG_LEVEL.subject);
+    public getSubjectTags = this.getSpecifiedTags.bind(this, TAG_LEVEL.subject);
+    public allSubjectTags = this.getSubjectTags(this.allTagIds);
+
     public getSubcategoryTag = this.getSpecifiedTag.bind(this, TAG_LEVEL.subcategory);
     public getSubcategoryTags = this.getSpecifiedTags.bind(this, TAG_LEVEL.subcategory);
 
+    public getFieldTag = this.getSpecifiedTag.bind(this, TAG_LEVEL.field);
+    public getFieldTags = this.getSpecifiedTags.bind(this, TAG_LEVEL.field);
+
     public getTopicTag = this.getSpecifiedTag.bind(this, TAG_LEVEL.topic);
     public getTopicTags = this.getSpecifiedTags.bind(this, TAG_LEVEL.topic);
+
+    public getChildren(tagId: TAG_ID) {
+        let children: Tag[] = [];
+        for (let i in this.allTags) {
+            if (this.allTags[i].parent == tagId) {
+                children.push(this.allTags[i]);
+            }
+        }
+        return children;
+    }
 
     public getDescendents(tagId: TAG_ID) {
         let descendents: Tag[] = [];
@@ -66,7 +83,7 @@ export abstract class AbstractBaseTagService {
         return descendents;
     }
 
-    protected getSpecifiedTags(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
+    public getSpecifiedTags(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
         // Return all TAG_ID an object has of a given type!
         if (tagArray == null) return [];
         let tags = [];

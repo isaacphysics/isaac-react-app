@@ -103,6 +103,10 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
         adminUserSearch(searchQuery);
     };
 
+    const editUser = (userid: number | undefined) => {
+        window.open(`/account?userId=${userid}`, '_blank');
+    };
+
     const deleteUser = async (userid: number | undefined) => {
         await adminUserDelete(userid);
         adminUserSearch(searchQuery);
@@ -276,7 +280,9 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                                     <RS.Button color="secondary btn-sm m-1" tag={Link} to={`/progress/${user.id}`} target="_blank">
                                                         View
                                                     </RS.Button>
-                                                    {/*Edit*/}
+                                                    <RS.Button color="secondary btn-sm m-1" onClick={() => editUser(user.id)}>
+                                                        Edit
+                                                    </RS.Button>
                                                     <RS.Button color="secondary btn-sm m-1" onClick={() => deleteUser(user.id)}>
                                                         Delete
                                                     </RS.Button>

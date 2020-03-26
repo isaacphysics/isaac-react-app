@@ -34,6 +34,7 @@ import {
     IsaacPodDTO,
     IsaacTopicSummaryPageDTO,
     IsaacWildcard,
+    RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
     UserAuthenticationSettingsDTO,
@@ -69,6 +70,16 @@ export const userAuthSettings = (userAuthSettings: UserAuthSettingsState = null,
             return action.userAuthSettings;
         default:
             return userAuthSettings;
+    }
+};
+
+type SelectedUserAuthSettingsState = UserAuthenticationSettingsDTO | null;
+export const selectedUserAuthSettings = (selectedUserAuthSettings: SelectedUserAuthSettingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS:
+            return action.selectedUserAuthSettings;
+        default:
+            return selectedUserAuthSettings;
     }
 };
 
@@ -115,6 +126,18 @@ export const adminUserSearch = (adminUserSearch: AdminUserSearchState = null, ac
             return action.users;
         default:
             return adminUserSearch;
+    }
+};
+
+export type AdminUserGetState = RegisteredUserDTO | null;
+export const adminUserGet = (adminUserGet: AdminUserGetState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.ADMIN_USER_GET_REQUEST:
+            return null;
+        case ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS:
+            return action.getUsers;
+        default:
+            return adminUserGet;
     }
 };
 
@@ -839,6 +862,7 @@ export const printingSettings = (printingSettingsState: PrintingSettingsState = 
 
 
 const appReducer = combineReducers({
+    adminUserGet,
     user,
     userAuthSettings,
     userPreferences,
@@ -884,7 +908,9 @@ const appReducer = combineReducers({
 });
 
 export type AppState = undefined | {
+    adminUserGet: AdminUserGetState;
     user: UserState;
+    selectedUserAuthSettings: SelectedUserAuthSettingsState;
     userAuthSettings: UserAuthSettingsState;
     userPreferences: UserPreferencesState;
     userProgress: UserProgressState;

@@ -20,9 +20,23 @@ export const HomepageComponent = ({user}: HomePageProps) => {
     return <div id="homepage" className="pb-5">
         <section id="call-to-action" className="homepageHero">
             <Container className="pt-4">
-                <Row className="d-none d-md-flex mt-3">
-                    <Col>
+                <Row className="mt-3">
+                    <Col className="d-none d-md-flex mb-1" lg={9}>
                         <h2 className="h5">Mastering Physics by Solving Problems<span className="d-none d-md-inline">: from School to University!</span></h2>
+                    </Col>
+                    <Col lg={3}>
+                        {!(user && user.loggedIn) && <Row>
+                            <Col size={6} className="text-center">
+                                <Button size="sm" tag={Link} to="/register" color="secondary" block>
+                                    Sign up
+                                </Button>
+                            </Col>
+                            <Col size={6} className="text-center">
+                                <Button size="sm" tag={Link} to="/login" color="primary" outline block>
+                                    Log in
+                                </Button>
+                            </Col>
+                        </Row>}
                     </Col>
                 </Row>
                 <Row className="py-4">
@@ -55,23 +69,6 @@ export const HomepageComponent = ({user}: HomePageProps) => {
                         </tbody></table>
                     </Col>
                 </Row>
-            </Container>
-        </section>
-
-        <section>
-            <Container>
-                {!(user && user.loggedIn) && <Row>
-                    <Col size={6} className="pb-4 pt-1 text-center">
-                        <Button size="lg" tag={Link} to={user && user.loggedIn ? "/topics" : "/register"} color="secondary" block>
-                            {user && user.loggedIn ? "Find a topic" : "Sign up"}
-                        </Button>
-                    </Col>
-                    <Col size={6} className="pb-4 pt-1 text-center">
-                        <Button size="lg" tag={Link} to={user && user.loggedIn ? "/search" : "/login"} color="primary" outline block>
-                            {user && user.loggedIn ? "Search the site" : "Log in"}
-                        </Button>
-                    </Col>
-                </Row>}
             </Container>
         </section>
 
