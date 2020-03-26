@@ -12,8 +12,7 @@ export const TeacherFeatures = () => {
     const user = useSelector((state: AppState) => state && state.user);
 
     const isDisabled = (isStudent(user) || !isLoggedIn(user));
-    const teacherLinkClass = classNames({"hexagon": true, "disabled": isDisabled});
-    const teacherImgClass = classNames({"hexagon-field": true, "disabled": isDisabled});
+    const isaacHexagonClass = classNames({"hexagon": true, "disabled": isDisabled});
 
     return<Container>
         <Row className="pb-4">
@@ -43,28 +42,22 @@ export const TeacherFeatures = () => {
                 </Col>
             }
             <Col md="auto">
-                <a href="groups" className={teacherLinkClass}>
-                    <img className={teacherImgClass} src="/assets/teacher_features_sprite.svg#groups" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        2. Create and manage groups
-                    </div>
-                </a>
+                <Hexagon link={"/groups"}
+                    imageSrc={"/assets/teacher_features_sprite.svg#groups"}
+                    title={"2. Create and manage groups"}
+                    hexagonClass={isaacHexagonClass}/>
             </Col>
             <Col md="auto">
-                <a href="/set_assignments" className={teacherLinkClass}>
-                    <img className={teacherImgClass} src="/assets/teacher_features_sprite.svg#set-assignments" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        3. Set Assignments
-                    </div>
-                </a>
+                <Hexagon link={"/set_assignments"}
+                    imageSrc={"/assets/teacher_features_sprite.svg#set-assignments"}
+                    title={"3. Set Assignments"}
+                    hexagonClass={isaacHexagonClass}/>
             </Col>
             <Col md="auto">
-                <a href="/assignment_progress" className={teacherLinkClass}>
-                    <img className={teacherImgClass} src="/assets/teacher_features_sprite.svg#track-progress" alt="Isaac hexagon"></img>
-                    <div className="hexagon-title">
-                        4. Track group progress
-                    </div>
-                </a>
+                <Hexagon link={"/assignment_progress"}
+                    imageSrc={"/assets/teacher_features_sprite.svg#track-progress"}
+                    title={"4. Track group progress"}
+                    hexagonClass={isaacHexagonClass}/>
             </Col>
         </Row>
         <Row>
