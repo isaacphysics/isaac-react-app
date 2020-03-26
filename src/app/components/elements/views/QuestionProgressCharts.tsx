@@ -6,6 +6,7 @@ import tags from "../../../services/tags";
 import Select from "react-select";
 import {ValueType} from "react-select/src/types";
 import {TAG_ID} from "../../../services/constants";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 interface QuestionProgressChartsProps {
     subId: string;
@@ -13,7 +14,7 @@ interface QuestionProgressChartsProps {
     questionsByLevel: LevelAttempts<number>;
 }
 
-const SIZE = {size: {width: 320, height: 400}};
+const SIZE = {size: {width: 240, height: 330}};
 
 export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     const {subId, questionsByTag, questionsByLevel} = props;
@@ -30,97 +31,90 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     const levelColumns = [...Array(7)].map((_, i) => [`Level ${i}`, questionsByLevel[i as Levels] || 0]);
 
     useEffect(() => {
-        !isAllZero(categoryColumns) && bb.generate({
-            data: {
-                columns: categoryColumns,
-                type: "donut",
-            },
-            donut: {
-                title: "By " + topTagLevel,
-                label: {
-                    format: (value, ratio, id) => `${value}`
-                }
-            },
-            bindto: `#${subId}-categoryChart`,
-            ...SIZE
-        });
+        if (!isAllZero(categoryColumns)) {
+            bb.generate({
+                data: {
+                    columns: categoryColumns,
+                    type: "donut",
+                },
+                donut: {
+                    title: "By " + topTagLevel,
+                    label: {format: (value, ratio, id) => `${value}`}
+                },
+                bindto: `#${subId}-categoryChart`,
+                ...SIZE
+            });
+        }
 
-        !isAllZero(topicColumns) && bb.generate({
-            data: {
-                columns: topicColumns,
-                type: "donut"
-            },
-            donut: {
-                title: "By topic",
-                label: {
-                    format: (value, ratio, id) => `${value}`
-                }
-            },
-            bindto: `#${subId}-topicChart`,
-            ...SIZE
-        });
+        if (!isAllZero(topicColumns)) {
+            bb.generate({
+                data: {
+                    columns: topicColumns,
+                    type: "donut"
+                },
+                donut: {
+                    title: "By Topic",
+                    label: {format: (value, ratio, id) => `${value}`}
+                },
+                bindto: `#${subId}-topicChart`,
+                ...SIZE
+            });
+        }
 
-        !isAllZero(levelColumns) && bb.generate({
-            data: {
-                columns: levelColumns,
-                type: "donut"
-            },
-            donut: {
-                title: "By Level",
-                label: {
-                    format: (value, ratio, id) => `${value}`
-                }
-            },
-            bindto: `#${subId}-levelChart`,
-            ...SIZE
-        });
+        if (!isAllZero(levelColumns)) {
+            bb.generate({
+                data: {columns: levelColumns, type: "donut"},
+                donut: {
+                    title: "By Level",
+                    label: {format: (value, ratio, id) => `${value}`}
+                },
+                bindto: `#${subId}-levelChart`,
+                ...SIZE
+            });
+        }
     }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, levelColumns]);
 
-    return <RS.Row className={"mt-4"}>
-        <RS.Col className="col-md-4 d-flex flex-column">
-            <RS.Row>
-                <div className={"height-40px text-flex-align"}>
-                    Questions by {topTagLevel}
-                </div>
-            </RS.Row>
-            <RS.Row className="flex-grow-1">
+    const noCharts = {[SITE.CS]: 2, [SITE.PHY]: 3}[SITE_SUBJECT];
+
+    return <RS.Row>
+        <RS.Col xl={12/noCharts} md={6} className="mt-4 d-flex flex-column">
+            <div className="height-40px text-flex-align mb-2">
+                Questions by {topTagLevel}
+            </div>
+            <div className="d-flex flex-grow-1">
                 <div id={`${subId}-categoryChart`} className="text-center-width doughnut-binding align-self-center">
-                    {isAllZero(categoryColumns) ? "No data" : ""}
+                    <strong>{isAllZero(categoryColumns) ? "No data" : ""}</strong>
                 </div>
-            </RS.Row>
+            </div>
         </RS.Col>
-        <RS.Col className="col-md-4 d-flex flex-column">
-            <RS.Row>
-                <div className="auto-margin">
-                    Questions by
-                </div>
+        <RS.Col xl={12/noCharts} md={6} className="mt-4 d-flex flex-column">
+            <div className="height-40px text-flex-align mb-2">
                 <Select
                     inputId={`${subId}-subcategory-select`}
-                    className={"w-50"}
                     name="subcategory"
+                    className="d-inline-block text-left pr-2 w-50"
                     classNamePrefix="select"
                     defaultValue={{value: defaultSearchChoiceTag.id, label: defaultSearchChoiceTag.title}}
                     options={tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title}})}
                     onChange={(e: ValueType<{value: TAG_ID; label: string}>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
                 />
-            </RS.Row>
-            <RS.Row className="flex-grow-1">
+                questions
+            </div>
+            <div className="d-flex flex-grow-1">
                 <div id={`${subId}-topicChart`} className="text-center-width doughnut-binding  align-self-center">
-                    {isAllZero(topicColumns) ? "No data" : ""}
+                    <strong>{isAllZero(topicColumns) ? "No data" : ""}</strong>
                 </div>
-            </RS.Row>
+            </div>
         </RS.Col>
-        <RS.Col className="col-md-4 d-flex flex-column">
-            <RS.Row>
-                <div className={"height-40px text-flex-align"}>
-                    Questions by level
-                </div>
-            </RS.Row>
-            <RS.Row className="flex-grow-1">
+        {SITE_SUBJECT === SITE.PHY && <RS.Col xl={4} className="mt-4 d-flex flex-column">
+            <div className="height-40px text-flex-align mb-2">
+                Questions by level
+            </div>
+            <div className="d-flex flex-grow-1">
                 <div id={`${subId}-levelChart`} className="text-center-width doughnut-binding  align-self-center">
-                    {isAllZero(levelColumns) ? "No data" : ""}
+                    <strong>{isAllZero(levelColumns) ? "No data" : ""}</strong>
                 </div>
-            </RS.Row>
-        </RS.Col>
+            </div>
+        </RS.Col>}
     </RS.Row>
 };

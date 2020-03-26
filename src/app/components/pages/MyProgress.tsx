@@ -18,6 +18,8 @@ import {ProgressBar} from "../elements/views/ProgressBar";
 import {safePercentage} from "../../services/validation";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {IS_CS_PLATFORM} from "../../services/constants";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {Card, CardBody} from "reactstrap";
 
 interface MyProgressProps {
     user: LoggedInUser;
@@ -47,104 +49,107 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
 
     return <RS.Container id="my-progress" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="My progress" />
-        <Tabs>{{
-            "Question Activity": <div>
-                <RS.Row>
-                    <RS.Col>
-                        <AggregateQuestionStats userProgress={userProgress} />
-                    </RS.Col>
-                    <RS.Col className={"col-md-4"}>
-                        <DailyStreakPanel userProgress={userProgress} />
-                    </RS.Col>
-                </RS.Row>
+        <Card className="mt-4">
+            <CardBody>
+                <Tabs>{{
+                    "Question activity": <div>
+                        <RS.Row>
+                            <RS.Col>
+                                <AggregateQuestionStats userProgress={userProgress} />
+                            </RS.Col>
+                            {SITE_SUBJECT === SITE.PHY && <RS.Col className="align-self-center" xs={12} md={3}>
+                                <DailyStreakPanel userProgress={userProgress} />
+                            </RS.Col>}
+                        </RS.Row>
 
-                <Tabs className={"my-3"}>
-                    {{
-                        "Correct Questions": <QuestionProgressCharts
-                            subId="correct"
-                            questionsByTag={(userProgress?.correctByTag) || {}}
-                            questionsByLevel={(userProgress?.correctByLevel) || {}} />,
-                        "Attempted Questions": <QuestionProgressCharts
-                            subId="attempted"
-                            questionsByTag={(userProgress?.attemptsByTag) || {}}
-                            questionsByLevel={(userProgress?.attemptsByLevel) || {}} />
-                    }}
-                </Tabs>
+                        <Card className="mt-4">
+                            <CardBody>
+                                <Tabs tabContentClass="mt-4">
+                                    {{
+                                        "Correct questions": <QuestionProgressCharts
+                                            subId="correct"
+                                            questionsByTag={(userProgress?.correctByTag) || {}}
+                                            questionsByLevel={(userProgress?.correctByLevel) || {}} />,
+                                        "Attempted questions": <QuestionProgressCharts
+                                            subId="attempted"
+                                            questionsByTag={(userProgress?.attemptsByTag) || {}}
+                                            questionsByLevel={(userProgress?.attemptsByLevel) || {}} />
+                                    }}
+                                </Tabs>
+                            </CardBody>
+                        </Card>
 
-                <div>
-                    <RS.Row className={"mt-3"}>
-                        <h4>Question parts correct by Type</h4>
-                    </RS.Row>
-                    <RS.Row>
-                        {(Array.from(QUESTION_TYPES.keys()) as string[]).filter((qType: string) => qType != "default").map((qType: string) => {
-                            const correct = userProgress?.correctByType?.[qType] || null;
-                            const attempts = userProgress?.attemptsByType?.[qType] || null;
-                            const percentage = safePercentage(correct, attempts);
-                            return <RS.Col key={qType} className={"col-lg-4 mt-2 type-progress-bar"}>
-                                <RS.Row className={"px-2"}>
-                                    {HUMAN_QUESTION_TYPES.get(qType)} questions correct
-                                </RS.Row>
-                                <RS.Row className={"px-2"}>
-                                    <ProgressBar percentage={percentage || 0}>
-                                        {percentage == null ? "No data" : `${correct} of ${attempts}`}
-                                    </ProgressBar>
-                                </RS.Row>
-                            </RS.Col>;
-                        })}
-                    </RS.Row>
-                </div>
+                        <div className="mt-4">
+                            <h4>Question parts correct by Type</h4>
+                            <RS.Row>
+                                {(Array.from(QUESTION_TYPES.keys()) as string[]).filter((qType: string) => qType != "default").map((qType: string) => {
+                                    const correct = userProgress?.correctByType?.[qType] || null;
+                                    const attempts = userProgress?.attemptsByType?.[qType] || null;
+                                    const percentage = safePercentage(correct, attempts);
+                                    return <RS.Col key={qType} className={"col-lg-4 mt-2 type-progress-bar"}>
+                                        <div className={"px-2"}>
+                                            {HUMAN_QUESTION_TYPES.get(qType)} questions correct
+                                        </div>
+                                        <div className={"px-2"}>
+                                            <ProgressBar percentage={percentage || 0}>
+                                                {percentage == null ? "No data" : `${correct} of ${attempts}`}
+                                            </ProgressBar>
+                                        </div>
+                                    </RS.Col>;
+                                })}
+                            </RS.Row>
+                        </div>
 
-                {answeredQuestionsByDate && <div>
-                    <RS.Row className={"mt-3"}>
-                        <h4>Question attempts over time</h4>
-                    </RS.Row>
-                    <RS.Row>
-                        <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />
-                    </RS.Row>
-                </div>}
-            </div>,
-            ...(viewingOwnData && isTeacher(user) && {"Isaac teacher activity": <div>
-                <TeacherAchievement
-                    verb="created"
-                    count={achievements && achievements.TEACHER_GROUPS_CREATED}
-                    item="group"
-                    createMoreText="Manage groups"
-                    createMoreLink="/groups"
-                    iconClassName="group-badge"/>
+                        {answeredQuestionsByDate && <div className="mt-4">
+                            <h4>Question attempts over time</h4>
+                            <div>
+                                <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />
+                            </div>
+                        </div>}
+                    </div>,
+                    ...(viewingOwnData && isTeacher(user) && !IS_CS_PLATFORM && {"Teacher Activity": <div>
+                        <TeacherAchievement
+                            verb="created"
+                            count={achievements && achievements.TEACHER_GROUPS_CREATED}
+                            item="group"
+                            createMoreText="Manage groups"
+                            createMoreLink="/groups"
+                            iconClassName="group-badge"/>
 
-                <TeacherAchievement
-                    verb="set"
-                    count={achievements && achievements.TEACHER_ASSIGNMENTS_SET}
-                    item="assignment"
-                    createMoreText="Set assignments"
-                    createMoreLink="/set_assignments"
-                    iconClassName="assignment-badge"/>
+                        <TeacherAchievement
+                            verb="set"
+                            count={achievements && achievements.TEACHER_ASSIGNMENTS_SET}
+                            item="assignment"
+                            createMoreText="Set assignments"
+                            createMoreLink="/set_assignments"
+                            iconClassName="assignment-badge"/>
 
-                <TeacherAchievement
-                    verb="created"
-                    count={achievements && achievements.TEACHER_GAMEBOARDS_CREATED}
-                    item="gameboard"
-                    createMoreText="Board builder"
-                    createMoreLink="/gameboard_builder"
-                    iconClassName="gameboard-badge"/>
+                        <TeacherAchievement
+                            verb="created"
+                            count={achievements && achievements.TEACHER_GAMEBOARDS_CREATED}
+                            item="gameboard"
+                            createMoreText="Board builder"
+                            createMoreLink="/gameboard_builder"
+                            iconClassName="gameboard-badge"/>
 
-                {!IS_CS_PLATFORM && <TeacherAchievement
-                    verb="set"
-                    count={achievements && achievements.TEACHER_BOOK_PAGES_SET}
-                    item="book page assignment"
-                    createMoreText="Set assignments"
-                    createMoreLink="/set_assignments"
-                    iconClassName="book-page-badge"/>
-                }
+                        <TeacherAchievement
+                            verb="set"
+                            count={achievements && achievements.TEACHER_BOOK_PAGES_SET}
+                            item="book page assignment"
+                            createMoreText="Set assignments"
+                            createMoreLink="/set_assignments"
+                            iconClassName="book-page-badge"/>
 
-                <TeacherAchievement
-                    verb="visited"
-                    count={achievements && achievements.TEACHER_CPD_EVENTS_ATTENDED}
-                    item="CPD event"
-                    createMoreText="Events"
-                    createMoreLink="/events"
-                    iconClassName="cpd-badge"/>
-            </div>}),
-        }}</Tabs>
+                        <TeacherAchievement
+                            verb="visited"
+                            count={achievements && achievements.TEACHER_CPD_EVENTS_ATTENDED}
+                            item="CPD event"
+                            createMoreText="Events"
+                            createMoreLink="/events"
+                            iconClassName="cpd-badge"/>
+                    </div>}),
+                }}</Tabs>
+            </CardBody>
+        </Card>
     </RS.Container>
 });
