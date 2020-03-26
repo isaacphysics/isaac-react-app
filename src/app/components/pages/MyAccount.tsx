@@ -33,10 +33,7 @@ import {
     isDobOverThirteen,
     validateEmail,
     validateEmailPreferences,
-    validatePassword,
-    validateSubjectInterests,
-    validateUserGender,
-    validateUserSchool
+    validatePassword
 } from "../../services/validation";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
