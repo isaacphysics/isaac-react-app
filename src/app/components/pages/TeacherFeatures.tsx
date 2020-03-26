@@ -27,12 +27,12 @@ export const TeacherFeatures = () => {
             {isStudent(user) || !isLoggedIn(user) ?
                 <Col md="auto">
                     <Hexagon link={"/teacher_account_request"}
-                        imageSrc={"/assets/teacher_features_sprite.svg#teacher-hat"}
+                        imageSrc={"/assets/phy/teacher_features_sprite.svg#teacher-hat"}
                         title={"1. Tell us you are a teacher"}/>
                 </Col> :
                 <Col md="auto">
                     <div className="hexagon">
-                        <img className="hexagon" src="/assets/teacher_features_sprite.svg#teacher-hat" alt="" />
+                        <img className="hexagon" src="/assets/phy/teacher_features_sprite.svg#teacher-hat" alt="" />
                         <div className="hexagon-title">
                             1. You are now a teacher!
                         </div>
@@ -41,19 +41,19 @@ export const TeacherFeatures = () => {
             }
             <Col md="auto">
                 <Hexagon link={"/groups"}
-                    imageSrc={"/assets/teacher_features_sprite.svg#groups"}
+                    imageSrc={"/assets/phy/teacher_features_sprite.svg#groups"}
                     title={"2. Create and manage groups"}
                     disabled={isDisabled}/>
             </Col>
             <Col md="auto">
                 <Hexagon link={"/set_assignments"}
-                    imageSrc={"/assets/teacher_features_sprite.svg#set-assignments"}
+                    imageSrc={"/assets/phy/teacher_features_sprite.svg#set-assignments"}
                     title={"3. Set Assignments"}
                     disabled={isDisabled}/>
             </Col>
             <Col md="auto">
                 <Hexagon link={"/assignment_progress"}
-                    imageSrc={"/assets/teacher_features_sprite.svg#track-progress"}
+                    imageSrc={"/assets/phy/teacher_features_sprite.svg#track-progress"}
                     title={"4. Track group progress"}
                     disabled={isDisabled}/>
             </Col>
@@ -66,22 +66,22 @@ export const TeacherFeatures = () => {
         <Row className="teacher-feature-body mb-5 justify-content-md-center">
             <Col md="auto">
                 <Hexagon link={"/supportTeacher"}
-                    imageSrc={"/assets/teacher_features_sprite.svg#use-with-class"}
+                    imageSrc={"/assets/phy/teacher_features_sprite.svg#use-with-class"}
                     title={"Teacher Support"}/>
             </Col>
             <Col md="auto">
                 <Hexagon link={"/events"}
-                    imageSrc={"/assets/teacher_features_sprite.svg#calendar"}
+                    imageSrc={"/assets/phy/teacher_features_sprite.svg#calendar"}
                     title={"Teacher and Student Events"}/>
             </Col>
             <Col md="auto">
                 <Hexagon link={"/books"}
-                    imageSrc={"/assets/key_stage_sprite.svg#skills-book-cover"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
                     title={"Books of core skills problems"}/>
             </Col>
             <Col md="auto">
                 <Hexagon link={"http://www.talkphysics.org/groups/isaac-physics/"}
-                    imageSrc={"/assets/teacher_features_sprite.svg#teacher-forum"}
+                    imageSrc={"/assets/phy/teacher_features_sprite.svg#teacher-forum"}
                     title={"Teacher Forum (TalkPhysics)"}/>
             </Col>
         </Row>
