@@ -186,7 +186,6 @@ const ReservationsModal = () => {
                                             label="All"
                                             checked={checkAllCancelReservationsCheckbox}
                                             onChange={() => toggleAllCancelReservationCheckboxes()}
-                                            // TBD: disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
                                         />
                                     </th>
                                     <th className="align-middle student-name">
@@ -213,7 +212,7 @@ const ReservationsModal = () => {
                                                 name={`reserved_student-${booking.userBooked.id}`}
                                                 checked={cancelReservationCheckboxes[booking.userBooked.id]}
                                                 // I'm including the full access autorisation here because we do the same in the next table
-                                                disabled={!booking.userBooked.authorisedFullAccess || booking.userBooked.emailVerificationStatus !== 'VERIFIED'}
+                                                disabled={!booking.userBooked.authorisedFullAccess && booking.userBooked.emailVerificationStatus !== 'VERIFIED'}
                                                 onChange={() => toggleCancelReservationCheckboxeForUser(booking.userBooked?.id)}
                                             />}
                                         </td>
@@ -263,7 +262,7 @@ const ReservationsModal = () => {
                                                 type="checkbox"
                                                 name={`unbooked_student-${user.id}`}
                                                 checked={userCheckboxes[user.id]}
-                                                disabled={!user.authorisedFullAccess || user.emailVerificationStatus !== 'VERIFIED'}
+                                                disabled={!user.authorisedFullAccess && user.emailVerificationStatus !== 'VERIFIED'}
                                                 onChange={() => toggleCheckboxForUser(user.id)}
                                             />
                                         </td>
