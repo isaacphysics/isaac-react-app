@@ -4,7 +4,6 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {isLoggedIn, isStudent} from "../../services/user";
-import classNames from "classnames";
 import {Hexagon} from "../elements/Hexagon";
 
 export const TeacherFeatures = () => {
@@ -12,7 +11,6 @@ export const TeacherFeatures = () => {
     const user = useSelector((state: AppState) => state && state.user);
 
     const isDisabled = (isStudent(user) || !isLoggedIn(user));
-    const isaacHexagonClass = classNames({"hexagon": true, "disabled": isDisabled});
 
     return<Container>
         <Row className="pb-4">
@@ -34,7 +32,7 @@ export const TeacherFeatures = () => {
                 </Col> :
                 <Col md="auto">
                     <div className="hexagon">
-                        <img className="hexagon-field" src="/assets/teacher_features_sprite.svg#teacher-hat" alt="Isaac hexagon"></img>
+                        <img className="hexagon-field" src="/assets/teacher_features_sprite.svg#teacher-hat" alt="" />
                         <div className="hexagon-title">
                             1. You are now a teacher!
                         </div>
@@ -45,19 +43,19 @@ export const TeacherFeatures = () => {
                 <Hexagon link={"/groups"}
                     imageSrc={"/assets/teacher_features_sprite.svg#groups"}
                     title={"2. Create and manage groups"}
-                    hexagonClass={isaacHexagonClass}/>
+                    disabled={isDisabled}/>
             </Col>
             <Col md="auto">
                 <Hexagon link={"/set_assignments"}
                     imageSrc={"/assets/teacher_features_sprite.svg#set-assignments"}
                     title={"3. Set Assignments"}
-                    hexagonClass={isaacHexagonClass}/>
+                    disabled={isDisabled}/>
             </Col>
             <Col md="auto">
                 <Hexagon link={"/assignment_progress"}
                     imageSrc={"/assets/teacher_features_sprite.svg#track-progress"}
                     title={"4. Track group progress"}
-                    hexagonClass={isaacHexagonClass}/>
+                    disabled={isDisabled}/>
             </Col>
         </Row>
         <Row>
