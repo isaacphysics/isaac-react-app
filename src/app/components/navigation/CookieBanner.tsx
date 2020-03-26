@@ -20,7 +20,7 @@ const CookieBannerComponent = ({logAction}: {logAction: (eventDetails: object) =
         logAction(eventDetails);
     }
 
-    return show ? <div className="banner d-print-none">
+    return show ? <div className="banner d-print-none" id="cookie-banner">
         <RS.Container className="py-3">
             <RS.Row style={{alignItems: "center"}}>
                 <RS.Col xs={12} sm={2} md={1}>

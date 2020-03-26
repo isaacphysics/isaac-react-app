@@ -2,6 +2,7 @@ import React from 'react';
 import {ImageDTO} from "../../../IsaacApiTypes";
 import {apiHelper} from "../../services/api";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
+import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 
 interface IsaacImageProps {
     doc: ImageDTO;
@@ -20,7 +21,7 @@ export const IsaacImage = ({doc}: IsaacImageProps) => {
                 <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
-                {doc.attribution && <div className="text-muted">{doc.attribution}</div>}
+                {doc.attribution && <span className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></span>}
             </div>
         </figure>
     </div>;

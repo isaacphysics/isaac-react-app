@@ -3,12 +3,12 @@ import {DOCUMENT_TYPE, SEARCH_RESULT_TYPE, TAG_ID, TAG_LEVEL} from "../../../ser
 import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
 import React from "react";
-import {getSpecifiedTag} from "../../../services/tags";
+import tags from "../../../services/tags";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
     let linkDestination, icon, iconLabel, topicTitle;
     let itemClasses = "p-3 bg-transparent content-summary-link ";
-    let itemTopic = getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[]);
+    let itemTopic = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[]);
     switch (item.type) {
         case (SEARCH_RESULT_TYPE.SHORTCUT):
             linkDestination = item.url;

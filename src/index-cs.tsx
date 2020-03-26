@@ -1,5 +1,5 @@
 import "core-js/stable";
-import './scss/isaac-cs.scss';
+import './scss/cs/isaac.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from "react-redux";
