@@ -1,0 +1,19 @@
+#reservation-modal {
+    table {
+        &.reserved {
+            th {
+                &.checkbox {
+                    width: 5%;
+                }
+
+                &.student-name {
+                    width: 50%;
+                }
+
+                &.reserved-by {
+                    width: 17%;
+                }
+            }
+        }
+    }
+}

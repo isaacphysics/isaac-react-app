@@ -148,144 +148,147 @@ const ReservationsModal = () => {
     };
 
     return <React.Fragment>
-        {!selectedEvent?.allowGroupReservations && <p>This event does not allow group reservations.</p>}
-        {selectedEvent?.allowGroupReservations && <Col>
-            <Row className="mb-5">
-                <Col md={3}>
-                    <ShowLoading until={activeGroups}>
-                        {activeGroups && <Dropdown isOpen={groupDropdownOpen} toggle={() => setGroupDropdownOpen(!groupDropdownOpen)}>
-                            <DropdownToggle caret color="primary">
-                                {currentGroup ? currentGroup.groupName : "Select group"}
-                            </DropdownToggle>
-                            <DropdownMenu>{
-                                activeGroups.filter(group => !group.archived).map(group =>
-                                    <DropdownItem onClick={() => dispatch(selectGroup(group))}
-                                        key={group.id}
-                                        active={currentGroup === group}
-                                    >{group.groupName}</DropdownItem>
-                                )
-                            }</DropdownMenu>
-                        </Dropdown>}
-                    </ShowLoading>
-                </Col>
-                {(!currentGroup || !currentGroup.members) && <Col>
-                    <p>Select one of your groups from the dropdown menu to see its members.</p>
-                </Col>}
-                {currentGroup && currentGroup.members && currentGroup.members.length == 0 && <Col>
-                    <p>This group has no members. Please select another group.</p>
-                </Col>}
-                {currentGroup && currentGroup.members && currentGroup.members.length > 0 && <Col>
-                    <Table bordered className="bg-white">
-                        <thead>
-                            <tr>
-                                <th className="align-middle">
-                                    <CustomInput
-                                        id="check_all_reserved"
-                                        type="checkbox"
-                                        label="Select all"
-                                        checked={checkAllCancelReservationsCheckbox}
-                                        onChange={() => toggleAllCancelReservationCheckboxes()}
-                                        // TBD: disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
-                                    />
-                                </th>
-                                <th className="align-middle">
-                                    Student
-                                </th>
-                                <th className="align-middle">
-                                    Booking Status
-                                </th>
-                                <th className="align-middle">
-                                    Reserved By
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => {
-                                return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
-                                    <td className="align-middle">
-                                        {booking.userBooked &&
-                                        (booking.reservedById === user?.id) &&
-                                        (booking.bookingStatus === 'RESERVED') &&
-                                        <CustomInput key={booking.userBooked.id}
-                                            id={`${booking.userBooked.id}`}
-                                            type="checkbox"
-                                            name={`reserved_student-${booking.userBooked.id}`}
-                                            checked={cancelReservationCheckboxes[booking.userBooked.id]}
-                                            // TBD: disabled={!booking.userBooked.authorisedFullAccess}
-                                            onChange={() => toggleCancelReservationCheckboxeForUser(booking.userBooked?.id)}
-                                        />}
-                                    </td>
-                                    <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)}</td>
-                                    <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
-                                    <td className="align-middle">{booking.reservedById === user?.id ? "You" : "Someone else"}</td>
-                                </tr>);
-                            })}
-                            {eventBookingsForGroup.length == 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
-                        </tbody>
-                    </Table>
-
-                    <div className="text-center">
-                        <Button color="primary" outline disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
-                            Cancel reservations
-                        </Button>
-                    </div>
-
-                    <Table bordered className="mt-3 bg-white">
-                        <thead>
-                            <tr>
-                                <th colSpan={2}>Other students in this group</th>
-                            </tr>
-                            <tr>
-                                <th className="w-auto text-nowrap align-middle">
-                                    <CustomInput
-                                        id="check_all_unbooked"
-                                        type="checkbox"
-                                        label="Select all"
-                                        checked={checkAllCheckbox}
-                                        onChange={() => toggleAllUnbooked()}
-                                        disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
-                                    />
-                                </th>
-                                <th className="w-100 align-middle">
-                                    Student
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {unbookedUsers.length > 0 && unbookedUsers.map(user => {
-                                return (user.id && <tr key={user.id}>
-                                    <td className="w-auto align-middle">
+        <div id="reservation-modal">
+            {!selectedEvent?.allowGroupReservations && <p>This event does not allow group reservations.</p>}
+            {selectedEvent?.allowGroupReservations && <Col>
+                <Row className="mb-5">
+                    <Col md={3}>
+                        <ShowLoading until={activeGroups}>
+                            {activeGroups && <Dropdown isOpen={groupDropdownOpen} toggle={() => setGroupDropdownOpen(!groupDropdownOpen)}>
+                                <DropdownToggle caret color="primary">
+                                    {currentGroup ? currentGroup.groupName : "Select group"}
+                                </DropdownToggle>
+                                <DropdownMenu>{
+                                    activeGroups.filter(group => !group.archived).map(group =>
+                                        <DropdownItem onClick={() => dispatch(selectGroup(group))}
+                                            key={group.id}
+                                            active={currentGroup === group}
+                                        >{group.groupName}</DropdownItem>
+                                    )
+                                }</DropdownMenu>
+                            </Dropdown>}
+                        </ShowLoading>
+                    </Col>
+                    {(!currentGroup || !currentGroup.members) && <Col>
+                        <p>Select one of your groups from the dropdown menu to see its members.</p>
+                    </Col>}
+                    {currentGroup && currentGroup.members && currentGroup.members.length == 0 && <Col>
+                        <p>This group has no members. Please select another group.</p>
+                    </Col>}
+                    {currentGroup && currentGroup.members && currentGroup.members.length > 0 && <Col>
+                        <Table bordered className="bg-white reserved">
+                            <thead>
+                                <tr>
+                                    <th className="align-middle checkbox">
                                         <CustomInput
-                                            key={user.id}
-                                            id={`${user.id}`}
+                                            id="check_all_reserved"
                                             type="checkbox"
-                                            name={`unbooked_student-${user.id}`}
-                                            checked={userCheckboxes[user.id]}
-                                            disabled={!user.authorisedFullAccess}
-                                            onChange={() => toggleCheckboxForUser(user.id)}
+                                            label="All"
+                                            checked={checkAllCancelReservationsCheckbox}
+                                            onChange={() => toggleAllCancelReservationCheckboxes()}
+                                            // TBD: disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
                                         />
-                                    </td>
-                                    <td className="w-100 align-middle">{user.givenName + " " + user.familyName}</td>
-                                </tr>)
-                            })}
-                        </tbody>
-                    </Table>
+                                    </th>
+                                    <th className="align-middle student-name">
+                                        Student
+                                    </th>
+                                    <th className="align-middle booking-status">
+                                        Booking Status
+                                    </th>
+                                    <th className="align-middle reserved-by">
+                                        Reserved By
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => {
+                                    return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
+                                        <td className="align-middle">
+                                            {booking.userBooked &&
+                                            (booking.reservedById === user?.id) &&
+                                            (booking.bookingStatus === 'RESERVED') &&
+                                            <CustomInput key={booking.userBooked.id}
+                                                id={`${booking.userBooked.id}`}
+                                                type="checkbox"
+                                                name={`reserved_student-${booking.userBooked.id}`}
+                                                checked={cancelReservationCheckboxes[booking.userBooked.id]}
+                                                // I'm including the full access autorisation here because we do the same in the next table
+                                                disabled={!booking.userBooked.authorisedFullAccess || booking.userBooked.emailVerificationStatus !== 'VERIFIED'}
+                                                onChange={() => toggleCancelReservationCheckboxeForUser(booking.userBooked?.id)}
+                                            />}
+                                        </td>
+                                        <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)} {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <span className="text-danger pl-2">E-mail not verified</span>}</td>
+                                        <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
+                                        <td className="align-middle">{booking.reservedById === user?.id ? "You" : "Someone else"}</td>
+                                    </tr>);
+                                })}
+                                {eventBookingsForGroup.length == 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
+                            </tbody>
+                        </Table>
 
-                    <Row className="toolbar">
-                        <Col>
-                            {isReservationLimitReached() && <p className="text-danger">
-                                You can only reserve a maximum of {selectedEvent && selectedEvent.groupReservationLimit} group members onto this event.
-                            </p>}
-                            <div className="text-center">
-                                <Button color="primary" disabled={!Object.values(userCheckboxes).some(v => v) || isReservationLimitReached()} onClick={requestReservations}>
-                                    Reserve places
-                                </Button>
-                            </div>
-                        </Col>
-                    </Row>
-                </Col>}
-            </Row>
-        </Col>}
+                        <div className="text-center">
+                            <Button color="primary" outline disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
+                                Cancel reservations
+                            </Button>
+                        </div>
+
+                        <Table bordered className="mt-3 bg-white unreserved">
+                            <thead>
+                                <tr>
+                                    <th colSpan={2}>Other students in this group</th>
+                                </tr>
+                                <tr>
+                                    <th className="w-auto text-nowrap align-middle checkbox">
+                                        <CustomInput
+                                            id="check_all_unbooked"
+                                            type="checkbox"
+                                            label="All"
+                                            checked={checkAllCheckbox}
+                                            onChange={() => toggleAllUnbooked()}
+                                            disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
+                                        />
+                                    </th>
+                                    <th className="w-100 align-middle student-name">
+                                        Student
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {unbookedUsers.length > 0 && unbookedUsers.map(user => {
+                                    return (user.id && <tr key={user.id}>
+                                        <td className="w-auto align-middle">
+                                            <CustomInput
+                                                key={user.id}
+                                                id={`${user.id}`}
+                                                type="checkbox"
+                                                name={`unbooked_student-${user.id}`}
+                                                checked={userCheckboxes[user.id]}
+                                                disabled={!user.authorisedFullAccess || user.emailVerificationStatus !== 'VERIFIED'}
+                                                onChange={() => toggleCheckboxForUser(user.id)}
+                                            />
+                                        </td>
+                                        <td className="w-100 align-middle">{user.givenName + " " + user.familyName} {user.emailVerificationStatus !== 'VERIFIED' && <span className="text-danger pl-2">E-mail not verified</span>}</td>
+                                    </tr>)
+                                })}
+                            </tbody>
+                        </Table>
+
+                        <Row className="toolbar">
+                            <Col>
+                                {isReservationLimitReached() && <p className="text-danger">
+                                    You can only reserve a maximum of {selectedEvent && selectedEvent.groupReservationLimit} group members onto this event.
+                                </p>}
+                                <div className="text-center">
+                                    <Button color="primary" disabled={!Object.values(userCheckboxes).some(v => v) || isReservationLimitReached()} onClick={requestReservations}>
+                                        Reserve places
+                                    </Button>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Col>}
+                </Row>
+            </Col>}
+        </div>
     </React.Fragment>
 };
 
