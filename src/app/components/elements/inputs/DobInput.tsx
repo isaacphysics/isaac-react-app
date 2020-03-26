@@ -8,8 +8,9 @@ interface DobInputProps {
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
     submissionAttempted: boolean;
+    editingOtherUser?: boolean;
 }
-export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted}: DobInputProps) => {
+export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, editingOtherUser}: DobInputProps) => {
     return <RS.FormGroup>
         <RS.Label htmlFor="dob-input">Date of birth</RS.Label>
         <DateInput
@@ -24,7 +25,7 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted}: D
             labelSuffix=" of birth"
         />
         <RS.FormFeedback id="age-validation-message">
-            You must be over 13 years old
+            {editingOtherUser ? "The user " : "You "}must be over 13 years old
         </RS.FormFeedback>
     </RS.FormGroup>
 };
