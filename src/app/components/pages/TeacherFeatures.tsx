@@ -32,7 +32,7 @@ export const TeacherFeatures = () => {
                 </Col> :
                 <Col md="auto">
                     <div className="hexagon">
-                        <img className="hexagon-field" src="/assets/teacher_features_sprite.svg#teacher-hat" alt="" />
+                        <img className="hexagon" src="/assets/teacher_features_sprite.svg#teacher-hat" alt="" />
                         <div className="hexagon-title">
                             1. You are now a teacher!
                         </div>
