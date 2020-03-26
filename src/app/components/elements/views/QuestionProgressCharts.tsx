@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {MutableRefObject, useEffect, useState} from 'react';
 import * as RS from "reactstrap";
 import {LevelAttempts, Levels} from "../../../../IsaacAppTypes";
-import bb from "billboard.js";
+import bb, {Chart} from "billboard.js";
 import tags from "../../../services/tags";
 import Select from "react-select";
 import {ValueType} from "react-select/src/types";
@@ -12,12 +12,17 @@ interface QuestionProgressChartsProps {
     subId: string;
     questionsByTag: { [tag: string]: number };
     questionsByLevel: LevelAttempts<number>;
+    flushRef: FlushableRef;
 }
 
-const SIZE = {size: {width: 240, height: 330}};
+export type FlushableRef = MutableRefObject<(() => void) | undefined>;
+
+const OPTIONS = {
+    size: { width: 240, height: 330 }
+};
 
 export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
-    const {subId, questionsByTag, questionsByLevel} = props;
+    const {subId, questionsByTag, questionsByLevel, flushRef} = props;
 
     const topTagLevel = tags.getTagHierarchy()[0];
     const searchTagLevel = tags.getTagHierarchy()[1];
@@ -31,8 +36,9 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     const levelColumns = [...Array(7)].map((_, i) => [`Level ${i}`, questionsByLevel[i as Levels] || 0]);
 
     useEffect(() => {
+        const charts: Chart[] = [];
         if (!isAllZero(categoryColumns)) {
-            bb.generate({
+            charts.push(bb.generate({
                 data: {
                     columns: categoryColumns,
                     type: "donut",
@@ -42,12 +48,12 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     label: {format: (value, ratio, id) => `${value}`}
                 },
                 bindto: `#${subId}-categoryChart`,
-                ...SIZE
-            });
+                ...OPTIONS
+            }));
         }
 
         if (!isAllZero(topicColumns)) {
-            bb.generate({
+            charts.push(bb.generate({
                 data: {
                     columns: topicColumns,
                     type: "donut"
@@ -57,20 +63,35 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     label: {format: (value, ratio, id) => `${value}`}
                 },
                 bindto: `#${subId}-topicChart`,
-                ...SIZE
-            });
+                ...OPTIONS
+            }));
         }
 
         if (!isAllZero(levelColumns)) {
-            bb.generate({
+            charts.push(bb.generate({
                 data: {columns: levelColumns, type: "donut"},
                 donut: {
                     title: "By Level",
                     label: {format: (value, ratio, id) => `${value}`}
                 },
                 bindto: `#${subId}-levelChart`,
-                ...SIZE
+                ...OPTIONS
+            }));
+        }
+        flushRef.current = () => {
+            charts.forEach(chart => {
+                // N.B. This no-op actually clears the text size cache, which makes this flush actually work.
+                // (The relevant line in BB is this.internal.clearLegendItemTextBoxCache() )
+                chart.data.names();
+                // N.B. Of course, under the text size cache, is a more general cache, which also needs
+                // clearing, and is not exposed.
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any I'm not in the mood Typescript.
+                (chart as any).internal.resetCache();
+                chart.flush();
             });
+        };
+        return () => {
+            flushRef.current = undefined;
         }
     }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, levelColumns]);
 
