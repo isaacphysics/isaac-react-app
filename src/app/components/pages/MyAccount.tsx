@@ -29,6 +29,7 @@ import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
 import {UserEmailPreference} from "../elements/panels/UserEmailPreferences";
 import {
+    allRequiredInformationIsPresent,
     isDobOverThirteen,
     validateEmail,
     validateEmailPreferences,
@@ -143,9 +144,7 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, userAuthSe
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
-            validateUserSchool(userToUpdate) &&
-            validateUserGender(userToUpdate) &&
-            validateSubjectInterests(subjectInterests) &&
+            allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests}) &&
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
             (!userToUpdate.password || isNewPasswordConfirmed)) {
             updateCurrentUser(userToUpdate, myUserPreferences, currentPassword, user);

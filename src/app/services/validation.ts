@@ -10,6 +10,7 @@ import {
 import {UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
 import {EXAM_BOARD, NOT_FOUND} from "./constants";
+import {SITE_SUBJECT, SITE} from "./siteConstants";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
@@ -84,11 +85,13 @@ export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 
 export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null) {
     return user && userPreferences &&
-        validateUserSchool(user) &&
-        validateUserGender(user) &&
-        validateExamBoard(user) &&
-        validateEmailPreferences(userPreferences.EMAIL_PREFERENCE) &&
-        validateSubjectInterests(userPreferences.SUBJECT_INTEREST);
+        (SITE_SUBJECT !== SITE.CS || (
+            validateUserSchool(user) &&
+            validateUserGender(user) &&
+            validateExamBoard(user)
+        )) &&
+        (!userPreferences.EMAIL_PREFERENCE || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
+        (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST));
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {

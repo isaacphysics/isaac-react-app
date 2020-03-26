@@ -3,16 +3,15 @@ import {SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../../services/constants";
 import React, {ChangeEvent} from "react";
 import {
+    allRequiredInformationIsPresent,
     validateEmail,
-    validateSubjectInterests,
-    validateUserGender,
-    validateUserSchool
 } from "../../../services/validation";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
+import {SITE_SUBJECT, SITE} from "../../../services/siteConstants";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -30,13 +29,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         submissionAttempted
     } = props;
 
-    const allRequiredFieldsValid = userToUpdate && subjectInterests &&
-        validateEmail(userToUpdate.email) &&
-        validateUserGender(userToUpdate) &&
-        validateUserSchool(userToUpdate) &&
-        validateSubjectInterests(subjectInterests);
-
-
+    const allRequiredFieldsValid = userToUpdate && userToUpdate.email &&
+        allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests});
 
     return <CardBody className="pt-0">
         <Row>
@@ -98,7 +92,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         </Row>
         <Row>
             <Col md={6}>
-                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
+                    required={SITE_SUBJECT === SITE.CS}/>
             </Col>
             <Col md={6}>
                 <FormGroup>
@@ -123,7 +118,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         </Row>
         <Row>
             <Col md={6}>
-                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
+                    required={SITE_SUBJECT === SITE.CS}/>
             </Col>
             <Col md={6}>
                 <div className="mt-2 mb-2 pt-1">

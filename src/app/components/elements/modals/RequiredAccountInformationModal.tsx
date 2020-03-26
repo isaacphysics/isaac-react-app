@@ -75,6 +75,7 @@ const RequiredAccountInfoBody = () => {
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                             submissionAttempted={submissionAttempted} idPrefix="modal"
+                            required
                         />
                     </div>}
                     {!validateExamBoard(initialUserValue) && <div>
@@ -99,6 +100,7 @@ const RequiredAccountInfoBody = () => {
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
+                        required
                     />
                 </RS.Col>}
             </RS.Row>
