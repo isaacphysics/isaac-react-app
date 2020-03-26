@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useMemo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     closeActiveModal,
@@ -24,6 +24,7 @@ const ReservationsModal = () => {
     const dispatch = useDispatch();
     const user = useSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
     const activeGroups = useSelector(groups.active);
+    const activeFilteredGroups = useMemo(() => activeGroups?.filter(group => !group.archived), [activeGroups]);
     const currentGroup = useSelector(groups.current);
     const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
     const eventBookingsForGroup = useSelector((state: AppState) => state && state.eventBookingsForGroup || []);
@@ -153,13 +154,14 @@ const ReservationsModal = () => {
             {selectedEvent?.allowGroupReservations && <Col>
                 <Row className="mb-5">
                     <Col md={3}>
-                        <ShowLoading until={activeGroups}>
-                            {activeGroups && <Dropdown isOpen={groupDropdownOpen} toggle={() => setGroupDropdownOpen(!groupDropdownOpen)}>
+                        <ShowLoading until={activeFilteredGroups}>
+                            {activeFilteredGroups && activeFilteredGroups.length === 0 && <p>Create a groups from the [Manage Groups] page to book your students onto an event</p>}
+                            {activeFilteredGroups && activeFilteredGroups.length > 0 && <Dropdown isOpen={groupDropdownOpen} toggle={() => setGroupDropdownOpen(!groupDropdownOpen)}>
                                 <DropdownToggle caret color="primary">
                                     {currentGroup ? currentGroup.groupName : "Select group"}
                                 </DropdownToggle>
                                 <DropdownMenu>{
-                                    activeGroups.filter(group => !group.archived).map(group =>
+                                    activeFilteredGroups.map(group =>
                                         <DropdownItem onClick={() => dispatch(selectGroup(group))}
                                             key={group.id}
                                             active={currentGroup === group}
