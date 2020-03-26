@@ -11,7 +11,7 @@ import {
 } from "../../../state/actions";
 import {store} from "../../../state/store";
 import {Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Col, CustomInput, Row, Table} from "reactstrap";
-import {AppState, currentEvent} from "../../../state/reducers";
+import {AppState} from "../../../state/reducers";
 import {groups} from '../../../state/selectors';
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {AppGroupMembership} from "../../../../IsaacAppTypes";
