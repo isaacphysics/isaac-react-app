@@ -9,27 +9,30 @@
   }
 
   a.hexagon, div.hexagon {
-    background-image:url(/assets/hexagon.svg);
+    background-image:url(/assets/hexagon.svg#green);
     background-size: contain;
     background-repeat: no-repeat;
     color: black;
     width:220px;
-    height:258px;
+    height:260px;
     overflow:hidden;
     display: block;
     margin-left: auto;
     margin-right: auto;
 
     &:focus {
-      background-image:url(/assets/hexagon-link-focus.svg);
+      background-image:url(/assets/hexagon.svg#green-bold);
       outline: none;
     }
 
     &.disabled{
       color: #ccc;
-      background-image:url(/assets/hexagon-grey.svg);
+      background-image:url(/assets/hexagon.svg#grey);
       &:hover .hexagon-title {
         color: #ccc;
+      }
+      &:focus {
+        background-image:url(/assets/hexagon.svg#grey-bold);
       }
     }
   }
