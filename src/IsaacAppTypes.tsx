@@ -633,7 +633,8 @@ export interface AchievementsRecord {
 }
 
 export interface UserSnapshot {
-    streakRecord?: StreakRecord;
+    dailyStreakRecord?: StreakRecord;
+    weeklyStreakRecord?: StreakRecord;
     achievementsRecord?: AchievementsRecord;
 }
 
