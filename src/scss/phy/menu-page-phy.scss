@@ -9,7 +9,7 @@
   }
 
   a.hexagon, div.hexagon {
-    background-image:url(/assets/top-boards-hexagon.svg);
+    background-image:url(/assets/hexagon.svg);
     background-size: contain;
     background-repeat: no-repeat;
     color: black;
@@ -21,13 +21,13 @@
     margin-right: auto;
 
     &:focus {
-      background-image:url(/assets/top-boards-hexagon-focus.svg);
+      background-image:url(/assets/hexagon-link-focus.svg);
       outline: none;
     }
 
     &.disabled{
       color: #ccc;
-      background-image:url(/assets/top-boards-hexagon-grey.svg);
+      background-image:url(/assets/hexagon-grey.svg);
       &:hover .hexagon-title {
         color: #ccc;
       }
