@@ -42,22 +42,16 @@ const ReservationsModal = () => {
 
     useEffect(() => {
         dispatch(loadGroups(false));
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         if (currentGroup && !currentGroup.members) {
             dispatch(getGroupMembers(currentGroup));
-        } else if (currentGroup && currentGroup.members) {
-            // af599 TODO: Retrieve event status for members maybe?
         }
-    }, [currentGroup]);
-
-    useEffect(() => {
         if (selectedEvent && selectedEvent.id && currentGroup && currentGroup.id) {
             dispatch(getEventBookingsForGroup(selectedEvent.id, currentGroup.id));
         }
-    }, [currentGroup]);
-
+    }, [dispatch, selectedEvent, currentGroup]);
 
     useEffect(() => {
         if (currentGroup && currentGroup.members) {
@@ -84,7 +78,7 @@ const ReservationsModal = () => {
             setCheckAllCheckbox(false);
             setUnbookedUsers(newUnbookedUsers);
         }
-    }, [eventBookingsForGroup]);
+    }, [currentGroup, eventBookingsForGroup]);
 
     const toggleCheckboxForUser = (userId?: number) => {
         if (!userId) return;
@@ -105,7 +99,7 @@ const ReservationsModal = () => {
         setUserCheckboxes(checkboxes);
     };
 
-    const toggleCancelReservationCheckboxeForUser = (userId?: number) => {
+    const toggleCancelReservationCheckboxForUser = (userId?: number) => {
         if (!userId) return;
         let checkboxes = { ...cancelReservationCheckboxes };
         checkboxes[userId] = !checkboxes[userId];
@@ -221,7 +215,7 @@ const ReservationsModal = () => {
                                                 checked={cancelReservationCheckboxes[booking.userBooked.id]}
                                                 // I'm including the full access autorisation here because we do the same in the next table
                                                 disabled={!booking.userBooked.authorisedFullAccess && booking.userBooked.emailVerificationStatus !== 'VERIFIED'}
-                                                onChange={() => toggleCancelReservationCheckboxeForUser(booking.userBooked?.id)}
+                                                onChange={() => toggleCancelReservationCheckboxForUser(booking.userBooked?.id)}
                                             />}
                                         </td>
                                         <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)} {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <span className="text-danger pl-2">E-mail not verified</span>}</td>
