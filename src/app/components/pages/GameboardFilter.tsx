@@ -145,12 +145,12 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
                 <RS.Row className="mt-4">
                     <RS.Col>
                         {boardStack.length > 0 && <RS.Button size="sm" color="primary" outline onClick={previousBoard}>
-                            <span className="d-md-inline d-none">Previous Gameboard</span> &#9100;
+                            <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
                         </RS.Button>}
                     </RS.Col>
                     <RS.Col className="text-right">
                         <RS.Button size="sm" color="primary" outline onClick={refresh}>
-                            <span className="d-md-inline d-none">Generate Gamebaord</span> ⟳
+                            <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
                         </RS.Button>
                     </RS.Col>
                 </RS.Row>
