@@ -92,7 +92,7 @@ export const Concepts = withRouter((props: {history: History; location: Location
                         <Input
                             className='search--filter-input mt-4'
                             type="search" value={searchText}
-                            placeholder="Search"
+                            placeholder="Search concepts"
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
                         />
                     </Form>
@@ -108,10 +108,16 @@ export const Concepts = withRouter((props: {history: History; location: Location
                                 </h3>
                             </Col>
                             <Col md={7} xs={12}>
-                                <Form inline className="search-filters">
-                                    <Label className="d-none d-sm-inline-block">Filter</Label>
-                                    <Label><CustomInput id="problem-search" type="checkbox" defaultChecked={conceptFilterPhysics} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterPhysics(e.target.checked)} />Physics</Label>
-                                    <Label><CustomInput id="concept-search" type="checkbox" defaultChecked={conceptFilterMaths} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterMaths(e.target.checked)} />Maths</Label>
+                                <Form id="concept-filter" inline className="search-filters">
+                                    <Label for="concept-filter" className="d-none d-sm-inline-block">Filter:</Label>
+                                    <Label>
+                                        <CustomInput id="problem-search" type="checkbox" defaultChecked={conceptFilterPhysics} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterPhysics(e.target.checked)} />
+                                        <span className="sr-only">Show </span>Physics<span className="sr-only"> concept</span>
+                                    </Label>
+                                    <Label>
+                                        <CustomInput id="concept-search" type="checkbox" defaultChecked={conceptFilterMaths} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterMaths(e.target.checked)} />
+                                        <span className="sr-only">Show </span>Maths<span className="sr-only"> concept</span>
+                                    </Label>
                                 </Form>
                             </Col>
                         </RS.CardHeader>
