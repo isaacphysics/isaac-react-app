@@ -157,7 +157,7 @@ export const IsaacApp = () => {
                     <StaticPageRoute exact path="/cookies" pageId="cookie_policy" />
                     <StaticPageRoute exact path="/accessibility" pageId="accessibility_statement" />
                     <StaticPageRoute exact path="/cyberessentials" />
-                    <TrackedRoute exact path="/coming_soon" component={ComingSoon} />is
+                    <TrackedRoute exact path="/coming_soon" component={ComingSoon} />
 
                     {/*
                     // TODO: schools and other admin stats
