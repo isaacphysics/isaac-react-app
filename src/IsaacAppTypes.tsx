@@ -405,7 +405,7 @@ export interface SubjectInterests {
 
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
-    EMAIL_PREFERENCE?: UserEmailPreferences;
+    EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
 }
 

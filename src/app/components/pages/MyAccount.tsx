@@ -162,7 +162,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
-            allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests}) &&
+            allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null}) &&
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
             (!userToUpdate.password || isNewPasswordConfirmed)) {
             updateCurrentUser(userToUpdate, editingOtherUser ? {} : myUserPreferences, currentPassword, user);
@@ -212,8 +212,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                         </NavItem>
                         }
                         {!editingOtherUser &&
-                        < NavItem >
-                            < NavLink
+                        <NavItem>
+                            <NavLink
                                 className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.emailpreferences})} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.emailpreferences))}
                             >
