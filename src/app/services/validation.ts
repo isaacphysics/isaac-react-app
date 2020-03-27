@@ -10,6 +10,7 @@ import {
 import {UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
 import {EXAM_BOARD, NOT_FOUND} from "./constants";
+import {SITE_SUBJECT, SITE} from "./siteConstants";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
@@ -40,7 +41,8 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
         emailPreferences.EVENTS,
         emailPreferences.NEWS_AND_UPDATES
     ].reduce(
-        (prev, next) => prev && (next === true || next === false), // Make sure all expected values are either true or false
+        // Make sure all expected values are either true or false
+        (prev, next) => prev && (next === true || next === false),
         true
     );
 };
@@ -84,11 +86,9 @@ export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 
 export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null) {
     return user && userPreferences &&
-        validateUserSchool(user) &&
-        validateUserGender(user) &&
-        validateExamBoard(user) &&
-        validateEmailPreferences(userPreferences.EMAIL_PREFERENCE) &&
-        validateSubjectInterests(userPreferences.SUBJECT_INTEREST);
+        (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user))) &&
+        (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
+        (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST));
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {

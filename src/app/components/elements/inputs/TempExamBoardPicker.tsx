@@ -5,13 +5,14 @@ import {EXAM_BOARD} from "../../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {setTempExamBoard} from "../../../state/actions";
 import {AppState} from "../../../state/reducers";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 export const TempExamBoardPicker = ({className, hideLabel = true}: {className?: string; hideLabel?: boolean}) => {
     const dispatch = useDispatch();
     const user = useSelector((state: AppState) => state && state.user || null);
     const currentExamBoard = useCurrentExamBoard();
 
-    return <React.Fragment>
+    return SITE_SUBJECT === SITE.CS ? <React.Fragment>
         {(!user?.loggedIn || user.examBoard === undefined || user.examBoard === EXAM_BOARD.OTHER) && <FormGroup className={className}>
             {!hideLabel && <Label className="d-inline-block pr-2" for="examBoardSelect">Exam Board</Label>}
             <Input
@@ -29,5 +30,5 @@ export const TempExamBoardPicker = ({className, hideLabel = true}: {className?: 
                 <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
             </Input>
         </FormGroup>}
-    </React.Fragment>
+    </React.Fragment> : null;
 };

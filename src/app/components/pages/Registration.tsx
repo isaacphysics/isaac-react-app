@@ -16,7 +16,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {LoggedInUser, LoggedInValidationUser, UserPreferencesDTO, ZxcvbnResult} from "../../../IsaacAppTypes";
+import {LoggedInUser, UserPreferencesDTO, ValidationUser, ZxcvbnResult} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
@@ -42,7 +42,7 @@ const dispatchToProps = {
 interface RegistrationPageProps {
     user: LoggedInUser | null;
     updateCurrentUser: (
-        registeredUser: LoggedInValidationUser,
+        registeredUser: ValidationUser,
         userPreferences: UserPreferencesDTO,
         passwordCurrent: string | null,
         currentUser: LoggedInUser

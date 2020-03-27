@@ -88,7 +88,9 @@ describe('TrustedHtml LaTeX locator', () => {
         const testcase = html[0] + ref + html[1];
         const result = katexify(testcase, null, null, false, {foo: 42});
 
-        expect(result).toEqual(html[0] + "Figure 42" + html[1]);
+        const expectedFigureRef = "Figure" + "&nbsp;" + "42";
+        const expectedFigureRefWithFormatting = `<strong class="text-secondary">${expectedFigureRef}</strong>`;
+        expect(result).toEqual(html[0] + expectedFigureRefWithFormatting + html[1]);
         expect(katex.renderToString).not.toHaveBeenCalled();
     });
 

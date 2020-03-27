@@ -5,6 +5,7 @@ a.skip-main:focus, a.skip-main:active {
   top: 70px;
 }
 header {
+  z-index: 20;
   background-image: url('/assets/phy/line.svg');
   @include respond-above(sm) {
     background-size: 100% 65%;

@@ -18,6 +18,7 @@ import {searchResultIsPublic} from "../../services/search"
 import {ShortcutResponses} from "../../../IsaacAppTypes";
 import {filterOnExamBoard, useCurrentExamBoard} from "../../services/examBoard";
 import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 
 export const Search = withRouter((props: {history: History; location: Location}) => {
@@ -117,7 +118,7 @@ export const Search = withRouter((props: {history: History; location: Location})
                                     <Label className="d-none d-sm-inline-block">Filter</Label>
                                     <Label><CustomInput id="problem-search" type="checkbox" defaultChecked={searchFilterProblems} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterProblems(e.target.checked)} />Search questions</Label>
                                     <Label><CustomInput id="concept-search" type="checkbox" defaultChecked={searchFilterConcepts} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterConcepts(e.target.checked)} />Search content</Label>
-                                    <Label><TempExamBoardPicker className="text-right" /></Label>
+                                    {SITE_SUBJECT === SITE.CS && <Label><TempExamBoardPicker className="text-right" /></Label>}
                                 </Form>
                             </Col>
                         </RS.CardHeader>

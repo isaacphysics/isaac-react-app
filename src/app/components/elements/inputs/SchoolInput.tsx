@@ -5,6 +5,7 @@ import {School, ValidationUser} from "../../../../IsaacAppTypes";
 import {api} from "../../../services/api";
 import {validateUserSchool} from "../../../services/validation";
 import {throttle} from "lodash";
+import classNames from "classnames";
 
 interface SchoolInputProps {
     userToUpdate: ValidationUser;
@@ -13,6 +14,7 @@ interface SchoolInputProps {
     className?: string;
     idPrefix?: string;
     disableInput?: boolean;
+    required: boolean;
 }
 const NOT_APPLICABLE = "N/A";
 
@@ -30,8 +32,7 @@ const getSchoolPromise = (schoolSearchText: string) =>
 // Must define this throttle function _outside_ the component to ensure it doesn't get overwritten each rerender!
 const throttledSchoolSearch = throttle(getSchoolPromise, 450);
 
-export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput}: SchoolInputProps) => {
-    let [schoolQueryText, setSchoolQueryText] = useState<string | null>(null);
+export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput, required}: SchoolInputProps) => {
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
     // Get school associated with urn
@@ -49,21 +50,14 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         fetchSchool(userToUpdate.schoolId || "");
     }, [userToUpdate]);
 
-    // Called as user types
-    function renderInput(queryValue: any) {
-        setSchoolQueryText(queryValue);
-    }
-
     // Set schoolId or schoolOther
     function setUserSchool(school: any) {
         if (setUserToUpdate) {
             if (school.urn) {
                 setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school.urn, schoolOther: undefined}));
-                setSchoolQueryText(null);
                 setSelectedSchoolObject(school);
             } else if (school) {
                 setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: school, schoolId: undefined}));
-                setSchoolQueryText(null);
                 setSelectedSchoolObject(school);
             }
         }
@@ -72,7 +66,6 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     // Called when school input box option selected
     function handleSetSchool(newValue: any) {
         if (newValue == null) {
-            setSchoolQueryText(null);
             setSelectedSchoolObject(undefined);
             userToUpdate.schoolOther = undefined;
         } else if (newValue && newValue.value) {
@@ -83,19 +76,18 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     }
 
     const schoolValue = (
-        schoolQueryText ?
-            schoolQueryText :
-            (selectedSchoolObject && selectedSchoolObject.urn ?
-                {value: selectedSchoolObject.urn, label: selectedSchoolObject.name + ", " + selectedSchoolObject.postcode} :
-                (userToUpdate.schoolOther ?
-                    {value: "manually entered school", label: userToUpdate.schoolOther} :
-                    undefined))
+        (selectedSchoolObject && selectedSchoolObject.urn ?
+            {value: selectedSchoolObject.urn, label: selectedSchoolObject.name + ", " + selectedSchoolObject.postcode} :
+            (userToUpdate.schoolOther ?
+                {value: "manually entered school", label: userToUpdate.schoolOther} :
+                undefined))
     );
 
     let randomNumber = Math.random();
 
+    const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
     return <RS.FormGroup className={`school ${className}`}>
-        <RS.Label htmlFor={`school-input-${randomNumber}`} className="form-required">School</RS.Label>
+        <RS.Label htmlFor={`school-input-${randomNumber}`} className={classNames({"form-required": required})}>School</RS.Label>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect
                 isClearable
@@ -103,9 +95,8 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 inputId={`school-input-${randomNumber}`}
                 placeholder={"Type your school name"}
                 value={schoolValue}
-                className={(submissionAttempted && !validateUserSchool(userToUpdate) ? "react-select-error " : "") + "basic-multi-select"}
+                className={(isInvalid ? "react-select-error " : "") + "basic-multi-select"}
                 classNamePrefix="select"
-                onInputChange={renderInput}
                 onChange={handleSetSchool}
                 loadOptions={throttledSchoolSearch}
                 filterOption={() => true}
@@ -118,7 +109,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             <RS.CustomInput
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
-                invalid={submissionAttempted && !validateUserSchool(userToUpdate)}
+                invalid={isInvalid}
                 disabled={!setUserToUpdate}
                 onChange={(e => {
                     if (setUserToUpdate) {
@@ -132,7 +123,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         </div>}
 
         <div className="invalid-school">
-            {submissionAttempted && !validateUserSchool(userToUpdate) ? "Please specify your school association" : null}
+            {submissionAttempted && required && !validateUserSchool(userToUpdate) ? "Please specify your school association" : null}
         </div>
     </RS.FormGroup>
 };
