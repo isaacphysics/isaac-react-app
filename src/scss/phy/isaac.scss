@@ -67,7 +67,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "~billboard.js/dist/theme/insight.css";
 
 // Utility
-@import "../common/preload";
+@import "preload";
 @import "../common/mixins";
 
 // Atoms
