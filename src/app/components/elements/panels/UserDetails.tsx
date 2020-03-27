@@ -19,6 +19,7 @@ interface UserDetailsProps {
     subjectInterests: SubjectInterests;
     setSubjectInterests: (si: SubjectInterests) => void;
     submissionAttempted: boolean;
+    editingOtherUser: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
 }
 
@@ -26,7 +27,7 @@ export const UserDetails = (props: UserDetailsProps) => {
     const {
         userToUpdate, setUserToUpdate,
         subjectInterests, setSubjectInterests,
-        submissionAttempted
+        submissionAttempted, editingOtherUser
     } = props;
 
     const allRequiredFieldsValid = userToUpdate && userToUpdate.email &&
@@ -87,7 +88,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </FormGroup>
             </Col>
             <Col md={6}>
-                <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} editingOtherUser={editingOtherUser}/>
             </Col>
         </Row>
         <Row>

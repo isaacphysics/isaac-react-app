@@ -10,7 +10,10 @@ export const DailyStreakGauge = (props: DailyStreakGaugeProps) => {
     const {streakRecord} = props;
     useEffect(() => {
         bb.generate({
-            data: {type: "gauge", columns: [["data", (streakRecord && streakRecord.currentActivity) || 0]]},
+            data: {
+                type: "gauge",
+                columns: [["data", (streakRecord && streakRecord.currentActivity) || 0]]
+            },
             gauge: {
                 fullCircle: true, max: 3, startingAngle: 0,
                 label: {
@@ -18,12 +21,12 @@ export const DailyStreakGauge = (props: DailyStreakGaugeProps) => {
                     format: () => (streakRecord && streakRecord.currentStreak || 0).toString()
                 }
             },
-            color: {pattern: ["#00FF00"], threshold: {values: [0]}},
-            size: {height: 180},
+            color: {pattern: ["#509E2E"], threshold: {values: [0]}},
+            size: {height: 130},
             legend: {show: false},
-            bindto: "#dailyStreakChart",
-            tooltip: {show: false}
+            bindto: "#daily-streak-chart",
+            tooltip: {show: false},
         });
     }, [streakRecord]);
-    return <div className={"auto-margin"} id="dailyStreakChart"/>
+    return <div className={"auto-margin"} id="daily-streak-chart"/>
 };
