@@ -245,19 +245,17 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
                                 />
                             </TabPane>
-                            {!editingOtherUser &&
-                            <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
+
+                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
                                 {<TeacherConnections user={user} authToken={authToken}/>}
-                            </TabPane>
-                            }
-                            {!editingOtherUser &&
-                            <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
+                            </TabPane>}
+
+                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                                 <UserEmailPreference
                                     emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                                     submissionAttempted={attemptedAccountUpdate}
                                 />
-                            </TabPane>
-                            }
+                            </TabPane>}
 
                         </TabContent>
 

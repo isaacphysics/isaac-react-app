@@ -96,9 +96,9 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
                     required={SITE_SUBJECT === SITE.CS}/>
             </Col>
-            <Col md={6}>
+            {SITE_SUBJECT === SITE.CS && <Col md={6}>
                 <FormGroup>
-                    <Label className="d-inline-block pr-2" htmlFor="exam-board-select">
+                    <Label className="d-inline-block pr-2 form-required" htmlFor="exam-board-select">
                         Exam board
                     </Label>
                     <Input
@@ -115,18 +115,16 @@ export const UserDetails = (props: UserDetailsProps) => {
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>
                 </FormGroup>
-            </Col>
-        </Row>
-        <Row>
+            </Col>}
             <Col md={6}>
                 <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
                     required={SITE_SUBJECT === SITE.CS}/>
             </Col>
-            <Col md={6}>
+            {SITE_SUBJECT === SITE.CS && <Col md={6}>
                 <div className="mt-2 mb-2 pt-1">
                     <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
                 </div>
-            </Col>
+            </Col>}
         </Row>
 
         {userToUpdate && userToUpdate.role == "STUDENT" && <Row>

@@ -41,7 +41,8 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
         emailPreferences.EVENTS,
         emailPreferences.NEWS_AND_UPDATES
     ].reduce(
-        (prev, next) => prev && (next === true || next === false), // Make sure all expected values are either true or false
+        // Make sure all expected values are either true or false
+        (prev, next) => prev && (next === true || next === false),
         true
     );
 };
@@ -85,12 +86,8 @@ export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 
 export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null) {
     return user && userPreferences &&
-        (SITE_SUBJECT !== SITE.CS || (
-            validateUserSchool(user) &&
-            validateUserGender(user) &&
-            validateExamBoard(user)
-        )) &&
-        (!userPreferences.EMAIL_PREFERENCE || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
+        (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user))) &&
+        (validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
         (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST));
 }
 
