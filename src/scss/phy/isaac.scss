@@ -67,7 +67,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "~billboard.js/dist/theme/insight.css";
 
 // Utility
-@import "../common/preload";
+@import "preload";
 @import "../common/mixins";
 
 // Atoms
@@ -75,7 +75,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/typography";
 @import "../common/headings";
 @import "../common/modals";
-@import "../common/questions";
+@import "questions";
 @import "../common/forms";
 @import "../common/elements";
 @import "../common/breadcrumbs";
@@ -97,7 +97,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 
 // Navigation
 @import "../common/navigation-bar";
-@import "../common/footer";
+@import "footer";
 @import "header";
 
 // Pages
@@ -117,6 +117,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/events";
 @import "books";
 @import "gameboard";
+@import "menu-page-phy";
 
 // Print
 @import "../common/print";
@@ -169,6 +170,5 @@ body {
     }
 }
 .footerLogo {
-    margin-top: -0.5px;
-    padding-left: 2rem;
+    margin-top: -0.55px;
 }

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -11,7 +11,7 @@ import {Unauthorised} from "./Unauthorised";
 import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats";
 import {DailyStreakPanel} from "../elements/panels/DailyStreakPanel";
 import {Tabs} from "../elements/Tabs";
-import {QuestionProgressCharts} from "../elements/views/QuestionProgressCharts";
+import {QuestionProgressCharts, FlushableRef} from "../elements/views/QuestionProgressCharts";
 import {HUMAN_QUESTION_TYPES, QUESTION_TYPES} from "../../services/questions";
 import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
@@ -43,6 +43,8 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
         }
     }, [userIdOfInterest]);
 
+    const tabRefs: FlushableRef[] = [useRef(), useRef()];
+
     if (!viewingOwnData && !isStaff(user)) {
         return <Unauthorised />
     }
@@ -64,16 +66,30 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
 
                         <Card className="mt-4">
                             <CardBody>
-                                <Tabs tabContentClass="mt-4">
+                                <Tabs tabContentClass="mt-4" activeTabChanged={(tabIndex) => {
+                                    const flush = tabRefs[tabIndex - 1].current;
+                                    if (flush) {
+                                        // Don't call the flush in an event handler that causes the render, that's too early.
+                                        // Call it once that's done.
+                                        requestAnimationFrame(() => {
+                                            flush();
+                                            // You'd think this wouldn't do anything, but it fixes the vertical positon of the
+                                            // legend. I'm beginning to dislike this library.
+                                            flush();
+                                        });
+                                    }
+                                }}>
                                     {{
                                         "Correct questions": <QuestionProgressCharts
                                             subId="correct"
                                             questionsByTag={(userProgress?.correctByTag) || {}}
-                                            questionsByLevel={(userProgress?.correctByLevel) || {}} />,
+                                            questionsByLevel={(userProgress?.correctByLevel) || {}}
+                                            flushRef={tabRefs[0]} />,
                                         "Attempted questions": <QuestionProgressCharts
                                             subId="attempted"
                                             questionsByTag={(userProgress?.attemptsByTag) || {}}
-                                            questionsByLevel={(userProgress?.attemptsByLevel) || {}} />
+                                            questionsByLevel={(userProgress?.attemptsByLevel) || {}}
+                                            flushRef={tabRefs[1]}/>
                                     }}
                                 </Tabs>
                             </CardBody>
