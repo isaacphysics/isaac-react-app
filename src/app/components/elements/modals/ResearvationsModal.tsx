@@ -14,7 +14,7 @@ import {Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Col, Custo
 import {AppState} from "../../../state/reducers";
 import {groups} from '../../../state/selectors';
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {AppGroupMembership} from "../../../../IsaacAppTypes";
+import {AppGroupMembership, AppGroup} from "../../../../IsaacAppTypes";
 import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
 import _orderBy from "lodash/orderBy";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
@@ -25,7 +25,11 @@ const ReservationsModal = () => {
     const dispatch = useDispatch();
     const user = useSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
     const activeGroups = useSelector(groups.active);
-    const activeFilteredGroups = useMemo(() => activeGroups?.filter(group => !group.archived), [activeGroups]);
+    const activeFilteredGroups = useMemo(() => activeGroups?.filter(group => !group.archived), [activeGroups])?.sort((a: AppGroup, b: AppGroup): number => {
+        if (!a.groupName || !b.groupName || (a.groupName === b.groupName)) return 0;
+        if (a.groupName > b.groupName) return 1;
+        return -1;
+    });
     const currentGroup = useSelector(groups.current);
     const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
     const eventBookingsForGroup = useSelector((state: AppState) => state && state.eventBookingsForGroup || []);
