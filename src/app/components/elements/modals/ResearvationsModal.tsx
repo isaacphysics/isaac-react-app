@@ -19,6 +19,7 @@ import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
 import _orderBy from "lodash/orderBy";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {isLoggedIn} from "../../../services/user";
+import {Link} from "react-router-dom";
 
 const ReservationsModal = () => {
     const dispatch = useDispatch();
@@ -155,7 +156,6 @@ const ReservationsModal = () => {
                 <Row className="mb-5">
                     <Col md={3}>
                         <ShowLoading until={activeFilteredGroups}>
-                            {activeFilteredGroups && activeFilteredGroups.length === 0 && <p>Create a groups from the [Manage Groups] page to book your students onto an event</p>}
                             {activeFilteredGroups && activeFilteredGroups.length > 0 && <Dropdown isOpen={groupDropdownOpen} toggle={() => setGroupDropdownOpen(!groupDropdownOpen)}>
                                 <DropdownToggle caret color="primary">
                                     {currentGroup ? currentGroup.groupName : "Select group"}
@@ -169,9 +169,11 @@ const ReservationsModal = () => {
                                     )
                                 }</DropdownMenu>
                             </Dropdown>}
+                            &nbsp; {/* ShowLoading needs to contain something. */}
                         </ShowLoading>
                     </Col>
-                    {(!currentGroup || !currentGroup.members) && <Col>
+                    {activeFilteredGroups && activeFilteredGroups.length === 0 && <p>Create a groups from the <Link to="/groups" onClick={() => store.dispatch(closeActiveModal())}>Manage groups</Link> page to book your students onto an event</p>}
+                    {activeFilteredGroups && activeFilteredGroups.length > 0 && (!currentGroup || !currentGroup.members) && <Col>
                         <p>Select one of your groups from the dropdown menu to see its members.</p>
                     </Col>}
                     {currentGroup && currentGroup.members && currentGroup.members.length == 0 && <Col>
