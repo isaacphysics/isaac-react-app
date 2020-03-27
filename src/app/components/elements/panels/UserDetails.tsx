@@ -5,13 +5,15 @@ import React, {ChangeEvent} from "react";
 import {
     allRequiredInformationIsPresent,
     validateEmail,
+    validateExamBoard,
+    validateUserGender,
 } from "../../../services/validation";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {SITE_SUBJECT, SITE} from "../../../services/siteConstants";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -31,7 +33,7 @@ export const UserDetails = (props: UserDetailsProps) => {
     } = props;
 
     const allRequiredFieldsValid = userToUpdate && userToUpdate.email &&
-        allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests});
+        allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null});
 
     return <CardBody className="pt-0">
         <Row>
@@ -109,7 +111,9 @@ export const UserDetails = (props: UserDetailsProps) => {
                                 Object.assign({}, userToUpdate, {examBoard: event.target.value})
                             )
                         }
+                        invalid={submissionAttempted && !validateExamBoard(userToUpdate)}
                     >
+                        <option value={undefined}></option>
                         <option value={EXAM_BOARD.OTHER}>Other</option>
                         <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
