@@ -59,7 +59,6 @@ import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MyProgress} from "../pages/MyProgress";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import {LoadScript} from "@react-google-maps/api";
-import {Concepts} from '../pages/Concepts';
 import SiteSpecific from "../site/siteSpecific";
 import StaticPageRoute from "./StaticPageRoute";
 import {Topic} from "../pages/Topic";
@@ -104,7 +103,6 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/(home)?" component={SiteSpecific.Homepage} />
                     <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />
                     <TrackedRoute exact path="/search" component={Search} />
-                    <TrackedRoute exact path="/concepts" component={Concepts} />
 
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                     <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
