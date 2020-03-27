@@ -29,13 +29,11 @@ import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
 import {UserEmailPreference} from "../elements/panels/UserEmailPreferences";
 import {
+    allRequiredInformationIsPresent,
     isDobOverThirteen,
     validateEmail,
     validateEmailPreferences,
-    validatePassword,
-    validateSubjectInterests,
-    validateUserGender,
-    validateUserSchool
+    validatePassword
 } from "../../services/validation";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
@@ -164,9 +162,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
-            validateUserSchool(userToUpdate) &&
-            validateUserGender(userToUpdate) &&
-            validateSubjectInterests(subjectInterests) &&
+            allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests}) &&
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
             (!userToUpdate.password || isNewPasswordConfirmed)) {
             updateCurrentUser(userToUpdate, editingOtherUser ? {} : myUserPreferences, currentPassword, user);
@@ -249,19 +245,17 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
                                 />
                             </TabPane>
-                            {!editingOtherUser &&
-                            <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
+
+                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
                                 {<TeacherConnections user={user} authToken={authToken}/>}
-                            </TabPane>
-                            }
-                            {!editingOtherUser &&
-                            <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
+                            </TabPane>}
+
+                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                                 <UserEmailPreference
                                     emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                                     submissionAttempted={attemptedAccountUpdate}
                                 />
-                            </TabPane>
-                            }
+                            </TabPane>}
 
                         </TabContent>
 
