@@ -9,6 +9,11 @@ import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect} from "react-router";
 import {isTeacher} from "../../../services/user";
+import {Alevel} from "../../pages/Alevel";
+import {Gcse} from "../../pages/Gcse";
+import {TeacherFeatures} from "../../pages/TeacherFeatures";
+import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
+import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
 
 let key = 0;
 export const RoutesPhy = [
@@ -21,6 +26,8 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/books/physics_skills_14" component={PhysicsSkills14}/>,
     <TrackedRoute key={key++} exact path="/books/pre_uni_maths" component={PreUniMaths}/>,
     <TrackedRoute key={key++} exact path="/books/chemistry_16" component={Chemistry16}/>,
+    <TrackedRoute key={key++} exact path="/books/quantum_mechanics_primer" component={QuantumMechanicsPrimer}/>,
+    <TrackedRoute key={key++} exact path="/books/solve_physics_problems" component={SolvingPhysProblems}/>,
 
     // Static pages
     <StaticPageRoute key={key++} exact path="/glossary" />,
@@ -37,9 +44,10 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/survey" />,
     <StaticPageRoute key={key++} exact path="/book/question" pageId="book_question" />,
     <StaticPageRoute key={key++} exact path="/exam_uni_help" />,
-    <StaticPageRoute key={key++} exact path="/gcse" />,
-    <StaticPageRoute key={key++} exact path="/alevel" />,
     <StaticPageRoute key={key++} exact path="/coronavirus" pageId="2020_03_coronavirus" />,
+    <TrackedRoute key={key++} exact path="/gcse" component={Gcse}/>,
+    <TrackedRoute key={key++} exact path="/alevel" component={Alevel}/>,
+    <TrackedRoute key={key++} exact path="/teacher_features" component={TeacherFeatures}/>,
 
     // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,
