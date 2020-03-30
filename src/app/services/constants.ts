@@ -1,11 +1,12 @@
 import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {invert} from "lodash";
+import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
-export const IS_CS_PLATFORM = true;
+export const IS_CS_PLATFORM = SITE_SUBJECT === SITE.CS;
 
 /*
  * Configure the api provider with the server running the API:
@@ -57,6 +58,10 @@ export enum ACTION_TYPE {
     USER_AUTH_SETTINGS_RESPONSE_SUCCESS = "USER_AUTH_SETTINGS_RESPONSE_SUCCESS",
     USER_AUTH_SETTINGS_RESPONSE_FAILURE = "USER_AUTH_SETTINGS_RESPONSE_FAILURE",
 
+    SELECTED_USER_AUTH_SETTINGS_REQUEST = "SELECTED_USER_AUTH_SETTINGS_REQUEST",
+    SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS = "SELECTED_USER_AUTH_SETTINGS_REQUEST_SUCCESS",
+    SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE = "SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE",
+
     USER_AUTH_LINK_REQUEST = "USER_AUTH_LINK_REQUEST",
     USER_AUTH_LINK_RESPONSE_SUCCESS = "USER_AUTH_LINK_RESPONSE_SUCCESS",
     USER_AUTH_LINK_RESPONSE_FAILURE = "USER_AUTH_LINK_RESPONSE_FAILURE",
@@ -107,6 +112,9 @@ export enum ACTION_TYPE {
     ADMIN_USER_SEARCH_REQUEST = "ADMIN_USER_SEARCH_REQUEST",
     ADMIN_USER_SEARCH_RESPONSE_SUCCESS = "ADMIN_USER_SEARCH_RESPONSE_SUCCESS",
     ADMIN_USER_SEARCH_RESPONSE_FAILURE = "ADMIN_USER_SEARCH_RESPONSE_FAILURE",
+    ADMIN_USER_GET_REQUEST = "ADMIN_USER_GET_REQUEST",
+    ADMIN_USER_GET_RESPONSE_SUCCESS = "ADMIN_USER_GET_RESPONSE_SUCCESS",
+    ADMIN_USER_GET_RESPONSE_FAILURE = "ADMIN_USER_GET_RESPONSE_FAILURE",
     ADMIN_USER_DELETE_REQUEST = "ADMIN_USER_DELETE_REQUEST",
     ADMIN_USER_DELETE_RESPONSE_SUCCESS = "ADMIN_USER_DELETE_RESPONSE_SUCCESS",
     ADMIN_USER_DELETE_RESPONSE_FAILURE = "ADMIN_USER_DELETE_RESPONSE_FAILURE",
@@ -268,6 +276,10 @@ export enum ACTION_TYPE {
     QUIZ_SUBMISSION_RESPONSE_SUCCESS = "QUIZ_SUBMISSION_RESPONSE_SUCCESS",
     QUIZ_SUBMISSION_RESPONSE_FAILURE = "QUIZ_SUBMISSION_RESPONSE_FAILURE",
 
+    TEST_QUESTION_REQUEST = "TEST_QUESTION_REQUEST",
+    TEST_QUESTION_RESPONSE_SUCCESS = "TEST_QUESTION_RESPONSE_SUCCESS",
+    TEST_QUESTION_RESPONSE_FAILURE = "TEST_QUESTION_RESPONSE_FAILURE",
+
     TOPIC_REQUEST = "TOPIC_REQUEST",
     TOPIC_RESPONSE_SUCCESS = "TOPIC_RESPONSE_SUCCESS",
     TOPIC_RESPONSE_FAILURE = "TOPIC_RESPONSE_FAILURE",
@@ -381,19 +393,25 @@ export enum ACTION_TYPE {
 
     PRINTING_SET_HINTS = "PRINTING_SET_HINTS",
 
+    CONCEPTS_REQUEST = "CONCEPTS_REQUEST",
+    CONCEPTS_RESPONSE_SUCCESS = "CONCEPTS_RESPONSE_SUCCESS",
+    CONCEPTS_RESPONSE_FAILURE = "CONCEPTS_RESPONSE_FAILURE",
+
     LOG_EVENT = "LOG_EVENT"
 }
 
 export enum EXAM_BOARD {
     AQA = "AQA",
     OCR = "OCR",
-    OTHER = "OTHER"
+    OTHER = "OTHER",
+    NONE = ""
 }
 
 export enum SUBJECTS {
     PHYSICS = 'physics',
     MATHS = 'maths',
-    CHEMISTRY = 'chemistry'
+    CHEMISTRY = 'chemistry',
+    CS = 'computer_science'
 }
 
 export const examBoardTagMap: {[examBoard: string]: string} = {
@@ -404,6 +422,7 @@ export const examBoardTagMap: {[examBoard: string]: string} = {
 export const tagExamBoardMap: {[tag: string]: string} = invert(examBoardTagMap);
 
 export enum TAG_ID {
+    // CS ----
     // Categories
     theory = "theory",
     programming = "programming",
@@ -467,15 +486,74 @@ export enum TAG_ID {
     functionalProgramming = "functional_programming",
     // Computing practical project topics
     softwareProject = "software_project",
+
+    // PHY ----
+    // Subjects
+    physics = "physics",
+    maths = "maths",
+    chemistry = "chemistry",
+
+    // Physics fields
+    mechanics = "mechanics",
+    waves = "waves",
+    fields = "fields",
+    circuits = "circuits",
+    chemPhysics = "chemphysics",
+    // Maths fields
+    geometry = "geometry",
+    calculus = "calculus",
+    algebra = "algebra",
+    functions = "functions",
+
+    // Mechanics topics
+    statics = "statics",
+    dynamics = "dynamics",
+    shm = "shm",
+    angularMotion = "angular_motion",
+    circularMotion = "circular_motion",
+    kinematics = "kinematics",
+    // Fields topics
+    electric = "electric",
+    magnetic = "magnetic",
+    gravitational = "gravitational",
+    combined = "combined",
+    // Circuits topics
+    resistors = "resistors",
+    capacitors = "capacitors",
+    generalCircuits = "general_circuits",
+    // Waves topics:
+    optics = "optics",
+    superposition = "superposition",
+    waveMotion = "wave_motion",
+    // Physical Chemistry topics:
+    thermodynamics = "thermodynamics",
+    kinetics = "kinetics",
+
+    // Geometry topics
+    geomVectors = "geom_vectors",
+    trigonometry = "trigonometry",
+    shapes = "shapes",
+    // Calculus topics
+    differentiation = "differentiation",
+    integration = "integration",
+    differentialEq = "differential_eq",
+    // Algebra topics
+    simultaneous = "simultaneous",
+    quadratics = "quadratics",
+    manipulation = "manipulation",
+    series = "series",
+    // Functions topics
+    generalFunctions = "general_functions",
+    graphSketching = "graph_sketching",
 }
 
 export enum TAG_LEVEL {
+    subject = "subject",
+    field = "field",
     category = "category",
     subcategory = "subcategory",
     topic = "topic",
 }
-
-export const TAG_HIERARCHY = [TAG_LEVEL.category, TAG_LEVEL.subcategory, TAG_LEVEL.topic];
 
 export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",

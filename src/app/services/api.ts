@@ -1,21 +1,25 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, MEMBERSHIP_STATUS, TAG_ID, EventTypeFilter} from "./constants";
+import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {AuthenticationProvider, EventBookingDTO, GameboardDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, EventBookingDTO, GameboardDTO, TestCaseDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
     AdditionalInformation,
     ATTENDANCE,
     BoardOrder,
+    Choice,
+    Concepts,
+    Credentials,
     EmailUserRoles,
-    LoggedInUser,
     QuestionSearchQuery,
     QuestionSearchResponse,
-    UserPreferencesDTO
+    UserPreferencesDTO,
+    ValidationUser
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
+import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -41,7 +45,6 @@ endpoint.interceptors.response.use((response) => {
     }
     return Promise.reject(error);
 });
-
 
 export const apiHelper = {
     determineImageUrl: (path: string) => {
@@ -77,10 +80,10 @@ export const api = {
         verifyPasswordReset: (token: string | null) => {
             return endpoint.get(`/users/resetpassword/${token}`)
         },
-        handlePasswordReset: (params: {token: string | null; password: string | null}) => {
-            return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
+        handlePasswordReset: (params: {token: string; password: string}) => {
+            return endpoint.post(`/users/resetpassword/${params.token}`, securePadPasswordReset({password: params.password}));
         },
-        updateCurrent: (registeredUser: LoggedInUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        updateCurrent: (registeredUser: ValidationUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent});
         },
         passwordResetById: (id: number) => {
@@ -104,11 +107,14 @@ export const api = {
         logout: (): AxiosPromise => {
             return endpoint.post(`/auth/logout`);
         },
-        login: (provider: ApiTypes.AuthenticationProvider, params: {email: string; password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
-            return endpoint.post(`/auth/${provider}/authenticate`, params);
+        login: (provider: ApiTypes.AuthenticationProvider, credentials: Credentials): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+            return endpoint.post(`/auth/${provider}/authenticate`, securePadCredentials(credentials));
         },
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings`)
+        },
+        getSelectedUserAuthSettings: (userId: number): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
+            return endpoint.get(`/auth/user_authentication_settings/${userId}`)
         },
         linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
             return endpoint.get(`/auth/${provider}/link`)
@@ -135,6 +141,11 @@ export const api = {
         userSearch: {
             get: (queryParams: {}): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO[]> => {
                 return endpoint.get(`/admin/users/`, {params: queryParams});
+            }
+        },
+        userGet: {
+            get: (userid: number | undefined): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+                return endpoint.get(`/admin/users/${userid}`);
             }
         },
         userDelete: {
@@ -212,9 +223,17 @@ export const api = {
                     "per_day": perDay
                 }
             })
+        },
+        testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
+            return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
         }
     },
     concepts: {
+        list: (): AxiosPromise<Concepts> => {
+            return endpoint.get('/pages/concepts', {
+                params: { limit: 999 }
+            });
+        },
         get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
             return endpoint.get(`/pages/concepts/${id}`);
         },
@@ -246,6 +265,9 @@ export const api = {
         },
         getWildcards: (): AxiosPromise<ApiTypes.IsaacWildcard[]> => {
             return endpoint.get(`gameboards/wildcards`);
+        },
+        generateTemporary: (params: {[key: string]: string}): AxiosPromise<ApiTypes.GameboardDTO> => {
+            return endpoint.get(`/gameboards`, {params});
         }
     },
     assignments: {

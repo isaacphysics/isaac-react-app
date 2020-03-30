@@ -1,0 +1,115 @@
+// NOMENSA footer.scss
+// REPLACE ./assets WITH /assets
+.footerTop {
+  background-color: black;
+  color: white;
+}
+
+.link-list {
+  a {
+    font-family: $secondary-font-medium;
+  }
+}
+
+.footer-bottom {
+  background-color: #ffffff;
+  width: 100%;
+  .footer-bottom-info {
+    p {
+      font-family: $primary-font;
+      font-size: 13px;
+      color: #000000;
+    }
+    @include respond-above(md) {
+      width: 40%;
+    }
+  }
+  .footer-bottom-logos {
+    @include respond-above(md) {
+      width: 40%;
+      margin-left: 17%;
+    }
+  }
+}
+
+.footer-links {
+  color: $gray-120;
+
+  h5 {
+    font-family: $secondary-font-semi-bold;
+  }
+
+  a {
+    color: $gray-120;
+    display: block;
+    text-decoration: none;
+
+    &:hover {
+      color: $gray-120;
+    }
+  }
+
+  .footerLink {
+    font-family: $primary-font;
+    font-size: 16px;
+  }
+
+  .logo-col {
+    @include respond-below(sm) {
+      padding: 1rem;
+    }
+    a {
+      color: $gray-120;
+      display: block;
+      text-decoration: none;
+
+      &:hover {
+        color: $gray-120;
+      }
+    }
+  }
+  &.footer-links-social {
+    background-image: url('/assets/social_dots.svg');
+    background-position: left 82%;
+    background-repeat: no-repeat;
+    height: 100%;
+
+    @include respond-above(md) {
+      background-position: left 100%;
+    }
+  }
+}
+
+.logo-text {
+  color: $gray-120;
+  font-family: $primary-font;
+  font-size: 0.8rem;
+  padding-top: 30px;
+}
+
+.link-list {
+  a {
+    font-family: $secondary-font-medium;
+  }
+}
+
+.footer-bottom {
+  background-color: #ffffff;
+  width: 100%;
+  .footer-bottom-info {
+    p {
+      font-family: $primary-font;
+      font-size: 13px;
+      color: #000000;
+    }
+    @include respond-above(md) {
+      width: 40%;
+    }
+  }
+  .footer-bottom-logos {
+    @include respond-above(md) {
+      width: 40%;
+      margin-left: 17%;
+    }
+  }
+}

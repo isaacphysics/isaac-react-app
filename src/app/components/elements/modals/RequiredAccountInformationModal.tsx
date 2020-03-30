@@ -19,6 +19,7 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {EXAM_BOARD} from "../../../services/constants";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -55,7 +56,7 @@ const RequiredAccountInfoBody = () => {
         }
     }
 
-    const allUserFieldsAreValid =
+    const allUserFieldsAreValid = SITE_SUBJECT !== SITE.CS ||
         validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) &&
         validateExamBoard(initialUserValue) && validateSubjectInterests(initialSubjectInterestsValue);
 
@@ -75,6 +76,7 @@ const RequiredAccountInfoBody = () => {
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                             submissionAttempted={submissionAttempted} idPrefix="modal"
+                            required
                         />
                     </div>}
                     {!validateExamBoard(initialUserValue) && <div>
@@ -99,6 +101,7 @@ const RequiredAccountInfoBody = () => {
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
+                        required
                     />
                 </RS.Col>}
             </RS.Row>

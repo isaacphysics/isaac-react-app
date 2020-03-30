@@ -1,0 +1,11 @@
+@import "../common/questions";
+
+.quick-question {
+  button {
+    border-radius: 0 !important;
+  }
+  .alert {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+}

@@ -6,9 +6,9 @@ import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
-import {ContentBase, ContentDTO} from "../../../IsaacApiTypes";
+import {ContentBase, ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
-import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {DocumentSubject, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -18,6 +18,7 @@ import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
+import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 
 const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
     return {
@@ -44,8 +45,9 @@ const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc, s
 
     const navigation = useNavigation(conceptId);
 
-    return <ShowLoading until={doc} thenRender={doc =>
-        <div>
+    return <ShowLoading until={doc} thenRender={supertypedDoc => {
+        const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+        return <div className={doc.subjectId || ""}>
             <Container>
                 <TitleAndBreadcrumb
                     intermediateCrumbs={navigation.breadcrumbHistory}
@@ -73,7 +75,7 @@ const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc, s
 
                         {/* Superseded notice */}
 
-                        <p>{doc.attribution}</p>
+                        {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
 
                         <NavigationLinks navigation={navigation} />
 
@@ -82,7 +84,7 @@ const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc, s
                 </Row>
             </Container>
         </div>
-    }/>;
+    }}/>;
 };
 
 export const Concept = withRouter(connect(stateToProps, dispatchToProps)(ConceptPageComponent));
