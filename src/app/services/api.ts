@@ -9,6 +9,7 @@ import {
     ATTENDANCE,
     BoardOrder,
     Choice,
+    Concepts,
     Credentials,
     EmailUserRoles,
     QuestionSearchQuery,
@@ -228,6 +229,11 @@ export const api = {
         }
     },
     concepts: {
+        list: (): AxiosPromise<Concepts> => {
+            return endpoint.get('/pages/concepts', {
+                params: { limit: 999 }
+            });
+        },
         get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
             return endpoint.get(`/pages/concepts/${id}`);
         },

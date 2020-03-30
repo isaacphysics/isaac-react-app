@@ -1,6 +1,6 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
-import {AuthenticationProvider, ChoiceDTO, ContentBase, TestCaseDTO} from "./IsaacApiTypes";
+import {AuthenticationProvider, ChoiceDTO, ContentBase, ContentSummaryDTO, ResultsWrapper, TestCaseDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
 
 export type Action =
@@ -366,6 +366,10 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
     | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
 
+    | {type: ACTION_TYPE.CONCEPTS_REQUEST}
+    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts}
+
     | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
 ;
 
@@ -417,7 +421,7 @@ export interface SubjectInterests {
 
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
-    EMAIL_PREFERENCE?: UserEmailPreferences;
+    EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
 }
 
@@ -712,3 +716,5 @@ export interface FreeTextRule extends Choice {
     allowsExtraWords?: boolean;
     allowsMisspelling?: boolean;
 }
+
+export type Concepts = ResultsWrapper<ContentSummaryDTO>;

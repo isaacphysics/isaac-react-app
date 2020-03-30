@@ -8,6 +8,7 @@ import {
     AppGroupMembership,
     AppQuestionDTO,
     AugmentedEvent,
+    Concepts,
     ContentErrorsResponse,
     EventMapData,
     EventOverview,
@@ -860,6 +861,16 @@ export const printingSettings = (printingSettingsState: PrintingSettingsState = 
     }
 };
 
+export type ConceptsState = Concepts | null;
+export const concepts = (concepts: ConceptsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS:
+            return action.concepts;
+        default:
+            return concepts;
+    }
+};
+
 
 const appReducer = combineReducers({
     adminUserGet,
@@ -904,7 +915,8 @@ const appReducer = combineReducers({
     fragments,
     glossaryTerms,
     testQuestions,
-    printingSettings
+    printingSettings,
+    concepts
 });
 
 export type AppState = undefined | {
@@ -952,6 +964,7 @@ export type AppState = undefined | {
     printingSettings: PrintingSettingsState;
     glossaryTerms: GlossaryTermsState;
     testQuestions: TestQuestionsState;
+    concepts: ConceptsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

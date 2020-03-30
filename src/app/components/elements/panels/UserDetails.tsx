@@ -3,16 +3,17 @@ import {SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../../services/constants";
 import React, {ChangeEvent} from "react";
 import {
+    allRequiredInformationIsPresent,
     validateEmail,
-    validateSubjectInterests,
+    validateExamBoard,
     validateUserGender,
-    validateUserSchool
 } from "../../../services/validation";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -31,13 +32,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         submissionAttempted, editingOtherUser
     } = props;
 
-    const allRequiredFieldsValid = userToUpdate && subjectInterests &&
-        validateEmail(userToUpdate.email) &&
-        validateUserGender(userToUpdate) &&
-        validateUserSchool(userToUpdate) &&
-        validateSubjectInterests(subjectInterests);
-
-
+    const allRequiredFieldsValid = userToUpdate && userToUpdate.email &&
+        allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null});
 
     return <CardBody className="pt-0">
         <Row>
@@ -99,11 +95,12 @@ export const UserDetails = (props: UserDetailsProps) => {
         </Row>
         <Row>
             <Col md={6}>
-                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
+                    required={SITE_SUBJECT === SITE.CS}/>
             </Col>
-            <Col md={6}>
+            {SITE_SUBJECT === SITE.CS && <Col md={6}>
                 <FormGroup>
-                    <Label className="d-inline-block pr-2" htmlFor="exam-board-select">
+                    <Label className="d-inline-block pr-2 form-required" htmlFor="exam-board-select">
                         Exam board
                     </Label>
                     <Input
@@ -114,23 +111,24 @@ export const UserDetails = (props: UserDetailsProps) => {
                                 Object.assign({}, userToUpdate, {examBoard: event.target.value})
                             )
                         }
+                        invalid={submissionAttempted && !validateExamBoard(userToUpdate)}
                     >
+                        <option value={undefined}></option>
                         <option value={EXAM_BOARD.OTHER}>Other</option>
                         <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>
                 </FormGroup>
-            </Col>
-        </Row>
-        <Row>
+            </Col>}
             <Col md={6}>
-                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
+                    required={SITE_SUBJECT === SITE.CS}/>
             </Col>
-            <Col md={6}>
+            {SITE_SUBJECT === SITE.CS && <Col md={6}>
                 <div className="mt-2 mb-2 pt-1">
                     <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
                 </div>
-            </Col>
+            </Col>}
         </Row>
 
         {userToUpdate && userToUpdate.role == "STUDENT" && <Row>

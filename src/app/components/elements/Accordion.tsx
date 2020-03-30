@@ -130,10 +130,11 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
                 }}
                 aria-expanded={open ? "true" : "false"}
             >
-                <div className="accordion-part">
-                    <span className="text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
+                <div className="accordion-title">
+                    <span className="accordion-part text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
                     {trustedTitle && <TrustedHtml html={trustedTitle} />}
                 </div>
+
                 {accordianIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon accordion-icon-" + accordianIcon}>
                     <span className="sr-only">{accordianIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
                 </span>}

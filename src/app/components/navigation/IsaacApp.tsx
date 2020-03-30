@@ -60,8 +60,9 @@ import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MyProgress} from "../pages/MyProgress";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import {LoadScript} from "@react-google-maps/api";
-import {Redirect} from "react-router";
 import SiteSpecific from "../site/siteSpecific";
+import StaticPageRoute from "./StaticPageRoute";
+import {Topic} from "../pages/Topic";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -107,6 +108,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                     <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                     <TrackedRoute exact path="/questions/:questionId" component={Question} />
+                    <TrackedRoute exact path="/topics/:topicName" component={Topic} />,
                     <TrackedRoute exact path="/quizzes/:quizId" ifUser={isLoggedIn} component={Quiz} />
 
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
@@ -150,20 +152,16 @@ export const IsaacApp = () => {
                     {/* Static pages */}
                     <TrackedRoute exact path="/contact" component={Contact}/>
                     <TrackedRoute exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>
-                    <TrackedRoute exact path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}} />
-                    <TrackedRoute exact path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}} />
-                    <TrackedRoute exact path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}} />
-                    <TrackedRoute exact path="/accessibility" component={Generic} componentProps={{pageIdOverride: "accessibility_statement"}} />
-                    <TrackedRoute exact path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}} />
-                    <TrackedRoute exact path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
+                    <StaticPageRoute exact path="/privacy" pageId="privacy_policy" />
+                    <StaticPageRoute exact path="/terms" pageId="terms_of_use" />
+                    <StaticPageRoute exact path="/cookies" pageId="cookie_policy" />
+                    <StaticPageRoute exact path="/accessibility" pageId="accessibility_statement" />
+                    <StaticPageRoute exact path="/cyberessentials" />
                     <TrackedRoute exact path="/coming_soon" component={ComingSoon} />
-                    <TrackedRoute exact path="/teaching_order" component={Generic} componentProps={{pageIdOverride: "teaching_order"}} />
 
                     {/*
                     // TODO: schools and other admin stats
                     */}
-
-                    <Redirect exact from="/game_builder" to="/gameboard_builder" />
 
                     {/* Builder pages */}
                     <TrackedRoute exact path="/equality" component={Equality} />
