@@ -1,6 +1,6 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
-import {AuthenticationProvider, ChoiceDTO, ContentBase, TestCaseDTO} from "./IsaacApiTypes";
+import {AuthenticationProvider, ChoiceDTO, ContentBase, ContentSummaryDTO, ResultsWrapper, TestCaseDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
 
 export type Action =
@@ -20,12 +20,15 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_REQUEST}
+    | {type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS; selectedUserAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
+    | {type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_AUTH_LINK_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS; provider: AuthenticationProvider; redirectUrl: string}
-    | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE, errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS; provider: AuthenticationProvider}
-    | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE, errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
@@ -67,6 +70,9 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST}
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS; users: {}[]}
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.ADMIN_USER_GET_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS; getUsers: {}}
+    | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_FAILURE}
@@ -329,7 +335,7 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS, gameboardId: string}
+    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS; gameboardId: string}
     | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.BOARDS_GROUPS_REQUEST; board: ApiTypes.GameboardDTO}
@@ -348,7 +354,11 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
     | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
 
-    | {type: ACTION_TYPE.PRINTING_SET_HINTS, hintsEnabled: boolean}
+    | {type: ACTION_TYPE.CONCEPTS_REQUEST}
+    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts}
+
+    | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
 ;
 
 export type NOT_FOUND_TYPE = 404;
@@ -399,7 +409,7 @@ export interface SubjectInterests {
 
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
-    EMAIL_PREFERENCE?: UserEmailPreferences;
+    EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
 }
 
@@ -633,7 +643,8 @@ export interface AchievementsRecord {
 }
 
 export interface UserSnapshot {
-    streakRecord?: StreakRecord;
+    dailyStreakRecord?: StreakRecord;
+    weeklyStreakRecord?: StreakRecord;
     achievementsRecord?: AchievementsRecord;
 }
 
@@ -692,3 +703,5 @@ export interface FreeTextRule extends Choice {
     allowsExtraWords?: boolean;
     allowsMisspelling?: boolean;
 }
+
+export type Concepts = ResultsWrapper<ContentSummaryDTO>;

@@ -8,13 +8,14 @@ import {
     AdditionalInformation,
     ATTENDANCE,
     BoardOrder,
-    Credentials,
     Choice,
+    Concepts,
+    Credentials,
     EmailUserRoles,
-    LoggedInUser,
     QuestionSearchQuery,
     QuestionSearchResponse,
-    UserPreferencesDTO
+    UserPreferencesDTO,
+    ValidationUser
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
@@ -82,7 +83,7 @@ export const api = {
         handlePasswordReset: (params: {token: string; password: string}) => {
             return endpoint.post(`/users/resetpassword/${params.token}`, securePadPasswordReset({password: params.password}));
         },
-        updateCurrent: (registeredUser: LoggedInUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        updateCurrent: (registeredUser: ValidationUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent});
         },
         passwordResetById: (id: number) => {
@@ -112,6 +113,9 @@ export const api = {
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings`)
         },
+        getSelectedUserAuthSettings: (userId: number): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
+            return endpoint.get(`/auth/user_authentication_settings/${userId}`)
+        },
         linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
             return endpoint.get(`/auth/${provider}/link`)
         },
@@ -137,6 +141,11 @@ export const api = {
         userSearch: {
             get: (queryParams: {}): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO[]> => {
                 return endpoint.get(`/admin/users/`, {params: queryParams});
+            }
+        },
+        userGet: {
+            get: (userid: number | undefined): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+                return endpoint.get(`/admin/users/${userid}`);
             }
         },
         userDelete: {
@@ -220,6 +229,11 @@ export const api = {
         }
     },
     concepts: {
+        list: (): AxiosPromise<Concepts> => {
+            return endpoint.get('/pages/concepts', {
+                params: { limit: 999 }
+            });
+        },
         get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
             return endpoint.get(`/pages/concepts/${id}`);
         },

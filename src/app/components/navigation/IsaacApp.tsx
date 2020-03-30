@@ -16,8 +16,6 @@ import {ProviderCallbackHandler} from "../handlers/ProviderCallbackHandler";
 import {MyAccount} from "../pages/MyAccount";
 import {MyAssignments} from "../pages/MyAssignments";
 import {Gameboard} from "../pages/Gameboard";
-import {AllTopics} from "../pages/AllTopics";
-import {Topic} from "../pages/Topic";
 import {ComingSoon} from "../pages/ComingSoon";
 import {NotFound} from "../pages/NotFound";
 import {fetchGlossaryTerms, requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
@@ -59,11 +57,11 @@ import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {Quiz} from "../pages/Quiz";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MyProgress} from "../pages/MyProgress";
-import {SITE_SUBJECT} from "../../services/siteConstants";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import {LoadScript} from "@react-google-maps/api";
-import {PhyGameboardBuilder} from "../pages/PhyGameboardBuilder";
 import SiteSpecific from "../site/siteSpecific";
+import StaticPageRoute from "./StaticPageRoute";
+import {Topic} from "../pages/Topic";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -80,13 +78,10 @@ export const IsaacApp = () => {
         dispatch(fetchGlossaryTerms());
     }, []);
 
-
-    const {Homepage, Header} = SiteSpecific[SITE_SUBJECT];
-
     // Render
     return <Router history={history}>
         <LoadScript googleMapsApiKey="AIzaSyBcVr1HZ_JUR92xfQZSnODvvlSpNHYbi4Y" id="script-loader">
-            <Header />
+            <SiteSpecific.Header />
             <Toasts />
             <ActiveModals />
             <CookieBanner />
@@ -98,25 +93,24 @@ export const IsaacApp = () => {
                     <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
                     <TrackedRoute exact path={"/auth_error"} component={AuthError} />
 
+                    {/* Site specific pages */}
+                    {SiteSpecific.Routes}
+
                     {/* Special case */}
                     <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
 
                     {/* Application pages */}
-                    <TrackedRoute exact path="/(home)?" component={Homepage} />
+                    <TrackedRoute exact path="/(home)?" component={SiteSpecific.Homepage} />
                     <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />
-
                     <TrackedRoute exact path="/search" component={Search} />
 
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                     <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                     <TrackedRoute exact path="/questions/:questionId" component={Question} />
+                    <TrackedRoute exact path="/topics/:topicName" component={Topic} />,
                     <TrackedRoute exact path="/quizzes/:quizId" ifUser={isLoggedIn} component={Quiz} />
 
-                    <TrackedRoute exact path="/topics" component={AllTopics} />
-                    <TrackedRoute exact path="/topics/:topicName" component={Topic} />
-
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
-                    <TrackedRoute exact path="/gameboards_builder" component={PhyGameboardBuilder} />
                     <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
                     <TrackedRoute exact path="/gameboard_builder" ifUser={isTeacher} component={GameboardBuilder} />
                     <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
@@ -156,14 +150,16 @@ export const IsaacApp = () => {
                     {/* Static pages */}
                     <TrackedRoute exact path="/contact" component={Contact}/>
                     <TrackedRoute exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>
-                    <TrackedRoute exact path="/privacy" component={Generic} componentProps={{pageIdOverride: "privacy_policy"}} />
-                    <TrackedRoute exact path="/terms" component={Generic} componentProps={{pageIdOverride: "terms_of_use"}} />
-                    <TrackedRoute exact path="/cookies" component={Generic} componentProps={{pageIdOverride: "cookie_policy"}} />
-                    <TrackedRoute exact path="/accessibility" component={Generic} componentProps={{pageIdOverride: "accessibility_statement"}} />
-                    <TrackedRoute exact path="/about" component={Generic} componentProps={{pageIdOverride: "about_us"}} />
-                    <TrackedRoute exact path="/cyberessentials" component={Generic} componentProps={{pageIdOverride: "cyberessentials"}} />
+                    <StaticPageRoute exact path="/privacy" pageId="privacy_policy" />
+                    <StaticPageRoute exact path="/terms" pageId="terms_of_use" />
+                    <StaticPageRoute exact path="/cookies" pageId="cookie_policy" />
+                    <StaticPageRoute exact path="/accessibility" pageId="accessibility_statement" />
+                    <StaticPageRoute exact path="/cyberessentials" />
                     <TrackedRoute exact path="/coming_soon" component={ComingSoon} />
-                    <TrackedRoute exact path="/teaching_order" component={Generic} componentProps={{pageIdOverride: "teaching_order"}} />
+
+                    {/*
+                    // TODO: schools and other admin stats
+                    */}
 
                     {/* Builder pages */}
                     <TrackedRoute exact path="/equality" component={Equality} />

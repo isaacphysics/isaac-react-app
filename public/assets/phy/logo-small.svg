@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
-<svg enable-background="new 150.1 0 228.4 322.2" version="1.1" viewBox="150.1 0 228.4 322.2" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+<svg enable-background="new 150.1 0 228.4 322.2" version="1.1" viewBox="150.1 0 228.4 322.2" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" width="106" height="150">
 <polyline points="378 0 378 255.7 264.3 321.6 150.6 256 150.6 0" fill="#fff" stroke="#CCCBCB" stroke-miterlimit="10"/>
 
 	<path d="m256.3 75c-19.7-60.6-49.5-50.7-62.8-46.9s-15.4 2.1-15.4 2.1c20.6 66.4 73.8 47.1 73.8 47.1s-29.2-1.7-45.9-30.7l50.3 28.4z" fill="#4E9934"/>
