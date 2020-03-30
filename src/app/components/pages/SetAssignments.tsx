@@ -24,7 +24,8 @@ import {
     loadGroups,
     loadGroupsForBoard,
     showToast,
-    unassignBoard
+    unassignBoard,
+    openIsaacBooksModal
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState, Boards} from "../../state/reducers";
@@ -36,9 +37,10 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {TEACHERS_CRUMB} from "../../services/constants";
 import {formatBoardOwner} from "../../services/gameboards";
-import {connect} from "react-redux";
+import {connect, useDispatch} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
+import {SITE_SUBJECT, SITE} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -46,7 +48,7 @@ const stateToProps = (state: AppState) => ({
     boards: boards.boards(state)
 });
 
-const dispatchToProps = {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast};
+const dispatchToProps = {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast, openIsaacBooksModal};
 
 interface SetAssignmentsPageProps {
     user: RegisteredUserDTO;
@@ -60,7 +62,7 @@ interface SetAssignmentsPageProps {
     unassignBoard: (board: GameboardDTO, group: UserGroupDTO) => void;
     showToast: (toast: Toast) => void;
     location: {hash: string};
-
+    openIsaacBooksModal: () => void;
 }
 
 type BoardProps = SetAssignmentsPageProps & {
@@ -202,7 +204,7 @@ function orderName(order: BoardOrder) {
 }
 
 const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
-    const {groups, loadGroups, boards, loadBoards} = props;
+    const {groups, loadGroups, boards, loadBoards, openIsaacBooksModal} = props;
 
     useEffect(() => {loadGroups(false);}, []);
 
@@ -212,6 +214,22 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
 
     let [actualBoardLimit, setActualBoardLimit] = useState<ActualBoardLimit>(toActual(boardLimit));
+
+    const dispatch = useDispatch();
+
+
+    const isaacAssignmentButtons = {
+        second: {
+            link: {
+                [SITE.CS]: "/topics",
+                [SITE.PHY]: "/pages/pre_made_gameboards"
+            },
+            text: {
+                [SITE.CS]: "Topics list",
+                [SITE.PHY]: "Boards for lessons"
+            }
+        }
+    };
 
     function loadInitial() {
         loadBoards(0, actualBoardLimit, boardOrder);
@@ -264,13 +282,18 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         </h4>
         <RS.Row className="mb-4">
             <RS.Col md={6} lg={4} className="pt-1">
-                <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
-                    {"Pre-made gameboards"}
-                </RS.Button>
+                {SITE_SUBJECT === SITE.PHY ?
+                    <RS.Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block>
+                        Isaac Books
+                    </RS.Button> :
+                    <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
+                        Pre-made gameboards
+                    </RS.Button>
+                }
             </RS.Col>
             <RS.Col md={6} lg={4} className="pt-1">
-                <RS.Button tag={Link} to={"/topics"} color="secondary" block>
-                    {"Topics list"}
+                <RS.Button tag={Link} to={isaacAssignmentButtons.second.link[SITE_SUBJECT]} color="secondary" block>
+                    {isaacAssignmentButtons.second.text[SITE_SUBJECT]}
                 </RS.Button>
             </RS.Col>
             <RS.Col md={12} lg={4} className="pt-1">
