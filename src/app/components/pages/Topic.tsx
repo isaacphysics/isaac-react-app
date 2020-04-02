@@ -5,9 +5,8 @@ import {AppState} from "../../state/reducers";
 import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
-import {filterAndSeparateRelatedContent} from "../../services/topics";
+import {getRelatedDocs} from "../../services/topics";
 import {Button, Col, Container, Row} from "reactstrap";
 import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID} from "../../services/constants";
 import {useCurrentExamBoard} from "../../services/examBoard";
@@ -26,11 +25,8 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
         [topicName]
     );
 
-    let [relatedConcepts, relatedQuestions]: [ContentSummaryDTO[] | null, ContentSummaryDTO[] | null] = [null, null];
-    if (topicPage && topicPage != NOT_FOUND && topicPage.relatedContent) {
-        [relatedConcepts, relatedQuestions] = topicPage.relatedContent &&
-            filterAndSeparateRelatedContent(topicPage.relatedContent, examBoard);
-    }
+    let [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage, examBoard);
+
     const searchQuery = `?topic=${topicName}`;
     const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards.filter((gameboard) => {
         return gameboard.tags && gameboard.tags.includes(examBoardTagMap[examBoard]);

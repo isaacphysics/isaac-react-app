@@ -8,9 +8,10 @@ import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} fro
 import {Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Row} from "reactstrap";
 import {TrustedHtml} from "../elements/TrustedHtml";
 import {IsaacHints} from "./IsaacHints";
+import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
+    const question = questions.selectQuestionPart(questionId)(state);
     const userId = state && state.user && state.user.loggedIn && state.user.id || undefined;
     const units = state && state.constants && state.constants.units || undefined;
     const props = {userId, units};

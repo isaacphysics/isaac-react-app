@@ -8,9 +8,12 @@ import {determineGameboardHistory, determineNextGameboardItem} from "./gameboard
 import {NOT_FOUND, TAG_ID} from "./constants";
 import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopicHistory} from "./topics";
 import {useCurrentExamBoard} from "./examBoard";
+import {ContentDTO} from "../../IsaacApiTypes";
+import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {makeUrl} from "./fastTrack";
 
 export interface LinkInfo {title: string; to?: string}
-export type CollectionType = "Gameboard" | "Topic";
+export type CollectionType = "Gameboard" | "Topic" | "FastTrack";
 export interface PageNavigation {
     collectionType?: CollectionType;
     breadcrumbHistory: LinkInfo[];
@@ -23,7 +26,8 @@ const defaultPageNavigation = {
     breadcrumbHistory: [],
 };
 
-export const useNavigation = (currentDocId: string): PageNavigation => {
+export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigation => {
+    const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
     const queryParams = queryString.parse(history.location.search);
     const dispatch = useDispatch();
 
@@ -35,6 +39,27 @@ export const useNavigation = (currentDocId: string): PageNavigation => {
     const currentGameboard = useSelector((state: AppState) => state && state.currentGameboard);
     const currentTopic = useSelector((state: AppState) => state && state.currentTopic);
     const examBoard = useCurrentExamBoard();
+
+    if (doc === null || doc === NOT_FOUND) {
+        return defaultPageNavigation;
+    }
+
+    if (doc.type === "isaacFastTrackQuestionPage") {
+        const gameboardHistory = (currentGameboard && currentGameboard != 404 && queryParams.board === currentGameboard.id) ?
+            determineGameboardHistory(currentGameboard) :
+            [];
+        const questionHistory = (queryParams.questionHistory as string || "").split(",");
+        const previousQuestion = questionHistory.pop();
+        return {
+            collectionType: "FastTrack",
+            breadcrumbHistory: gameboardHistory,
+            backToCollection: previousQuestion ? {title: "Return to Previous Question",
+                to: makeUrl(`/questions/${previousQuestion}`, {questionHistory: questionHistory.join(","),
+                    board: currentGameboard && currentGameboard !== NOT_FOUND ? currentGameboard.id : undefined})} : undefined,
+            nextItem: currentGameboard && currentGameboard != NOT_FOUND ? {title: "Return to Top 10 Questions",
+                to: `/gameboard#${currentGameboard.id}`} : undefined
+        };
+    }
 
     if (queryParams.board) {
         const gameboardHistory = (currentGameboard && currentGameboard != 404 && queryParams.board === currentGameboard.id) ?

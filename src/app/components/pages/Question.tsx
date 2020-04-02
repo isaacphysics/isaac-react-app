@@ -47,7 +47,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
     const segueEnvironment = useSelector((state: AppState) =>
         (state && state.constants && state.constants.segueEnvironment) || "unknown"
     );
-    const navigation = useNavigation(questionId);
+    const navigation = useNavigation(doc);
 
     const dispatch = useDispatch();
     useEffect(() => {
