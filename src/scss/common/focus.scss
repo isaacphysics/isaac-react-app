@@ -78,6 +78,12 @@
   outline: none !important;
 }
 
+.nav-link:focus {
+  box-shadow: 0 0 0 2pt black !important;
+  border-radius: 1px;
+  outline: none !important;
+}
+
 .btn-danger:focus {
   box-shadow: 0 0 0 2pt black !important;
   border-radius: 8px;
