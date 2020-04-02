@@ -78,7 +78,7 @@ export const TeacherFeatures = () => {
             </Col>
             <Col md="auto">
                 <button className="hexagon hexagon-btn-link" onClick={() => dispatch(openIsaacBooksModal())} >
-                    <img className="hexagon hexagon-btn" src="/assets/phy/key_stage_sprite.svg#skills-book-cover" alt="Isaac Hexagon" />
+                    <img className="hexagon hexagon-btn" src="/assets/phy/key_stage_sprite.svg#skills-book-cover" alt="" />
                     <div className="hexagon-title">
                         Books of core skills problems
                     </div>

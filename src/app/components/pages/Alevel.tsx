@@ -45,7 +45,7 @@ export const Alevel = () => {
         <Row className="teacher-feature-body justify-content-md-center">
             <Col md="auto">
                 <button className="hexagon hexagon-btn-link" onClick={() => dispatch(openALevelBookChoiceModal())} >
-                    <img className="hexagon hexagon-btn" src="/assets/phy/key_stage_sprite.svg#skills-book-cover" alt="Isaac Hexagon" />
+                    <img className="hexagon hexagon-btn" src="/assets/phy/key_stage_sprite.svg#skills-book-cover" alt="" />
                     <div className="hexagon-title">
                         Physics Skills Mastery
                     </div>

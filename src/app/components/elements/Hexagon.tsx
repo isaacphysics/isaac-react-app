@@ -11,7 +11,7 @@ interface HexagonProps {
 export const Hexagon = ({link, imageSrc, title, disabled}: HexagonProps ) => {
     let classes = classNames({"hexagon": true, "disabled": disabled});
     return <a href={link} className={classes} aria-disabled={disabled} >
-        <img className={classes} src={imageSrc} alt="Isaac Hexagon" />
+        <img className={classes} src={imageSrc} alt="" />
         <div className="hexagon-title">
             {title}
         </div>
