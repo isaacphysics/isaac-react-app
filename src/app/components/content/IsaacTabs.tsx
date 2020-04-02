@@ -4,7 +4,6 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {useCurrentExamBoard} from "../../services/examBoard";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {Card} from "reactstrap";
 
 interface IsaacTabsProps {
     doc: {children: {title?: string; children?: ContentDTO[]}[]};
@@ -24,9 +23,7 @@ export const IsaacTabs = (props: any) => {
         tabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
     });
 
-    return <Card>
-        <Tabs className="isaac-tab" tabContentClass="pt-4" activeTabOverride={activeTab}>
-            {tabTitlesToContent}
-        </Tabs>
-    </Card>;
+    return <Tabs className="isaac-tab" tabContentClass="pt-4" activeTabOverride={activeTab}>
+        {tabTitlesToContent}
+    </Tabs>;
 };
