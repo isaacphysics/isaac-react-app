@@ -1,4 +1,4 @@
-import React, {useMemo, useState, ReactNode} from "react";
+import React, {useEffect, useState, ReactNode} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
@@ -21,13 +21,11 @@ export const Tabs = (props: TabsProps) => {
     const {className = "", tabTitleClass = "", tabContentClass = "", children, activeTabOverride, activeTabChanged} = props;
 
     const [activeTab, setActiveTab] = useState(1);
-    useMemo(
-        () => {
-            if (activeTabOverride) {
-                setActiveTab(activeTabOverride);
-            }
-        }, [activeTabOverride]
-    );
+    useEffect(() => {
+        if (activeTabOverride) {
+            setActiveTab(activeTabOverride);
+        }
+    }, [activeTabOverride]);
 
     const tabs = children;
 

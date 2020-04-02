@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {closeActiveModal, searchQuestions} from "../../../state/actions";
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
@@ -62,9 +62,9 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         setSortState(newSortState);
     };
 
-    useMemo(() => {
+    useEffect(() => {
         setSearchExamBoards([examBoardTagMap[examBoard]]);
-    }, [user]);
+    }, [user, examBoard]);
 
     useEffect(() => {
         searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, false, 0);

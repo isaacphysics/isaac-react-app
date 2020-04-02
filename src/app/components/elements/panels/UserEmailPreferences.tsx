@@ -1,5 +1,5 @@
 import {CardBody, FormGroup, Table} from "reactstrap";
-import React, {useMemo} from "react";
+import React, {useEffect} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {useSelector} from "react-redux";
@@ -31,9 +31,11 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
         }
     };
 
-
     // initially set email preferences to default value
-    useMemo(() => {setEmailPreferences(Object.assign(defaultEmailPreferences, emailPreferences))}, []);
+    // af599: I get what this useEffect is trying to do, but there must be a better way of doing it.
+    useEffect(() => {
+        setEmailPreferences(Object.assign(defaultEmailPreferences, emailPreferences))
+    }, []);
 
     let errorMessage = null;
     if (error && error.type === "generalError") {

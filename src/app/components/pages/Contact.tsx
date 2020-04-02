@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {Alert, Container, Card, CardBody, CardFooter, Col, Form, FormGroup, Input, Row, Label, FormFeedback} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
@@ -55,10 +55,10 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
     const [messageSent, setMessageSent] = useState(false);
 
     // set subject and message if any of user, presetSubject or presetMessage change
-    useMemo(() => {
+    useEffect(() => {
         setSubject(presetSubject);
         setMessage(presetMessage);
-    }, [user, presetSubject, presetMessage]);
+    }, [presetSubject, presetMessage]);
 
     useEffect(() => {
         setFirstName(user && user.loggedIn && user.givenName || "");

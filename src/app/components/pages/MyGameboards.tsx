@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteBoard, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -195,7 +195,7 @@ export const MyGameboards = () => {
         loadInitial();
     }, [boardLimit]);
 
-    useMemo(() => {
+    useEffect(() => {
         if (boardView == boardViews.table) {
             setBoardLimit(BoardLimit.All)
         } else if (boardView == boardViews.card) {

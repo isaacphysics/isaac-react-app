@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -97,12 +97,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const [editingOtherUser, _] = useState(!!userOfInterest && user && user.loggedIn && user.id && user.id.toString() !== userOfInterest || false);
     const [userToEdit, setUserToEdit] = useState();
 
-    useEffect(() => {editingOtherUser && userFind && setUserToEdit(Object.assign({}, userFind))}, [userFind]);
+    useEffect(() => {editingOtherUser && userFind && setUserToEdit(Object.assign({}, userFind))}, [editingOtherUser, userFind]);
 
     // - Copy of user to store changes before saving
     const [userToUpdate, setUserToUpdate] = useState(editingOtherUser && userOfInterest && userFind ? Object.assign({}, userFind, {loggedIn: true, password: ""}) : Object.assign({}, user, {password: ""}));
 
-    useEffect(() => {editingOtherUser && userToEdit && setUserToUpdate(Object.assign({}, userToEdit, {loggedIn: true}))}, [userToEdit]);
+    useEffect(() => {editingOtherUser && userToEdit && setUserToUpdate(Object.assign({}, userToEdit, {loggedIn: true}))}, [editingOtherUser, userToEdit]);
 
     // Inputs which trigger re-render
     const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
@@ -119,7 +119,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
 
-    useMemo(() => {
+    useEffect(() => {
         const currentEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
         const currentSubjectInterests = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
         const currentUserPreferences = {
@@ -134,7 +134,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     // Set active tab using hash anchor
     const [activeTab, setActiveTab] = useState(ACCOUNT_TAB.account);
-    useMemo(() => {
+    useEffect(() => {
         // @ts-ignore
         let tab: ACCOUNT_TAB =
             (authToken && ACCOUNT_TAB.teacherconnections) ||
