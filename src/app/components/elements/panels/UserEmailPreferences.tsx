@@ -17,13 +17,13 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
     const error = useSelector((state: AppState) => state && state.error);
     const defaultEmailPreferences = {ASSIGNMENTS: true};
     const isaacEmailPreferences = {
+        assignments: {
+            [SITE.CS]: "If you're a student, set this to 'Yes' to receive assignment notifications from your teacher.",
+            [SITE.PHY]: "Get notified when your teacher gives your group a new assignment."
+        },
         news: {
             [SITE.CS]: "Be the first to know about new topics, new platform features, and our fantastic competition giveaways.",
             [SITE.PHY]: "New content and website feature updates, as well as interesting news about Isaac."
-        },
-        assignments: {
-            [SITE.CS]: "If you're a student, set this to 'Yes'; to receive assignment notifications from your teacher.",
-            [SITE.PHY]: "Get notified when your teacher gives your group a new assignment."
         },
         events: {
             [SITE.CS]: "Get valuable updates on our free student workshops/teacher CPD events happening near you.",
@@ -55,19 +55,6 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                 </thead>
                 <tbody>
                     <tr>
-                        <td className="form-required">News</td>
-                        <td className="d-none d-sm-table-cell">
-                            {isaacEmailPreferences.news[SITE_SUBJECT]}
-                        </td>
-                        <td className="text-center">
-                            <TrueFalseRadioInput
-                                id={`${idPrefix}news`} stateObject={emailPreferences}
-                                propertyName="NEWS_AND_UPDATES" setStateFunction={setEmailPreferences}
-                                submissionAttempted={submissionAttempted}
-                            />
-                        </td>
-                    </tr>
-                    <tr>
                         <td className="form-required">Assignments</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferences.assignments[SITE_SUBJECT]}
@@ -76,6 +63,19 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                             <TrueFalseRadioInput
                                 id={`${idPrefix}assignments`} stateObject={emailPreferences}
                                 propertyName="ASSIGNMENTS" setStateFunction={setEmailPreferences}
+                                submissionAttempted={submissionAttempted}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="form-required">News</td>
+                        <td className="d-none d-sm-table-cell">
+                            {isaacEmailPreferences.news[SITE_SUBJECT]}
+                        </td>
+                        <td className="text-center">
+                            <TrueFalseRadioInput
+                                id={`${idPrefix}news`} stateObject={emailPreferences}
+                                propertyName="NEWS_AND_UPDATES" setStateFunction={setEmailPreferences}
                                 submissionAttempted={submissionAttempted}
                             />
                         </td>

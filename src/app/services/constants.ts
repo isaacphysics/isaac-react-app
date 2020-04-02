@@ -599,6 +599,15 @@ export enum UserRole {
     STUDENT = "STUDENT"
 }
 
+export enum UserFacingRole {
+    ADMIN = "Admin",
+    EVENT_MANAGER = "Event Manager",
+    CONTENT_EDITOR = "Content Editor",
+    EVENT_LEADER = "Event Leader",
+    TEACHER = "Teacher",
+    STUDENT = "Student"
+}
+
 export enum SortOrder {
     ASC = "ASC",
     DESC = "DESC",
