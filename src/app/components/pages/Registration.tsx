@@ -28,6 +28,7 @@ import {DateInput} from "../elements/inputs/DateInput";
 import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../services/passwordStrength"
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {Redirect} from "react-router";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
@@ -118,7 +119,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <small className="text-muted">
                         Sign up to {" "}
                         <Link to="/">
-                            Isaac <span className="d-none d-md-inline">Computer Science</span>
+                            Isaac <span className="d-none d-md-inline">{SITE_SUBJECT_TITLE}</span>
                         </Link>
                     </small>
                 </CardTitle>

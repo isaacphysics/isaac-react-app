@@ -7,6 +7,7 @@ import {LoggedInUser} from "../../../IsaacAppTypes";
 import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import { WEBMASTER_EMAIL } from '../../services/siteConstants';
 
 
 const stateToProps = (state: AppState) => {
@@ -86,7 +87,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                     <h3>Upcoming events</h3>
                     <p>If you&apos;d like to find out more about our upcoming events, visit our <a href="https://isaaccomputerscience.org/events">Events Page</a></p>
                     <h3>Problems with the site?</h3>
-                    <p>We always want to improve so please report any issues to <a className="small" href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></p>
+                    <p>We always want to improve so please report any issues to <a className="small" href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></p>
                     <h3>Follow us</h3>
                     <p>Follow us on:</p>
                     <a href="https://twitter.com/IsaacCompSci">Twitter</a><br/>
@@ -167,7 +168,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                 </CardBody>
                                 <CardFooter>
                                     <div>
-                                        <Alert color="danger" isOpen={!!errorMessage}>{errorMessage} You can contact us at <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></Alert>
+                                        <Alert color="danger" isOpen={!!errorMessage}>{errorMessage} You can contact us at <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></Alert>
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>

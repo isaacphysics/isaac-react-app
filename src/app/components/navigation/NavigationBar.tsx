@@ -16,6 +16,7 @@ import {
 import {isAdmin, isEventLeader, isAdminOrEventManager, isStaff} from "../../services/user";
 import {loadMyAssignments} from "../../state/actions";
 import {filterAssignmentsByStatus} from "../../services/assignments";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 export const NavigationBar = () => {
     const dispatch = useDispatch();
@@ -78,9 +79,9 @@ export const NavigationBar = () => {
                         </p>
                     </DropdownToggle>
                     <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={closeMenuIfMobile}>
-                        <DropdownItem tag={Link} to="/students" className="pl-4 py-3 p-md-3">
+                        {SITE_SUBJECT === SITE.CS && <DropdownItem tag={Link} to="/students" className="pl-4 py-3 p-md-3">
                             For students
-                        </DropdownItem>
+                        </DropdownItem>}
                         <DropdownItem tag={Link} to="/assignments" className="pl-4 py-3 p-md-3">
                             My assignments
                             {assignmentCount > 0 && <span className="badge badge-pill bg-grey ml-2">{assignmentCount}</span>}
@@ -103,9 +104,9 @@ export const NavigationBar = () => {
                         <p className="m-0">For teachers</p>
                     </DropdownToggle>
                     <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={closeMenuIfMobile}>
-                        <DropdownItem tag={Link} to="/teachers" className="pl-4 py-3 p-md-3">
+                        {SITE_SUBJECT === SITE.CS && <DropdownItem tag={Link} to="/teachers" className="pl-4 py-3 p-md-3">
                             For teachers
-                        </DropdownItem>
+                        </DropdownItem>}
                         <DropdownItem tag={Link} to="/set_assignments" className="pl-4 py-3 p-md-3">
                             Set assignments
                         </DropdownItem>
