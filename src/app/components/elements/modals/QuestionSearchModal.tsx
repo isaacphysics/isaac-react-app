@@ -110,7 +110,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     isClearable
                 />
             </div>}
-            {!isBookSearch && <div className={`text-wrap col-lg-6 mt-2 ${isBookSearch ? "d-none" : ""}`}>
+            {!isBookSearch && <div className="text-wrap col-lg-6 mt-2">
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                 <Select inputId="question-search-topic"
                     isMulti
