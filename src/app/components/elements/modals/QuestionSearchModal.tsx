@@ -6,7 +6,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {debounce, range} from "lodash";
 import Select from "react-select";
-import {convertExamBoardToOption, groupTagSelectionsByParent, logEvent, multiSelectOnChange, sortQuestions, selectOnChange, bookSort} from "../../../services/gameboardBuilder";
+import {
+    convertExamBoardToOption,
+    groupTagSelectionsByParent,
+    logEvent,
+    multiSelectOnChange,
+    selectOnChange,
+    sortQuestions
+} from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM, SortOrder} from "../../../services/constants";
@@ -14,6 +21,7 @@ import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {useCurrentExamBoard} from "../../../services/examBoard";
 import {searchResultIsPublic} from "../../../services/search";
 import {isStaff} from "../../../services/user";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 interface QuestionSearchModalProps {
     originalSelectedQuestions: Map<string, ContentSummaryDTO>;
@@ -35,7 +43,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [searchBook, setSearchBook] = useState<string[]>([]);
     const isBookSearch = searchBook.length > 0;
 
-    const [searchFasttrack, setSearchFasttrack] = useState<boolean>(false);
+    const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
 
     const [questionsSort, setQuestionsSort] = useState({});
     const [selectedQuestions, setSelectedQuestions] = useState(new Map(originalSelectedQuestions));
@@ -79,8 +87,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     }, [user]);
 
     useEffect(() => {
-        searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchFasttrack, 0);
-    },[searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchFasttrack]);
+        searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchFastTrack, 0);
+    },[searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchFastTrack]);
 
     return <div>
         <div className="row">
@@ -134,7 +142,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <Select inputId="question-search-level"
                     options={[
                         ...(range(1,6).map((i) => {return { value: i.toString(), label: i.toString() }})),
-                        { value: '6', label: '6 (Post A-Level)' }]}
+                        {value: '6', label: '6 (Post A-Level)'}]}
                     name="colors"
                     className="basic-multi-select"
                     classNamePrefix="select"
@@ -147,7 +155,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         <div className="row">
             {!IS_CS_PLATFORM && isStaff(user) && <div className="text-wrap col">
                 <RS.Form>
-                    <RS.Label check><input type="checkbox" checked={searchFasttrack} onChange={e => setSearchFasttrack(e.target.checked)} />{' '}Show Fasttrack questions</RS.Label>
+                    <RS.Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</RS.Label>
                 </RS.Form>
             </div>}
         </div>
@@ -156,7 +164,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-title">Search</RS.Label>
                 <RS.Input id="question-search-title"
                     type="text"
-                    placeholder="e.g. Creating an AST"
+                    placeholder={{[SITE.CS]: "e.g. Creating an AST", [SITE.PHY]: "e.g. Man vs. Horse"}[SITE_SUBJECT]}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setSearchQuestionName(e.target.value);
                     }}
