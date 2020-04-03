@@ -11,18 +11,23 @@ interface IsaacTabsProps {
 
 export const IsaacTabs = (props: any) => {
     const {doc: {children}} = props as IsaacTabsProps;
-    const examBoardFilter = useCurrentExamBoard();
     const tabTitlesToContent: {[title: string]: ReactElement} = {};
 
     let activeTab = 1;
     children.forEach((child, index) => {
         const tabTitle = child.title || `Tab ${index + 1}`;
-        if (SITE_SUBJECT === SITE.CS && examBoardFilter == tabTitle) {
-            activeTab = index + 1;
-        }
         tabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
     });
 
+    // EXAM BOARD Special Case
+    const examBoardFilter = useCurrentExamBoard();
+    const tabTitles = Object.keys(tabTitlesToContent);
+    const specialCaseExamBoardTab = tabTitles.includes("AQA") && tabTitles.includes("OCR") && tabTitles.length === 2;
+    if (SITE_SUBJECT === SITE.CS && specialCaseExamBoardTab) {
+        return <IsaacContent doc={tabTitlesToContent[examBoardFilter as any]} />
+    }
+
+    // Normal case
     return <Tabs className="isaac-tab" tabContentClass="pt-4" activeTabOverride={activeTab}>
         {tabTitlesToContent}
     </Tabs>;
