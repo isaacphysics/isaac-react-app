@@ -9,6 +9,7 @@ import {api} from "../../services/api";
 import {Link} from "react-router-dom";
 import {isTeacher} from "../../services/user";
 import {IsaacContent} from "../content/IsaacContent";
+import {WEBMASTER_EMAIL} from "../../services/siteConstants";
 
 const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
@@ -201,7 +202,7 @@ export const TeacherRequest = () => {
                                 </CardBody>
                                 <CardFooter>
                                     <div>
-                                        <Alert color="danger" isOpen={!!errorMessage}>{errorMessage} You can contact us at <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></Alert>
+                                        <Alert color="danger" isOpen={!!errorMessage}>{errorMessage} You can contact us at <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></Alert>
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>

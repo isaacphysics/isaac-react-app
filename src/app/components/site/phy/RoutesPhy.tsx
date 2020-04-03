@@ -46,6 +46,7 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/fast_track_14" pageId="fast_track_14_index" />,
     <StaticPageRoute key={key++} exact path="/prize_draws" />,
     <StaticPageRoute key={key++} exact path="/spc" />,
+    <StaticPageRoute key={key++} exact path="/pre_made_gameboards" />,
     <StaticPageRoute key={key++} exact path="/chemistry" pageId="chemistry_landing_page" />,
     <StaticPageRoute key={key++} exact path="/survey" />,
     <StaticPageRoute key={key++} exact path="/book/question" pageId="book_question" />,

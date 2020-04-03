@@ -66,6 +66,8 @@ import ReactGA from "react-ga";
 import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {atLeastOne} from "../services/validation";
+import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
+import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -548,7 +550,12 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
         }) as any);
     }
 };
-
+export const openALevelBookChoiceModal = () => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(aLevelBookChoiceModal()) as any);
+};
+export const openIsaacBooksModal = () => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(isaacBooksModal()) as any);
+};
 export const revokeAuthorisationAfterPrompt = (user: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(revocationConfirmationModal(user)) as any);
 };
