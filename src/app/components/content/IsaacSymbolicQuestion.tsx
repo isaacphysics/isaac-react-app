@@ -15,14 +15,16 @@ import {parseExpression} from "inequality-grammar";
 
 // Magic starts here
 interface ChildrenMap {
-    children: {[key: string]: ChildrenMap}
+    children: {[key: string]: ChildrenMap};
 }
 
 function countChildren(root: ChildrenMap) {
     let q = [root];
     let count = 1;
     while (q.length > 0) {
-        let e = q.shift()!;
+        let e = q.shift();
+        if (!e) continue;
+
         let c = Object.keys(e.children).length;
         if (c > 0) {
             count = count + c;
@@ -83,12 +85,6 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     }
 
     const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), valid: true}));
-    useEffect(() => {
-        const pythonExpression = currentAttemptPythonExpression();
-        if (inputState.pythonExpression !== pythonExpression) {
-            setInputState({...inputState, pythonExpression});
-        }
-    }, [currentAttempt]);
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality>();
