@@ -6,23 +6,7 @@ import {Dispatch, SetStateAction} from "react";
 import {ValueType} from "react-select/src/types";
 import {Tag} from "../../IsaacAppTypes";
 
-export const sortQuestions = (sortState: { [s: string]: string }) => (questions: ContentSummaryDTO[]) => {
-    if (sortState["title"] && sortState["title"] != SortOrder.NONE) {
-        const sortedQuestions = questions.sort((a, b) => bookSort(a.title || "", b.title || ""));
-        return sortState["title"] == SortOrder.ASC ? sortedQuestions : sortedQuestions.reverse();
-    }
-    const keys: string[] = [];
-    const order: ("asc" | "desc")[] = [];
-    for (const key of Object.keys(sortState)) {
-        if (sortState[key] && sortState[key] != SortOrder.NONE) {
-            keys.push(key);
-            order.push(sortState[key] == SortOrder.ASC ? "asc" : "desc");
-        }
-    }
-    return orderBy(questions, keys, order);
-};
-
-export const bookSort = (a: string, b: string) => {
+const bookSort = (a: string, b: string) => {
     const splitRegex = /(\d+)/;
     const sectionsA = a.split(splitRegex).filter((x) => x != "." && x != "");
     const sectionsB = b.split(splitRegex).filter((x) => x != "." && x != "");
@@ -55,6 +39,22 @@ export const bookSort = (a: string, b: string) => {
         }
     }
     return sectionsB.length - sectionsA.length;
+};
+
+export const sortQuestions = (sortState: { [s: string]: string }) => (questions: ContentSummaryDTO[]) => {
+    if (sortState["title"] && sortState["title"] != SortOrder.NONE) {
+        const sortedQuestions = questions.sort((a, b) => bookSort(a.title || "", b.title || ""));
+        return sortState["title"] == SortOrder.ASC ? sortedQuestions : sortedQuestions.reverse();
+    }
+    const keys: string[] = [];
+    const order: ("asc" | "desc")[] = [];
+    for (const key of Object.keys(sortState)) {
+        if (sortState[key] && sortState[key] != SortOrder.NONE) {
+            keys.push(key);
+            order.push(sortState[key] == SortOrder.ASC ? "asc" : "desc");
+        }
+    }
+    return orderBy(questions, keys, order);
 };
 
 export const convertContentSummaryToGameboardItem = (question: ContentSummaryDTO) => {
