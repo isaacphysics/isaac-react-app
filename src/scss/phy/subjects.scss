@@ -2,6 +2,14 @@
   /* background classes */
   @include bg-variant(".bg-secondary", $color);
 
+  /* correct answer */
+  .validation-response-panel {
+    &.correct {
+      background: $color;
+      color: white;
+    }
+  }
+
   /* btn classes */
   .btn-secondary {
     @include button-variant($color, $color);
