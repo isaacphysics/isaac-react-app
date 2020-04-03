@@ -72,7 +72,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
                 {question.title}
             </a>
             <input
-                type="image" src="/assets/tab.svg" alt="Preview question" title="Preview question in modal"
+                type="image" src="/assets/library_books.svg" alt="Preview question" title="Preview question in modal"
                 className="pointer-cursor align-middle" onClick={() => {question.id && openQuestionModal(question.id)}}
             />
         </td>
@@ -82,8 +82,8 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
         {!IS_CS_PLATFORM && <td className="w-15">
             {question.level}
         </td>}
-        <td className="w-15">
+        {IS_CS_PLATFORM && <td className="w-15">
             {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagIcon(tagExamBoardMap[tag]))}
-        </td>
+        </td>}
     </tr>
 };

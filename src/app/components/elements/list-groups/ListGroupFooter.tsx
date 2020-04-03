@@ -2,39 +2,66 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {ListGroupPhysics} from "./ListGroupPhysics";
 
-const setOne = <>
-    <ListGroupItem className="border-0 px-0 py-0 bg-transparent">
-        <Link className="footerLink py-2" to="/about">About us</Link>
+
+interface FooterLinkProps {
+    linkTo: string;
+    children?: React.ReactNode | string;
+}
+
+const FooterLink = ({linkTo, children}: FooterLinkProps ) => {
+    return <ListGroupItem className="border-0 px-0 py-0 bg-transparent align-items-stretch">
+        <Link className="footerLink py-2" to={linkTo}>
+            {children}
+        </Link>
     </ListGroupItem>
-    <ListGroupItem className="border-0 px-0 py-0 bg-transparent align-items-stretch">
-        <Link className="footerLink py-2" to="/contact">Contact us</Link>
-    </ListGroupItem>
-    <ListGroupItem className="border-0 px-0 py-0 bg-transparent align-items-stretch">
-        <Link className="footerLink py-2" to="/accessibility">Accessibility <span className="d-none d-md-inline">statement</span></Link>
-    </ListGroupItem>
-</>;
+};
+
+let key = 0;
+const footerLinks = {
+    [SITE.CS]: {
+        left: [
+            <FooterLink key={key++} linkTo="/about">About us</FooterLink>,
+            <FooterLink key={key++} linkTo="/contact">Contact us</FooterLink>,
+            <FooterLink key={key++} linkTo="/accessibility">
+                Accessibility <span className="d-none d-md-inline">statement</span>
+            </FooterLink>,
+        ],
+        right: [
+            <FooterLink key={key++} linkTo="/privacy">Privacy policy</FooterLink>,
+            <FooterLink key={key++} linkTo="/terms">Terms of use</FooterLink>,
+            <FooterLink key={key++} linkTo="/cookies">Cookie policy</FooterLink>,
+        ]
+    },
+    [SITE.PHY]: {
+        left: [
+            <FooterLink key={key++} linkTo="/about">About Us</FooterLink>,
+            <FooterLink key={key++} linkTo="/contact">Contact Us</FooterLink>,
+            <FooterLink key={key++} linkTo="/accessibility">
+                Accessibility <span className="d-none d-md-inline">Statement</span>
+            </FooterLink>,
+            <FooterLink key={key++} linkTo="/privacy">Privacy Policy</FooterLink>,
+            <FooterLink key={key++} linkTo="/terms">Terms of Use</FooterLink>,
+        ],
+        right: [
+            <FooterLink key={key++} linkTo="/why_physics">Why Physics?</FooterLink>,
+            <FooterLink key={key++} linkTo="/bios">Biographies</FooterLink>,
+            <FooterLink key={key++} linkTo="/publications">Publications</FooterLink>,
+            <FooterLink key={key++} linkTo="/extraordinary_problems">Extraordinary Problems</FooterLink>,
+            <FooterLink key={key++} linkTo="/chemistry">Isaac Chemistry</FooterLink>,
+        ]
+    }
+};
 
 export const ListGroupFooter = () => (
     <div className="footer-links">
         <h5>Links</h5>
         <div className="d-flex flex-row pt-lg-3">
-            {SITE_SUBJECT === SITE.PHY ? <ListGroupPhysics/> :
-                <ListGroup className="w-50 mb-3 link-list">
-                    {setOne}
-                </ListGroup>}
             <ListGroup className="w-50 mb-3 link-list">
-                {SITE_SUBJECT === SITE.PHY && setOne}
-                <ListGroupItem className="border-0 px-0 py-0 bg-transparent">
-                    <Link className="footerLink py-2" to="/privacy">Privacy policy</Link>
-                </ListGroupItem>
-                <ListGroupItem className="border-0 px-0 py-0 bg-transparent align-items-stretch">
-                    <Link className="footerLink py-2" to="/terms">Terms of use</Link>
-                </ListGroupItem>
-                <ListGroupItem className="border-0 px-0 py-0 bg-transparent">
-                    <Link className="footerLink py-2" to="/cookies">Cookie policy</Link>
-                </ListGroupItem>
+                {footerLinks[SITE_SUBJECT].left}
+            </ListGroup>
+            <ListGroup className="w-50 mb-3 link-list">
+                {footerLinks[SITE_SUBJECT].right}
             </ListGroup>
         </div>
     </div>

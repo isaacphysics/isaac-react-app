@@ -20,9 +20,8 @@ import {LoggedInUser} from "../../../IsaacAppTypes";
 import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT, WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {PageFragment} from "../elements/PageFragment";
-
 
 const stateToProps = (state: AppState) => {
     const urlQuery = queryString.parse(location.search);
@@ -69,10 +68,6 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
     const [messageSent, setMessageSent] = useState(false);
 
     const siteSpecific = {
-        email: {
-            [SITE.PHY]: "webmaster@isaacphysics.org",
-            [SITE.CS]: "webmaster@isaaccomputerscience.org"
-        },
         social: {
             twitter: {
                 [SITE.PHY]: "https://twitter.com/isaacphysics",
@@ -127,7 +122,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                     <h3>Upcoming events</h3>
                     <p>If you&apos;d like to find out more about our upcoming events, visit our <a href="/events">Events Page</a></p>
                     <h3>Problems with the site?</h3>
-                    <p>We always want to improve so please report any issues to <a className="small" href={"mailto:" + siteSpecific.email[SITE_SUBJECT]}>{siteSpecific.email[SITE_SUBJECT]}</a></p>
+                    <p>We always want to improve so please report any issues to <a className="small" href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></p>
                     {SITE_SUBJECT === SITE.PHY && <div>
                         <h3>Call us</h3>
                         <p>Give us a call on <a href="tel:+441223337066">01223 337066</a></p>
@@ -211,7 +206,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                 </CardBody>
                                 <CardFooter>
                                     <div>
-                                        <Alert color="danger" isOpen={!!errorMessage}>{errorMessage} You can contact us at <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a></Alert>
+                                        <Alert color="danger" isOpen={!!errorMessage}>{errorMessage} You can contact us at <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></Alert>
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>

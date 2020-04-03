@@ -5,13 +5,14 @@ interface SortableTableHeaderProps {
     className: string;
     title: string;
     updateState: (order: string) => void;
+    enabled: boolean;
 }
 
-export const SortableTableHeader = ({className, title, updateState}: SortableTableHeaderProps) => {
+export const SortableTableHeader = ({className, title, updateState, enabled}: SortableTableHeaderProps) => {
     const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
     const sortOrders = [SortOrder.NONE, SortOrder.ASC, SortOrder.DESC];
 
-    return <th
+    return enabled ? <th
         className={className + " pointer-cursor"}
         onClick={(e: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => {
             const newIndex = (currentOrderIndex + 1) % sortOrders.length;
@@ -25,5 +26,5 @@ export const SortableTableHeader = ({className, title, updateState}: SortableTab
             {sortOrders[currentOrderIndex] == SortOrder.DESC && "⇓"}
             {sortOrders[currentOrderIndex] == SortOrder.NONE && "⇕"}
         </div>
-    </th>
+    </th> : <th className={className}>{title}</th>;
 }
