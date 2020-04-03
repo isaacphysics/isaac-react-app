@@ -33,7 +33,6 @@ export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: s
         case "video": selectedComponent = <IsaacVideo {...props} />; break;
         case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...props} />; break;
         case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props}/>; break
-        // case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break; // TODO
         case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break;
         case "anvilApp": selectedComponent = <AnvilApp {...props} />; break;
         case "isaacMultiChoiceQuestion":
