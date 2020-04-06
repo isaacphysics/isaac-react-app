@@ -73,7 +73,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                                         // Call it once that's done.
                                         requestAnimationFrame(() => {
                                             flush();
-                                            // You'd think this wouldn't do anything, but it fixes the vertical positon of the
+                                            // You'd think this wouldn't do anything, but it fixes the vertical position of the
                                             // legend. I'm beginning to dislike this library.
                                             flush();
                                         });
