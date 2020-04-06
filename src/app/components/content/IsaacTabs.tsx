@@ -1,4 +1,4 @@
-import React, {ReactElement} from "react";
+import React, {ReactElement, useEffect} from "react";
 import {Tabs} from "../elements/Tabs";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
@@ -24,7 +24,8 @@ export const IsaacTabs = (props: any) => {
     const tabTitles = Object.keys(tabTitlesToContent);
     const specialCaseExamBoardTab = tabTitles.includes("AQA") && tabTitles.includes("OCR") && tabTitles.length === 2;
     if (SITE_SUBJECT === SITE.CS && specialCaseExamBoardTab) {
-        return <IsaacContent doc={tabTitlesToContent[examBoardFilter as any]} />
+        // return <IsaacContent doc={tabTitlesToContent[examBoardFilter as any]} />
+        return <div>{tabTitlesToContent[examBoardFilter]}</div>
     }
 
     // Normal case
