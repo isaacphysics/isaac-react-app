@@ -114,6 +114,7 @@
 
   .expand-button {
     @include border-top-left-radius(4px);
+    visibility: hidden;
     position: absolute;
     right: 1px;
     bottom: 17px;
@@ -124,5 +125,13 @@
     height: 32px;
     font-size: 2rem;
     line-height: 32px;
+  }
+}
+
+.quick-question {
+  .examboard-special-tabs {
+    .expand-button {
+      visibility: visible;
+    }
   }
 }
