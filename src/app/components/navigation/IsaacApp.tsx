@@ -62,6 +62,7 @@ import {LoadScript} from "@react-google-maps/api";
 import SiteSpecific from "../site/siteSpecific";
 import StaticPageRoute from "./StaticPageRoute";
 import {Topic} from "../pages/Topic";
+import {Redirect} from "react-router";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -101,6 +102,7 @@ export const IsaacApp = () => {
 
                     {/* Application pages */}
                     <TrackedRoute exact path="/" component={SiteSpecific.Homepage} />
+                    <Redirect exact from="/home" to="/" /> {/* historic route which might get reintroduced with the introduction of dashboards */}
                     <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />
                     <TrackedRoute exact path="/search" component={Search} />
 
