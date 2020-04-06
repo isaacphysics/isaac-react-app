@@ -1,9 +1,12 @@
-import React, {ReactElement, useEffect} from "react";
+import React, {ReactElement} from "react";
 import {Tabs} from "../elements/Tabs";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {useCurrentExamBoard} from "../../services/examBoard";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import { useDispatch } from "react-redux";
+import {openActiveModal, closeActiveModal} from '../../state/actions';
+import {store} from '../../state/store';
 
 interface IsaacTabsProps {
     doc: {children: {title?: string; children?: ContentDTO[]}[]};
@@ -12,6 +15,16 @@ interface IsaacTabsProps {
 export const IsaacTabs = (props: any) => {
     const {doc: {children}} = props as IsaacTabsProps;
     const tabTitlesToContent: {[title: string]: ReactElement} = {};
+
+    const dispatch = useDispatch();
+
+    function expandToModal(content: any) {
+        dispatch(openActiveModal({
+            closeAction: () => {store.dispatch(closeActiveModal())},
+            title: '',
+            body: content
+        }))
+    }
 
     let activeTab = 1;
     children.forEach((child, index) => {
@@ -24,8 +37,10 @@ export const IsaacTabs = (props: any) => {
     const tabTitles = Object.keys(tabTitlesToContent);
     const specialCaseExamBoardTab = tabTitles.includes("AQA") && tabTitles.includes("OCR") && tabTitles.length === 2;
     if (SITE_SUBJECT === SITE.CS && specialCaseExamBoardTab) {
-        // return <IsaacContent doc={tabTitlesToContent[examBoardFilter as any]} />
-        return <div>{tabTitlesToContent[examBoardFilter]}</div>
+        return <div className="examboard-special-tabs">
+            <button className="expand-button" onClick={() => expandToModal(tabTitlesToContent[examBoardFilter])}>+</button>
+            {tabTitlesToContent[examBoardFilter]}
+        </div>
     }
 
     // Normal case
