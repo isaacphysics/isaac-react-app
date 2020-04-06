@@ -22,7 +22,7 @@ const HeaderComponent = ({user}: HeaderProps) => {
                 <Col>
                     <div className="header-bar mx-3 mx-md-0 d-md-flex">
                         <div className="header-logo">
-                            <Link to="/home">
+                            <Link to="/">
                                 <img src="/assets/phy/logo.svg" alt="Isaac Physics" className="d-none d-md-block"/>
                                 <img src="/assets/phy/logo-small.svg" alt="Isaac Physics" className="d-sm-block d-md-none"/>
                             </Link>

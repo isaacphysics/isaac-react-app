@@ -100,7 +100,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
 
                     {/* Application pages */}
-                    <TrackedRoute exact path="/(home)?" component={SiteSpecific.Homepage} />
+                    <TrackedRoute exact path="/" component={SiteSpecific.Homepage} />
                     <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />
                     <TrackedRoute exact path="/search" component={Search} />
 
