@@ -40,6 +40,11 @@ function getTags(docTags?: string[]) {
         .map(tag => ({title: tag.title}));
 }
 
+function fastTrackConceptEnumerator(questionId: string) {
+    // Magic, unfortunately
+    return "_abcdefghijk".indexOf(questionId.split('_')[2].slice(-1));
+}
+
 export const Question = withRouter(({questionIdOverride, match}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
     const doc = useSelector(selectDoc.ifNotAQuizId(questionId));
@@ -58,13 +63,24 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+
+        let title = doc.title as string;
+
+        if (doc.tags && (doc.tags.indexOf('ft_upper') != -1 || doc.tags.indexOf('ft_lower') != -1)) {
+            title += " " + fastTrackConceptEnumerator(questionId);
+
+            if (doc.tags.indexOf('ft_lower') != -1) {
+                title += " (Easier)";
+            }
+        }
+
         return <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <Container>
                 {/*FastTrack progress bar*/}
                 {/*Print options*/}
                 {/*High contrast option*/}
                 <TitleAndBreadcrumb
-                    currentPageTitle={doc.title as string}
+                    currentPageTitle={title}
                     intermediateCrumbs={[
                         ...navigation.breadcrumbHistory,
                         ...getTags(doc.tags)
