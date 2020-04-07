@@ -16,7 +16,7 @@ import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
 import {isTeacher} from "../../services/user";
-import {reservationsModal} from "../../components/elements/modals/ResearvationsModal";
+import {reservationsModal} from "../../components/elements/modals/ReservationsModal";
 
 interface EventDetailsProps {
     match: {params: {eventId: string}};
