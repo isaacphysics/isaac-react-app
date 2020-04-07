@@ -2,14 +2,14 @@ import React from "react";
 import {LinkItem, NavigationBar, NavigationSection, useAssignmentBadge} from "../../navigation/NavigationBar";
 import {useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacher} from "../../../services/user";
+import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
 
 export const NavigationBarCS = () => {
     const user = useSelector((state: AppState) => (state && state.user) || null);
     const assignmentBadge = useAssignmentBadge();
 
     return <NavigationBar>
-        <NavigationSection title={<React.Fragment>Students {assignmentBadge}</React.Fragment>}>
+        <NavigationSection title={<>Students {assignmentBadge}</>} topLevelLink={!isLoggedIn(user)} to="/students">
             <LinkItem to="/assignments">My assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>

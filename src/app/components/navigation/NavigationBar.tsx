@@ -12,6 +12,7 @@ import {
     Nav,
     Navbar,
     NavbarToggler,
+    NavLink,
     UncontrolledDropdown
 } from "reactstrap";
 import {loadMyAssignments} from "../../state/actions";
@@ -35,18 +36,17 @@ export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
     </LinkItem>
 );
 
-export const NavigationSection = ({children, title}: {children: React.ReactNode; title: React.ReactElement | string}) => (
+interface NavigationSectionProps {children: React.ReactNode; title: React.ReactNode; topLevelLink?: boolean; to?: string}
+export const NavigationSection = ({children, title, topLevelLink, to}: NavigationSectionProps) => (
     <MenuOpenContext.Consumer>
-        {({setMenuOpen}) => (
-            <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret className="p-3 ml-3 mr-3">
-                    {title}
-                </DropdownToggle>
-                <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={() => setMenuOpen(false)}>
-                    {children}
-                </DropdownMenu>
-            </UncontrolledDropdown>
-        )}
+        {({setMenuOpen}) => <UncontrolledDropdown nav inNavbar>
+            {topLevelLink ?
+                <NavLink className="p-3 ml-3 mr-3" tag={Link} to={to} onClick={() => setMenuOpen(false)}>{title}</NavLink> :
+                <DropdownToggle nav caret className="p-3 ml-3 mr-3">{title}</DropdownToggle>}
+            <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={() => setMenuOpen(false)}>
+                {children}
+            </DropdownMenu>
+        </UncontrolledDropdown>}
     </MenuOpenContext.Consumer>
 );
 
