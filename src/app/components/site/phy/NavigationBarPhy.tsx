@@ -11,7 +11,7 @@ export const NavigationBarPhy = () => {
     return <NavigationBar>
         <NavigationSection title={<React.Fragment>My Isaac {assignmentBadge}</React.Fragment>}>
             <LinkItem to="/account">My Account</LinkItem>
-            <LinkItem to="/my_gameboards">My Boards</LinkItem>
+            <LinkItem to="/my_gameboards">My Gameboards</LinkItem>
             <LinkItem to="/assignments">My Assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/progress">My Progress</LinkItem>
         </NavigationSection>

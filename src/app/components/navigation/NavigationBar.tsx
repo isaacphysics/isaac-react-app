@@ -35,8 +35,8 @@ export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
     </LinkItem>
 );
 
-export const NavigationSection = ({children, title}: {children: React.ReactNode; title: React.ReactElement | string}) => {
-    return <MenuOpenContext.Consumer>
+export const NavigationSection = ({children, title}: {children: React.ReactNode; title: React.ReactElement | string}) => (
+    <MenuOpenContext.Consumer>
         {({setMenuOpen}) => (
             <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret className="p-3 ml-3 mr-3">
@@ -47,8 +47,8 @@ export const NavigationSection = ({children, title}: {children: React.ReactNode;
                 </DropdownMenu>
             </UncontrolledDropdown>
         )}
-    </MenuOpenContext.Consumer>;
-};
+    </MenuOpenContext.Consumer>
+);
 
 export const useAssignmentBadge = () => {
     const dispatch = useDispatch();

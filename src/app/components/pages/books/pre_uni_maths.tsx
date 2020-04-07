@@ -1,7 +1,7 @@
 import {Col, Row, Container} from "reactstrap";
 import React from "react";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {STUDENTS_CRUMB, SUBJECTS} from "../../../services/constants";
+import {SUBJECTS} from "../../../services/constants";
 import {PageFragment} from "../../elements/PageFragment";
 import {BookChapter} from "../../elements/BookChapter";
 
@@ -14,7 +14,7 @@ export const PreUniMaths = () => {
     return <Container className="maths">
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Pre-University Mathematics for Sciences" intermediateCrumbs={[STUDENTS_CRUMB]} help={pageHelp} />
+                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Pre-University Mathematics for Sciences" help={pageHelp} />
                 <img className="book-cover" src="/assets/phy/books/pre_uni_maths.jpg" alt="Cover of the book."/>
                 <PageFragment fragmentId="phys_book_gcse_intro"/>
             </div>

@@ -2,38 +2,37 @@ import React from "react";
 import {LinkItem, NavigationBar, NavigationSection, useAssignmentBadge} from "../../navigation/NavigationBar";
 import {useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff} from "../../../services/user";
+import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacher} from "../../../services/user";
 
 export const NavigationBarCS = () => {
     const user = useSelector((state: AppState) => (state && state.user) || null);
     const assignmentBadge = useAssignmentBadge();
 
     return <NavigationBar>
-        <NavigationSection title="About us">
-            <LinkItem to="/about">What we do</LinkItem>
-            <LinkItem to="/events">Events</LinkItem>
-        </NavigationSection>
-
-        <NavigationSection title={<React.Fragment>For students {assignmentBadge}</React.Fragment>}>
-            <LinkItem to="/students">For students</LinkItem>
+        <NavigationSection title={<React.Fragment>Students {assignmentBadge}</React.Fragment>}>
             <LinkItem to="/assignments">My assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
-            {/* <LinkItemComingSoon>Problem-solving</LinkItemComingSoon> */}
+            <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
-        <NavigationSection title="For teachers">
-            <LinkItem to="/teachers">For teachers</LinkItem>
+        {isTeacher(user) && <NavigationSection title="Teachers">
+            <LinkItem to="/teachers">Teacher tools</LinkItem>
             <LinkItem to="/set_assignments">Set assignments</LinkItem>
-            <LinkItem to="/assignment_progress">Assignment progress</LinkItem>
+            <LinkItem to="/assignment_progress">My markbook</LinkItem>
             <LinkItem to="/groups">Manage groups</LinkItem>
-        </NavigationSection>
+            <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
+        </NavigationSection>}
 
         <NavigationSection title="Topics">
             <LinkItem to="/topics">All topics</LinkItem>
-            <LinkItem to="/teaching_order">Suggested teaching</LinkItem>
             <LinkItem to="/pages/specification_page_aqa">AQA specification view</LinkItem>
             <LinkItem to="/pages/specification_page_ocr">OCR specification view</LinkItem>
+        </NavigationSection>
+
+        <NavigationSection title="Events">
+            <LinkItem to="/events?types=teacher">Teacher events</LinkItem>
+            <LinkItem to="/events?types=student">Student events</LinkItem>
         </NavigationSection>
 
         <NavigationSection title={<React.Fragment>

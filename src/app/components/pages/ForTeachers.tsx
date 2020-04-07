@@ -16,12 +16,12 @@ export const ForTeachers = () => {
     const achievementsSelector = useSelector((state: AppState) => state && state.userProgress && state.userProgress.userSnapshot && state.userProgress.userSnapshot.achievementsRecord);
 
     useEffect(() => {
-       if (!achievementsSelector) {
-           dispatch(getProgress());
-       }
+        if (!achievementsSelector) {
+            dispatch(getProgress());
+        }
     }, [user]);
 
-    const pageTitle = user && isTeacher(user) ? "My Isaac teaching" : "How we help teachers";
+    const pageTitle = user && isTeacher(user) ? "Teacher tools" : "How we help teachers";
 
     const teacherUpgradeLink = <div className="text-center">
         <RS.Button size="lg" tag={Link} to="/pages/teacher_accounts" color="primary" outline>
@@ -42,7 +42,7 @@ export const ForTeachers = () => {
     return <RS.Container className="teachers-page">
         <RS.Row className="pb-4">
             <RS.Col>
-                <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="For teachers" />
+                <TitleAndBreadcrumb currentPageTitle={pageTitle} />
             </RS.Col>
         </RS.Row>
 
