@@ -29,7 +29,7 @@ import {
     ContentDTO,
     ContentSummaryDTO,
     EventBookingDTO,
-    GameboardDTO,
+    GameboardDTO, GameboardItem,
     GameboardListDTO,
     GlossaryTermDTO,
     IsaacPodDTO,
@@ -867,6 +867,16 @@ export const concepts = (concepts: ConceptsState = null, action: Action) => {
     }
 };
 
+export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;
+export const fasttrackConcepts = (state: FasttrackConceptsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS:
+            return action.concepts;
+        default:
+            return state;
+    }
+};
+
 
 const appReducer = combineReducers({
     adminUserGet,
@@ -911,7 +921,8 @@ const appReducer = combineReducers({
     glossaryTerms,
     testQuestions,
     printingSettings,
-    concepts
+    concepts,
+    fasttrackConcepts
 });
 
 export type AppState = undefined | {
@@ -959,6 +970,7 @@ export type AppState = undefined | {
     glossaryTerms: GlossaryTermsState;
     testQuestions: TestQuestionsState;
     concepts: ConceptsState;
+    fasttrackConcepts: FasttrackConceptsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {
