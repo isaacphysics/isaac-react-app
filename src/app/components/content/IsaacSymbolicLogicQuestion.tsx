@@ -33,7 +33,6 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
-    const examBoard = useCurrentExamBoard();
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
