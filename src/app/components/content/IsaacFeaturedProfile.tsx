@@ -12,10 +12,19 @@ export const IsaacFeaturedProfile = ({doc}: IsaacFeaturedProfileProps) => {
 
     return <div className="text-center featured-profile">
         <img className="profile-image" src={path} alt=""/>
-        {doc.homepage ? <a href={doc.homepage} target="_blank" rel="noopener noreferrer"><b>{doc.title}</b></a> :
-            <div><b>{doc.title}</b></div>}
+        {doc.homepage ?
+            // eslint-disable-next-line react/jsx-no-target-blank
+            <a href={doc.homepage} target="_blank" rel="noopener"><b>{doc.title}</b></a>
+            :
+            <div><b>{doc.title}</b></div>
+        }
         <div className="profile-title">{doc.subtitle}</div>
         <p className="profile-description">{summary}</p>
-        {doc.emailAddress && <a href={"mailto:" + doc.emailAddress}><img src='/assets/phy/icon-mailto.png' alt="Email"/></a>}
+        {doc.emailAddress &&
+            <a href={"mailto:" + doc.emailAddress}>
+                <img src='/assets/phy/icon-mailto.png' alt=""/>
+                <span className="sr-only">{"Email " + doc.title}</span>
+            </a>
+        }
     </div>
 };
