@@ -1,19 +1,15 @@
-import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row, Table} from "reactstrap";
 import {SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../../services/constants";
 import React, {ChangeEvent} from "react";
-import {
-    allRequiredInformationIsPresent,
-    validateEmail,
-    validateExamBoard,
-    validateUserGender,
-} from "../../../services/validation";
+import {allRequiredInformationIsPresent, validateEmail, validateExamBoard,} from "../../../services/validation";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {SubjectInterestInput} from "../inputs/subjectInterestInput";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -31,6 +27,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         subjectInterests, setSubjectInterests,
         submissionAttempted, editingOtherUser
     } = props;
+
+    console.log(subjectInterests);
 
     const allRequiredFieldsValid = userToUpdate && userToUpdate.email &&
         allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null});
@@ -130,6 +128,48 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </div>
             </Col>}
         </Row>
+        {SITE_SUBJECT === SITE.PHY && <Row>
+            <Col>
+                <FormGroup>
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th/>
+                                <th>GCSE</th>
+                                <th>A Level</th>
+                                <th>University</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Physics</th>
+                                <td><SubjectInterestInput stateObject={subjectInterests} propertyName={"PHYSICS_GCSE"} setStateFunction={setSubjectInterests}/></td>
+                                <td><SubjectInterestInput stateObject={subjectInterests} propertyName={"PHYSICS_ALEVEL"} setStateFunction={setSubjectInterests}/></td>
+                                <td><SubjectInterestInput stateObject={subjectInterests} propertyName={"PHYSICS_UNI"} setStateFunction={setSubjectInterests}/></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Chemistry</th>
+                                <td><SubjectInterestInput stateObject={subjectInterests} propertyName={"CHEMISTRY_GCSE"} setStateFunction={setSubjectInterests}/></td>
+                                <td><SubjectInterestInput stateObject={subjectInterests} propertyName={"CHEMISTRY_ALEVEL"} setStateFunction={setSubjectInterests}/></td>
+                                <td><SubjectInterestInput stateObject={subjectInterests} propertyName={"CHEMISTRY_UNI"} setStateFunction={setSubjectInterests}/></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Maths</th>
+                                <td><SubjectInterestInput stateObject={subjectInterests} propertyName={"MATHS_GCSE"} setStateFunction={setSubjectInterests}/></td>
+                                <td><SubjectInterestInput stateObject={subjectInterests} propertyName={"MATHS_ALEVEL"} setStateFunction={setSubjectInterests}/></td>
+                                <td><SubjectInterestInput stateObject={subjectInterests} propertyName={"MATHS_UNI"} setStateFunction={setSubjectInterests}/></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Engineering</th>
+                                <td/>
+                                <td/>
+                                <td><SubjectInterestInput stateObject={subjectInterests} propertyName={"ENGINEERING_UNI"} setStateFunction={setSubjectInterests}/></td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </FormGroup>
+            </Col>
+        </Row>}
 
         {userToUpdate && userToUpdate.role == "STUDENT" && <Row>
             <Col className="text-muted text-center mt-2">

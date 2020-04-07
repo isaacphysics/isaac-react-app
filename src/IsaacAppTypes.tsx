@@ -405,6 +405,16 @@ export interface UserExamPreferences {
 
 export interface SubjectInterests {
     CS_ALEVEL?: boolean;
+    PHYSICS_GCSE?: boolean;
+    PHYSICS_ALEVEL?: boolean;
+    PHYSICS_UNI?: boolean;
+    CHEMISTRY_ALEVEL?: boolean;
+    CHEMISTRY_GCSE?: boolean;
+    CHEMISTRY_UNI?: boolean;
+    MATHS_GCSE?: boolean;
+    MATHS_ALEVEL?: boolean;
+    MATHS_UNI?: boolean;
+    ENGINEERING_UNI?: boolean;
 }
 
 export interface UserPreferencesDTO {

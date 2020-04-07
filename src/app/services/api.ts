@@ -84,6 +84,7 @@ export const api = {
             return endpoint.post(`/users/resetpassword/${params.token}`, securePadPasswordReset({password: params.password}));
         },
         updateCurrent: (registeredUser: ValidationUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+            console.log(userPreferences);
             return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent});
         },
         passwordResetById: (id: number) => {
