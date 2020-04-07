@@ -32,6 +32,11 @@ export const UserDetails = (props: UserDetailsProps) => {
         submissionAttempted, editingOtherUser
     } = props;
 
+    const teacherRequestRoute = {
+        [SITE.PHY]: "/pages/contact_us_teacher",
+        [SITE.CS]: "/pages/teacher_accounts"
+    };
+
     const allRequiredFieldsValid = userToUpdate && userToUpdate.email &&
         allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null});
 
@@ -43,11 +48,11 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </span>
             </Col>
         </Row>
-        <Row className="mb-2">
+        <Row className="mb-3">
             <Col>
                 Account type: <b>{userToUpdate && userToUpdate.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate && userToUpdate.role == "STUDENT" && <span>
                     <small>(Are you a teacher? {" "}
-                        <a href="/pages/teacher_accounts" target="_blank" rel="noopener noreferrer">
+                        <a href={teacherRequestRoute[SITE_SUBJECT]} target="_blank" rel="noopener noreferrer">
                             Upgrade your account
                         </a>{".)"}</small>
                 </span>}
