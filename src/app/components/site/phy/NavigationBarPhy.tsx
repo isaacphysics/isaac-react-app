@@ -2,18 +2,18 @@ import {LinkItem, NavigationBar, NavigationSection, useAssignmentBadge} from "..
 import React from "react";
 import {useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacher} from "../../../services/user";
+import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
 
 export const NavigationBarPhy = () => {
     const user = useSelector((state: AppState) => (state?.user) || null);
     const assignmentBadge = useAssignmentBadge();
 
     return <NavigationBar>
-        <NavigationSection title={<React.Fragment>My Isaac {assignmentBadge}</React.Fragment>}>
-            <LinkItem to="/account">My Account</LinkItem>
-            <LinkItem to="/my_gameboards">My Gameboards</LinkItem>
-            <LinkItem to="/assignments">My Assignments {assignmentBadge}</LinkItem>
-            <LinkItem to="/progress">My Progress</LinkItem>
+        <NavigationSection title={<>My Isaac {assignmentBadge}</>}>
+            <LinkItem to="/account" muted={!isLoggedIn(user)}>My Account</LinkItem>
+            <LinkItem to="/my_gameboards" muted={!isLoggedIn(user)}>My Gameboards</LinkItem>
+            <LinkItem to="/assignments" muted={!isLoggedIn(user)}>My Assignments {assignmentBadge}</LinkItem>
+            <LinkItem to="/progress" muted={!isLoggedIn(user)}>My Progress</LinkItem>
         </NavigationSection>
 
         <NavigationSection title="Learn">
@@ -31,7 +31,7 @@ export const NavigationBarPhy = () => {
         </NavigationSection>}
 
         <NavigationSection title="Events">
-            <LinkItem to="/events?show_booked_only=true">My Booked Events</LinkItem>
+            {isLoggedIn(user) && <LinkItem to="/events?show_booked_only=true">My Booked Events</LinkItem>}
             <LinkItem to="/events?types=student">Student Events</LinkItem>
             <LinkItem to="/events?types=teacher">Teacher Events</LinkItem>
             <LinkItem to="/events">All Events</LinkItem>

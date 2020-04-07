@@ -23,8 +23,8 @@ const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: Rea
     menuOpen: false, setMenuOpen: () => {}
 });
 
-export const LinkItem = ({children, ...props}: React.PropsWithChildren<DropdownItemProps>) => (
-    <DropdownItem tag={Link} className="pl-4 py-3 p-md-3" {...props}>
+export const LinkItem = ({children, muted, ...props}: React.PropsWithChildren<DropdownItemProps & {muted?: boolean}>) => (
+    <DropdownItem tag={Link} className={`pl-4 py-3 p-md-3 ${muted ? "text-muted" : ""}`} {...props}>
         {children}
     </DropdownItem>
 );
