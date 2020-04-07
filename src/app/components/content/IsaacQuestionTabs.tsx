@@ -10,6 +10,7 @@ import * as RS from "reactstrap";
 import {QUESTION_TYPES} from "../../services/questions";
 import {DateString, NUMERIC_DATE_AND_TIME} from "../elements/DateString";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     const questionPart = questions.selectQuestionPart(doc.id)(state);
@@ -73,9 +74,9 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
                 <div>
                     {validationResponse.explanation && <IsaacContent doc={validationResponse.explanation} />}
                 </div>
-                <div className="pt-1">
-                    <h5 className="m-0">{validationResponse.correct ? "Well done!" : "Please try again."}</h5>
-                </div>
+                {SITE_SUBJECT === SITE.PHY && <div className="pt-1">
+                    <div className="m-0 question-response">{validationResponse.correct ? "Well done!" : "Please try again."}</div>
+                </div>}
             </div>}
 
             {locked && <RS.Alert color="danger">
