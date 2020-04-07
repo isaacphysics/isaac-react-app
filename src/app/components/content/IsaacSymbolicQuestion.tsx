@@ -1,16 +1,16 @@
-import React, {ChangeEvent, useEffect, useState, useRef, useLayoutEffect} from "react";
+import React, {ChangeEvent, useLayoutEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
-import { InequalityModal } from "../elements/modals/InequalityModal";
+import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {IsaacHints} from "./IsaacHints";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
-import {Inequality, makeInequality, WidgetSpec} from "inequality";
+import {Inequality, makeInequality} from "inequality";
 import {parseExpression} from "inequality-grammar";
 
 // Magic starts here

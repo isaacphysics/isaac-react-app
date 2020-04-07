@@ -2,7 +2,6 @@
 import React from "react";
 import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import katex from "katex";
-import Menu from "react-select/src/components/Menu";
 
 class MenuItem {
     public type: string;
@@ -211,7 +210,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         // MouseUp and TouchEnd on body because they are not intercepted by inequalityElement (I blame dark magic)
         document.body.addEventListener('mouseup', this.onCursorMoveEnd.bind(this), { passive: true } );
         document.body.addEventListener('touchend', this.onCursorMoveEnd.bind(this), { passive: true } );
-        
+
         let defaultMenuItems = {
             // ...this.state.menuItems,
             upperCaseLetters: [ ...(this.state.menuItems.upperCaseLetters || []) ],
@@ -487,9 +486,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
     private makeMathsTrigFunctionItem(name: string): MenuItem {
         let children: { [key: string]: any } | null = null;
-        let functionName = name;
-        let label = '';
-        let fontSize = '1.2em';
+        let functionName: string;
+        let label: string;
+        let fontSize: string;
         if (name.substring(0, 3) === 'arc') {
             functionName = name.substring(3);
             if (name.substring(3, 7) === 'sech' || name.substring(3, 8) === 'cosec') {
@@ -497,7 +496,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             } else {
                 label = `\\${functionName}`;
             }
-            label += '^{-1}'
+            label += '^{-1}';
             fontSize = ['arccosech'].includes(name) ? '0.8em' : '1em';
             children = { superscript: { type: 'Num', properties: { significand: '-1' }, children: {} } }
         } else {
@@ -645,7 +644,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                         type: 'Differential',
                         properties: { letter: 'd' },
                         children: derivativeOrder > 1 ? { order: { type: 'Num', properties: { significand: `${derivativeOrder}` } } } : { }
-                    };                
+                    };
                     derivativeObject.children = { numerator, denominator };
                     items.push(derivativeObject);
                 } else if (this._differentialRegex.test(symbol)) {
