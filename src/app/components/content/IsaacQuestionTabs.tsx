@@ -73,6 +73,9 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
                 <div>
                     {validationResponse.explanation && <IsaacContent doc={validationResponse.explanation} />}
                 </div>
+                <div className="pt-1">
+                    <h5 className="m-0">{validationResponse.correct ? "Well done!" : "Please try again."}</h5>
+                </div>
             </div>}
 
             {locked && <RS.Alert color="danger">
