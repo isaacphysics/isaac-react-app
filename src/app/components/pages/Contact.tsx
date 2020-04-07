@@ -1,14 +1,27 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
-import {Alert, Container, Card, CardBody, CardFooter, Col, Form, FormGroup, Input, Row, Label, FormFeedback} from "reactstrap";
+import {
+    Alert,
+    Card,
+    CardBody,
+    CardFooter,
+    Col,
+    Container,
+    Form,
+    FormFeedback,
+    FormGroup,
+    Input,
+    Label,
+    Row
+} from "reactstrap";
 import {AppState, ErrorState} from "../../state/reducers";
 import {submitMessage} from "../../state/actions";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import { WEBMASTER_EMAIL } from '../../services/siteConstants';
-
+import {SITE, SITE_SUBJECT, WEBMASTER_EMAIL} from "../../services/siteConstants";
+import {PageFragment} from "../elements/PageFragment";
 
 const stateToProps = (state: AppState) => {
     const urlQuery = queryString.parse(location.search);
@@ -54,6 +67,23 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
     const [messageSendAttempt, setMessageSendAttempt] = useState(false);
     const [messageSent, setMessageSent] = useState(false);
 
+    const siteSpecific = {
+        social: {
+            twitter: {
+                [SITE.PHY]: "https://twitter.com/isaacphysics",
+                [SITE.CS]: "https://twitter.com/IsaacCompSci"
+            },
+            facebook: {
+                [SITE.PHY]: "https://www.facebook.com/isaacphysicsUK",
+                [SITE.CS]: "https://www.facebook.com/IsaacComputerScience/"
+            },
+            youtube: {
+                [SITE.PHY]: "https://www.youtube.com/user/isaacphysics/",
+                [SITE.CS]: "https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ"
+            }
+        }
+    };
+
     // set subject and message if any of user, presetSubject or presetMessage change
     useMemo(() => {
         setSubject(presetSubject);
@@ -84,16 +114,26 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
         <div className="pt-4">
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">
+                    {SITE_SUBJECT === SITE.PHY && <div>
+                        <h3>Frequently Asked Question?</h3>
+                        <p> You might like to check our FAQs pages to see if they can help you: <a href="/support/student">student FAQs</a> | <a href="/support/teacher">teacher FAQs</a></p>
+                    </div>
+                    }
                     <h3>Upcoming events</h3>
-                    <p>If you&apos;d like to find out more about our upcoming events, visit our <a href="https://isaaccomputerscience.org/events">Events Page</a></p>
+                    <p>If you&apos;d like to find out more about our upcoming events, visit our <a href="/events">Events Page</a></p>
                     <h3>Problems with the site?</h3>
                     <p>We always want to improve so please report any issues to <a className="small" href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></p>
+                    {SITE_SUBJECT === SITE.PHY && <div>
+                        <h3>Call us</h3>
+                        <p>Give us a call on <a href="tel:+441223337066">01223 337066</a></p>
+                    </div>
+                    }
                     <h3>Follow us</h3>
                     <p>Follow us on:</p>
-                    <a href="https://twitter.com/IsaacCompSci">Twitter</a><br/>
-                    <a href="https://www.facebook.com/IsaacComputerScience/">Facebook</a><br/>
-                    <a href="https://www.instagram.com/isaaccompsci/">Instagram</a><br/>
-                    <a href="https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ">YouTube</a>
+                    <a href={siteSpecific.social.youtube[SITE_SUBJECT]}>YouTube</a><br/>
+                    <a href={siteSpecific.social.twitter[SITE_SUBJECT]}>Twitter</a><br/>
+                    <a href={siteSpecific.social.facebook[SITE_SUBJECT]}>Facebook</a><br/>
+                    {(SITE_SUBJECT === SITE.CS) && <a href="https://www.instagram.com/isaaccompsci/">Instagram</a>}
                 </Col>
                 <Col size={12} md={{size: 9, order: 2}} xs={{order: 1}}>
                     <Card>
@@ -113,9 +153,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                             }}>
                                 <CardBody>
                                     <h3>Send us a message</h3>
-                                    <p>Please get in touch with the Isaac Computer Science team if you have comments about our resources or events, questions about the site, ideas, or other feedback. We would love to hear from you! <br/><br/>
-                                        To contact us, please fill out this form:
-                                    </p>
+                                    <PageFragment fragmentId="contact_intro"/>
                                     <Row>
                                         <Col size={12} md={6}>
                                             <FormGroup>

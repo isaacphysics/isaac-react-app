@@ -31,7 +31,7 @@ export const ServerError = () => {
                         refresh this page and try again
                     </a>
                     {", "}
-                    <Link to="/home">
+                    <Link to="/">
                         return to our homepage
                     </Link>
                     {", or "}

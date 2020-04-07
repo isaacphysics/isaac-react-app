@@ -2,6 +2,24 @@
   /* background classes */
   @include bg-variant(".bg-secondary", $color);
 
+  /* correct answer */
+  .validation-response-panel {
+    .question-response {
+      font-family: desyrel, serif;
+      font-size: 36px;
+      font-weight: 600;
+    }
+    h1 {
+      font-family: desyrel, serif;
+      font-size: 48px;
+      font-weight: 700;
+    }
+    &.correct {
+      background: $color;
+      color: white;
+    }
+  }
+
   /* btn classes */
   .btn-secondary {
     @include button-variant($color, $color);
