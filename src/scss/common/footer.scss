@@ -75,7 +75,7 @@
     height: 100%;
 
     @include respond-above(md) {
-      background-position: left 100%;
+      background-position: left 100% bottom 15%;
     }
   }
 }
