@@ -55,6 +55,15 @@
     }
   }
 
+  .book-link {
+    text-decoration: underline;
+    background-color: transparent;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
   .jumbotron {
     padding: 1.5rem;
   }

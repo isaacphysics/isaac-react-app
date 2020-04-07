@@ -33,6 +33,7 @@ import Select from "react-select";
 import {withRouter} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -101,7 +102,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         <RS.Label htmlFor="gameboard-builder-name">Gameboard title:</RS.Label>
                         <RS.Input id="gameboard-builder-name"
                             type="text"
-                            placeholder="e.g. Year 12 Network components"
+                            placeholder={{[SITE.CS]: "e.g. Year 12 Network components", [SITE.PHY]: "e.g. Year 12 Dynamics"}[SITE_SUBJECT]}
                             defaultValue={gameboardTitle}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setGameboardTitle(e.target.value);
