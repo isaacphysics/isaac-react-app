@@ -64,9 +64,9 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.computationalThinking, title: "Computational thinking", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
         {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.programmingFundamentals, new: true},
         // Programming paradigms topics:
+        {id: TAG_ID.proceduralAndStructuredProgramming, title: "Procedural and structured programming", parent: TAG_ID.programmingParadigms, new: true},
         {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programmingParadigms},
         {id: TAG_ID.functionalProgramming, title: "Functional programming (AQA)", parent: TAG_ID.programmingParadigms},
-        {id: TAG_ID.proceduralAndStructuredProgramming, title: "Procedural and structured programming", parent: TAG_ID.programmingParadigms, new: true},
         // Software project topics
         {id: TAG_ID.softwareProject, title: "Software project", parent: TAG_ID.computingPracticalProject},
     ];
