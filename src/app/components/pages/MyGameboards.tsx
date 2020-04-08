@@ -128,7 +128,7 @@ const Board = (props: BoardTableProps) => {
                 <div className={`share-link-table ${showShareLink ? "d-block" : ""}`}>
                     <div ref={shareLink}>{boardLink}</div>
                 </div>
-                <button className="ru_share" onClick={toggleShareLink}/></td>
+                <button className="share-link-icon" onClick={toggleShareLink}/></td>
             <td><CustomInput id={`board-delete-${board.id}`} type="checkbox" checked={board && (selectedBoards.some(e => e.id === board.id))}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     board && updateBoardSelection(board, event.target.checked)
@@ -151,7 +151,7 @@ const Board = (props: BoardTableProps) => {
 
                 <div className="my-4">
                     <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{boardLink}</div></div>
-                    <button className="ru_share" onClick={toggleShareLink}/>
+                    <button className="share-link-icon" onClick={toggleShareLink}/>
                     <CardTitle><a href={boardLink}>{board.title}</a></CardTitle>
                     <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                 </div>
