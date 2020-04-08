@@ -8,7 +8,7 @@ interface SubjectInterestTableInputProps<T> {
 }
 
 export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<any>) => {
-    const {stateObject, setStateFunction} = props
+    const {stateObject, setStateFunction} = props;
 
     return <FormGroup>
         <Label htmlFor="phy-subject-table" className="mb-0">
@@ -17,33 +17,33 @@ export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<
         <Table id="phy_subject-table" borderless>
             <thead>
                 <tr>
-                    <th/>
-                    <th>GCSE<br/><small>14-16 yrs</small></th>
-                    <th>A Level<br/><small>16-18 yrs</small></th>
-                    <th>University<br/><small>18+ yrs</small></th>
+                    <td/>
+                    <th scope="col">GCSE<br/><small>14-16 yrs</small></th>
+                    <th scope="col">A Level<br/><small>16-18 yrs</small></th>
+                    <th scope="col">University<br/><small>18+ yrs</small></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <th>Physics</th>
+                    <th scope="row">Physics</th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_UNI"} setStateFunction={setStateFunction}/></td>
                 </tr>
                 <tr>
-                    <th>Chemistry</th>
+                    <th scope="row">Chemistry</th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_UNI"} setStateFunction={setStateFunction}/></td>
                 </tr>
                 <tr>
-                    <th>Maths</th>
+                    <th scope="row">Maths</th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"MATHS_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"MATHS_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"MATHS_UNI"} setStateFunction={setStateFunction}/></td>
                 </tr>
                 <tr>
-                    <th>Engineering</th>
+                    <th scope="row">Engineering</th>
                     <td/>
                     <td/>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"ENGINEERING_UNI"} setStateFunction={setStateFunction}/></td>
