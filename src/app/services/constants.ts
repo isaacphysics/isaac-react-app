@@ -451,7 +451,7 @@ export enum TAG_ID {
     searchingSortingPathfinding = "searching_sorting_pathfinding",
     complexity = "complexity",
     theoryOfComputation = "theory_of_computation",
-    planningAndDebugging = "planning_and_debugging",
+    computationalThinking = "computational_thinking",
     dataStructures = "data_structures",
     // Computer networks topics
     security = "security",
@@ -479,7 +479,6 @@ export enum TAG_ID {
     programmingConcepts = "programming_concepts",
     subroutines = "subroutines",
     files = "files",
-    structureAndRobustness = "structure_and_robustness",
     recursion = "recursion",
     stringManipulation = "string_manipulation",
     guis = "guis",
@@ -487,6 +486,7 @@ export enum TAG_ID {
     // Programming paradigms topics
     objectOrientedProgramming = "object_oriented_programming",
     functionalProgramming = "functional_programming",
+    proceduralAndStructuredProgramming = "procedural_and_structured_programming",
     // Computing practical project topics
     softwareProject = "software_project",
 
