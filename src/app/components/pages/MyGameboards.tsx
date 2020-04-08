@@ -22,7 +22,7 @@ import {ActualBoardLimit, AppGameBoard, BoardOrder} from "../../../IsaacAppTypes
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {boards as ThisBoards} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {sortIcon, STUDENTS_CRUMB} from "../../services/constants";
+import {sortIcon} from "../../services/constants";
 import {boardCompletionSelection, formatBoardOwner} from "../../services/gameboards";
 import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
@@ -244,7 +244,7 @@ export const MyGameboards = () => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My gameboards" intermediateCrumbs={[STUDENTS_CRUMB]} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="My gameboards" help={pageHelp} />
         {boards && boards.totalResults == 0 ?
             <h3 className="text-center mt-4 mb-5">You have no gameboards to view.</h3>
             :

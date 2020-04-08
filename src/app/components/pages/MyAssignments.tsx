@@ -6,7 +6,6 @@ import {AppState} from "../../state/reducers";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
 import {Card, CardBody, Col, Container, Nav, NavItem, NavLink, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {STUDENTS_CRUMB} from "../../services/constants";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {Assignments} from "../elements/Assignments";
@@ -44,7 +43,7 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}:
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My assignments" intermediateCrumbs={[STUDENTS_CRUMB]} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="My assignments" help={pageHelp} />
         <Card className="my-5">
             <CardBody className="pt-0">
                 <ShowLoading until={assignments}>
