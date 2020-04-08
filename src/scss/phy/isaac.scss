@@ -91,10 +91,11 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/focus";
 @import "../common/progress-bar";
 @import "../common/anvil";
+@import "related-content";
 @import "button";
 @import "logo";
 @import "cards";
-@import "related-content";
+@import "featured-profile";
 
 // Navigation
 @import "../common/navigation-bar";
@@ -104,7 +105,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 // Pages
 @import "subjects";
 @import "../common/pages";
-@import "../common/homepage";
+@import "homepage";
 @import "../common/login";
 @import "../common/registration";
 @import "../common/my-account";
@@ -166,8 +167,7 @@ body {
 
 .footer-links {
     &.footer-links-social {
-        background-image: url('/assets/phy/social_dots.svg');
-        background-size: contain;
+        background-image: none;
     }
 }
 .footerLogo {

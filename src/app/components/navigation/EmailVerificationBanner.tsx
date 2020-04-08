@@ -7,6 +7,7 @@ import {EmailVerificationStatus} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {requestEmailVerification} from "../../state/actions";
+import { WEBMASTER_EMAIL } from '../../services/siteConstants';
 
 function mapStateToProps(state: AppState) {
     return {user: state && state.user || null};
@@ -67,7 +68,7 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
                             address failed. This means you won&apos;t receive emails from Isaac, and may prevent you
                             regaining access to your account. <br/>To start receiving emails again, update your email
                             address on your <Link to="/account">My account</Link> page. If you believe this is in
-                            error, please <a href="mailto:webmaster@isaaccomputerscience.org">email us</a>.
+                            error, please <a href={`mailto:${WEBMASTER_EMAIL}`}>email us</a>.
                         </small>
                     </RS.Col>
                 }

@@ -22,7 +22,10 @@ export const isTest = document.location.hostname.startsWith("test.");
 
 export const API_PATH: string = apiPath;
 
-export const EDITOR_URL = "https://editor.isaaccomputerscience.org/#!/edit/master/";
+export const EDITOR_URL = {
+    [SITE.PHY]: "https://editor.isaacphysics.org",
+    [SITE.CS]: "https://editor.isaaccomputerscience.org",
+}[SITE_SUBJECT] + "/#!/edit/master/";
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
 
