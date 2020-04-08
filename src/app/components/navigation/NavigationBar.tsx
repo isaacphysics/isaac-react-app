@@ -60,7 +60,7 @@ export const useAssignmentBadge = () => {
         }
     }, [user]);
 
-    useSelector((state: AppState) => {
+    const assignmentBadge = useSelector((state: AppState) => {
         if (state?.assignments) {
             const {inProgressRecent} = filterAssignmentsByStatus(state.assignments);
             const assignmentCount = inProgressRecent.length;
@@ -72,6 +72,7 @@ export const useAssignmentBadge = () => {
             }
         }
     });
+    return assignmentBadge;
 };
 
 export const NavigationBar = ({children}: {children: React.ReactNode}) => {
