@@ -1,4 +1,4 @@
-import {FormGroup, Row, default as RS, Table, Label} from "reactstrap";
+import {FormGroup, Label, Table} from "reactstrap";
 import {SubjectInterestInput} from "./subjectInterestInput";
 import React from "react";
 
