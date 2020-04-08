@@ -117,7 +117,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                         </RS.Col>
                         <RS.Col lg={8} className={event.expired ? "expired" : ""}>
                             {/* TODO Student/Teacher/Virtual icon */}
-                            {isStaff(user) && <RS.Button color="link" onClick={googleCalendarTemplate} className="calendar-img" title="Add to Google Calendar">Add to Calendar</RS.Button>}
+                            {isStaff(user) && <RS.Button color="link" onClick={googleCalendarTemplate} className="calendar-img mx-2" title="Add to Google Calendar">Add to Calendar</RS.Button>}
 
                             {/* Key event info */}
                             <RS.Table borderless className="event-key-info mb-4">
