@@ -28,13 +28,14 @@ interface EqualityPageProps {
     fetchDoc: (documentType: DOCUMENT_TYPE, questionId: string) => void;
 }
 const EqualityPageComponent = (props: EqualityPageProps) => {
-    const {queryParams, history, fetchDoc} = props;
+    const {queryParams} = props;
 
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
     const [currentAttempt, setCurrentAttempt] = useState();
     const [editorSyntax, setEditorSyntax] = useState('logic');
-    const [editorMode, setEditorMode] = useState(queryParams.mode || 'logic');
+    // Does this really need to be a state variable if it is immutable?
+    const [editorMode] = useState(queryParams.mode || 'logic');
 
     let availableSymbols = queryParams.symbols && queryParams.symbols.split(',').map(s => s.trim());
 
