@@ -2,6 +2,8 @@
 import React from "react";
 import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import katex from "katex";
+import _uniqWith from 'lodash/uniqWith';
+import _isEqual from 'lodash/isEqual';
 
 class MenuItem {
     public type: string;
@@ -298,7 +300,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 menuItems: {
                     ...prevState.menuItems,
                     mathsDerivatives: [ ...prevState.menuItems.mathsDerivatives, ...customMenuItems.mathsDerivatives ],
-                    letters: [ ...prevState.menuItems.letters, ...customMenuItems.letters ]/*.sort((a: MenuItem, b: MenuItem) => {
+                    letters: _uniqWith([ ...prevState.menuItems.letters, ...customMenuItems.letters ], (a, b) => _isEqual(a, b))/*.sort((a: MenuItem, b: MenuItem) => {
                         if ((a.type === 'Symbol' && b.type === 'Symbol') || (a.type !== 'Symbol' && b.type !== 'Symbol')) {
                             return a.menu.label.localeCompare(b.menu.label);
                         }
