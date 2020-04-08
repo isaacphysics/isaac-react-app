@@ -104,7 +104,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 // Pages
 @import "subjects";
 @import "../common/pages";
-@import "../common/homepage";
+@import "homepage";
 @import "../common/login";
 @import "../common/registration";
 @import "../common/my-account";
