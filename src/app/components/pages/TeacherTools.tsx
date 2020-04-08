@@ -10,7 +10,7 @@ import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
 import {getProgress} from "../../state/actions";
 
-export const ForTeachers = () => {
+export const TeacherTools = () => {
     const dispatch = useDispatch();
     const user = useSelector((state: AppState) => state && state.user);
     const achievementsSelector = useSelector((state: AppState) => state && state.userProgress && state.userProgress.userSnapshot && state.userProgress.userSnapshot.achievementsRecord);
@@ -98,7 +98,7 @@ export const ForTeachers = () => {
                             <RS.ListGroupItem className="bg-transparent">
                                 <LinkCard
                                     title="Group progress" imageSource="/assets/card03.png"
-                                    linkDestination="/assignment_progress" linkText="View assignment progress"
+                                    linkDestination="/my_markbook" linkText="View my markbook"
                                 >
                                     Review your groups&apos; progress on the work which you have assigned to them.
                                 </LinkCard>

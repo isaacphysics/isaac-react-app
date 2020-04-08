@@ -4,16 +4,16 @@ import {AllTopics} from "../../pages/AllTopics";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {ComingSoon} from "../../pages/ComingSoon";
 import {Topic} from "../../pages/Topic";
-import {ForStudents} from "../../pages/ForStudents";
-import {ForTeachers} from "../../pages/ForTeachers";
+import {Students} from "../../pages/Students";
+import {TeacherTools} from "../../pages/TeacherTools";
 import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {Redirect} from "react-router";
 
 let key = 0;
 export const RoutesCS = [
     // Student and teacher
-    <TrackedRoute key={key++} exact path="/students" component={ForStudents} />,
-    <TrackedRoute key={key++} exact path="/teachers" component={ForTeachers} />,
+    <TrackedRoute key={key++} exact path="/students" component={Students} />,
+    <TrackedRoute key={key++} exact path="/teachers" component={TeacherTools} />,
 
     // Assignments
     <TrackedRoute key={key++} exact path="/my_markbook" component={AssignmentProgress} />,
