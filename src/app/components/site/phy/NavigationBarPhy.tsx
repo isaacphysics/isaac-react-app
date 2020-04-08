@@ -19,12 +19,12 @@ export const NavigationBarPhy = () => {
         <NavigationSection title="Learn">
             <LinkItem to="/gameboards/new">Questions</LinkItem>
             <LinkItem to="/concepts">Concepts</LinkItem>
-            <LinkItem to="/">Books</LinkItem> {/*TODO find books page link*/}
+            {/*<LinkItem to="/books">Books</LinkItem> TODO find a suitable books link */}
             <LinkItem to="/chemistry">Chemistry</LinkItem>
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teach">
-            <LinkItem to="/gameboard_builder">Create Assignments</LinkItem>
+            <LinkItem to="/gameboard_builder">Create Gameboard</LinkItem>
             <LinkItem to="/set_assignments">Set Assignments</LinkItem>
             <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
             <LinkItem to="/groups">Manage Groups</LinkItem>
