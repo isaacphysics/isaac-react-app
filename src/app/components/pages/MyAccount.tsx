@@ -130,7 +130,14 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         setEmailPreferences(currentEmailPreferences);
         setSubjectInterests(currentSubjectInterests);
         setMyUserPreferences(currentUserPreferences);
-    }, [userPreferences]);
+    },[]);
+
+    useMemo(() => {
+        setMyUserPreferences({
+            EMAIL_PREFERENCE: emailPreferences,
+            SUBJECT_INTEREST: subjectInterests,
+        })
+    }, [emailPreferences, subjectInterests]);
 
     // Set active tab using hash anchor
     const [activeTab, setActiveTab] = useState(ACCOUNT_TAB.account);
