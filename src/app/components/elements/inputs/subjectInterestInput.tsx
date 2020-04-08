@@ -13,7 +13,7 @@ export const SubjectInterestInput = (props: SubjectInterestInputProps<any>) => {
             if (e.target.checked) {
                 stateObject[propertyName] = true;
             } else {
-                delete stateObject[propertyName];
+                stateObject[propertyName] = false;
             }
             setStateFunction(Object.assign({}, stateObject));
         }}

@@ -132,7 +132,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         setMyUserPreferences(currentUserPreferences);
     },[]);
 
-    useMemo(() => {
+    useEffect(() => {
         setMyUserPreferences({
             EMAIL_PREFERENCE: emailPreferences,
             SUBJECT_INTEREST: subjectInterests,
