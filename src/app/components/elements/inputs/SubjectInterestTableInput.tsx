@@ -2,12 +2,12 @@ import {FormGroup, Row, default as RS, Table, Label} from "reactstrap";
 import {SubjectInterestInput} from "./subjectInterestInput";
 import React from "react";
 
-interface SujectInterestTableInputProps<T> {
+interface SubjectInterestTableInputProps<T> {
     stateObject: T;
     setStateFunction: (stateObject: T) => void;
 }
 
-export const SubjectInterestTableInput = (props: SujectInterestTableInputProps<any>) => {
+export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<any>) => {
     const {stateObject, setStateFunction} = props
 
     return <FormGroup>
