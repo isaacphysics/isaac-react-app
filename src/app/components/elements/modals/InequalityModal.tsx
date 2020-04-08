@@ -109,7 +109,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     public constructor(props: InequalityModalProps) {
         super(props);
 
-        this._availableSymbols = this.parsePseudoSymbols(props.availableSymbols);
+        this._availableSymbols = Array.from(new Set(this.parsePseudoSymbols(props.availableSymbols)));
 
         this.state = {
             sketch: props.sketch as Inequality,
@@ -222,13 +222,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             mathsTrigFunctions: [ ...this.state.menuItems.mathsTrigFunctions, ...this.generateMathsTrigFunctionsItems() ],
             mathsHypFunctions: [ ...this.state.menuItems.mathsHypFunctions, ...this.generateMathsHypFunctionsItems() ],
             mathsLogFunctions: [ ...this.state.menuItems.mathsLogFunctions, ...this.generateMathsLogFunctionsItems() ],
-            mathsDerivatives: [ ...this.state.menuItems.mathsDerivatives, ...this.generateMathsDerivativesItems() ],
-            // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
-            letters: [],
-            otherFunctions: [],
-            chemicalElements: [],
+            mathsDerivatives: [ ...this.state.menuItems.mathsDerivatives, ...this.generateMathsDefaultDerivativesItems() ],
             chemicalStates: this.makeChemicalStatesMenuItems(),
             chemicalOperations: this.makeChemicalOperationsMenuItems(),
+            // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
+            // letters: [],
+            // otherFunctions: [],
+            // chemicalElements: [],
         };
 
         this.setState((prevState: InequalityModalState) => ({
@@ -242,8 +242,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             // ~~~ Assuming these are only letters... might become more complicated in the future.
             // THE FUTURE IS HERE! Sorry.
             let customMenuItems = {
+                mathsDerivatives: this.state.menuItems.mathsDerivatives,
                 letters: new Array<MenuItem>(),
-                basicFunctions: new Array<MenuItem>(),
                 otherFunctions: new Array<MenuItem>(),
                 chemicalElements: new Array<MenuItem>(),
             };
@@ -264,9 +264,23 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                         console.warn(`Could not parse available symbol "${availableSymbol} as a function"`);
                     }
                 } else if (availableSymbol.startsWith('Derivative')) {
-                    // Do nothing
+                    const items = this.generateMathsDerivativeAndLetters(availableSymbol);
+                    if (items.derivative) {
+                        customMenuItems.mathsDerivatives.push(items.derivative);
+                        customMenuItems.letters.push(items.derivative);
+                    }
+                    if (items.letters) {
+                        customMenuItems.letters.push(...items.letters);
+                    }
                 } else if (this._differentialRegex.test(availableSymbol)) {
-                    // Do nothing
+                    const items = this.generateMathsDifferentialAndLetters(availableSymbol);
+                    if (items.differential) {
+                        customMenuItems.mathsDerivatives.push(items.differential);
+                        customMenuItems.letters.push(items.differential);
+                    }
+                    if (items.letters) {
+                        customMenuItems.letters.push(...items.letters);
+                    }
                 } else {
                     // Everything else is a letter, unless we are doing chemistry
                     if (this.props.editorMode === 'chemistry' && /^[A-Z]/.test(availableSymbol)) {
@@ -281,7 +295,28 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 }
             }
             this.setState((prevState: InequalityModalState) => ({
-                menuItems: { ...prevState.menuItems, ...customMenuItems },
+                menuItems: {
+                    ...prevState.menuItems,
+                    mathsDerivatives: [ ...prevState.menuItems.mathsDerivatives, ...customMenuItems.mathsDerivatives ],
+                    letters: [ ...prevState.menuItems.letters, ...customMenuItems.letters ]/*.sort((a: MenuItem, b: MenuItem) => {
+                        if ((a.type === 'Symbol' && b.type === 'Symbol') || (a.type !== 'Symbol' && b.type !== 'Symbol')) {
+                            return a.menu.label.localeCompare(b.menu.label);
+                        }
+                        if (a.type === 'Derivative' && b.type === 'Differential') {
+                            return -1;
+                        } else if (a.type === 'Differential' && b.type === 'Derivative') {
+                            return 1;
+                        }
+                        if (a.type === 'Symbol' && b.type !== 'Symbol') {
+                            return -1;
+                        } else if (a.type !== 'Symbol' && b.type === 'Symbol') {
+                            return 1;
+                        }
+                        return 0;
+                    })*/,
+                    otherFunctions: [ ...prevState.menuItems.otherFunctions, ...customMenuItems.otherFunctions ],
+                    chemicalElements: [ ...prevState.menuItems.chemicalElements, ...customMenuItems.chemicalElements ],
+                },
                 defaultMenu: false
             }));
         } else {
@@ -385,7 +420,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 i += 1;
             }
         }
-        return Array.from(new Set(theseSymbols));
+        return theseSymbols;
     }
 
     private convertToLatexIfGreek(s: string): string {
@@ -576,9 +611,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         return differentialSymbol;
     }
 
-    private generateMathsDerivativesItems(): MenuItem[] {
-        const items: MenuItem[] = [];
-
+    private generateMathsDefaultDerivativesItems(): MenuItem[] {
         // Do we need to generate special derivatives?
         if (this.isUserPrivileged() && (!this._availableSymbols || this._availableSymbols.length === 0)) {
             const derivativeItem = new MenuItem('Derivative', {}, { label: '\\frac{\\mathrm{d}\\ \\cdot}{\\mathrm{d}\\ \\cdots}', texLabel: true, className: 'derivative' });
@@ -586,98 +619,87 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 numerator: { type: 'Differential', properties: { letter: 'd' } },
                 denominator: { type: 'Differential', properties: { letter: 'd' } }
             }
-            items.push(
+            return [
                 new MenuItem('Differential', { letter: 'd' }, { label: '\\mathrm{d}^{\\circ}\\circ', texLabel: true, className: 'differential-d' }),
                 new MenuItem('Differential', { letter: '∆' }, { label: '\\mathrm{\\Delta}^{\\circ}\\circ', texLabel: true, className: 'differential-upper-delta' }),
                 new MenuItem('Differential', { letter: 'δ' }, { label: '\\mathrm{\\delta}^{\\circ}\\circ', texLabel: true, className: 'differential-lower-delta' }),
                 derivativeItem
-            );
+            ];
         }
+        return [];
+    }
 
-        if (this._availableSymbols) {
-            for (const symbol of this._availableSymbols) {
-                if (symbol.startsWith('Derivative(')) {
-                    const pieces = symbol.split(';').map(s => s.replace(/[()\s]/g, '')).slice(1); // FIXME Is this regex just a trim()?
-                    let orders: { [piece: string]: number } = {};
-                    // Count how many times one should derive each variable
-                    for (const piece of pieces) {
-                        orders[piece] = orders[piece] + 1 || 1;
-                    }
-                    const derivativeOrder = Object.values(orders).reduce((a, c) => a + c, 0);
-                    const denominatorObjects: any[] = [];
-                    let texBottom = '';
-                    for (const p of Object.entries(orders)) {
-                        const letter = p[0];
-                        const order = p[1];
-                        const o = {
-                            type: 'Differential',
-                            properties: { letter: 'd' }, // TODO Support other types of differentials
-                            children: {
-                                argument: {
-                                    type: 'Symbol',
-                                    properties: { letter: letter }
-                                },
-                                order: null as any | null
-                            }
-                        };
-                        texBottom += `d${letter}`;
-                        if (order > 1) {
-                            o.children = { ...o.children, order: {
-                                type: 'Num',
-                                properties: { significand: `${order}` }
-                            }};
-                            texBottom += `^{${order}}`;
-                        }
-                        denominatorObjects.push(o);
-                    }
-                    // This sure would look a lot better as a reduce but I can't figure it out.
-                    let denominator = denominatorObjects.pop();
-                    while (denominatorObjects.length > 0) {
-                        let acc = denominatorObjects.pop();
-                        acc.children.right = denominator;
-                        denominator = acc;
-                    }
-                    // Build up the object
-                    const texLabel = '\\frac{\\mathrm{d}' + (derivativeOrder > 1 ? `^{${derivativeOrder}}` : '') + `}{${texBottom}}`;
-                    const derivativeObject = new MenuItem('Derivative', { }, { label: texLabel, texLabel: true, fontSize: '1.5em', className: '' });
-                    const numerator = {
-                        type: 'Differential',
-                        properties: { letter: 'd' },
-                        children: derivativeOrder > 1 ? { order: { type: 'Num', properties: { significand: `${derivativeOrder}` } } } : { }
-                    };
-                    derivativeObject.children = { numerator, denominator };
-                    items.push(derivativeObject);
-                } else if (this._differentialRegex.test(symbol)) {
-                    const parsedDifferential = this._differentialRegex.exec(symbol);
-                    if (!parsedDifferential) continue; // this should not be necessary as we wouldn't be here if the regex didn't parse in the first place
-                    const differentialType = parsedDifferential[1];
-                    const differentialOrder = parsedDifferential[2] || 0;
-                    const differentialArgument = parsedDifferential[3] || null;
-
-                    if (differentialType === "d" && differentialOrder === 0 && differentialArgument == null) {
-                        // We parse this as a letter d, plus optional subscript, ignoring order.
-                        this.setState((prevState: InequalityModalState) => ({
-                            menuItems: {
-                                ...prevState.menuItems,
-                                letters: [ ...this.state.menuItems.letters, this.makeSingleLetterMenuItem(symbol) ]
-                            }
-                        }));
-                    } else {
-                        items.push(this.makeMathsDifferentialItem(parsedDifferential as string[]));
-                        if (differentialArgument) {
-                            this.setState((prevState: InequalityModalState) => ({
-                                menuItems: {
-                                    ...prevState.menuItems,
-                                    letters: [ ...this.state.menuItems.letters, this.makeSingleLetterMenuItem(differentialArgument) ]
-                                }
-                            }));
-                        }
-                    }
+    private generateMathsDerivativeAndLetters(symbol: string): { derivative: MenuItem; letters: MenuItem[] } {
+        const pieces = symbol.split(';').map(s => s.replace(/[()\s]/g, '')).slice(1); // FIXME Is this regex just a trim()?
+        let orders: { [piece: string]: number } = {};
+        // Count how many times one should derive each variable
+        for (const piece of pieces) {
+            orders[piece] = orders[piece] + 1 || 1;
+        }
+        const derivativeOrder = Object.values(orders).reduce((a, c) => a + c, 0);
+        const denominatorObjects: any[] = [];
+        const letters = new Array<MenuItem>();
+        let texBottom = '';
+        for (const p of Object.entries(orders)) {
+            const letter = p[0];
+            letters.push(this.makeSingleLetterMenuItem(letter));
+            const order = p[1];
+            const o = {
+                type: 'Differential',
+                properties: { letter: 'd' }, // TODO Support other types of differentials
+                children: {
+                    argument: {
+                        type: 'Symbol',
+                        properties: { letter: letter }
+                    },
+                    order: null as any | null
                 }
+            };
+            texBottom += `\\mathrm{d}${letter}`;
+            if (order > 1) {
+                o.children = { ...o.children, order: {
+                    type: 'Num',
+                    properties: { significand: `${order}` }
+                }};
+                texBottom += `^{${order}}`;
+            }
+            denominatorObjects.push(o);
+        }
+        // This sure would look a lot better as a reduce but I can't figure it out.
+        let denominator = denominatorObjects.pop();
+        while (denominatorObjects.length > 0) {
+            let acc = denominatorObjects.pop();
+            acc.children.right = denominator;
+            denominator = acc;
+        }
+        // Build up the object
+        const texLabel = '\\frac{\\mathrm{d}' + (derivativeOrder > 1 ? `^{${derivativeOrder}}` : '') + `}{${texBottom}}`;
+        const derivativeObject = new MenuItem('Derivative', { }, { label: texLabel, texLabel: true, fontSize: '1.5em', className: 'derivative' });
+        const numerator = {
+            type: 'Differential',
+            properties: { letter: 'd' },
+            children: derivativeOrder > 1 ? { order: { type: 'Num', properties: { significand: `${derivativeOrder}` } } } : { }
+        };
+        derivativeObject.children = { numerator, denominator };
+
+        return { derivative: derivativeObject, letters: letters };
+    }
+
+    private generateMathsDifferentialAndLetters(symbol: string): { differential?: MenuItem|null; letters?: MenuItem[]|null } {
+        // We wouldn't be here if the regex didn't parse in the first place, so the assertion is justified
+        const parsedDifferential = this._differentialRegex.exec(symbol)!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        const differentialType = parsedDifferential[1];
+        const differentialOrder = parsedDifferential[2] || 0;
+        const differentialArgument = parsedDifferential[3] || null;
+
+        if (differentialType === "d" && differentialOrder === 0 && differentialArgument == null) {
+            return { letters: [this.makeSingleLetterMenuItem('d')] }
+        } else {
+            return {
+                differential: this.makeMathsDifferentialItem(parsedDifferential as string[]),
+                letters: differentialArgument ? [this.makeSingleLetterMenuItem(differentialArgument)] : null
             }
         }
-
-        return items;
     }
 
     private makeChemicalElementMenuItem(symbol: string) {
