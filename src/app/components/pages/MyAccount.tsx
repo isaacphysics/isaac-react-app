@@ -167,12 +167,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
             }
         }
 
-        console.log(subjectInterests);
-        console.log(myUserPreferences);
-        console.log(editingOtherUser);
-        console.log(userToUpdate);
-        console.log(user);
-
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
             allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null}) &&

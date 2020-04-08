@@ -28,8 +28,6 @@ export const UserDetails = (props: UserDetailsProps) => {
         submissionAttempted, editingOtherUser
     } = props;
 
-    console.log(subjectInterests);
-
     const allRequiredFieldsValid = userToUpdate && userToUpdate.email &&
         allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null});
 

@@ -254,7 +254,6 @@ export const updateCurrentUser = (
 
     try {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-        console.log(updatedUserPreferences)
         const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent);
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
         await dispatch(requestCurrentUser() as any);
