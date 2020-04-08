@@ -1,4 +1,4 @@
-import {FormGroup, Table} from "reactstrap";
+import {FormGroup, Row, default as RS, Table, Label} from "reactstrap";
 import {SubjectInterestInput} from "./subjectInterestInput";
 import React from "react";
 
@@ -11,13 +11,16 @@ export const SubjectInterestTableInput = (props: SujectInterestTableInputProps<a
     const {stateObject, setStateFunction} = props
 
     return <FormGroup>
-        <Table>
+        <Label htmlFor="phy-subject-table" className="mb-0">
+            Subject Interests
+        </Label>
+        <Table id="phy_subject-table" borderless>
             <thead>
                 <tr>
                     <th/>
-                    <th>GCSE</th>
-                    <th>A Level</th>
-                    <th>University</th>
+                    <th>GCSE<br/><small>14-16 yrs</small></th>
+                    <th>A Level<br/><small>16-18 yrs</small></th>
+                    <th>University<br/><small>18+ yrs</small></th>
                 </tr>
             </thead>
             <tbody>
