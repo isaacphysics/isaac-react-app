@@ -25,25 +25,25 @@ export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<
             </thead>
             <tbody>
                 <tr>
-                    <th scope="row">Physics</th>
+                    <th>Physics</th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_UNI"} setStateFunction={setStateFunction}/></td>
                 </tr>
                 <tr>
-                    <th scope="row">Chemistry</th>
+                    <th>Chemistry</th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_UNI"} setStateFunction={setStateFunction}/></td>
                 </tr>
                 <tr>
-                    <th scope="row">Maths</th>
+                    <th>Maths</th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"MATHS_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"MATHS_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"MATHS_UNI"} setStateFunction={setStateFunction}/></td>
                 </tr>
                 <tr>
-                    <th scope="row">Engineering</th>
+                    <th>Engineering</th>
                     <td/>
                     <td/>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"ENGINEERING_UNI"} setStateFunction={setStateFunction}/></td>
@@ -51,4 +51,4 @@ export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<
             </tbody>
         </Table>
     </FormGroup>
-}
+};
