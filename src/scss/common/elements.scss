@@ -193,7 +193,7 @@ button.btn.btn-link.login-b,
   }
 }
 
-.ru_share {
+.share-link-icon {
   background-image: url(/assets/share.svg);
   width: 50px;
   height: 58px;
@@ -205,7 +205,27 @@ button.btn.btn-link.login-b,
   margin-left: 10px;
   background-color: transparent;
 }
-.ru_print {
+.share-link {
+  font-family: $secondary-font !important;
+  display: none;
+  position: relative;
+  padding: 4px;
+  border: 1px solid gray;
+  right: 30px;
+  background: #fff;
+  height: 58px;
+}
+.share-link div {
+  margin: 14px 30px 14px 6px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  user-select: all;
+  -webkit-user-select: all;
+  -moz-user-select: all;
+  -ms-user-select: all;
+  width: 100%;
+}
+.print-icon {
   background-image: url(/assets/print.svg);
   width: 50px;
   height: 58px;
