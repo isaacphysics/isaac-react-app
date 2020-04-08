@@ -94,7 +94,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             hiddenEditorRef.current,
             100,
             0,
-            [],
+            [currentAttemptValue],
             {
                 textEntry: true,
                 fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
