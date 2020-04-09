@@ -122,13 +122,6 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             {user && user.loggedIn && user.email && event.userOnWaitList && <span> - You are on the waiting list for this event.</span>}
                                         </td>
                                     </tr>}
-                                    {event.bookingDeadline && <tr>
-                                        <td>Booking Deadline:</td>
-                                        <td>
-                                            <DateString>{event.bookingDeadline}</DateString>
-                                            {!event.withinBookingDeadline && <div className="alert-danger text-center">The booking deadline for this event has passed.</div>}
-                                        </td>
-                                    </tr>}
                                 </tbody>
                             </RS.Table>
 
@@ -183,7 +176,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     {event.eventStatus != 'CLOSED' && !event.expired && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
                                         onClick={() => {setBookingFormOpen(true)}}
                                     >
-                                        Open booking form
+                                        Book a place
                                     </RS.Button>}
                                     {bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
                                         color="primary" outline onClick={() => {setBookingFormOpen(false)}}
