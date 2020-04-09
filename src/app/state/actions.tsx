@@ -10,7 +10,7 @@ import {
     EventStatusFilter,
     EventTypeFilter,
     EXAM_BOARD,
-    MEMBERSHIP_STATUS,
+    MEMBERSHIP_STATUS, NOT_FOUND,
     TAG_ID
 } from "../services/constants";
 import {
@@ -869,7 +869,9 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
 };
 
 // Current gameboard
-export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>) => {
+export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    if (state && state.currentGameboard && state.currentGameboard !== NOT_FOUND && state.currentGameboard.id === gameboardId) return;
     dispatch({type: ACTION_TYPE.GAMEBOARD_REQUEST, gameboardId});
     try {
         // TODO MT handle local storage load if gameboardId == null
@@ -1669,7 +1671,9 @@ export const fetchConcepts = () => async (dispatch: Dispatch<Action>) => {
     }};
 
 // Fasttrack concepts
-export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upperQuestionId: string) => async (dispatch: Dispatch<Action>) => {
+export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upperQuestionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    if (state && state.fasttrackConcepts && state.fasttrackConcepts.gameboardId === gameboardId && state.fasttrackConcepts.concept === concept) return;
     dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST});
     try {
         const concepts = await api.fasttrack.concepts(gameboardId, concept, upperQuestionId);
