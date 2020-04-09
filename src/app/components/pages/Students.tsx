@@ -12,11 +12,11 @@ const stateToProps = (state: AppState) => ({
     user: (state && state.user) || null
 });
 
-interface ForStudentProps {
+interface StudentProps {
     user: LoggedInUser | null;
 }
 
-const ForStudentsComponent = ({user}: ForStudentProps) => {
+const StudentsComponent = ({user}: StudentProps) => {
     const pageTitle = user && user.loggedIn ? "My Isaac" : "How we help students";
     const registrationButton = <div className="text-center">
         <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>Sign up</RS.Button>
@@ -25,7 +25,7 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
     return <RS.Container className="students-page">
         <RS.Row className="pb-4">
             <RS.Col>
-                <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="For students" />
+                <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="Students" />
             </RS.Col>
         </RS.Row>
 
@@ -79,4 +79,4 @@ const ForStudentsComponent = ({user}: ForStudentProps) => {
     </RS.Container>;
 };
 
-export const ForStudents = connect(stateToProps)(ForStudentsComponent);
+export const Students = connect(stateToProps)(StudentsComponent);

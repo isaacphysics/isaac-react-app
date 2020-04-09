@@ -22,7 +22,7 @@ export const HomepageComponent = ({user}: HomePageProps) => {
             <Container className="pt-4">
                 <Row className="mt-3">
                     <Col className="d-none d-md-flex mb-1" lg={9}>
-                        <h2 className="h5">Mastering Physics by Solving Problems<span className="d-none d-md-inline">: from School to University!</span></h2>
+                        <span className="physics-strapline">Mastering Physics by Solving Problems<span className="d-none d-md-inline">: from School to University!</span></span>
                     </Col>
                     <Col lg={3}>
                         {!(user && user.loggedIn) && <Row>
