@@ -22,6 +22,7 @@
     }
     :last-child {
       font-weight: 600;
+      padding-right: 64px;
     }
   }
 }
@@ -38,4 +39,15 @@
   .heading {
     text-underline-mode: none;
   }
+}
+
+.btn.calendar-img {
+  position: absolute;
+  right: 0;
+  width: 64px;
+  font-size: 12px;
+  background: url(/assets/logo_calendar_64px.png) 0 0 no-repeat;
+  padding-top: 60px;
+  text-align: center;
+  margin: 0;
 }
