@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
+import moment from "moment";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
@@ -17,20 +18,9 @@ import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
 import {isStaff, isTeacher} from "../../services/user";
 
+
 function formatDate(date: Date|number) {
-    if (!(date instanceof Date)) {
-        date = new Date(date);
-    }
-    function pad(num: number) {
-        return (num < 10 ? "0" : "") + num;
-    }
-    // YYYYMMDDTHHMMSS
-    return date.getFullYear() +
-        pad(date.getMonth() + 1) +
-        pad(date.getDate()) +
-        "T" + pad(date.getHours()) +
-        pad(date.getMinutes()) +
-        pad(date.getSeconds());
+    return moment(date).format("YYYYMMDD[T]HHmmss");
 }
 
 interface EventDetailsProps {
