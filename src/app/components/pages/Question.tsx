@@ -148,14 +148,15 @@ function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; s
     const gameboardMaybeNullOrMissing = useSelector((appState: AppState) => appState && appState.currentGameboard);
     const fasttrackConcepts = useSelector((appState: AppState) => appState && appState.fasttrackConcepts);
 
-    const smallDevice = useMediaQuery({query: '(max-device-width: 640px)'});
-    const largeDevice = useMediaQuery({query: '(min-device-width: 1024px)'});
-    const deviceSize = smallDevice ? 'small' : !largeDevice ? 'medium' : 'large';
-    const hexagonUnitLength = {large: 28, medium: 22, small: 12.5}[deviceSize];
-    const hexagonPadding = {large: 4, medium: 4, small: 2}[deviceSize];
+    const smDevice = useMediaQuery({query: '(min-device-width: 768px)'});
+    const mdDevice = useMediaQuery({query: '(min-device-width: 992px)'});
+    const lgDevice = useMediaQuery({query: '(min-device-width: 1200px)'});
+    const deviceSize = lgDevice ?  "lg" : mdDevice ? "md" : smDevice ? "sm" : "xs";
+    const hexagonUnitLength = {lg: 28, md: 26, sm: 22, xs: 12.5}[deviceSize];
+    const hexagonPadding = {lg: 4, md: 4, sm: 3, xs: 2}[deviceSize];
     const hexagonHalfWidth = hexagonUnitLength;
     const hexagonQuarterHeight = hexagonUnitLength / Math.sqrt(3);
-    const progressBarPadding = deviceSize !== 'small' ? 5 : 1;
+    const progressBarPadding = deviceSize !== 'xs' ? 5 : 1;
 
     const conceptQuestions = gameboardMaybeNullOrMissing && gameboardMaybeNullOrMissing !== NOT_FOUND && fasttrackConcepts && fasttrackConcepts.gameboardId === gameboardMaybeNullOrMissing.id && fasttrackConcepts.concept === doc.title ?
         fasttrackConcepts.items
@@ -210,7 +211,7 @@ function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; s
         },
         base: {
             stroke: {
-                width: {large: 3, medium: 3, small: 2}[deviceSize],
+                width: {lg: 3, md: 3, sm: 2, xs: 2}[deviceSize],
                 colour: '#ddd'
             },
             fill: {
@@ -222,7 +223,7 @@ function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; s
         },
         questionPartProgress: {
             stroke: {
-                width: {large: 3, medium: 3, small: 2}[deviceSize],
+                width: {lg: 3, md: 3, sm: 2, xs: 2}[deviceSize],
                 colour: '#009acd'
             },
             fill: {colour: 'none'},
@@ -233,7 +234,7 @@ function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; s
         fill: 'none',
         stroke: {
             colour: '#fea100',
-            width: {large: 3, medium: 3, small: 2}[deviceSize],
+            width: {lg: 3, md: 3, sm: 2, xs: 2}[deviceSize],
             dashArray: 4
         },
     };
@@ -388,14 +389,14 @@ function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; s
 
     function generateHexagonTitle(title: string, isCurrentQuestion: boolean) {
         let isTwoCharLength = ("" + title).length > 1;
-        let xSingleCharPosition = hexagon.halfWidth - {large: 8, medium: 8, small: 5}[deviceSize];
-        let xTwoCharPosition = hexagon.halfWidth - {large: 14, medium: 14, small: 10}[deviceSize];
-        let yPosition = hexagon.quarterHeight * 2 + {large: 9, medium: 9, small: 6}[deviceSize];
+        let xSingleCharPosition = hexagon.halfWidth - {lg: 8, md: 8, sm: 6, xs: 5}[deviceSize];
+        let xTwoCharPosition = hexagon.halfWidth - {lg: 14, md: 14, sm: 11, xs: 10}[deviceSize];
+        let yPosition = hexagon.quarterHeight * 2 + {lg: 9, md: 9, sm: 7, xs: 6}[deviceSize];
         return <text
             fontFamily="Exo 2"
-            fontSize={{large: 26, medium: 26, small: 18}[deviceSize]}
+            fontSize={{lg: 26, md: 26, sm: 18, xs: 18}[deviceSize]}
             fontStyle="italic"
-            fontWeight={deviceSize === 'small' ? 500 : 600}
+            fontWeight={deviceSize === 'xs' ? 500 : 600}
             fill={ isCurrentQuestion ? '#333' : '#ccc'}
             stroke="none"
             strokeWidth={1}
@@ -409,10 +410,10 @@ function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; s
     function generateCompletionTick(isCurrentQuestion: boolean) {
         return <image
             href="/assets/tick-bg.png"
-            height={{large: 36, medium: 28, small: 18}[deviceSize]}
-            width={{large: 36, medium: 28, small: 18}[deviceSize]}
-            x={hexagon.halfWidth - {large: 18, medium: 14, small: 9}[deviceSize]}
-            y={hexagon.quarterHeight - {large: 2, medium: 1, small: 2}[deviceSize]}
+            height={{lg: 36, md: 34, sm: 29, xs: 18}[deviceSize]}
+            width={{lg: 36, md: 34, sm: 29, xs: 18}[deviceSize]}
+            x={hexagon.halfWidth - {lg: 18, md: 17, sm: 15, xs: 9}[deviceSize]}
+            y={hexagon.quarterHeight - {lg: 2, md: 2, sm: 2, xs: 2}[deviceSize]}
             opacity={isCurrentQuestion ? 1 : 0.3}
         />;
     }
@@ -507,32 +508,45 @@ function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; s
     }
 
     function renderProgress(progress: Progress) {
-        return <div>
-            <h4>{gameboard.title}</h4>
-            {currentlyWorkingOn.isConcept && <h4>{currentlyWorkingOn.title} Practice</h4>}
-            <svg id="ft-progress" width="100%" height={progressBarHeight}>
-                <g id="progress-bar-padding" transform={`translate(${progressBarPadding}, ${progressBarPadding})`}>
-                    <g id="concept-connections">
-                        {progress.connections.topTenToUpper.length > 0 &&
-                            createConceptConnectionRow(progress.connections.topTenToUpper, 'top-ten-to-upper', 0)
-                        }
-                        {progress.connections.upperToLower.length > 0 &&
-                            createConceptConnectionRow(progress.connections.upperToLower, 'upper-to-lower', 1)
-                        }
+        return <RS.Row className="mt-sm-3">
+            <RS.Col cols={12} md={3} lg={4}>
+                <h4>{gameboard.title}</h4>
+                <div className="d-none d-md-block">
+                    <br className="d-none d-md-block" />
+                    <br className="d-none d-lg-block" />
+                    {currentlyWorkingOn.isConcept && <h4>{currentlyWorkingOn.title} Practice</h4>}
+                </div>
+            </RS.Col>
+            <RS.Col cols={12} md={9} lg={8}>
+                <svg id="ft-progress" width="100%" height={progressBarHeight}>
+                    <g id="progress-bar-padding" transform={`translate(${progressBarPadding}, ${progressBarPadding})`}>
+                        <g id="concept-connections">
+                            {progress.connections.topTenToUpper.length > 0 &&
+                                createConceptConnectionRow(progress.connections.topTenToUpper, 'top-ten-to-upper', 0)
+                            }
+                            {progress.connections.upperToLower.length > 0 &&
+                                createConceptConnectionRow(progress.connections.upperToLower, 'upper-to-lower', 1)
+                            }
 
+                        </g>
+                        <g id="question-hexagons">
+                            {createQuestionRow(progress.questions.topTen, 'top_ten', 0)}
+                            {progress.questions.upper.length > 0 &&
+                                createQuestionRow(progress.questions.upper, 'upper', 1)
+                            }
+                            {progress.questions.lower.length > 0 &&
+                                createQuestionRow(progress.questions.lower, 'lower', 2)
+                            }
+                        </g>
                     </g>
-                    <g id="question-hexagons">
-                        {createQuestionRow(progress.questions.topTen, 'top_ten', 0)}
-                        {progress.questions.upper.length > 0 &&
-                            createQuestionRow(progress.questions.upper, 'upper', 1)
-                        }
-                        {progress.questions.lower.length > 0 &&
-                            createQuestionRow(progress.questions.lower, 'lower', 2)
-                        }
-                    </g>
-                </g>
-            </svg>
-        </div>;
+                </svg>
+            </RS.Col>
+            <RS.Col cols={12} className="d-block d-md-none">
+                <div>
+                    {currentlyWorkingOn.isConcept && <h4>{currentlyWorkingOn.title} Practice</h4>}
+                </div>
+            </RS.Col>
+        </RS.Row>;
     }
 
     const categorisedConceptQuestions = categoriseConceptQuestions(conceptQuestions);
