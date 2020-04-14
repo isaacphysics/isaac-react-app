@@ -1,4 +1,4 @@
-import {FormGroup, Label, NavLink, Table} from "reactstrap";
+import {FormGroup, Label, Table} from "reactstrap";
 import {SubjectInterestInput} from "./subjectInterestInput";
 import React from "react";
 
