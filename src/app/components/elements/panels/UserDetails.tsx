@@ -14,6 +14,7 @@ import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {UserFacingRole} from "../../../services/constants";
+import {Link} from "react-router-dom";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -52,10 +53,9 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col>
                 Account type: <b>{userToUpdate && userToUpdate.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate && userToUpdate.role == "STUDENT" && <span>
                     <small>(Are you a teacher? {" "}
-                        {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                        <a href={teacherRequestRoute[SITE_SUBJECT]} target="_blank">
+                        <Link to={teacherRequestRoute[SITE_SUBJECT]} target="_blank">
                             Upgrade your account
-                        </a>{".)"}</small>
+                        </Link>{".)"}</small>
                 </span>}
             </Col>
         </Row>
