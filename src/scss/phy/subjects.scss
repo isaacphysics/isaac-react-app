@@ -41,6 +41,18 @@
   .border-secondary {
     border-color: $color !important;
   }
+
+  /* unit dropdown */
+  .numeric-question .unit-selection {
+    .dropdown-item {
+      &:active {
+        @include button-variant($color, $color);
+      }
+      &:focus {
+        box-shadow: 0 0 0 $input-btn-focus-width rgba($color, .25);
+      }
+    }
+  }
 }
 
 
