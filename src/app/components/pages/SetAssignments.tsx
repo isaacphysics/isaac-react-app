@@ -35,7 +35,6 @@ import {boards, groups} from "../../state/selectors";
 import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
-import {TEACHERS_CRUMB} from "../../services/constants";
 import {formatBoardOwner} from "../../services/gameboards";
 import {connect, useDispatch} from "react-redux";
 import {formatDate} from "../elements/DateString";
@@ -282,7 +281,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Set assignments" intermediateCrumbs={[TEACHERS_CRUMB]} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="Set assignments" help={pageHelp} />
         <h4 className="mt-4 mb-3">
             Add a gameboard from ...
         </h4>

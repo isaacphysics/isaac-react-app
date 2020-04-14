@@ -5,8 +5,8 @@ import {AppState} from "../../../state/reducers";
 import {Col, Container, Row} from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
-import {NavigationBar} from "../../navigation/NavigationBar";
 import {MainSearch} from "../../elements/MainSearch";
+import {NavigationBarPhy} from "./NavigationBarPhy";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
@@ -67,7 +67,7 @@ const HeaderComponent = ({user}: HeaderProps) => {
                         </div>
                     </div>
 
-                    <NavigationBar />
+                    <NavigationBarPhy />
                 </Col>
             </Row>
         </Container>

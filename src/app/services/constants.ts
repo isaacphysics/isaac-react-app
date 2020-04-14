@@ -451,7 +451,7 @@ export enum TAG_ID {
     searchingSortingPathfinding = "searching_sorting_pathfinding",
     complexity = "complexity",
     theoryOfComputation = "theory_of_computation",
-    planningAndDebugging = "planning_and_debugging",
+    computationalThinking = "computational_thinking",
     dataStructures = "data_structures",
     // Computer networks topics
     security = "security",
@@ -479,7 +479,6 @@ export enum TAG_ID {
     programmingConcepts = "programming_concepts",
     subroutines = "subroutines",
     files = "files",
-    structureAndRobustness = "structure_and_robustness",
     recursion = "recursion",
     stringManipulation = "string_manipulation",
     guis = "guis",
@@ -487,6 +486,7 @@ export enum TAG_ID {
     // Programming paradigms topics
     objectOrientedProgramming = "object_oriented_programming",
     functionalProgramming = "functional_programming",
+    proceduralAndStructuredProgramming = "procedural_and_structured_programming",
     // Computing practical project topics
     softwareProject = "software_project",
 
@@ -588,8 +588,6 @@ export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export const HOME_CRUMB = {title: "Home", to: "/"};
 export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
-export const STUDENTS_CRUMB = {title: "For students", to: "/students"};
-export const TEACHERS_CRUMB = {title: "For teachers", to: "/teachers"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
 
@@ -600,6 +598,15 @@ export enum UserRole {
     EVENT_LEADER = "EVENT_LEADER",
     TEACHER = "TEACHER",
     STUDENT = "STUDENT"
+}
+
+export enum UserFacingRole {
+    ADMIN = "Admin",
+    EVENT_MANAGER = "Event Manager",
+    CONTENT_EDITOR = "Content Editor",
+    EVENT_LEADER = "Event Leader",
+    TEACHER = "Teacher",
+    STUDENT = "Student"
 }
 
 export enum SortOrder {
