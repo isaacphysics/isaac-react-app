@@ -42,6 +42,24 @@
     border-color: $color !important;
   }
 
+  /* checkboxes and radio buttons */
+  .custom-control-input {
+    &:checked ~ .custom-control-label::before {
+      border-color: $color;
+      background-color: $color;
+    }
+    &:focus ~ .custom-control-label::before {
+      box-shadow: 0 0 0 $input-btn-focus-width rgba($color, .25);
+    }
+    &:focus:not(:checked) ~ .custom-control-label::before {
+      border-color: $color;
+    }
+    &:not(:disabled):active ~ .custom-control-label::before {
+      background-color: lighten($color, 35%);
+      border-color: lighten($color, 35%);
+    }
+  }
+
   /* unit dropdown */
   .numeric-question .unit-selection {
     .dropdown-item {
