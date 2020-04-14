@@ -52,7 +52,8 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col>
                 Account type: <b>{userToUpdate && userToUpdate.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate && userToUpdate.role == "STUDENT" && <span>
                     <small>(Are you a teacher? {" "}
-                        <a href={teacherRequestRoute[SITE_SUBJECT]} target="_blank" rel="noopener noreferrer">
+                        {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                        <a href={teacherRequestRoute[SITE_SUBJECT]} target="_blank">
                             Upgrade your account
                         </a>{".)"}</small>
                 </span>}
