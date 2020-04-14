@@ -7,6 +7,7 @@ import React, {useEffect} from "react";
 import {fetchFasttrackConcepts} from "../../state/actions";
 import * as RS from "reactstrap";
 import {board} from "../../state/selectors";
+import {Link} from "react-router-dom";
 
 type QuestionLevel = "topTen" | "upper" | "lower";
 
@@ -415,7 +416,7 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
             fillColour = question.isCurrentQuestion ? hexagon.base.fill.selectedColour : hexagon.base.fill.deselectedColour;
         }
 
-        return <a href={question.href}>
+        return <Link to={question.href}>
             <title>{question.title + (question.isCurrentQuestion ? ' (Current)' : '')}</title>
             {generateHexagon([true], allVisible => allVisible === true, hexagon.base, fillColour, true)}
 
@@ -428,7 +429,7 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
 
             {question.isCompleted ? generateCompletionTick(question.isCurrentQuestion)
                 : generateHexagonTitle(question.hexagonTitle, question.isCurrentQuestion)}
-        </a>;
+        </Link>;
     }
 
     function createConnection(sourceIndex: number, targetIndex: number) {
