@@ -410,11 +410,11 @@ export const progress = (progress: ProgressState = null, action: Action) => {
     }
 };
 
-export type CurrentGameboardState = GameboardDTO | NOT_FOUND_TYPE | null;
-export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action) => {
+export type CurrentGameboardState = GameboardDTO | NOT_FOUND_TYPE | null | {inflight: true; id: string | null};
+export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action): CurrentGameboardState => {
     switch (action.type) {
         case ACTION_TYPE.GAMEBOARD_REQUEST:
-            return null;
+            return {inflight: true, id: action.gameboardId} as {inflight: true; id: string | null};
         case ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;
         case ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS:

@@ -3,10 +3,10 @@ import queryString from "query-string";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {useMediaQuery} from "react-responsive";
-import {NOT_FOUND} from "../../services/constants";
 import React, {useEffect} from "react";
 import {fetchFasttrackConcepts} from "../../state/actions";
 import * as RS from "reactstrap";
+import {board} from "../../state/selectors";
 
 type QuestionLevel = "topTen" | "upper" | "lower";
 
@@ -104,7 +104,7 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
     const questionHistory = qhs ? qhs.split(",") : [];
 
     const dispatch = useDispatch();
-    const gameboardMaybeNullOrMissing = useSelector((appState: AppState) => appState && appState.currentGameboard);
+    const gameboardMaybeNull = useSelector(board.currentGameboard);
     const fasttrackConcepts = useSelector((appState: AppState) => appState && appState.fasttrackConcepts);
 
     const smDevice = useMediaQuery({query: '(min-device-width: 768px)'});
@@ -117,22 +117,22 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
     const hexagonQuarterHeight = hexagonUnitLength / Math.sqrt(3);
     const progressBarPadding = deviceSize !== 'xs' ? 5 : 1;
 
-    const conceptQuestions = gameboardMaybeNullOrMissing && gameboardMaybeNullOrMissing !== NOT_FOUND && fasttrackConcepts && fasttrackConcepts.gameboardId === gameboardMaybeNullOrMissing.id && fasttrackConcepts.concept === doc.title ?
+    const conceptQuestions = gameboardMaybeNull && fasttrackConcepts && fasttrackConcepts.gameboardId === gameboardMaybeNull.id && fasttrackConcepts.concept === doc.title ?
         fasttrackConcepts.items
         : null;
 
     useEffect(() => {
-        if (conceptQuestions === null && gameboardMaybeNullOrMissing && gameboardMaybeNullOrMissing !== NOT_FOUND) {
+        if (conceptQuestions === null && gameboardMaybeNull) {
             const uppers = questionHistory.filter(e => /upper/i.test(e));
             const upper = uppers.pop() || "";
-            dispatch(fetchFasttrackConcepts(gameboardMaybeNullOrMissing.id as string, doc.title as string, upper));
+            dispatch(fetchFasttrackConcepts(gameboardMaybeNull.id as string, doc.title as string, upper));
         }
-    }, [gameboardMaybeNullOrMissing, doc, conceptQuestions]);
+    }, [gameboardMaybeNull, doc, conceptQuestions]);
 
-    if (!gameboardMaybeNullOrMissing || gameboardMaybeNullOrMissing === NOT_FOUND || conceptQuestions === null) return null;
+    if (!gameboardMaybeNull || conceptQuestions === null) return null;
 
     // @ts-ignore Assert the properties we use and we know the API returns
-    const gameboard: GameboardDTO & { id: string; title: string; questions: GameboardItem[] } = gameboardMaybeNullOrMissing;
+    const gameboard: GameboardDTO & { id: string; title: string; questions: GameboardItem[] } = gameboardMaybeNull;
 
     function getCurrentlyWorkingOn(): AugmentedQuestion {
         return {

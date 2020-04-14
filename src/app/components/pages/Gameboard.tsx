@@ -14,10 +14,11 @@ import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
+import {board} from "../../state/selectors";
 
 const stateFromProps = (state: AppState) => {
     return state && {
-        gameboard: state.currentGameboard,
+        gameboard: board.currentGameboardOrNotFound(state),
         user: state.user,
     };
 };

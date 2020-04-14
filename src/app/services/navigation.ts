@@ -11,6 +11,7 @@ import {useCurrentExamBoard} from "./examBoard";
 import {ContentDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {makeUrl} from "./fastTrack";
+import {board} from "../state/selectors";
 
 export interface LinkInfo {title: string; to?: string}
 export type CollectionType = "Gameboard" | "Topic" | "FastTrack";
@@ -36,7 +37,7 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
         if (queryParams.topic) dispatch(fetchTopicSummary(queryParams.topic as TAG_ID));
     }, [queryParams.board, queryParams.topic, currentDocId, dispatch]);
 
-    const currentGameboard = useSelector((state: AppState) => state && state.currentGameboard);
+    const currentGameboard = useSelector(board.currentGameboard);
     const currentTopic = useSelector((state: AppState) => state && state.currentTopic);
     const examBoard = useCurrentExamBoard();
 
@@ -45,7 +46,7 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
     }
 
     if (doc.type === "isaacFastTrackQuestionPage") {
-        const gameboardHistory = (currentGameboard && currentGameboard != 404 && queryParams.board === currentGameboard.id) ?
+        const gameboardHistory = (currentGameboard && queryParams.board === currentGameboard.id) ?
             determineGameboardHistory(currentGameboard) :
             [];
         const questionHistory = (queryParams.questionHistory as string || "").split(",");
@@ -55,14 +56,14 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
             breadcrumbHistory: gameboardHistory,
             backToCollection: previousQuestion ? {title: "Return to Previous Question",
                 to: makeUrl(`/questions/${previousQuestion}`, {questionHistory: questionHistory.join(","),
-                    board: currentGameboard && currentGameboard !== NOT_FOUND ? currentGameboard.id : undefined})} : undefined,
-            nextItem: currentGameboard && currentGameboard != NOT_FOUND ? {title: "Return to Top 10 Questions",
+                    currentGameboard: currentGameboard ? currentGameboard.id : undefined})} : undefined,
+            nextItem: currentGameboard ? {title: "Return to Top 10 Questions",
                 to: `/gameboard#${currentGameboard.id}`} : undefined
         };
     }
 
     if (queryParams.board) {
-        const gameboardHistory = (currentGameboard && currentGameboard != 404 && queryParams.board === currentGameboard.id) ?
+        const gameboardHistory = (currentGameboard && queryParams.board === currentGameboard.id) ?
             determineGameboardHistory(currentGameboard) :
             [];
         return {

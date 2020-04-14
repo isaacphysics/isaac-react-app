@@ -2,15 +2,15 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AppState} from "../../state/reducers";
 import Select, {ValueType} from "react-select";
 import {Link, withRouter} from "react-router-dom";
 import tags from '../../services/tags';
-import {NOT_FOUND, TAG_ID} from '../../services/constants';
+import {TAG_ID} from '../../services/constants';
 import {Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
 import {generateTemporaryGameboard, loadGameboard} from '../../state/actions';
 import {ShowLoading} from "../handlers/ShowLoading";
+import {board} from "../../state/selectors";
 
 interface Item<T> {
     value: T;
@@ -26,7 +26,7 @@ function toCSV<T>(items: Item<T>[]) {
 export const GameboardFilter = withRouter((props: {location: {hash?: string}}) => {
     const dispatch = useDispatch();
 
-    const gameboard = useSelector((state: AppState) => state && state.currentGameboard);
+    const gameboard = useSelector(board.currentGameboard);
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>([]);
 
@@ -93,7 +93,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
     }, [selections, difficulty]);
 
     function refresh() {
-        if (gameboard && gameboard !== NOT_FOUND) {
+        if (gameboard) {
             boardStack.push(gameboard.id as string);
             setBoardStack(boardStack);
             loadNewBoard();
@@ -160,7 +160,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
                         <h3>{boardName}</h3>
                     </RS.Col>
                     <RS.Col className="text-right">
-                        {gameboard && gameboard !== NOT_FOUND && <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}`}>
+                        {gameboard && <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}`}>
                             Save to My&nbsp;Gameboards
                         </RS.Button>}
                     </RS.Col>
@@ -170,7 +170,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
 
         <div className="pb-4">
             <ShowLoading until={gameboard}>
-                {gameboard && gameboard !== NOT_FOUND ?
+                {gameboard ?
                     <GameboardViewer gameboard={gameboard} /> :
                     <RS.Alert color="warning">No questions found matching the criteria.</RS.Alert>
                 }

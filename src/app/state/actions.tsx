@@ -871,7 +871,7 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
 // Current gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const state = getState();
-    if (state && state.currentGameboard && state.currentGameboard !== NOT_FOUND && state.currentGameboard.id === gameboardId) return;
+    if (state && state.currentGameboard && state.currentGameboard !== NOT_FOUND && 'inflight' in state.currentGameboard && state.currentGameboard.id === gameboardId) return;
     dispatch({type: ACTION_TYPE.GAMEBOARD_REQUEST, gameboardId});
     try {
         // TODO MT handle local storage load if gameboardId == null
