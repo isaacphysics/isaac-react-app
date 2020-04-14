@@ -1,4 +1,4 @@
-import {FormGroup, Label, Table} from "reactstrap";
+import {FormGroup, Label, NavLink, Table} from "reactstrap";
 import {SubjectInterestInput} from "./subjectInterestInput";
 import React from "react";
 
@@ -18,20 +18,22 @@ export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<
             <thead>
                 <tr>
                     <td/>
-                    <th scope="col">GCSE<br/><small>14-16 yrs</small></th>
-                    <th scope="col">A Level<br/><small>16-18 yrs</small></th>
-                    <th scope="col">University<br/><small>18+ yrs</small></th>
+                    <th scope="col" className="table-title">GCSE<br/><small>14-16 yrs</small></th>
+                    <th scope="col" className="table-title">A Level<br/><small>16-18 yrs</small></th>
+                    <th scope="col" className="table-title">University<br/><small>18+ yrs</small></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <th scope="row">Physics</th>
+                    <th scope="row"><span className="d-none d-lg-block d-md-block">Physics</span>
+                        <span className="d-block d-md-none">Phys</span></th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_UNI"} setStateFunction={setStateFunction}/></td>
                 </tr>
                 <tr>
-                    <th scope="row">Chemistry</th>
+                    <th scope="row"><span className="d-none d-lg-block d-md-block">Chemistry</span>
+                        <span className="d-block d-md-none">Chem</span></th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_UNI"} setStateFunction={setStateFunction}/></td>
@@ -43,7 +45,8 @@ export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"MATHS_UNI"} setStateFunction={setStateFunction}/></td>
                 </tr>
                 <tr>
-                    <th scope="row">Engineering</th>
+                    <th scope="row"><span className="d-none d-lg-block d-md-block">Engineering</span>
+                        <span className="d-block d-md-none">Eng</span></th>
                     <td/>
                     <td/>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"ENGINEERING_UNI"} setStateFunction={setStateFunction}/></td>

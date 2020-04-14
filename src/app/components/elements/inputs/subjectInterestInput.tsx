@@ -10,11 +10,7 @@ export const SubjectInterestInput = (props: SubjectInterestInputProps<any>) => {
     const {stateObject, propertyName, setStateFunction} = props
     return <CustomInput id={`${propertyName}-checkbox`} type="checkbox" className="isaac-checkbox" checked={stateObject[propertyName] === true}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            if (e.target.checked) {
-                stateObject[propertyName] = true;
-            } else {
-                stateObject[propertyName] = false;
-            }
+            stateObject[propertyName] = e.target.checked;
             setStateFunction(Object.assign({}, stateObject));
         }}
     />;
