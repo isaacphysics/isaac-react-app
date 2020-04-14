@@ -3,26 +3,17 @@ import queryString from "query-string";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {useMediaQuery} from "react-responsive";
-import {NOT_FOUND, TAG_ID} from "../../services/constants";
+import {NOT_FOUND} from "../../services/constants";
 import React, {useEffect} from "react";
 import {fetchFasttrackConcepts} from "../../state/actions";
 import * as RS from "reactstrap";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import tags from "../../services/tags";
 
-function moveTo(x: number, y: number) {
-    return 'M' + x + ' ' + y;
-}
+type QuestionLevel = "topTen" | "upper" | "lower";
 
-function line(x: number, y: number) {
-    return 'L' + x + ' ' + y;
-}
+type LevelTag = 'ft_top_ten' | 'ft_upper' | 'ft_lower';
+const fastTrackStates: LevelTag[] = ['ft_top_ten', 'ft_upper', 'ft_lower'];
 
-export type L = "topTen" | "upper" | "lower";
-type Level = 'ft_top_ten' | 'ft_upper' | 'ft_lower';
-const fastTrackStates: Level[] = ['ft_top_ten', 'ft_upper', 'ft_lower'];
-
-function getFastTrackLevel(tags?: string[]): Level {
+function getFastTrackLevel(tags?: string[]): LevelTag {
     if (!tags) throw new Error("Unknown level for undefined tags");
     for (let state of fastTrackStates) {
         if (tags.indexOf(state) != -1) {
@@ -32,13 +23,13 @@ function getFastTrackLevel(tags?: string[]): Level {
     throw new Error("Unknown level for tags:" + tags.join(","));
 }
 
+type ConceptLevel = "upperLevelQuestions" | "lowerLevelQuestions";
+const conceptLevels: ConceptLevel[] = ["upperLevelQuestions", "lowerLevelQuestions"];
+
 interface ConceptLevelQuestions {
     upperLevelQuestions: GameboardItem[];
     lowerLevelQuestions: GameboardItem[];
 }
-
-type ConceptLevel = "upperLevelQuestions" | "lowerLevelQuestions";
-const conceptLevels: ConceptLevel[] = ["upperLevelQuestions", "lowerLevelQuestions"];
 
 function categoriseConceptQuestions(conceptQuestions: GameboardItem[]): ConceptLevelQuestions | null {
     let result = null;
@@ -49,6 +40,26 @@ function categoriseConceptQuestions(conceptQuestions: GameboardItem[]): ConceptL
         };
     }
     return result;
+}
+
+interface AugmentedQuestion {
+    id: string;
+    title: string;
+    fastTrackLevel: LevelTag;
+    isConcept: boolean;
+    isCurrentQuestion: boolean;
+    isCompleted: boolean;
+    href: string;
+    hexagonTitle: string;
+    questionPartStates?: string[];
+}
+
+function moveTo(x: number, y: number) {
+    return 'M' + x + ' ' + y;
+}
+
+function line(x: number, y: number) {
+    return 'L' + x + ' ' + y;
 }
 
 function calculateDashArray<T>(elements: T[] | undefined, evaluator: (t: T) => boolean, perimiterLength: number) {
@@ -73,7 +84,7 @@ function calculateDashArray<T>(elements: T[] | undefined, evaluator: (t: T) => b
     return dashArray.join(',');
 }
 
-function calculateProgressBarHeight(questionLevel: Level, hexagonQuarterHeight: number, hexagonPadding: number, progressBarPadding: number) {
+function calculateProgressBarHeight(questionLevel: LevelTag, hexagonQuarterHeight: number, hexagonPadding: number, progressBarPadding: number) {
     let numberOfHexagonRows = {"ft_top_ten": 1, "ft_upper": 2, "ft_lower": 3}[questionLevel];
     return 2 * progressBarPadding + 4 * hexagonQuarterHeight + (numberOfHexagonRows - 1) * (6 * hexagonQuarterHeight + 2 * hexagonPadding);
 }
@@ -87,18 +98,6 @@ function generateHexagonPoints(halfWidth: number, quarterHeight: number) {
         ', ' + 0 * halfWidth + ' ' + 1 * quarterHeight;
 }
 
-interface AugmentedQuestion {
-    id: string;
-    title: string;
-    fastTrackLevel: Level;
-    isConcept: boolean;
-    isCurrentQuestion: boolean;
-    isCompleted: boolean;
-    href: string;
-    hexagonTitle: string;
-    currentlyWorkingOn: boolean;
-    questionPartStates?: string[];
-}
 
 export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPageDTO; search: string }) {
     const {questionHistory: qhs}: { questionHistory?: string } = queryString.parse(search);
@@ -124,22 +123,20 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
 
     useEffect(() => {
         if (conceptQuestions === null && gameboardMaybeNullOrMissing && gameboardMaybeNullOrMissing !== NOT_FOUND) {
-            console.log("Effect", gameboardMaybeNullOrMissing, doc, conceptQuestions, fasttrackConcepts);
-            // FIXME: Why is this running twice
             const uppers = questionHistory.filter(e => /upper/i.test(e));
             const upper = uppers.pop() || "";
             dispatch(fetchFasttrackConcepts(gameboardMaybeNullOrMissing.id as string, doc.title as string, upper));
         }
     }, [gameboardMaybeNullOrMissing, doc, conceptQuestions]);
 
-    if (!gameboardMaybeNullOrMissing || gameboardMaybeNullOrMissing === NOT_FOUND) return null;
-    // @ts-ignore I don't care.
+    if (!gameboardMaybeNullOrMissing || gameboardMaybeNullOrMissing === NOT_FOUND || conceptQuestions === null) return null;
+
+    // @ts-ignore Assert the properties we use and we know the API returns
     const gameboard: GameboardDTO & { id: string; title: string; questions: GameboardItem[] } = gameboardMaybeNullOrMissing;
 
     function getCurrentlyWorkingOn(): AugmentedQuestion {
         return {
             hexagonTitle: "", href: "", isCompleted: false, isCurrentQuestion: false,
-            currentlyWorkingOn: false, // TODO: How is this set?
             id: doc.id as string,
             title: doc.title as string,
             fastTrackLevel: getFastTrackLevel(doc.tags),
@@ -149,7 +146,7 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
 
     const currentlyWorkingOn = getCurrentlyWorkingOn();
 
-    if (!currentlyWorkingOn.isConcept || conceptQuestions === null || currentlyWorkingOn.fastTrackLevel === undefined) {
+    if (!currentlyWorkingOn.isConcept || currentlyWorkingOn.fastTrackLevel === undefined) {
         return null;
     }
 
@@ -199,7 +196,7 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
         },
     };
 
-    function augmentQuestion(question: any, gameboardId: string, questionHistory: string[], index: number): AugmentedQuestion {
+    function augmentQuestion(question: GameboardItem, gameboardId: string, questionHistory: string[], index: number): AugmentedQuestion {
         const fastTrackLevel = getFastTrackLevel(question.tags);
         let href = "/questions/" + question.id + '?board=' + gameboardId;
         if (questionHistory) {
@@ -211,7 +208,7 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
                 newQuestionHistory = questionHistory;
             } else {
                 // Step back in question history if possible
-                newQuestionHistory = questionHistory.slice(0, questionHistory.lastIndexOf(question.id));
+                newQuestionHistory = questionHistory.slice(0, questionHistory.lastIndexOf(question.id as string));
             }
             if (newQuestionHistory && newQuestionHistory.length) {
                 href += "&questionHistory=" + newQuestionHistory.join(',');
@@ -219,17 +216,18 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
         }
         return {
             isConcept: false,
-            currentlyWorkingOn: false, // TODO: How is this set?
             fastTrackLevel,
             isCurrentQuestion: question.id == currentlyWorkingOn.id,
             isCompleted: question.state === 'PERFECT',
             hexagonTitle: "" + (index + 1),
             href,
-            ...question
+            id: question.id as string,
+            title: question.title as string,
+            questionPartStates: question.questionPartStates
         };
     }
 
-    function getMostRecentQuestion(questionHistory: string[], conceptLevel: Level) {
+    function getMostRecentQuestion(questionHistory: string[], conceptLevel: LevelTag) {
         const reversedQuestionHistory = questionHistory.slice().reverse();
         const questionLevelMatcheFunctions = {
             "ft_top_ten": (questionId: string) => questionId.indexOf('fasttrack') != -1,
@@ -266,7 +264,7 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
     interface Progress {
         title: string;
         conceptTitle: string;
-        questions: { [key in L]: AugmentedQuestion[] };
+        questions: { [key in QuestionLevel]: AugmentedQuestion[] };
         connections: {
             topTenToUpper: Connection[];
             upperToLower: Connection[];
@@ -290,7 +288,7 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
 
         // Evalueate concept question progress
         if (currentlyWorkingOn.isConcept) {
-            let upperAndLowerConceptQuestions: Map<L, GameboardItem[]> = new Map([['upper', conceptQuestions.upperLevelQuestions], ['lower', conceptQuestions.lowerLevelQuestions]]);
+            let upperAndLowerConceptQuestions: Map<QuestionLevel, GameboardItem[]> = new Map([['upper', conceptQuestions.upperLevelQuestions], ['lower', conceptQuestions.lowerLevelQuestions]]);
             upperAndLowerConceptQuestions.forEach((conceptQuestionsOfType, conceptQuestionType) => {
                 for (let i = 0; i < conceptQuestionsOfType.length; i++) {
                     let question = conceptQuestionsOfType[i];
@@ -418,7 +416,7 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
         }
 
         return <a href={question.href}>
-            <title>{question.title + (question.currentlyWorkingOn ? ' (Current)' : '')}</title>
+            <title>{question.title + (question.isCurrentQuestion ? ' (Current)' : '')}</title>
             {generateHexagon([true], allVisible => allVisible === true, hexagon.base, fillColour, true)}
 
             {generateHexagon(
@@ -445,10 +443,10 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
 
     function createQuestionRow(conceptQuestions: AugmentedQuestion[], fastTrackLevel: string, conceptRowIndex: number) {
         return <g key={fastTrackLevel + '-question-hexagons'}
-                  transform={'translate(0,' + conceptRowIndex * (6 * hexagon.quarterHeight + 2 * hexagon.padding) + ')'}>
+            transform={'translate(0,' + conceptRowIndex * (6 * hexagon.quarterHeight + 2 * hexagon.padding) + ')'}>
             {conceptQuestions.map((question, columnIndex) => (
                 <g key={question.id} className={fastTrackLevel + '-question-hexagon'}
-                   transform={'translate(' + columnIndex * 2 * (hexagon.halfWidth + hexagon.padding) + ', 0)'}>
+                    transform={'translate(' + columnIndex * 2 * (hexagon.halfWidth + hexagon.padding) + ', 0)'}>
                     {createQuestionHexagon(question)}
                 </g>
             ))}
@@ -457,7 +455,7 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
 
     function createConceptConnectionRow(conceptConnections: Connection[], connectionName: string, connectionRowIndex: number) {
         return <g key={connectionName + '-concept-connections'}
-                  transform={'translate(' +
+            transform={'translate(' +
                   (hexagon.halfWidth + hexagon.padding) + ',' +
                   (3 * hexagon.quarterHeight + hexagon.padding + connectionRowIndex * (6 * hexagon.quarterHeight + 2 * hexagon.padding)) + ')'}>
             {conceptConnections.map(conceptConnection => (<React.Fragment key={JSON.stringify(conceptConnection)}>
