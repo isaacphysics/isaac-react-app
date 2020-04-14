@@ -6,7 +6,6 @@ import {
     allRequiredInformationIsPresent,
     validateEmail,
     validateExamBoard,
-    validateUserGender,
 } from "../../../services/validation";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
@@ -14,6 +13,8 @@ import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {UserFacingRole} from "../../../services/constants";
+import {Link} from "react-router-dom";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -32,6 +33,11 @@ export const UserDetails = (props: UserDetailsProps) => {
         submissionAttempted, editingOtherUser
     } = props;
 
+    const teacherRequestRoute = {
+        [SITE.PHY]: "/pages/contact_us_teacher",
+        [SITE.CS]: "/pages/teacher_accounts"
+    };
+
     const allRequiredFieldsValid = userToUpdate && userToUpdate.email &&
         allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null});
 
@@ -43,7 +49,16 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </span>
             </Col>
         </Row>
-
+        <Row className="mb-3">
+            <Col>
+                Account type: <b>{userToUpdate && userToUpdate.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate && userToUpdate.role == "STUDENT" && <span>
+                    <small>(Are you a teacher? {" "}
+                        <Link to={teacherRequestRoute[SITE_SUBJECT]} target="_blank">
+                            Upgrade your account
+                        </Link>{".)"}</small>
+                </span>}
+            </Col>
+        </Row>
         <Row>
             <Col md={6}>
                 <FormGroup>
@@ -130,17 +145,6 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </div>
             </Col>}
         </Row>
-
-        {userToUpdate && userToUpdate.role == "STUDENT" && <Row>
-            <Col className="text-muted text-center mt-2">
-                Are you a teacher? {" "}
-                <a href="/pages/teacher_accounts" target="_blank" rel="noopener noreferrer">
-                    <span className='sr-only'> Are you a teacher? </span>
-                    Let us know
-                </a> {" "}
-                and we&apos;ll convert your account to a teacher account.
-            </Col>
-        </Row>}
 
         {submissionAttempted && !allRequiredFieldsValid && <h4 role="alert" className="text-danger text-center mt-4 mb-3">
             Required information in this form is not set
