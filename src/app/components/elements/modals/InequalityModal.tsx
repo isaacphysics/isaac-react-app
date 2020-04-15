@@ -665,6 +665,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 }};
                 texBottom += `^{${order}}`;
             }
+            if (!o.children.order) {
+                delete o.children.order;
+            }
             denominatorObjects.push(o);
         }
         // This sure would look a lot better as a reduce but I can't figure it out.
