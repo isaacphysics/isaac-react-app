@@ -16,6 +16,7 @@ import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
 import {isTeacher} from "../../services/user";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface EventDetailsProps {
     match: {params: {eventId: string}};
@@ -120,6 +121,13 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             {user && user.loggedIn && user.email && event.userBooked && <span> - <span className="text-success">You are booked on this event!</span></span>}
                                             {!event.userBooked && !event.userOnWaitList && zeroOrLess(event.placesAvailable) && !(event.tags && event.tags.indexOf('student') != -1 && user && isTeacher(user)) && <span> - Waiting list booking is available!</span>}
                                             {user && user.loggedIn && user.email && event.userOnWaitList && <span> - You are on the waiting list for this event.</span>}
+                                        </td>
+                                    </tr>}
+                                    {SITE_SUBJECT == SITE.PHY && event.bookingDeadline && <tr>
+                                        <td>Booking Deadline:</td>
+                                        <td>
+                                            <DateString>{event.bookingDeadline}</DateString>
+                                            {!event.withinBookingDeadline && <div className="alert-danger text-center">The booking deadline for this event has passed.</div>}
                                         </td>
                                     </tr>}
                                 </tbody>
