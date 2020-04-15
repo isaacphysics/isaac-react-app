@@ -16,6 +16,7 @@ import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {isStaff, isTeacher} from "../../services/user";
 
 
@@ -145,7 +146,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             {user && user.loggedIn && user.email && event.userOnWaitList && <span> - You are on the waiting list for this event.</span>}
                                         </td>
                                     </tr>}
-                                    {event.bookingDeadline && <tr>
+                                    {SITE_SUBJECT == SITE.PHY && event.bookingDeadline && <tr>
                                         <td>Booking Deadline:</td>
                                         <td>
                                             <DateString>{event.bookingDeadline}</DateString>
@@ -206,7 +207,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     {event.eventStatus != 'CLOSED' && !event.expired && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
                                         onClick={() => {setBookingFormOpen(true)}}
                                     >
-                                        Open booking form
+                                        Book a place
                                     </RS.Button>}
                                     {bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
                                         color="primary" outline onClick={() => {setBookingFormOpen(false)}}
