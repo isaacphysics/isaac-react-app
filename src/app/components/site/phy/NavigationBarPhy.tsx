@@ -19,7 +19,7 @@ export const NavigationBarPhy = () => {
         <NavigationSection title="Learn">
             <LinkItem to="/gameboards/new">Questions</LinkItem>
             <LinkItem to="/concepts">Concepts</LinkItem>
-            {/*<LinkItem to="/books">Books</LinkItem> TODO find a suitable books link */}
+            <LinkItem to="/books">Books</LinkItem>
             <LinkItem to="/chemistry">Chemistry</LinkItem>
         </NavigationSection>
 
