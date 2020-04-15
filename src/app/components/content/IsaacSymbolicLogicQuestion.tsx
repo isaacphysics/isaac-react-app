@@ -42,9 +42,10 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
         }
     }
 
-    const closeModal = () => {
+    const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
+        window.scrollTo(0, previousYPosition);
     };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
@@ -63,7 +64,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
             />
             {modalVisible && <InequalityModal
-                close={closeModal}
+                close={closeModal(window.scrollY)}
                 onEditorStateChange={(state: any) => {
                     setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
                     setInitialEditorSymbols(state.symbols);

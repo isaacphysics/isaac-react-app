@@ -73,9 +73,10 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         }
     }
 
-    const closeModal = () => {
+    const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
+        window.scrollTo(0, previousYPosition);
     };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
@@ -190,7 +191,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                     previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
             />
             {modalVisible && <InequalityModal
-                close={closeModal}
+                close={closeModal(window.scrollY)}
                 onEditorStateChange={updateState}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols}
