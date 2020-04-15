@@ -1,19 +1,15 @@
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
-import {EXAM_BOARD} from "../../../services/constants";
+import {EXAM_BOARD, UserFacingRole} from "../../../services/constants";
 import React, {ChangeEvent} from "react";
-import {
-    allRequiredInformationIsPresent,
-    validateEmail,
-    validateExamBoard,
-} from "../../../services/validation";
+import {allRequiredInformationIsPresent, validateEmail, validateExamBoard,} from "../../../services/validation";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {UserFacingRole} from "../../../services/constants";
+import {SubjectInterestTableInput} from "../inputs/SubjectInterestTableInput";
 import {Link} from "react-router-dom";
 
 interface UserDetailsProps {
@@ -145,6 +141,11 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </div>
             </Col>}
         </Row>
+        {SITE_SUBJECT === SITE.PHY && !editingOtherUser && <Row className="mt-3">
+            <Col>
+                <SubjectInterestTableInput stateObject={subjectInterests} setStateFunction={setSubjectInterests}/>
+            </Col>
+        </Row>}
 
         {submissionAttempted && !allRequiredFieldsValid && <h4 role="alert" className="text-danger text-center mt-4 mb-3">
             Required information in this form is not set
