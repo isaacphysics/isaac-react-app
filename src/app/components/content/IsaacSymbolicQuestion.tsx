@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useLayoutEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
 import {setCurrentAttempt} from "../../state/actions";
@@ -86,6 +86,14 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     }
 
     const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), valid: true}));
+    useEffect(() => {
+        // Only update the text-entry box if the graphical editor is visible
+        if (!modalVisible) return;
+        const pythonExpression = currentAttemptPythonExpression();
+        if (inputState.pythonExpression !== pythonExpression) {
+            setInputState({...inputState, pythonExpression});
+        }
+    }, [currentAttempt]);
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality>();
