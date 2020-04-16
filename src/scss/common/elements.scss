@@ -2,8 +2,9 @@
 .content-summary-link .content-summary-link-title {
   background: none;
   border: 0;
-  font-family: $secondary-font;
-  font-weight: 900;
+  .text-secondary {
+    font-family: $secondary-font-bold;
+  }
 }
 
 .content-summary-link a {
