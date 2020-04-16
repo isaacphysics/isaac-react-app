@@ -87,7 +87,7 @@ button {
   }
 }
 
-.symbolic-question {
+.symbolic-question, .equality-page {
   .eqn-editor-preview {
     border: solid 1px $black;
     padding: 0.15em 0.6em;
@@ -96,6 +96,12 @@ button {
 
     &.empty {
       color: $gray-500;
+    }
+  }
+
+  .equality-page {
+    .eqn-editor-preview {
+      background: $white !important;
     }
   }
 

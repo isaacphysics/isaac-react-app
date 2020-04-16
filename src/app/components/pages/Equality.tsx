@@ -35,7 +35,7 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
     const [currentAttempt, setCurrentAttempt] = useState();
     const [editorSyntax, setEditorSyntax] = useState('logic');
     // Does this really need to be a state variable if it is immutable?
-    const [editorMode] = useState(queryParams.mode || 'logic');
+    const [editorMode, setEditorMode] = useState(queryParams.mode || 'logic');
 
     let availableSymbols = queryParams.symbols && queryParams.symbols.split(',').map(s => s.trim());
 
@@ -63,15 +63,25 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
                 </Col>
             </Row>
             <Row>
-                <Col md={{size: 2}} className="py-4 syntax-picker">
-                    <Label for="inequality-syntax-select">Syntax</Label>
-                    <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditorSyntax(e.target.value)}>
-                        <option value="logic">Boolean Logic</option>
-                        <option value="binary">Digital Electronics</option>
-                    </Input>
+                <Col md={{size: 2}} className="py-4 syntax-picker mode-picker">
+                    <div>
+                        <Label for="inequality-mode-select">Editor mode:</Label>
+                        <Input type="select" name="mode" id="inequality-mode-select" value={editorMode} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditorMode(e.target.value)}>
+                            <option value="maths">Maths</option>
+                            <option value="chemistry">Chemistry</option>
+                            <option value="logic">Boolean Logic</option>
+                        </Input>
+                    </div>
+                    {(editorMode === 'logic') && <div className="mt-4">
+                        <Label for="inequality-syntax-select">Boolean Logic Syntax</Label>
+                        <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditorSyntax(e.target.value)}>
+                            <option value="logic">Boolean Logic</option>
+                            <option value="binary">Digital Electronics</option>
+                        </Input>
+                    </div>}
                 </Col>
                 <Col md={{size: 8}} className="py-4 question-panel">
-                    <div className="symboliclogic-question">
+                    <div className="equality-page">
                         <Label>&nbsp;</Label>
                         <div
                             role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={0}
