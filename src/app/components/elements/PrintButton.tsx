@@ -14,8 +14,10 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
     return questionPage ?
         <React.Fragment>
             <button
-                className="ru_print btn-action"
-                onClick={() => setQuestionPrintOpen(!questionPrintOpen)}/>
+                className="print-icon btn-action"
+                onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
+                aria-label="Print page"
+            />
             {
                 questionPrintOpen && <div className="question-actions-link-box">
                     <div className="question-actions-link">
@@ -25,7 +27,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                                 dispatch(setPrintingHints(true));
                                 setTimeout(window.print, 100);
                             }}
-                        >With hints
+                        ><span className="sr-only">Print </span>With hints
                         </button>
                         |
                         <button
@@ -34,17 +36,20 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                                 dispatch(setPrintingHints(false));
                                 setTimeout(window.print, 100);
                             }}
-                        >Without hints</button>
+                        ><span className="sr-only">Print </span>Without hints</button>
                     </div>
                 </div>
             }
         </React.Fragment>
         :
-        <React.Fragment><button
-            className="ru_print btn-action"
-            onClick={() => {
-                dispatch(setPrintingHints(false));
-                setTimeout(window.print, 100);
-            }}/>
+        <React.Fragment>
+            <button
+                className="print-icon btn-action"
+                onClick={() => {
+                    dispatch(setPrintingHints(false));
+                    setTimeout(window.print, 100);
+                }}
+                aria-label="Print page"
+            />
         </React.Fragment>
 };

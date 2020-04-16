@@ -3,17 +3,16 @@ import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiTypes";
-import { InequalityModal } from "../elements/modals/InequalityModal";
+import {ChemicalFormulaDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
+import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {IsaacHints} from "./IsaacHints";
-import { EXAM_BOARD } from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
-    let r: {currentAttempt?: LogicFormulaDTO | null} = {};
+    let r: {currentAttempt?: ChemicalFormulaDTO | null} = {};
     if (questionPart) {
         r.currentAttempt = questionPart.currentAttempt;
     }
@@ -21,14 +20,13 @@ const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
 };
 const dispatchToProps = {setCurrentAttempt};
 
-interface IsaacSymbolicLogicQuestionProps {
-    doc: IsaacSymbolicLogicQuestionDTO;
+interface IsaacSymbolicChemistryQuestionProps {
+    doc: IsaacSymbolicChemistryQuestionDTO;
     questionId: string;
-    currentAttempt?: LogicFormulaDTO | null;
-    setCurrentAttempt: (questionId: string, attempt: LogicFormulaDTO) => void;
-    examBoard: EXAM_BOARD;
+    currentAttempt?: ChemicalFormulaDTO | null;
+    setCurrentAttempt: (questionId: string, attempt: ChemicalFormulaDTO) => void;
 }
-const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
+const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
@@ -61,23 +59,22 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
             <div
                 role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={0}
                 onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
-                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
+                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
             />
             {modalVisible && <InequalityModal
                 close={closeModal(window.scrollY)}
                 onEditorStateChange={(state: any) => {
-                    setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
+                    setCurrentAttempt(questionId, { type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" })
                     setInitialEditorSymbols(state.symbols);
                 }}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols}
                 visible={modalVisible}
-                editorMode='logic'
-                logicSyntax={props.examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
+                editorMode='chemistry'
             />}
             <IsaacHints questionPartId={questionId} hints={doc.hints} />
         </div>
     );
 };
 
-export const IsaacSymbolicLogicQuestion = connect(stateToProps, dispatchToProps)(IsaacSymbolicLogicQuestionComponent);
+export const IsaacSymbolicChemistryQuestion = connect(stateToProps, dispatchToProps)(IsaacSymbolicChemistryQuestionComponent);

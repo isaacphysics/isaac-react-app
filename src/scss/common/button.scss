@@ -121,6 +121,14 @@
 
 
 // ISAAC
+.btn-underline {
+  text-decoration: underline;
+  
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 a.btn {
   text-decoration: none;
 }

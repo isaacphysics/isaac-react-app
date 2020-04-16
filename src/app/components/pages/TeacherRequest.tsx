@@ -85,7 +85,7 @@ export const TeacherRequest = () => {
                                         You already have a teacher account
                                     </span>
                                     <p className="mt-3">
-                                        Go to the <Link to="/teachers">For teachers page</Link> to start using your
+                                        Go to the <Link to="/teachers">Teacher tools page</Link> to start using your
                                         new account features.
                                     </p>
                                 </Col>

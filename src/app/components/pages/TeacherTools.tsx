@@ -10,18 +10,18 @@ import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
 import {getProgress} from "../../state/actions";
 
-export const ForTeachers = () => {
+export const TeacherTools = () => {
     const dispatch = useDispatch();
     const user = useSelector((state: AppState) => state && state.user);
     const achievementsSelector = useSelector((state: AppState) => state && state.userProgress && state.userProgress.userSnapshot && state.userProgress.userSnapshot.achievementsRecord);
 
     useEffect(() => {
-       if (!achievementsSelector) {
-           dispatch(getProgress());
-       }
+        if (!achievementsSelector) {
+            dispatch(getProgress());
+        }
     }, [user]);
 
-    const pageTitle = user && isTeacher(user) ? "My Isaac teaching" : "How we help teachers";
+    const pageTitle = user && isTeacher(user) ? "Teacher tools" : "How we help teachers";
 
     const teacherUpgradeLink = <div className="text-center">
         <RS.Button size="lg" tag={Link} to="/pages/teacher_accounts" color="primary" outline>
@@ -42,7 +42,7 @@ export const ForTeachers = () => {
     return <RS.Container className="teachers-page">
         <RS.Row className="pb-4">
             <RS.Col>
-                <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="For teachers" />
+                <TitleAndBreadcrumb currentPageTitle={pageTitle} />
             </RS.Col>
         </RS.Row>
 
@@ -98,7 +98,7 @@ export const ForTeachers = () => {
                             <RS.ListGroupItem className="bg-transparent">
                                 <LinkCard
                                     title="Group progress" imageSource="/assets/card03.png"
-                                    linkDestination="/assignment_progress" linkText="View assignment progress"
+                                    linkDestination="/my_markbook" linkText="View my markbook"
                                 >
                                     Review your groups&apos; progress on the work which you have assigned to them.
                                 </LinkCard>

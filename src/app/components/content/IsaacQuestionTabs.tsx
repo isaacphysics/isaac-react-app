@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, {useContext, useEffect} from "react";
 import {connect, useDispatch} from "react-redux";
 import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
@@ -73,6 +73,9 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
                 <div>
                     {validationResponse.explanation && <IsaacContent doc={validationResponse.explanation} />}
                 </div>
+                {/*{SITE_SUBJECT === SITE.PHY && <div className="pt-1">*/}
+                {/*    <div className="m-0 question-response">{validationResponse.correct ? "Well done!" : "Please try again."}</div>*/}
+                {/*</div>}*/}
             </div>}
 
             {locked && <RS.Alert color="danger">
