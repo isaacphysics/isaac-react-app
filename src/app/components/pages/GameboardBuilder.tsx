@@ -47,7 +47,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
     const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTags, setGameboardTags] = useState<string[]>([]);
-    const [gameboardURL, setGameboardURL] = useState();
+    const [gameboardURL, setGameboardURL] = useState<string>();
     const [questionOrder, setQuestionOrder] = useState<string[]>( []);
     const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);

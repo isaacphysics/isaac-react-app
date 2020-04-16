@@ -23,12 +23,12 @@ export const TeacherRequest = () => {
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName || "");
     const [emailAddress, setEmailAddress] = useState(user && user.loggedIn && user.email || "");
-    const [school, setSchool] = useState();
+    const [school, setSchool] = useState<string>();
     const [otherInformation, setOtherInformation] = useState("");
-    const [verificationDetails, setVerificationDetails] = useState();
+    const [verificationDetails, setVerificationDetails] = useState<string>();
     const [messageSent, setMessageSent] = useState(false);
     const [emailVerified, setEmailVerified] = useState(user && user.loggedIn && user.emailVerificationStatus == "VERIFIED");
-    const [allowedDomain, setAllowedDomain] = useState();
+    const [allowedDomain, setAllowedDomain] = useState<boolean>();
 
     const urn = user && user.loggedIn && user.schoolId || "";
     const subject = "Teacher Account Request";

@@ -23,7 +23,7 @@ const stateToProps = (state: AppState, {match: {params: {questionId}}, location:
 const dispatchToProps = {fetchDoc};
 
 interface EqualityPageProps {
-    queryParams: {board?: string, mode?: string, symbols?: string};
+    queryParams: {board?: string; mode?: string; symbols?: string};
     history: any;
     fetchDoc: (documentType: DOCUMENT_TYPE, questionId: string) => void;
 }
@@ -32,7 +32,7 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
-    const [currentAttempt, setCurrentAttempt] = useState();
+    const [currentAttempt, setCurrentAttempt] = useState<any>();
     const [editorSyntax, setEditorSyntax] = useState('logic');
     // Does this really need to be a state variable if it is immutable?
     const [editorMode] = useState(queryParams.mode || 'logic');
