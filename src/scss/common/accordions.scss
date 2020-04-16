@@ -7,6 +7,11 @@
   }
 }
 
+.accordion-level {
+  font-family: "exo_2regular", sans-serif;
+  padding: 1rem;
+}
+
 .accordion-icon {
   background-repeat: no-repeat;
   background-size: contain;
@@ -51,6 +56,9 @@
       display: flex;
       flex-direction: row;
       align-items: center;
+      border: none;
+      text-align: left;
+      text-decoration: none;
 
       .accordion-title {
         flex-grow: 1;
@@ -63,12 +71,19 @@
         background-position: right;
         width: 20px;
         height: 10px;
+        margin-right: 1rem;
       }
 
       &.active {
         border-bottom: 1px solid $shadow-08;
         &:after {
           background-image: url('/assets/chevron_up.svg');
+        }
+      }
+
+      &:hover {
+        .accordion-title {
+          text-decoration: underline;
         }
       }
     }

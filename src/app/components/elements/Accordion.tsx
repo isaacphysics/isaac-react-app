@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from "react";
 import * as RS from "reactstrap";
 import {withRouter} from "react-router-dom";
-import {ALPHABET} from "../../services/constants";
+import {ALPHABET, NOT_FOUND} from "../../services/constants";
 import {connect, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
 import {AppState} from "../../state/reducers";
@@ -10,19 +10,22 @@ import {TrustedHtml} from "./TrustedHtml";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {questions} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {ContentDTO} from "../../../IsaacApiTypes";
+import {IsaacContent} from "../content/IsaacContent";
 
 interface AccordionsProps {
     id?: string;
     trustedTitle?: string;
     index: number;
     location: {hash: string};
-    children: React.ReactChildren;
+    content?: ContentDTO;
+    children?: React.ReactChildren;
     logAction: (eventDetails: object) => void;
 }
 
 let nextClientId = 0;
 
-const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}}: AccordionsProps) => {
+const AccordionComponent = ({id, trustedTitle, index, content, children, location: {hash}}: AccordionsProps) => {
     // Toggle
     const isFirst = index === 0;
     const [open, setOpen] = useState(isFirst);
@@ -53,7 +56,7 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
     }, [hash, anchorId]);
 
     function logAccordionOpen() {
-        if (page && page != 404) {
+        if (page && page != NOT_FOUND) {
             switch (page.type) {
                 case "isaacQuestionPage":
                     logAction({
@@ -115,11 +118,16 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
         if (allValidated && allWrong) accordianIcon = "cross";
     }
 
+
+    const isConceptPage = page && page != NOT_FOUND && page.type === "isaacConceptPage";
+
+    const level = isConceptPage && content && content.level !== 0 ? content.level : null;
+
     return <div className="accordion">
         <div className="accordion-header">
             <RS.Button
                 id={anchorId || ""} block color="link"
-                className={open ? 'active p-3 text-left' : 'p-3 text-left'}
+                className={open ? 'active' : ''}
                 onClick={(event: any) => {
                     const nextState = !open;
                     setOpen(nextState);
@@ -130,8 +138,9 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
                 }}
                 aria-expanded={open ? "true" : "false"}
             >
-                <div className="accordion-title">
-                    <span className="accordion-part text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
+                {level && <span className="accordion-level badge-secondary">Level {level}</span>}
+                <div className="accordion-title p-3">
+                    <span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
                     {trustedTitle && <TrustedHtml html={trustedTitle} />}
                 </div>
 
@@ -144,7 +153,7 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
             <AccordionSectionContext.Provider value={{id, clientId: clientId.current}}>
                 <RS.Card>
                     <RS.CardBody>
-                        {children}
+                        {content ? <IsaacContent doc={content} /> : children}
                     </RS.CardBody>
                 </RS.Card>
             </AccordionSectionContext.Provider>
