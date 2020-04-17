@@ -10,8 +10,10 @@ import katex from "katex";
 import {IsaacHints} from "./IsaacHints";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
-import {Inequality, makeInequality} from "inequality";
+import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import {parseExpression} from "inequality-grammar";
+
+import _flattenDeep from 'lodash/flatMapDeep';
 
 // Magic starts here
 interface ChildrenMap {
@@ -99,11 +101,12 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const sketchRef = useRef<Inequality>();
 
     useLayoutEffect(() => {
+        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
         const {sketch} = makeInequality(
             hiddenEditorRef.current,
             100,
             0,
-            [currentAttemptValue],
+            _flattenDeep(currentAttemptValue.symbols),
             {
                 textEntry: true,
                 fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
