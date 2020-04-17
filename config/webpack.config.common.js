@@ -60,7 +60,7 @@ module.exports = (isProd) => {
                             ],
                         },
                         {
-                            test: /node_modules[\/\\](query-string|split-on-first|strict-uri-encode)[\/\\].*\.js$/,
+                            test: /node_modules[\/\\](query-string|split-on-first|strict-uri-encode|d3.*)[\/\\].*\.js$/,
                             use: [
                                 {
                                     loader: 'babel-loader',
