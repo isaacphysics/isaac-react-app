@@ -14,7 +14,7 @@ module.exports = env => {
 
     let configCS = {
         entry: {
-            'isaac-cs': ['@babel/polyfill', resolve('src/index-cs')],
+            'isaac-cs': [resolve('src/index-cs')],
         },
 
         output: {

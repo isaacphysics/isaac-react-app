@@ -14,7 +14,7 @@ module.exports = env => {
 
     let configPhysics = {
         entry: {
-            'isaac-phy': ['@babel/polyfill', resolve('src/index-phy')],
+            'isaac-phy': [resolve('src/index-phy')],
         },
 
         output: {
