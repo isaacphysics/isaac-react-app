@@ -60,7 +60,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
-    const [firstLoad, setFirstLoad] = useState(true);
+    const [textInput, setTextInput] = useState('');
 
     const updateState = (state: any) => {
         setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
@@ -91,12 +91,12 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), valid: true}));
     useEffect(() => {
         // Only update the text-entry box if the graphical editor is visible OR if this is the first load
-        if (firstLoad || modalVisible) {
-            const pythonExpression = currentAttemptPythonExpression();
-            if (inputState.pythonExpression !== pythonExpression) {
-                setInputState({...inputState, pythonExpression});
-            }
-            setFirstLoad(false);
+        const pythonExpression = currentAttemptPythonExpression();
+        if (modalVisible || textInput === '') {
+            setTextInput(pythonExpression);
+        }
+        if (inputState.pythonExpression !== pythonExpression) {
+            setInputState({...inputState, pythonExpression});
         }
     }, [currentAttempt]);
 
@@ -130,6 +130,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const debounceTimer = useRef<number|null>(null);
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
         const pycode = e.target.value;
+        setTextInput(pycode);
         setInputState({...inputState, pythonExpression: pycode});
 
         // Parse that thing
@@ -214,7 +215,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <RS.InputGroup className="my-2">
-                    <RS.Input type="text" onChange={updateEquation} value={inputState.pythonExpression}
+                    <RS.Input type="text" onChange={updateEquation} value={textInput}
                         placeholder="or type your formula here"/>
                     <RS.InputGroupAddon addonType="append">
                         <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</RS.Button>
