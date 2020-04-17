@@ -11,6 +11,8 @@ import { EXAM_BOARD } from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
 
+import _flattenDeep from 'lodash/flattenDeep';
+
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
     let r: {currentAttempt?: LogicFormulaDTO | null} = {};
@@ -41,6 +43,12 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
             currentAttemptValue = { result: { tex: '\\textrm{PLACEHOLDER HERE}' } };
         }
     }
+
+    useEffect(() => {
+        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
+
+        setInitialEditorSymbols(_flattenDeep(currentAttemptValue.symbols));
+    }, [currentAttempt, currentAttemptValue]);
 
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
