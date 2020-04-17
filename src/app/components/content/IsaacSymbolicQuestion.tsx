@@ -88,7 +88,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         return currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python || "";
     }
 
-    const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), valid: true}));
+    const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
     useEffect(() => {
         // Only update the text-entry box if the graphical editor is visible OR if this is the first load
         const pythonExpression = currentAttemptPythonExpression();
@@ -96,7 +96,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             setTextInput(pythonExpression);
         }
         if (inputState.pythonExpression !== pythonExpression) {
-            setInputState({...inputState, pythonExpression});
+            setInputState({...inputState, userInput: textInput, pythonExpression});
         }
     }, [currentAttempt]);
 
@@ -131,7 +131,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
         const pycode = e.target.value;
         setTextInput(pycode);
-        setInputState({...inputState, pythonExpression: pycode});
+        setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
 
         // Parse that thing
         if (debounceTimer.current) {
