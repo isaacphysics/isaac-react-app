@@ -9,7 +9,7 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
         const dates = [];
         while (current <= max) {
             dates.push(new Date(current));
-            current.setDate(current.getDate() + 1);
+            current.setMonth(current.getMonth() + 1);
         }
         return dates;
     };

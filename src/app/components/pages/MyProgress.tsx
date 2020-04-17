@@ -36,10 +36,10 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
     useEffect(() => {
         if (viewingOwnData && user.loggedIn) {
             dispatch(getProgress());
-            dispatch(getAnsweredQuestionsByDate(user.id as number, 0, Date.now(), true));
+            dispatch(getAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
         } else if (isTeacher(user)) {
             dispatch(getProgress(userIdOfInterest));
-            dispatch(getAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), true));
+            dispatch(getAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
         }
     }, [userIdOfInterest]);
 
