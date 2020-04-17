@@ -179,11 +179,13 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                     setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(state), pythonExpression: ""});
                     setInitialEditorSymbols([]);
                 } else if (parsedExpression.length === 1) {
-                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true);
+                    // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
+                    // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
+                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
                 } else {
                     let sizes = parsedExpression.map(countChildren);
                     let i = sizes.indexOf(Math.max.apply(null, sizes));
-                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true);
+                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
                 }
             }
         }, 250);
