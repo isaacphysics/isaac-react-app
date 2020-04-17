@@ -101,12 +101,11 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const sketchRef = useRef<Inequality>();
 
     useLayoutEffect(() => {
-        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
         const {sketch} = makeInequality(
             hiddenEditorRef.current,
             100,
             0,
-            _flattenDeep(currentAttemptValue.symbols),
+            _flattenDeep((currentAttemptValue || { symbols: [] }).symbols),
             {
                 textEntry: true,
                 fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
