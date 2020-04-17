@@ -10,6 +10,8 @@ import {IsaacHints} from "./IsaacHints";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
 
+import _flattenDeep from 'lodash/flattenDeep';
+
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
     let r: {currentAttempt?: ChemicalFormulaDTO | null} = {};
