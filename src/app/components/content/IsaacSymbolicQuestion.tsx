@@ -10,7 +10,7 @@ import katex from "katex";
 import {IsaacHints} from "./IsaacHints";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
-import {Inequality, makeInequality, WidgetSpec} from "inequality";
+import {Inequality, makeInequality} from "inequality";
 import {parseExpression} from "inequality-grammar";
 
 import _flattenDeep from 'lodash/flatMapDeep';
