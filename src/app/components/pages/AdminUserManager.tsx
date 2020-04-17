@@ -5,7 +5,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {connect, useDispatch, useSelector} from "react-redux";
 import {adminModifyUserRoles, adminUserDelete, adminUserSearch, getUserIdSchoolLookup} from "../../state/actions";
 import {AdminUserSearchState, AppState} from "../../state/reducers";
-import {Role} from "../../../IsaacApiTypes";
+import {RegisteredUserDTO, Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
@@ -13,20 +13,22 @@ import {Link} from "react-router-dom";
 
 const stateToProps = (state: AppState) => {
     return {
-        searchResults: state && state.adminUserSearch || null
+        searchResults: state && state.adminUserSearch || null,
+        currentUser: state && state.user || null
     };
 };
 const dispatchToProps = {adminUserSearch, adminModifyUserRoles, adminUserDelete};
 
 interface AdminUserMangerProps {
     user: LoggedInUser;
+    currentUser: RegisteredUserDTO | null;
     adminUserSearch: (query: {}) => void;
     adminUserDelete: (userid: number | undefined) => void;
     searchResults: AdminUserSearchState;
     adminModifyUserRoles: (role: Role, userIds: number[]) => void;
 }
 
-const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, adminUserDelete, searchResults}: AdminUserMangerProps) => {
+const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUserRoles, adminUserDelete, searchResults}: AdminUserMangerProps) => {
     const dispatch = useDispatch();
     const [userUpdating, setUserUpdating] = useState(false);
     const [searchRequested, setSearchRequested] = useState(false);
@@ -112,6 +114,9 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
         adminUserSearch(searchQuery);
     };
 
+    const availableRoles = {
+        "EVENT_MANAGER": ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"],
+        "ADMIN": ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"]
     return <RS.Container>
         <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager"/>
 
@@ -222,7 +227,8 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                             <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline>Modify Role</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Promote or demote selected users to:</RS.DropdownItem>
-                                {["STUDENT", "TEACHER", "EVENT_LEADER"].map(role =>
+                                {(currentUser && currentUser.role == "ADMIN" ? ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"]:
+                                    ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"]).map(role =>
                                     <RS.DropdownItem
                                         key={role} disabled={selectedUserIds.length === 0}
                                         onClick={() => modifyUserRolesAndUpdateResults(role as Role)}
