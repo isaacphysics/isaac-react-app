@@ -60,6 +60,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
+    const [firstLoad, setFirstLoad] = useState(true);
 
     const updateState = (state: any) => {
         setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
@@ -89,11 +90,13 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
 
     const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), valid: true}));
     useEffect(() => {
-        // Only update the text-entry box if the graphical editor is visible
-        if (!modalVisible) return;
-        const pythonExpression = currentAttemptPythonExpression();
-        if (inputState.pythonExpression !== pythonExpression) {
-            setInputState({...inputState, pythonExpression});
+        // Only update the text-entry box if the graphical editor is visible OR if this is the first load
+        if (firstLoad || modalVisible) {
+            const pythonExpression = currentAttemptPythonExpression();
+            if (inputState.pythonExpression !== pythonExpression) {
+                setInputState({...inputState, pythonExpression});
+            }
+            setFirstLoad(false);
         }
     }, [currentAttempt]);
 
