@@ -62,8 +62,11 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
     const [textInput, setTextInput] = useState('');
 
-    const updateState = (state: any) => {
-        setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
+    const updateState = (previousAttempt?: FormulaDTO | null) => (state: any) => {
+        const pythonExpression = state?.result?.python || "";
+        if (!previousAttempt || previousAttempt.pythonExpression !== pythonExpression) {
+            setCurrentAttempt(questionId, {type: 'formula', value: JSON.stringify(state), pythonExpression});
+        }
         setInitialEditorSymbols(state.symbols);
     };
 
@@ -116,7 +119,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             }
         );
         sketch.log = { initialState: [], actions: [] };
-        sketch.onNewEditorState = updateState;
+        sketch.onNewEditorState = updateState(currentAttempt);
         sketch.onCloseMenus = () => {};
         sketch.isUserPrivileged = () => { return true; };
         sketch.onNotifySymbolDrag = () => {};
