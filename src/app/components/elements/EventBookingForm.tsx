@@ -55,7 +55,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         </RS.FormFeedback>
                     </RS.Label>
                     {editingSelf && targetUser.emailVerificationStatus != 'VERIFIED' && !verifyEmailRequestSent && <RS.Button
-                        color="link" onClick={() => {
+                        color="link" className="btn-underline" onClick={() => {
                             dispatch(requestEmailVerification());
                             setVerifyEmailRequestSent(true);
                         }}
@@ -67,7 +67,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     </span>}
                 </div>
                 {editingSelf && <div>
-                    <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} submissionAttempted />
+                    <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} disableInput={true} submissionAttempted required />
                 </div>}
                 {editingSelf && <div className="text-center alert-warning p-1">
                     If this information is incorrect, please update it from your <a href="/account" target="_blank">account page</a>.

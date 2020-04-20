@@ -1,0 +1,391 @@
+#inequality-modal,
+#inequality-modal canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    z-index: 250;
+}
+
+#inequality-modal {
+    * {
+        cursor: default;
+    }
+
+    .beta-badge {
+        position: absolute;
+        bottom: 15px;
+        right: 40px;
+        transform: rotate(30deg);
+        background: theme-color("secondary");
+        color: white;
+        font-weight: bold;
+        font-size: 0.9rem;
+        padding: 0 0.5rem;
+        border-radius: 4px;
+        border: 0.1rem solid white;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.25);
+        z-index: 255;
+
+        @keyframes inequality-swing {
+            0%, 100% { transform: rotate(30deg); }
+            50% { transform: rotate(15deg); }
+        }
+
+        &:hover {
+            animation: inequality-swing 1s infinite ease-in-out;
+        }
+    }
+
+    .inequality-ui {
+        position: absolute;
+        width: 100%;
+        z-index: 255;
+
+        &.button {
+            background: theme-color("primary");
+            text-indent: -1000px;
+            overflow: hidden;
+            cursor: pointer;
+
+            &.confirm {
+                width: 90px;
+                height: 90px;
+                bottom: 25px;
+                right: 5px;
+                background-color: transparent;
+                background-image: url('/assets/inequality-confirm.svg');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position-y: center;
+                z-index: 255;
+            }
+
+            &.centre {
+                width: 90px;
+                height: 90px;
+                bottom: 25px;
+                left: 5px;
+                background-color: transparent;
+                background-image: url('/assets/inequality-centre.svg');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position-y: center;
+            }
+
+            &.trash {
+                width: 90px;
+                height: 90px;
+                bottom: 45%;
+                right: 5px;
+                background-color: transparent;
+                background-image: url('/assets/inequality-trash.svg');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position-y: center;
+                opacity: 0.5;
+                cursor: default;
+
+                &:hover, &.active {
+                    opacity: 1.0;
+                }
+            }
+        }
+
+        &.katex-preview {
+            border: 1px solid #208838;
+            border-right: 0;
+            border-top-left-radius: 45px;
+            border-bottom-left-radius: 45px;
+            bottom: 25px;
+            right: 50px;
+            height: 90px;
+            padding: 0 60px 0 30px;
+            width: auto;
+            vertical-align: middle;
+            line-height: 90px;
+            font-size: 2em;
+            z-index: 254;
+
+            &.empty {
+                padding: 0;
+                width: 0;
+                border: 0;
+            }
+        }
+
+        &.menu-bar {
+            position: relative;
+            width: 100%;
+            display: block;
+            right: 0;
+            left: 0;
+            overflow: visible;
+            background: theme-color("primary");
+
+            &.closed {
+                height: 0;
+                overflow: hidden;
+            }
+
+            div.top-menu {
+                &.numbers {
+                    display: flex;
+                    flex-direction: row;
+                    max-width: 450px;
+                    margin: 0 auto;
+                    padding: 16px 0;
+
+                    & > div {
+                        &.input-box {
+                            position: relative;
+
+                            .menu-item {
+                                &.inactive {
+                                    opacity: 0.5;
+                                }
+
+                                position: relative;
+                                display: inline-block;
+                                text-align: center;
+                                font-size: 1.8em;
+                                top: 6px;
+
+                                .katex {
+                                    text-align: center;
+                                    display: block;
+                                    line-height: 90px;
+                                    height: 90px;
+                                    width: 78px;
+                                    margin: 0 auto;
+                                    overflow: visible;
+                                }
+
+                                svg.v-hexagon {
+                                    position: absolute;
+                                    height: 90px;
+                                    left: 0;
+                                    top: 0;
+                                    overflow: visible;
+                                    fill: white;
+                                    stroke: darken(theme-color("primary"), 10%);
+                                    stroke-width: 8px;
+                                    margin: 0 auto;
+                                }
+                            }
+
+                            .clear-number {
+                                position: absolute;
+                                top: -10px;
+                                right: -15px;
+                                width: 30px;
+                                height: 30px;
+                                background: url('/assets/inequality-clear.svg');
+                                background-size: 30px;
+                            }
+                        }
+
+                        &.keypad-box {
+                            padding-right: 16px;
+
+                            .bottom-row {
+                                padding-left: 26px;
+                                margin-top: -12px;
+                            }
+
+                            .key {
+                                position: relative;
+                                display: inline-block;
+                                width: 52px;
+                                height: 57px;
+                                text-align: center;
+                                font-size: 1.8em;
+
+                                .katex {
+                                    text-align: center;
+                                    display: block;
+                                    line-height: 57px;
+                                    height: 57px;
+                                    width: 100%;
+                                    margin: 0 auto;
+                                    overflow: visible;
+                                }
+        
+                                svg.v-hexagon {
+                                    position: absolute;
+                                    padding-left: 2px;
+                                    width: 50px;
+                                    left: 0px;
+                                    top: 0px;
+                                    overflow: visible;
+                                    fill: white;
+                                    stroke: darken(theme-color("primary"), 10%);
+                                    stroke-width: 8px;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                ul {
+                    position: relative;
+                    padding: 0;
+                    list-style-type: none;
+                    white-space: nowrap;
+                    margin: 0 auto;
+                    background: darken(theme-color("primary"), 20%);
+
+                    li {
+                        position: relative;
+                        display: inline-block;
+                        box-sizing: content-box;
+                        padding: 8px;
+                        text-indent: 0;
+                        width: 64px;
+                        height: 70px;
+                        text-align: center;
+                        font-size: 1.8em;
+
+                        &.active {
+                            background: theme-color("primary");
+                        }
+
+                        .katex {
+                            display: block;
+                            padding-top: 5px;
+                            line-height: 52px;
+                            max-height: 52px;
+                            overflow: visible;
+
+                            span.base {
+                                max-height: 38px;
+                                vertical-align: top;
+                            }
+                        }
+
+                        &.radix, &.fraction, &.derivative {
+                            .katex span.base {
+                                line-height: 36px;
+                            }
+                        }
+
+                        svg.v-hexagon {
+                            position: absolute;
+                            width: 64px;
+                            left: 8px;
+                            top: 4px;
+                            overflow: visible;
+                            fill: white;
+                            stroke: darken(theme-color("primary"), 10%);
+                            stroke-width: 8px;
+                        }
+                    }
+
+                    &.sub-menu {
+                        background: theme-color("primary");
+                    }
+                }
+
+                .sub-menu-tabs {
+                    li {
+                        font-size: 1.4em;
+
+                        .katex {
+                            padding-top: 8px;
+                        }
+
+                        &.derivatives {
+                            .katex span.base {
+                                line-height: 32px;
+                            }
+                        }
+
+                        &.inactive {
+                            svg.v-hexagon {
+                                fill: theme-color("primary");
+                                stroke-width: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .menu-tabs {
+            position: relative;
+            height: 40px;
+            text-align: center;
+
+            ul {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+
+                li {
+                    display: inline-block;
+                    box-sizing: content-box;
+                    padding: 0px 8px;
+                    text-indent: 0;
+                    width: 120px;
+                    height: 36px;
+                    text-align: center;
+                    font-size: 1.6em;
+                    background: black;
+                    color: white;
+                    position: relative;
+
+                    &.active {
+                        color: black;
+                        background: theme-color("primary");
+
+                        svg.tab-triangle {
+                            fill: theme-color("primary");
+                        }
+                    }
+
+                    svg.tab-triangle {
+                        position: absolute;
+                        width: 136px;
+                        height: 23px;
+                        left: 0;
+                        top: 36px;
+                        overflow: visible;
+                        fill: black;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// TODO: Find a better way to unify this and the identical above (around line 137)
+// ... yeah, this is going to be a lost cause.
+#moving-menu-item {
+    position: relative; // this will become absolute in InequalityModal.tsx
+    display: inline-block;
+    box-sizing: content-box;
+    padding: 8px;
+    text-indent: 0;
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    font-size: 1.8em;
+
+    .katex {
+        display: block;
+        padding-top: 5px;
+    }
+
+    svg.v-hexagon {
+        position: absolute;
+        width: 48px;
+        left: 8px;
+        top: 4px;
+        overflow: visible;
+        fill: white;
+        stroke: darken(theme-color("primary"), 10%);
+        stroke-width: 8px;
+    }
+}

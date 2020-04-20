@@ -1,0 +1,53 @@
+.events {
+  button, a.btn {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  legend {
+    margin-bottom: 0;
+  }
+  label {
+    margin-top: 1rem; // this would ideally be more specific
+  }
+  .restrict-height {
+    max-height: 150px;
+    display: block;
+    width: auto;
+  }
+}
+.event-key-info {
+  tr {
+    td {
+      padding: 0.5rem 0;
+    }
+    :last-child {
+      font-weight: 600;
+      padding-right: 64px;
+    }
+  }
+}
+
+#events-map {
+  height: 400px;
+}
+
+.event-map-info {
+  .link {
+    color: $primary
+  }
+
+  .heading {
+    text-underline-mode: none;
+  }
+}
+
+.btn.calendar-img {
+  position: absolute;
+  right: 0;
+  width: 64px;
+  font-size: 12px;
+  background: url(/assets/logo_calendar_64px.png) 0 0 no-repeat;
+  padding-top: 60px;
+  text-align: center;
+  margin: 0;
+}

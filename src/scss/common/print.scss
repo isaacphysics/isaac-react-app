@@ -1,0 +1,74 @@
+@media print {
+  div#root {
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  .question-content-container {
+    display: block !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .force-print, .only-print {
+    display: initial !important;
+  }
+
+  .accordion {
+    page-break-inside: avoid;
+  }
+
+  .content-body {
+    background-color: white !important;
+  }
+
+  .collapse {
+    display: initial !important;
+  }
+
+  .container {
+    max-width: none;
+  }
+
+  .question-panel {
+    margin-left: 0 !important;
+    max-width: 100%;
+    flex-grow: 1;
+  }
+
+  .btn-secondary, .eqn-editor-preview, .form-control, .validation-response-panel {
+    @extend .no-print
+  }
+
+  .tab-pane:not(.no-print) {
+    @extend .force-print
+  }
+
+  .question-component {
+    border-bottom: lightgray solid 1px;
+    padding: 0 !important;
+    margin-bottom: 1rem;
+  }
+
+  .parsons-layout {
+    margin-left: 1px;
+    width: 100%;
+  }
+
+  .parsons-available-items {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .content-value {
+    .row {
+      display: block !important;
+    }
+  }
+}
+
+.only-print {
+  display: none;
+}

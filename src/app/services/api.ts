@@ -1,19 +1,25 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
+import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {EventBookingDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, EventBookingDTO, GameboardDTO, TestCaseDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
     AdditionalInformation,
     ATTENDANCE,
     BoardOrder,
-    LoggedInUser,
-    UserPreferencesDTO
+    Choice,
+    Concepts,
+    Credentials,
+    EmailUserRoles,
+    QuestionSearchQuery,
+    QuestionSearchResponse,
+    UserPreferencesDTO,
+    ValidationUser
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
-import {TypeFilter} from "../components/pages/Events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
+import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -39,7 +45,6 @@ endpoint.interceptors.response.use((response) => {
     }
     return Promise.reject(error);
 });
-
 
 export const apiHelper = {
     determineImageUrl: (path: string) => {
@@ -75,17 +80,21 @@ export const api = {
         verifyPasswordReset: (token: string | null) => {
             return endpoint.get(`/users/resetpassword/${token}`)
         },
-        handlePasswordReset: (params: {token: string | null; password: string | null}) => {
-            return endpoint.post(`/users/resetpassword/${params.token}`, {password: params.password})
+        handlePasswordReset: (params: {token: string; password: string}) => {
+            return endpoint.post(`/users/resetpassword/${params.token}`, securePadPasswordReset({password: params.password}));
         },
-        updateCurrent: (registeredUser: LoggedInUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        updateCurrent: (registeredUser: ValidationUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent});
         },
         passwordResetById: (id: number) => {
             return endpoint.post(`/users/${id}/resetpassword`);
         },
+
         getUserIdSchoolLookup: (userIds: number[]): AxiosPromise<AppTypes.UserSchoolLookup> => {
             return endpoint.get(`/users/school_lookup?user_ids=${userIds.join(",")}`);
+        },
+        getProgress: (userIdOfInterest = "current_user"): AxiosPromise<AppTypes.UserProgress> => {
+            return endpoint.get(`users/${userIdOfInterest}/progress`);
         }
     },
     authentication: {
@@ -98,22 +107,45 @@ export const api = {
         logout: (): AxiosPromise => {
             return endpoint.post(`/auth/logout`);
         },
-        login: (provider: ApiTypes.AuthenticationProvider, params: {email: string; password: string}): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
-            return endpoint.post(`/auth/${provider}/authenticate`, params);
+        login: (provider: ApiTypes.AuthenticationProvider, credentials: Credentials): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+            return endpoint.post(`/auth/${provider}/authenticate`, securePadCredentials(credentials));
         },
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings`)
+        },
+        getSelectedUserAuthSettings: (userId: number): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
+            return endpoint.get(`/auth/user_authentication_settings/${userId}`)
+        },
+        linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
+            return endpoint.get(`/auth/${provider}/link`)
+        },
+        unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
+            return endpoint.delete(`/auth/${provider}/link`);
         }
     },
     email: {
         verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
             return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
-        }
+        },
+        getTemplateEmail: (contentid: string): AxiosPromise<AppTypes.TemplateEmail> => {
+            return endpoint.get(`/email/viewinbrowser/${contentid}`);
+        },
+        sendAdminEmail: (contentid: string, emailType: string, roles: EmailUserRoles): AxiosPromise => {
+            return endpoint.post(`/email/sendemail/${contentid}/${emailType}`, roles);
+        },
+        sendAdminEmailWithIds: (contentid: string, emailType: string, ids: number[]): AxiosPromise => {
+            return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
+        },
     },
     admin: {
         userSearch: {
             get: (queryParams: {}): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO[]> => {
                 return endpoint.get(`/admin/users/`, {params: queryParams});
+            }
+        },
+        userGet: {
+            get: (userid: number | undefined): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+                return endpoint.get(`/admin/users/${userid}`);
             }
         },
         userDelete: {
@@ -159,15 +191,49 @@ export const api = {
             return endpoint.delete(`/authorisations/release/`);
         }
     },
+    glossary: {
+        getTerms: (): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.GlossaryTermDTO>> => {
+            // FIXME: Magic number. This needs to go through pagination with
+            // limit and start_index query parameters.
+            return endpoint.get('/glossary/terms', {
+                params: { limit: 10000 }
+            });
+        },
+        getTermById: (id: string): AxiosPromise<ApiTypes.GlossaryTermDTO> => {
+            return endpoint.get(`/glossary/terms/${id}`);
+        }
+    },
     questions: {
         get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
             return endpoint.get(`/pages/questions/${id}`);
         },
+        search: (query: QuestionSearchQuery): AxiosPromise<QuestionSearchResponse> => {
+            return endpoint.get(`/pages/questions/`, {
+                params: query,
+            });
+        },
         answer: (id: string, answer: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
+        },
+        answeredQuestionsByDate: (userId: number | string, fromDate: number, toDate: number, perDay: boolean): AxiosPromise<ApiTypes.AnsweredQuestionsByDate> => {
+            return endpoint.get(`/questions/answered_questions/${userId}`, {
+                params: {
+                    "from_date": fromDate,
+                    "to_date": toDate,
+                    "per_day": perDay
+                }
+            })
+        },
+        testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
+            return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
         }
     },
     concepts: {
+        list: (): AxiosPromise<Concepts> => {
+            return endpoint.get('/pages/concepts', {
+                params: { limit: 999 }
+            });
+        },
         get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
             return endpoint.get(`/pages/concepts/${id}`);
         },
@@ -193,6 +259,15 @@ export const api = {
         },
         save: (gameboardId: string) => {
             return endpoint.post(`gameboards/user_gameboards/${gameboardId}`, {});
+        },
+        create: (gameboard: GameboardDTO) => {
+            return endpoint.post(`gameboards`, gameboard);
+        },
+        getWildcards: (): AxiosPromise<ApiTypes.IsaacWildcard[]> => {
+            return endpoint.get(`gameboards/wildcards`);
+        },
+        generateTemporary: (params: {[key: string]: string}): AxiosPromise<ApiTypes.GameboardDTO> => {
+            return endpoint.get(`/gameboards`, {params});
         }
     },
     assignments: {
@@ -234,7 +309,7 @@ export const api = {
         }
     },
     contactForm: {
-        send: (extra: any, params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
+        send: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
             return endpoint.post(`/contact/`, params, {});
         }
     },
@@ -291,12 +366,17 @@ export const api = {
             return endpoint.get(`/gameboards/${boardId}`);
         }
     },
+    news: {
+        get: (subject: string): AxiosPromise<{results: ApiTypes.IsaacPodDTO[]; totalResults: number}> => {
+            return endpoint.get(`/pages/pods/${subject}`)
+        }
+    },
     events: {
         get: (eventId: string): AxiosPromise<ApiTypes.IsaacEventPageDTO> => {
             return endpoint.get(`/events/${eventId}`);
         },
         getEvents: (
-            startIndex: number, eventsPerPage: number, filterEventsByType: TypeFilter | null,
+            startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
             showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
             /* eslint-disable @typescript-eslint/camelcase */
@@ -320,6 +400,17 @@ export const api = {
                 Object.assign(params, {filter: eventOverviewFilter})
             }
             return endpoint.get('/events/overview', {params});
+        },
+        getEventMapData: (
+            startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
+            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
+        ): AxiosPromise<{results: AppTypes.EventMapData[]; totalResults: number}> => {
+            /* eslint-disable @typescript-eslint/camelcase */
+            return endpoint.get(`/events/map_data`, {params: {
+                start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
+                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
+            }});
+            /* eslint-enable @typescript-eslint/camelcase */
         }
     },
     eventBookings: {
@@ -353,6 +444,9 @@ export const api = {
         recordEventAttendance: (eventId: string, userId: number, attendance: ATTENDANCE) => {
             const attended = attendance === ATTENDANCE.ATTENDED;
             return endpoint.post(`/events/${eventId}/bookings/${userId}/record_attendance?attended=${attended}`);
+        },
+        getEventBookingCSV: (eventId: string) => {
+            return endpoint.get(`/events/${eventId}/bookings/download`);
         }
     },
     logger: {

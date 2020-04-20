@@ -1,6 +1,7 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID} from "./app/services/constants";
+import {AuthenticationProvider, ChoiceDTO, ContentBase, ContentSummaryDTO, ResultsWrapper, TestCaseDTO} from "./IsaacApiTypes";
+import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -19,16 +20,24 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_REQUEST}
+    | {type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS; selectedUserAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
+    | {type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_LINK_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS; provider: AuthenticationProvider; redirectUrl: string}
+    | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS; provider: AuthenticationProvider}
+    | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
 
-    | {type: ACTION_TYPE.USER_PREFERENCES_SET_FOR_ANON; userPreferences: UserPreferencesDTO}
+    | {type: ACTION_TYPE.EXAM_BOARD_SET_TEMP; examBoard: EXAM_BOARD}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST}
     | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST}
     | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS}
     | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE; errorMessage: string}
@@ -37,6 +46,9 @@ export type Action =
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.USER_PROGRESS_REQUEST}
+    | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS; progress: UserProgress}
+    | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
     | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
@@ -58,6 +70,9 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST}
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS; users: {}[]}
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.ADMIN_USER_GET_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS; getUsers: {}}
+    | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_FAILURE}
@@ -72,6 +87,18 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_STATS_REQUEST}
     | {type: ACTION_TYPE.ADMIN_STATS_RESPONSE_SUCCESS; stats: AdminStatsResponse}
     | {type: ACTION_TYPE.ADMIN_STATS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS; email: TemplateEmail}
+    | {type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST}
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS; authorisations: ApiTypes.UserSummaryWithEmailAddressDTO[]}
@@ -123,13 +150,33 @@ export type Action =
     | {type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS; id: string; doc: ApiTypes.ContentDTO}
     | {type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE; id: string}
 
-    | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO}
+    | {type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST}
+    | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
+    | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO; accordionClientId?: string}
     | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionId: string}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: ApiTypes.ChoiceDTO}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE; questionId: string; lock?: Date}
     | {type: ACTION_TYPE.QUESTION_UNLOCK; questionId: string}
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>}
+
+    | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST}
+    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; answeredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
+    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
+    | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.TEST_QUESTION_REQUEST}
+    | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS; testCaseResponses: TestCaseDTO[]}
+    | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
@@ -138,6 +185,10 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE; gameboardId: string | null}
+
+    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST}
+    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS; wildcards: ApiTypes.IsaacWildcard[]}
+    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS}
@@ -211,6 +262,10 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
 
+    | {type: ACTION_TYPE.NEWS_REQUEST}
+    | {type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS; theNews: ApiTypes.IsaacPodDTO[]}
+    | {type: ACTION_TYPE.NEWS_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.EVENTS_REQUEST}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}
@@ -220,6 +275,10 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS; eventOverviews: EventOverview[]}
     | {type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.EVENT_MAP_DATA_REQUEST}
+    | {type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS; eventMapData: EventMapData[]; total: number}
+    | {type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.EVENT_REQUEST}
     | {type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS; augmentedEvent: AugmentedEvent}
     | {type: ACTION_TYPE.EVENT_RESPONSE_FAILURE}
@@ -227,6 +286,10 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS; eventBookings: ApiTypes.EventBookingDTO[]}
     | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_SUCCESS; eventBookingCSV: any}
+    | {type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.EVENT_BOOKING_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_SUCCESS}
@@ -271,6 +334,10 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST}
+    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS; gameboardId: string}
+    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.BOARDS_GROUPS_REQUEST; board: ApiTypes.GameboardDTO}
     | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groups: {[key: string]: ApiTypes.UserGroupDTO[]}}
     | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
@@ -286,6 +353,12 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
     | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
     | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
+
+    | {type: ACTION_TYPE.CONCEPTS_REQUEST}
+    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts}
+
+    | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
 ;
 
 export type NOT_FOUND_TYPE = 404;
@@ -295,6 +368,7 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     currentAttempt?: ApiTypes.ChoiceDTO;
     canSubmit?: boolean;
     locked?: Date;
+    accordionClientId?: string;
 }
 
 export interface AppGroup extends ApiTypes.UserGroupDTO {
@@ -314,6 +388,10 @@ export interface ShortcutResponses {
     type: string;
 }
 
+export interface UserBetaFeaturePreferences {
+    SCREENREADER_HOVERTEXT?: boolean;
+}
+
 export interface UserEmailPreferences {
     NEWS_AND_UPDATES?: boolean;
     ASSIGNMENTS?: boolean;
@@ -327,12 +405,21 @@ export interface UserExamPreferences {
 
 export interface SubjectInterests {
     CS_ALEVEL?: boolean;
+    PHYSICS_GCSE?: boolean;
+    PHYSICS_ALEVEL?: boolean;
+    PHYSICS_UNI?: boolean;
+    CHEMISTRY_ALEVEL?: boolean;
+    CHEMISTRY_GCSE?: boolean;
+    CHEMISTRY_UNI?: boolean;
+    MATHS_GCSE?: boolean;
+    MATHS_ALEVEL?: boolean;
+    MATHS_UNI?: boolean;
+    ENGINEERING_UNI?: boolean;
 }
 
 export interface UserPreferencesDTO {
-    BETA_FEATURE?: string;
-    EMAIL_PREFERENCE?: UserEmailPreferences;
-    EXAM_BOARD?: UserExamPreferences;
+    BETA_FEATURE?: UserBetaFeaturePreferences;
+    EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
 }
 
@@ -345,7 +432,7 @@ export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<Api
     return choice.hasOwnProperty("frontEndValidation");
 }
 
-export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {loggedIn: false};
+export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {loggedIn: false; examBoard?: EXAM_BOARD};
 
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;
@@ -385,6 +472,7 @@ export interface Toast {
 
 export interface ActiveModal {
     closeAction?: () => void;
+    size?: string;
     title: string;
     body: any;
     buttons?: any[];
@@ -392,7 +480,9 @@ export interface ActiveModal {
 
 export enum BoardOrder {
     "created" = "created",
+    "-created" = "-created",
     "visited" = "visited",
+    "-visited" = "-visited",
     "title" = "title",
     "-title" = "-title"
 }
@@ -428,6 +518,8 @@ export interface AdminStatsResponse {
 
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
+export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string}>({id: undefined, clientId: "unknown"});
+export const QuestionContext = React.createContext<string | undefined>(undefined);
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;
@@ -467,6 +559,19 @@ export interface EventOverview {
     numberOfPlaces: number;
 }
 
+export interface EventMapData {
+    id?: string;
+    title?: string;
+    subtitle?: string;
+    date?: Date;
+    bookingDeadline?: Date;
+    status?: ApiTypes.EventStatus;
+    address?: ApiTypes.Address;
+    latitude?: number;
+    longitude?: number;
+    deadline?: Date;
+}
+
 export interface AdditionalInformation {
     jobTitle?: string;
     yearGroup?: string;
@@ -476,6 +581,15 @@ export interface AdditionalInformation {
     emergencyNumber?: string;
     authorisation?: string;
     authorisationOther?: string;
+}
+
+export interface Credentials {
+    email: string;
+    password: string;
+}
+
+export interface PaddedCredentials extends Credentials {
+    _randomPadding: string;
 }
 
 export interface ZxcvbnResult {
@@ -490,8 +604,114 @@ export interface ZxcvbnResult {
     sequence: any;
 }
 
+export interface EmailUserRoles {
+    ADMIN: boolean;
+    EVENT_MANAGER: boolean;
+    EVENT_LEADER: boolean;
+    CONTENT_EDITOR: boolean;
+    TEACHER: boolean;
+    STUDENT: boolean;
+}
+
+export interface TemplateEmail {
+    subject?: string;
+    plainText?: string;
+    html?: string;
+}
+
 export interface UserSchoolLookup {[userId: number]: School}
 
 export enum ATTENDANCE {
     ABSENT, ATTENDED
 }
+
+export interface QuestionSearchQuery {
+    searchString: string;
+    tags: string;
+    levels?: string;
+    fasttrack: boolean;
+    startIndex: number;
+    limit: number;
+}
+
+export interface QuestionSearchResponse {
+    results: ApiTypes.ContentSummaryDTO[];
+}
+
+export interface StreakRecord {
+    currentStreak?: number;
+    largestStreak?: number;
+    currentActivity?: number;
+}
+
+export interface AchievementsRecord {
+    TEACHER_ASSIGNMENTS_SET?: number;
+    TEACHER_CPD_EVENTS_ATTENDED?: number;
+    TEACHER_GROUPS_CREATED?: number;
+    TEACHER_BOOK_PAGES_SET?: number;
+    TEACHER_GAMEBOARDS_CREATED?: number;
+}
+
+export interface UserSnapshot {
+    dailyStreakRecord?: StreakRecord;
+    weeklyStreakRecord?: StreakRecord;
+    achievementsRecord?: AchievementsRecord;
+}
+
+export interface UserProgress {
+    attemptsByLevel?: LevelAttempts<number>;
+    correctByLevel?: LevelAttempts<number>;
+    totalQuestionsAttempted?: number;
+    totalQuestionsCorrect?: number;
+    totalQuestionPartsCorrect: number;
+    totalQuestionPartsAttempted?: number;
+    totalQuestionsCorrectThisAcademicYear?: number;
+    totalQuestionsAttemptedThisAcademicYear?: number;
+    totalQuestionPartsCorrectThisAcademicYear?: number;
+    totalQuestionPartsAttemptedThisAcademicYear?: number;
+    attemptsByType?: { [type: string]: number };
+    correctByType?: { [type: string]: number };
+    attemptsByTag?: { [tag: string]: number };
+    correctByTag: { [tag: string]: number };
+    userSnapshot?: UserSnapshot;
+    userDetails?: ApiTypes.UserSummaryDTO;
+}
+
+export interface PrintingSettings {
+    hintsEnabled: boolean;
+}
+
+export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
+
+export type LevelAttempts<T> = { [level in Levels]?: T; }
+
+export interface BaseTag {
+    id: TAG_ID;
+    title: string;
+    parent?: TAG_ID;
+    comingSoon?: string;
+    new?: boolean;
+}
+
+export interface Tag extends BaseTag {
+    type: TAG_LEVEL;
+    level: number;
+}
+
+export interface DocumentSubject {
+    subjectId?: string;
+}
+
+export interface Choice extends ChoiceDTO {
+    correct?: boolean;
+    explanation?: ContentBase;
+}
+
+export interface FreeTextRule extends Choice {
+    caseInsensitive?: boolean;
+    allowsAnyOrder?: boolean;
+    allowsExtraWords?: boolean;
+    allowsMisspelling?: boolean;
+}
+
+export type Concepts = ResultsWrapper<ContentSummaryDTO>;

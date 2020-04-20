@@ -1,13 +1,13 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {
+    authenticateWithTokenAfterPrompt,
     changeMyMembershipStatus,
     getActiveAuthorisations,
     getMyGroupMemberships,
     getStudentAuthorisations,
-    authenticateWithTokenAfterPrompt,
     releaseAllAuthorisationsAfterPrompt,
     releaseAuthorisationAfterPrompt,
     revokeAuthorisationAfterPrompt
@@ -87,7 +87,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
     return <RS.CardBody>
         {editingSelf && <RS.Container>
             <h3>
-                <span>Teacher Connections<span id="teacher-connections-title" className="icon-help" /></span>
+                <span>Teacher connections<span id="teacher-connections-title" className="icon-help" /></span>
                 <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your Isaac assignment progress.
                 </RS.UncontrolledTooltip>
@@ -153,10 +153,10 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                 <RS.Row>
                     <RS.Col lg={7}>
                         <h3>
-                            <span>Your Student Connections<span id="student-connections-title" className="icon-help" /></span>
+                            <span>Your student connections<span id="student-connections-title" className="icon-help" /></span>
                             <RS.UncontrolledTooltip placement="bottom" target="student-connections-title">
                                 These are the students who have shared their Isaac data with you.
-                                These students are also able to view your name and email address on their Teacher Connections page.
+                                These students are also able to view your name and email address on their Teacher connections page.
                             </RS.UncontrolledTooltip>
                         </h3>
                         <p>
@@ -212,7 +212,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                 <RS.Col>
                     <h3>
                         <span>
-                            Your Group Memberships
+                            Your group memberships
                             <span id="group-memberships-title" className="icon-help" />
                         </span>
                         <RS.UncontrolledTooltip placement="bottom" target="group-memberships-title">
@@ -229,9 +229,9 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                         <RS.Table borderless>
                             <thead>
                                 <tr>
-                                    <th className="align-middle">Group Name</th>
+                                    <th className="align-middle">Group name</th>
                                     <th className="align-middle">Teachers</th>
-                                    <th className="align-middle">Membership Status</th>
+                                    <th className="align-middle">Membership status</th>
                                     <th className="align-middle">Actions</th>
                                 </tr>
                             </thead>
@@ -256,7 +256,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                                             <RS.Button color="link" onClick={() =>
                                                 changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.INACTIVE)
                                             }>
-                                                Leave Group
+                                                Leave group
                                             </RS.Button>
                                             <span id="leave-group-action" className="icon-help" />
                                             <RS.UncontrolledTooltip placement="bottom" target="leave-group-action">
@@ -268,7 +268,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                                             <RS.Button color="link" onClick={() =>
                                                 changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.ACTIVE)
                                             }>
-                                                Rejoin Group
+                                                Rejoin group
                                             </RS.Button>
                                             <span id="rejoin-group-action" className="icon-help" />
                                             <RS.UncontrolledTooltip placement="bottom" target="rejoin-group-action">

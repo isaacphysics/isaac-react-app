@@ -29,7 +29,7 @@ const contentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
     return <tr key={index}>
         <td>
             {/* eslint-disable-next-line react/jsx-no-target-blank */}
-            <a href={EDITOR_URL + errorRecord.partialContent.canonicalSourceFile} target="_blank">
+            <a href={EDITOR_URL + errorRecord.partialContent.canonicalSourceFile} target="_blank" rel="noopener">
                 {errorRecord.partialContent.title || errorRecord.partialContent.id}
             </a>
         </td>
@@ -51,7 +51,7 @@ export const AdminContentErrorsPageComponent = ({errors, getAdminContentErrors}:
     return <Container>
         <Row>
             <Col>
-                <TitleAndBreadcrumb currentPageTitle="Content Errors" />
+                <TitleAndBreadcrumb currentPageTitle="Content errors" />
             </Col>
         </Row>
         <ShowLoading until={errors}>

@@ -3,12 +3,13 @@ import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {connect, useDispatch, useSelector} from "react-redux";
-import {adminModifyUserRoles, adminUserSearch, adminUserDelete, getUserIdSchoolLookup} from "../../state/actions";
+import {adminModifyUserRoles, adminUserDelete, adminUserSearch, getUserIdSchoolLookup} from "../../state/actions";
 import {AdminUserSearchState, AppState} from "../../state/reducers";
 import {Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
+import {Link} from "react-router-dom";
 
 const stateToProps = (state: AppState) => {
     return {
@@ -27,6 +28,7 @@ interface AdminUserMangerProps {
 
 const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, adminUserDelete, searchResults}: AdminUserMangerProps) => {
     const dispatch = useDispatch();
+    const [userUpdating, setUserUpdating] = useState(false);
     const [searchRequested, setSearchRequested] = useState(false);
     const [searchQuery, setSearchQuery] = useState({
         familyName: null,
@@ -41,8 +43,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
     const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
 
     useEffect(() => {
-        debugger;
-        if (!userIdToSchoolMapping && searchResults) {
+        if (searchResults && searchResults.length > 0) {
             dispatch(getUserIdSchoolLookup(searchResults.map((result) => result.id).filter((result) => result != undefined) as number[]));
         }
     }, [searchResults]);
@@ -88,9 +89,11 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
     const modifyUserRolesAndUpdateResults = async (role: Role) => {
         let confirmed = (role === "STUDENT") || confirmUnverifiedUserPromotions();
         if (confirmed) {
+            setUserUpdating(true);
             await adminModifyUserRoles(role, selectedUserIds);
             adminUserSearch(searchQuery);
             setSelectedUserIds([]);
+            setUserUpdating(false);
         }
     };
 
@@ -98,6 +101,10 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
         event.preventDefault();
         setSearchRequested(true);
         adminUserSearch(searchQuery);
+    };
+
+    const editUser = (userid: number | undefined) => {
+        window.open(`/account?userId=${userid}`, '_blank');
     };
 
     const deleteUser = async (userid: number | undefined) => {
@@ -117,14 +124,14 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                             <RS.FormGroup>
                                 <RS.Label htmlFor="family-name-search">Find a user by family name:</RS.Label>
                                 <RS.Input
-                                    id="family-name-search" type="text" defaultValue={searchQuery.familyName || undefined} placeholder="Wilkes"
+                                    id="family-name-search" type="text" defaultValue={searchQuery.familyName || undefined} placeholder="e.g. Wilkes"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({familyName: e.target.value})}
                                 />
                             </RS.FormGroup>
                             <RS.FormGroup>
                                 <RS.Label htmlFor="email-search">Find a user by email:</RS.Label>
                                 <RS.Input
-                                    id="email-search" type="text" defaultValue={searchQuery.email || undefined} placeholder="teacher@school.org"
+                                    id="email-search" type="text" defaultValue={searchQuery.email || undefined} placeholder="e.g. teacher@school.org"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({email: e.target.value})}
                                 />
                             </RS.FormGroup>
@@ -147,11 +154,12 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                         updateQuery({role: role !== "null" ? role : null})
                                     }}
                                 >
-                                    <option value="null">Any Role</option>
+                                    <option value="null">Any role</option>
                                     <option value="STUDENT">Student</option>
                                     <option value="TEACHER">Teacher</option>
-                                    <option value="CONTENT_EDITOR">Content Editor</option>
-                                    <option value="EVENT_ADMIN">Event Admin</option>
+                                    <option value="CONTENT_EDITOR">Content editor</option>
+                                    <option value="EVENT_LEADER">Event leader</option>
+                                    <option value="EVENT_MANAGER">Event manager</option>
                                     <option value="ADMIN">Admin</option>
                                 </RS.Input>
                             </RS.FormGroup>
@@ -160,7 +168,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                 <RS.Row>
                                     <RS.Col md={7}>
                                         <RS.Input
-                                            id="postcode-search" type="text" defaultValue={searchQuery.postcode || undefined} placeholder="CB3 0FD"
+                                            id="postcode-search" type="text" defaultValue={searchQuery.postcode || undefined} placeholder="e.g. CB3 0FD"
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({postcode: e.target.value})}
                                         />
                                     </RS.Col>
@@ -169,12 +177,12 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                             id="postcode-radius-search" type="select" defaultValue={searchQuery.postcodeRadius}
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({postcodeRadius: e.target.value})}
                                         >
-                                            <option value="FIVE_MILES">5 Miles</option>
-                                            <option value="TEN_MILES">10 Miles</option>
-                                            <option value="FIFTEEN_MILES">15 Miles</option>
-                                            <option value="TWENTY_MILES">20 Miles</option>
-                                            <option value="TWENTY_FIVE_MILES">25 Miles</option>
-                                            <option value="FIFTY_MILES">50 Miles</option>
+                                            <option value="FIVE_MILES">5 miles</option>
+                                            <option value="TEN_MILES">10 miles</option>
+                                            <option value="FIFTEEN_MILES">15 miles</option>
+                                            <option value="TWENTY_MILES">20 miles</option>
+                                            <option value="TWENTY_FIVE_MILES">25 miles</option>
+                                            <option value="FIFTY_MILES">50 miles</option>
                                         </RS.Input>
                                     </RS.Col>
                                 </RS.Row>
@@ -202,7 +210,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
         {/* Result panel */}
         <RS.Card className="my-4">
             <RS.CardTitle tag="h4" className="pl-4 pt-3 mb-0">
-                Manage Users ({searchResults && searchResults.length || 0})<br />
+                Manage users ({searchResults && searchResults.length || 0})<br />
                 Selected ({selectedUserIds.length})
             </RS.CardTitle>
 
@@ -211,10 +219,10 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                 <RS.Row className="pb-4">
                     <RS.Col>
                         <RS.UncontrolledButtonDropdown>
-                            <RS.DropdownToggle caret color="primary" outline>Modify Role</RS.DropdownToggle>
+                            <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline>Modify Role</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Promote or demote selected users to:</RS.DropdownItem>
-                                {["STUDENT", "TEACHER"].map(role =>
+                                {["STUDENT", "TEACHER", "EVENT_LEADER"].map(role =>
                                     <RS.DropdownItem
                                         key={role} disabled={selectedUserIds.length === 0}
                                         onClick={() => modifyUserRolesAndUpdateResults(role as Role)}
@@ -224,6 +232,14 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                 )}
                             </RS.DropdownMenu>
                         </RS.UncontrolledButtonDropdown>
+                    </RS.Col>
+                    <RS.Col>
+                        <Link className="btn float-right btn-secondary border-0" to={{
+                            pathname: "/admin/emails",
+                            state: {
+                                csvIDs: selectedUserIds
+                            }
+                        }}>Email</Link>
                     </RS.Col>
                 </RS.Row>
 
@@ -243,8 +259,8 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                             <th>Email</th>
                                             <th>User role</th>
                                             <th>School</th>
-                                            <th>Member since</th>
                                             <th>Verification status</th>
+                                            <th>Member since</th>
                                             <th>Last seen</th>
                                         </tr>
                                     </thead>
@@ -260,17 +276,23 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                                                         }}
                                                     />
                                                 </td>
-                                                <td>
-                                                    {/*View*/}
-                                                    {/*Edit*/}
-                                                    <RS.Input type="button" value="Delete" onClick={() => deleteUser(user.id)} className="btn btn-sm btn-secondary border-0 p-0"/>
+                                                <td className="text-center">
+                                                    <RS.Button color="secondary btn-sm m-1" tag={Link} to={`/progress/${user.id}`} target="_blank">
+                                                        View
+                                                    </RS.Button>
+                                                    <RS.Button color="secondary btn-sm m-1" onClick={() => editUser(user.id)}>
+                                                        Edit
+                                                    </RS.Button>
+                                                    <RS.Button color="secondary btn-sm m-1" onClick={() => deleteUser(user.id)}>
+                                                        Delete
+                                                    </RS.Button>
                                                 </td>
                                                 <td>{user.familyName}, {user.givenName}</td>
                                                 <td>{user.email}</td>
                                                 <td>{user.role}</td>
                                                 <td>{user.id && userIdToSchoolMapping && userIdToSchoolMapping[user.id] && userIdToSchoolMapping[user.id].name}</td>
-                                                <td><DateString>{user.registrationDate}</DateString></td>
                                                 <td>{user.emailVerificationStatus}</td>
+                                                <td><DateString>{user.registrationDate}</DateString></td>
                                                 <td><DateString>{user.lastSeen}</DateString></td>
                                             </tr>
                                         )}
@@ -284,7 +306,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                 }
             </RS.CardBody>
         </RS.Card>
-    </RS.Container>
+    </RS.Container>;
 };
 
 export const AdminUserManager = connect(stateToProps, dispatchToProps)(AdminUserManagerComponent);

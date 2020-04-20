@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
+import moment from "moment";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {EVENTS_CRUMB} from "../../services/constants";
-import {AdditionalInformation, AugmentedEvent} from "../../../IsaacAppTypes";
+import {EVENTS_CRUMB, NOT_FOUND} from "../../services/constants";
+import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {addMyselfToWaitingList, bookMyselfOnEvent, cancelMyBooking, getEvent, showToast} from "../../state/actions";
-import {DateString} from "../elements/DateString";
+import {DateString, TIME_ONLY} from "../elements/DateString";
 import {IsaacContent} from "../content/IsaacContent";
 import {Link} from "react-router-dom";
 import {EventBookingForm} from "../elements/EventBookingForm";
@@ -15,7 +16,13 @@ import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
-import {isTeacher} from "../../services/user";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isStaff, isTeacher} from "../../services/user";
+
+
+function formatDate(date: Date|number) {
+    return moment(date).format("YYYYMMDD[T]HHmmss");
+}
 
 interface EventDetailsProps {
     match: {params: {eventId: string}};
@@ -38,7 +45,24 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
         history.push("/login");
     }
 
-    return <ShowLoading until={event} render={(event: AugmentedEvent) => {
+    function googleCalendarTemplate() {
+        if (event && event !== NOT_FOUND) {
+            // https://calendar.google.com/calendar/event?action=TEMPLATE&text=[event_name]&dates=[start_date as YYYYMMDDTHHMMSS or YYYYMMDD]/[end_date as YYYYMMDDTHHMMSS or YYYYMMDD]&details=[extra_info]&location=[full_address_here]
+            const address = event.location && event.location.address ? [event.location.address.addressLine1, event.location.address.addressLine2, event.location.address.town, event.location.address.county, event.location.address.postalCode, event.location.address.country] : [];
+
+            const calendarTemplateUrl = [
+                "https://calendar.google.com/calendar/event?action=TEMPLATE",
+                event.title && "text=" + encodeURI(event.title),
+                event.date && "dates=" + encodeURI(formatDate(event.date)) + (event.endDate ? '/' + encodeURI(formatDate(event.endDate)) : ""),
+                event.subtitle && "details=" + encodeURI(event.subtitle),
+                "location=" + encodeURI(address.filter(s => !!s).join(', '))
+            ];
+
+            window.open(calendarTemplateUrl.filter(s => !!s).join('&'), '_blank');
+        }
+    }
+
+    return <ShowLoading until={event} thenRender={event => {
         const userIsNotAStudent = user && user.loggedIn && user.role !== "STUDENT";
         const isStudentEvent = event.tags !== undefined && event.tags.indexOf('student') != -1;
         const canMakeABooking = event.withinBookingDeadline && event.eventStatus != 'WAITING_LIST_ONLY' && (atLeastOne(event.placesAvailable) || (isStudentEvent && userIsNotAStudent));
@@ -84,7 +108,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                         </RS.Col>
                         <RS.Col lg={8} className={event.expired ? "expired" : ""}>
                             {/* TODO Student/Teacher/Virtual icon */}
-                            {/* TODO add to calendar import if staff user - <a ng-click="googleCalendarTemplate()" ng-if="isStaffUser"><span className="calendar-img" alt="Add to Google Calendar">Add to Calendar</span></a>*/}
+                            {isStaff(user) && <RS.Button color="link" onClick={googleCalendarTemplate} className="calendar-img mx-2" title="Add to Google Calendar">Add to Calendar</RS.Button>}
 
                             {/* Key event info */}
                             <RS.Table borderless className="event-key-info mb-4">
@@ -96,8 +120,10 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     <tr>
                                         <td>When:</td>
                                         <td>
-                                            <><DateString>{event.date}</DateString> {event.date != event.endDate && <span> &#8212; </span>}</>
-                                            {event.date != event.endDate && <><DateString>{event.endDate}</DateString></>}{/* TODO short dates if not multiDay would be nice here */}
+                                            {event.multiDay ?
+                                                <><DateString>{event.date}</DateString>{" — "}<DateString>{event.endDate}</DateString></> :
+                                                <><DateString>{event.date}</DateString>{" — "}<DateString formatter={TIME_ONLY}>{event.endDate}</DateString></>
+                                            }
                                             {event.expired && <div className="alert-danger text-center">This event is in the past.</div>}
                                         </td>
                                     </tr>
@@ -120,7 +146,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             {user && user.loggedIn && user.email && event.userOnWaitList && <span> - You are on the waiting list for this event.</span>}
                                         </td>
                                     </tr>}
-                                    {event.bookingDeadline && <tr>
+                                    {SITE_SUBJECT == SITE.PHY && event.bookingDeadline && <tr>
                                         <td>Booking Deadline:</td>
                                         <td>
                                             <DateString>{event.bookingDeadline}</DateString>
@@ -150,12 +176,14 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                     <small>
                                                         By requesting to book on this event, you are granting event organisers access to the information provided in the form above.
                                                         You are also giving them permission to set you pre-event work and view your progress.
-                                                        You can manage access to your progress data in your <a href="/account#teacherconnections" target="_blank">account settings</a>.
+                                                        You can manage access to your progress data in your <Link to="/account#teacherconnections" target="_blank">account settings</Link>.
+                                                        <br />
+                                                        Your data will be processed in accordance with Isaac Computer Science&apos;s <Link to="/privacy" target="_blank">privacy policy</Link>.
                                                     </small>
                                                 </p>}
 
-                                                {atLeastOne(event.numberOfPlaces) && !event.userBooked && (canMakeABooking || canBeAddedToWaitingList) && <div>
-                                                    <RS.Input type="submit" value={submissionTitle} className="btn btn-secondary btn-xl border-0 w-auto" />
+                                                {atLeastOne(event.numberOfPlaces) && !event.userBooked && (canMakeABooking || canBeAddedToWaitingList) && <div className="text-center mt-4 mb-2">
+                                                    <RS.Input type="submit" value={submissionTitle} className="btn btn-xl btn-secondary border-0" />
                                                 </div>}
                                             </div>
                                         </RS.Form>
@@ -176,10 +204,10 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
                                 {/* Options for logged-in users */}
                                 {user && user.loggedIn && <span>
-                                    {event.eventStatus != 'CLOSED' && !event.expired && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && event.withinBookingDeadline && <RS.Button
+                                    {event.eventStatus != 'CLOSED' && !event.expired && !bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
                                         onClick={() => {setBookingFormOpen(true)}}
                                     >
-                                        Open booking form
+                                        Book a place
                                     </RS.Button>}
                                     {bookingFormOpen && !(event.userBooked || event.userOnWaitList) && <RS.Button
                                         color="primary" outline onClick={() => {setBookingFormOpen(false)}}

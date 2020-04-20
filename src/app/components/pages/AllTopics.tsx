@@ -1,10 +1,10 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {Badge, Col, Container, Row} from "reactstrap";
-import "../../services/tags";
-import * as Tags from "../../services/tags";
-import {Tag} from "../../services/tags";
+import "../../services/tagsPhy";
+import tags from "../../services/tags";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {Tag} from "../../../IsaacAppTypes";
 
 export const AllTopics = () => {
 
@@ -33,14 +33,14 @@ export const AllTopics = () => {
 
             <Row>
                 <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
-                    {Tags.allCategoryTags.map((category) => {
-                        const categoryDescendentIds = Tags.getDescendents(category.id).map(t => t.id);
-                        const subcategoryTags = Tags.getAllSubcategoryTags(categoryDescendentIds);
+                    {tags.allCategoryTags.map((category) => {
+                        const categoryDescendentIds = tags.getDescendents(category.id).map(t => t.id);
+                        const subcategoryTags = tags.getSubcategoryTags(categoryDescendentIds);
                         return <Col key={category.id} md={6}>
                             <h2>{category.title}</h2>
                             {subcategoryTags.map((subcategory) => {
-                                const subcategoryDescendentIds = Tags.getDescendents(subcategory.id).map(t => t.id);
-                                const topicTags = Tags.getAllTopicTags(subcategoryDescendentIds);
+                                const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
+                                const topicTags = tags.getTopicTags(subcategoryDescendentIds);
                                 return <React.Fragment key={subcategory.id}>
                                     <h3>{subcategory.title}</h3>
                                     <ul className="list-unstyled mb-3 link-list">

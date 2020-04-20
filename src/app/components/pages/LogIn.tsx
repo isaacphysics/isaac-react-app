@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
-import {Button, Card, CardBody, Col, Container, Form, FormGroup, FormFeedback, Input, Row, Label} from "reactstrap";
-import {handleProviderLoginRedirect} from "../../state/actions";
-import {logInUser, resetPassword} from "../../state/actions";
+import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {handleProviderLoginRedirect, logInUser, resetPassword} from "../../state/actions";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {history} from "../../services/history";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {Credentials, LoggedInUser} from "../../../IsaacAppTypes";
 import {Redirect} from "react-router";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null,
@@ -23,14 +23,14 @@ const dispatchToProps = {
 interface LogInPageProps {
     user: LoggedInUser | null;
     handleProviderLoginRedirect: (provider: AuthenticationProvider) => void;
-    logInUser: (provider: AuthenticationProvider, params: {email: string; password: string}) => void;
+    logInUser: (provider: AuthenticationProvider, credentials: Credentials) => void;
     resetPassword: (params: {email: string}) => void;
     errorMessage: string | null;
 }
 
 const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, resetPassword, errorMessage}: LogInPageProps) => {
     useEffect( () => {
-        document.title = "Login — Isaac Computer Science";
+        document.title = "Login — Isaac " + SITE_SUBJECT_TITLE;
     }, []);
 
     const [email, setEmail] = useState("");
@@ -38,7 +38,7 @@ const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, reset
     const [logInAttempted, setLoginAttempted] = useState(false);
 
     const isValidEmail = email.length > 0 && email.includes("@");
-    const isValidPassword = password.length > 5;
+    const isValidPassword = password.length > 0;
 
     const [passwordResetAttempted, setPasswordResetAttempted] = useState(false);
     const [passwordResetRequest, setPasswordResetRequest] = useState(false);

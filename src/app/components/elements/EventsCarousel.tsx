@@ -16,8 +16,8 @@ export const EventsCarousel = () => {
         return function cleanUp() { dispatch(clearEventsList); }
     }, []);
 
-    return <ShowLoading until={eventsState} render={({events, total}) => <div className="events-carousel">
-        <ResponsiveCarousel>
+    return <ShowLoading until={eventsState} thenRender={({events, total}) => <div className="events-carousel">
+        <ResponsiveCarousel groupingLimit={3}>
             {events.map((event, index) => <EventCard event={event} pod key={index} />)}
         </ResponsiveCarousel>
     </div>} />

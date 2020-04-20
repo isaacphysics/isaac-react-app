@@ -1,9 +1,19 @@
 {
   "name": "isaac-cs-app",
-  "version": "1.0.6-SNAPSHOT",
+  "version": "1.2.1-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@babel/core": "7.2.2",
+    "@babel/plugin-proposal-class-properties": "7.7.4",
+    "@babel/plugin-transform-arrow-functions": "7.7.4",
+    "@babel/plugin-transform-modules-commonjs": "7.7.5",
+    "@babel/plugin-transform-runtime": "7.7.6",
+    "@babel/polyfill": "7.7.0",
+    "@babel/preset-env": "7.7.7",
+    "@babel/preset-react": "7.7.4",
+    "@babel/preset-typescript": "7.7.7",
+    "@babel/runtime": "7.7.7",
+    "@react-google-maps/api": "^1.8.1",
     "@svgr/webpack": "^4.2.0",
     "@types/classnames": "^2.2.6",
     "@types/enzyme": "^3.9.1",
@@ -17,11 +27,13 @@
     "@types/react-redux": "^7.1.0",
     "@types/react-router": "5.0.0",
     "@types/react-router-dom": "^4.3.4",
+    "@types/react-select": "^3.0.6",
     "@types/reactstrap": "^8.0.1",
     "@types/redux-logger": "3.0.7",
     "@types/remarkable": "1.7.3",
     "@types/seedrandom": "^2.4.28",
     "@types/store": "^2.0.1",
+    "@types/uuid": "^3.4.6",
     "@typescript-eslint/eslint-plugin": "^1.6.0",
     "axios": "^0.19.0",
     "babel-core": "7.0.0-bridge.0",
@@ -31,11 +43,13 @@
     "babel-plugin-named-asset-import": "^0.3.1",
     "babel-preset-react-app": "^7.0.2",
     "bfj": "6.1.1",
+    "billboard.js": "^1.11.0",
     "bootstrap": "^4.3.1",
     "bootstrap-block-grid": "^1.1.7",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "classnames": "^2.2.6",
-    "core-js": "^3.0.1",
+    "copy-webpack-plugin": "^5.1.1",
+    "core-js": "3.6.2",
     "css-loader": "1.0.0",
     "dotenv": "6.0.0",
     "dotenv-expand": "4.2.0",
@@ -53,18 +67,20 @@
     "history": "^4.9.0",
     "html-webpack-plugin": "4.0.0-alpha.2",
     "identity-obj-proxy": "3.0.0",
-    "inequality": "^0.9.16",
-    "inequality-grammar": "^0.9.2",
+    "inequality": "^0.9.20",
+    "inequality-grammar": "^0.9.10",
     "jest": "^24.7.1",
     "jest-pnp-resolver": "1.0.2",
     "jest-resolve": "23.6.0",
     "jest-watch-typeahead": "^0.2.1",
     "js-cookie": "^2.2.0",
-    "katex": "^0.10.1",
+    "katex": "^0.11.1",
     "lodash": "^4.17.15",
     "math-random-seed": "^2.0.0",
-    "mini-css-extract-plugin": "0.5.0",
-    "node-sass": "^4.11.0",
+    "mini-css-extract-plugin": "0.8.0",
+    "moment": "^2.24.0",
+    "node-sass": "^4.13.1",
+    "npm-overlapping-marker-spiderfier": "^1.0.3",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.2.1",
     "postcss-flexbugs-fixes": "4.1.0",
@@ -80,28 +96,45 @@
     "react-ga": "^2.5.7",
     "react-redux": "^7.1.0",
     "react-router-dom": "5.0.0",
+    "react-select": "^3.0.6",
     "react-sortable-hoc": "^1.9.1",
     "reactstrap": "^8.0.1",
     "redux": "4.0.1",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.3.0",
+    "regenerator-runtime": "^0.13.5",
     "remarkable": "^1.7.4",
     "resolve": "1.10.0",
     "sass-loader": "7.1.0",
+    "string.prototype.matchall": "^4.0.0",
     "style-loader": "0.23.1",
-    "terser-webpack-plugin": "1.2.2",
+    "terser-webpack-plugin": "^2.3.1",
     "transfer-webpack-plugin": "^0.1.4",
-    "typescript": "3.3.3333",
+    "ts-jest": "24.3.0",
+    "ts-loader": "6.2.0",
+    "typescript": "^3.8.3",
     "url-loader": "1.1.2",
-    "webpack": "4.28.3",
-    "webpack-dev-server": "3.1.14",
-    "webpack-manifest-plugin": "2.0.4",
+    "uuid": "^3.3.3",
+    "webpack": "4.41.2",
+    "webpack-cli": "3.3.9",
+    "webpack-dev-server": "3.8.2",
+    "webpack-manifest-plugin": "2.2.0",
+    "webpack-merge": "4.2.2",
     "workbox-webpack-plugin": "3.6.3"
   },
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
+    "build-phy": "webpack --env prod --config config/webpack.config.physics.js",
+    "build-cs": "webpack --env prod --config config/webpack.config.cs.js",
+    "build-phy-dev": "webpack --config config/webpack.config.physics.js",
+    "build-cs-dev": "webpack --config config/webpack.config.cs.js",
+    "start-phy": "webpack-dev-server --hot --port 8004 --history-api-fallback --config config/webpack.config.physics.js --disableHostCheck=true",
+    "start-cs": "webpack-dev-server --hot --port 8003 --history-api-fallback --config config/webpack.config.cs.js --disableHostCheck=true",
+    "test": "npm run test-phy && npm run test-cs",
+    "test-phy": "jest --config config/jest/jest.config.physics.js",
+    "test-cs": "jest --config config/jest/jest.config.cs.js",
+    "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
     "analyse-bundle": "npm run build -- --stats && webpack-bundle-analyzer build/bundle-stats.json build"
   },
   "eslintConfig": {
@@ -120,7 +153,8 @@
     "rules": {
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
-      "@typescript-eslint/explicit-function-return-type": "off"
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/no-empty-interface": "warn"
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -143,66 +177,12 @@
     "@types/redux-mock-store": "^1.0.0",
     "@typescript-eslint/parser": "^1.13.0",
     "axios-mock-adapter": "^1.16.0",
+    "clean-webpack-plugin": "^3.0.0",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.11.2",
     "jest-environment-enzyme": "^7.0.2",
     "jest-enzyme": "^7.0.2",
     "redux-mock-store": "^1.5.3",
     "webpack-bundle-analyzer": "^3.3.2"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "resolver": "jest-pnp-resolver",
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [
-      "jest-enzyme"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/*.test.(js|jsx|ts|tsx)"
-    ],
-    "testEnvironment": "enzyme",
-    "testURL": "http://localhost",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ],
-    "watchPlugins": [
-      "<rootDir>/node_modules/jest-watch-typeahead/filename.js",
-      "<rootDir>/node_modules/jest-watch-typeahead/testname.js"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
   }
 }

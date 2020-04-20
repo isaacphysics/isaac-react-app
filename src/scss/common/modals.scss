@@ -1,0 +1,70 @@
+// Isaac
+
+.modal-content {
+  max-width: none !important;
+}
+
+// NOMENSA modal.scss
+
+.modal-content {
+  border-radius: 0;
+  max-width: 459px;
+
+  .modal-footer,
+  .modal-header {
+    border-width: 0;
+  }
+
+  .modal-header {
+    padding-left: 1.875rem;
+
+    button {
+      &.close {
+        color: $black;
+        font-family: $secondary-font-medium;
+        font-size: 1rem;
+        font-weight: 400;
+        opacity: 1;
+        text-decoration: underline;
+        text-transform: uppercase;
+      }
+    }
+
+    .modal-title {
+      font-family: $secondary-font-semi-bold;
+      font-size: 2.125rem;
+      font-weight: 600;
+      margin-top: 2.3rem;
+    }
+  }
+
+  .modal-body {
+    overflow: auto;
+  }
+
+  .modal-footer {
+    @include respond-below(sm) {
+      button, a {
+        font-family: $secondary-font-medium;
+        margin: 0 0.25rem 1rem;
+
+        + button, +a {
+          margin: 0 0 1rem;
+        }
+      }
+    }
+  }
+
+  .book-link {
+    text-decoration: underline;
+    background-color: transparent;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .jumbotron {
+    padding: 1.5rem;
+  }
+}

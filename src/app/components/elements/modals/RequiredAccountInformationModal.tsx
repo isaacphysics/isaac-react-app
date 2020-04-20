@@ -8,6 +8,7 @@ import {AppState} from "../../../state/reducers";
 import {
     allRequiredInformationIsPresent,
     validateEmailPreferences,
+    validateExamBoard,
     validateSubjectInterests,
     validateUserGender,
     validateUserSchool
@@ -17,6 +18,8 @@ import {isLoggedIn} from "../../../services/user";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
+import {EXAM_BOARD} from "../../../services/constants";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -53,43 +56,70 @@ const RequiredAccountInfoBody = () => {
         }
     }
 
-    const allUserFieldsAreValid = validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateSubjectInterests(initialSubjectInterestsValue);
+    const allUserFieldsAreValid = SITE_SUBJECT !== SITE.CS ||
+        validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) &&
+        validateExamBoard(initialUserValue) && validateSubjectInterests(initialSubjectInterestsValue);
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
             <div className="text-muted small pb-2">
                 Providing a few extra pieces of information helps us understand the usage of Isaac Computer Science across the UK and beyond.
-                Full details on how we use your personal information can be found in our <a target="_" href="/privacy">Privacy Policy</a>.
+                Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
             </div>
             <div className="text-right text-muted required-before">
                 Required
             </div>
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {!(validateSubjectInterests(initialSubjectInterestsValue) && validateUserGender(initialUserValue)) && <RS.Col>
+                {!(validateUserGender(initialUserValue) && validateExamBoard(initialUserValue)) && <RS.Col>
                     {!validateUserGender(initialUserValue) && <div>
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                             submissionAttempted={submissionAttempted} idPrefix="modal"
+                            required
                         />
                     </div>}
-                    {!validateSubjectInterests(initialSubjectInterestsValue) && <div>
-                        <StudyingCsInput
-                            subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
-                            submissionAttempted={submissionAttempted} idPrefix="modal-"
-                        />
+                    {!validateExamBoard(initialUserValue) && <div>
+                        <RS.FormGroup>
+                            <RS.Label className="d-inline-block pr-2 form-required" htmlFor="exam-board-select">
+                                Exam board
+                            </RS.Label>
+                            <RS.Input
+                                type="select" name="select" id="exam-board-select"
+                                value={userToUpdate.examBoard} invalid={submissionAttempted && !validateExamBoard(userToUpdate)}
+                                onChange={event => setUserToUpdate(Object.assign({}, userToUpdate, {examBoard: event.target.value}))}
+                            >
+                                <option value={undefined} />
+                                <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
+                                <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
+                                <option value={EXAM_BOARD.OTHER}>Other</option>
+                            </RS.Input>
+                        </RS.FormGroup>
                     </div>}
                 </RS.Col>}
                 {!validateUserSchool(initialUserValue) && <RS.Col>
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
+                        required
                     />
                 </RS.Col>}
             </RS.Row>
+            {!validateSubjectInterests(initialSubjectInterestsValue) && <RS.Row className="d-flex flex-wrap my-1">
+                <RS.Col>
+                    <div>
+                        <StudyingCsInput
+                            subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
+                            submissionAttempted={submissionAttempted} idPrefix="modal-"
+                        />
+                    </div>
+                </RS.Col>
+            </RS.Row>}
         </RS.CardBody>}
 
-        {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <hr className="text-center" />}
+        {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <RS.CardBody>
+            <hr className="text-center" />
+        </RS.CardBody>}
 
         {!validateEmailPreferences(initialEmailPreferencesValue) && <div>
             <UserEmailPreference
@@ -104,12 +134,14 @@ const RequiredAccountInfoBody = () => {
             </h4>
         </div>}
 
-        <RS.Row className="text-center border-top p-3 p-sm-4">
-            <RS.Col md={{size: 6, offset: 3}}>
-                <RS.Input value={isMobile() ? "Update" : "Update account"} type="submit" className="btn btn-secondary border-0 px-0 px-md-2 my-1" />
-            </RS.Col>
-        </RS.Row>
-    </RS.Form>
+        <RS.CardBody className="py-0">
+            <RS.Row className="text-center pb-3">
+                <RS.Col md={{size: 6, offset: 3}}>
+                    <RS.Input type="submit" value={isMobile() ? "Update" : "Update account"} className="btn btn-secondary border-0 px-0 px-md-2 my-1" />
+                </RS.Col>
+            </RS.Row>
+        </RS.CardBody>
+    </RS.Form>;
 };
 
 export const requiredAccountInformationModal = {

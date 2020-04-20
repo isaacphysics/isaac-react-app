@@ -1,10 +1,13 @@
-import React from "react";
+import React, {useContext} from "react";
 import katex from "katex";
-import '../../services/mhchem';
+import 'katex/dist/contrib/mhchem.js';
+import renderA11yString from '../../services/katex-a11y';
 import he from "he";
-import {UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {LoggedInUser, FigureNumberingContext, FigureNumbersById} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
-import {connect} from "react-redux";
+import {useSelector} from "react-redux";
+import {EXAM_BOARD} from "../../services/constants";
+import {useCurrentExamBoard} from "../../services/examBoard";
 
 type MathJaxMacro = string|[string, number];
 
@@ -35,12 +38,12 @@ const BaseMacros: {[key: string]: MathJaxMacro} = {
 const BooleanLogicMathsMacros: {[key: string]: MathJaxMacro} = {
     "true": "\\boldsymbol{\\rm{T}}",
     "false": "\\boldsymbol{\\rm{F}}",
-    "and": ["{#1} \\wedge {#2}", 2],
+    "and": ["{#1} \\land {#2}", 2],
     "or": ["{#1} \\lor {#2}", 2],
     "not": ["\\lnot{#1}", 1],
     "bracketnot": ["\\lnot{(#1)}", 1],
     "xor": ["{#1} \\veebar {#2}", 2],
-    "equivalent": "\\equiv"
+    "equivalent": "=", // Fall back to equals rather than the more correct "\\equiv"
 };
 const BooleanLogicEngineeringMacros: {[key: string]: MathJaxMacro} = {
     "and" : ["{#1} \\cdot {#2}", 2],
@@ -76,6 +79,7 @@ const KatexOptions = {
     throwOnError: false,
     strict: false,
     colorIsTextColor: true,
+    output: "html"
 };
 
 function patternQuote(s: string) {
@@ -194,11 +198,28 @@ function munge(latex: string) {
         .replace(/\\newline/g, "\\\\");
 }
 
-export function katexify(html: string, userPreferences: UserPreferencesDTO | null) {
+const REF = "==REF==yzskvUeunVc==";
+const ENDREF = "==ENDREF==";
+const REF_REGEXP = new RegExp(REF + "(.*?)" + ENDREF, "g");
+const SR_REF_REGEXP = new RegExp("start text, " + REF_REGEXP.source + ", end text,", "g");
+
+export function katexify(html: string, user: LoggedInUser | null, examBoard: EXAM_BOARD | null, screenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
     let index = 0;
+
+    function createReference(ref: string | null, ifMissing: string, format: boolean = true) {
+        if (ref) {
+            const number = figureNumbers[ref];
+            if (number) {
+                const figure = `Figure&nbsp;${number}`;
+                return format ? `<strong class="text-secondary">${figure}</strong>` : figure;
+            }
+        }
+        return ifMissing;
+    }
+
     while ((match = start.exec(html)) !== null) {
         output += html.substring(index, match.index);
         index = match.index;
@@ -218,11 +239,42 @@ export function katexify(html: string, userPreferences: UserPreferencesDTO | nul
                 const latexUnEntitied = he.decode(latex);
                 const latexMunged = munge(latexUnEntitied);
                 let macrosToUse = KatexMacrosWithMathsBool;
-                if (userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA) {
+                if (examBoard == EXAM_BOARD.AQA) {
                     macrosToUse = KatexMacrosWithEngineeringBool;
                 }
-                output += katex.renderToString(latexMunged,
-                    {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse});
+                macrosToUse = {...macrosToUse, "\\ref": (context: {consumeArgs: (n: number) => {text: string}[][]}) => {
+                    const args = context.consumeArgs(1);
+                    const reference = args[0].reverse().map((t: {text: string}) => t.text).join("");
+                    return "\\text{" + REF + reference + ENDREF + "}";
+                }};
+                let katexOptions = {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse};
+                let katexRenderResult = katex.renderToString(latexMunged, katexOptions);
+                katexRenderResult = katexRenderResult.replace(REF_REGEXP, (_, match) => {
+                    return createReference(match, "unknown reference " + match);
+                });
+
+                let screenreaderText;
+                try {
+                    let pauseChars = katexOptions.displayMode ? ". &nbsp;" : ",";  // trailing comma/full-stop for pause in speaking
+                    screenreaderText = `${renderA11yString(latexMunged, katexOptions)}${pauseChars}`;
+                    screenreaderText = screenreaderText.replace(SR_REF_REGEXP, (_, match) => {
+                        return createReference(match, "unknown reference " + match, false);
+                    });
+                } catch (e) {
+                    // eslint-disable-next-line no-console
+                    console.warn(`Unsupported equation for screenreader text: '${latexMunged}'`, e);
+                    screenreaderText = "[[Unsupported equation]]";
+                }
+                katexRenderResult = katexRenderResult.replace('<span class="katex">',
+                    `<span class="katex"><span class="sr-only">${screenreaderText}</span>`);
+
+                if (screenReaderHoverText) {
+                    katexRenderResult = katexRenderResult.replace('<span class="katex">',
+                        `<span class="katex" title="${screenreaderText.replace(/,/g, "").replace(/\s\s+/g, " ")}">`);
+                }
+
+                output += katexRenderResult;
+
                 index = match.index + match[0].length;
             } else {
                 // Unmatched start, so output the start and continue searching from after it.
@@ -231,7 +283,10 @@ export function katexify(html: string, userPreferences: UserPreferencesDTO | nul
             }
         } else {
             // It's a ref
-            output += match[0];
+            const ref = match[0].match(/ref\{([^}]*)\}/);
+            const result = createReference(ref && ref[1], "unknown reference " + match[0]);
+
+            output += result;
             index = match.index + match[0].length;
         }
         start.lastIndex = index;
@@ -267,23 +322,16 @@ function manipulateHtml(html: string) {
     return htmlDom.innerHTML;
 }
 
-const stateToProps = (state: AppState) => ({
-    userPreferences: state ? state.userPreferences : null
-});
+export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
+    const user = useSelector((state: AppState) => state && state.user || null);
+    const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
+        state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
+    const examBoard = useCurrentExamBoard();
 
-interface TrustedHtmlProps {
-    html: string;
-    span?: boolean;
-    userPreferences: UserPreferencesDTO | null;
-}
+    const figureNumbers = useContext(FigureNumberingContext);
 
-let TrustedHtmlComponent = ({html, span, userPreferences}: TrustedHtmlProps) => {
-    html = manipulateHtml(katexify(html, userPreferences));
-    if (span) {
-        return <span dangerouslySetInnerHTML={{__html: html}} />;
-    } else {
-        return <div dangerouslySetInnerHTML={{__html: html}} />;
-    }
+    html = manipulateHtml(katexify(html, user, examBoard, screenReaderHoverText, figureNumbers));
+
+    const ElementType = span ? "span" : "div";
+    return <ElementType dangerouslySetInnerHTML={{__html: html}} />;
 };
-
-export const TrustedHtml = connect(stateToProps)(TrustedHtmlComponent);

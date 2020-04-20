@@ -1,32 +1,30 @@
 import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {
-    Container,
-    Row,
+    Button,
     Col,
-    UncontrolledButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
+    Container,
     DropdownItem,
-    Label, Spinner, Button
+    DropdownMenu,
+    DropdownToggle,
+    Label,
+    Row,
+    Spinner,
+    UncontrolledButtonDropdown
 } from "reactstrap"
-import {
-    loadGroups,
-    loadAssignmentsOwnedByMe,
-    loadBoard,
-    loadProgress,
-    openActiveModal
-} from "../../state/actions";
+import {loadAssignmentsOwnedByMe, loadBoard, loadGroups, loadProgress, openActiveModal} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {sortBy, orderBy} from "lodash";
-import {AppGroup, AppAssignmentProgress, ActiveModal} from "../../../IsaacAppTypes";
+import {orderBy, sortBy} from "lodash";
+import {ActiveModal, AppAssignmentProgress, AppGroup} from "../../../IsaacAppTypes";
 import {groups} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {API_PATH, DATE_FORMATTER} from "../../services/constants";
+import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
+import {formatDate} from "../elements/DateString";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 const stateFromProps = (state: AppState) => {
     if (state != null) {
@@ -125,12 +123,6 @@ type ProgressDetailsProps = AssignmentDetailsProps & {
 };
 
 const passMark = 0.75;
-
-function formatDate(date: number | Date | undefined) {
-    if (!date) return "Unknown";
-    const dateObject = new Date(date);
-    return DATE_FORMATTER.format(dateObject);
-}
 
 function formatMark(numerator: number, denominator: number, formatAsPercentage: boolean) {
     let result;
@@ -350,8 +342,10 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
                         {sortedProgress.map((studentProgress) => {
                             const fullAccess = studentProgress.user.authorisedFullAccess;
                             return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " revoked"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
-                                <th className="student-name">{studentProgress.user.givenName}<span
-                                    className="d-none d-lg-inline"> {studentProgress.user.familyName}</span></th>
+                                <th className="student-name">
+                                    {studentProgress.user.givenName}
+                                    <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                </th>
                                 {questions.map((q, index) =>
                                     <td key={q.id} className={markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestion(index)}>
                                         {fullAccess ? formatMark(studentProgress.correctPartResults[index],
@@ -411,9 +405,9 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
 
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
         <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
-            <div className="gameboard-title align-items-center">
+            <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
                 <span>{assignment.gameboard.title}{assignment.dueDate && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(assignment.dueDate)})</span>}</span>
-            </div>
+            </Button>
             <div className="gameboard-links align-items-center">
                 <Button color="link">{isExpanded ? "Hide " : "View "} <span className="d-none d-md-inline">mark sheet</span></Button>
                 <span className="d-none d-md-inline">or</span>
@@ -504,8 +498,11 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
             <div className="group-name"><span className="icon-group"/><span>{group.groupName}</span></div>
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
-            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" onClick={openGroupDownloadLink}>(Download Group CSV)</a></div>
-            <div className="pr-2 pl-3"><img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" /></div>
+            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openGroupDownloadLink}>(Download Group CSV)</a></div>
+            <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
+                <img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" />
+                <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
+            </Button>
         </div>
         {isExpanded && <GroupDetails {...props} />}
     </React.Fragment>;
@@ -540,12 +537,16 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
 
     return <React.Fragment>
         <Container>
-            <TitleAndBreadcrumb currentPageTitle="Assignment progress" subTitle="Track your class performance" intermediateCrumbs={[{title: "For teachers", to: "#"}]} help="Click on your groups to see the assignments you have set. View your students' progress by question." />
+            <TitleAndBreadcrumb
+                currentPageTitle={{[SITE.PHY]: "Assignment Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
+                subTitle="Track your class performance"
+                help="Click on your groups to see the assignments you have set. View your students' progress by question."
+            />
             <Row className="align-items-center d-none d-md-flex">
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">
-                        <DropdownToggle color="tertiary" caret>
+                        <DropdownToggle color="tertiary" className="border" caret>
                             {sortOrder}
                         </DropdownToggle>
                         <DropdownMenu>

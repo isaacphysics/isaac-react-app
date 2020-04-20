@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {ReactNode, useMemo, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
@@ -38,29 +38,25 @@ export const Tabs = (props: TabsProps) => {
         }
     }
 
-    const tabTitles = children && Object.keys(children);
-    const specialCaseExamBoardTab = tabTitles.length === 2 &&
-        tabTitles.includes("AQA") && tabTitles.includes("OCR");
-
     return <div className={className}>
-        {!specialCaseExamBoardTab && <Nav tabs>
+        <Nav tabs>
             {Object.keys(tabs).map((tabTitle, mapIndex) => {
                 const tabIndex = mapIndex + 1;
                 const c = callOrString(tabTitleClass, tabTitle, tabIndex);
                 const classes = activeTab === tabIndex ? `${c} active` : c;
                 return <NavItem key={tabTitle} className="px-3 text-center">
-                    <NavLink tag="button" className={classes} disabled={tabIndex == activeTab} onClick={() => changeTab(tabIndex)}>
+                    <NavLink tag="button" tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}>
                         {tabTitle}
                     </NavLink>
                 </NavItem>;
             })}
-        </Nav>}
+        </Nav>
 
-        <TabContent activeTab={activeTab} className={!specialCaseExamBoardTab ? tabContentClass : ""}>
+        <TabContent activeTab={activeTab} className={tabContentClass}>
             {Object.entries(tabs).map(([tabTitle, tabBody], mapIndex) => {
                 const tabIndex = mapIndex + 1;
                 return <TabPane key={tabTitle} tabId={tabIndex}>
-                    {tabBody}
+                    {tabBody as ReactNode}
                 </TabPane>;
             })}
         </TabContent>

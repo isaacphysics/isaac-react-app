@@ -1,9 +1,5 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from "react";
-import {connect} from "react-redux";
-import {Link} from "react-router-dom";
-import {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast} from "../../state/actions";
-import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState, Boards} from "../../state/reducers";
+import React, {ChangeEvent, useEffect, useState} from "react";
+import * as RS from "reactstrap";
 import {
     Alert,
     Button,
@@ -19,15 +15,31 @@ import {
     Row,
     Spinner,
     UncontrolledTooltip
-} from 'reactstrap';
+} from "reactstrap";
+import {Link, withRouter} from "react-router-dom";
+import {
+    assignBoard,
+    deleteBoard,
+    loadBoards,
+    loadGroups,
+    loadGroupsForBoard,
+    openIsaacBooksModal,
+    showToast,
+    unassignBoard
+} from "../../state/actions";
+import {ShowLoading} from "../handlers/ShowLoading";
+import {AppState, Boards} from "../../state/reducers";
 import {ActualBoardLimit, AppGameBoard, BoardOrder, Toast} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {boards, groups} from "../../state/selectors";
-import {sortBy, range} from "lodash";
+import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
-import {DATE_FORMATTER, TEACHERS_CRUMB} from "../../services/constants";
-import {withRouter} from "react-router-dom";
+import {formatBoardOwner} from "../../services/gameboards";
+import {connect, useDispatch} from "react-redux";
+import {formatDate} from "../elements/DateString";
+import {ShareLink} from "../elements/ShareLink";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -35,7 +47,7 @@ const stateToProps = (state: AppState) => ({
     boards: boards.boards(state)
 });
 
-const dispatchToProps = {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast};
+const dispatchToProps = {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast, openIsaacBooksModal};
 
 interface SetAssignmentsPageProps {
     user: RegisteredUserDTO;
@@ -49,23 +61,7 @@ interface SetAssignmentsPageProps {
     unassignBoard: (board: GameboardDTO, group: UserGroupDTO) => void;
     showToast: (toast: Toast) => void;
     location: {hash: string};
-
-}
-
-function formatDate(date: number | Date | undefined) {
-    if (!date) return "Unknown";
-    const dateObject = new Date(date);
-    return DATE_FORMATTER.format(dateObject);
-}
-
-function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
-    if (board.tags && board.tags.includes("isaac")) {
-        return "Isaac CS";
-    }
-    if (user.id == board.ownerUserId) {
-        return "Me";
-    }
-    return "Someone else";
+    openIsaacBooksModal: () => void;
 }
 
 type BoardProps = SetAssignmentsPageProps & {
@@ -97,7 +93,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
         </Label>
         <Label className="w-100 pb-2">Due Date Reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate)} />
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
         </Label>
         <Button className="mt-3 mb-2" block color="primary" onClick={assign} disabled={groupId === null}>Assign to group</Button>
     </Container>;
@@ -110,29 +106,8 @@ const Board = (props: BoardProps) => {
     useEffect( () => {
         loadGroupsForBoard(board);
     }, [board.id]);
-    const [showShareLink, setShowShareLink] = useState(false);
-    const shareLink = useRef<HTMLInputElement>(null);
 
-    const assignmentLink = `${location.origin}/assignment/${board.id}`;
-
-    function toggleShareLink() {
-        if (showShareLink) {
-            setShowShareLink(false);
-        } else {
-            setShowShareLink(true);
-            setImmediate(() => {
-                if (shareLink.current) {
-                    if (window.getSelection && shareLink.current) {
-                        let selection = window.getSelection();
-                        let range = document.createRange();
-                        range.selectNodeContents(shareLink.current);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
-                    }
-                }
-            });
-        }
-    }
+    const assignmentLink = `/assignment/${board.id}`;
 
     const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
 
@@ -178,8 +153,7 @@ const Board = (props: BoardProps) => {
             </aside>
 
             <div className="my-4">
-                <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{assignmentLink}</div></div>
-                <button className="ru_share" onClick={toggleShareLink}/>
+                <ShareLink linkUrl={assignmentLink}/>
                 <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
                 <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
             </div>
@@ -217,8 +191,10 @@ function toActual(limit: BoardLimit) {
 }
 
 const orderNames: {[key in BoardOrder]: string} = {
-    "created": "Date Created",
-    "visited": "Date Visited",
+    "created": "Date Created Ascending",
+    "-created": "Date Created Descending",
+    "visited": "Date Visited Ascending",
+    "-visited": "Date Visited Descending",
     "title": "Title Ascending",
     "-title": "Title Descending"
 };
@@ -227,7 +203,7 @@ function orderName(order: BoardOrder) {
 }
 
 const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
-    const {groups, loadGroups, boards, loadBoards} = props;
+    const {groups, loadGroups, boards, loadBoards, openIsaacBooksModal} = props;
 
     useEffect(() => {loadGroups(false);}, []);
 
@@ -237,6 +213,28 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
 
     let [actualBoardLimit, setActualBoardLimit] = useState<ActualBoardLimit>(toActual(boardLimit));
+
+    const dispatch = useDispatch();
+
+
+    const isaacAssignmentButtons = {
+        second: {
+            link: {
+                [SITE.CS]: "/topics",
+                [SITE.PHY]: "/pages/pre_made_gameboards"
+            },
+            text: {
+                [SITE.CS]: "Topics list",
+                [SITE.PHY]: "our Boards for Lessons"
+            }
+        },
+        third: {
+            text: {
+                [SITE.CS]: "Create gameboard",
+                [SITE.PHY]: "create a gameboard"
+            }
+        }
+    };
 
     function loadInitial() {
         loadBoards(0, actualBoardLimit, boardOrder);
@@ -283,10 +281,32 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Set assignments" intermediateCrumbs={[TEACHERS_CRUMB]} help={pageHelp} />
-        <p className="mt-4 mb-3">
-            Choose a gameboard from one of our <Link to="/pages/gameboards">pre-made gameboards</Link> or find one from the <Link to="/topics">Topics list</Link>.
-        </p>
+        <TitleAndBreadcrumb currentPageTitle="Set assignments" help={pageHelp} />
+        <h4 className="mt-4 mb-3">
+            Add a gameboard from ...
+        </h4>
+        <RS.Row className="mb-4">
+            <RS.Col md={6} lg={4} className="pt-1">
+                {SITE_SUBJECT === SITE.PHY ?
+                    <RS.Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block>
+                        our GCSE &amp; A-Level books
+                    </RS.Button> :
+                    <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
+                        Pre-made gameboards
+                    </RS.Button>
+                }
+            </RS.Col>
+            <RS.Col md={6} lg={4} className="pt-1">
+                <RS.Button tag={Link} to={isaacAssignmentButtons.second.link[SITE_SUBJECT]} color="secondary" block>
+                    {isaacAssignmentButtons.second.text[SITE_SUBJECT]}
+                </RS.Button>
+            </RS.Col>
+            <RS.Col md={12} lg={4} className="pt-1">
+                <RS.Button tag={Link} to={"/gameboard_builder"} color="secondary" block>
+                    {isaacAssignmentButtons.third.text[SITE_SUBJECT]}
+                </RS.Button>
+            </RS.Col>
+        </RS.Row>
         {groups && groups.length == 0 && <Alert color="warning">You have not created any groups to assign work to. Please <Link to="/groups">create a group here first.</Link></Alert>}
         {boards && boards.totalResults == 0 ? <h3 className="text-center mt-4 mb-5">You have no gameboards to assign; use one of the options above to find one.</h3> :
             <React.Fragment>

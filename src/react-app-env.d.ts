@@ -69,3 +69,9 @@ declare module "bootstrap";
 declare module "math-random-seed";
 
 declare var MathJax: any;
+declare var ISAAC_SITE: string;
+declare var REACT_APP_API_VERSION: string;
+
+declare module "inequality-grammar" {
+  export const parseExpression: (exp: string) => (any[]) | {error: string};
+}

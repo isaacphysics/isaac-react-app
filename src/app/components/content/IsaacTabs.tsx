@@ -1,51 +1,50 @@
-import React, {ReactElement, useMemo, useState} from "react";
+import React, {ReactElement} from "react";
 import {Tabs} from "../elements/Tabs";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
-import {withRouter} from "react-router-dom";
-import {connect} from "react-redux";
-import {AppState} from "../../state/reducers";
-import {UserPreferencesDTO} from "../../../IsaacAppTypes";
-import {EXAM_BOARD} from "../../services/constants";
-
-const stateToProps = (state: AppState) => ({
-    userPreferences: state ? state.userPreferences : null
-});
+import {useCurrentExamBoard} from "../../services/examBoard";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import { useDispatch } from "react-redux";
+import {openActiveModal, closeActiveModal} from '../../state/actions';
+import {store} from '../../state/store';
 
 interface IsaacTabsProps {
-    doc: {
-        children: {
-            title?: string;
-            children?: ContentDTO[];
-        }[];
-    };
-    userPreferences: UserPreferencesDTO | null;
+    doc: {children: {title?: string; children?: ContentDTO[]}[]};
 }
 
-const IsaacTabsComponent = (props: any) => {
-    const {doc: {children}, userPreferences} = props as IsaacTabsProps;
-    const [examBoardFilter, setExamBoardFilter] = useState(userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA ? EXAM_BOARD.AQA : EXAM_BOARD.OCR);
-    useMemo(() => {
-        setExamBoardFilter(userPreferences && userPreferences.EXAM_BOARD && userPreferences.EXAM_BOARD.AQA ? EXAM_BOARD.AQA : EXAM_BOARD.OCR);
-    }, [userPreferences]);
+export const IsaacTabs = (props: any) => {
+    const {doc: {children}} = props as IsaacTabsProps;
     const tabTitlesToContent: {[title: string]: ReactElement} = {};
+
+    const dispatch = useDispatch();
+
+    function expandToModal(content: any) {
+        dispatch(openActiveModal({
+            closeAction: () => {store.dispatch(closeActiveModal())},
+            title: '',
+            body: content
+        }))
+    }
+
     let activeTab = 1;
     children.forEach((child, index) => {
         const tabTitle = child.title || `Tab ${index + 1}`;
-        if (examBoardFilter == tabTitle) {
-            activeTab = index + 1;
-        }
-
-        tabTitlesToContent[tabTitle] = <React.Fragment>
-            {child.children && child.children.map((tabContentChild, index) => (
-                <IsaacContent key={index} doc={tabContentChild} />
-            ))}
-        </React.Fragment>;
+        tabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
     });
 
+    // EXAM BOARD Special Case
+    const examBoardFilter = useCurrentExamBoard();
+    const tabTitles = Object.keys(tabTitlesToContent);
+    const specialCaseExamBoardTab = tabTitles.includes("AQA") && tabTitles.includes("OCR") && tabTitles.length === 2;
+    if (SITE_SUBJECT === SITE.CS && specialCaseExamBoardTab) {
+        return <div className="examboard-special-tabs">
+            <button className="expand-button" onClick={() => expandToModal(tabTitlesToContent[examBoardFilter])}>+</button>
+            {tabTitlesToContent[examBoardFilter]}
+        </div>
+    }
+
+    // Normal case
     return <Tabs className="isaac-tab" tabContentClass="pt-4" activeTabOverride={activeTab}>
         {tabTitlesToContent}
     </Tabs>;
 };
-
-export const IsaacTabs = withRouter(connect(stateToProps)(IsaacTabsComponent));

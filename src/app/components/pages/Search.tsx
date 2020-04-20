@@ -1,48 +1,34 @@
 import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {withRouter} from "react-router-dom";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {Col, Container, CustomInput, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {fetchSearch} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {ContentSummaryDTO, ResultsWrapper, Role} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
-import {ShortcutResponses, UserPreferencesDTO} from "../../../IsaacAppTypes";
-import {determineExamBoardFrom, filterOnExamBoard} from "../../services/examBoard";
-import {AnonUserExamBoardPicker} from "../elements/inputs/AnonUserExamBoardPicker";
-
-const stateToProps = (state: AppState) => {
-    return {
-        searchResults: state && state.search && state.search.searchResults || null,
-        userRole: state && state.user && state.user.loggedIn && state.user.role || null,
-        userPreferences: state ? state.userPreferences : null
-    };
-};
-const dispatchToProps = {fetchSearch};
+import {searchResultIsPublic} from "../../services/search"
+import {ShortcutResponses} from "../../../IsaacAppTypes";
+import {filterOnExamBoard, useCurrentExamBoard} from "../../services/examBoard";
+import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 
-interface SearchPageProps {
-    searchResults: ResultsWrapper<ContentSummaryDTO> | null;
-    userPreferences: UserPreferencesDTO | null;
-    userRole: Role | null;
-    history: History;
-    location: Location;
-    fetchSearch: (query: string, types: string) => void;
-}
-
-const SearchPageComponent = (props: SearchPageProps) => {
-    const {searchResults, userRole, location, history, fetchSearch, userPreferences} = props;
+export const Search = withRouter((props: {history: History; location: Location}) => {
+    const {location, history} = props;
+    const dispatch = useDispatch();
+    const searchResults = useSelector((state: AppState) => state && state.search && state.search.searchResults || null);
+    const user = useSelector((state: AppState) => state && state.user || null);
+    const examBoard = useCurrentExamBoard();
 
     const searchParsed = queryString.parse(location.search);
-
-    const examBoard = determineExamBoardFrom(userPreferences);
 
     const queryParsed = searchParsed.query || "";
     const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
@@ -63,7 +49,7 @@ const SearchPageComponent = (props: SearchPageProps) => {
             setSearchText(query);
             setSearchFilterProblems(problems);
             setSearchFilterConcepts(concepts);
-            fetchSearch(query, calculateSearchTypes(problems, concepts));
+            dispatch(fetchSearch(query, calculateSearchTypes(problems, concepts)));
         },
         [query, problems, concepts]
     );
@@ -94,14 +80,8 @@ const SearchPageComponent = (props: SearchPageProps) => {
         doSearch();
     }, [searchFilterProblems, searchFilterConcepts]);
 
-    const isStaffUser = userRole && (userRole == 'ADMIN' || userRole == 'EVENT_MANAGER' || userRole == 'CONTENT_EDITOR' || userRole == 'STAFF');
-
-    const filterResult = function(r: ContentSummaryDTO) {
-        const keepElement = (r.id != "_regression_test_" && (!r.tags || r.tags.indexOf("nofilter") < 0 && !r.supersededBy));
-        return keepElement || isStaffUser;
-    };
-
-    const filteredSearchResults = searchResults && searchResults.results && filterOnExamBoard(searchResults.results.filter(filterResult), examBoard);
+    const filteredSearchResults = searchResults && searchResults.results &&
+        filterOnExamBoard(searchResults.results.filter((result) => searchResultIsPublic(result, user)), examBoard);
 
     const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
 
@@ -136,16 +116,16 @@ const SearchPageComponent = (props: SearchPageProps) => {
                             <Col md={7} xs={12}>
                                 <Form inline className="search-filters">
                                     <Label className="d-none d-sm-inline-block">Filter</Label>
-                                    <Label><CustomInput id="problem-search" type="checkbox" defaultChecked={searchFilterProblems} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterProblems(e.target.checked)} />Search problems</Label>
-                                    <Label><CustomInput id="concept-search" type="checkbox" defaultChecked={searchFilterConcepts} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterConcepts(e.target.checked)} />Search concepts</Label>
-                                    <Label><AnonUserExamBoardPicker className="text-right" /></Label>
+                                    <Label><CustomInput id="problem-search" type="checkbox" defaultChecked={searchFilterProblems} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterProblems(e.target.checked)} />Search questions</Label>
+                                    <Label><CustomInput id="concept-search" type="checkbox" defaultChecked={searchFilterConcepts} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterConcepts(e.target.checked)} />Search content</Label>
+                                    {SITE_SUBJECT === SITE.CS && <Label><TempExamBoardPicker className="text-right" /></Label>}
                                 </Form>
                             </Col>
                         </RS.CardHeader>
                         {query != "" && <RS.CardBody>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0 ?
-                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults}/>
+                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} displayTopicTitle={true}/>
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </RS.CardBody>}
@@ -154,6 +134,4 @@ const SearchPageComponent = (props: SearchPageProps) => {
             </Row>
         </Container>
     );
-};
-
-export const Search = withRouter(connect(stateToProps, dispatchToProps)(SearchPageComponent));
+});

@@ -1,35 +1,40 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {
+    Button,
+    ButtonDropdown,
     Card,
     CardBody,
+    Col,
     Container,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Form,
+    Input,
+    InputGroup,
+    InputGroupAddon,
     Nav,
     NavItem,
     NavLink,
+    Row,
     TabContent,
     TabPane,
-    Row,
-    Col,
-    UncontrolledTooltip,
     UncontrolledButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Button, Input, Table, ButtonDropdown, Form, InputGroupAddon, InputGroup
+    UncontrolledTooltip
 } from "reactstrap"
 import {Link} from "react-router-dom";
 import {
-    loadGroups,
     createGroup,
     deleteGroup,
-    updateGroup,
-    getGroupInfo,
-    resetMemberPassword,
     deleteMember,
+    getGroupInfo,
+    loadGroups,
+    resetMemberPassword,
+    selectGroup,
     showGroupInvitationModal,
     showGroupManagersModal,
-    selectGroup
+    updateGroup
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
@@ -38,7 +43,7 @@ import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {groups} from "../../state/selectors";
 import {UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {TEACHERS_CRUMB} from "../../services/constants";
+import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateFromProps = (state: AppState) => (state && {groups: groups.groups(state), group: groups.current(state)});
 const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal};
@@ -356,7 +361,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage groups" intermediateCrumbs={[TEACHERS_CRUMB]} className="mb-4" help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />
         <Row className="mb-5">
             <Col md={4}>
                 <ShowLoading until={activeTab}>
@@ -366,7 +371,10 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                 {tabs.map((tab, index) => {
                                     const classes = tab.active() ? "active" : "";
                                     return <NavItem key={index} className="mx-2">
-                                        <NavLink className={`text-center ${classes}`} onClick={tab.activate}>
+                                        <NavLink
+                                            className={`text-center ${classes}`} tabIndex={0}
+                                            onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
+                                        >
                                             {tab.name}
                                         </NavLink>
                                     </NavItem>;

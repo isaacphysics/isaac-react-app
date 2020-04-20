@@ -1,41 +1,41 @@
-import {CardBody, Col, CustomInput, FormFeedback, FormGroup, Input, Label, Row, default as RS} from "reactstrap";
-import {SubjectInterests, UserExamPreferences, ValidationUser} from "../../../../IsaacAppTypes";
-import {EXAM_BOARD} from "../../../services/constants";
+import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
+import {EXAM_BOARD, UserFacingRole} from "../../../services/constants";
 import React, {ChangeEvent} from "react";
-import {
-    validateEmail,
-    validateSubjectInterests,
-    validateUserGender,
-    validateUserSchool
-} from "../../../services/validation";
+import {allRequiredInformationIsPresent, validateEmail, validateExamBoard,} from "../../../services/validation";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
+import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {SubjectInterestTableInput} from "../inputs/SubjectInterestTableInput";
+import {Link} from "react-router-dom";
 
 interface UserDetailsProps {
-    examPreferences: UserExamPreferences;
-    setExamPreferences: (e: any) => void;
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
     subjectInterests: SubjectInterests;
     setSubjectInterests: (si: SubjectInterests) => void;
     submissionAttempted: boolean;
+    editingOtherUser: boolean;
+    userAuthSettings: UserAuthenticationSettingsDTO | null;
 }
 
 export const UserDetails = (props: UserDetailsProps) => {
     const {
         userToUpdate, setUserToUpdate,
-        examPreferences, setExamPreferences,
         subjectInterests, setSubjectInterests,
-        submissionAttempted
+        submissionAttempted, editingOtherUser
     } = props;
 
-    const allRequiredFieldsValid = userToUpdate && subjectInterests &&
-        validateEmail(userToUpdate.email) &&
-        validateUserGender(userToUpdate) &&
-        validateUserSchool(userToUpdate) &&
-        validateSubjectInterests(subjectInterests);
+    const teacherRequestRoute = {
+        [SITE.PHY]: "/pages/contact_us_teacher",
+        [SITE.CS]: "/pages/teacher_accounts"
+    };
+
+    const allRequiredFieldsValid = userToUpdate && userToUpdate.email &&
+        allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null});
 
     return <CardBody className="pt-0">
         <Row>
@@ -45,7 +45,16 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </span>
             </Col>
         </Row>
-
+        <Row className="mb-3">
+            <Col>
+                Account type: <b>{userToUpdate && userToUpdate.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate && userToUpdate.role == "STUDENT" && <span>
+                    <small>(Are you a teacher? {" "}
+                        <Link to={teacherRequestRoute[SITE_SUBJECT]} target="_blank">
+                            Upgrade your account
+                        </Link>{".)"}</small>
+                </span>}
+            </Col>
+        </Row>
         <Row>
             <Col md={6}>
                 <FormGroup>
@@ -92,60 +101,49 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </FormGroup>
             </Col>
             <Col md={6}>
-                <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} editingOtherUser={editingOtherUser}/>
             </Col>
         </Row>
         <Row>
             <Col md={6}>
-                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
-                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
+                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
+                    required={SITE_SUBJECT === SITE.CS}/>
             </Col>
-            <Col md={6}>
+            {SITE_SUBJECT === SITE.CS && <Col md={6}>
                 <FormGroup>
-                    <Label className="d-inline-block pr-2" htmlFor="exam-board-select">
+                    <Label className="d-inline-block pr-2 form-required" htmlFor="exam-board-select">
                         Exam board
                     </Label>
                     <Input
                         type="select" name="select" id="exam-board-select"
-                        value={
-                            (examPreferences && examPreferences[EXAM_BOARD.OCR]) ? EXAM_BOARD.OCR : EXAM_BOARD.AQA
-                        }
+                        value={userToUpdate.examBoard}
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                            setExamPreferences(
-                                event.target.value == EXAM_BOARD.AQA ?
-                                    {[EXAM_BOARD.AQA]: true, [EXAM_BOARD.OCR]: false} :
-                                    {[EXAM_BOARD.AQA]: false, [EXAM_BOARD.OCR]: true}
+                            setUserToUpdate(
+                                Object.assign({}, userToUpdate, {examBoard: event.target.value})
                             )
                         }
+                        invalid={submissionAttempted && !validateExamBoard(userToUpdate)}
                     >
-                        {/*<option></option> This was not an option although we should probably support it */}
+                        <option value={undefined}></option>
+                        <option value={EXAM_BOARD.OTHER}>Other</option>
                         <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
                     </Input>
                 </FormGroup>
-                <div className="mt-5 pt-1">
+            </Col>}
+            <Col md={6}>
+                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
+                    required={SITE_SUBJECT === SITE.CS}/>
+            </Col>
+            {SITE_SUBJECT === SITE.CS && <Col md={6}>
+                <div className="mt-2 mb-2 pt-1">
                     <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
                 </div>
-            </Col>
+            </Col>}
         </Row>
-
-        {/*<Row>*/}
-        {/*    <Col md={6}>*/}
-        {/*        <FormGroup>*/}
-        {/*            <Label htmlFor="linked-accounts">Linked Accounts</Label>*/}
-        {/*            <Row>Placeholder</Row> /!* TODO add linked account control *!/*/}
-        {/*        </FormGroup>*/}
-        {/*    </Col>*/}
-        {/*</Row>*/}
-
-        {userToUpdate && userToUpdate.role == "STUDENT" && <Row>
-            <Col className="text-muted text-center mt-2">
-                Are you a teacher? {" "}
-                <a href="/pages/teacher_accounts" target="_blank" rel="noopener noreferrer">
-                    <span className='sr-only'> Are you a teacher? </span>
-                    Let us know
-                </a> {" "}
-                and we&apos;ll convert your account to a teacher account.
+        {SITE_SUBJECT === SITE.PHY && !editingOtherUser && <Row className="mt-3">
+            <Col>
+                <SubjectInterestTableInput stateObject={subjectInterests} setStateFunction={setSubjectInterests}/>
             </Col>
         </Row>}
 

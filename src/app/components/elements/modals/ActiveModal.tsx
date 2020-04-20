@@ -1,20 +1,30 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
-import {connect} from "react-redux";
-import {AppState} from "../../../state/reducers";
 import * as AppTypes from "../../../../IsaacAppTypes";
-
-const stateToProps = (state: AppState) => ({
-    activeModal: state && state.activeModal
-});
+import {closeActiveModal} from "../../../state/actions";
+import {useDispatch} from "react-redux";
 
 interface ActiveModalProps {
     activeModal?: AppTypes.ActiveModal | null;
 }
 
-const ActiveModalComponent = ({activeModal}: ActiveModalProps) => {
+export const ActiveModal = ({activeModal}: ActiveModalProps) => {
     const ModalBody = activeModal && activeModal.body;
-    return <RS.Modal isOpen={!!activeModal} size={"lg"}>
+    const dispatch = useDispatch();
+    const [isOpen, setIsOpen] = useState(true);
+
+    const toggle = () => {
+        const isNowOpen = !isOpen;
+        setIsOpen(isNowOpen);
+    };
+
+    useEffect(() => {
+        if (!isOpen) {
+            dispatch(closeActiveModal());
+        }
+    }, [isOpen]);
+
+    return <RS.Modal toggle={toggle} isOpen={isOpen} size={(activeModal && activeModal.size) || "lg"}>
         {activeModal && <React.Fragment>
             <RS.ModalHeader
                 className="h-title pb-5 mb-4"
@@ -25,7 +35,7 @@ const ActiveModalComponent = ({activeModal}: ActiveModalProps) => {
             >
                 {activeModal.title}
             </RS.ModalHeader>
-            <RS.ModalBody className="px-0 pb-2 mx-4">
+            <RS.ModalBody className="pb-2 mx-4">
                 {typeof ModalBody === "function" ? <ModalBody /> : ModalBody}
             </RS.ModalBody>
             {activeModal.buttons &&
@@ -36,5 +46,3 @@ const ActiveModalComponent = ({activeModal}: ActiveModalProps) => {
         </React.Fragment>}
     </RS.Modal>
 };
-
-export const ActiveModal = connect(stateToProps)(ActiveModalComponent);

@@ -16,7 +16,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {LoggedInUser, LoggedInValidationUser, UserPreferencesDTO, ZxcvbnResult} from "../../../IsaacAppTypes";
+import {LoggedInUser, UserPreferencesDTO, ValidationUser, ZxcvbnResult} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
@@ -28,6 +28,7 @@ import {DateInput} from "../elements/inputs/DateInput";
 import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../services/passwordStrength"
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {Redirect} from "react-router";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
@@ -42,7 +43,7 @@ const dispatchToProps = {
 interface RegistrationPageProps {
     user: LoggedInUser | null;
     updateCurrentUser: (
-        registeredUser: LoggedInValidationUser,
+        registeredUser: ValidationUser,
         userPreferences: UserPreferencesDTO,
         passwordCurrent: string | null,
         currentUser: LoggedInUser
@@ -118,7 +119,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <small className="text-muted">
                         Sign up to {" "}
                         <Link to="/">
-                            Isaac <span className="d-none d-md-inline">Computer Science</span>
+                            Isaac <span className="d-none d-md-inline">{SITE_SUBJECT_TITLE}</span>
                         </Link>
                     </small>
                 </CardTitle>
@@ -252,7 +253,9 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                                             checked={confirmedOverThirteen}
                                             required
                                             label="I am at least 13 years old"
-                                            disabled={registrationUser.dateOfBirth !== null}
+                                            disabled={registrationUser.dateOfBirth}
+                                            // TODO: Look at DateInput null vs undefined for updating DoB and maybe
+                                            // change this in future
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                 setDobCheckboxChecked(!dobCheckboxChecked);
                                             }}

@@ -8,7 +8,7 @@ interface PageNotFoundProps {location: {pathname: string; state?: {overridePathn
 const PageNotFoundComponent = ({location: {pathname, state}}: PageNotFoundProps) => {
     return <Container>
         <div>
-            <TitleAndBreadcrumb breadcrumbTitleOverride="Unknown page" currentPageTitle="Page Not Found" />
+            <TitleAndBreadcrumb breadcrumbTitleOverride="Unknown page" currentPageTitle="Page not found" />
             <h3 className="my-4">
                 <small>
                     {"We're sorry, page not found: "}

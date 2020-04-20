@@ -2,8 +2,16 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import ReactGA from "react-ga";
+import {WEBMASTER_EMAIL} from "../../services/siteConstants";
 
 export const ServerError = () => {
+
+    ReactGA.exception({
+        description: 'server_error',
+        fatal: true
+    });
+
     return <Container>
         <div>
             <TitleAndBreadcrumb currentPageTitle="Error" />
@@ -23,7 +31,7 @@ export const ServerError = () => {
                         refresh this page and try again
                     </a>
                     {", "}
-                    <Link to="/home">
+                    <Link to="/">
                         return to our homepage
                     </Link>
                     {", or "}
@@ -31,9 +39,7 @@ export const ServerError = () => {
                         contact
                     </Link>
                     {" or "}
-                    <a href="mailto:webmaster@isaaccomputerscience.org">
-                        email
-                    </a>
+                    <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a>
                     {" us if this keeps happening."}
                 </small>
             </h3>

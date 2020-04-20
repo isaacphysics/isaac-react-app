@@ -1,12 +1,14 @@
 import React from "react";
 import {Col, Container, Row} from "reactstrap";
-import {withRouter} from "react-router-dom";
+import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
 import {history} from "../../services/history";
 import {fromPairs} from "lodash";
 import {PageFragment} from "../elements/PageFragment";
+import {NotFound} from "./NotFound";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 type SupportType = "student" | "teacher";
 
@@ -27,22 +29,44 @@ interface SupportCategories {
 }
 
 const support: {student: SupportCategories; teacher: SupportCategories} = {
-    student: {
-        title: "Student support",
-        categories: {
-            general: {category: "general", title: "General questions", icon: "faq"},
-            homework: {category: "homework", title: "Finding homework", icon: "faq"},
+    [SITE.CS]: {
+        student: {
+            title: "Student support",
+            categories:{
+                general: {category: "general", title: "General questions", icon: "faq"},
+                homework: {category: "homework", title: "Finding homework", icon: "faq"},
+            }
+        },
+        teacher: {
+            title: "Teacher support",
+            categories: {
+                general: { category: "general", title: "General questions", icon: "faq" },
+                assignments: { category: "assignments", title: "Assigning work", icon: "faq" },
+                progress: { category: "progress", title: "Viewing student progress", icon: "faq" },
+            }
         }
     },
-    teacher: {
-        title: "Teacher support",
-        categories: {
-            general: { category: "general", title: "General questions", icon: "faq" },
-            assignments: { category: "assignments", title: "Assigning work", icon: "faq" },
-            progress: { category: "progress", title: "Viewing student progress", icon: "faq" },
+    [SITE.PHY]: {
+        student: {
+            title: "Student Support",
+            categories:{
+                general: {category: "general", title: "General Questions", icon: "faq"},
+                homework: {category: "homework", title: "Finding Homework", icon: "faq"},
+                questions: {category: "questions", title: "Answering Questions", icon: "faq"},
+            }
+        },
+        teacher: {
+            title: "Teacher Support",
+            categories: {
+                general: { category: "general", title: "General Questions", icon: "faq" },
+                assignments: { category: "assignments", title: "Assigning Work", icon: "faq" },
+                progress: { category: "progress", title: "Viewing Student Progress", icon: "faq" },
+                suggestions: { category: "progress", title: "Teaching Suggestions", icon: "teacher-hat" },
+                direct: { category: "direct", title: "One-to-One Support", icon: "teacher-hat"}
+            }
         }
-    }
-};
+    },
+}[SITE_SUBJECT];
 
 function supportPath(type?: string, category?: string) {
     return `/support/${type || "student"}/${category || "general"}`;
@@ -59,8 +83,17 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
     }
 
     const section = support[type];
+
+    if (section == undefined) {
+        return <Route component={NotFound} />
+    }
+
     const categoryNames = Object.keys(section.categories);
     const categoryIndex = categoryNames.indexOf(category);
+
+    if (categoryIndex == -1) {
+        return <Route component={NotFound} />
+    }
 
     function activeTabChanged(tabIndex: number) {
         history.push(supportPath(type, categoryNames[tabIndex - 1]));

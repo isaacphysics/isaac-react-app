@@ -20,11 +20,14 @@ const CookieBannerComponent = ({logAction}: {logAction: (eventDetails: object) =
         logAction(eventDetails);
     }
 
-    return show ? <div className="banner d-print-none">
+    return show ? <div className="banner d-print-none" id="cookie-banner">
         <RS.Container className="py-3">
             <RS.Row style={{alignItems: "center"}}>
                 <RS.Col xs={12} sm={2} md={1}>
-                    <h3 className="text-center" role="presentation">ℹ️<span className="d-inline-block d-sm-none">&nbsp;Cookies</span></h3>
+                    <h3 className="text-center">
+                        <span role="presentation" aria-labelledby="cookies-heading">ℹ</span>️
+                        <span id="cookies-heading" className="d-inline-block d-sm-none">&nbsp;Cookies</span>
+                    </h3>
                 </RS.Col>
                 <RS.Col xs={12} sm={10} md={8}>
                     <small>Use of this website and the information entered is being recorded. This data is used to support research

@@ -4,8 +4,8 @@ import seed from "math-random-seed";
 import {requestConstantsUnits, setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {IsaacNumericQuestionDTO, QuantityDTO} from "../../../IsaacApiTypes";
-import {Input, Row, Col, Label, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from "reactstrap";
+import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
+import {Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Row} from "reactstrap";
 import {TrustedHtml} from "../elements/TrustedHtml";
 import {IsaacHints} from "./IsaacHints";
 
@@ -26,6 +26,7 @@ interface IsaacNumericQuestionProps {
     currentAttempt?: QuantityDTO;
     setCurrentAttempt: (questionId: string, attempt: QuantityDTO) => void;
     requestConstantsUnits: () => void;
+    validationResponse?: QuantityValidationResponseDTO;
 }
 
 function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
@@ -36,14 +37,13 @@ function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: s
         return Math.floor(random() * size);
     }
 
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    function pick(arr: any[]): any {
-        if (arr.length === 0) return null;
+    function pick<T>(arr: T[]): T {
+        if (arr.length === 0) return null as unknown as T;
         const index = randInt(arr.length);
         return arr.splice(index, 1)[0];
     }
 
-    function shuffle(arr: any[]): void {
+    function shuffle<T>(arr: T[]): void {
         let i = arr.length;
         while (--i > 0) {
             const j = randInt(i);
@@ -52,7 +52,6 @@ function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: s
             arr[j] = temp;
         }
     }
-    /* eslint-enable @typescript-eslint/no-explicit-any */
 
     const unitsToShow: (string|undefined)[] = [];
     function addUnitToShow(unit: string): void {
@@ -99,9 +98,12 @@ function wrapUnitForSelect(unit?: string): string {
 }
 
 const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
-    const {doc, userId, questionId, units, currentAttempt, setCurrentAttempt, requestConstantsUnits} = props;
+    const {doc, userId, questionId, units, currentAttempt, setCurrentAttempt, requestConstantsUnits, validationResponse} = props;
     const currentAttemptValue = currentAttempt && currentAttempt.value;
     const currentAttemptUnits = currentAttempt && currentAttempt.units;
+
+    const currentAttemptValueWrong = validationResponse && !validationResponse.correctValue;
+    const currentAttemptUnitsWrong = validationResponse && !validationResponse.correctUnits;
 
     useEffect((): void => {
         requestConstantsUnits();
@@ -135,12 +137,12 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
                     {doc.children}
                 </IsaacContentValueOrChildren>
             </div>
-            <Row>
+            <Row className="no-print">
                 <Col sm={4}>
                     <Label className="w-100">
                         Value
                         <br />
-                        <Input type="text" value={currentAttemptValue || ""}
+                        <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong || undefined}
                             onChange={updateValue}
                         />
                     </Label>
@@ -153,7 +155,7 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
                         Units
                         <br/>
                         <Dropdown isOpen={isOpen} toggle={() => {setIsOpen(!isOpen);}}>
-                            <DropdownToggle caret className="px-2 py-1">
+                            <DropdownToggle caret className="px-2 py-1" color={currentAttemptUnitsWrong ? "danger" : undefined}>
                                 <TrustedHtml span html={wrapUnitForSelect(currentAttemptUnits)}/>
                             </DropdownToggle>
                             <DropdownMenu right>

@@ -1,17 +1,25 @@
 import React from "react";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import ReactGA from "react-ga";
+import {WEBMASTER_EMAIL} from "../../services/siteConstants";
 
 export const SessionExpired = () => {
+
+    ReactGA.exception({
+        description: 'session_expired',
+        fatal: true
+    });
+
     return <Container>
         <div>
-            <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired error" currentPageTitle="Session Expired"/>
+            <TitleAndBreadcrumb breadcrumbTitleOverride="Session expired error" currentPageTitle="Session expired"/>
 
             <h3 className="my-4"><small>{"We're sorry, but your session has expired!"}</small></h3>
 
             <h3>
                 <small>
-                    {"You should try to "}
+                    {"You should "}
                     <a
                         role="button"
                         tabIndex={0}
@@ -31,7 +39,7 @@ export const SessionExpired = () => {
             <h3>
                 <small>
                     {"Please email "}
-                    <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a>
+                    <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a>
                     {" if this keeps happening."}
                 </small>
             </h3>

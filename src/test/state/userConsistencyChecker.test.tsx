@@ -12,7 +12,7 @@ const USER_ID1 = "foo";
 const USER_ID2 = "bar";
 
 const actionLogin = {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: {_id: USER_ID1}};
-const actionLogout = {type: ACTION_TYPE.USER_LOG_OUT_REQUEST};
+const actionLogout = {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS};
 const actionError = {type: ACTION_TYPE.USER_CONSISTENCY_ERROR};
 
 describe("userConsistencyCheckerMiddleware", () => {

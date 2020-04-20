@@ -55,7 +55,7 @@ export const groupInvitationModal = (firstTime: boolean) => {
         title: firstTime ? "Group Created" : "Invite Users",
         body: <ConnectedCurrentGroupInviteModal firstTime={firstTime} />,
         buttons: [
-            <RS.Row>
+            <RS.Row key={0}>
                 <RS.Col>
                     <RS.Button block key={2} color="secondary" onClick={() => {
                         store.dispatch(closeActiveModal());
@@ -119,7 +119,7 @@ const CurrentGroupManagersModal = ({group, user, addGroupManager, deleteGroupMan
 
     function removeManager(manager: UserSummaryWithEmailAddressDTO) {
         if (group) {
-            if (confirm("Are you sure you want to remove this teacher from the group?\nThey may still have access to student data until students revoke the connection from their My Account pages.")) {
+            if (confirm("Are you sure you want to remove this teacher from the group?\nThey may still have access to student data until students revoke the connection from their My account pages.")) {
                 deleteGroupManager(group, manager)
             }
         }

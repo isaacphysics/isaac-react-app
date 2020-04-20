@@ -15,16 +15,20 @@ export const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], coll
 
     // Copy and mask collection type title
     if (collectionType === "Gameboard") {
-        const collectionBreadcrumb = breadcrumbHistory.pop();
-        breadcrumbHistory.push(Object.assign({}, collectionBreadcrumb, {title: collectionType}));
+        const collectionBreadcrumb = breadcrumbHistory.splice(1, 1)[0];
+        breadcrumbHistory.splice(1, 0,
+            Object.assign({}, collectionBreadcrumb, {title: collectionType}));
     }
 
     return <Breadcrumb className="py-md-2 px-md-0 mb-3 mb-md-0 bread">
         {breadcrumbHistory.map((breadcrumb) => (
             <BreadcrumbItem key={breadcrumb.title}>
-                <Link to={breadcrumb.to}>
-                    {breadcrumb.title}
-                </Link>
+                {breadcrumb.to ?
+                    <Link to={breadcrumb.to}>
+                        {breadcrumb.title}
+                    </Link>
+                    : breadcrumb.title
+                }
             </BreadcrumbItem>
         ))}
         <BreadcrumbItem active>

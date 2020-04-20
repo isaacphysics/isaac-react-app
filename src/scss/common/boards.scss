@@ -1,0 +1,201 @@
+.subject-physics, .subject-maths, .subject-complete, .subject-compsci {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 71px;
+  height: 82px;
+  background: url(/assets/my-boards-sprite.png) no-repeat 0 0;
+  padding: 20px 0 0;
+  z-index: 999;
+}
+
+.subject-compsci-table {
+  position: relative;
+  width: 71px;
+  height: 82px;
+  background: url(/assets/my-boards-sprite.png) no-repeat -70px 0;
+  padding: 20px 0 0;
+  z-index: 999;
+  padding-top: 35px !important;
+}
+
+.input-align {
+  @media only screen and (min-resolution: 192dpi) {
+    width: 100%;
+    align-self: center;
+  }
+}
+
+.myBoards-percentageCompleted {
+  align-self: center;
+}
+
+.myBoards-percentageCompleted h4{
+  font-size: 1.5em;
+  text-align: center;
+  position: relative;
+  top: 5px;
+  right: -0.25rem;
+}
+
+.myBoards-percentageCompleted h4::after {
+  font-size: 0.5em;
+  content: '%';
+  position: relative;
+  top: -20px;
+
+}
+
+.myBoardsTable-percentageCompleted {
+  text-align: center;
+}
+
+.myBoardsTable-percentageCompleted h4{
+  font-size: 1.5em;
+  text-align: center;
+  top: -15px;
+  right: -0.25rem;
+  position: relative;
+}
+
+.myBoardsTable-percentageCompleted h4::after {
+  font-size: 0.5em;
+  content: '%';
+  position: relative;
+  top: -20px;
+}
+
+.subject-physics {
+  background-position: 0 0;
+}
+.subject-maths {
+  background-position: -71px 0;
+}
+.subject-complete {
+  position: relative;
+  top: 0;
+  left: 0;
+  background: url(/assets/my-boards-sprite.png) no-repeat -142px 0;
+}
+.subject-complete-card {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 71px;
+  height: 82px;
+  background: url(/assets/my-boards-sprite.png) no-repeat -142px 0;
+}
+.subject-compsci {
+  background-position: -71px 0;
+}
+
+.table-button {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  font-weight: bold;
+}
+
+.input-options {
+  float: right;
+  @media only screen and (max-width:800px) {
+    float: unset !important;
+    flex-direction: column;
+  }
+}
+
+.delete-button {
+  top: -50px;
+}
+
+.groups-assigned {
+  font-size: 14pt;
+  line-height: 110%;
+  font-weight: bold;
+  font-style: normal;
+  padding-top: 0;
+  color: #fff;
+  text-align: center;
+  strong {
+    display: block;
+    font-size: 20pt;
+    font-weight: 600;
+    padding-bottom: 4px;
+    margin-top: -6px;
+  }
+}
+
+.board-card {
+  .card-body > .close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+    min-width: 20px;
+    padding-left: 1px;
+  }
+  aside {
+    position: relative;
+    margin-left: 88px;
+    margin-top: 14px;
+    margin-bottom: 12px;
+    .card-subtitle {
+      margin-top: 4px;
+    }
+  }
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-right: 50px;
+    a {
+      display: inline;
+    }
+  }
+  .card-subtitle {
+    margin-bottom: 0.25rem;
+  }
+  button {
+    -webkit-appearance: none;
+    border: none;
+    outline: none !important;
+  }
+  .share-link {
+    display: none;
+    position: absolute;
+    padding: 4px;
+    border: 1px solid $gray-118;
+    background: #fff;
+    top: 117px;
+    right: 50px;
+    width: 70%;
+  }
+  .share-link div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    user-select: all;
+    -webkit-user-select: all;
+    -moz-user-select: all;
+    -ms-user-select: all;
+  }
+  .unassign {
+    cursor: pointer;
+    min-width: 20px;
+  }
+}
+.share-link-table {
+  display: none;
+  position: relative;
+  padding: 4px;
+  border: 1px solid $gray-118;
+  background: #fff;
+  top: 35px;
+  right: 30px;
+}
+.share-link-table div {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  user-select: all;
+  width: 250px;
+}

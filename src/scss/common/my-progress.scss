@@ -1,0 +1,78 @@
+.text-center-width {
+  text-align: center;
+  width: 100%;
+}
+
+.text-flex-align {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  &.height-40px {
+      height: 40px;
+  }
+}
+
+.auto-margin {
+  margin: auto;
+}
+
+.type-progress-bar {
+  flex-basis: unset;
+}
+
+.doughnut-binding {
+  svg {
+    margin: auto;
+  }
+}
+
+.teacher-achievement {
+  .teacher-badge {
+    min-width: 6em;
+    height: 124px;
+    flex-grow: 0;
+
+    .badge-icon {
+      background-image: url("/assets/teacher-badges.png");
+      width: 6em;
+      height: 124px;
+      display: block;
+      margin: 0 auto 3%;
+
+      &.unlocked {
+        background-position-x: -96px;
+      }
+
+      &.group-badge {
+        background-position-y: 0px;
+      }
+
+      &.book-page-badge {
+        background-position-y: 493px;
+      }
+
+      &.gameboard-badge {
+        background-position-y: 369px;
+      }
+
+      &.cpd-badge {
+        background-position-y: 244px;
+      }
+
+      &.assignment-badge {
+        background-position-y: 123px;
+      }
+    }
+  }
+
+  .text-offset {
+    margin-left: 2rem;
+    margin-top: 20px;
+
+    span {
+      font-weight: bold;
+    }
+  }
+}

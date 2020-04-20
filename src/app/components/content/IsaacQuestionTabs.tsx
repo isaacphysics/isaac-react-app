@@ -1,34 +1,25 @@
-import React, {useEffect} from "react";
-import {connect} from "react-redux";
+import React, {useContext, useEffect} from "react";
+import {connect, useDispatch} from "react-redux";
 import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
-import {IsaacFreeTextQuestion} from "./IsaacFreeTextQuestion";
-import {IsaacNumericQuestion} from "./IsaacNumericQuestion";
-import {IsaacMultiChoiceQuestion} from "./IsaacMultiChoiceQuestion";
-import {IsaacStringMatchQuestion} from "./IsaacStringMatchQuestion";
-import {IsaacSymbolicLogicQuestion} from "./IsaacSymbolicLogicQuestion";
-import {Alert, Button, Col, Row} from "reactstrap";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
 import * as ApiTypes from "../../../IsaacApiTypes";
-import {IsaacParsonsQuestion} from "./IsaacParsonsQuestion";
-import {DATE_TIME_FORMATTER} from "../../services/constants";
-import {IsaacItemQuestion} from "./IsaacItemQuestion";
+import {questions} from "../../state/selectors";
+import classnames from "classnames";
+import * as RS from "reactstrap";
+import {QUESTION_TYPES} from "../../services/questions";
+import {DateString, NUMERIC_DATE_AND_TIME} from "../elements/DateString";
+import {AccordionSectionContext} from "../../../IsaacAppTypes";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
-    // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
-    const indexedQuestion = state && state.questions &&
-        state.questions
-            .map((question, index) => ({question, index}))
-            .filter(({question}) => question.id == doc.id)[0];
-    return indexedQuestion ? {
-        validationResponse: indexedQuestion.question.validationResponse,
-        currentAttempt: indexedQuestion.question.currentAttempt,
-        canSubmit: indexedQuestion.question.canSubmit && !indexedQuestion.question.locked,
-        locked: indexedQuestion.question.locked,
-        questionIndex: indexedQuestion.index
+    const questionPart = questions.selectQuestionPart(doc.id)(state);
+    return questionPart ? {
+        validationResponse: questionPart.validationResponse,
+        currentAttempt: questionPart.currentAttempt,
+        canSubmit: questionPart.canSubmit && !questionPart.locked,
+        locked: questionPart.locked
     } : {};
 };
-const dispatchToProps = {registerQuestion, deregisterQuestion, attemptQuestion};
 
 interface IsaacQuestionTabsProps {
     doc: ApiTypes.IsaacQuestionBaseDTO;
@@ -36,86 +27,79 @@ interface IsaacQuestionTabsProps {
     canSubmit?: boolean;
     locked?: Date;
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
-    questionIndex?: number;
-    registerQuestion: (question: ApiTypes.QuestionDTO) => void;
-    deregisterQuestion: (questionId: string) => void;
-    attemptQuestion: (questionId: string, attempt: ApiTypes.ChoiceDTO) => void;
-}
-
-function showTime(date: Date) {
-    return DATE_TIME_FORMATTER.format(date);
 }
 
 const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
-    const {doc, currentAttempt, validationResponse, questionIndex, canSubmit, locked, registerQuestion, deregisterQuestion, attemptQuestion} = props;
+    const {doc, validationResponse, currentAttempt, canSubmit, locked} = props;
+    const dispatch = useDispatch();
+
+    const accordion = useContext(AccordionSectionContext);
 
     useEffect((): (() => void) => {
-        registerQuestion(doc);
-        return () => deregisterQuestion(doc.id as string);
+        dispatch(registerQuestion(doc, accordion.clientId));
+        return () => dispatch(deregisterQuestion(doc.id as string));
     }, [doc.id]);
 
-    const submitCurrentAttempt = () => currentAttempt && attemptQuestion(doc.id as string, currentAttempt);
-
-    let QuestionComponent;
-    switch (doc.type) {
-        case 'isaacFreeTextQuestion': QuestionComponent = IsaacFreeTextQuestion; break;
-        case 'isaacNumericQuestion': QuestionComponent = IsaacNumericQuestion; break;
-        case 'isaacSymbolicLogicQuestion': QuestionComponent = IsaacSymbolicLogicQuestion; break;
-        case 'isaacStringMatchQuestion': QuestionComponent = IsaacStringMatchQuestion; break;
-        case 'isaacItemQuestion': QuestionComponent = IsaacItemQuestion; break;
-        case 'isaacParsonsQuestion': QuestionComponent = IsaacParsonsQuestion; break;
-        case 'isaacMultiChoiceQuestion': default: QuestionComponent = IsaacMultiChoiceQuestion; break;
+    function submitCurrentAttempt(event: React.FormEvent) {
+        if (event) {event.preventDefault();}
+        if (currentAttempt) {
+            dispatch(attemptQuestion(doc.id as string, currentAttempt));
+        }
     }
 
-    let extraClasses = "";
-    if (doc.type === 'isaacParsonsQuestion') {
-        extraClasses += "parsons-layout ";
-    }
+    const QuestionComponent = QUESTION_TYPES.get(doc.type) || QUESTION_TYPES.get("default");
 
-    return <React.Fragment>
+    const sigFigsError = validationResponse && validationResponse.explanation &&
+        (validationResponse.explanation.tags || []).includes("sig_figs");
+
+    return <RS.Form onSubmit={submitCurrentAttempt}>
         {/* <h2 className="h-question d-flex pb-3">
             <span className="mr-3">{questionIndex !== undefined ? `Q${questionIndex + 1}` : "Question"}</span>
         </h2> */}
 
         {/* Difficulty bar */}
-        <div className={`question-component p-md-5 ${extraClasses}`}>
-            <QuestionComponent questionId={doc.id as string} doc={doc} />
 
-            {validationResponse && !canSubmit && <div className={`validation-response-panel p-3 mt-3 ${validationResponse.correct ? "correct" : ""}`}>
+        <div className={
+            classnames({"question-component p-md-5": true, "parsons-layout": doc.type === 'isaacParsonsQuestion'})
+        }>
+            <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
+
+            {validationResponse && !canSubmit && <div className={
+                classnames({"validation-response-panel p-3 mt-3": true,  "correct": validationResponse.correct})
+            }>
                 <div className="pb-1">
-                    {validationResponse.correct ?
-                        <h1 className="m-0">Correct!</h1> :
-                        <h1 className="m-0">Incorrect</h1>
-                    }
+                    <h1 className="m-0">{sigFigsError ? "Significant Figures" : validationResponse.correct ? "Correct!" : "Incorrect"}</h1>
                 </div>
                 <div>
-                    {validationResponse.explanation &&
-                        <IsaacContent doc={validationResponse.explanation} />
-                    }
+                    {validationResponse.explanation && <IsaacContent doc={validationResponse.explanation} />}
                 </div>
+                {/*{SITE_SUBJECT === SITE.PHY && <div className="pt-1">*/}
+                {/*    <div className="m-0 question-response">{validationResponse.correct ? "Well done!" : "Please try again."}</div>*/}
+                {/*</div>}*/}
             </div>}
 
-            {locked && <Alert color="danger">
-                This question is locked until at least {showTime(locked)} to prevent repeated guessing.
-            </Alert>}
+            {locked && <RS.Alert color="danger">
+                This question is locked until at least {<DateString formatter={NUMERIC_DATE_AND_TIME}>{locked}</DateString>} to prevent repeated guessing.
+            </RS.Alert>}
 
-            {((!validationResponse) || (validationResponse && !validationResponse.correct) || canSubmit) && (!locked) && <Row>
-                <Col className="text-center pt-3 pb-1">
-                    <Button color="secondary" disabled={!canSubmit} onClick={submitCurrentAttempt}>
-                        Check my answer
-                    </Button>
-                </Col>
-            </Row>}
+            {((!validationResponse) || (!validationResponse.correct) || canSubmit) && (!locked) && <RS.Row>
+                <RS.Col className="text-center pt-3 pb-1">
+                    <input
+                        type="submit" className="btn btn-secondary border-0"
+                        disabled={!canSubmit} value="Check my answer"
+                    />
+                </RS.Col>
+            </RS.Row>}
 
-            {((!validationResponse) || (validationResponse && !validationResponse.correct) || canSubmit) && <Row>
-                <Col xl={{size: 10, offset: 1}} >
-                    {doc.hints && <p className="text-center pt-2 mb-0">
-                        <small>Don&apos;t forget to use the hints above if you need help.</small>
+            {((!validationResponse) || (!validationResponse.correct) || canSubmit) && <RS.Row>
+                <RS.Col xl={{size: 10, offset: 1}} >
+                    {doc.hints && <p className="no-print text-center pt-2 mb-0">
+                        <small>{"Don't forget to use the hints above if you need help."}</small>
                     </p>}
-                </Col>
-            </Row>}
+                </RS.Col>
+            </RS.Row>}
         </div>
-    </React.Fragment>;
+    </RS.Form>;
 };
 
-export const IsaacQuestionTabs = connect(stateToProps, dispatchToProps)(IsaacQuestionTabsComponent);
+export const IsaacQuestionTabs = connect(stateToProps)(IsaacQuestionTabsComponent);

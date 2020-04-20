@@ -1,10 +1,11 @@
-import {CardBody, Col, FormGroup, Row, default as RS, Table} from "reactstrap";
+import {CardBody, FormGroup, Table} from "reactstrap";
 import React, {useMemo} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {validateEmailPreferences} from "../../../services/validation";
+import {SITE_SUBJECT_TITLE, SITE_SUBJECT, SITE} from "../../../services/siteConstants";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences;
@@ -15,6 +16,21 @@ interface UserEmailPreferencesProps {
 export const UserEmailPreference = ({emailPreferences, setEmailPreferences, submissionAttempted, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
     const error = useSelector((state: AppState) => state && state.error);
     const defaultEmailPreferences = {ASSIGNMENTS: true};
+    const isaacEmailPreferences = {
+        assignments: {
+            [SITE.CS]: "If you're a student, set this to 'Yes' to receive assignment notifications from your teacher.",
+            [SITE.PHY]: "Get notified when your teacher gives your group a new assignment."
+        },
+        news: {
+            [SITE.CS]: "Be the first to know about new topics, new platform features, and our fantastic competition giveaways.",
+            [SITE.PHY]: "New content and website feature updates, as well as interesting news about Isaac."
+        },
+        events: {
+            [SITE.CS]: "Get valuable updates on our free student workshops/teacher CPD events happening near you.",
+            [SITE.PHY]: "Information about new virtual or real world physics events."
+        }
+    };
+
 
     // initially set email preferences to default value
     useMemo(() => {setEmailPreferences(Object.assign(defaultEmailPreferences, emailPreferences))}, []);
@@ -27,34 +43,21 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
     }
 
     return <CardBody className="pb-0">
-        <p>We know people don’t like getting unwanted spam, so we’ve made it easy to personalise and control the updates you receive from us.</p>
+        <p>Get important information about the Isaac {SITE_SUBJECT_TITLE} programme delivered to your inbox.</p>
         <FormGroup className="overflow-auto">
             <Table className="mb-0">
                 <thead>
                     <tr>
-                        <th>Email Type</th>
+                        <th>Email type</th>
                         <th className="d-none d-sm-table-cell">Description</th>
                         <th className="text-center">Preference</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td className="form-required">News</td>
-                        <td className="d-none d-sm-table-cell">
-                            Content updates, new website features, and other interesting news as it happens.
-                        </td>
-                        <td className="text-center">
-                            <TrueFalseRadioInput
-                                id={`${idPrefix}news`} stateObject={emailPreferences}
-                                propertyName="NEWS_AND_UPDATES" setStateFunction={setEmailPreferences}
-                                submissionAttempted={submissionAttempted}
-                            />
-                        </td>
-                    </tr>
-                    <tr>
                         <td className="form-required">Assignments</td>
                         <td className="d-none d-sm-table-cell">
-                            A notification when your teacher sets a new group assignment.
+                            {isaacEmailPreferences.assignments[SITE_SUBJECT]}
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
@@ -65,9 +68,22 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                         </td>
                     </tr>
                     <tr>
+                        <td className="form-required">News</td>
+                        <td className="d-none d-sm-table-cell">
+                            {isaacEmailPreferences.news[SITE_SUBJECT]}
+                        </td>
+                        <td className="text-center">
+                            <TrueFalseRadioInput
+                                id={`${idPrefix}news`} stateObject={emailPreferences}
+                                propertyName="NEWS_AND_UPDATES" setStateFunction={setEmailPreferences}
+                                submissionAttempted={submissionAttempted}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
                         <td className="form-required">Events</td>
                         <td className="d-none d-sm-table-cell">
-                            Information about our events around England.
+                            {isaacEmailPreferences.events[SITE_SUBJECT]}
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
@@ -79,6 +95,12 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     </tr>
                 </tbody>
             </Table>
+            <hr />
+            <div>
+                <small>
+                    <b>Frequency</b>: Expect one email every six weeks to two months from News and Events. Assignment notifications will be sent as needed by your teacher.
+                </small>
+            </div>
             {errorMessage && <h4 role="alert" className="text-danger text-center">
                 {errorMessage}
             </h4>}

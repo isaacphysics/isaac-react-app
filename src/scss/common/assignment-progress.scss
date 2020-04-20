@@ -1,0 +1,497 @@
+.assignment-progress-container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@include respond-below(sm) {
+  .assignment-progress-container {
+    margin: 0 -1px;
+    padding: 0;
+  }
+
+  .assignment-progress-gameboard {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+.assignment-progress-group {
+  border: 1px solid $gray-118;
+  margin: 1rem 0;
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  align-items: stretch;
+  background: white;
+}
+
+.assignment-progress-group > div {
+  display: inline-block;
+  flex: 0 0 auto;
+  align-self: baseline;
+  padding-right: 0.5rem;
+}
+
+.assignment-progress-group .group-name {
+  background: $primary;
+  align-self: stretch;
+  display: flex;
+  font-weight: bold;
+  flex-shrink: 1;
+  padding: 0.5rem 1.5rem;
+  width: 300px;
+  @include respond-above(sm) {
+    font-size: 1.1rem;
+  }
+}
+.assignment-progress-group .group-name span {
+  margin: auto 0;
+  & + span {
+    padding-left: 1rem;
+  }
+}
+
+.active .accordion-arrow {
+  transform: rotate(180deg);
+}
+
+.assignment-progress-details {
+  background: $gray-107;
+  margin-top: -1rem;
+}
+
+.assignment-progress-legend {
+  background: #fff;
+  border: 1px solid $gray-118;
+  padding: 1rem;
+}
+
+
+/*
+    My progress styles
+*/
+
+// GENERIC
+$status-opacity: 0.5;
+$total-status-opacity: 0.5;
+$default-name-fill: #888;
+
+// COMPLETED
+$perfect-fill: $green;
+$completed-bg-img: linear-gradient(to right, rgba($perfect-fill, $status-opacity), rgba($perfect-fill, $status-opacity));
+$completed-total-bg-img: linear-gradient(to right, rgba($perfect-fill, $total-status-opacity), rgba($perfect-fill, $total-status-opacity));
+$completed-cb-bg-img: linear-gradient(
+                to right, rgba($perfect-fill, $status-opacity), rgba($perfect-fill, $status-opacity));
+$completed-bg-size: 100%;
+
+// PASSED
+$passed-fill: #2C2C2C;
+$passed-bg-img: linear-gradient(to right, rgba($passed-fill, $status-opacity), rgba($passed-fill, $status-opacity));
+$passed-total-bg-img: linear-gradient(to right, rgba($passed-fill, $total-status-opacity), rgba($passed-fill, $total-status-opacity));
+$passed-cb-bg-img: linear-gradient(
+                to bottom left, rgba($passed-fill, $status-opacity / 1.5) 25%,
+                rgba($passed-fill, $status-opacity / 2) 25%, rgba($passed-fill, $status-opacity / 2) 50%,
+                rgba($passed-fill, $status-opacity / 1.5) 50%, rgba($passed-fill, $status-opacity / 1.5) 75%,
+                rgba($passed-fill, $status-opacity / 2) 75%, rgba($passed-fill, $status-opacity / 2));
+$passed-bg-size: 50%;
+
+// IN-PROGRESS
+$in-progress-fill: #555;
+$in-progress-bg-img: linear-gradient(to right, rgba($in-progress-fill, $status-opacity / 2), rgba($in-progress-fill, $status-opacity / 2));
+$in-progress-total-bg-img: linear-gradient(to right, rgba($in-progress-fill, $total-status-opacity / 2), rgba($in-progress-fill, $total-status-opacity / 2));
+$in-progress-cb-bg-img: linear-gradient(
+                to bottom left, rgba($in-progress-fill, $status-opacity / 1.5) 25%,
+                rgba($in-progress-fill, $status-opacity / 4) 25%, rgba($in-progress-fill, $status-opacity / 4) 50%,
+                rgba($in-progress-fill, $status-opacity / 1.5) 50%, rgba($in-progress-fill, $status-opacity / 1.5) 75%,
+                rgba($in-progress-fill, $status-opacity / 4) 75%, rgba($in-progress-fill, $status-opacity / 4));
+$in-progress-bg-size: 100%;
+
+// FAILED
+$failed-fill: $red;
+$failed-bg-img: linear-gradient(to right, rgba($failed-fill, $status-opacity), rgba($failed-fill, $status-opacity));
+$failed-total-bg-img: linear-gradient(to right, rgba($failed-fill, $total-status-opacity), rgba($failed-fill, $total-status-opacity));
+$failed-cb-bg-img:
+        linear-gradient(135deg, rgba($failed-fill, $status-opacity / 1.5) 25%, rgba($failed-fill, $status-opacity / 6) 25%),
+        linear-gradient(225deg, rgba($failed-fill, $status-opacity / 1.5) 25%, rgba($failed-fill, $status-opacity / 6) 25%),
+        linear-gradient(315deg, rgba($failed-fill, $status-opacity / 1.5) 25%, rgba($failed-fill, $status-opacity / 6) 25%),
+        linear-gradient( 45deg, rgba($failed-fill, $status-opacity / 1.5) 25%, rgba($failed-fill, $status-opacity / 6) 25%);
+$failed-bg-size: 25%;
+
+
+.assignment-progress-details {
+  td, .key-cell, tr {
+    .completed {
+      background-image: $completed-bg-img;
+      background-size: $completed-bg-size;
+    }
+    .passed {
+      background-image: $passed-bg-img;
+      background-size: $passed-bg-size;
+    }
+    .in-progress {
+      background-image: $in-progress-bg-img;
+      background-size: $in-progress-bg-size;
+    }
+    .failed {
+      background-image: $failed-bg-img;
+      background-size: $failed-bg-size;
+    }
+  }
+
+  .completed th {
+    &:first-child, .icon-person { color: rgba($perfect-fill, 1); }
+    &.total-column {
+      background-image: $completed-total-bg-img;
+      background-size: $completed-bg-size;
+    }
+  }
+
+  .passed th {
+    &:first-child, .icon-person { color: rgba($passed-fill, 1); }
+    &.total-column {
+      background-image: $passed-total-bg-img;
+      background-size: $passed-bg-size;
+    }
+  }
+
+  .in-progress th {
+    &:first-child, .icon-person  { color: rgba($default-name-fill, 1); }
+    &.total-column {
+      background-image: $in-progress-total-bg-img;
+      background-size: $in-progress-bg-size;
+    }
+  }
+
+  .failed th {
+    &:first-child, .icon-person { color: rgba($failed-fill, 1); }
+    &.total-column {
+      background-image: $failed-total-bg-img;
+      background-size: $failed-bg-size;
+    }
+  }
+
+  .not-attempted {
+    th {
+      &:first-child, .icon-person  { color: rgba($default-name-fill, 1); }
+    }
+  }
+  .revoked {
+    th {
+      &:first-child, .icon-person {
+        color: gray;
+      }
+    }
+  }
+
+  .key-cell span {
+    border: 1px solid black;
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+  }
+
+  .key-description {
+    text-align: left;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
+    @include respond-above(sm) {
+      margin-left: 0.75rem;
+    }
+  }
+}
+
+.assignment-progress-details.colour-blind {
+  td, .key-cell, tr {
+    .completed {
+      background-image: $completed-cb-bg-img;
+    }
+    .passed {
+      background-image: $passed-cb-bg-img;
+    }
+    .in-progress {
+      background-image: $in-progress-cb-bg-img;
+    }
+    .failed {
+      background-image: $failed-cb-bg-img;
+    }
+  }
+
+  .completed th.total-column { background-image: $completed-cb-bg-img;}
+  .passed th.total-column { background-image: $passed-cb-bg-img; }
+  .in-progress th.total-column { background-image: $in-progress-cb-bg-img; }
+  .failed th.total-column { background-image: $failed-cb-bg-img; }
+}
+
+.assignment-progress-options {
+  clear: both;
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.assignment-progress-options label {
+  padding-left: 1rem;
+  padding-right: 0.25rem;
+}
+
+.assignment-progress-details {
+  counter-reset: board-count;
+}
+
+.assignment-progress-gameboard {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+.assignment-progress-gameboard .gameboard-header {
+  background: #fff;
+  border: 1px solid $gray-118;
+  align-content: stretch;
+  display: flex;
+  cursor: pointer;
+  justify-content: space-between;
+}
+
+.assignment-progress-gameboard .gameboard-title {
+  display: flex;
+  border: 0px;
+}
+
+.assignment-progress-gameboard .gameboard-header > *:first-child:before {
+  background: $primary;
+  counter-increment: board-count;
+  content: counter(board-count) ". ";
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+}
+.assignment-progress-gameboard .gameboard-title span {
+  padding-left: 0.75rem;
+  font-size: 1.2rem;
+}
+.gameboard-due-date {
+  font-weight: normal;
+  color: $gray-160;
+  font-size: 0.875rem !important;
+}
+
+.gameboard-links {
+  align-items: baseline;
+  display: flex;
+  padding-right: 0.5rem;
+  margin-left: auto;
+}
+.gameboard-links > * {
+  margin-right: 0.3rem !important;
+}
+
+.assignment-progress-progress {
+  background: $gray-103;
+  border: 1px solid $gray-118;
+  border-top: none;
+}
+
+.progress-header {
+  text-align: center;
+  padding: 0.5rem 0;
+  @include respond-above(sm) {
+    font-size: 1.1rem;
+  }
+}
+
+.progress-questions {
+  border-top: 1px solid $gray-118;
+  display: flex;
+  justify-content: space-between;
+  @include respond-above(sm) {
+    font-size: 1.2rem;
+  }
+  align-items: center;
+  background: white;
+}
+
+.progress-questions button {
+  align-self: flex-end;
+  min-width: 65px;
+  border-radius: 0;
+  padding: 0.5rem 0;
+  border: 1px solid $gray-118;
+  margin: -1px;
+  z-index: 10;
+  &.btn.disabled {
+    opacity: 0.5;
+  }
+}
+
+@mixin table-sticky() {
+  position: sticky !important;
+  background-clip:  padding-box !important;
+  background: $gray-103;
+  z-index: 2;
+}
+
+@mixin after-border() {
+  content:'';
+  position:absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
+.progress-table {
+
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-bottom: 1px; // Fixes odd broswer bugs around the magic :after borders
+
+  th.selected {
+    // Fixes Firefox bug with position: relative table cells: https://bugzilla.mozilla.org/show_bug.cgi?id=688556
+    background-clip: padding-box !important;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  tbody tr:nth-of-type(even) {
+    background: $gray-110;
+    th {
+      background: $gray-110;
+    }
+  }
+
+  font-size: 12px;
+  tbody td, tbody th {
+    min-width: 40px;
+  }
+  .total-column.left {
+    right: 40px;
+  }
+
+  @include respond-above(sm) {
+    font-size: 17px;
+    tbody td, tbody th {
+      min-width: 65px;
+    }
+    .total-column.left {
+      right: 65px;
+    }
+  }
+
+  thead th {
+    //border-top: 1px solid $gray-118;
+    border-bottom: 1px solid $gray-118;
+    &.selected {
+      border-top-color: #fff;
+      background: #fff;
+    }
+    &:not(.selected):after {
+      @include after-border;
+      border-top: 1px solid $gray-118;
+    }
+  }
+
+  tfoot th {
+    border-top: 1px solid $gray-118;
+    &.selected {
+      background: #fff;
+    }
+  }
+
+  .progress-table-header-footer th {
+    position: relative;
+    padding-right: 8px;
+  }
+
+  .progress-table-header-footer button {
+    background: none;
+    border: none;
+    padding: 0;
+
+    position: absolute;
+    right: 2px;
+    font-size: 8px;
+    top: 1px;
+    z-index: 1;
+
+    line-height: initial;
+    span {
+      opacity: 0.5;
+      display: block;
+    }
+    .up {
+      padding-top: 10px;
+    }
+    .down {
+      padding-bottom: 10px;
+    }
+  }
+
+  .progress-table-header-footer .sorted.forward .up, .progress-table-header-footer .sorted.reverse .down {
+    opacity: 1;
+  }
+
+  td, th {
+    vertical-align: middle;
+    text-align: center;
+    line-height: 1.3rem;
+  }
+
+  .revoked .student-name {
+    text-decoration: line-through;
+  }
+
+  .selected:not(:nth-child(2)) {
+    border-left: 1px solid $gray-118;
+  }
+
+  .selected:not(:nth-last-child(3)) {
+    border-right: 1px solid $gray-118;
+  }
+
+  th {
+    font-weight: normal;
+  }
+
+  td.selected, td.total-column {
+    font-weight: bold;
+  }
+
+  th:first-child {
+    @include table-sticky;
+    left: 0;
+    top: 0;
+    width: 195px;
+
+    &:after {
+      @include after-border;
+      border-right: 1px solid $gray-118;
+      pointer-events: none; // don't intercept clicks as we want links in the th element
+    }
+  }
+
+  .total-column {
+    @include table-sticky;
+    width: 65px;
+    right: 0;
+    top: 0;
+    button {
+      z-index: 2;
+    }
+    &.left:after{
+      @include after-border;
+      border-left: 1px solid $gray-118;
+    }
+  }
+
+  .student-name {
+    font-weight: bold;
+    color: $text-muted;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    min-width: 130px;
+  }
+}
+

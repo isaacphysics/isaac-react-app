@@ -1,7 +1,12 @@
 import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {invert} from "lodash";
+import {SITE, SITE_SUBJECT} from "./siteConstants";
 
-export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
+// eslint-disable-next-line no-undef
+export const API_VERSION: string = REACT_APP_API_VERSION || "any";
+
+export const IS_CS_PLATFORM = SITE_SUBJECT === SITE.CS;
 
 /*
  * Configure the api provider with the server running the API:
@@ -10,14 +15,17 @@ export const API_VERSION: string = process.env.REACT_APP_API_VERSION || "any";
 let apiPath = `${document.location.origin}/api/${API_VERSION}/api`;
 if (document.location.hostname === "localhost") {
     apiPath = "http://localhost:8080/isaac-api/api";
-} else if (document.location.hostname.indexOf(".eu.ngrok.io") > -1) {
+} else if (document.location.hostname.endsWith(".eu.ngrok.io")) {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
 }
 export const isTest = document.location.hostname.startsWith("test.");
 
 export const API_PATH: string = apiPath;
 
-export const EDITOR_URL = "https://editor.isaaccomputerscience.org/#!/edit/master/";
+export const EDITOR_URL = {
+    [SITE.PHY]: "https://editor.isaacphysics.org",
+    [SITE.CS]: "https://editor.isaaccomputerscience.org",
+}[SITE_SUBJECT] + "/#!/edit/master/";
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
 
@@ -28,11 +36,7 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
-export const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB");
-export const DATE_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
-    year: "numeric", month: "numeric", day: "numeric",
-    hour: "numeric", minute: "numeric", second: "numeric", hour12: false
-});
+export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_jan20_aqa', 'class_test_jan20_ocr'];
 
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
@@ -57,11 +61,23 @@ export enum ACTION_TYPE {
     USER_AUTH_SETTINGS_RESPONSE_SUCCESS = "USER_AUTH_SETTINGS_RESPONSE_SUCCESS",
     USER_AUTH_SETTINGS_RESPONSE_FAILURE = "USER_AUTH_SETTINGS_RESPONSE_FAILURE",
 
+    SELECTED_USER_AUTH_SETTINGS_REQUEST = "SELECTED_USER_AUTH_SETTINGS_REQUEST",
+    SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS = "SELECTED_USER_AUTH_SETTINGS_REQUEST_SUCCESS",
+    SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE = "SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE",
+
+    USER_AUTH_LINK_REQUEST = "USER_AUTH_LINK_REQUEST",
+    USER_AUTH_LINK_RESPONSE_SUCCESS = "USER_AUTH_LINK_RESPONSE_SUCCESS",
+    USER_AUTH_LINK_RESPONSE_FAILURE = "USER_AUTH_LINK_RESPONSE_FAILURE",
+
+    USER_AUTH_UNLINK_REQUEST = "USER_AUTH_UNLINK_REQUEST",
+    USER_AUTH_UNLINK_RESPONSE_SUCCESS = "USER_AUTH_UNLINK_RESPONSE_SUCCESS",
+    USER_AUTH_UNLINK_RESPONSE_FAILURE = "USER_AUTH_UNLINK_RESPONSE_FAILURE",
+
     USER_PREFERENCES_REQUEST = "USER_PREFERENCES_REQUEST",
     USER_PREFERENCES_RESPONSE_SUCCESS= "USER_PREFERENCES_RESPONSE_SUCCESS",
     USER_PREFERENCES_RESPONSE_FAILURE = "USER_PREFERENCES_RESPONSE_FAILURE",
 
-    USER_PREFERENCES_SET_FOR_ANON = "USER_PREFERENCES_SET_FOR_ANON",
+    EXAM_BOARD_SET_TEMP = "EXAM_BOARD_SET_TEMP",
 
     USER_PASSWORD_RESET_REQUEST= "USER_PASSWORD_RESET_REQUEST",
     USER_PASSWORD_RESET_RESPONSE_SUCCESS ="USER_PASSWORD_RESET_RESPONSE_SUCCESS",
@@ -73,6 +89,10 @@ export enum ACTION_TYPE {
 
     USER_LOG_OUT_REQUEST = "USER_LOG_OUT_REQUEST",
     USER_LOG_OUT_RESPONSE_SUCCESS = "USER_LOG_OUT_RESPONSE_SUCCESS",
+
+    USER_PROGRESS_REQUEST = "USER_PROGRESS_REQUEST",
+    USER_PROGRESS_RESPONSE_SUCCESS = "USER_PROGRESS_RESPONSE_SUCCESS",
+    USER_PROGRESS_RESPONSE_FAILURE = "USER_PROGRESS_RESPONSE_FAILURE",
 
     AUTHENTICATION_REQUEST_REDIRECT = "AUTHENTICATION_REQUEST_REDIRECT",
     AUTHENTICATION_REDIRECT = "AUTHENTICATION_REDIRECT",
@@ -95,6 +115,9 @@ export enum ACTION_TYPE {
     ADMIN_USER_SEARCH_REQUEST = "ADMIN_USER_SEARCH_REQUEST",
     ADMIN_USER_SEARCH_RESPONSE_SUCCESS = "ADMIN_USER_SEARCH_RESPONSE_SUCCESS",
     ADMIN_USER_SEARCH_RESPONSE_FAILURE = "ADMIN_USER_SEARCH_RESPONSE_FAILURE",
+    ADMIN_USER_GET_REQUEST = "ADMIN_USER_GET_REQUEST",
+    ADMIN_USER_GET_RESPONSE_SUCCESS = "ADMIN_USER_GET_RESPONSE_SUCCESS",
+    ADMIN_USER_GET_RESPONSE_FAILURE = "ADMIN_USER_GET_RESPONSE_FAILURE",
     ADMIN_USER_DELETE_REQUEST = "ADMIN_USER_DELETE_REQUEST",
     ADMIN_USER_DELETE_RESPONSE_SUCCESS = "ADMIN_USER_DELETE_RESPONSE_SUCCESS",
     ADMIN_USER_DELETE_RESPONSE_FAILURE = "ADMIN_USER_DELETE_RESPONSE_FAILURE",
@@ -107,6 +130,15 @@ export enum ACTION_TYPE {
     ADMIN_STATS_REQUEST = "ADMIN_STATS_REQUEST",
     ADMIN_STATS_RESPONSE_SUCCESS = "ADMIN_STATS_RESPONSE_SUCCESS",
     ADMIN_STATS_RESPONSE_FAILURE = "ADMIN_STATS_RESPONSE_FAILURE",
+    ADMIN_EMAIL_TEMPLATE_REQUEST = "ADMIN_EMAIL_TEMPLATE_REQUEST",
+    ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS = "ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS",
+    ADMIN_EMAIL_TEMPLATE_RESPONSE_FAILURE = "ADMIN_EMAIL_TEMPLATE_RESPONSE_FAILURE",
+    ADMIN_SEND_EMAIL_REQUEST = "ADMIN_SEND_EMAIL_REQUEST",
+    ADMIN_SEND_EMAIL_RESPONSE_SUCCESS = "ADMIN_SEND_EMAIL_RESPONSE_SUCCESS",
+    ADMIN_SEND_EMAIL_RESPONSE_FAILURE = "ADMIN_SEND_EMAIL_RESPONSE_FAILURE",
+    ADMIN_SEND_EMAIL_WITH_IDS_REQUEST = "ADMIN_SEND_EMAIL_WITH_IDS_REQUEST",
+    ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS = "ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS",
+    ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE = "ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE",
 
     AUTHORISATIONS_ACTIVE_REQUEST = "AUTHORISATIONS_ACTIVE_REQUEST",
     AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS = "AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS",
@@ -166,9 +198,18 @@ export enum ACTION_TYPE {
     EVENT_OVERVIEWS_RESPONSE_SUCCESS = "EVENT_OVERVIEWS_RESPONSE_SUCCESS",
     EVENT_OVERVIEWS_RESPONSE_FAILURE = "EVENT_OVERVIEWS_RESPONSE_FAILURE",
 
+    EVENT_MAP_DATA_REQUEST = "EVENT_MAP_DATA_REQUEST",
+    EVENT_MAP_DATA_RESPONSE_SUCCESS = "EVENT_MAP_DATA_RESPONSE_SUCCESS",
+    EVENT_MAP_DATA_RESPONSE_FAILURE = "EVENT_MAP_DATA_RESPONSE_FAILURE",
+
+
     EVENT_BOOKINGS_REQUEST = "EVENT_BOOKINGS_REQUEST",
     EVENT_BOOKINGS_RESPONSE_SUCCESS = "EVENT_BOOKINGS_RESPONSE_SUCCESS",
     EVENT_BOOKINGS_RESPONSE_FAILURE = "EVENT_BOOKINGS_RESPONSE_FAILURE",
+
+    EVENT_BOOKING_CSV_REQUEST = "EVENT_BOOKING_CSV_REQUEST",
+    EVENT_BOOKING_CSV_RESPONSE_SUCCESS = "EVENT_BOOKING_CSV_RESPONSE_SUCCESS",
+    EVENT_BOOKING_CSV_RESPONSE_FAILURE = "EVENT_BOOKING_CSV_RESPONSE_FAILURE",
 
     EVENT_BOOKING_REQUEST = "EVENT_BOOKING_REQUEST",
     EVENT_BOOKING_RESPONSE_SUCCESS = "EVENT_BOOKING_RESPONSE_SUCCESS",
@@ -206,9 +247,17 @@ export enum ACTION_TYPE {
     EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS = "EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS",
     EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE = "EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE",
 
+    NEWS_REQUEST = "NEWS_REQUEST",
+    NEWS_RESPONSE_SUCCESS = "NEWS_RESPONSE_SUCCESS",
+    NEWS_RESPONSE_FAILURE = "NEWS_RESPONSE_FAILURE",
+
     FRAGMENT_REQUEST = "FRAGMENT_REQUEST",
     FRAGMENT_RESPONSE_SUCCESS = "FRAGMENT_RESPONSE_SUCCESS",
     FRAGMENT_RESPONSE_FAILURE = "FRAGMENT_RESPONSE_FAILURE",
+
+    GLOSSARY_TERMS_REQUEST = "GLOSSARY_TERMS_REQUEST",
+    GLOSSARY_TERMS_RESPONSE_SUCCESS = "GLOSSARY_TERMS_RESPONSE_SUCCESS",
+    GLOSSARY_TERMS_RESPONSE_FAILURE = "GLOSSARY_TERMS_RESPONSE_FAILURE",
 
     QUESTION_REGISTRATION = "QUESTION_REGISTRATION",
     QUESTION_DEREGISTRATION = "QUESTION_DEREGISTRATION",
@@ -217,6 +266,22 @@ export enum ACTION_TYPE {
     QUESTION_ATTEMPT_RESPONSE_FAILURE = "QUESTION_ATTEMPT_RESPONSE_FAILURE",
     QUESTION_UNLOCK = "QUESTION_UNLOCK",
     QUESTION_SET_CURRENT_ATTEMPT = "QUESTION_SET_CURRENT_ATTEMPT",
+
+    QUESTION_SEARCH_REQUEST = "QUESTION_SEARCH_REQUEST",
+    QUESTION_SEARCH_RESPONSE_SUCCESS = "QUESTION_SEARCH_RESPONSE_SUCCESS",
+    QUESTION_SEARCH_RESPONSE_FAILURE = "QUESTION_SEARCH_RESPONSE_FAILURE",
+
+    QUESTION_ANSWERS_BY_DATE_REQUEST = "QUESTION_ANSWERS_BY_DATE_REQUEST",
+    QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS = "QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS",
+    QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE = "QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE",
+
+    QUIZ_SUBMISSION_REQUEST = "QUIZ_SUBMISSION_REQUEST",
+    QUIZ_SUBMISSION_RESPONSE_SUCCESS = "QUIZ_SUBMISSION_RESPONSE_SUCCESS",
+    QUIZ_SUBMISSION_RESPONSE_FAILURE = "QUIZ_SUBMISSION_RESPONSE_FAILURE",
+
+    TEST_QUESTION_REQUEST = "TEST_QUESTION_REQUEST",
+    TEST_QUESTION_RESPONSE_SUCCESS = "TEST_QUESTION_RESPONSE_SUCCESS",
+    TEST_QUESTION_RESPONSE_FAILURE = "TEST_QUESTION_RESPONSE_FAILURE",
 
     TOPIC_REQUEST = "TOPIC_REQUEST",
     TOPIC_RESPONSE_SUCCESS = "TOPIC_RESPONSE_SUCCESS",
@@ -229,6 +294,14 @@ export enum ACTION_TYPE {
     GAMEBOARD_ADD_REQUEST = "GAMEBOARD_ADD_REQUEST",
     GAMEBOARD_ADD_RESPONSE_SUCCESS = "GAMEBOARD_ADD_RESPONSE_SUCCESS",
     GAMEBOARD_ADD_RESPONSE_FAILURE = "GAMEBOARD_ADD_RESPONSE_FAILURE",
+
+    GAMEBOARD_CREATE_REQUEST = "GAMEBOARD_CREATE_REQUEST",
+    GAMEBOARD_CREATE_RESPONSE_SUCCESS = "GAMEBOARD_CREATE_RESPONSE_SUCCESS",
+    GAMEBOARD_CREATE_RESPONSE_FAILURE = "GAMEBOARD_CREATE_RESPONSE_FAILURE",
+
+    GAMEBOARD_WILDCARDS_REQUEST = "GAMEBOARD_WILDCARDS_REQUEST",
+    GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS = "GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS",
+    GAMEBOARD_WILDCARDS_RESPONSE_FAILURE = "GAMEBOARD_WILDCARDS_RESPONSE_FAILURE",
 
     CONTACT_FORM_SEND_REQUEST = "CONTACT_FORM_SEND_REQUEST",
     CONTACT_FORM_SEND_RESPONSE_SUCCESS = "CONTACT_FORM_SEND_RESPONSE_SUCCESS",
@@ -321,12 +394,27 @@ export enum ACTION_TYPE {
     BOARDS_ASSIGN_RESPONSE_SUCCESS = "BOARDS_ASSIGN_RESPONSE_SUCCESS",
     BOARDS_ASSIGN_RESPONSE_FAILURE = "BOARDS_ASSIGN_RESPONSE_FAILURE",
 
+    PRINTING_SET_HINTS = "PRINTING_SET_HINTS",
+
+    CONCEPTS_REQUEST = "CONCEPTS_REQUEST",
+    CONCEPTS_RESPONSE_SUCCESS = "CONCEPTS_RESPONSE_SUCCESS",
+    CONCEPTS_RESPONSE_FAILURE = "CONCEPTS_RESPONSE_FAILURE",
+
     LOG_EVENT = "LOG_EVENT"
 }
 
 export enum EXAM_BOARD {
     AQA = "AQA",
-    OCR = "OCR"
+    OCR = "OCR",
+    OTHER = "OTHER",
+    NONE = ""
+}
+
+export enum SUBJECTS {
+    PHYSICS = 'physics',
+    MATHS = 'maths',
+    CHEMISTRY = 'chemistry',
+    CS = 'computer_science'
 }
 
 export const examBoardTagMap: {[examBoard: string]: string} = {
@@ -334,7 +422,10 @@ export const examBoardTagMap: {[examBoard: string]: string} = {
     [EXAM_BOARD.OCR]: "examboard_ocr",
 };
 
+export const tagExamBoardMap: {[tag: string]: string} = invert(examBoardTagMap);
+
 export enum TAG_ID {
+    // CS ----
     // Categories
     theory = "theory",
     programming = "programming",
@@ -346,9 +437,9 @@ export enum TAG_ID {
     computerSystems = "computer_systems",
     dataAndInformation = "data_and_information",
     // Programming sub-categories
-    functionalProgramming = "functional_programming",
-    objectOrientedProgramming = "object_oriented_programming",
-    proceduralProgramming = "procedural_programming",
+    programmingParadigms = "programming_paradigms",
+    programmingFundamentals = "programming_fundamentals",
+    computingPracticalProject = "computing_practical_project",
 
     // GCSE to A level transition topics
     gcseBooleanLogic = "gcse_boolean_logic",
@@ -359,15 +450,15 @@ export enum TAG_ID {
     // Data structures and algorithms topics
     searchingSortingPathfinding = "searching_sorting_pathfinding",
     complexity = "complexity",
-    modelsOfComputation = "models_of_computation",
-    planningAndDebugging = "planning_and_debugging",
+    theoryOfComputation = "theory_of_computation",
+    computationalThinking = "computational_thinking",
     dataStructures = "data_structures",
     // Computer networks topics
     security = "security",
-    networkStructure = "network_structure",
+    networking = "networking",
     networkHardware = "network_hardware",
     communication = "communication",
-    internet = "internet",
+    theInternet = "the_internet",
     // Computer systems topics
     booleanLogic = "boolean_logic",
     architecture = "architecture",
@@ -379,39 +470,93 @@ export enum TAG_ID {
     numberSystems = "number_systems",
     numberBases = "number_bases",
     representation = "representation",
-    transmission = "transmission",
     databases = "databases",
     bigData = "big_data",
     compression = "compression",
     encryption = "encryption",
 
-    // Functional programming topics
-    functions = "functions",
-    lists = "lists",
-    higherOrderFunctions = "higher_order_functions",
-    // Object-oriented programming topics
-    creatingObjects = "creating_objects",
-    oopConcepts = "oop_concepts",
-    classDiagrams = "class_diagrams",
-    // Procedural programming topics
+    // Programming fundamentals topics
     programmingConcepts = "programming_concepts",
     subroutines = "subroutines",
     files = "files",
-    structureAndRobustness = "structure_and_robustness",
     recursion = "recursion",
     stringManipulation = "string_manipulation",
     guis = "guis",
     softwareEngineeringPrinciples = "software_engineering_principles",
+    // Programming paradigms topics
+    objectOrientedProgramming = "object_oriented_programming",
+    functionalProgramming = "functional_programming",
+    proceduralAndStructuredProgramming = "procedural_and_structured_programming",
+    // Computing practical project topics
     softwareProject = "software_project",
+
+    // PHY ----
+    // Subjects
+    physics = "physics",
+    maths = "maths",
+    chemistry = "chemistry",
+
+    // Physics fields
+    mechanics = "mechanics",
+    waves = "waves",
+    fields = "fields",
+    circuits = "circuits",
+    chemPhysics = "chemphysics",
+    // Maths fields
+    geometry = "geometry",
+    calculus = "calculus",
+    algebra = "algebra",
+    functions = "functions",
+
+    // Mechanics topics
+    statics = "statics",
+    dynamics = "dynamics",
+    shm = "shm",
+    angularMotion = "angular_motion",
+    circularMotion = "circular_motion",
+    kinematics = "kinematics",
+    // Fields topics
+    electric = "electric",
+    magnetic = "magnetic",
+    gravitational = "gravitational",
+    combined = "combined",
+    // Circuits topics
+    resistors = "resistors",
+    capacitors = "capacitors",
+    generalCircuits = "general_circuits",
+    // Waves topics:
+    optics = "optics",
+    superposition = "superposition",
+    waveMotion = "wave_motion",
+    // Physical Chemistry topics:
+    thermodynamics = "thermodynamics",
+    kinetics = "kinetics",
+
+    // Geometry topics
+    geomVectors = "geom_vectors",
+    trigonometry = "trigonometry",
+    shapes = "shapes",
+    // Calculus topics
+    differentiation = "differentiation",
+    integration = "integration",
+    differentialEq = "differential_eq",
+    // Algebra topics
+    simultaneous = "simultaneous",
+    quadratics = "quadratics",
+    manipulation = "manipulation",
+    series = "series",
+    // Functions topics
+    generalFunctions = "general_functions",
+    graphSketching = "graph_sketching",
 }
 
 export enum TAG_LEVEL {
+    subject = "subject",
+    field = "field",
     category = "category",
     subcategory = "subcategory",
     topic = "topic",
 }
-
-export const TAG_HIERARCHY = [TAG_LEVEL.category, TAG_LEVEL.subcategory, TAG_LEVEL.topic];
 
 export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
@@ -443,7 +588,47 @@ export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export const HOME_CRUMB = {title: "Home", to: "/"};
 export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
-export const STUDENTS_CRUMB = {title: "For students", to: "/students"};
-export const TEACHERS_CRUMB = {title: "For teachers", to: "/teachers"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
+
+export enum UserRole {
+    ADMIN = "ADMIN",
+    EVENT_MANAGER = "EVENT_MANAGER",
+    CONTENT_EDITOR = "CONTENT_EDITOR",
+    EVENT_LEADER = "EVENT_LEADER",
+    TEACHER = "TEACHER",
+    STUDENT = "STUDENT"
+}
+
+export enum UserFacingRole {
+    ADMIN = "Admin",
+    EVENT_MANAGER = "Event Manager",
+    CONTENT_EDITOR = "Content Editor",
+    EVENT_LEADER = "Event Leader",
+    TEACHER = "Teacher",
+    STUDENT = "Student"
+}
+
+export enum SortOrder {
+    ASC = "ASC",
+    DESC = "DESC",
+    NONE = "NONE"
+}
+
+export enum sortIcon {
+    "sortable" = '⇕',
+    "ascending" = '⇑',
+    "descending" = '⇓'
+}
+
+export enum EventStatusFilter {
+    "All events" = "all",
+    "Upcoming events" = "upcoming",
+    "My booked events" = "showBookedOnly",
+}
+export enum EventTypeFilter {
+    "All events" = "all",
+    "Student events" = "student",
+    "Teacher events" = "teacher",
+    "Online tutorials" = "virtual",
+}

@@ -1,6 +1,8 @@
 /* tslint:disable */
 // Generated using typescript-generator version 2.12.476 on 2019-05-15 20:09:01.
 
+import {EXAM_BOARD} from "./app/services/constants";
+
 export interface AssignmentDTO {
     gameboardId?: string;
     gameboard?: GameboardDTO;
@@ -131,6 +133,7 @@ export interface IsaacSymbolicQuestionDTO extends IsaacQuestionBaseDTO {
 }
 
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
+    linkedGameboards?: GameboardDTO[];
 }
 
 export interface IsaacWildcardDTO extends ContentDTO {
@@ -202,6 +205,19 @@ export interface ChoiceDTO extends ContentDTO {
 }
 
 export interface ChoiceQuestionDTO extends QuestionDTO {
+}
+
+export interface TestCaseDTO extends QuestionValidationResponseDTO {
+    expected?: boolean;
+}
+
+export interface TestQuestionDTO extends ChoiceQuestionDTO {
+    testCases?: TestCaseDTO[];
+}
+
+export interface GlossaryTermDTO extends ContentDTO {
+    explanation?: ContentDTO;
+    examBoard: string;
 }
 
 export interface ContentBaseDTO {
@@ -342,6 +358,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     registrationDate?: Date;
     schoolId?: string;
     role?: Role;
+    examBoard?: EXAM_BOARD;
     schoolOther?: string;
     firstLogin?: boolean;
     lastUpdated?: Date;
@@ -424,6 +441,11 @@ export interface ExternalReference {
     url?: string;
 }
 
+export interface GlossaryTerm extends Content {
+    explanation?: Content;
+    examBoard: string;
+}
+
 export interface ContentBase {
     id?: string;
     type?: string;
@@ -460,6 +482,10 @@ export interface Address {
     country?: string;
 }
 
+export interface AnsweredQuestionsByDate {
+    [date: string]: number;
+}
+
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
 
 export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY";
@@ -468,7 +494,7 @@ export type FastTrackConceptState = "ft_top_ten" | "ft_upper" | "ft_lower";
 
 export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT";
 
-export type Role = "STUDENT" | "TEACHER" | "TESTER" | "EVENT_MANAGER" | "STAFF" | "CONTENT_EDITOR" | "ADMIN";
+export type Role = "STUDENT" | "TEACHER" | "EVENT_LEADER"| "CONTENT_EDITOR" | "EVENT_MANAGER" | "ADMIN";
 
 export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED";
 

@@ -1,0 +1,13 @@
+@import "../common/button";
+.btn, input.btn {
+  //Button Secondary
+  &.btn-secondary {
+    color: $black;
+  }
+  &.btn-secondary:not(:disabled):not(.disabled):active {
+    background-color: $cs-reddish;
+    border: 1px solid transparent;
+    color: $black;
+    text-decoration: underline;
+  }
+}

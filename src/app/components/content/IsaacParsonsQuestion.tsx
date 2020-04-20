@@ -8,6 +8,7 @@ import {IsaacHints} from "./IsaacHints";
 import {Col, Row} from "reactstrap";
 import {DragDropContext, Droppable, Draggable, DragStart, DropResult, ResponderProvided, DroppableProvided, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot} from "react-beautiful-dnd";
 import _differenceBy from "lodash/differenceBy";
+import {questions} from "../../state/selectors";
 
 interface IsaacParsonsQuestionProps {
     doc: IsaacParsonsQuestionDTO;
@@ -186,7 +187,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             {/* TODO Accessibility */}
             <Row className="my-md-3">
                 <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
-                    <Col md={{size: 6}}>
+                    <Col md={{size: 6}} className="parsons-available-items">
                         <h4>Available items</h4>
                         <Droppable droppableId="availableItems">
                             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
@@ -214,7 +215,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                             }}
                         </Droppable>
                     </Col>
-                    <Col md={{size: 6}}>
+                    <Col md={{size: 6}} className="no-print">
                         <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
                         <Droppable droppableId="answerItems">
                             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
@@ -250,9 +251,8 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
 }
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    // TODO MT move this selector to the reducer - https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers
-    const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
-    return question ? {currentAttempt: question.currentAttempt} : {};
+    const questionPart = questions.selectQuestionPart(questionId)(state);
+    return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
 };
 const dispatchToProps = {setCurrentAttempt};
 
