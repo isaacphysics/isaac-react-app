@@ -62,14 +62,6 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
     const [textInput, setTextInput] = useState('');
 
-    const updateState = (previousAttempt?: FormulaDTO | null) => (state: any) => {
-        const pythonExpression = state?.result?.python || "";
-        if (!previousAttempt || previousAttempt.pythonExpression !== pythonExpression) {
-            setCurrentAttempt(questionId, {type: 'formula', value: JSON.stringify(state), pythonExpression});
-        }
-        setInitialEditorSymbols(state.symbols);
-    };
-
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
         try {
@@ -78,6 +70,15 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             currentAttemptValue = { result: { tex: '\\textrm{PLACEHOLDER HERE}' } };
         }
     }
+
+    const updateState = (state: any) => {
+        const pythonExpression = state?.result?.python || "";
+        const previousPythonExpression = currentAttemptValue?.result?.python || "";
+        if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
+            setCurrentAttempt(questionId, {type: 'formula', value: JSON.stringify(state), pythonExpression});
+        }
+        setInitialEditorSymbols(state.symbols);
+    };
 
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
@@ -119,7 +120,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             }
         );
         sketch.log = { initialState: [], actions: [] };
-        sketch.onNewEditorState = updateState(currentAttempt);
+        sketch.onNewEditorState = updateState;
         sketch.onCloseMenus = () => {};
         sketch.isUserPrivileged = () => { return true; };
         sketch.onNotifySymbolDrag = () => {};
