@@ -9,7 +9,6 @@ import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
-import {CoronavirusWarningBanner} from "../../navigation/CoronavirusWarningBanner";
 
 
 const stateToProps = (state: AppState) => ({user: state ? state.user : null});
@@ -23,7 +22,6 @@ export const HomepageComponent = ({user}: HomePageProps) => {
         document.title = "Isaac " + SITE_SUBJECT_TITLE;
     }, []);
     return <div id="homepage">
-        <CoronavirusWarningBanner />
         <section id="call-to-action" className="homepageHero">
             <Container>
                 <Row>
@@ -108,12 +106,12 @@ export const HomepageComponent = ({user}: HomePageProps) => {
         <section id="events">
             <Container className="pt-4 pb-5">
                 <div className="eventList pt-5 pattern-03">
-                    <h2 className="h-title text-center mb-4">Your face-to-face events</h2>
+                    <h2 className="h-title text-center mb-4">Events</h2>
                     <p className="pt-4 pb-2 event-description text-center col-md-8 offset-md-2">
-                        {"We offer free face-to-face events for students and teachers. Visit our "}
-                        <a href="https://isaaccomputerscience.org/events" target="_blank" rel="noopener noreferrer">
+                        {"We offer free online and face-to-face events for students and teachers. Visit our "}
+                        <Link to="/events">
                             Events page
-                        </a>
+                        </Link>
                         {" to see what’s happening in your area, and sign up today!"}
                     </p>
                     <EventsCarousel />
