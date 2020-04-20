@@ -12,6 +12,7 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
 
 import _flattenDeep from 'lodash/flattenDeep';
+import {useCurrentExamBoard} from "../../services/examBoard";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
@@ -34,6 +35,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
+    const examBoard = useCurrentExamBoard();
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -81,7 +83,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 initialEditorSymbols={initialEditorSymbols}
                 visible={modalVisible}
                 editorMode='logic'
-                logicSyntax={props.examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
+                logicSyntax={examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
             />}
             <IsaacHints questionPartId={questionId} hints={doc.hints} />
         </div>
