@@ -43,6 +43,11 @@ const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUse
     });
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
     const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
+    let promotableRoles = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
+    if (currentUser && currentUser.role == "ADMIN") {
+        promotableRoles = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"]
+    }
+        
 
     useEffect(() => {
         if (searchResults && searchResults.length > 0) {
@@ -114,9 +119,6 @@ const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUse
         adminUserSearch(searchQuery);
     };
 
-    const availableRoles = {
-        "EVENT_MANAGER": ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"],
-        "ADMIN": ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"]
     return <RS.Container>
         <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager"/>
 
@@ -227,8 +229,7 @@ const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUse
                             <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline>Modify Role</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Promote or demote selected users to:</RS.DropdownItem>
-                                {(currentUser && currentUser.role == "ADMIN" ? ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"]:
-                                    ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"]).map(role =>
+                                {(promotableRoles).map(role =>
                                     <RS.DropdownItem
                                         key={role} disabled={selectedUserIds.length === 0}
                                         onClick={() => modifyUserRolesAndUpdateResults(role as Role)}
