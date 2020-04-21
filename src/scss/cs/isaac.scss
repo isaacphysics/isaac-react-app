@@ -61,6 +61,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 // Utility
 @import "preload";
 @import "../common/mixins";
+@import "../common/animations";
 
 // Atoms
 @import "../common/fonts";
