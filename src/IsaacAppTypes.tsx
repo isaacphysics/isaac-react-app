@@ -581,6 +581,7 @@ export interface AdditionalInformation {
     emergencyNumber?: string;
     authorisation?: string;
     authorisationOther?: string;
+    experienceLevel?: string;
 }
 
 export interface Credentials {
