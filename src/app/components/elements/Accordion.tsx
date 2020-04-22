@@ -139,9 +139,9 @@ const AccordionComponent = ({id, trustedTitle, index, content, children, locatio
                 aria-expanded={open ? "true" : "false"}
             >
                 {level && <span className="accordion-level badge-secondary">Level {level}</span>}
-                <div className="accordion-title p-3">
-                    <span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
-                    {trustedTitle && <TrustedHtml html={trustedTitle} />}
+                <div className="accordion-title pl-3">
+                    <RS.Row><span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
+                        {trustedTitle && <div className="p-3"><TrustedHtml html={trustedTitle} /></div>}</RS.Row>
                 </div>
 
                 {accordianIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon accordion-icon-" + accordianIcon}>
@@ -153,7 +153,7 @@ const AccordionComponent = ({id, trustedTitle, index, content, children, locatio
             <AccordionSectionContext.Provider value={{id, clientId: clientId.current}}>
                 <RS.Card>
                     <RS.CardBody>
-                        {content ? <IsaacContent doc={content} /> : children}
+                        {children}
                     </RS.CardBody>
                 </RS.Card>
             </AccordionSectionContext.Provider>
