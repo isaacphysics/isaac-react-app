@@ -87,7 +87,7 @@ button {
   }
 }
 
-.symbolic-question {
+.symbolic-question, .equality-page {
   .eqn-editor-preview {
     border: solid 1px $black;
     padding: 0.15em 0.6em;
@@ -96,6 +96,12 @@ button {
 
     &.empty {
       color: $gray-500;
+    }
+  }
+
+  .equality-page {
+    .eqn-editor-preview {
+      background: $white !important;
     }
   }
 
@@ -111,6 +117,10 @@ button {
 
 @include media-breakpoint-up(md) {
   .parsons-layout {
+    -webkit-animation: gutter-overflow 1s; /* Safari 4+ */
+    -moz-animation:    gutter-overflow 1s; /* Fx 5+ */
+    -o-animation:      gutter-overflow 1s; /* Opera 12+ */
+    animation:         gutter-overflow 1s; /* IE 10+, Fx 29+ */
     @include make-col-offset(-2, 8);
     width: 150%;
   }

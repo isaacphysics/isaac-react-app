@@ -150,7 +150,14 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
     }
 
+    private handleKeyPress(ev: KeyboardEvent) {
+        if (ev.code === 'Escape') {
+            this.close();
+        }
+    }
+
     public componentDidMount() {
+        window.addEventListener('keyup', this.handleKeyPress.bind(this));
         const inequalityElement = document.getElementById('inequality-modal') as HTMLElement;
         const { sketch, p } = makeInequality(
             inequalityElement,
@@ -354,6 +361,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     public componentWillUnmount() {
+        window.removeEventListener('keyup', this.handleKeyPress.bind(this));
         const inequalityElement = document.getElementById('inequality-modal') as HTMLElement;
         inequalityElement.removeEventListener('mousedown', this.onMouseDown.bind(this));
         inequalityElement.removeEventListener('touchstart', this.onTouchStart.bind(this));

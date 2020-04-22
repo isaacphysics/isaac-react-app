@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -10,6 +10,9 @@ import {IsaacHints} from "./IsaacHints";
 import { EXAM_BOARD } from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
+
+import _flattenDeep from 'lodash/flattenDeep';
+import {useCurrentExamBoard} from "../../services/examBoard";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
@@ -32,6 +35,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
+    const examBoard = useCurrentExamBoard();
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -41,6 +45,12 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
             currentAttemptValue = { result: { tex: '\\textrm{PLACEHOLDER HERE}' } };
         }
     }
+
+    useEffect(() => {
+        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
+
+        setInitialEditorSymbols(_flattenDeep(currentAttemptValue.symbols));
+    }, [currentAttempt, currentAttemptValue]);
 
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
@@ -73,7 +83,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 initialEditorSymbols={initialEditorSymbols}
                 visible={modalVisible}
                 editorMode='logic'
-                logicSyntax={props.examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
+                logicSyntax={examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
             />}
             <IsaacHints questionPartId={questionId} hints={doc.hints} />
         </div>

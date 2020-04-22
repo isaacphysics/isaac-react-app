@@ -48,9 +48,9 @@ export const Events = withRouter(({history, location}: {history: History; locati
         dispatch(getEventMapData(startIndex, -1, typeFilter, statusFilter));
     }, [typeFilter, statusFilter]);
     return <div>
-        {SITE_SUBJECT === SITE.CS && <CoronavirusWarningBanner />}
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help="Follow the links below to find out more about our FREE events." />
+            {SITE_SUBJECT === SITE.CS && <CoronavirusWarningBanner />}
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">
