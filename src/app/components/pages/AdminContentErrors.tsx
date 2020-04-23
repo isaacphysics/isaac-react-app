@@ -1,25 +1,12 @@
 import React, {useEffect} from "react";
-import {AdminContentErrorsState, AppState} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {getAdminContentErrors} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
 import {Col, Container, Row, Table} from "reactstrap";
 import {EDITOR_URL} from "../../services/constants";
 import {ContentErrorItem} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-
-const stateToProps = (state: AppState) => {
-    return {
-        errors: state ? state.adminContentErrors : null
-    };
-};
-const dispatchToProps = {getAdminContentErrors};
-
-interface AdminContentErrorsPageComponentProps {
-    errors: AdminContentErrorsState;
-    getAdminContentErrors: () => void;
-}
 
 const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number) => {
     return <li key={index}>{errorDetailsListItem}</li>
@@ -43,10 +30,10 @@ const contentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
     </tr>
 };
 
-export const AdminContentErrorsPageComponent = ({errors, getAdminContentErrors}: AdminContentErrorsPageComponentProps) => {
-    useEffect(
-        () => {getAdminContentErrors();}, []
-    );
+export const AdminContentErrors = () => {
+    const dispatch = useDispatch();
+    useEffect(() => {dispatch(getAdminContentErrors());}, []);
+    const errors = useSelector((state: AppState) => state?.adminContentErrors || null);
 
     return <Container>
         <Row>
@@ -87,5 +74,3 @@ export const AdminContentErrorsPageComponent = ({errors, getAdminContentErrors}:
         </ShowLoading>
     </Container>;
 };
-
-export const AdminContentErrors = withRouter(connect(stateToProps, dispatchToProps)(AdminContentErrorsPageComponent));

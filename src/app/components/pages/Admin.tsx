@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {connect} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {AppState, ContentVersionState} from "../../state/reducers";
@@ -8,30 +8,15 @@ import {getContentVersion, requestConstantsSegueVersion, setContentVersion} from
 import {ShowLoading} from "../handlers/ShowLoading";
 import {ContentVersionUpdatingStatus} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {segue} from "../../state/selectors";
 
-const stateToProps = (state: AppState) => ({
-    segueVersion: state && state.constants && state.constants.segueVersion || "unknown",
-    contentVersion: state && state.contentVersion || null,
-});
-
-const dispatchToProps = {getContentVersion, setContentVersion, requestConstantsSegueVersion};
-
-interface AdminPageProps {
-    user: RegisteredUserDTO;
-    segueVersion: string;
-    contentVersion: ContentVersionState;
-    getContentVersion: () => void;
-    setContentVersion: (version: string) => void;
-    requestConstantsSegueVersion: () => void;
-}
-
-const AdminPageComponent = ({user, getContentVersion, setContentVersion, contentVersion, segueVersion, requestConstantsSegueVersion}: AdminPageProps) => {
+export const Admin = ({user}: {user: RegisteredUserDTO}) => {
+    const dispatch = useDispatch();
+    const segueVersion = useSelector(segue.versionOrUnknown);
+    const contentVersion = useSelector(segue.contentVersion);
     useEffect(() => {
-        getContentVersion();
-    }, []);
-
-    useEffect(() => {
-        requestConstantsSegueVersion();
+        dispatch(getContentVersion());
+        dispatch(requestConstantsSegueVersion());
     }, []);
 
     const [newVersion, setNewVersion] = useState<string | null>(null);
@@ -43,7 +28,7 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
             event.preventDefault();
         }
         if (contentVersion && displayVersion !== contentVersion.liveVersion && newVersion != null) {
-            setContentVersion(newVersion);
+            dispatch(setContentVersion(newVersion));
         }
     };
 
@@ -130,5 +115,3 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
         </div>
     </RS.Container>;
 };
-
-export const Admin = connect(stateToProps, dispatchToProps)(AdminPageComponent);

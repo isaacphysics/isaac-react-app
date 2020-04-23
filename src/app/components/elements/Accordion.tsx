@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {ALPHABET, NOT_FOUND} from "../../services/constants";
-import {connect, useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
@@ -17,12 +17,13 @@ interface AccordionsProps {
     index: number;
     location: {hash: string};
     children?: React.ReactElement;
-    logAction: (eventDetails: object) => void;
 }
 
 let nextClientId = 0;
 
-const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}}: AccordionsProps) => {
+export const Accordion = withRouter(({id, trustedTitle, index, children, location: {hash}}: AccordionsProps) => {
+    const dispatch = useDispatch();
+
     // Toggle
     const isFirst = index === 0;
     const [open, setOpen] = useState(isFirst);
@@ -54,34 +55,32 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
 
     function logAccordionOpen() {
         if (page && page != NOT_FOUND) {
-            switch (page.type) {
-                case "isaacQuestionPage":
-                    logAction({
-                        type: "QUESTION_PART_OPEN",
-                        questionPageId: page.id,
-                        questionPartIndex: index,
-                        questionPartId: id
-                    });
-                    break;
-                case "isaacConceptPage":
-                    logAction({
-                        type: "CONCEPT_SECTION_OPEN",
-                        conceptPageId: page.id,
-                        conceptSectionIndex: index,
-                        conceptSectionLevel: null,
-                        conceptSectionId: id
-                    });
-                    // TODO for IP add doc.level for conceptSectionLevel event
-                    break;
-                default:
-                    logAction({
-                        type: "ACCORDION_SECTION_OPEN",
-                        pageId: page.id,
-                        accordionId: id,
-                        accordionTitle: trustedTitle,
-                        accordionIndex: index
-                    })
+            let eventDetails;
+            if (page.type === "isaacQuestionPage") {
+                eventDetails = {
+                    type: "QUESTION_PART_OPEN",
+                    questionPageId: page.id,
+                    questionPartIndex: index,
+                    questionPartId: id
+                };
+            } else if (page.type === "isaacConceptPage") {
+                eventDetails = {
+                    type: "CONCEPT_SECTION_OPEN",
+                    conceptPageId: page.id,
+                    conceptSectionIndex: index,
+                    conceptSectionLevel: null,
+                    conceptSectionId: id
+                };
+            } else {
+                eventDetails = {
+                    type: "ACCORDION_SECTION_OPEN",
+                    pageId: page.id,
+                    accordionId: id,
+                    accordionTitle: trustedTitle,
+                    accordionIndex: index
+                };
             }
+            dispatch(logAction(eventDetails));
         }
     }
 
@@ -161,6 +160,4 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
             </AccordionSectionContext.Provider>
         </RS.Collapse>
     </div>;
-};
-
-export const Accordion = withRouter(connect(null, {logAction: logAction})(AccordionComponent));
+});

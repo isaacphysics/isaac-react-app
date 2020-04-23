@@ -1,33 +1,18 @@
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {connect, useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {adminModifyUserRoles, adminUserDelete, adminUserSearch, getUserIdSchoolLookup} from "../../state/actions";
-import {AdminUserSearchState, AppState} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
 import {Link} from "react-router-dom";
 
-const stateToProps = (state: AppState) => {
-    return {
-        searchResults: state && state.adminUserSearch || null
-    };
-};
-const dispatchToProps = {adminUserSearch, adminModifyUserRoles, adminUserDelete};
-
-interface AdminUserMangerProps {
-    user: LoggedInUser;
-    adminUserSearch: (query: {}) => void;
-    adminUserDelete: (userid: number | undefined) => void;
-    searchResults: AdminUserSearchState;
-    adminModifyUserRoles: (role: Role, userIds: number[]) => void;
-}
-
-const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, adminUserDelete, searchResults}: AdminUserMangerProps) => {
+export const AdminUserManager = () => {
     const dispatch = useDispatch();
+    const searchResults = useSelector((state: AppState) => state?.adminUserSearch || null);
     const [userUpdating, setUserUpdating] = useState(false);
     const [searchRequested, setSearchRequested] = useState(false);
     const [searchQuery, setSearchQuery] = useState({
@@ -90,8 +75,8 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
         let confirmed = (role === "STUDENT") || confirmUnverifiedUserPromotions();
         if (confirmed) {
             setUserUpdating(true);
-            await adminModifyUserRoles(role, selectedUserIds);
-            adminUserSearch(searchQuery);
+            await dispatch(adminModifyUserRoles(role, selectedUserIds));
+            dispatch(adminUserSearch(searchQuery));
             setSelectedUserIds([]);
             setUserUpdating(false);
         }
@@ -100,7 +85,7 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
     const search = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSearchRequested(true);
-        adminUserSearch(searchQuery);
+        dispatch(adminUserSearch(searchQuery));
     };
 
     const editUser = (userid: number | undefined) => {
@@ -108,8 +93,8 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
     };
 
     const deleteUser = async (userid: number | undefined) => {
-        await adminUserDelete(userid);
-        adminUserSearch(searchQuery);
+        await dispatch(adminUserDelete(userid));
+        dispatch(adminUserSearch(searchQuery));
     };
 
     return <RS.Container>
@@ -308,5 +293,3 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
         </RS.Card>
     </RS.Container>;
 };
-
-export const AdminUserManager = connect(stateToProps, dispatchToProps)(AdminUserManagerComponent);

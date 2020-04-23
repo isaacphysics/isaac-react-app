@@ -75,3 +75,8 @@ export const questions = {
         return state && state.questions && state.questions.filter(predicate) || [];
     }
 };
+
+export const segue = {
+    contentVersion: (state: AppState) => state && state.contentVersion || null,
+    versionOrUnknown: (state: AppState) => state && state.constants && state.constants.segueVersion || "unknown",
+};
