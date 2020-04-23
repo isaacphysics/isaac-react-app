@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {ALPHABET, NOT_FOUND} from "../../services/constants";
@@ -10,22 +10,19 @@ import {TrustedHtml} from "./TrustedHtml";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {questions} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {ContentDTO} from "../../../IsaacApiTypes";
-import {IsaacContent} from "../content/IsaacContent";
 
 interface AccordionsProps {
     id?: string;
     trustedTitle?: string;
     index: number;
     location: {hash: string};
-    content?: ContentDTO;
-    children?: React.ReactChildren;
+    children?: React.ReactElement;
     logAction: (eventDetails: object) => void;
 }
 
 let nextClientId = 0;
 
-const AccordionComponent = ({id, trustedTitle, index, content, children, location: {hash}}: AccordionsProps) => {
+const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}}: AccordionsProps) => {
     // Toggle
     const isFirst = index === 0;
     const [open, setOpen] = useState(isFirst);
@@ -120,8 +117,13 @@ const AccordionComponent = ({id, trustedTitle, index, content, children, locatio
 
 
     const isConceptPage = page && page != NOT_FOUND && page.type === "isaacConceptPage";
-
-    const level = isConceptPage && content && content.level !== 0 ? content.level : null;
+    let level = null;
+    if (isConceptPage && children) {
+        level = children?.props?.doc?.level;
+        if (level === 0) {
+            level = null;
+        }
+    }
 
     return <div className="accordion">
         <div className="accordion-header">
