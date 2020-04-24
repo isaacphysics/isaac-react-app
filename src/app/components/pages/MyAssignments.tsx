@@ -1,5 +1,5 @@
 import React, {MouseEvent, useEffect, useState} from "react";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {loadMyAssignments, logAction} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
@@ -10,18 +10,12 @@ import {filterAssignmentsByStatus} from "../../services/assignments";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {Assignments} from "../elements/Assignments";
 
-const stateToProps = (state: AppState) => (state && {assignments: state.assignments});
-const dispatchToProps = {loadMyAssignments, logAction};
+export const MyAssignments = () => {
+    const dispatch = useDispatch();
+    useEffect(() => {dispatch(loadMyAssignments())}, []);
+    useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}))}, []);
 
-interface MyAssignmentsPageProps {
-    assignments: AssignmentDTO[] | null;
-    loadMyAssignments: () => void;
-    logAction: (eventDetails: object) => void;
-}
-const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}: MyAssignmentsPageProps) => {
-    useEffect(() => {loadMyAssignments();}, []);
-    useEffect(() => {logAction({type: "VIEW_MY_ASSIGNMENTS"})}, []);
-
+    const assignments = useSelector((state: AppState) => state?.assignments || null);
     const myAssignments = filterAssignmentsByStatus(assignments);
 
     const [activeTab, setActiveTab] = useState(0);
@@ -71,5 +65,3 @@ const MyAssignmentsPageComponent = ({assignments, loadMyAssignments, logAction}:
         </Card>
     </Container>;
 };
-
-export const MyAssignments = connect(stateToProps, dispatchToProps)(MyAssignmentsPageComponent);

@@ -1,11 +1,11 @@
 import React from "react";
 import {LinkItem, NavigationBar, NavigationSection, useAssignmentBadge} from "../../navigation/NavigationBar";
 import {useSelector} from "react-redux";
-import {AppState} from "../../../state/reducers";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
+import {userOrNull} from "../../../state/selectors";
 
 export const NavigationBarCS = () => {
-    const user = useSelector((state: AppState) => (state && state.user) || null);
+    const user = useSelector(userOrNull);
     const assignmentBadge = useAssignmentBadge();
 
     return <NavigationBar>

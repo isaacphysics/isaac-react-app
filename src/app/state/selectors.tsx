@@ -77,6 +77,13 @@ export const questions = {
 };
 
 export const segue = {
-    contentVersion: (state: AppState) => state && state.contentVersion || null,
-    versionOrUnknown: (state: AppState) => state && state.constants && state.constants.segueVersion || "unknown",
+    contentVersion: (state: AppState) => state?.contentVersion || null,
+    versionOrUnknown: (state: AppState) => state?.constants?.segueVersion || "unknown",
+    environmentOrUnknown: (state: AppState) => state?.constants?.segueEnvironment || "unknown",
 };
+
+export const error = {
+    general: (state: AppState) => state?.error && state.error.type == "generalError" && state.error.generalError || null,
+};
+
+export const userOrNull = (state: AppState) => state?.user || null;

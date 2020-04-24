@@ -17,6 +17,7 @@ import {
 } from "reactstrap";
 import {loadMyAssignments} from "../../state/actions";
 import {filterAssignmentsByStatus} from "../../services/assignments";
+import {userOrNull} from "../../state/selectors";
 
 
 const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
@@ -52,7 +53,7 @@ export const NavigationSection = ({children, title, topLevelLink, to}: Navigatio
 
 export const useAssignmentBadge = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state: AppState) => (state && state.user) || null);
+    const user = useSelector(userOrNull);
 
     useEffect(() => {
         if (user?.loggedIn) {

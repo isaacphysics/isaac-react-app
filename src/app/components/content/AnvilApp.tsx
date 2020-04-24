@@ -3,7 +3,7 @@ import {AnvilAppDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
 import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
-import {questions} from "../../state/selectors";
+import {questions, userOrNull} from "../../state/selectors";
 
 interface AnvilAppProps {
     doc: AnvilAppDTO;
@@ -15,7 +15,7 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
     const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${sessionIdentifier}`;
     const title = doc.value || "Anvil app";
     const page = useSelector((state: AppState) => (state && state.doc) || null);
-    const user = useSelector((state: AppState) => (state && state.user) || null);
+    const user = useSelector(userOrNull);
 
     let iframeRef = React.useRef() as RefObject<HTMLIFrameElement>;
 

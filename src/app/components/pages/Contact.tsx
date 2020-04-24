@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
     Alert,
     Card,
@@ -14,7 +14,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {AppState, ErrorState} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {submitMessage} from "../../state/actions";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {validateEmail} from "../../services/validation";
@@ -22,43 +22,43 @@ import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {SITE, SITE_SUBJECT, WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {PageFragment} from "../elements/PageFragment";
+import {userOrNull} from "../../state/selectors";
 
-const stateToProps = (state: AppState) => {
+const determineUrlQueryPresets = (user?: LoggedInUser | null) => {
     const urlQuery = queryString.parse(location.search);
     let presetSubject = "";
     let presetMessage = "";
-    if (urlQuery && urlQuery.preset == "teacherRequest") {
-        if (state && state.user && state.user.loggedIn && state.user.role != "TEACHER") {
-            presetSubject = "Teacher Account Request";
-            presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n" + state.user.givenName + " " + state.user.familyName;
-        }
-    } else if (urlQuery && urlQuery.preset == 'accountDeletion') {
-        if (state && state.user && state.user.loggedIn) {
-            presetSubject = "Account Deletion Request";
-            presetMessage = "Hello,\n\nPlease could you delete my Isaac Computer Science account.\n\nThanks, \n\n" + state.user.givenName + " " + state.user.familyName;
-        }
+    if (urlQuery?.preset == "teacherRequest" && user?.loggedIn && user?.role != "TEACHER") {
+        presetSubject = "Teacher Account Request";
+        presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n" + user.givenName + " " + user.familyName;
+    } else if (urlQuery?.preset == 'accountDeletion' && user?.loggedIn) {
+        presetSubject = "Account Deletion Request";
+        presetMessage = "Hello,\n\nPlease could you delete my Isaac Computer Science account.\n\nThanks, \n\n" + user.givenName + " " + user.familyName;
     }
-    return {
-        user: state ? state.user : null,
-        errorMessage: state ? state.error : null,
-        presetSubject: urlQuery.subject as string || presetSubject,
-        presetMessage: urlQuery.message as string || presetMessage,
-    };
+    return [
+        urlQuery.subject as string || presetSubject,
+        urlQuery.message as string || presetMessage
+    ];
 };
 
-const dispatchToProps = {
-    submitMessage
-};
+const siteSpecific = {
+    [SITE.PHY]: {social: {
+        twitter: "https://twitter.com/isaacphysics",
+        facebook: "https://www.facebook.com/isaacphysicsUK",
+        youtube: "https://www.youtube.com/user/isaacphysics/",
+    }},
+    [SITE.CS]: {social: {
+        twitter: "https://twitter.com/IsaacCompSci",
+        facebook: "https://www.facebook.com/IsaacComputerScience/",
+        youtube: "https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ",
+    }}
+}[SITE_SUBJECT];
 
-interface ContactPageProps {
-    user: LoggedInUser | null;
-    submitMessage: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string}) => void;
-    errorMessage: ErrorState;
-    presetSubject: string;
-    presetMessage: string;
-}
-
-const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject, presetMessage}: ContactPageProps) => {
+export const Contact = () => {
+    const dispatch = useDispatch();
+    const user = useSelector(userOrNull);
+    const errorMessage = useSelector((state: AppState) => state?.error || null);
+    const [presetSubject, presetMessage] = determineUrlQueryPresets(user);
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName || "");
     const [email, setEmail] = useState(user && user.loggedIn && user.email || "");
@@ -66,23 +66,6 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
     const [message, setMessage] = useState(presetMessage);
     const [messageSendAttempt, setMessageSendAttempt] = useState(false);
     const [messageSent, setMessageSent] = useState(false);
-
-    const siteSpecific = {
-        social: {
-            twitter: {
-                [SITE.PHY]: "https://twitter.com/isaacphysics",
-                [SITE.CS]: "https://twitter.com/IsaacCompSci"
-            },
-            facebook: {
-                [SITE.PHY]: "https://www.facebook.com/isaacphysicsUK",
-                [SITE.CS]: "https://www.facebook.com/IsaacComputerScience/"
-            },
-            youtube: {
-                [SITE.PHY]: "https://www.youtube.com/user/isaacphysics/",
-                [SITE.CS]: "https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ"
-            }
-        }
-    };
 
     // set subject and message if any of user, presetSubject or presetMessage change
     useMemo(() => {
@@ -97,17 +80,6 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
     }, [user]);
 
     const isValidEmail = validateEmail(email);
-
-    const sendForm = () => {
-        submitMessage(
-            {
-                firstName: firstName,
-                lastName: lastName,
-                emailAddress: email,
-                subject: subject,
-                message: message
-            })
-    };
 
     return <Container id="contact-page" className="pb-5">
         <TitleAndBreadcrumb currentPageTitle="Contact us" />
@@ -130,9 +102,9 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                     }
                     <h3>Follow us</h3>
                     <p>Follow us on:</p>
-                    <a href={siteSpecific.social.youtube[SITE_SUBJECT]}>YouTube</a><br/>
-                    <a href={siteSpecific.social.twitter[SITE_SUBJECT]}>Twitter</a><br/>
-                    <a href={siteSpecific.social.facebook[SITE_SUBJECT]}>Facebook</a><br/>
+                    <a href={siteSpecific.social.youtube}>YouTube</a><br/>
+                    <a href={siteSpecific.social.twitter}>Twitter</a><br/>
+                    <a href={siteSpecific.social.facebook}>Facebook</a><br/>
                     {(SITE_SUBJECT === SITE.CS) && <a href="https://www.instagram.com/isaaccompsci/">Instagram</a>}
                 </Col>
                 <Col size={12} md={{size: 9, order: 2}} xs={{order: 1}}>
@@ -145,10 +117,10 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                     </h3>
                                 </Col>
                             </Row>:
-                            <Form name="contact" onSubmit={(e: any) => {
+                            <Form name="contact" onSubmit={e => {
+                                if (e) {e.preventDefault();}
                                 setMessageSendAttempt(true);
-                                e.preventDefault();
-                                sendForm();
+                                dispatch(submitMessage({firstName, lastName, emailAddress: email, subject, message}));
                                 setMessageSent(true)
                             }}>
                                 <CardBody>
@@ -160,7 +132,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                                 <Label htmlFor="first-name-input" className="form-required">First name</Label>
                                                 <Input id="first-name-input" type="text" name="first-name"
                                                     defaultValue={user && user.loggedIn ? user.givenName : ""}
-                                                    onChange={(e: any) => setFirstName(e.target.value)} required/>
+                                                    onChange={e => setFirstName(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                         <Col size={12} md={6}>
@@ -168,7 +140,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                                 <Label htmlFor="last-name-input" className="form-required">Last name</Label>
                                                 <Input id="last-name-input" type="text" name="last-name"
                                                     defaultValue={user && user.loggedIn ? user.familyName : ""}
-                                                    onChange={(e: any) => setLastName(e.target.value)} required/>
+                                                    onChange={e => setLastName(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -179,7 +151,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                                 <Input invalid={messageSendAttempt && !isValidEmail} id="email-input"
                                                     type="email" name="email"
                                                     defaultValue={user && user.loggedIn ? user.email : ""}
-                                                    onChange={(e: any) => setEmail(e.target.value)}
+                                                    onChange={e => setEmail(e.target.value)}
                                                     aria-describedby="emailValidationMessage" required/>
                                                 <FormFeedback id="emailValidationMessage">
                                                     {!isValidEmail && "Please enter a valid email address"}
@@ -190,7 +162,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                             <FormGroup>
                                                 <Label htmlFor="subject-input" className="form-required">Message subject</Label>
                                                 <Input id="subject-input" type="text" name="subject" defaultValue={subject}
-                                                    onChange={(e: any) => setSubject(e.target.value)} required/>
+                                                    onChange={e => setSubject(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -199,7 +171,7 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
                                             <FormGroup>
                                                 <Label htmlFor="message-input" className="form-required">Message</Label>
                                                 <Input id="message-input" type="textarea" name="message" rows={7} value={message}
-                                                    onChange={(e: any) => setMessage(e.target.value)} required/>
+                                                    onChange={e => setMessage(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -227,5 +199,3 @@ const ContactPageComponent = ({user, submitMessage, errorMessage, presetSubject,
         </div>
     </Container>;
 };
-
-export const Contact = connect(stateToProps, dispatchToProps)(ContactPageComponent);

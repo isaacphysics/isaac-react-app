@@ -6,10 +6,11 @@ import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useDispatch, useSelector} from "react-redux";
 import {handleEmailAlter, requestEmailVerification} from "../../state/actions";
+import {userOrNull} from "../../state/selectors";
 
 export const EmailAlterHandler = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state: AppState) => state && state.user);
+    const user = useSelector(userOrNull);
     const errorMessage = useSelector((state: AppState) => state && state.error);
 
     const {userid, token}: {userid?: string; token?: string} = queryString.parse(location.search);

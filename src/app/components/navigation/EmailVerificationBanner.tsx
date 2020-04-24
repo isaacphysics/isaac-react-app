@@ -1,40 +1,22 @@
 import React, {useState} from 'react';
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import * as RS from 'reactstrap';
-
-import {EmailVerificationStatus} from "../../../IsaacApiTypes";
-import {AppState} from "../../state/reducers";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 import {requestEmailVerification} from "../../state/actions";
-import { WEBMASTER_EMAIL } from '../../services/siteConstants';
+import {WEBMASTER_EMAIL} from '../../services/siteConstants';
+import {userOrNull} from "../../state/selectors";
 
-function mapStateToProps(state: AppState) {
-    return {user: state && state.user || null};
-}
-
-const mapDispatchToProps = {
-    requestEmailVerification
-};
-
-interface EmailVerificationBannerProps {
-    user: LoggedInUser | null;
-    requestEmailVerification: () => void;
-}
-const EmailVerificationBannerComponent = ({user, requestEmailVerification}: EmailVerificationBannerProps) => {
-    const status: EmailVerificationStatus | null = user && user.loggedIn && user.emailVerificationStatus || null;
+export const EmailVerificationBanner = () => {
+    const dispatch = useDispatch();
     const [hidden, setHidden] = useState(false);
-
-    function clickSnooze() {
-        setHidden(true);
-    }
+    const user = useSelector(userOrNull);
+    const status = user?.loggedIn && user?.emailVerificationStatus || null;
+    const show = user?.loggedIn && status != "VERIFIED" && !hidden;
 
     function clickVerify() {
-        requestEmailVerification();
+        dispatch(requestEmailVerification());
         setHidden(true);
     }
-
-    const show = user != null && user.loggedIn && status != "VERIFIED" && !hidden;
 
     return show ? <div className="banner d-print-none" id="email-status-banner">
         <RS.Container className="py-3">
@@ -55,8 +37,9 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
                         </small>
                     </RS.Col>
                     <RS.Col xs={12} md={3} className="text-center">
-                        <RS.Button color="primary" outline className="mt-3 mb-2 d-block d-md-inline-block banner-button"
-                            onClick={clickSnooze} id="email-verification-snooze"
+                        <RS.Button
+                            color="primary" outline className="mt-3 mb-2 d-block d-md-inline-block banner-button"
+                            onClick={() => setHidden(true)} id="email-verification-snooze"
                         >
                             Snooze
                         </RS.Button>
@@ -76,5 +59,3 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
         </RS.Container>
     </div> : null;
 };
-
-export const EmailVerificationBanner = connect(mapStateToProps, mapDispatchToProps)(EmailVerificationBannerComponent);

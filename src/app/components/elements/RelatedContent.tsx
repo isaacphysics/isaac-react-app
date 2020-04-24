@@ -3,13 +3,12 @@ import {ListGroup, ListGroupItem} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../services/constants";
-import {connect} from "react-redux";
+import {useDispatch} from "react-redux";
 import {logAction} from "../../state/actions";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
     parentPage: ContentDTO;
-    logAction: (eventDetails: object) => void;
 }
 
 function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentDTO) {
@@ -47,7 +46,8 @@ function getURLForContent(content: ContentSummaryDTO) {
     return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`
 }
 
-export const RelatedContentComponent = ({content, parentPage, logAction}: RelatedContentProps) => {
+export const RelatedContent = ({content, parentPage}: RelatedContentProps) => {
+    const dispatch = useDispatch();
     const concepts = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
     const questions = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION).sort((a, b) => {
         if (a.level === b.level) return (a.title || '').localeCompare(b.title || '');
@@ -59,7 +59,7 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
     const makeListGroupItem = (contentSummary: ContentSummaryDTO) => (
         <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
             <Link to={getURLForContent(contentSummary)}
-                onClick={() => {logAction(getEventDetails(contentSummary, parentPage))}}
+                onClick={() => {dispatch(logAction(getEventDetails(contentSummary, parentPage)))}}
             >
                 {contentSummary.level ? (contentSummary.title + " (Level " + contentSummary.level + ")") : contentSummary.title}
             </Link>
@@ -100,5 +100,3 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
         </div>
     </div>
 };
-
-export const RelatedContent = connect(null, {logAction: logAction})(RelatedContentComponent);

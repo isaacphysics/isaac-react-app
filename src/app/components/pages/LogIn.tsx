@@ -1,38 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {handleProviderLoginRedirect, logInUser, resetPassword} from "../../state/actions";
-import {AuthenticationProvider} from "../../../IsaacApiTypes";
-import {AppState} from "../../state/reducers";
 import {history} from "../../services/history";
-import {Credentials, LoggedInUser} from "../../../IsaacAppTypes";
 import {Redirect} from "react-router";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {error, userOrNull} from "../../state/selectors";
 
-const stateToProps = (state: AppState) => ({
-    errorMessage: state && state.error && state.error.type == "generalError" && state.error.generalError || null,
-    user: state && state.user || null,
-});
+export const LogIn = () => {
+    useEffect( () => {document.title = "Login — Isaac " + SITE_SUBJECT_TITLE;}, []);
 
-const dispatchToProps = {
-    handleProviderLoginRedirect,
-    logInUser,
-    resetPassword
-};
-
-interface LogInPageProps {
-    user: LoggedInUser | null;
-    handleProviderLoginRedirect: (provider: AuthenticationProvider) => void;
-    logInUser: (provider: AuthenticationProvider, credentials: Credentials) => void;
-    resetPassword: (params: {email: string}) => void;
-    errorMessage: string | null;
-}
-
-const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, resetPassword, errorMessage}: LogInPageProps) => {
-    useEffect( () => {
-        document.title = "Login — Isaac " + SITE_SUBJECT_TITLE;
-    }, []);
-
+    const dispatch = useDispatch();
+    const user = useSelector(userOrNull);
+    const errorMessage = useSelector(error.general);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [logInAttempted, setLoginAttempted] = useState(false);
@@ -46,7 +26,7 @@ const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, reset
     const validateAndLogIn = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if ((isValidPassword && isValidEmail)) {
-            logInUser("SEGUE", {email: email, password: password});
+            dispatch(logInUser("SEGUE", {email: email, password: password}));
         }
     };
 
@@ -58,13 +38,13 @@ const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, reset
     const attemptPasswordReset = () => {
         setPasswordResetAttempted(true);
         if (isValidEmail) {
-            resetPassword({email: email});
+            dispatch(resetPassword({email: email}));
             setPasswordResetRequest(!passwordResetRequest);
         }
     };
 
     const logInWithGoogle = () => {
-        handleProviderLoginRedirect("GOOGLE");
+        dispatch(handleProviderLoginRedirect("GOOGLE"));
     };
 
     const attemptLogIn = () => {
@@ -162,5 +142,3 @@ const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, reset
         </Row>
     </Container>;
 };
-
-export const LogIn = connect(stateToProps, dispatchToProps)(LogInPageComponent);

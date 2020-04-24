@@ -5,7 +5,6 @@ import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState} from "../../state/reducers";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL, TAG_ID} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -19,7 +18,7 @@ import {RelatedContent} from "../elements/RelatedContent";
 import {isStudent, isTeacher} from "../../services/user";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
-import {doc as selectDoc} from "../../state/selectors";
+import {doc as selectDoc, userOrNull} from "../../state/selectors";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 import tags from "../../services/tags";
@@ -43,10 +42,7 @@ function getTags(docTags?: string[]) {
 export const Question = withRouter(({questionIdOverride, match}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
     const doc = useSelector(selectDoc.ifNotAQuizId(questionId));
-    const user = useSelector((state: AppState) => state && state.user);
-    const segueEnvironment = useSelector((state: AppState) =>
-        (state && state.constants && state.constants.segueEnvironment) || "unknown"
-    );
+    const user = useSelector(userOrNull);
     const navigation = useNavigation(questionId);
 
     const dispatch = useDispatch();
@@ -73,9 +69,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
                     level={doc.level}
                 />
                 <RS.Row className="no-print">
-                    {segueEnvironment === "DEV" && doc.canonicalSourceFile &&
-                        <EditContentButton canonicalSourceFile={EDITOR_URL + doc.canonicalSourceFile} />
-                    }
+                    {doc.canonicalSourceFile && <EditContentButton canonicalSourceFile={EDITOR_URL + doc.canonicalSourceFile} />}
                     <div className="question-actions question-actions-leftmost mt-3">
                         <ShareLink linkUrl={`/questions/${questionId}`}/>
                     </div>

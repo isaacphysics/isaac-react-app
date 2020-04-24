@@ -34,6 +34,7 @@ import {withRouter} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {userOrNull} from "../../state/selectors";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -41,7 +42,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
     const dispatch = useDispatch();
 
-    const user = useSelector((state: AppState) => state && state.user);
+    const user = useSelector(userOrNull);
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
     const baseGameboard = useSelector((state: AppState) => state && state.currentGameboard);
 

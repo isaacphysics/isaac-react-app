@@ -1,21 +1,13 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {connect} from "react-redux";
-import {AppState} from "../../../state/reducers";
+import {useSelector} from "react-redux";
 import {Col, Container, Row} from "reactstrap";
-import {RouteComponentProps, withRouter} from "react-router";
-import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarCS} from "./NavigationBarCS";
+import {userOrNull} from "../../../state/selectors";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
-
-interface HeaderProps {
-    user: LoggedInUser | null;
-}
-
-const HeaderComponent = ({user}: HeaderProps) => {
+export const HeaderCS = () => {
+    const user = useSelector(userOrNull);
     return <header className="light">
         <Container className="container-fluid px-0">
             <Row>
@@ -72,5 +64,3 @@ const HeaderComponent = ({user}: HeaderProps) => {
         </Container>
     </header>;
 };
-
-export const HeaderCS = withRouter(connect(stateToProps)(HeaderComponent));

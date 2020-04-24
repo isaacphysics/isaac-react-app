@@ -13,6 +13,7 @@ import {PageFragment} from "../elements/PageFragment";
 import {EventStatusFilter, EventTypeFilter} from "../../services/constants";
 import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {userOrNull} from "../../state/selectors";
 
 /* eslint-disable @typescript-eslint/camelcase */
 
@@ -30,7 +31,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
     const dispatch = useDispatch();
     const eventsState = useSelector((state: AppState) => state && state.events);
     // const eventMapData = useSelector((state: AppState) => state && state.eventMapData);
-    const user = useSelector((state: AppState) => state && state.user);
+    const user = useSelector(userOrNull);
     const numberOfLoadedEvents = eventsState ? eventsState.events.length : 0;
 
     const statusFilter =
