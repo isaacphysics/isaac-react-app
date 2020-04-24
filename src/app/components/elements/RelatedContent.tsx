@@ -50,6 +50,7 @@ function getURLForContent(content: ContentSummaryDTO) {
 export const RelatedContentComponent = ({content, parentPage, logAction}: RelatedContentProps) => {
     const concepts = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
     const questions = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION).sort((a, b) => {
+        if (a.title && b.title) return (a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
         if (a.level === b.level) return (a.title || '').localeCompare(b.title || '');
         const aInt = parseInt(a.level || '-1');
         const bInt = parseInt(b.level || '-1');
@@ -92,7 +93,7 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
                     <ListGroup className="mr-lg-3">
                         {questions.length > 0 ?
                             questions.map(contentSummary => makeListGroupItem(contentSummary)) :
-                            <div className="mt-2 ml-3">There are no related concepts</div>
+                            <div className="mt-2 ml-3">There are no related questions</div>
                         }
                     </ListGroup>
                 </div>
