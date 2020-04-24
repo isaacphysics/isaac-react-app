@@ -83,7 +83,10 @@ export const Search = withRouter((props: {history: History; location: Location})
     const filteredSearchResults = searchResults && searchResults.results &&
         filterOnExamBoard(searchResults.results.filter((result) => searchResultIsPublic(result, user)), examBoard);
 
-    const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
+    const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []).sort((a, b) => {
+        if (a.title && b.title) return (a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
+        return 1;
+    });
 
     return (
         <Container id="search-page">

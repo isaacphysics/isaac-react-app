@@ -62,7 +62,7 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
             <Link to={getURLForContent(contentSummary)}
                 onClick={() => {logAction(getEventDetails(contentSummary, parentPage))}}
             >
-                {contentSummary.level ? (contentSummary.title + " (Level " + contentSummary.level + ")") : contentSummary.title}
+                {contentSummary.level && contentSummary.level != '0' ? (contentSummary.title + " (Level " + contentSummary.level + ")") : contentSummary.title}
             </Link>
         </ListGroupItem>
     );
