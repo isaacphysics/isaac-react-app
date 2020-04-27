@@ -4,12 +4,14 @@ import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
 import React from "react";
 import tags from "../../../services/tags";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
     let linkDestination, icon, iconLabel;
     let itemClasses = "p-0 bg-transparent content-summary-link ";
 
     let titleClasses = "content-summary-link-title flex-grow-1 ";
+    let titleTextClass = SITE_SUBJECT == SITE.PHY ? "text-secondary" : undefined;
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[]);
     if (itemSubject) {
         titleClasses += itemSubject.id;
@@ -40,7 +42,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
         <Link className="p-3 pr-4" to={{pathname: linkDestination, search: search}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
             <div className={titleClasses}>
-                <span className="text-secondary">{item.title}</span>
+                <span className={titleTextClass}>{item.title}</span>
                 {item.summary && <div className="small text-muted d-none d-md-block">{item.summary}</div>}
             </div>
             {displayTopicTitle && <span className="small text-muted align-self-center d-none d-md-inline">{topicTitle}</span>}
