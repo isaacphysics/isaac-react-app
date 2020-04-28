@@ -90,9 +90,11 @@ interface AccountPageProps {
 
 const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, userFind}: AccountPageProps) => {
     useEffect(() => {
-        userOfInterest && adminUserGet(Number(userOfInterest));
-        userOfInterest && getChosenUserAuthSettings(Number(userOfInterest));
-    }, []);
+        if (userOfInterest) {
+            adminUserGet(Number(userOfInterest));
+            getChosenUserAuthSettings(Number(userOfInterest));
+        }
+    }, [userOfInterest]);
 
     // - Admin user modification
     const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
