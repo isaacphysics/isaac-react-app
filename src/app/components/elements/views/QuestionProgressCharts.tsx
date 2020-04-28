@@ -137,5 +137,5 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 </div>
             </div>
         </RS.Col>}
-    </RS.Row>
+    </RS.Row>;
 };

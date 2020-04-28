@@ -543,7 +543,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             }
             label += '^{-1}';
             fontSize = ['arccosech'].includes(name) ? '0.8em' : '1em';
-            children = { superscript: { type: 'Num', properties: { significand: '-1' }, children: {} } }
+            children = { superscript: { type: 'Num', properties: { significand: '-1' }, children: {} } };
         } else {
             functionName = name;
             if (name.substring(0, 4) === 'sech' || name.substring(0, 5) === 'cosec') {

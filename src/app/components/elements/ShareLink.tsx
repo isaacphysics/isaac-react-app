@@ -47,5 +47,5 @@ export const ShareLink = (props: {linkUrl: string}) => {
     return <React.Fragment>
         <button className="share-link-icon btn-action" onClick={() => toggleShareLink()} aria-label="Get share link"/>
         <div className={classnames({"share-link": true, "d-block": showShareLink})}><div ref={shareLink}>{shareUrl}</div></div>
-    </React.Fragment>
+    </React.Fragment>;
 };

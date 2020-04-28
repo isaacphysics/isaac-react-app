@@ -40,7 +40,7 @@ export const IsaacTabs = (props: any) => {
         return <div className="examboard-special-tabs">
             <button className="expand-button" onClick={() => expandToModal(tabTitlesToContent[examBoardFilter])}>+</button>
             {tabTitlesToContent[examBoardFilter]}
-        </div>
+        </div>;
     }
 
     // Normal case
