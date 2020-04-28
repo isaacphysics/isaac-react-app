@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useLayoutEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
 import {setCurrentAttempt} from "../../state/actions";
@@ -12,6 +12,8 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
 import {Inequality, makeInequality} from "inequality";
 import {parseExpression} from "inequality-grammar";
+
+import _flattenDeep from 'lodash/flatMapDeep';
 
 // Magic starts here
 interface ChildrenMap {
@@ -58,11 +60,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
-
-    const updateState = (state: any) => {
-        setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
-        setInitialEditorSymbols(state.symbols);
-    };
+    const [textInput, setTextInput] = useState('');
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -72,6 +70,15 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             currentAttemptValue = { result: { tex: '\\textrm{PLACEHOLDER HERE}' } };
         }
     }
+
+    const updateState = (state: any) => {
+        const pythonExpression = state?.result?.python || "";
+        const previousPythonExpression = currentAttemptValue?.result?.python || "";
+        if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
+            setCurrentAttempt(questionId, {type: 'formula', value: JSON.stringify(state), pythonExpression});
+        }
+        setInitialEditorSymbols(state.symbols);
+    };
 
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
@@ -85,7 +92,17 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         return currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python || "";
     }
 
-    const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), valid: true}));
+    const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
+    useEffect(() => {
+        // Only update the text-entry box if the graphical editor is visible OR if this is the first load
+        const pythonExpression = currentAttemptPythonExpression();
+        if (modalVisible || textInput === '') {
+            setTextInput(pythonExpression);
+        }
+        if (inputState.pythonExpression !== pythonExpression) {
+            setInputState({...inputState, userInput: textInput, pythonExpression});
+        }
+    }, [currentAttempt]);
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality>();
@@ -95,7 +112,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             hiddenEditorRef.current,
             100,
             0,
-            [currentAttemptValue],
+            _flattenDeep((currentAttemptValue || { symbols: [] }).symbols),
             {
                 textEntry: true,
                 fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
@@ -117,7 +134,8 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const debounceTimer = useRef<number|null>(null);
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
         const pycode = e.target.value;
-        setInputState({...inputState, pythonExpression: pycode});
+        setTextInput(pycode);
+        setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
 
         // Parse that thing
         if (debounceTimer.current) {
@@ -165,11 +183,13 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                     setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(state), pythonExpression: ""});
                     setInitialEditorSymbols([]);
                 } else if (parsedExpression.length === 1) {
-                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true);
+                    // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
+                    // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
+                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
                 } else {
                     let sizes = parsedExpression.map(countChildren);
                     let i = sizes.indexOf(Math.max.apply(null, sizes));
-                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true);
+                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
                 }
             }
         }, 250);
@@ -201,7 +221,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <RS.InputGroup className="my-2">
-                    <RS.Input type="text" onChange={updateEquation} value={inputState.pythonExpression}
+                    <RS.Input type="text" onChange={updateEquation} value={textInput}
                         placeholder="or type your formula here"/>
                     <RS.InputGroupAddon addonType="append">
                         <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</RS.Button>

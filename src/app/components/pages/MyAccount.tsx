@@ -20,10 +20,10 @@ import {AdminUserGetState, AppState, ErrorState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
     LoggedInUser,
-    UserPreferencesDTO,
-    ValidationUser,
     SubjectInterests,
     UserEmailPreferences,
+    UserPreferencesDTO,
+    ValidationUser,
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
@@ -95,14 +95,20 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     }, []);
     // - Admin user modification
     const [editingOtherUser, _] = useState(!!userOfInterest && user && user.loggedIn && user.id && user.id.toString() !== userOfInterest || false);
-    const [userToEdit, setUserToEdit] = useState();
+    const [userToEdit, setUserToEdit] = useState<any>();
 
     useEffect(() => {editingOtherUser && userFind && setUserToEdit(Object.assign({}, userFind))}, [editingOtherUser, userFind]);
 
     // - Copy of user to store changes before saving
-    const [userToUpdate, setUserToUpdate] = useState(editingOtherUser && userOfInterest && userFind ? Object.assign({}, userFind, {loggedIn: true, password: ""}) : Object.assign({}, user, {password: ""}));
+    const [userToUpdate, setUserToUpdate] = useState<any>(editingOtherUser && userOfInterest && userFind ?
+        Object.assign({}, userFind, {loggedIn: true, password: ""}) :
+        Object.assign({}, user, {password: ""}));
 
-    useEffect(() => {editingOtherUser && userToEdit && setUserToUpdate(Object.assign({}, userToEdit, {loggedIn: true}))}, [editingOtherUser, userToEdit]);
+    useEffect(() => {
+        if (editingOtherUser && userToEdit) {
+            setUserToUpdate(Object.assign({}, userToEdit, {loggedIn: true}));
+        }
+    }, [userToEdit]);
 
     // Inputs which trigger re-render
     const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);

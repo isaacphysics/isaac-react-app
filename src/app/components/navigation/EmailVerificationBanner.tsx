@@ -2,12 +2,13 @@ import React, {useState} from 'react';
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import * as RS from 'reactstrap';
+import {Button} from 'reactstrap';
 
 import {EmailVerificationStatus} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {requestEmailVerification} from "../../state/actions";
-import { WEBMASTER_EMAIL } from '../../services/siteConstants';
+import {WEBMASTER_EMAIL} from '../../services/siteConstants';
 
 function mapStateToProps(state: AppState) {
     return {user: state && state.user || null};
@@ -49,8 +50,8 @@ const EmailVerificationBannerComponent = ({user, requestEmailVerification}: Emai
                 {(status == null || status == "NOT_VERIFIED") && <React.Fragment>
                     <RS.Col xs={12} sm={10} md={8}>
                         <small>Your email address is not verified - please find our email in your inbox and follow the
-                            verification link. You can <Link onClick={clickVerify} id="email-verification-request">
-                            request a new verification email</Link> if necessary. To change your account email,
+                            verification link. You can <Button color="link primary-font-link" onClick={clickVerify} id="email-verification-request">
+                            request a new verification email</Button> if necessary. To change your account email,
                             go to <Link to="/account">My account</Link>.
                         </small>
                     </RS.Col>
