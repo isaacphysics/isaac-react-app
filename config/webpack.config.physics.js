@@ -31,10 +31,12 @@ module.exports = env => {
             new CopyWebpackPlugin([{
                 from: resolve('public/manifest-phy.json'),
                 to: 'manifest-phy.json',
-            },
-            {
-                from: resolve('public/unsupported_browser.phy.html'),
-                to: 'unsupported-browser.html',
+            }, {
+                from: resolve('public/unsupported_browsers/unsupported-phy.html'),
+                to: 'unsupported_browser.html',
+            }, {
+                from: resolve('public/unsupported_browsers/unsupported-phy.js'),
+                to: 'unsupported_browser.js',
             }]),
         ],
     };
