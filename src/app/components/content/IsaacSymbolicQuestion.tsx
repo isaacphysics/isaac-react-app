@@ -59,7 +59,7 @@ interface IsaacSymbolicQuestionProps {
 const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
+    const [initialEditorSymbols, setInitialEditorSymbols] = useState(JSON.parse(doc.formulaSeed || '[]'));
     const [textInput, setTextInput] = useState('');
 
     let currentAttemptValue: any | undefined;
