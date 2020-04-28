@@ -58,6 +58,7 @@ import {LoadScript} from "@react-google-maps/api";
 import SiteSpecific from "../site/siteSpecific";
 import StaticPageRoute from "./StaticPageRoute";
 import {Redirect} from "react-router";
+import {UnsupportedBrowserBanner} from "./UnsupportedBrowserWarningBanner";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -81,6 +82,7 @@ export const IsaacApp = () => {
             <Toasts />
             <ActiveModals />
             <CookieBanner />
+            <UnsupportedBrowserBanner />
             <EmailVerificationBanner />
             <main id="main" role="main" className="flex-fill content-body">
                 <Switch>
