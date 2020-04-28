@@ -93,8 +93,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         userOfInterest && adminUserGet(Number(userOfInterest));
         userOfInterest && getChosenUserAuthSettings(Number(userOfInterest));
     }, []);
+
     // - Admin user modification
-    const [editingOtherUser, _] = useState(!!userOfInterest && user && user.loggedIn && user.id && user.id.toString() !== userOfInterest || false);
+    const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
     const [userToEdit, setUserToEdit] = useState<any>();
 
     useEffect(() => {editingOtherUser && userFind && setUserToEdit(Object.assign({}, userFind))}, [editingOtherUser, userFind]);
