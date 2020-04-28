@@ -1,7 +1,7 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {withRouter} from "react-router-dom";
-import {ALPHABET} from "../../services/constants";
+import {ALPHABET, NOT_FOUND} from "../../services/constants";
 import {connect, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
 import {AppState} from "../../state/reducers";
@@ -16,7 +16,7 @@ interface AccordionsProps {
     trustedTitle?: string;
     index: number;
     location: {hash: string};
-    children: React.ReactChildren;
+    children?: React.ReactElement;
     logAction: (eventDetails: object) => void;
 }
 
@@ -53,7 +53,7 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
     }, [hash, anchorId]);
 
     function logAccordionOpen() {
-        if (page && page != 404) {
+        if (page && page != NOT_FOUND) {
             switch (page.type) {
                 case "isaacQuestionPage":
                     logAction({
@@ -115,11 +115,21 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
         if (allValidated && allWrong) accordianIcon = "cross";
     }
 
+
+    const isConceptPage = page && page != NOT_FOUND && page.type === "isaacConceptPage";
+    let level = null;
+    if (isConceptPage && children) {
+        level = children?.props?.doc?.level;
+        if (level === 0) {
+            level = null;
+        }
+    }
+
     return <div className="accordion">
         <div className="accordion-header">
             <RS.Button
                 id={anchorId || ""} block color="link"
-                className={open ? 'active p-3 text-left' : 'p-3 text-left'}
+                className={open ? 'active' : ''}
                 onClick={(event: any) => {
                     const nextState = !open;
                     setOpen(nextState);
@@ -130,9 +140,10 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
                 }}
                 aria-expanded={open ? "true" : "false"}
             >
-                <div className="accordion-title">
-                    <span className="accordion-part text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
-                    {trustedTitle && <TrustedHtml html={trustedTitle} />}
+                {level && <span className="accordion-level badge-secondary">Level {level}</span>}
+                <div className="accordion-title pl-3">
+                    <RS.Row><span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
+                        {trustedTitle && <div className="p-3"><TrustedHtml html={trustedTitle} /></div>}</RS.Row>
                 </div>
 
                 {accordianIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon accordion-icon-" + accordianIcon}>

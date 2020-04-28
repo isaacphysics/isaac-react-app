@@ -3,7 +3,7 @@
 set -e # Exit on failure
 
 if test -z "$1"; then
-  read -p "isaac-cs-app version to build (e.g. v1.3.0 or ['master']): " VERSION_TO_DEPLOY
+  read -p "isaac-react-app version to build (e.g. v1.3.0 or ['master']): " VERSION_TO_DEPLOY
   VERSION_TO_DEPLOY=${VERSION_TO_DEPLOY:-master}
 else
   VERSION_TO_DEPLOY="$1"
@@ -17,8 +17,8 @@ rm -rf $BUILD_DIR
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
 
-git clone -b $VERSION_TO_DEPLOY --depth 1 https://github.com/isaacphysics/isaac-cs-app.git
-cd isaac-cs-app
+git clone -b $VERSION_TO_DEPLOY --depth 1 https://github.com/isaacphysics/isaac-react-app.git
+cd isaac-react-app
 
 # Determine segue version to use. Honest.
 if [[ $VERSION_TO_DEPLOY == v* ]]; then
@@ -45,7 +45,7 @@ docker push "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}"
 docker push "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}"
 
 cd ..
-rm -rf isaac-cs-app
+rm -rf isaac-react-app
 
 git clone -b $SEGUE_VERSION --depth 1 https://github.com/isaacphysics/isaac-api.git
 cd isaac-api

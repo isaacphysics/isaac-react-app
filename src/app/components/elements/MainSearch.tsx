@@ -38,9 +38,9 @@ const MainSearchComponent = ({history}: MainSearchProps) => {
                 <NavItem>
                     <Form inline onSubmit={doSearch}>
                         <FormGroup className='search--main-group'>
-                            <Label for='search' className='sr-only'>Search</Label>
+                            <Label for='header-search' className='sr-only'>Search</Label>
                             <Input
-                                type="search" name="query" placeholder="Search" aria-label="Search"
+                                id="header-search" type="search" name="query" placeholder="Search" aria-label="Search"
                                 value={searchText} onChange={setSearchTextAsValue} innerRef={searchInputRef}
                             />
                             <SearchButton />

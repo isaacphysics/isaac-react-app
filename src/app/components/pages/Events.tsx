@@ -11,8 +11,6 @@ import {clearEventsList, getEventMapData, getEventsList} from "../../state/actio
 import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
 import {EventStatusFilter, EventTypeFilter} from "../../services/constants";
-import {InteractiveMap} from "../elements/InteractiveMap";
-import {DateString} from "../elements/DateString";
 import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
@@ -31,7 +29,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
 
     const dispatch = useDispatch();
     const eventsState = useSelector((state: AppState) => state && state.events);
-    const eventMapData = useSelector((state: AppState) => state && state.eventMapData);
+    // const eventMapData = useSelector((state: AppState) => state && state.eventMapData);
     const user = useSelector((state: AppState) => state && state.user);
     const numberOfLoadedEvents = eventsState ? eventsState.events.length : 0;
 
@@ -83,21 +81,20 @@ export const Events = withRouter(({history, location}: {history: History; locati
                 {/* Results */}
                 <ShowLoading until={eventsState} thenRender={({events, total}) => <div className="my-4">
                     {/* Map */}
-                    <div className="mb-3" hidden={total == 0 || (statusFilter === EventStatusFilter["My booked events"])}>
-                        <InteractiveMap
-                            getInfoWindow={(event) => {
-                                return <div className="event-map-info">
-                                    <h3><a className="heading link" href={`events/${event.id}`}>{event.title}</a></h3>
-                                    {event.subtitle}<br/>
-                                    <b>When: </b><DateString>{event.date}</DateString><br/>
-                                    <b>Location: </b>{event && event.address && `${event.address.addressLine1}, ${event.address.town}`}<br/>
-                                    <a className="link" href={`events/${event.id}`}>View Full Details</a>
-
-                                </div>
-                            }}
-                            locationData={eventMapData ? eventMapData.filter((event) => event && event.longitude !== undefined && event.latitude !== undefined) : []}
-                        />
-                    </div>
+                    {/*<div className="mb-3" hidden={total == 0 || (statusFilter === EventStatusFilter["My booked events"])}>*/}
+                    {/*    <InteractiveMap*/}
+                    {/*        getInfoWindow={(event) => {*/}
+                    {/*            return <div className="event-map-info">*/}
+                    {/*                <h3><a className="heading link" href={`events/${event.id}`}>{event.title}</a></h3>*/}
+                    {/*                {event.subtitle}<br/>*/}
+                    {/*                <b>When: </b><DateString>{event.date}</DateString><br/>*/}
+                    {/*                <b>Location: </b>{event && event.address && `${event.address.addressLine1}, ${event.address.town}`}<br/>*/}
+                    {/*                <a className="link" href={`events/${event.id}`}>View Full Details</a>*/}
+                    {/*            </div>*/}
+                    {/*        }}*/}
+                    {/*        locationData={eventMapData ? eventMapData.filter((event) => event && event.longitude !== undefined && event.latitude !== undefined) : []}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
                     {/* Event Cards */}
                     <RS.Row>
                         {events.map(event => <div key={event.id} className="col-xs-12 col-sm-6 col-md-4 d-flex">
