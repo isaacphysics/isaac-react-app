@@ -153,7 +153,7 @@ const Board = (props: BoardProps) => {
             </aside>
 
             <div className="my-4">
-                <ShareLink linkUrl={assignmentLink}/>
+                <div className="card-share-link"><ShareLink linkUrl={assignmentLink} /></div>
                 <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
                 <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
             </div>

@@ -159,43 +159,26 @@
     border: none;
     outline: none !important;
   }
-  .share-link {
-    display: none;
-    position: absolute;
-    padding: 4px;
-    border: 1px solid $gray-118;
-    background: #fff;
-    top: 117px;
-    right: 50px;
-    width: 70%;
-  }
-  .share-link div {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    user-select: all;
-    -webkit-user-select: all;
-    -moz-user-select: all;
-    -ms-user-select: all;
-  }
   .unassign {
     cursor: pointer;
     min-width: 20px;
   }
 }
-.share-link-table {
-  display: none;
-  position: relative;
-  padding: 4px;
-  border: 1px solid $gray-118;
-  background: #fff;
-  top: 35px;
-  right: 30px;
+.card-share-link div.share-link {
+  position: absolute;
+  right: 50px;
+  input {
+    top: 8px;
+  }
+
 }
-.share-link-table div {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  user-select: all;
-  width: 250px;
+
+.table-share-link div.share-link {
+    position: absolute;
+    right: 111px;
+    @include respond-above(md) {right: 113px;}
+    @include respond-above(lg) {right: 123px;}
+    input {
+      top: 8px;
+    }
 }
