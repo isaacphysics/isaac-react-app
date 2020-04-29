@@ -1,4 +1,4 @@
-import React, {ReactNode, useMemo, useState} from "react";
+import React, {ReactNode, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
@@ -18,18 +18,8 @@ function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string
 }
 
 export const Tabs = (props: TabsProps) => {
-    const {className = "", tabTitleClass = "", tabContentClass = "", children, activeTabOverride, activeTabChanged} = props;
-
-    const [activeTab, setActiveTab] = useState(1);
-    useMemo(
-        () => {
-            if (activeTabOverride) {
-                setActiveTab(activeTabOverride);
-            }
-        }, [activeTabOverride]
-    );
-
-    const tabs = children;
+    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, activeTabChanged} = props;
+    const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 
     function changeTab(tabIndex: number) {
         setActiveTab(tabIndex);
@@ -38,9 +28,12 @@ export const Tabs = (props: TabsProps) => {
         }
     }
 
-    return <div className={className}>
+    return <div
+        key={activeTabOverride} // important because we want to reset state if the activeTabOverride prop is changed
+        className={className}
+    >
         <Nav tabs>
-            {Object.keys(tabs).map((tabTitle, mapIndex) => {
+            {Object.keys(children).map((tabTitle, mapIndex) => {
                 const tabIndex = mapIndex + 1;
                 const c = callOrString(tabTitleClass, tabTitle, tabIndex);
                 const classes = activeTab === tabIndex ? `${c} active` : c;
@@ -53,7 +46,7 @@ export const Tabs = (props: TabsProps) => {
         </Nav>
 
         <TabContent activeTab={activeTab} className={tabContentClass}>
-            {Object.entries(tabs).map(([tabTitle, tabBody], mapIndex) => {
+            {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
                 const tabIndex = mapIndex + 1;
                 return <TabPane key={tabTitle} tabId={tabIndex}>
                     {tabBody as ReactNode}

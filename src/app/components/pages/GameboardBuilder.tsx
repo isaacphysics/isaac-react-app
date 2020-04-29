@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {Spinner} from "reactstrap";
@@ -53,14 +53,14 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
-    useMemo(() => {
+    useEffect(() => {
         if (baseGameboard && baseGameboard !== NOT_FOUND) {
             setGameboardTitle(`${baseGameboard.title} (Copy)`);
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
             setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
             setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
         }
-    }, [baseGameboard]);
+    }, [user, baseGameboard]);
 
     const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "";
 
@@ -76,7 +76,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
         if (baseGameboardId && (!baseGameboard || baseGameboard === NOT_FOUND)) {
             dispatch(loadGameboard(baseGameboardId));
         }
-    }, [baseGameboardId]);
+    }, [dispatch, baseGameboardId, baseGameboard]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
