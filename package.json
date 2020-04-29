@@ -123,8 +123,6 @@
     "workbox-webpack-plugin": "3.6.3"
   },
   "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
     "build-phy": "webpack --env prod --config config/webpack.config.physics.js",
     "build-cs": "webpack --env prod --config config/webpack.config.cs.js",
     "build-phy-dev": "webpack --config config/webpack.config.physics.js",
@@ -135,7 +133,10 @@
     "test-phy": "jest --config config/jest/jest.config.physics.js",
     "test-cs": "jest --config config/jest/jest.config.cs.js",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
-    "analyse-bundle": "npm run build -- --stats && webpack-bundle-analyzer build/bundle-stats.json build"
+    "build-stats-phy": "webpack --env prod --config config/webpack.config.physics.js --profile --json > bundle-stats-phy.json",
+    "analyse-bundle-phy": "webpack-bundle-analyzer bundle-stats-phy.json build-physics",
+    "build-stats-cs": "webpack --env prod --config config/webpack.config.cs.js --profile --json > bundle-stats-cs.json",
+    "analyse-bundle-cs": "webpack-bundle-analyzer bundle-stats-cs.json build-cs"
   },
   "eslintConfig": {
     "extends": [

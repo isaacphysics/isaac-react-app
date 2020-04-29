@@ -342,7 +342,7 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
 export const verifyPasswordReset = (token: string | null) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST});
-        const response = await api.users.verifyPasswordReset(token);
+        await api.users.verifyPasswordReset(token);
         dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS});
     } catch(e) {
         dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
@@ -1455,7 +1455,7 @@ export const getNewsPodList = (subject: string) => async (dispatch: Dispatch<Act
         dispatch({type: ACTION_TYPE.NEWS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Unable to display news", e));
     }
-}
+};
 
 export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
     try {

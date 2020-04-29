@@ -45,9 +45,9 @@ const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUse
     const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
     let promotableRoles = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
     if (currentUser && currentUser.role == "ADMIN") {
-        promotableRoles = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"]
+        promotableRoles = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"];
     }
-        
+
 
     useEffect(() => {
         if (searchResults && searchResults.length > 0) {

@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from "react";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
-import classnames from "classnames";
 
 export const ShareLink = (props: {linkUrl: string}) => {
     const {linkUrl} = props;
@@ -43,10 +42,10 @@ export const ShareLink = (props: {linkUrl: string}) => {
     return <React.Fragment>
         <button className="share-link-icon btn-action" onClick={() => toggleShareLink()} aria-label="Get share link"/>
         <div
-            className={classnames({"share-link": true, "d-block": showShareLink})}
+            className={`share-link ${showShareLink ? "d-block" : ""}`}
             style={{width: Math.min((shareUrl.length + 1), 20) * 8.5}}
         >
             <input type="text" readOnly ref={shareLink} value={shareUrl} />
         </div>
-    </React.Fragment>
+    </React.Fragment>;
 };

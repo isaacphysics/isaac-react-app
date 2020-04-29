@@ -1,14 +1,14 @@
 import React from "react";
 import matchAll from 'string.prototype.matchall';
 
-React;
+React;  // lgtm [js/useless-expression]
 
 matchAll.shim();
 
 if (!Element.prototype.matches) {
     Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
 }
-  
+
 if (!Element.prototype.closest) {
     Element.prototype.closest = function(s) {
         var el = this;
