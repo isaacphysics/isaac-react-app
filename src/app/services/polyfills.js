@@ -1,8 +1,7 @@
 import React from "react";
 import matchAll from 'string.prototype.matchall';
 
-// lgtm [js/useless-expression]
-React;
+React;  // lgtm [js/useless-expression]
 
 matchAll.shim();
 
