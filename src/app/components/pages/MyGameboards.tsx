@@ -77,7 +77,6 @@ const Board = (props: BoardTableProps) => {
     const boardLink = `/gameboards#${board.id}`;
 
     const dispatch = useDispatch();
-    const shareLink = useRef<HTMLInputElement>(null);
 
     const hexagonId = `board-hex-${board.id}`;
 
