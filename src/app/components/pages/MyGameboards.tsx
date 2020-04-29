@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteBoard, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
