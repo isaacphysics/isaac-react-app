@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 
 

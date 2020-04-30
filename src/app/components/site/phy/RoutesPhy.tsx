@@ -15,13 +15,18 @@ import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
 import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
 import {Concepts} from "../../pages/Concepts";
+import {AssignmentProgress} from "../../pages/AssignmentProgress";
 
 let key = 0;
 export const RoutesPhy = [
+    // Assignments
+    <TrackedRoute key={key++} exact path="/assignment_progress" ifUser={isTeacher} component={AssignmentProgress} />,
+
     // Gameboard filter
     <TrackedRoute key={key++} exact path="/gameboards/new" component={GameboardFilter} />,
 
     // Books
+    <StaticPageRoute key={key++} exact path="/books" />,
     <TrackedRoute key={key++} exact path="/books/physics_skills_19" component={PhysicsSkills19}/>,
     <TrackedRoute key={key++} exact path="/books/phys_book_gcse" component={PhysBookGcse}/>,
     <TrackedRoute key={key++} exact path="/books/physics_skills_14" component={PhysicsSkills14}/>,

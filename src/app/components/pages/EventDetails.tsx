@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
+import moment from "moment";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {EVENTS_CRUMB} from "../../services/constants";
+import {EVENTS_CRUMB, NOT_FOUND} from "../../services/constants";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {addMyselfToWaitingList, bookMyselfOnEvent, cancelMyBooking, getEvent, showToast, openActiveModal} from "../../state/actions";
 import {DateString, TIME_ONLY} from "../elements/DateString";
@@ -15,8 +16,13 @@ import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
-import {isTeacher} from "../../services/user";
 import {reservationsModal} from "../../components/elements/modals/ReservationsModal";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isStaff, isTeacher} from "../../services/user";
+
+function formatDate(date: Date|number) {
+    return moment(date).format("YYYYMMDD[T]HHmmss");
+}
 
 interface EventDetailsProps {
     match: {params: {eventId: string}};
@@ -37,6 +43,23 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
     function loginAndReturn() {
         persistence.save(KEY.AFTER_AUTH_PATH, pathname);
         history.push("/login");
+    }
+
+    function googleCalendarTemplate() {
+        if (event && event !== NOT_FOUND) {
+            // https://calendar.google.com/calendar/event?action=TEMPLATE&text=[event_name]&dates=[start_date as YYYYMMDDTHHMMSS or YYYYMMDD]/[end_date as YYYYMMDDTHHMMSS or YYYYMMDD]&details=[extra_info]&location=[full_address_here]
+            const address = event.location && event.location.address ? [event.location.address.addressLine1, event.location.address.addressLine2, event.location.address.town, event.location.address.county, event.location.address.postalCode, event.location.address.country] : [];
+
+            const calendarTemplateUrl = [
+                "https://calendar.google.com/calendar/event?action=TEMPLATE",
+                event.title && "text=" + encodeURI(event.title),
+                event.date && "dates=" + encodeURI(formatDate(event.date)) + (event.endDate ? '/' + encodeURI(formatDate(event.endDate)) : ""),
+                event.subtitle && "details=" + encodeURI(event.subtitle),
+                "location=" + encodeURI(address.filter(s => !!s).join(', '))
+            ];
+
+            window.open(calendarTemplateUrl.filter(s => !!s).join('&'), '_blank');
+        }
     }
 
     return <ShowLoading until={event} thenRender={event => {
@@ -91,7 +114,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                         </RS.Col>
                         <RS.Col lg={8} className={event.expired ? "expired" : ""}>
                             {/* TODO Student/Teacher/Virtual icon */}
-                            {/* TODO add to calendar import if staff user - <a ng-click="googleCalendarTemplate()" ng-if="isStaffUser"><span className="calendar-img" alt="Add to Google Calendar">Add to Calendar</span></a>*/}
+                            {isStaff(user) && <RS.Button color="link" onClick={googleCalendarTemplate} className="calendar-img mx-2" title="Add to Google Calendar">Add to Calendar</RS.Button>}
 
                             {/* Key event info */}
                             <RS.Table borderless className="event-key-info mb-4">
@@ -122,7 +145,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
                                             {zeroOrLess(event.placesAvailable) && <div>
                                                 <strong className="text-danger">FULL</strong>
-                                                {event.tags && !event.tags.includes('student') && user && user.loggedIn && user.role != 'STUDENT' && <span> - for student bookings</span>}
+                                                {event?.tags?.includes('student') && user?.loggedIn && user.role != 'STUDENT' && <span> - for student bookings</span>}
                                             </div>}
                                             {user && user.loggedIn && user.email && event.userBookingStatus === 'CONFIRMED' && <span> - <span className="text-success">You are booked on this event!</span></span>}
                                             {user && user.loggedIn && user.email && event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
@@ -135,7 +158,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             {user && user.loggedIn && user.email && event.userBookingStatus === "WAITING_LIST" && <span> - You are on the waiting list for this event.</span>}
                                         </td>
                                     </tr>}
-                                    {event.bookingDeadline && <tr>
+                                    {SITE_SUBJECT == SITE.PHY && event.bookingDeadline && <tr>
                                         <td>Booking Deadline:</td>
                                         <td>
                                             <DateString>{event.bookingDeadline}</DateString>
@@ -196,7 +219,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     {event.eventStatus != 'CLOSED' && !bookingFormOpen && !(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST") && <RS.Button id="open_booking_form_button"
                                         onClick={() => {setBookingFormOpen(true)}}
                                     >
-                                        Open booking form
+                                        Book a place
                                     </RS.Button>}
                                     {bookingFormOpen && !(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST") && <RS.Button
                                         color="primary" outline onClick={() => {setBookingFormOpen(false)}}

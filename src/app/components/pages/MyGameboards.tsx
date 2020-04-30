@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteBoard, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -22,7 +22,7 @@ import {ActualBoardLimit, AppGameBoard, BoardOrder} from "../../../IsaacAppTypes
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {boards as ThisBoards} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {sortIcon, STUDENTS_CRUMB} from "../../services/constants";
+import {sortIcon} from "../../services/constants";
 import {boardCompletionSelection, formatBoardOwner} from "../../services/gameboards";
 import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
@@ -128,7 +128,7 @@ const Board = (props: BoardTableProps) => {
                 <div className={`share-link-table ${showShareLink ? "d-block" : ""}`}>
                     <div ref={shareLink}>{boardLink}</div>
                 </div>
-                <button className="ru_share" onClick={toggleShareLink}/></td>
+                <button className="share-link-icon" onClick={toggleShareLink}/></td>
             <td><CustomInput id={`board-delete-${board.id}`} type="checkbox" checked={board && (selectedBoards.some(e => e.id === board.id))}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     board && updateBoardSelection(board, event.target.checked)
@@ -151,7 +151,7 @@ const Board = (props: BoardTableProps) => {
 
                 <div className="my-4">
                     <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{boardLink}</div></div>
-                    <button className="ru_share" onClick={toggleShareLink}/>
+                    <button className="share-link-icon" onClick={toggleShareLink}/>
                     <CardTitle><a href={boardLink}>{board.title}</a></CardTitle>
                     <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                 </div>
@@ -195,7 +195,7 @@ export const MyGameboards = () => {
         loadInitial();
     }, [boardLimit]);
 
-    useMemo(() => {
+    useEffect(() => {
         if (boardView == boardViews.table) {
             setBoardLimit(BoardLimit.All)
         } else if (boardView == boardViews.card) {
@@ -244,7 +244,7 @@ export const MyGameboards = () => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My gameboards" intermediateCrumbs={[STUDENTS_CRUMB]} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="My gameboards" help={pageHelp} />
         {boards && boards.totalResults == 0 ?
             <h3 className="text-center mt-4 mb-5">You have no gameboards to view.</h3>
             :

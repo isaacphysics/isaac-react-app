@@ -55,7 +55,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         </RS.FormFeedback>
                     </RS.Label>
                     {editingSelf && targetUser.emailVerificationStatus != 'VERIFIED' && !verifyEmailRequestSent && <RS.Button
-                        color="link" onClick={() => {
+                        color="link" className="btn-underline" onClick={() => {
                             dispatch(requestEmailVerification());
                             setVerifyEmailRequestSent(true);
                         }}

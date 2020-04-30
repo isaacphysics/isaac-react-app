@@ -1,6 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {Alert, Card, CardBody, CardFooter, Col, Container, Form, FormGroup, Input, Label, Row} from "reactstrap";
+import {
+    Alert,
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+    Col,
+    Container,
+    Form,
+    FormGroup,
+    Input,
+    Label,
+    Row
+} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {fetchFragment, requestEmailVerification, submitMessage} from "../../state/actions";
 import {validateEmail} from "../../services/validation";
@@ -23,12 +36,12 @@ export const TeacherRequest = () => {
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName || "");
     const [emailAddress, setEmailAddress] = useState(user && user.loggedIn && user.email || "");
-    const [school, setSchool] = useState();
+    const [school, setSchool] = useState<string>();
     const [otherInformation, setOtherInformation] = useState("");
-    const [verificationDetails, setVerificationDetails] = useState();
+    const [verificationDetails, setVerificationDetails] = useState<string>();
     const [messageSent, setMessageSent] = useState(false);
     const [emailVerified, setEmailVerified] = useState(user && user.loggedIn && user.emailVerificationStatus == "VERIFIED");
-    const [allowedDomain, setAllowedDomain] = useState();
+    const [allowedDomain, setAllowedDomain] = useState<boolean>();
 
     const urn = user && user.loggedIn && user.schoolId || "";
     const subject = "Teacher Account Request";
@@ -85,7 +98,7 @@ export const TeacherRequest = () => {
                                         You already have a teacher account
                                     </span>
                                     <p className="mt-3">
-                                        Go to the <Link to="/teachers">For teachers page</Link> to start using your
+                                        Go to the <Link to="/teachers">Teacher tools page</Link> to start using your
                                         new account features.
                                     </p>
                                 </Col>
@@ -113,7 +126,7 @@ export const TeacherRequest = () => {
                                     <p>To request a teacher account on Isaac Computer Science, please fill in this form.
                                     You must use the email address that was assigned to you by your school, and the
                                     name of your school should be shown in the &lsquo;School&rsquo; field. If any of the
-                                    information is incorrect or missing, you can amend it on your
+                                    information is incorrect or missing, you can amend it on your{" "}
                                     <Link to="/account">My account</Link> page.
                                     </p>
                                     <Row>
@@ -175,8 +188,8 @@ export const TeacherRequest = () => {
                                         <Col>
                                             <small className="text-danger text-left">Your email address is not verified —
                                                 please click on the link in the verification email to confirm your
-                                                email address. You can <Link onClick={() => dispatch(requestEmailVerification())} to={"#"}>request a
-                                                    new verification email</Link> if necessary.
+                                                email address. You can <Button color="link primary-font-link" onClick={() => dispatch(requestEmailVerification())}>request a
+                                                    new verification email</Button> if necessary.
                                             </small>
                                         </Col>
                                     </Row>

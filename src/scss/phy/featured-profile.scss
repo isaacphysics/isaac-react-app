@@ -1,0 +1,23 @@
+@include media-breakpoint-up(md) {
+  .featured-profile {
+    height: 400px;
+    width: 33.33333%;
+    float: left;
+    .caption p{
+      font-size: 80%;
+    }
+  }
+}
+
+.profile-image {
+  width: 80%
+}
+
+.profile-description {
+  font-size: 12.8px;
+  color: $gray-160;
+}
+
+.profile-title {
+  font-size: 1rem;
+}

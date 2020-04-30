@@ -119,7 +119,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
     }
 
     return <RS.Container id="gameboard-generator" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle="Gameboard Generator" help={pageHelp}/>
+        <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
         <RS.Row>
             <RS.Col  lg={{size: 10, offset: 1}}>

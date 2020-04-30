@@ -16,7 +16,6 @@ import {ProviderCallbackHandler} from "../handlers/ProviderCallbackHandler";
 import {MyAccount} from "../pages/MyAccount";
 import {MyAssignments} from "../pages/MyAssignments";
 import {Gameboard} from "../pages/Gameboard";
-import {ComingSoon} from "../pages/ComingSoon";
 import {NotFound} from "../pages/NotFound";
 import {fetchGlossaryTerms, requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
 import {AppState} from "../../state/reducers";
@@ -42,10 +41,7 @@ import {Groups} from "../pages/Groups";
 import {Equality} from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
-import {AssignmentProgress} from "../pages/AssignmentProgress";
 import {Support} from "../pages/Support";
-import {ForStudents} from "../pages/ForStudents";
-import {ForTeachers} from "../pages/ForTeachers";
 import {AddGameboard} from "../handlers/AddGameboard";
 import {isTest} from "../../services/constants";
 import {AdminEmails} from "../pages/AdminEmails";
@@ -62,8 +58,8 @@ import {MarkdownBuilder} from "../pages/MarkdownBuilder";
 import {LoadScript} from "@react-google-maps/api";
 import SiteSpecific from "../site/siteSpecific";
 import StaticPageRoute from "./StaticPageRoute";
-import {Topic} from "../pages/Topic";
 import {Redirect} from "react-router";
+import {UnsupportedBrowserBanner} from "./UnsupportedBrowserWarningBanner";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -87,6 +83,7 @@ export const IsaacApp = () => {
             <Toasts />
             <ActiveModals />
             <CookieBanner />
+            <UnsupportedBrowserBanner />
             <EmailVerificationBanner />
             <main id="main" role="main" className="flex-fill content-body">
                 <Switch>
@@ -110,7 +107,6 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                     <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                     <TrackedRoute exact path="/questions/:questionId" component={Question} />
-                    <TrackedRoute exact path="/topics/:topicName" component={Topic} />,
                     <TrackedRoute exact path="/quizzes/:quizId" ifUser={isLoggedIn} component={Quiz} />
 
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
@@ -124,23 +120,20 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />
 
                     {/* Student pages */}
-                    <TrackedRoute exact path="/students" component={ForStudents} />
                     <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
                     <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                     <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
 
                     {/* Teacher pages */}
-                    <TrackedRoute exact path="/teachers" component={ForTeachers} />
                     <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
                     <TrackedRoute exact path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
-                    <TrackedRoute exact path="/assignment_progress" ifUser={isTeacher} component={AssignmentProgress} />
 
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
                     <TrackedRoute exact path="/admin/usermanager" ifUser={isAdminOrEventManager} component={AdminUserManager} />
                     <TrackedRoute exact path="/admin/events" ifUser={user => isAdminOrEventManager(user) || isEventLeader(user)} component={EventManager} />
                     <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
-                    <TrackedRoute exact path="/admin/content_errors" ifUser={isStaff} component={AdminContentErrors} />
+                    <TrackedRoute exact path="/admin/content_errors" ifUser={user => segueEnvironment === "DEV" || isStaff(user)} component={AdminContentErrors} />
                     <TrackedRoute exact path="/admin/emails" ifUser={isAdmin} component={AdminEmails} />
 
                     {/* Authentication */}
@@ -159,7 +152,6 @@ export const IsaacApp = () => {
                     <StaticPageRoute exact path="/cookies" pageId="cookie_policy" />
                     <StaticPageRoute exact path="/accessibility" pageId="accessibility_statement" />
                     <StaticPageRoute exact path="/cyberessentials" />
-                    <TrackedRoute exact path="/coming_soon" component={ComingSoon} />
 
                     {/*
                     // TODO: schools and other admin stats
