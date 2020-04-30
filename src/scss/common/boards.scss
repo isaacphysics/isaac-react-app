@@ -1,22 +1,48 @@
-.subject-physics, .subject-maths, .subject-complete, .subject-compsci {
+.subject-physics, .subject-maths, .subject-chemistry, .subject-compsci, .subject-complete {
   position: absolute;
   top: 20px;
   left: 20px;
-  width: 71px;
-  height: 82px;
-  background: url(/assets/my-boards-sprite.png) no-repeat 0 0;
+  width: 63px;
+  height: 74px;
+  background: url(/assets/hexagons_sprite.png) no-repeat -256px 0;
   padding: 20px 0 0;
   z-index: 999;
 }
 
 .subject-compsci-table {
   position: relative;
-  width: 71px;
-  height: 82px;
-  background: url(/assets/my-boards-sprite.png) no-repeat -70px 0;
+  width: 63px;
+  height: 74px;
+  background: url(/assets/hexagons_sprite.png) no-repeat -256px 0;
   padding: 20px 0 0;
   z-index: 999;
-  padding-top: 35px !important;
+  padding-top: 32px !important;
+}
+.subject-physics {
+  background-position: 0 0;
+}
+.subject-maths {
+  background-position: -64px 0;
+}
+.subject-chemistry {
+  background-position: -128px 0;
+}
+.subject-compsci {
+  background-position: -256px 0;
+}
+.subject-complete {
+  position: relative;
+  top: 0;
+  left: 0;
+  background: url(/assets/hexagons_sprite.png) no-repeat -320px 0;
+}
+.subject-complete-card {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 71px;
+  height: 82px;
+  background: url(/assets/hexagons_sprite.png) no-repeat -320px 0;
 }
 
 .input-align {
@@ -34,7 +60,7 @@
   font-size: 1.5em;
   text-align: center;
   position: relative;
-  top: 5px;
+  top: 16px;
   right: -0.25rem;
 }
 
@@ -63,30 +89,6 @@
   content: '%';
   position: relative;
   top: -20px;
-}
-
-.subject-physics {
-  background-position: 0 0;
-}
-.subject-maths {
-  background-position: -71px 0;
-}
-.subject-complete {
-  position: relative;
-  top: 0;
-  left: 0;
-  background: url(/assets/my-boards-sprite.png) no-repeat -142px 0;
-}
-.subject-complete-card {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 71px;
-  height: 82px;
-  background: url(/assets/my-boards-sprite.png) no-repeat -142px 0;
-}
-.subject-compsci {
-  background-position: -71px 0;
 }
 
 .table-button {

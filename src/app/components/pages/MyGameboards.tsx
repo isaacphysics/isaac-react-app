@@ -26,6 +26,7 @@ import {sortIcon} from "../../services/constants";
 import {boardCompletionSelection, formatBoardOwner} from "../../services/gameboards";
 import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
+import {Link} from "react-router-dom";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -139,10 +140,10 @@ const Board = (props: BoardTableProps) => {
             <CardBody className="pb-4 pt-4">
                 <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
                 {(board.percentageCompleted == 100) ?
-                    <button className="subject-complete-card" id={hexagonId}/> :
-                    <button className="groups-assigned subject-compsci myBoards-percentageCompleted" id={hexagonId}>
+                    <span className="subject-complete-card"/> :
+                    <span className="groups-assigned subject-compsci myBoards-percentageCompleted">
                         <h4>{board.percentageCompleted}</h4>
-                    </button>
+                    </span>
                 }
                 <aside>
                     <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
@@ -152,7 +153,7 @@ const Board = (props: BoardTableProps) => {
                 <div className="my-4">
                     <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{boardLink}</div></div>
                     <button className="share-link-icon" onClick={toggleShareLink}/>
-                    <CardTitle><a href={boardLink}>{board.title}</a></CardTitle>
+                    <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
                     <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                 </div>
             </CardBody>
