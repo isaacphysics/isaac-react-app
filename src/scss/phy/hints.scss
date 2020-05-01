@@ -1,0 +1,7 @@
+.hint-tab-title {
+  color: $purple !important;
+  &.active {
+    color: white !important;
+    background-color: $purple !important;
+  }
+}

@@ -10,6 +10,7 @@ import * as RS from "reactstrap";
 import {QUESTION_TYPES} from "../../services/questions";
 import {DateString, NUMERIC_DATE_AND_TIME} from "../elements/DateString";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
     const questionPart = questions.selectQuestionPart(doc.id)(state);
@@ -91,7 +92,7 @@ const IsaacQuestionTabsComponent = (props: IsaacQuestionTabsProps) => {
                 </RS.Col>
             </RS.Row>}
 
-            {((!validationResponse) || (!validationResponse.correct) || canSubmit) && <RS.Row>
+            {(!validationResponse || !validationResponse.correct || canSubmit) && SITE_SUBJECT === SITE.CS && <RS.Row>
                 <RS.Col xl={{size: 10, offset: 1}} >
                     {doc.hints && <p className="no-print text-center pt-2 mb-0">
                         <small>{"Don't forget to use the hints above if you need help."}</small>

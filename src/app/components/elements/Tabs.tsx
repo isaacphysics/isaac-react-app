@@ -10,6 +10,7 @@ interface TabsProps {
     children: {};
     activeTabOverride?: number;
     activeTabChanged?: (tabIndex: number) => void;
+    unselectable?: boolean;
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string, tabIndex: number) {
@@ -18,13 +19,17 @@ function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string
 }
 
 export const Tabs = (props: TabsProps) => {
-    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, activeTabChanged} = props;
+    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, activeTabChanged, unselectable=false} = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 
     function changeTab(tabIndex: number) {
-        setActiveTab(tabIndex);
+        let nextTabIndex = tabIndex;
+        if (unselectable && activeTab === tabIndex) {
+            nextTabIndex = -1;
+        }
+        setActiveTab(nextTabIndex);
         if (activeTabChanged) {
-            activeTabChanged(tabIndex);
+            activeTabChanged(nextTabIndex);
         }
     }
 
@@ -32,13 +37,16 @@ export const Tabs = (props: TabsProps) => {
         key={activeTabOverride} // important because we want to reset state if the activeTabOverride prop is changed
         className={className}
     >
-        <Nav tabs>
+        <Nav tabs className="flex-wrap justify-content-start">
             {Object.keys(children).map((tabTitle, mapIndex) => {
                 const tabIndex = mapIndex + 1;
                 const c = callOrString(tabTitleClass, tabTitle, tabIndex);
                 const classes = activeTab === tabIndex ? `${c} active` : c;
-                return <NavItem key={tabTitle} className="px-3 text-center">
-                    <NavLink tag="button" tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}>
+                return <NavItem key={tabTitle} className="text-center">
+                    <NavLink
+                        tag="button" type="button" name={tabTitle.replace(" ", "_")}
+                        tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}
+                    >
                         {tabTitle}
                     </NavLink>
                 </NavItem>;
