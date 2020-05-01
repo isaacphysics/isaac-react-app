@@ -25,6 +25,7 @@ import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {history} from "../../services/history";
 
 const stateFromProps = (state: AppState) => {
     if (state != null) {
@@ -401,6 +402,12 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
         openActiveModal(downloadLinkModal(event.currentTarget.href));
     }
 
+    function openIndividualAssignment(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.stopPropagation();
+        event.preventDefault();
+        history.push(`/assignment_progress/${assignment._id}`)
+    }
+
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
         <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
             <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
@@ -410,6 +417,8 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
                 <Button color="link">{isExpanded ? "Hide " : "View "} <span className="d-none d-md-inline">mark sheet</span></Button>
                 <span className="d-none d-md-inline">or</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+                <span className="d-none d-md-inline">or</span>
+                <Button className="d-none d-md-inline" color="link" tag="a" onClick={openIndividualAssignment}>View this assignment</Button>
             </div>
         </div>
         {isExpanded && <ProgressLoader {...props} />}
