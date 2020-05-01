@@ -1,130 +1,26 @@
-.subject-physics, .subject-maths, .subject-complete, .subject-compsci {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 71px;
-  height: 82px;
-  background: url(/assets/my-boards-sprite.png) no-repeat 0 0;
-  padding: 20px 0 0;
-  z-index: 999;
+.board-subject-hexagon {
+  background: url(/assets/hexagons_sprite.png) no-repeat -256px 0;
 }
-
-.subject-compsci-table {
-  position: relative;
-  width: 71px;
-  height: 82px;
-  background: url(/assets/my-boards-sprite.png) no-repeat -70px 0;
-  padding: 20px 0 0;
-  z-index: 999;
-  padding-top: 35px !important;
-}
-
-.input-align {
-  @media only screen and (min-resolution: 192dpi) {
-    width: 100%;
-    align-self: center;
-  }
-}
-
-.myBoards-percentageCompleted {
-  align-self: center;
-}
-
-.myBoards-percentageCompleted h4{
-  font-size: 1.5em;
-  text-align: center;
-  position: relative;
-  top: 5px;
-  right: -0.25rem;
-}
-
-.myBoards-percentageCompleted h4::after {
-  font-size: 0.5em;
-  content: '%';
-  position: relative;
-  top: -20px;
-
-}
-
-.myBoardsTable-percentageCompleted {
-  text-align: center;
-}
-
-.myBoardsTable-percentageCompleted h4{
-  font-size: 1.5em;
-  text-align: center;
-  top: -15px;
-  right: -0.25rem;
-  position: relative;
-}
-
-.myBoardsTable-percentageCompleted h4::after {
-  font-size: 0.5em;
-  content: '%';
-  position: relative;
-  top: -20px;
-}
-
 .subject-physics {
   background-position: 0 0;
 }
 .subject-maths {
-  background-position: -71px 0;
+  background-position: -64px 0;
 }
-.subject-complete {
-  position: relative;
-  top: 0;
-  left: 0;
-  background: url(/assets/my-boards-sprite.png) no-repeat -142px 0;
-}
-.subject-complete-card {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 71px;
-  height: 82px;
-  background: url(/assets/my-boards-sprite.png) no-repeat -142px 0;
+.subject-chemistry {
+  background-position: -128px 0;
 }
 .subject-compsci {
-  background-position: -71px 0;
+  // Use the yellow background for compsci?
+  //background-position: -192px 0;
+}
+.subject-complete {
+  background-position: -320px 0;
 }
 
-.table-button {
-  background: none!important;
-  border: none;
-  padding: 0!important;
-  font-weight: bold;
+tr.board-card {
+  height: 100px;
 }
-
-.input-options {
-  float: right;
-  @media only screen and (max-width:800px) {
-    float: unset !important;
-    flex-direction: column;
-  }
-}
-
-.delete-button {
-  top: -50px;
-}
-
-.groups-assigned {
-  font-size: 14pt;
-  line-height: 110%;
-  font-weight: bold;
-  font-style: normal;
-  padding-top: 0;
-  color: #fff;
-  text-align: center;
-  strong {
-    display: block;
-    font-size: 20pt;
-    font-weight: 600;
-    padding-bottom: 4px;
-    margin-top: -6px;
-  }
-}
-
 .board-card {
   .card-body > .close {
     position: absolute;
@@ -136,7 +32,7 @@
   }
   aside {
     position: relative;
-    margin-left: 88px;
+    margin-left: 100px;
     margin-top: 14px;
     margin-bottom: 12px;
     .card-subtitle {
@@ -163,7 +59,112 @@
     cursor: pointer;
     min-width: 20px;
   }
+
+  // Subject hexagons:
+  .board-subject-hexagon-container {
+    position: absolute;
+    width: 63px;
+
+    &.table-view {
+      position: relative;
+      top: -5px;
+    }
+  }
+  .board-subject-hexagon {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    width: 63px;
+    height: 74px;
+
+    &.z0 {
+      z-index: 5;
+    }
+    &.z1 {
+      z-index: 4;
+      top: 10px;
+      left: 5px;
+    }
+    &.z2 {
+      z-index: 3;
+      top: 10px;
+      left: 15px;
+    }
+    &.z3 {
+      z-index: 2;
+      top: 0;
+      left: 10px;
+    }
+  }
+  .board-percent-completed {
+    width: 100%;
+    font-size: 30px;
+    line-height: 110%;
+    font-family: $secondary-font-semi-bold;
+    color: #fff;
+    z-index: 10;
+    position: absolute;
+    top: 25px;
+    left: 15px;
+    text-align: center;
+    &:after {
+      font-size: 0.5em;
+      content: '%';
+      position: relative;
+      top: -15px;
+    }
+  }
+  // If compsci uses yellow hexagons, need black number for accessibility:
+  //.subject-compsci + .board-percent-completed {
+  //  color: #0f0f0f;
+  //}
+  .groups-assigned {
+    width: 100%;
+    font-size: 12pt;
+    line-height: 110%;
+    font-weight: bold;
+    z-index: 10;
+    position: absolute;
+    top: 28px;
+    left: 0.7rem;
+    color: #fff;
+    text-align: center;
+    strong {
+      display: block;
+      font-size: 20pt;
+      font-weight: 600;
+      padding-bottom: 4px;
+      margin-top: -6px;
+    }
+  }
 }
+
+.input-align {
+  @media only screen and (min-resolution: 192dpi) {
+    width: 100%;
+    align-self: center;
+  }
+}
+
+.table-button {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  font-weight: bold;
+}
+
+.input-options {
+  float: right;
+  @media only screen and (max-width:800px) {
+    float: unset !important;
+    flex-direction: column;
+  }
+}
+
+.delete-button {
+  top: -50px;
+}
+
 .card-share-link div.share-link {
   position: absolute;
   right: 50px;
@@ -174,11 +175,16 @@
 }
 
 .table-share-link div.share-link {
-    position: absolute;
-    right: 111px;
-    @include respond-above(md) {right: 113px;}
-    @include respond-above(lg) {right: 123px;}
-    input {
-      top: 8px;
-    }
+  position: absolute;
+  right: 111px;
+  @include respond-above(md) {
+    right: 113px;
+  }
+  @include respond-above(lg) {
+    right: 123px;
+  }
+
+  input {
+    top: 8px;
+  }
 }

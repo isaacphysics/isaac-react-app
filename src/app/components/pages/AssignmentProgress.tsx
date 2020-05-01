@@ -144,8 +144,6 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
     const [sortOrder, setSortOrder] = useState<SortOrder>("name");
     const [reverseOrder, setReverseOrder] = useState(false);
 
-    // TODO: useMemo on this stuff if performance is a problem
-
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     let questions = assignment.gameboard.questions;
     const assignmentAverages: number[] = [];

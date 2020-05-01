@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteBoard, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -23,10 +23,11 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {boards as ThisBoards} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {sortIcon} from "../../services/constants";
-import {boardCompletionSelection, formatBoardOwner} from "../../services/gameboards";
+import {boardCompletionSelection, formatBoardOwner, generateGameboardSubjectHexagons} from "../../services/gameboards";
 import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
+import {Link} from "react-router-dom";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -78,8 +79,6 @@ const Board = (props: BoardTableProps) => {
 
     const dispatch = useDispatch();
 
-    const hexagonId = `board-hex-${board.id}`;
-
     const updateBoardSelection = (board: AppGameBoard, checked: boolean) => {
         if (checked) {
             setSelectedBoards([...selectedBoards, board]);
@@ -94,13 +93,22 @@ const Board = (props: BoardTableProps) => {
         }
     }
 
+    // FIXME: set this to be an ordered unique list of subjects in the board. The line below can be used for testing:
+    //const boardSubjects = ["maths", "physics", "chemistry", "compsci"].sort(()=>{return .5 - Math.random();}).slice(0,Math.floor(Math.random() *4)+1);
+    const boardSubjects = ["compsci"];
+
     return boardView == boardViews.table ?
         <tr key={board.id} className="board-card">
-            {(board.percentageCompleted == 100) ?
-                <td><div className="subject-complete" id={hexagonId}/></td> :
-                <td><div className="subject-compsci-table groups-assigned myBoardsTable-percentageCompleted" id={hexagonId}>
-                    <h4>{board.percentageCompleted}</h4>
-                </div></td>}
+            <td>
+                <div className="board-subject-hexagon-container table-view">
+                    {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
+                        <>
+                            {generateGameboardSubjectHexagons(boardSubjects)}
+                            <div className="board-percent-completed">{board.percentageCompleted}</div>
+                        </>
+                    }
+                </div>
+            </td>
             <td className="align-middle"><a href={boardLink}>{board.title}</a></td>
             {/*<td className="text-center align-middle">{board.levels.join(' ')}</td>*/}
             <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
@@ -118,12 +126,14 @@ const Board = (props: BoardTableProps) => {
         <Card className="board-card card-neat">
             <CardBody className="pb-4 pt-4">
                 <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
-                {(board.percentageCompleted == 100) ?
-                    <button className="subject-complete-card" id={hexagonId}/> :
-                    <button className="groups-assigned subject-compsci myBoards-percentageCompleted" id={hexagonId}>
-                        <h4>{board.percentageCompleted}</h4>
-                    </button>
-                }
+                <div className="board-subject-hexagon-container">
+                    {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
+                        <>
+                            {generateGameboardSubjectHexagons(boardSubjects)}
+                            <div className="board-percent-completed">{board.percentageCompleted}</div>
+                        </>
+                    }
+                </div>
                 <aside>
                     <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                     <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
@@ -131,7 +141,7 @@ const Board = (props: BoardTableProps) => {
 
                 <div className="my-4">
                     <div className="card-share-link"><ShareLink linkUrl={boardLink} /></div>
-                    <CardTitle><a href={boardLink}>{board.title}</a></CardTitle>
+                    <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
                     <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                 </div>
             </CardBody>
@@ -174,7 +184,7 @@ export const MyGameboards = () => {
         loadInitial();
     }, [boardLimit]);
 
-    useMemo(() => {
+    useEffect(() => {
         if (boardView == boardViews.table) {
             setBoardLimit(BoardLimit.All)
         } else if (boardView == boardViews.card) {
