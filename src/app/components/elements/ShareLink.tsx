@@ -39,13 +39,15 @@ export const ShareLink = (props: {linkUrl: string}) => {
         }
     }, [showShareLink]);
 
+    let buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
+
     return <React.Fragment>
-        <button className="share-link-icon btn-action" onClick={() => toggleShareLink()} aria-label="Get share link"/>
+        <button className="share-link-icon btn-action" onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
         <div
             className={`share-link ${showShareLink ? "d-block" : ""}`}
             style={{width: Math.min((shareUrl.length + 1), 20) * 8.5}}
         >
-            <input type="text" readOnly ref={shareLink} value={shareUrl} />
+            <input type="text" readOnly ref={shareLink} value={shareUrl} aria-label="Share URL" />
         </div>
     </React.Fragment>;
 };
