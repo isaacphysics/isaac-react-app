@@ -3,10 +3,11 @@ import {KEY, LOADING_FAILURE_VALUE} from "./localStorage";
 
 // TODO there'll probably be a way to use this in a way that lets the compiler do even more checking for us
 export enum FIRST_LOGIN_STATE {
-    BANNER_NOT_SHOWN = "bannerNotShown",
-    BANNER_SHOWN = "bannerShown"
+    FIRST_LOGIN = "firstLogin",
+    SUBSEQUENT_LOGIN = "subsequentLogin"
 }
 
 export const isFirstLoginInPersistence = () => {
-    return persistence.session.load(KEY.FIRST_LOGIN) !== (LOADING_FAILURE_VALUE || FIRST_LOGIN_STATE.BANNER_SHOWN);
+    let firstLogin = persistence.session.load(KEY.FIRST_LOGIN);
+    return ((firstLogin !== LOADING_FAILURE_VALUE) && (firstLogin !== FIRST_LOGIN_STATE.SUBSEQUENT_LOGIN));
 };
