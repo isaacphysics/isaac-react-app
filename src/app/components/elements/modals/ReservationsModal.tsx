@@ -217,7 +217,7 @@ const ReservationsModal = () => {
                                             </td>
                                             <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)} {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <span className="text-danger pl-2">E-mail not verified</span>}</td>
                                             <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
-                                            <td className="align-middle">{booking.reservedById === user?.id ? "You" : "Someone else"}</td>
+                                            <td className="align-middle">{!booking.reservedById ? '' : (booking.reservedById === user?.id ? 'You' : 'Someone else')}</td>
                                         </tr>);
                                     })}
                                     {eventBookingsForGroup.length == 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
