@@ -115,7 +115,7 @@ const Board = (props: BoardTableProps) => {
             <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
             <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
             <td className="text-center align-middle">
-                <div className="table-share-link"><ShareLink linkUrl={boardLink} /></div>
+                <div className="table-share-link"><ShareLink linkUrl={boardLink} reducedWidthLink /></div>
             </td>
             <td><CustomInput id={`board-delete-${board.id}`} type="checkbox" checked={board && (selectedBoards.some(e => e.id === board.id))}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,8 +139,8 @@ const Board = (props: BoardTableProps) => {
                     <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
                 </aside>
 
-                <div className="my-4">
-                    <div className="card-share-link"><ShareLink linkUrl={boardLink} /></div>
+                <div className="mt-4 mb-2">
+                    <div className="card-share-link"><ShareLink linkUrl={boardLink} reducedWidthLink /></div>
                     <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
                     <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                 </div>

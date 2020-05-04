@@ -2,9 +2,9 @@ import React, {useEffect, useRef, useState} from "react";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
+import {isMobile} from "../../services/device";
 
-export const ShareLink = (props: {linkUrl: string}) => {
-    const {linkUrl} = props;
+export const ShareLink = ({linkUrl, reducedWidthLink}: {linkUrl: string; reducedWidthLink?: boolean}) => {
     const [showShareLink, setShowShareLink] = useState(false);
     const segueEnvironment = useSelector((state: AppState) =>
         (state && state.constants && state.constants.segueEnvironment) || "unknown"
@@ -39,14 +39,11 @@ export const ShareLink = (props: {linkUrl: string}) => {
         }
     }, [showShareLink]);
 
-    let buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
-
+    const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
+    const linkWidth = isMobile() || reducedWidthLink ? 180 : (shareUrl.length * 9);
     return <React.Fragment>
         <button className="share-link-icon btn-action" onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
-        <div
-            className={`share-link ${showShareLink ? "d-block" : ""}`}
-            style={{width: Math.min((shareUrl.length + 1), 20) * 8.5}}
-        >
+        <div className={`share-link ${showShareLink ? "d-block" : ""}`} style={{width: linkWidth}}>
             <input type="text" readOnly ref={shareLink} value={shareUrl} aria-label="Share URL" />
         </div>
     </React.Fragment>;
