@@ -139,7 +139,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
                                             {zeroOrLess(event.placesAvailable) && <div>
                                                 <strong className="text-danger">FULL</strong>
-                                                {event.tags && !event.tags.includes('student') && user && user.loggedIn && user.role != 'STUDENT' && <span> - for student bookings</span>}
+                                                {event?.tags?.includes('student') && user?.loggedIn && user.role != 'STUDENT' && <span> - for student bookings</span>}
                                             </div>}
                                             {user && user.loggedIn && user.email && event.userBooked && <span> - <span className="text-success">You are booked on this event!</span></span>}
                                             {!event.userBooked && !event.userOnWaitList && zeroOrLess(event.placesAvailable) && !(event.tags && event.tags.indexOf('student') != -1 && user && isTeacher(user)) && <span> - Waiting list booking is available!</span>}

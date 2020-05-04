@@ -59,7 +59,7 @@ interface IsaacSymbolicQuestionProps {
 const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
+    const [initialEditorSymbols, setInitialEditorSymbols] = useState(JSON.parse(doc.formulaSeed || '[]'));
     const [textInput, setTextInput] = useState('');
 
     let currentAttemptValue: any | undefined;
@@ -228,10 +228,10 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                         <RS.UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
-                            a*x**2 + b x + c<br />
-                            c == sqrt(a**2 + b**2)<br />
-                            (1/2) mv**2<br />
-                            x_3 = x_1 + x_2<br />
+                            a*x^2 + b x + c<br />
+                            (-b ± sqrt(b**2 - 4ac)) / (2a)<br />
+                            1/2 mv**2<br />
+                            log(x_a, 2) == log(x_a) / log(2)<br />
                             <br />
                             As you type, the box above will preview the result.
                         </RS.UncontrolledTooltip>

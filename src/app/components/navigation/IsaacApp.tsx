@@ -58,6 +58,7 @@ import {LoadScript} from "@react-google-maps/api";
 import SiteSpecific from "../site/siteSpecific";
 import StaticPageRoute from "./StaticPageRoute";
 import {Redirect} from "react-router";
+import {UnsupportedBrowserBanner} from "./UnsupportedBrowserWarningBanner";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -81,6 +82,7 @@ export const IsaacApp = () => {
             <Toasts />
             <ActiveModals />
             <CookieBanner />
+            <UnsupportedBrowserBanner />
             <EmailVerificationBanner />
             <main id="main" role="main" className="flex-fill content-body">
                 <Switch>
@@ -129,7 +131,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/admin/usermanager" ifUser={isAdminOrEventManager} component={AdminUserManager} />
                     <TrackedRoute exact path="/admin/events" ifUser={user => isAdminOrEventManager(user) || isEventLeader(user)} component={EventManager} />
                     <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
-                    <TrackedRoute exact path="/admin/content_errors" ifUser={isStaff} component={AdminContentErrors} />
+                    <TrackedRoute exact path="/admin/content_errors" ifUser={user => segueEnvironment === "DEV" || isStaff(user)} component={AdminContentErrors} />
                     <TrackedRoute exact path="/admin/emails" ifUser={isAdmin} component={AdminEmails} />
 
                     {/* Authentication */}

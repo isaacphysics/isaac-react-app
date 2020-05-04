@@ -1,9 +1,8 @@
 import React from "react";
 import {Tabs} from "./Tabs";
-import {Col, Row, Button} from "reactstrap";
+import {Button, Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
-import {TempExamBoardPicker} from "./inputs/TempExamBoardPicker";
 
 export const FeaturedContentTabs = () => (
     <div className="tabs-featured-question">

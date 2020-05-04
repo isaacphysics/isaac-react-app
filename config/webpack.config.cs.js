@@ -31,6 +31,12 @@ module.exports = env => {
             new CopyWebpackPlugin([{
                 from: resolve('public/manifest-cs.json'),
                 to: 'manifest-cs.json',
+            }, {
+                from: resolve('public/unsupported_browsers/unsupported-cs.html'),
+                to: 'unsupported_browser.html',
+            }, {
+                from: resolve('public/unsupported_browsers/unsupported-cs.js'),
+                to: 'unsupported_browser.js',
             }]),
         ],
     };
