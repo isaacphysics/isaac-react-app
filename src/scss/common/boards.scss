@@ -168,26 +168,12 @@ tr.board-card {
   top: -50px;
 }
 
-.card-share-link div.share-link {
-  position: absolute;
-  right: 50px;
-  input {
-    top: 8px;
-  }
-
-}
-
-.table-share-link div.share-link {
-  position: absolute;
-  right: 111px;
-  @include respond-above(md) {
-    right: 113px;
-  }
-  @include respond-above(lg) {
-    right: 123px;
-  }
-
-  input {
-    top: 8px;
+.table-share-link, .card-share-link {
+  position: relative;
+  div.share-link {
+    position: absolute;
+    input {
+      top: 8px;
+    }
   }
 }
