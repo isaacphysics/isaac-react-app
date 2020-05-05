@@ -23,11 +23,17 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {boards as ThisBoards} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {sortIcon} from "../../services/constants";
-import {boardCompletionSelection, formatBoardOwner, generateGameboardSubjectHexagons} from "../../services/gameboards";
+import {
+    boardCompletionSelection,
+    determineGameboardSubjects,
+    formatBoardOwner,
+    generateGameboardSubjectHexagons
+} from "../../services/gameboards";
 import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -93,9 +99,7 @@ const Board = (props: BoardTableProps) => {
         }
     }
 
-    // FIXME: set this to be an ordered unique list of subjects in the board. The line below can be used for testing:
-    //const boardSubjects = ["maths", "physics", "chemistry", "compsci"].sort(()=>{return .5 - Math.random();}).slice(0,Math.floor(Math.random() *4)+1);
-    const boardSubjects = ["compsci"];
+    const boardSubjects = (SITE_SUBJECT === SITE.CS) ? ["compsci"] : determineGameboardSubjects(board);
 
     return boardView == boardViews.table ?
         <tr key={board.id} className="board-card">
