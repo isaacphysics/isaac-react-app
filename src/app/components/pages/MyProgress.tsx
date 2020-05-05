@@ -4,7 +4,7 @@ import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {getAnsweredQuestionsByDate, getProgress} from "../../state/actions";
 import {AppState} from "../../state/reducers";
-import {isStaff, isTeacher} from "../../services/user";
+import {isTeacher} from "../../services/user";
 import {withRouter} from "react-router-dom";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {Unauthorised} from "./Unauthorised";
@@ -61,7 +61,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
 
     const tabRefs: FlushableRef[] = [useRef(), useRef()];
 
-    if (!viewingOwnData && !isStaff(user)) {
+    if (!viewingOwnData && !isTeacher(user)) {
         return <Unauthorised />
     }
 
