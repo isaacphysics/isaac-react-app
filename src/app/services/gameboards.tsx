@@ -80,10 +80,10 @@ export const determineGameboardSubjects = (board: GameboardDTO) => {
     }
     );
     // If none of the questions have a subject tag, default to physics
-    if (allSubjects.length == 0) {
+    if (allSubjects.length === 0) {
         allSubjects.push("physics");
     }
     let enumeratedSubjects = countBy(allSubjects);
     return Object.keys(enumeratedSubjects).sort(function (a, b) {return subjects.indexOf(a) - subjects.indexOf(b)})
-        .sort(function (a, b) {return enumeratedSubjects[b]-enumeratedSubjects[a]});
+        .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a]});
 };
