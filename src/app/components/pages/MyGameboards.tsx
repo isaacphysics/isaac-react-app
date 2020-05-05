@@ -33,7 +33,6 @@ import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -99,7 +98,7 @@ const Board = (props: BoardTableProps) => {
         }
     }
 
-    const boardSubjects = (SITE_SUBJECT === SITE.CS) ? ["compsci"] : determineGameboardSubjects(board);
+    const boardSubjects = determineGameboardSubjects(board);
 
     return boardView == boardViews.table ?
         <tr key={board.id} className="board-card">

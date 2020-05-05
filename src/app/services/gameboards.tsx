@@ -4,6 +4,7 @@ import {NOT_FOUND} from "./constants";
 import React from "react";
 import countBy from "lodash/countBy"
 import intersection from "lodash/intersection"
+import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 enum boardCompletions {
     "any" = "Any",
@@ -68,6 +69,9 @@ export const generateGameboardSubjectHexagons = (boardSubjects: string[]) => {
 };
 
 export const determineGameboardSubjects = (board: GameboardDTO) => {
+    if (SITE_SUBJECT === SITE.CS) {
+        return ["compsci"];
+    }
     let allSubjects: string[] = [];
     board.questions?.map((item) => {
         let tags = intersection(["physics","maths","chemistry"], item.tags || []);

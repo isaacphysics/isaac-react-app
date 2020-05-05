@@ -140,7 +140,7 @@ const Board = (props: BoardProps) => {
 
     const hexagonId = `board-hex-${board.id}`;
 
-    const boardSubjects = (SITE_SUBJECT === SITE.CS) ? ["compsci"] : determineGameboardSubjects(board);
+    const boardSubjects = determineGameboardSubjects(board);
 
     return <Card className="board-card">
         <CardBody className="pb-4 pt-4">
