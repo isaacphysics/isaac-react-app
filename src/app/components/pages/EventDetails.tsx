@@ -191,6 +191,9 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                         You can manage access to your progress data in your <Link to="/account#teacherconnections" target="_blank">account settings</Link>.
                                                         <br />
                                                         Your data will be processed in accordance with Isaac Computer Science&apos;s <Link to="/privacy" target="_blank">privacy policy</Link>.
+                                                        <br />
+                                                        If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event.
+                                                        You can enable this in your <Link to="/account#emailpreferences" target="_blank">account settings</Link>.
                                                     </small>
                                                 </p>}
 
@@ -231,7 +234,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     >
                                         Reserve spaces
                                     </RS.Button>}
-                                    {event.userBookingStatus && ["CONFIRMED", "RESERVED"].includes(event.userBookingStatus) && <RS.Button
+                                    {event.userBookingStatus && ["CONFIRMED", "RESERVED"].includes(event.userBookingStatus) && !event.expired && <RS.Button
                                         color="primary" outline onClick={() => {dispatch(cancelMyBooking(eventId))}}
                                     >
                                         Cancel your booking

@@ -158,6 +158,11 @@ export const api = {
                 return endpoint.post(`/admin/users/change_role/${role}`, userIds);
             }
         },
+        modifyUserEmailVerificationStatuses: {
+            post: (status: ApiTypes.EmailVerificationStatus, emails: string[]) => {
+                return endpoint.post(`/admin/users/change_email_verification_status/${status}/true`, emails);
+            }
+        },
         getContentErrors: (): AxiosPromise<AppTypes.ContentErrorsResponse> => {
             return endpoint.get(`/admin/content_problems`)
         },

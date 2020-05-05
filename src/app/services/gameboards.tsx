@@ -1,6 +1,7 @@
 import {GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {CurrentGameboardState} from "../state/reducers";
 import {NOT_FOUND} from "./constants";
+import React from "react";
 
 enum boardCompletions {
     "any" = "Any",
@@ -57,3 +58,9 @@ export const determineNextGameboardItem = (currentGameboard: CurrentGameboardSta
         }
     }
 };
+
+export const generateGameboardSubjectHexagons = (boardSubjects: string[]) => {
+    return boardSubjects.map((subject, i) =>
+        <div key={subject} className={`board-subject-hexagon subject-${subject} z${i}`} />
+    );
+}

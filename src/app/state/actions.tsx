@@ -46,7 +46,8 @@ import {
     TestCaseDTO,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
+    UserSummaryWithEmailAddressDTO,
+    EmailVerificationStatus
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -1073,6 +1074,17 @@ export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (di
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("User role modification failed", e));
+    }
+};
+
+export const adminModifyUserEmailVerificationStatuses = (status: EmailVerificationStatus, emails: string[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_REQUEST});
+    try {
+        await api.admin.modifyUserEmailVerificationStatuses.post(status, emails);
+        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_SUCCESS});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Email verification status modification failed", e));
     }
 };
 
