@@ -44,8 +44,8 @@ const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUse
     });
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
     const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
-    let promotableRoles = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
-    const verificationStatuses = ["NOT_VERIFIED", "DELIVERY_FAILED"];
+    let promotableRoles: Role[] = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
+    const verificationStatuses: EmailVerificationStatus[] = ["NOT_VERIFIED", "DELIVERY_FAILED"];
     if (currentUser && currentUser.role == "ADMIN") {
         promotableRoles = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"];
     }
@@ -243,7 +243,7 @@ const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUse
                                 {(promotableRoles).map(role =>
                                     <RS.DropdownItem
                                         key={role} disabled={selectedUserIds.length === 0}
-                                        onClick={() => modifyUserRolesAndUpdateResults(role as Role)}
+                                        onClick={() => modifyUserRolesAndUpdateResults(role)}
                                     >
                                         {role}
                                     </RS.DropdownItem>
@@ -257,7 +257,7 @@ const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUse
                                 {(verificationStatuses).map(status =>
                                     <RS.DropdownItem
                                         key={status} disabled={selectedUserIds.length === 0}
-                                        onClick={() => modifyUserEmailVerificationStatusesAndUpdateResults(status as EmailVerificationStatus)}
+                                        onClick={() => modifyUserEmailVerificationStatusesAndUpdateResults(status)}
                                     >
                                         {status}
                                     </RS.DropdownItem>
