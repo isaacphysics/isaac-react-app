@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteBoard, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -26,6 +26,7 @@ import {sortIcon} from "../../services/constants";
 import {boardCompletionSelection, formatBoardOwner, generateGameboardSubjectHexagons} from "../../services/gameboards";
 import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
+import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
 
 interface MyBoardsPageProps {
@@ -77,8 +78,6 @@ const Board = (props: BoardTableProps) => {
     const boardLink = `/gameboards#${board.id}`;
 
     const dispatch = useDispatch();
-    const [showShareLink, setShowShareLink] = useState(false);
-    const shareLink = useRef<HTMLInputElement>(null);
 
     const updateBoardSelection = (board: AppGameBoard, checked: boolean) => {
         if (checked) {
@@ -87,23 +86,6 @@ const Board = (props: BoardTableProps) => {
             setSelectedBoards(selectedBoards.filter((thisBoard) => thisBoard.id !== board.id));
         }
     };
-
-    function toggleShareLink() {
-        if (showShareLink) {
-            setShowShareLink(false);
-        } else {
-            setShowShareLink(true);
-            setTimeout(() => {
-                if (shareLink.current) {
-                    const selection = window.getSelection();
-                    const range = document.createRange();
-                    range.selectNodeContents(shareLink.current);
-                    selection && selection.removeAllRanges();
-                    selection && selection.addRange(range);
-                }
-            });
-        }
-    }
 
     function confirmCardDeleteBoard() {
         if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
@@ -132,11 +114,9 @@ const Board = (props: BoardTableProps) => {
             <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
             <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
             <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
-            <td className="align-middle">
-                <div className={`share-link-table ${showShareLink ? "d-block" : ""}`}>
-                    <div ref={shareLink}>{boardLink}</div>
-                </div>
-                <button className="share-link-icon" onClick={toggleShareLink}/></td>
+            <td className="text-center align-middle">
+                <div className="table-share-link"><ShareLink linkUrl={boardLink} reducedWidthLink /></div>
+            </td>
             <td><CustomInput id={`board-delete-${board.id}`} type="checkbox" checked={board && (selectedBoards.some(e => e.id === board.id))}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     board && updateBoardSelection(board, event.target.checked)
@@ -159,9 +139,8 @@ const Board = (props: BoardTableProps) => {
                     <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
                 </aside>
 
-                <div className="my-4">
-                    <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{boardLink}</div></div>
-                    <button className="share-link-icon" onClick={toggleShareLink}/>
+                <div className="mt-4 mb-2">
+                    <div className="card-share-link"><ShareLink linkUrl={boardLink} reducedWidthLink /></div>
                     <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
                     <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                 </div>
