@@ -2,6 +2,9 @@ import {GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {CurrentGameboardState} from "../state/reducers";
 import {NOT_FOUND} from "./constants";
 import React from "react";
+import countBy from "lodash/countBy"
+import intersection from "lodash/intersection"
+import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 enum boardCompletions {
     "any" = "Any",
@@ -63,4 +66,24 @@ export const generateGameboardSubjectHexagons = (boardSubjects: string[]) => {
     return boardSubjects.map((subject, i) =>
         <div key={subject} className={`board-subject-hexagon subject-${subject} z${i}`} />
     );
-}
+};
+
+export const determineGameboardSubjects = (board: GameboardDTO) => {
+    if (SITE_SUBJECT === SITE.CS) {
+        return ["compsci"];
+    }
+    const subjects = ["physics", "maths", "chemistry"];
+    let allSubjects: string[] = [];
+    board.questions?.map((item) => {
+        let tags = intersection(subjects, item.tags || []);
+        tags.forEach(tag => allSubjects.push(tag));
+    }
+    );
+    // If none of the questions have a subject tag, default to physics
+    if (allSubjects.length === 0) {
+        allSubjects.push("physics");
+    }
+    let enumeratedSubjects = countBy(allSubjects);
+    return Object.keys(enumeratedSubjects).sort(function (a, b) {return subjects.indexOf(a) - subjects.indexOf(b)})
+        .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a]});
+};
