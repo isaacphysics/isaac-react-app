@@ -161,8 +161,8 @@ const Board = (props: BoardProps) => {
                 <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
             </aside>
 
-            <div className="my-4">
-                <ShareLink linkUrl={assignmentLink}/>
+            <div className="mt-4 mb-3">
+                <div className="card-share-link"><ShareLink linkUrl={assignmentLink} reducedWidthLink /></div>
                 <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
                 <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
             </div>

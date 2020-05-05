@@ -93,6 +93,9 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                                 </RS.Button>
                             </th>
                             <th className="align-middle">
+                                Level of teaching experience
+                            </th>
+                            <th className="align-middle">
                                 Accessibility requirements
                             </th>
                             <th className="align-middle">
@@ -143,6 +146,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                                     <td className="align-middle">{booking.bookingStatus}</td>
                                     <td className="align-middle"><DateString>{booking.bookingDate}</DateString></td>
                                     <td className="align-middle"><DateString>{booking.updated}</DateString></td>
+                                    <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.experienceLevel}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.accessibilityRequirements}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.medicalRequirements}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.emergencyName}</td>
