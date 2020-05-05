@@ -35,7 +35,11 @@ import {boards, groups} from "../../state/selectors";
 import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
-import {formatBoardOwner, generateGameboardSubjectHexagons} from "../../services/gameboards";
+import {
+    determineGameboardSubjects,
+    formatBoardOwner,
+    generateGameboardSubjectHexagons
+} from "../../services/gameboards";
 import {connect, useDispatch} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
@@ -136,9 +140,7 @@ const Board = (props: BoardProps) => {
 
     const hexagonId = `board-hex-${board.id}`;
 
-    // FIXME: set this to be an ordered unique list of subjects in the board. The line below can be used for testing:
-    //const boardSubjects = ["maths", "physics", "chemistry", "compsci"].sort(()=>{return .5 - Math.random();}).slice(0,Math.floor(Math.random() *4)+1);
-    const boardSubjects = ["compsci"];
+    const boardSubjects = determineGameboardSubjects(board);
 
     return <Card className="board-card">
         <CardBody className="pb-4 pt-4">
