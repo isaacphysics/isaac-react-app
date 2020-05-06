@@ -114,7 +114,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         Object.assign(regexRules, {
             "[**Glossary**](/glossary)": /\*\*Glossary\*\*/g,
             "[**Concepts**](/concepts)": /\*\*Concepts\*\*/g,
-        })
+        });
     }
     let regexProcessedMarkdown = markdown;
     Object.entries(regexRules).forEach(([replacement, rule]) =>

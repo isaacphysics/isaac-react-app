@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -90,14 +90,17 @@ interface AccountPageProps {
 
 const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, userFind}: AccountPageProps) => {
     useEffect(() => {
-        userOfInterest && adminUserGet(Number(userOfInterest));
-        userOfInterest && getChosenUserAuthSettings(Number(userOfInterest));
-    }, []);
+        if (userOfInterest) {
+            adminUserGet(Number(userOfInterest));
+            getChosenUserAuthSettings(Number(userOfInterest));
+        }
+    }, [userOfInterest]);
+
     // - Admin user modification
-    const [editingOtherUser, _] = useState(!!userOfInterest && user && user.loggedIn && user.id && user.id.toString() !== userOfInterest || false);
+    const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
     const [userToEdit, setUserToEdit] = useState<any>();
 
-    useEffect(() => {editingOtherUser && userFind && setUserToEdit(Object.assign({}, userFind))}, [userFind]);
+    useEffect(() => {editingOtherUser && userFind && setUserToEdit(Object.assign({}, userFind))}, [editingOtherUser, userFind]);
 
     // - Copy of user to store changes before saving
     const [userToUpdate, setUserToUpdate] = useState<any>(editingOtherUser && userOfInterest && userFind ?
@@ -125,7 +128,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
 
-    useMemo(() => {
+    useEffect(() => {
         const currentEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
         const currentSubjectInterests = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
         const currentUserPreferences = {
@@ -140,7 +143,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     // Set active tab using hash anchor
     const [activeTab, setActiveTab] = useState(ACCOUNT_TAB.account);
-    useMemo(() => {
+    useEffect(() => {
         // @ts-ignore
         let tab: ACCOUNT_TAB =
             (authToken && ACCOUNT_TAB.teacherconnections) ||
