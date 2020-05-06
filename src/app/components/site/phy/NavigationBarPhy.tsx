@@ -19,8 +19,8 @@ export const NavigationBarPhy = () => {
         <NavigationSection title="Learn">
             <LinkItem to="/gameboards/new">Questions</LinkItem>
             <LinkItem to="/concepts">Concepts</LinkItem>
-            <LinkItem to="/books">Books</LinkItem>
-            <LinkItem to="/chemistry">Chemistry</LinkItem>
+            <LinkItem to="/alevel">A Level</LinkItem>
+            <LinkItem to="/gcse">GCSE</LinkItem>
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teach">
