@@ -7,7 +7,6 @@ import {AppState} from "../../state/reducers";
 import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
 import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
-import {IsaacHints} from "./IsaacHints";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
 import {Inequality, makeInequality} from "inequality";
@@ -241,7 +240,6 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                     {errors.map(e => (<li key={e}>{e}</li>))}
                 </ul></div>}
             </div>
-            <IsaacHints questionPartId={questionId} hints={doc.hints} />
         </div>
     );
 };

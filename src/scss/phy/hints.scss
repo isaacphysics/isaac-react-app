@@ -1,7 +1,23 @@
-.hint-tab-title {
-  color: $purple !important;
-  &.active {
-    color: white !important;
-    background-color: $purple !important;
+.tabbed-hints {
+  margin-top: 1rem;
+  @include respond-above(md) {
+    margin-top: 1.25rem;
+  }
+  ul {
+    @include respond-below(lg) {
+      li {padding-left: 0.5rem !important; padding-right: 0.5rem !important;}
+    }
+    @include respond-below(xs) {
+      li {padding-left: 0 !important; padding-right: 0 !important;}
+    }
+  }
+
+  .hint-tab-title {
+    color: $purple !important;
+
+    &.active {
+      color: white !important;
+      background-color: $purple !important;
+    }
   }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import {AnvilApp} from "./AnvilApp"
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
+import {IsaacQuestion} from "./IsaacQuestion";
 import {IsaacVideo} from "./IsaacVideo";
 import {IsaacImage} from "./IsaacImage";
 import {IsaacFigure} from "./IsaacFigure";
@@ -49,7 +49,7 @@ export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: s
             if (match.path.startsWith("/quizzes")) {
                 tempSelectedComponent = <IsaacQuizTabs {...props} />;
             } else {
-                tempSelectedComponent = <IsaacQuestionTabs {...props} />;
+                tempSelectedComponent = <IsaacQuestion {...props} />;
             }
             selectedComponent = <QuestionContext.Provider value={props.doc.id}>{tempSelectedComponent}</QuestionContext.Provider>;
             break;
