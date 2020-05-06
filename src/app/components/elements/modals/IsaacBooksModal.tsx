@@ -21,7 +21,7 @@ export const isaacBooksModal = () => {
                 </Row>
                 <Row>
                     <Col className="text-center" md={4}>
-                        <Link to="/books/phys_book_gcse"><img className="book-cover" src="assets/phy/books/phys_book_gcse.jpg" alt="" />
+                        <Link onClick={store.dispatch(closeActiveModal())} to="/books/phys_book_gcse"><img className="book-cover" src="assets/phy/books/phys_book_gcse.jpg" alt="" />
                             <span className="sr-only">Mastering Essential </span><span>GCSE Physics</span>
                         </Link>
                     </Col>
@@ -32,7 +32,7 @@ export const isaacBooksModal = () => {
                         </button>
                     </Col>
                     <Col className="text-center" md={4}>
-                        <Link to="/books/chemistry_16"><img className="book-cover" src="assets/phy/books/chemistry_16.jpg" alt="" />
+                        <Link onClick={store.dispatch(closeActiveModal())} to="/books/chemistry_16"><img className="book-cover" src="assets/phy/books/chemistry_16.jpg" alt="" />
                             <span className="sr-only">Mastering Essential </span><span>Pre-University Physical Chemistry</span>
                         </Link>
                     </Col>
@@ -42,7 +42,7 @@ export const isaacBooksModal = () => {
                 </Row>
                 <Row>
                     <Col className="text-center" md={4}>
-                        <Link to="/books/pre_uni_maths"><img className="book-cover" src="assets/phy/books/pre_uni_maths.jpg" alt="" />
+                        <Link onClick={store.dispatch(closeActiveModal())} to="/books/pre_uni_maths"><img className="book-cover" src="assets/phy/books/pre_uni_maths.jpg" alt="" />
                             <span className="sr-only">Pre-university </span><span>Mathematics for Sciences</span>
                         </Link>
                     </Col>

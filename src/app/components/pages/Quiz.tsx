@@ -11,9 +11,8 @@ import {
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {AppState} from "../../state/reducers";
-import {ContentBase, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
+import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE} from "../../services/constants";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -27,7 +26,6 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
     const doc = useSelector(selectDoc.ifQuizId(match.params.quizId));
     const allQuestionsAttempted = useSelector(questions.allQuestionsAttempted);
     const anyQuestionPreviouslyAttempted = useSelector(questions.anyQuestionPreviouslyAttempted);
-    const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
 
     function submitQuiz(event: React.FormEvent) {
         if (event) {event.preventDefault();}
@@ -68,10 +66,7 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
         return <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <RS.Container>
                 <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
-
-                {segueEnvironment === "DEV" && (doc as ContentBase).canonicalSourceFile &&
-                    <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
-                }
+                <EditContentButton doc={doc} />
 
                 <RS.Row>
                     <RS.Col md={{size: 8, offset: 2}} className="py-4 question-panel">

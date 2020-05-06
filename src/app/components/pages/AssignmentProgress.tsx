@@ -341,8 +341,10 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
                             const fullAccess = studentProgress.user.authorisedFullAccess;
                             return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " revoked"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
                                 <th className="student-name">
-                                    {studentProgress.user.givenName}
-                                    <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                    <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
+                                        {studentProgress.user.givenName}
+                                        <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                    </Link>
                                 </th>
                                 {questions.map((q, index) =>
                                     <td key={q.id} className={markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestion(index)}>

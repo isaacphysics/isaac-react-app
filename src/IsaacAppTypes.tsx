@@ -79,6 +79,9 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST}
     | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS; errors: ContentErrorsResponse}
@@ -581,6 +584,7 @@ export interface AdditionalInformation {
     emergencyNumber?: string;
     authorisation?: string;
     authorisationOther?: string;
+    experienceLevel?: string;
 }
 
 export interface Credentials {

@@ -13,13 +13,13 @@ export const aLevelBookChoiceModal = () => {
             <Col>
                 <Row className="justify-content-md-center">
                     <Col className="text-center" md={4}>
-                        <Link to="/books/physics_skills_14">
+                        <Link onClick={store.dispatch(closeActiveModal())} to="/books/physics_skills_14">
                             <img className="book-cover" src="assets/phy/books/physics_skills_14.jpg" alt="" />
                             <span className="sr-only">Pre-university Physics </span><span>2nd Edition (2014-2018)</span>
                         </Link>
                     </Col>
                     <Col className="text-center" md={4}>
-                        <Link to="/books/physics_skills_19">
+                        <Link onClick={store.dispatch(closeActiveModal())} to="/books/physics_skills_19">
                             <img className="book-cover" src="assets/phy/books/physics_skills_19.jpg" alt="" />
                             <span className="sr-only">Pre-university Physics </span><span>3rd Edition (2019-)</span>
                         </Link>
