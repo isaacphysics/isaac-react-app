@@ -279,3 +279,12 @@ body {
         background-repeat: no-repeat;
     }
 }
+
+ul {
+    list-style-position: outside;
+    list-style-image: url('/assets/hexagon-bullet.svg');
+    &.no-bullet {
+        list-style-type: none;
+        list-style-image: none;
+    }
+}

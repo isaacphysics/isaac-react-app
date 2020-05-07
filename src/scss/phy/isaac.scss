@@ -173,3 +173,12 @@ body {
 .footerLogo {
     margin-top: -0.55px;
 }
+
+ul {
+    list-style-position: outside;
+    list-style-image: url('/assets/phy/hexagon-bullet.svg');
+    &.no-bullet {
+        list-style-type: none;
+        list-style-image: none;
+    }
+}
