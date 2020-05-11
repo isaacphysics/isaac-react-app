@@ -5,7 +5,6 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {ChoiceDTO, IsaacStringMatchQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
 import {Input} from "reactstrap";
-import {IsaacHints} from "./IsaacHints";
 import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
@@ -45,7 +44,6 @@ const IsaacStringMatchQuestionComponent = (props: IsaacStringMatchQuestionProps)
                 value={currentAttemptValue || ""}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     setCurrentAttempt(questionId, choiceDTOfromEvent(event))}/>
-            <IsaacHints questionPartId={questionId} hints={doc.hints}/>
         </div>
     );
 };

@@ -10,10 +10,11 @@ import {IsaacPodDTO} from "../../../IsaacApiTypes";
 interface NewsCarouselProps {
     subject: "news" | "physics";
     descending?: boolean;
+    showTitle?: boolean;
 }
 
 export const NewsCarousel = (props: NewsCarouselProps) => {
-    const {descending, subject} = props;
+    const {descending, subject, showTitle} = props;
     const dispatch = useDispatch();
     const newsState = useSelector((state: AppState) => state && state.news);
     useEffect(() => {
@@ -35,7 +36,7 @@ export const NewsCarousel = (props: NewsCarouselProps) => {
 
     return <ShowLoading until={newsState} thenRender={({news}) => <div>
         <ResponsiveCarousel groupingLimit={3}>
-            {news?.sort(compare).map((newsItem: IsaacPodDTO, index: number) => <NewsCard newsItem={newsItem} key={index} />)}
+            {news?.sort(compare).map((newsItem: IsaacPodDTO, index: number) => <NewsCard newsItem={newsItem} showTitle={showTitle} key={index} />)}
         </ResponsiveCarousel>
     </div>} />
 };
