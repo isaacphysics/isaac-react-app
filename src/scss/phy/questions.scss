@@ -1,5 +1,11 @@
 @import "../common/questions";
 
+.question-panel > .content-value,
+.question-panel .isaac-accordion .accordion-section > .content-value,
+.question-component .question-content {
+  font-family: $primary-font;
+}
+
 .question-panel > .content-value {
   background: none;
   box-shadow: none;
