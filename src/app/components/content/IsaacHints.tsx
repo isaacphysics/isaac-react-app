@@ -38,7 +38,7 @@ export const IsaacTabbedHints = ({hints}: HintsProps) => {
     return <div className="tabbed-hints">
         {hints && <Tabs className="no-print" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
             {Object.assign({}, ...hints.map((hint, index) => ({
-                [hint.title || `Hint\u00A0${index + 1}`]: <div className="mt-3 mt-sm-4 mx-3 py-3 px-4 alert-secondary">
+                [hint.title || `Hint\u00A0${index + 1}`]: <div className="mt-3 mt-lg-4 pt-2">
                     <IsaacContent doc={hint} />
                 </div>
             })))}
