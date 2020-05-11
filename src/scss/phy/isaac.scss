@@ -73,7 +73,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 
 // Atoms
 @import "../common/fonts";
-@import "../common/typography";
+@import "typography";
 @import "../common/headings";
 @import "../common/modals";
 @import "questions";
@@ -172,13 +172,4 @@ body {
 }
 .footerLogo {
     margin-top: -0.55px;
-}
-
-ul {
-    list-style-position: outside;
-    list-style-image: url('/assets/phy/hexagon-bullet.svg');
-    &.no-bullet {
-        list-style-type: none;
-        list-style-image: none;
-    }
 }
