@@ -7,7 +7,7 @@ import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
 import {Tabs} from "../elements/Tabs";
 
-const PintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
+const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
     const printHints = useSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
     return <React.Fragment>
         {printHints && hints?.map((hint, index) => (
@@ -30,7 +30,7 @@ export const IsaacLinkHints = ({hints, questionPartId}: HintsProps) => {
                 <IsaacHintModal questionPartId={questionPartId} hintIndex={index} label={`Hint ${index + 1}`} title={hint.title || `Hint ${index + 1}`} body={hint} scrollable/>
             </ListGroupItem>)}
         </ListGroup>
-        <PintOnlyHints hints={hints} />
+        <PrintOnlyHints hints={hints} />
     </div>;
 };
 
@@ -43,6 +43,6 @@ export const IsaacTabbedHints = ({hints}: HintsProps) => {
                 </div>
             })))}
         </Tabs>}
-        <PintOnlyHints hints={hints} />
+        <PrintOnlyHints hints={hints} />
     </div>
 };
