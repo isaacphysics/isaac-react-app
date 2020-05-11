@@ -7,7 +7,6 @@ import {AppState} from "../../state/reducers";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
 import {Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Row} from "reactstrap";
 import {TrustedHtml} from "../elements/TrustedHtml";
-import {IsaacHints} from "./IsaacHints";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
@@ -174,7 +173,6 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
                 </Col>
                 }
             </Row>
-            <IsaacHints questionPartId={questionId} hints={doc.hints}/>
         </div>
     );
 };

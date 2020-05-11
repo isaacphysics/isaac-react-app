@@ -4,7 +4,6 @@ import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {ChoiceDTO, IsaacItemQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
-import {IsaacHints} from "./IsaacHints";
 import {CustomInput, Label} from "reactstrap";
 import {questions} from "../../state/selectors";
 
@@ -65,8 +64,6 @@ const IsaacItemQuestionComponent = (props: IsaacItemQuestionProps) => {
                     </Label>
                 </li>)
             }</ul>
-
-            <IsaacHints questionPartId={questionId} hints={doc.hints}/>
         </div>
     );
 };

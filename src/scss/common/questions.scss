@@ -197,6 +197,8 @@ button {
     margin-left: -3rem;
     margin-right: -3rem;
     margin-bottom: -3rem;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
     @include media-breakpoint-down(sm) {
       margin-left: -1rem;
       margin-right: -1rem;
