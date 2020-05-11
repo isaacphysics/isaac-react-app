@@ -544,6 +544,7 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     teacher?: boolean;
     student?: boolean;
     virtual?: boolean;
+    recurring?: boolean;
     field?: "physics" | "maths";
 }
 
