@@ -69,6 +69,7 @@
     "identity-obj-proxy": "3.0.0",
     "inequality": "^0.9.21",
     "inequality-grammar": "^0.9.10",
+    "isaac-graph-sketcher": "file:../isaac-graph-sketcher",
     "jest": "^24.7.1",
     "jest-pnp-resolver": "1.0.2",
     "jest-resolve": "23.6.0",

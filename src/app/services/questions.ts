@@ -7,6 +7,7 @@ import {IsaacFreeTextQuestion} from "../components/content/IsaacFreeTextQuestion
 import {IsaacSymbolicLogicQuestion} from "../components/content/IsaacSymbolicLogicQuestion";
 import {IsaacSymbolicQuestion} from "../components/content/IsaacSymbolicQuestion";
 import {IsaacSymbolicChemistryQuestion} from "../components/content/IsaacSymbolicChemistryQuestion";
+import {IsaacGraphSketcherQuestion} from "../components/content/IsaacGraphSketcherQuestion";
 
 // @ts-ignore as TypeScript is struggling to infer common type for questions
 export const QUESTION_TYPES = new Map([
@@ -19,6 +20,7 @@ export const QUESTION_TYPES = new Map([
     ["isaacStringMatchQuestion", IsaacStringMatchQuestion],
     ["isaacFreeTextQuestion", IsaacFreeTextQuestion],
     ["isaacSymbolicLogicQuestion", IsaacSymbolicLogicQuestion],
+    ["isaacGraphSketcherQuestion", IsaacGraphSketcherQuestion],
     ["default", IsaacMultiChoiceQuestion]
 ]);
 
@@ -32,5 +34,6 @@ export const HUMAN_QUESTION_TYPES = new Map([
     ["isaacStringMatchQuestion", "String match"],
     ["isaacFreeTextQuestion", "Free text"],
     ["isaacSymbolicLogicQuestion", "Boolean logic"],
+    ["isaacGraphSketcherQuestion", "Graph Sketcher"],
     ["default", "Multiple choice"]
 ]);
