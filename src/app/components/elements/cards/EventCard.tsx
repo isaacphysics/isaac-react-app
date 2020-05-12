@@ -3,10 +3,11 @@ import * as RS from "reactstrap";
 import classnames from "classnames";
 import {Link} from "react-router-dom";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
-import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../DateString";
+import {DateString} from "../DateString";
+import {formatEventCardDate} from "../../../services/events";
 
 export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolean}) => {
-    const {id, title, subtitle, eventThumbnail, location, expired, date, endDate, multiDay} = event;
+    const {id, title, subtitle, eventThumbnail, location, expired, date} = event;
 
     return <RS.Card className={classnames({'card-neat': true, 'disabled text-muted': expired, 'm-4': pod, 'mb-4': !pod})}>
         {eventThumbnail && <div className={'event-card-image text-center'}>
@@ -19,17 +20,7 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
                 <span className="d-block my-2">
                     <span className="font-weight-bold">When:</span>
                     <span className="d-block">
-                        {multiDay ?
-                            <React.Fragment>
-                                <DateString>{date}</DateString><br />
-                                <DateString>{endDate}</DateString>
-                            </React.Fragment>
-                            :
-                            <React.Fragment>
-                                <DateString formatter={FRIENDLY_DATE}>{endDate}</DateString>{pod ? " " : <br />}
-                                <DateString formatter={TIME_ONLY}>{date}</DateString> — <DateString formatter={TIME_ONLY}>{endDate}</DateString>
-                            </React.Fragment>
-                        }
+                        {formatEventCardDate(event, pod)}
                     </span>
                 </span>
                 {location && location.address && <span className='d-block my-2'>
