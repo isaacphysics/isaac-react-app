@@ -17,10 +17,10 @@ export const NavigationBarPhy = () => {
         </NavigationSection>
 
         <NavigationSection title="Learn">
-            <LinkItem to="/gameboards/new">Questions</LinkItem>
-            <LinkItem to="/concepts">Concepts</LinkItem>
-            <LinkItem to="/alevel">A Level</LinkItem>
-            <LinkItem to="/gcse">GCSE</LinkItem>
+            <LinkItem to="/alevel">A Level Resources</LinkItem>
+            <LinkItem to="/gcse">GCSE Resources</LinkItem>
+            <LinkItem to="/gameboards/new">Question Finder</LinkItem>
+            <LinkItem to="/concepts">Concept Reference</LinkItem>
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teach">
