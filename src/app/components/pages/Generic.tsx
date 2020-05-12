@@ -6,7 +6,7 @@ import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {useDispatch, useSelector} from "react-redux";
-import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
+import {DOCUMENT_TYPE} from "../../services/constants";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -32,16 +32,15 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
         return <div className={doc.subjectId || ""}>
             <Container>
                 <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
-
-                <Row className="no-print">
-                    {doc.canonicalSourceFile && <EditContentButton canonicalSourceFile={EDITOR_URL + doc['canonicalSourceFile']} />}
+                <div className="no-print d-flex align-items-center">
+                    <EditContentButton doc={doc} />
                     <div className="question-actions question-actions-leftmost mt-3">
                         <ShareLink linkUrl={`/pages/${doc.id}`}/>
                     </div>
                     <div className="question-actions mt-3 not_mobile">
                         <PrintButton/>
                     </div>
-                </Row>
+                </div>
 
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4">
@@ -50,7 +49,6 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                 </Row>
 
                 {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
-
             </Container>
         </div>
     }}/>;

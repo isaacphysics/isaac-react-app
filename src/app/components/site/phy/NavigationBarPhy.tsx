@@ -19,8 +19,8 @@ export const NavigationBarPhy = () => {
         <NavigationSection title="Learn">
             <LinkItem to="/gameboards/new">Questions</LinkItem>
             <LinkItem to="/concepts">Concepts</LinkItem>
-            <LinkItem to="/books">Books</LinkItem>
-            <LinkItem to="/chemistry">Chemistry</LinkItem>
+            <LinkItem to="/alevel">A Level</LinkItem>
+            <LinkItem to="/gcse">GCSE</LinkItem>
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teach">
@@ -38,9 +38,10 @@ export const NavigationBarPhy = () => {
         </NavigationSection>
 
         <NavigationSection title="Help">
-            <LinkItem to="/support/student">Student Support</LinkItem>
-            <LinkItem to="/support/teacher">Teacher Support</LinkItem>
-            <LinkItem to="/contact">Contact us</LinkItem>
+            <LinkItem to="/solving_problems">Problem Solving Guide</LinkItem>
+            <LinkItem to="/support/student">Student FAQ</LinkItem>
+            <LinkItem to="/support/teacher">Teacher FAQ</LinkItem>
+            <LinkItem to="/contact">Contact Us</LinkItem>
         </NavigationSection>
 
         {(isStaff(user) || isEventLeader(user)) && <NavigationSection title="Admin">

@@ -50,6 +50,7 @@ export const RelatedContent = ({content, parentPage}: RelatedContentProps) => {
     const dispatch = useDispatch();
     const concepts = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
     const questions = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION).sort((a, b) => {
+        if (a.title && b.title) return (a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
         if (a.level === b.level) return (a.title || '').localeCompare(b.title || '');
         const aInt = parseInt(a.level || '-1');
         const bInt = parseInt(b.level || '-1');
@@ -61,7 +62,7 @@ export const RelatedContent = ({content, parentPage}: RelatedContentProps) => {
             <Link to={getURLForContent(contentSummary)}
                 onClick={() => {dispatch(logAction(getEventDetails(contentSummary, parentPage)))}}
             >
-                {contentSummary.level ? (contentSummary.title + " (Level " + contentSummary.level + ")") : contentSummary.title}
+                {contentSummary.level && contentSummary.level != '0' ? (contentSummary.title + " (Level " + contentSummary.level + ")") : contentSummary.title}
             </Link>
         </ListGroupItem>
     );
@@ -92,7 +93,7 @@ export const RelatedContent = ({content, parentPage}: RelatedContentProps) => {
                     <ListGroup className="mr-lg-3">
                         {questions.length > 0 ?
                             questions.map(contentSummary => makeListGroupItem(contentSummary)) :
-                            <div className="mt-2 ml-3">There are no related concepts</div>
+                            <div className="mt-2 ml-3">There are no related questions</div>
                         }
                     </ListGroup>
                 </div>

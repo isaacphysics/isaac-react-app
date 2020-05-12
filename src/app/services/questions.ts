@@ -31,6 +31,6 @@ export const HUMAN_QUESTION_TYPES = new Map([
     ["isaacSymbolicChemistryQuestion", "Chemistry"],
     ["isaacStringMatchQuestion", "String match"],
     ["isaacFreeTextQuestion", "Free text"],
-    ["isaacSymbolicLogicQuestion", "Symbolic logic"],
+    ["isaacSymbolicLogicQuestion", "Boolean logic"],
     ["default", "Multiple choice"]
 ]);

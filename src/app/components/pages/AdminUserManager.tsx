@@ -2,9 +2,15 @@ import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {useDispatch, useSelector} from "react-redux";
-import {adminModifyUserRoles, adminUserDelete, adminUserSearch, getUserIdSchoolLookup} from "../../state/actions";
+import {
+    adminModifyUserEmailVerificationStatuses,
+    adminModifyUserRoles,
+    adminUserDelete,
+    adminUserSearch,
+    getUserIdSchoolLookup
+} from "../../state/actions";
 import {AppState} from "../../state/reducers";
-import {Role} from "../../../IsaacApiTypes";
+import {EmailVerificationStatus, Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
@@ -26,6 +32,12 @@ export const AdminUserManager = () => {
     });
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
     const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
+    const currentUser = useSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
+    let promotableRoles: Role[] = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
+    const verificationStatuses: EmailVerificationStatus[] = ["NOT_VERIFIED", "DELIVERY_FAILED"];
+    if (currentUser && currentUser.role == "ADMIN") {
+        promotableRoles = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"];
+    }
 
     useEffect(() => {
         if (searchResults && searchResults.length > 0) {
@@ -81,6 +93,15 @@ export const AdminUserManager = () => {
             setUserUpdating(false);
         }
     };
+
+    const modifyUserEmailVerificationStatusesAndUpdateResults = async (status: EmailVerificationStatus) => {
+        setUserUpdating(true);
+        const selectedEmails = searchResults?.filter(user => user.id && selectedUserIds.includes(user.id)).map(user => user.email || '') || [];
+        await adminModifyUserEmailVerificationStatuses(status, selectedEmails);
+        adminUserSearch(searchQuery);
+        setSelectedUserIds([]);
+        setUserUpdating(false);
+    }
 
     const search = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -207,16 +228,30 @@ export const AdminUserManager = () => {
                             <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline>Modify Role</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Promote or demote selected users to:</RS.DropdownItem>
-                                {["STUDENT", "TEACHER", "EVENT_LEADER"].map(role =>
+                                {(promotableRoles).map(role =>
                                     <RS.DropdownItem
                                         key={role} disabled={selectedUserIds.length === 0}
-                                        onClick={() => modifyUserRolesAndUpdateResults(role as Role)}
+                                        onClick={() => modifyUserRolesAndUpdateResults(role)}
                                     >
                                         {role}
                                     </RS.DropdownItem>
                                 )}
                             </RS.DropdownMenu>
                         </RS.UncontrolledButtonDropdown>
+                        {currentUser && currentUser.role === 'ADMIN' && <RS.UncontrolledButtonDropdown>
+                            <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline className="ml-3">Email Status</RS.DropdownToggle>
+                            <RS.DropdownMenu>
+                                <RS.DropdownItem header>Change email verification status for users to:</RS.DropdownItem>
+                                {(verificationStatuses).map(status =>
+                                    <RS.DropdownItem
+                                        key={status} disabled={selectedUserIds.length === 0}
+                                        onClick={() => modifyUserEmailVerificationStatusesAndUpdateResults(status)}
+                                    >
+                                        {status}
+                                    </RS.DropdownItem>
+                                )}
+                            </RS.DropdownMenu>
+                        </RS.UncontrolledButtonDropdown>}
                     </RS.Col>
                     <RS.Col>
                         <Link className="btn float-right btn-secondary border-0" to={{

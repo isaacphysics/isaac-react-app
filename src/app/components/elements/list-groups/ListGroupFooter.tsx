@@ -55,7 +55,7 @@ const footerLinks = {
 
 export const ListGroupFooter = () => (
     <div className="footer-links">
-        <h5>Links</h5>
+        <h2 className="h5">Links</h2>
         <div className="d-flex flex-row pt-lg-3">
             <ListGroup className="w-50 mb-3 link-list">
                 {footerLinks[SITE_SUBJECT].left}

@@ -46,7 +46,8 @@ import {
     TestCaseDTO,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
+    UserSummaryWithEmailAddressDTO,
+    EmailVerificationStatus
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -342,7 +343,7 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
 export const verifyPasswordReset = (token: string | null) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST});
-        const response = await api.users.verifyPasswordReset(token);
+        await api.users.verifyPasswordReset(token);
         dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS});
     } catch(e) {
         dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
@@ -1076,6 +1077,17 @@ export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (di
     }
 };
 
+export const adminModifyUserEmailVerificationStatuses = (status: EmailVerificationStatus, emails: string[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_REQUEST});
+    try {
+        await api.admin.modifyUserEmailVerificationStatuses.post(status, emails);
+        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_SUCCESS});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Email verification status modification failed", e));
+    }
+};
+
 export const getAdminSiteStats = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ADMIN_STATS_REQUEST});
     try {
@@ -1455,7 +1467,7 @@ export const getNewsPodList = (subject: string) => async (dispatch: Dispatch<Act
         dispatch({type: ACTION_TYPE.NEWS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Unable to display news", e));
     }
-}
+};
 
 export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
     try {

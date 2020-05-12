@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {FreeTextRule, LoggedInUser} from "../../../IsaacAppTypes";
 import * as RS from "reactstrap";
 import {TestCaseDTO} from "../../../IsaacApiTypes";
@@ -123,12 +123,12 @@ export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
     const [questionChoices, setQuestionChoices] = useState<(FreeTextRule & {choiceNumber: number})[]>([JSON.parse(JSON.stringify(defaultChoiceExample))]);
     const [questionChoicesJson, setQuestionChoicesJson] = useState(convertQuestionChoicesToJson(questionChoices));
     const [jsonParseError, setJsonParseError] = useState(false);
-    useMemo(() => {setQuestionChoicesJson(convertQuestionChoicesToJson(questionChoices))}, [questionChoices]);
+    useEffect(() => {setQuestionChoicesJson(convertQuestionChoicesToJson(questionChoices))}, [questionChoices]);
 
     const [testCases, setTestCases] = useState<(TestCaseDTO & {testCaseNumber: number})[]>([JSON.parse(JSON.stringify(defaultTestCaseExample))]);
     const [testCasesCsv, setTestCasesCsv] = useState(convertTestCasesToCsv(testCases));
     const [csvParseError, setCsvParseError] = useState(false);
-    useMemo(() => {setTestCasesCsv(convertTestCasesToCsv(testCases))}, [testCases]);
+    useEffect(() => {setTestCasesCsv(convertTestCasesToCsv(testCases))}, [testCases]);
 
     const [choicesHashAtPreviousRequest, setChoicesHashAtPreviousRequest] = useState<number | null>(null);
 

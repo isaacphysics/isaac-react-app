@@ -12,7 +12,7 @@ import {
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
+import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE} from "../../services/constants";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -66,8 +66,7 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
         return <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <RS.Container>
                 <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
-
-                {doc.canonicalSourceFile && <EditContentButton canonicalSourceFile={EDITOR_URL + doc['canonicalSourceFile']} />}
+                <EditContentButton doc={doc} />
 
                 <RS.Row>
                     <RS.Col md={{size: 8, offset: 2}} className="py-4 question-panel">

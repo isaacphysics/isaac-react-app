@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {
     Alert,
@@ -20,7 +20,7 @@ import {LoggedInUser} from "../../../IsaacAppTypes";
 import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {SITE, SITE_SUBJECT, WEBMASTER_EMAIL} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {PageFragment} from "../elements/PageFragment";
 import {userOrNull} from "../../state/selectors";
 
@@ -28,12 +28,12 @@ const determineUrlQueryPresets = (user?: LoggedInUser | null) => {
     const urlQuery = queryString.parse(location.search);
     let presetSubject = "";
     let presetMessage = "";
-    if (urlQuery?.preset == "teacherRequest" && user?.loggedIn && user?.role != "TEACHER") {
+    if (urlQuery?.preset == "teacherRequest" && user?.loggedIn && user?.role !== "TEACHER") {
         presetSubject = "Teacher Account Request";
         presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n" + user.givenName + " " + user.familyName;
     } else if (urlQuery?.preset == 'accountDeletion' && user?.loggedIn) {
         presetSubject = "Account Deletion Request";
-        presetMessage = "Hello,\n\nPlease could you delete my Isaac Computer Science account.\n\nThanks, \n\n" + user.givenName + " " + user.familyName;
+        presetMessage = `Hello,\n\nPlease could you delete my Isaac ${SITE_SUBJECT_TITLE} account.\n\nThanks, \n\n` + user.givenName + " " + user.familyName;
     }
     return [
         urlQuery.subject as string || presetSubject,
@@ -68,10 +68,10 @@ export const Contact = () => {
     const [messageSent, setMessageSent] = useState(false);
 
     // set subject and message if any of user, presetSubject or presetMessage change
-    useMemo(() => {
+    useEffect(() => {
         setSubject(presetSubject);
         setMessage(presetMessage);
-    }, [user, presetSubject, presetMessage]);
+    }, [presetSubject, presetMessage]);
 
     useEffect(() => {
         setFirstName(user && user.loggedIn && user.givenName || "");

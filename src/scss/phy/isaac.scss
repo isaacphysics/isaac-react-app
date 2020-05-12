@@ -73,7 +73,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 
 // Atoms
 @import "../common/fonts";
-@import "../common/typography";
+@import "typography";
 @import "../common/headings";
 @import "../common/modals";
 @import "questions";
@@ -92,6 +92,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/focus";
 @import "../common/progress-bar";
 @import "../common/anvil";
+@import "hints";
 @import "related-content";
 @import "button";
 @import "logo";
@@ -112,7 +113,6 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/my-account";
 @import "../common/topic";
 @import "../common/search";
-@import "../common/my-assignments";
 @import "../common/my-progress";
 @import "../common/gameboard";
 @import "../common/assignment-progress";

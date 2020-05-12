@@ -7,7 +7,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
+import {DOCUMENT_TYPE} from "../../services/constants";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -19,7 +19,6 @@ import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
-
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -41,16 +40,15 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
                     currentPageTitle={doc.title as string}
                     collectionType={navigation.collectionType}
                 />
-
-                <Row className="no-print">
-                    {doc.canonicalSourceFile && <EditContentButton canonicalSourceFile={EDITOR_URL + doc['canonicalSourceFile']} />}
+                <div className="no-print d-flex align-items-center">
+                    <EditContentButton doc={doc} />
                     <div className="question-actions question-actions-leftmost mt-3">
                         <ShareLink linkUrl={`/concepts/${doc.id}`}/>
                     </div>
                     <div className="question-actions mt-3 not_mobile">
                         <PrintButton/>
                     </div>
-                </Row>
+                </div>
 
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4">

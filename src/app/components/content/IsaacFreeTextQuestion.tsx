@@ -6,7 +6,6 @@ import {AppState} from "../../state/reducers";
 import {ChoiceDTO, IsaacFreeTextQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
 import {Alert, FormGroup, Input} from "reactstrap";
 import {ValidatedChoice} from "../../../IsaacAppTypes";
-import {IsaacHints} from "./IsaacHints";
 import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
@@ -100,7 +99,6 @@ const IsaacFreeTextQuestionComponent = (props: IsaacFreeTextQuestionProps) => {
                 />
             </FormGroup>
             <FreeTextValidation {...validation} />
-            <IsaacHints questionPartId={questionId} hints={doc.hints}/>
         </div>
     );
 };

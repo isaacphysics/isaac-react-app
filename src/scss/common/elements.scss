@@ -2,8 +2,9 @@
 .content-summary-link .content-summary-link-title {
   background: none;
   border: 0;
-  font-family: $secondary-font;
-  font-weight: 900;
+  .text-secondary {
+    font-family: $secondary-font-semi-bold;
+  }
 }
 
 .content-summary-link a {
@@ -218,22 +219,26 @@ button.btn.btn-link.login-b,
   font-family: $secondary-font !important;
   display: none;
   position: relative;
-  padding: 4px;
+  padding: 4px 8px;
+  padding-right: 32px;
   border: 1px solid gray;
   right: 30px;
   background: #fff;
   height: 58px;
+  input {
+    position: relative;
+    top: -45px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    user-select: all;
+    -webkit-user-select: all;
+    -moz-user-select: all;
+    -ms-user-select: all;
+    width: 100%;
+    padding-left: 2px;
+  }
 }
-.share-link div {
-  margin: 14px 30px 14px 6px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  user-select: all;
-  -webkit-user-select: all;
-  -moz-user-select: all;
-  -ms-user-select: all;
-  width: 100%;
-}
+
 .print-icon {
   background-image: url(/assets/print.svg);
   width: 50px;

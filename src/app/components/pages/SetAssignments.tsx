@@ -35,7 +35,11 @@ import {boards, groups} from "../../state/selectors";
 import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
-import {formatBoardOwner} from "../../services/gameboards";
+import {
+    determineGameboardSubjects,
+    formatBoardOwner,
+    generateGameboardSubjectHexagons
+} from "../../services/gameboards";
 import {connect, useDispatch} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
@@ -136,24 +140,31 @@ const Board = (props: BoardProps) => {
 
     const hexagonId = `board-hex-${board.id}`;
 
+    const boardSubjects = determineGameboardSubjects(board);
+
     return <Card className="board-card">
         <CardBody className="pb-4 pt-4">
             <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
-            <button onClick={() => setShowAssignments(!showAssignments)} className="groups-assigned subject-compsci" id={hexagonId}>
-                <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
-                group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
-                {board.assignedGroups && <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length == 0 ?
-                    "No groups have been assigned."
-                    : ("Gameboard assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}</UncontrolledTooltip>
-                }
+            <button onClick={() => setShowAssignments(!showAssignments)} id={hexagonId} className="board-subject-hexagon-container">
+                {generateGameboardSubjectHexagons(boardSubjects)}
+                <span className="groups-assigned">
+                    <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
+                    group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
+                    {board.assignedGroups &&
+                        <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length === 0 ?
+                            "No groups have been assigned."
+                            : ("Gameboard assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}
+                        </UncontrolledTooltip>
+                    }
+                </span>
             </button>
             <aside>
                 <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                 <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
             </aside>
 
-            <div className="my-4">
-                <ShareLink linkUrl={assignmentLink}/>
+            <div className="mt-4 mb-3">
+                <div className="card-share-link"><ShareLink linkUrl={assignmentLink} reducedWidthLink /></div>
                 <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
                 <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
             </div>

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import * as RS from "reactstrap";
 import {ProgressBar} from "../views/ProgressBar";
 import {UserProgress} from "../../../../IsaacAppTypes";
@@ -50,5 +50,5 @@ export const AggregateQuestionStats = ({userProgress}: {userProgress?: UserProgr
                 </ProgressBar>
             </RS.Col>
         </RS.Row>
-    </div>
+    </div>;
 };

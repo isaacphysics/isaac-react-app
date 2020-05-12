@@ -4,22 +4,38 @@ import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {getAnsweredQuestionsByDate, getProgress} from "../../state/actions";
 import {AppState} from "../../state/reducers";
-import {isStaff, isTeacher} from "../../services/user";
+import {isTeacher} from "../../services/user";
 import {withRouter} from "react-router-dom";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {Unauthorised} from "./Unauthorised";
 import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats";
 import {DailyStreakPanel} from "../elements/panels/DailyStreakPanel";
 import {Tabs} from "../elements/Tabs";
-import {QuestionProgressCharts, FlushableRef} from "../elements/views/QuestionProgressCharts";
-import {HUMAN_QUESTION_TYPES, QUESTION_TYPES} from "../../services/questions";
+import {FlushableRef, QuestionProgressCharts} from "../elements/views/QuestionProgressCharts";
+import {HUMAN_QUESTION_TYPES} from "../../services/questions";
 import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
 import {safePercentage} from "../../services/validation";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {IS_CS_PLATFORM} from "../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {Card, CardBody} from "reactstrap";
+
+export const siteSpecific = {
+    [SITE.PHY]: {
+        questionTypeStatsList: [
+            "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion"
+        ],
+        colWidth: "col-lg-6"
+    },
+    [SITE.CS]: {
+        questionTypeStatsList: [
+            "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
+            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacSymbolicLogicQuestion"
+        ],
+        colWidth: "col-lg-4"
+    }
+}[SITE_SUBJECT];
+
 
 interface MyProgressProps {
     user: LoggedInUser;
@@ -41,18 +57,18 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
             dispatch(getProgress(userIdOfInterest));
             dispatch(getAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
         }
-    }, [userIdOfInterest]);
+    }, [userIdOfInterest, viewingOwnData, user, dispatch]);
 
     const tabRefs: FlushableRef[] = [useRef(), useRef()];
 
-    if (!viewingOwnData && !isStaff(user)) {
+    if (!viewingOwnData && !isTeacher(user)) {
         return <Unauthorised />
     }
 
     return <RS.Container id="my-progress" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="My progress" />
-        <Card className="mt-4">
-            <CardBody>
+        <RS.Card className="mt-4">
+            <RS.CardBody>
                 <Tabs>{{
                     "Question activity": <div>
                         <RS.Row>
@@ -64,8 +80,8 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                             </RS.Col>}
                         </RS.Row>
 
-                        <Card className="mt-4">
-                            <CardBody>
+                        <RS.Card className="mt-4">
+                            <RS.CardBody>
                                 <Tabs tabContentClass="mt-4" activeTabChanged={(tabIndex) => {
                                     const flush = tabRefs[tabIndex - 1].current;
                                     if (flush) {
@@ -92,17 +108,17 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                                             flushRef={tabRefs[1]}/>
                                     }}
                                 </Tabs>
-                            </CardBody>
-                        </Card>
+                            </RS.CardBody>
+                        </RS.Card>
 
                         <div className="mt-4">
                             <h4>Question parts correct by Type</h4>
                             <RS.Row>
-                                {(Array.from(QUESTION_TYPES.keys()) as string[]).filter((qType: string) => qType != "default").map((qType: string) => {
+                                {siteSpecific.questionTypeStatsList.map((qType: string) => {
                                     const correct = userProgress?.correctByType?.[qType] || null;
                                     const attempts = userProgress?.attemptsByType?.[qType] || null;
                                     const percentage = safePercentage(correct, attempts);
-                                    return <RS.Col key={qType} className={"col-lg-4 mt-2 type-progress-bar"}>
+                                    return <RS.Col key={qType} className={`${siteSpecific.colWidth} mt-2 type-progress-bar`}>
                                         <div className={"px-2"}>
                                             {HUMAN_QUESTION_TYPES.get(qType)} questions correct
                                         </div>
@@ -165,7 +181,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                             iconClassName="cpd-badge"/>
                     </div>}),
                 }}</Tabs>
-            </CardBody>
-        </Card>
+            </RS.CardBody>
+        </RS.Card>
     </RS.Container>
 });

@@ -100,11 +100,11 @@ export const HomepageCS = () => {
                 <div className="eventList pt-5 pattern-03">
                     <h2 className="h-title text-center mb-4">Events</h2>
                     <p className="pt-4 pb-2 event-description text-center col-md-8 offset-md-2">
-                        {"We offer free online and face-to-face events for students and teachers. Visit our "}
+                        {"We offer free online events for students and teachers. Visit our "}
                         <Link to="/events">
                             Events page
                         </Link>
-                        {" to see what’s happening in your area, and sign up today!"}
+                        {" to see what’s happening, and sign up today!"}
                     </p>
                     <EventsCarousel />
                     <Link to="/events">

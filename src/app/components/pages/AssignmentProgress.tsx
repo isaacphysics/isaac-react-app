@@ -136,8 +136,6 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
     const [sortOrder, setSortOrder] = useState<SortOrder>("name");
     const [reverseOrder, setReverseOrder] = useState(false);
 
-    // TODO: useMemo on this stuff if performance is a problem
-
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     let questions = assignment.gameboard.questions;
     const assignmentAverages: number[] = [];
@@ -335,8 +333,10 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
                             const fullAccess = studentProgress.user.authorisedFullAccess;
                             return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " revoked"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
                                 <th className="student-name">
-                                    {studentProgress.user.givenName}
-                                    <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                    <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
+                                        {studentProgress.user.givenName}
+                                        <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                    </Link>
                                 </th>
                                 {questions.map((q, index) =>
                                     <td key={q.id} className={markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestion(index)}>

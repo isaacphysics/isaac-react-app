@@ -1,20 +1,23 @@
 import React from "react";
 import {useSelector} from "react-redux";
 import {segue} from "../../state/selectors";
+import {ExternalLink} from "./ExternalLink";
+import {EDITOR_URL} from "../../services/constants";
+import {ContentDTO} from "../../../IsaacApiTypes";
 
 export interface EditContentButtonProps {
-    canonicalSourceFile?: string;
+    doc: ContentDTO & {canonicalSourceFile?: string};
     className?: string;
 }
 
-export const EditContentButton = ({canonicalSourceFile, className}: EditContentButtonProps) => {
+export const EditContentButton = ({doc, className}: EditContentButtonProps) => {
     const segueEnvironment = useSelector(segue.environmentOrUnknown);
-    if (segueEnvironment === "DEV") {
+    if (segueEnvironment === "DEV" && doc.canonicalSourceFile) {
         return <div>
-            <a href={canonicalSourceFile} className={`btn btn-primary mt-3 ${className ? ` ${className}` : ""}`} target="_blank" rel="noopener">
-                View in the Content Editor
-            </a>
-        </div>;
+            <ExternalLink href={EDITOR_URL + doc.canonicalSourceFile} className={`pl-2 ${className ? ` ${className}` : ""}`}>
+                <h3>{doc.published ? "Published" : "Unpublished"} ✎</h3>
+            </ExternalLink>
+        </div>
     } else {
         return null; // does not render
     }

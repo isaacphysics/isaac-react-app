@@ -3,7 +3,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
-import {IsaacHints} from "./IsaacHints";
 import {CustomInput, Label} from "reactstrap";
 import {questions} from "../../state/selectors";
 
@@ -22,8 +21,8 @@ export const IsaacMultiChoiceQuestion = ({doc, questionId}: IsaacMultiChoiceQues
                 {doc.children}
             </IsaacContentValueOrChildren>
         </div>
-        <ul>
-            {doc?.choices?.map((choice, index) => <li key={choice.value} className="list-unstyled">
+        <ul>{doc?.choices?.map((choice, index) =>
+            <li key={choice.value} className="list-unstyled">
                 <Label className="label-radio multichoice-option d-flex">
                     <CustomInput
                         id={`${questionId}${index}`} color="secondary" type="radio"
@@ -36,6 +35,5 @@ export const IsaacMultiChoiceQuestion = ({doc, questionId}: IsaacMultiChoiceQues
                 </Label>
             </li>)}
         </ul>
-        <IsaacHints questionPartId={questionId} hints={doc.hints}/>
     </div>;
 };

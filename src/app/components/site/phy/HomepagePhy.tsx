@@ -68,7 +68,7 @@ export const HomepagePhy = () => {
         <section id="news">
             <Container>
                 <Row className="eventList pt-1 pattern-03-reverse">
-                    <NewsCarousel descending={true} subject="physics" />
+                    <NewsCarousel showTitle={true} descending={true} subject="physics" />
                 </Row>
             </Container>
         </section>
