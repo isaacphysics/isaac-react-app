@@ -1,19 +1,14 @@
 import React, {useState} from "react";
-import {Alert, Row, Col, Button} from "reactstrap";
+import {Alert, Button, Col, Row} from "reactstrap";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {connect} from "react-redux";
+import {useDispatch} from "react-redux";
 import {logAction} from "../../state/actions";
 
 
-interface IsaacQuickQuestionProps {
-    doc: ApiTypes.IsaacQuickQuestionDTO;
-    logAction: (eventDetails: object) => void;
-}
-const IsaacQuickQuestionComponent = (props: IsaacQuickQuestionProps) => {
-    const {doc, logAction} = props;
-
+export const IsaacQuickQuestion = ({doc}: {doc: ApiTypes.IsaacQuickQuestionDTO}) => {
+    const dispatch = useDispatch();
     const [isVisible, setVisible] = useState(false);
 
     const toggle = () => {
@@ -21,7 +16,7 @@ const IsaacQuickQuestionComponent = (props: IsaacQuickQuestionProps) => {
         setVisible(isNowVisible);
         if (isNowVisible) {
             const eventDetails = {type: "QUICK_QUESTION_SHOW_ANSWER", questionId: doc.id};
-            logAction(eventDetails);
+            dispatch(logAction(eventDetails));
         }
     };
 
@@ -50,5 +45,3 @@ const IsaacQuickQuestionComponent = (props: IsaacQuickQuestionProps) => {
     </div>
     ;
 };
-
-export const IsaacQuickQuestion = connect(null, {logAction: logAction})(IsaacQuickQuestionComponent);

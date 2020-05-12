@@ -1,5 +1,5 @@
 import React, {FormEvent, useEffect, useState} from "react";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import seed from "math-random-seed";
 import {requestConstantsUnits, setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -7,24 +7,11 @@ import {AppState} from "../../state/reducers";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
 import {Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Row} from "reactstrap";
 import {TrustedHtml} from "../elements/TrustedHtml";
-
-const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
-    const userId = state && state.user && state.user.loggedIn && state.user.id || undefined;
-    const units = state && state.constants && state.constants.units || undefined;
-    const props = {userId, units};
-    return question ? {currentAttempt: question.currentAttempt, ...props} : {...props};
-};
-const dispatchToProps = {setCurrentAttempt, requestConstantsUnits};
+import {questions} from "../../state/selectors";
 
 interface IsaacNumericQuestionProps {
     doc: IsaacNumericQuestionDTO;
-    userId?: number;
-    units?: string[];
     questionId: string;
-    currentAttempt?: QuantityDTO;
-    setCurrentAttempt: (questionId: string, attempt: QuantityDTO) => void;
-    requestConstantsUnits: () => void;
     validationResponse?: QuantityValidationResponseDTO;
 }
 
@@ -96,38 +83,40 @@ function wrapUnitForSelect(unit?: string): string {
     }
 }
 
-const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
-    const {doc, userId, questionId, units, currentAttempt, setCurrentAttempt, requestConstantsUnits, validationResponse} = props;
-    const currentAttemptValue = currentAttempt && currentAttempt.value;
-    const currentAttemptUnits = currentAttempt && currentAttempt.units;
+export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: IsaacNumericQuestionProps) => {
+    const dispatch = useDispatch();
+    const userId = useSelector((state: AppState) => state?.user?.loggedIn && state.user.id || undefined);
+    const units = useSelector((state: AppState) => state?.constants?.units || undefined);
+    const questionPart = useSelector(questions.selectQuestionPart(questionId));
 
+    const currentAttempt = questionPart?.currentAttempt as QuantityDTO;
+    const currentAttemptValue = currentAttempt?.value;
+    const currentAttemptUnits = currentAttempt?.units;
     const currentAttemptValueWrong = validationResponse && !validationResponse.correctValue;
     const currentAttemptUnitsWrong = validationResponse && !validationResponse.correctUnits;
 
-    useEffect((): void => {
-        requestConstantsUnits();
-    }, [requestConstantsUnits]);
+    useEffect((): void => {dispatch(requestConstantsUnits());}, [dispatch]);
     const selectedUnits = selectUnits(doc, questionId, units, userId);
 
     function updateValue(event: FormEvent<HTMLInputElement>) {
-        let attempt = {
+        const attempt = {
             type: "quantity",
             value: event.currentTarget.value,
             units: currentAttemptUnits
         };
-        setCurrentAttempt(questionId, attempt);
+        dispatch(setCurrentAttempt(questionId, attempt));
     }
 
     function updateUnits(units?: string) {
-        let attempt = {
+        const attempt = {
             type: "quantity",
             value: currentAttemptValue,
             units: units
         };
-        setCurrentAttempt(questionId, attempt);
+        dispatch(setCurrentAttempt(questionId, attempt));
     }
 
-    let [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <div className="numeric-question">
@@ -170,5 +159,3 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
         </div>
     );
 };
-
-export const IsaacNumericQuestion = connect(stateToProps, dispatchToProps)(IsaacNumericQuestionComponent);

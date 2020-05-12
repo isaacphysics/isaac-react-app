@@ -1,27 +1,20 @@
 import React, {ChangeEvent} from "react";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {AppState} from "../../state/reducers";
-import {ChoiceDTO, IsaacItemQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
+import {IsaacItemQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
 import {CustomInput, Label} from "reactstrap";
 import {questions} from "../../state/selectors";
-
-const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = questions.selectQuestionPart(questionId)(state);
-    return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
-};
-const dispatchToProps = {setCurrentAttempt};
 
 interface IsaacItemQuestionProps {
     doc: IsaacItemQuestionDTO;
     questionId: string;
-    currentAttempt?: ItemChoiceDTO;
-    setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => void;
 }
 
-const IsaacItemQuestionComponent = (props: IsaacItemQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
+export const IsaacItemQuestion = ({doc, questionId}: IsaacItemQuestionProps) => {
+    const dispatch = useDispatch();
+    const questionPart = useSelector(questions.selectQuestionPart(questionId));
+    const currentAttempt = questionPart?.currentAttempt as ItemChoiceDTO;
 
     function updateItems(changeEvent: ChangeEvent<HTMLInputElement>, item: ItemDTO) {
         let selected = changeEvent.target.checked;
@@ -37,7 +30,7 @@ const IsaacItemQuestionComponent = (props: IsaacItemQuestionProps) => {
         } else if (itemChoice.items) {
             itemChoice.items = itemChoice.items.filter(i => i.id !== item.id);
         }
-        setCurrentAttempt(questionId, itemChoice);
+        dispatch(setCurrentAttempt(questionId, itemChoice));
     }
 
     return (
@@ -67,5 +60,3 @@ const IsaacItemQuestionComponent = (props: IsaacItemQuestionProps) => {
         </div>
     );
 };
-
-export const IsaacItemQuestion = connect(stateToProps, dispatchToProps)(IsaacItemQuestionComponent);

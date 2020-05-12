@@ -1,25 +1,11 @@
 import React from "react";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {AppState} from "../../state/reducers";
-import {ChoiceDTO, IsaacFreeTextQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
+import {IsaacFreeTextQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
 import {Alert, FormGroup, Input} from "reactstrap";
 import {ValidatedChoice} from "../../../IsaacAppTypes";
 import {questions} from "../../state/selectors";
-
-const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = questions.selectQuestionPart(questionId)(state);
-    return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
-};
-const dispatchToProps = {setCurrentAttempt};
-
-interface IsaacFreeTextQuestionProps {
-    doc: IsaacFreeTextQuestionDTO;
-    questionId: string;
-    currentAttempt?: ChoiceDTO;
-    setCurrentAttempt: (questionId: string, attempt: ValidatedChoice<ChoiceDTO>) => void;
-}
 
 interface Limit {
     exceeded: boolean;
@@ -52,7 +38,7 @@ function validate(answer: string): Validation {
     };
 }
 
-function validatedChoiceDTOfromEvent(event: React.ChangeEvent<HTMLInputElement>): ValidatedChoice<StringChoiceDTO> {
+function validatedChoiceDtoFromEvent(event: React.ChangeEvent<HTMLInputElement>): ValidatedChoice<StringChoiceDTO> {
     const value = event.target.value;
     const frontEndValidation = validate(value).validValue;
     return {
@@ -75,10 +61,10 @@ const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
         </Alert>;
 };
 
-const IsaacFreeTextQuestionComponent = (props: IsaacFreeTextQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
-    const currentAttemptValue = currentAttempt && currentAttempt.value || "";
-
+export const IsaacFreeTextQuestion = ({doc, questionId}: {doc: IsaacFreeTextQuestionDTO; questionId: string}) => {
+    const dispatch = useDispatch();
+    const questionPart = useSelector(questions.selectQuestionPart(questionId));
+    const currentAttemptValue = questionPart?.currentAttempt?.value || "";
     const validation = validate(currentAttemptValue);
 
     return (
@@ -95,12 +81,10 @@ const IsaacFreeTextQuestionComponent = (props: IsaacFreeTextQuestionProps) => {
                     rows={3}
                     value={currentAttemptValue}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        setCurrentAttempt(questionId, validatedChoiceDTOfromEvent(event))}
+                        dispatch(setCurrentAttempt(questionId, validatedChoiceDtoFromEvent(event)))}
                 />
             </FormGroup>
             <FreeTextValidation {...validation} />
         </div>
     );
 };
-
-export const IsaacFreeTextQuestion = connect(stateToProps, dispatchToProps)(IsaacFreeTextQuestionComponent);

@@ -1,8 +1,7 @@
 import React, {useContext, useEffect} from "react";
-import {connect, useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
-import {AppState} from "../../state/reducers";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {questions} from "../../state/selectors";
 import * as RS from "reactstrap";
@@ -12,28 +11,14 @@ import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 
-const stateToProps = (state: AppState, {doc}: {doc: ApiTypes.ContentDTO}) => {
-    const questionPart = questions.selectQuestionPart(doc.id)(state);
-    return questionPart ? {
-        validationResponse: questionPart.validationResponse,
-        currentAttempt: questionPart.currentAttempt,
-        canSubmit: questionPart.canSubmit && !questionPart.locked,
-        locked: questionPart.locked
-    } : {};
-};
 
-interface IsaacQuestionTabsProps {
-    doc: ApiTypes.IsaacQuestionBaseDTO;
-    currentAttempt?: ApiTypes.ChoiceDTO;
-    canSubmit?: boolean;
-    locked?: Date;
-    validationResponse?: ApiTypes.QuestionValidationResponseDTO;
-}
-
-const IsaacQuestionComponent = (props: IsaacQuestionTabsProps) => {
-    const {doc, validationResponse, currentAttempt, canSubmit, locked} = props;
+export const IsaacQuestion = ({doc}: {doc: ApiTypes.IsaacQuestionBaseDTO}) => {
     const dispatch = useDispatch();
-
+    const questionPart = useSelector(questions.selectQuestionPart(doc.id));
+    const validationResponse = questionPart?.validationResponse;
+    const currentAttempt = questionPart?.currentAttempt;
+    const locked = questionPart?.locked;
+    const canSubmit = questionPart?.canSubmit && !locked;
     const accordion = useContext(AccordionSectionContext);
 
     useEffect((): (() => void) => {
@@ -101,5 +86,3 @@ const IsaacQuestionComponent = (props: IsaacQuestionTabsProps) => {
         </div>
     </RS.Form>;
 };
-
-export const IsaacQuestion = connect(stateToProps)(IsaacQuestionComponent);

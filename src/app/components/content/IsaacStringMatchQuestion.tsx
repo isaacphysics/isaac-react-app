@@ -1,51 +1,31 @@
 import React from "react";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {AppState} from "../../state/reducers";
-import {ChoiceDTO, IsaacStringMatchQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
+import {IsaacStringMatchQuestionDTO} from "../../../IsaacApiTypes";
 import {Input} from "reactstrap";
 import {questions} from "../../state/selectors";
 
-const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = questions.selectQuestionPart(questionId)(state);
-    return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
-};
-const dispatchToProps = {setCurrentAttempt};
 
-interface IsaacStringMatchQuestionProps {
-    doc: IsaacStringMatchQuestionDTO;
-    questionId: string;
-    currentAttempt?: ChoiceDTO;
-    setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => void;
-}
+export const IsaacStringMatchQuestion = ({doc, questionId}: {doc: IsaacStringMatchQuestionDTO; questionId: string}) => {
+    const dispatch = useDispatch();
+    const questionPart = useSelector(questions.selectQuestionPart(questionId));
+    const currentAttemptValue = questionPart?.currentAttempt?.value;
 
-function choiceDTOfromEvent(event: React.ChangeEvent<HTMLInputElement>): StringChoiceDTO {
-    return {
-        type: "stringChoice",
-        value: event.target.value
-    };
-}
-
-const IsaacStringMatchQuestionComponent = (props: IsaacStringMatchQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
-    const currentAttemptValue = currentAttempt && currentAttempt.value;
-    return (
-        <div className="stringmatch-question">
-            <div className="question-content">
-                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
-                    {doc.children}
-                </IsaacContentValueOrChildren>
-            </div>
-            <Input type={doc.multiLineEntry ? "textarea" : "text"} placeholder="Type your answer here."
-                maxLength={doc.multiLineEntry ? 250 : 75}
-                spellCheck={false} className="mb-4"
-                rows={doc.multiLineEntry ? 3 : undefined}
-                value={currentAttemptValue || ""}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                    setCurrentAttempt(questionId, choiceDTOfromEvent(event))}/>
+    return <div className="stringmatch-question">
+        <div className="question-content">
+            <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                {doc.children}
+            </IsaacContentValueOrChildren>
         </div>
-    );
+        <Input type={doc.multiLineEntry ? "textarea" : "text"} placeholder="Type your answer here."
+            maxLength={doc.multiLineEntry ? 250 : 75}
+            spellCheck={false} className="mb-4"
+            rows={doc.multiLineEntry ? 3 : undefined}
+            value={currentAttemptValue || ""}
+            onChange={event =>
+                dispatch(setCurrentAttempt(questionId, {type: "stringChoice", value: event.target.value}))
+            }
+        />
+    </div>;
 };
-
-export const IsaacStringMatchQuestion = connect(stateToProps, dispatchToProps)(IsaacStringMatchQuestionComponent);
