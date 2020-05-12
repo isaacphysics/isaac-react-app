@@ -20,7 +20,7 @@ import {LoggedInUser} from "../../../IsaacAppTypes";
 import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {SITE, SITE_SUBJECT, WEBMASTER_EMAIL} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {PageFragment} from "../elements/PageFragment";
 
 const stateToProps = (state: AppState) => {
@@ -35,7 +35,7 @@ const stateToProps = (state: AppState) => {
     } else if (urlQuery && urlQuery.preset == 'accountDeletion') {
         if (state && state.user && state.user.loggedIn) {
             presetSubject = "Account Deletion Request";
-            presetMessage = "Hello,\n\nPlease could you delete my Isaac Computer Science account.\n\nThanks, \n\n" + state.user.givenName + " " + state.user.familyName;
+            presetMessage = `Hello,\n\nPlease could you delete my Isaac ${SITE_SUBJECT_TITLE} account.\n\nThanks, \n\n` + state.user.givenName + " " + state.user.familyName;
         }
     }
     return {
