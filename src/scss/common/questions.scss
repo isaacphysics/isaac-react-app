@@ -81,9 +81,22 @@ button {
 }
 
 .numeric-question .unit-selection {
+  .dropdown-menu {
+    width: 100%;
+    min-width: unset;
+  }
   button.btn {
-    min-width: auto !important;
     padding: 0.25rem 1.5rem;
+    min-width: unset;
+    width: 100%;
+    &.selected {
+      border-radius: 0;
+    }
+    &.dropdown-toggle::after {
+      position: absolute;
+      right: 0.5rem;
+      top: 1rem;
+    }
   }
 }
 
