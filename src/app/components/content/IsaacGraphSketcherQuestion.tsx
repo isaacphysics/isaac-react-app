@@ -4,7 +4,7 @@ import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
-import {IsaacHints} from "./IsaacHints";
+import {IsaacTabbedHints} from "./IsaacHints";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
 import { GraphSketcherModal } from "../elements/modals/GraphSketcherModal";
@@ -57,7 +57,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     return <div className="graph-sketcher-question">
         <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>PREVIEW: Click here to answer.</div>
         {modalVisible && <GraphSketcherModal></GraphSketcherModal>}
-        Hints: <IsaacHints questionPartId={questionId} hints={doc.hints} />
+        Hints: <IsaacTabbedHints questionPartId={questionId} hints={doc.hints} />
     </div>
 };
 

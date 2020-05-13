@@ -8,7 +8,7 @@ const GraphSketcherModalComponent = (props: any) => {
 
     useEffect(() => {
         const e = document.getElementById('graph-sketcher-modal') as HTMLElement
-        const { sketch, p } = makeGraphSketcher(e, 200, 200);
+        const { sketch, p } = makeGraphSketcher(e, window.innerWidth, window.innerHeight);
         setSketch(sketch);
         setGraphSketcherElement(e);
 
