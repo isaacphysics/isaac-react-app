@@ -68,7 +68,6 @@ const NotificationModalBody = () => {
 
 export const notificationModal = (notification: any) => {
     return {
-        // closeAction: () => {store.dispatch(closeActiveModal())},
         title: notification.title,
         body: <NotificationModalBody/>
     }

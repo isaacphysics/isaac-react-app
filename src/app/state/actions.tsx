@@ -147,7 +147,6 @@ export const logAction = (eventDetails: object) => {
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST});
     try {
-        api.notifications.get();
         const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
         dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings: authenticationSettings.data});
     } catch (e) {
