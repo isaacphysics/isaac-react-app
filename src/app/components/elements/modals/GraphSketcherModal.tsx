@@ -21,7 +21,13 @@ const GraphSketcherModalComponent = (props: any) => {
     }, []);
 
     return <div id='graph-sketcher-modal' style={{border: '5px solid black'}}>
-        SKETCH: {JSON.stringify(sketch)}
+        <div id="graph-sketcher-ui-redo">.</div>
+        <div id="graph-sketcher-ui-undo">.</div>
+        <div id="graph-sketcher-ui-poly">.</div>
+        <div id="graph-sketcher-ui-straight">.</div>
+        <div id="graph-sketcher-ui-trash-button">.</div>
+        <div id="graph-sketcher-ui-submit">.</div>
+        <div id="graph-sketcher-ui-color-select">.</div>
     </div>
 }
 
