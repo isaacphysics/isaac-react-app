@@ -147,6 +147,7 @@ export const logAction = (eventDetails: object) => {
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST});
     try {
+        api.notifications.get();
         const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
         dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings: authenticationSettings.data});
     } catch (e) {
@@ -677,6 +678,16 @@ export const requestConstantsSegueEnvironment = () => async (dispatch: Dispatch<
         dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE});
     }
 };
+
+export const requestNotifications = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.NOTIFICATIONS_REQUEST});
+    try {
+        const response = await api.notifications.get();
+        dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS, notifications: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE});
+    }
+}
 
 // Document & topic fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
