@@ -8,7 +8,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {EVENTS_CRUMB, NOT_FOUND} from "../../services/constants";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {addMyselfToWaitingList, bookMyselfOnEvent, cancelMyBooking, getEvent, showToast} from "../../state/actions";
-import {DateString, TIME_ONLY} from "../elements/DateString";
+import {DateString} from "../elements/DateString";
 import {IsaacContent} from "../content/IsaacContent";
 import {Link} from "react-router-dom";
 import {EventBookingForm} from "../elements/EventBookingForm";
@@ -18,6 +18,7 @@ import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {isStaff, isTeacher} from "../../services/user";
+import {formatEventDetailsDate} from "../../services/events";
 
 
 function formatDate(date: Date|number) {
@@ -120,10 +121,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     <tr>
                                         <td>When:</td>
                                         <td>
-                                            {event.multiDay ?
-                                                <><DateString>{event.date}</DateString>{" — "}<DateString>{event.endDate}</DateString></> :
-                                                <><DateString>{event.date}</DateString>{" — "}<DateString formatter={TIME_ONLY}>{event.endDate}</DateString></>
-                                            }
+                                            {formatEventDetailsDate(event)}
                                             {event.expired && <div className="alert-danger text-center">This event is in the past.</div>}
                                         </td>
                                     </tr>
