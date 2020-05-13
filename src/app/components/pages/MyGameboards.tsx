@@ -162,7 +162,7 @@ function orderName(order: BoardOrder) {
 export const MyGameboards = () => {
     //Redux state and dispatch
     const dispatch = useDispatch();
-    const boards = useSelector((state: AppState) => ThisBoards.boards(state) as Boards);
+    const boards = useSelector(ThisBoards.boards()) as Boards;
     const user = useSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);

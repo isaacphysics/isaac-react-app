@@ -42,7 +42,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
     const dispatch = useDispatch();
 
-    const user = useSelector(userOrNull);
+    const user = useSelector(userOrNull());
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
     const baseGameboard = useSelector((state: AppState) => state && state.currentGameboard);
 

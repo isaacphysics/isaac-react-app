@@ -13,7 +13,7 @@ import {userOrNull} from "../../state/selectors";
 
 export const TeacherTools = () => {
     const dispatch = useDispatch();
-    const user = useSelector(userOrNull);
+    const user = useSelector(userOrNull());
     const achievementsSelector = useSelector((state: AppState) => state && state.userProgress && state.userProgress.userSnapshot && state.userProgress.userSnapshot.achievementsRecord);
 
     useEffect(() => {

@@ -11,7 +11,7 @@ export interface EditContentButtonProps {
 }
 
 export const EditContentButton = ({doc, className}: EditContentButtonProps) => {
-    const segueEnvironment = useSelector(segue.environmentOrUnknown);
+    const segueEnvironment = useSelector(segue.environmentOrUnknown());
     if (segueEnvironment === "DEV" && doc.canonicalSourceFile) {
         return <div>
             <ExternalLink href={EDITOR_URL + doc.canonicalSourceFile} className={`pl-2 ${className ? ` ${className}` : ""}`}>

@@ -73,7 +73,7 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
 export const Gameboard = withRouter(({location: {hash}}: {location: {hash: string}}) => {
     const dispatch = useDispatch();
     const gameboard = useSelector((state: AppState) => state?.currentGameboard || null);
-    const user = useSelector(userOrNull);
+    const user = useSelector(userOrNull());
     let gameboardId = hash ? hash.slice(1) : null;
 
     useEffect(() => {dispatch(loadGameboard(gameboardId))}, [gameboardId]);

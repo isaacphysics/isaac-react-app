@@ -45,7 +45,7 @@ import {UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 
-const stateFromProps = (state: AppState) => (state && {groups: groups.groups(state), group: groups.current(state)});
+const stateFromProps = (state: AppState) => (state && {groups: groups.groups()(state), group: groups.current()(state)});
 const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal};
 
 interface GroupsPageProps {

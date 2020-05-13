@@ -324,7 +324,7 @@ function manipulateHtml(html: string) {
 }
 
 export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
-    const user = useSelector(userOrNull);
+    const user = useSelector(userOrNull());
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
     const examBoard = useCurrentExamBoard();

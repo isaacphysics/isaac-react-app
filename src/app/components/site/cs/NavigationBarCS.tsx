@@ -5,7 +5,7 @@ import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTe
 import {userOrNull} from "../../../state/selectors";
 
 export const NavigationBarCS = () => {
-    const user = useSelector(userOrNull);
+    const user = useSelector(userOrNull());
     const assignmentBadge = useAssignmentBadge();
 
     return <NavigationBar>

@@ -47,8 +47,8 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
-    groups: groups.active(state),
-    boards: boards.boards(state)
+    groups: groups.active()(state),
+    boards: boards.boards()(state)
 });
 
 const dispatchToProps = {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast, openIsaacBooksModal};

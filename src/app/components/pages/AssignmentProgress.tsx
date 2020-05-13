@@ -55,7 +55,7 @@ const stateFromProps = (state: AppState) => {
             });
         }
 
-        const activeGroups = groups.active(state);
+        const activeGroups = groups.active()(state);
         if (activeGroups) {
             const activeGroupsWithAssignments = activeGroups.map(g => {
                 return {

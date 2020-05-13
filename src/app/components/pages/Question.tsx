@@ -42,7 +42,7 @@ function getTags(docTags?: string[]) {
 export const Question = withRouter(({questionIdOverride, match}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
     const doc = useSelector(selectDoc.ifNotAQuizId(questionId));
-    const user = useSelector(userOrNull);
+    const user = useSelector(userOrNull());
     const navigation = useNavigation(questionId);
 
     const dispatch = useDispatch();

@@ -25,7 +25,7 @@ export const Search = withRouter((props: {history: History; location: Location})
     const {location, history} = props;
     const dispatch = useDispatch();
     const searchResults = useSelector((state: AppState) => state && state.search && state.search.searchResults || null);
-    const user = useSelector(userOrNull);
+    const user = useSelector(userOrNull());
     const examBoard = useCurrentExamBoard();
 
     const searchParsed = queryString.parse(location.search);

@@ -30,7 +30,7 @@ const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guer
 
 export const TeacherRequest = () => {
     const dispatch = useDispatch();
-    const user = useSelector(userOrNull);
+    const user = useSelector(userOrNull());
     const errorMessage = useSelector((state: AppState) => (state && state.error) || null);
     const warningFragment = useSelector((state: AppState) => state && state.fragments && state.fragments[warningFragmentId] || null);
 

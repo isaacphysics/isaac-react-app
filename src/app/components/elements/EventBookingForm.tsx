@@ -16,7 +16,7 @@ interface EventBookingFormProps {
 
 export const EventBookingForm = ({event, targetUser, additionalInformation, updateAdditionalInformation}: EventBookingFormProps) => {
     const dispatch = useDispatch();
-    const user = useSelector(userOrNull);
+    const user = useSelector(userOrNull());
     const editingSelf = user && user.loggedIn && targetUser.id === user.id;
 
     const [verifyEmailRequestSent, setVerifyEmailRequestSent] = useState(false);

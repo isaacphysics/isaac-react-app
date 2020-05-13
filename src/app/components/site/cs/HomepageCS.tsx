@@ -11,7 +11,7 @@ import {userOrNull} from "../../../state/selectors";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
-    const user = useSelector(userOrNull);
+    const user = useSelector(userOrNull());
 
     return <div id="homepage">
         <section id="call-to-action" className="homepageHero">

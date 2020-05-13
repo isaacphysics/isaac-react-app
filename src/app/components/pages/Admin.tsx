@@ -12,8 +12,8 @@ import classnames from "classnames";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useDispatch();
-    const segueVersion = useSelector(segue.versionOrUnknown);
-    const contentVersion = useSelector(segue.contentVersion);
+    const segueVersion = useSelector(segue.versionOrUnknown());
+    const contentVersion = useSelector(segue.contentVersion());
     useEffect(() => {
         dispatch(getContentVersion());
         dispatch(requestConstantsSegueVersion());

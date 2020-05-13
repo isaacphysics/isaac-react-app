@@ -31,7 +31,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
     const dispatch = useDispatch();
     const eventsState = useSelector((state: AppState) => state && state.events);
     // const eventMapData = useSelector((state: AppState) => state && state.eventMapData);
-    const user = useSelector(userOrNull);
+    const user = useSelector(userOrNull());
     const numberOfLoadedEvents = eventsState ? eventsState.events.length : 0;
 
     const statusFilter =

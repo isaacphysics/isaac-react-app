@@ -1,4 +1,6 @@
 import {
+    boards,
+    BoardsState,
     constants,
     groups,
     GroupsState,
@@ -6,22 +8,14 @@ import {
     rootReducer,
     search,
     toasts,
-    user,
-    boards,
-    BoardsState
+    user
 } from "../../app/state/reducers";
 import {Action, AppGameBoard, AppGroupMembership, LoggedInUser} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
 import {mapValues, union, without} from "lodash";
-import {groups as groupsSelector, boards as boardsSelector} from "../../app/state/selectors";
-import {
-    GameboardDTO,
-    UserGroupDTO,
-    UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO
-} from "../../IsaacApiTypes";
-import {act} from "react-dom/test-utils";
+import {boards as boardsSelector, groups as groupsSelector} from "../../app/state/selectors";
+import {UserGroupDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
@@ -227,7 +221,7 @@ describe("groups reducer", () => {
     });
 
     // @ts-ignore It's not a complete state
-    const groupSelector = mapValues(groupsSelector, f => (groupsState: GroupsState) => f({groups: groupsState}));
+    const groupSelector = mapValues(groupsSelector, f => () => (groupsState: GroupsState) => f()({groups: groupsState}));
 
     it("can get new active groups", () => {
         const testGroups = {1: userGroupDTOs.one, 2: userGroupDTOs.two};
@@ -235,7 +229,7 @@ describe("groups reducer", () => {
         const previousStates = [{}, null, {active: undefined, cache: testGroups}, {active: [3, 4], cache: testGroups}];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual(Object.values(testGroups));
+            expect(groupSelector.active()(actualNextState)).toEqual(Object.values(testGroups));
         });
     });
     it("can get new archived groups", () => {
@@ -244,7 +238,7 @@ describe("groups reducer", () => {
         const previousStates = [{}, null, {active: undefined, cache: {}}, {active: [3, 4], cache: testGroups}, {active: undefined, archived: [3, 4], cache: testGroups}, {archived: [1], active: [3, 4], cache: {}}];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
-            expect(groupSelector.archived(actualNextState)).toEqual(Object.values(testGroups));
+            expect(groupSelector.archived()(actualNextState)).toEqual(Object.values(testGroups));
         });
     });
     it("can merge new archived groups", () => {
@@ -254,7 +248,7 @@ describe("groups reducer", () => {
         const previousStates = [{active: undefined, cache: cache}, {active: [3, 4], cache: cache}, {active: undefined, archived: [3, 4], cache: cache}, {archived: [1], active: [3, 4], cache: cache}];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
-            expect(groupSelector.archived(actualNextState)).toEqual(Object.values(testGroups));
+            expect(groupSelector.archived()(actualNextState)).toEqual(Object.values(testGroups));
         });
     });
 
@@ -266,7 +260,7 @@ describe("groups reducer", () => {
         const previousStates = [someActiveGroups];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
-            expect(groupSelector.current(actualNextState)).toEqual(userGroupDTOs.two);
+            expect(groupSelector.current()(actualNextState)).toEqual(userGroupDTOs.two);
         });
     });
 
@@ -275,7 +269,7 @@ describe("groups reducer", () => {
         const previousStates = [someActiveGroups];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual([...Object.values(activeGroups), userGroupDTOs.three]);
+            expect(groupSelector.active()(actualNextState)).toEqual([...Object.values(activeGroups), userGroupDTOs.three]);
         });
     });
 
@@ -285,7 +279,7 @@ describe("groups reducer", () => {
         const previousStates = [someActiveGroups];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
-            const newGroups = groupSelector.active(actualNextState);
+            const newGroups = groupSelector.active()(actualNextState);
             expect(newGroups.length).toEqual(2);
             expect(newGroups).toEqual([userGroupDTOs.one, updatedGroup]);
         });
@@ -297,7 +291,7 @@ describe("groups reducer", () => {
         const previousStates = [someActiveGroups];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
-            const newGroups = groupSelector.active(actualNextState);
+            const newGroups = groupSelector.active()(actualNextState);
             expect(newGroups.length).toEqual(1);
             expect(newGroups).toEqual([userGroupDTOs.one]);
         });
@@ -309,7 +303,7 @@ describe("groups reducer", () => {
         const previousStates = [someActiveGroups];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual([userGroupDTOs.one, {...userGroupDTOs.two, token}]);
+            expect(groupSelector.active()(actualNextState)).toEqual([userGroupDTOs.one, {...userGroupDTOs.two, token}]);
         });
     });
 
@@ -322,7 +316,7 @@ describe("groups reducer", () => {
         const previousStates = [someActiveGroups];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual([userGroupDTOs.one, {...userGroupDTOs.two, members}]);
+            expect(groupSelector.active()(actualNextState)).toEqual([userGroupDTOs.one, {...userGroupDTOs.two, members}]);
         });
     });
 
@@ -338,7 +332,7 @@ describe("groups reducer", () => {
         const action2: Action = {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: Object.values(activeGroups), archivedGroupsOnly: false};
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action2);
-            expect(groupSelector.active(actualNextState)).toEqual([userGroupDTOs.one, {...userGroupDTOs.two, members}]);
+            expect(groupSelector.active()(actualNextState)).toEqual([userGroupDTOs.one, {...userGroupDTOs.two, members}]);
         });
     });*/
 
@@ -358,7 +352,7 @@ describe("groups reducer", () => {
         const previousStates = [groups(someActiveGroups, prepareAction)];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual([userGroupDTOs.one, {...userGroupDTOs.two, members: []}]);
+            expect(groupSelector.active()(actualNextState)).toEqual([userGroupDTOs.one, {...userGroupDTOs.two, members: []}]);
         });
     });
 
@@ -370,7 +364,7 @@ describe("groups reducer", () => {
         const previousStates = [someActiveGroups];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual([{...userGroupDTOs.one, additionalManagers: [manager]}, userGroupDTOs.two]);
+            expect(groupSelector.active()(actualNextState)).toEqual([{...userGroupDTOs.one, additionalManagers: [manager]}, userGroupDTOs.two]);
         });
     });
 
@@ -384,7 +378,7 @@ describe("groups reducer", () => {
         const action: Action = {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS, group: userGroupDTOs.one, manager};
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual([{...userGroupDTOs.one, additionalManagers: []}, userGroupDTOs.two]);
+            expect(groupSelector.active()(actualNextState)).toEqual([{...userGroupDTOs.one, additionalManagers: []}, userGroupDTOs.two]);
         });
     });
 });
@@ -401,7 +395,7 @@ describe("boards reducer", () => {
     const groupsState = groups(null, groupCreationAction);
 
     // @ts-ignore It's not a complete state
-    const selector = mapValues(boardsSelector, f => (boardsState: BoardsState) => f({boards: boardsState, groups: groupsState}));
+    const selector = mapValues(boardsSelector, f => () => (boardsState: BoardsState) => f()({boards: boardsState, groups: groupsState}));
 
     const testBoards: AppGameBoard[] = [{id: "abc", title: "ABC Board"}, {id: "def", title: "DEF Board"}];
 
@@ -412,7 +406,7 @@ describe("boards reducer", () => {
         const previousStates = [{}, null];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
-            expect(selector.boards(actualNextState)).toEqual({totalResults: 42, boards: testBoards});
+            expect(selector.boards()(actualNextState)).toEqual({totalResults: 42, boards: testBoards});
         });
     });
 
@@ -424,7 +418,7 @@ describe("boards reducer", () => {
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
             const priorBoards = previousState && previousState.boards && previousState.boards.boards || [];
-            expect(selector.boards(actualNextState)).toEqual({totalResults: 40, boards: union(newBoards, priorBoards)});
+            expect(selector.boards()(actualNextState)).toEqual({totalResults: 40, boards: union(newBoards, priorBoards)});
         });
     });
 
@@ -433,7 +427,7 @@ describe("boards reducer", () => {
         const previousStates = [{}, null, simpleState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
-            expect(selector.boards(actualNextState)).toEqual(null);
+            expect(selector.boards()(actualNextState)).toEqual(null);
         });
     });
 
@@ -443,7 +437,7 @@ describe("boards reducer", () => {
         const previousStates = [simpleState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
-            expect(selector.boards(actualNextState)).toEqual({totalResults: 41, boards: [testBoards[1]]});
+            expect(selector.boards()(actualNextState)).toEqual({totalResults: 41, boards: [testBoards[1]]});
         });
     });
 
@@ -454,14 +448,14 @@ describe("boards reducer", () => {
         const previousStates = [simpleState, assignedState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
-            expect(selector.boards(actualNextState).boards[1]).toEqual({...testBoards[1], assignedGroups: testGroups});
+            expect(selector.boards()(actualNextState).boards[1]).toEqual({...testBoards[1], assignedGroups: testGroups});
         });
     });
 
     it ("can remove a board assignees", () => {
         const action: Action = {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, board: testBoards[0], group: testGroups[0]};
         const actualNextState = boards(assignedState, action);
-        expect(selector.boards(actualNextState).boards[0]).toEqual({...testBoards[0], assignedGroups: without(testGroups, testGroups[0])});
+        expect(selector.boards()(actualNextState).boards[0]).toEqual({...testBoards[0], assignedGroups: without(testGroups, testGroups[0])});
     });
 
     it ("can add a board assignee", () => {
@@ -470,7 +464,7 @@ describe("boards reducer", () => {
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
             const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(gId => testGroupsMap[gId]) || [];
-            expect(selector.boards(actualNextState).boards[0]).toEqual({...testBoards[0], assignedGroups: union(assignedGroups, [testGroupsMap[1]])});
+            expect(selector.boards()(actualNextState).boards[0]).toEqual({...testBoards[0], assignedGroups: union(assignedGroups, [testGroupsMap[1]])});
         });
     });
 
