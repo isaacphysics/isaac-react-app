@@ -3,12 +3,12 @@ import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
 import ReactGA, {FieldsObject} from "react-ga";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {connect} from "react-redux";
-import {AppState} from "../../state/reducers";
+import {useSelector} from "react-redux";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {Unauthorised} from "../pages/Unauthorised";
 import {isTeacher} from "../../services/user";
+import {selectors} from "../../state/selectors";
 
 ReactGA.initialize("UA-137475074-1");
 ReactGA.set({ anonymizeIp: true });
@@ -18,10 +18,7 @@ const trackPage = (page: string, options?: FieldsObject) => {
     ReactGA.pageview(page);
 };
 
-const mapStateToProps = (state: AppState) => ({user: state ? state.user : null});
-
 interface UserFilterProps {
-    user: LoggedInUser | null;
     ifUser?: (user: LoggedInUser) => boolean;
 }
 
@@ -38,10 +35,11 @@ const WrapperComponent = function({component: Component, trackingOptions, ...pro
     return <Component {...props} />;
 };
 
-const TrackedRouteComponent = function({component, trackingOptions, componentProps, ...rest}: TrackedRouteProps) {
+export const TrackedRoute = function({component, trackingOptions, componentProps, ...rest}: TrackedRouteProps) {
+    const user = useSelector(selectors.user.orNull());
     if (component) {
         if (rest.ifUser !== undefined) {
-            const {ifUser, user, ...rest$} = rest;
+            const {ifUser, ...rest$} = rest;
             return <Route {...rest$} render={props => {
                 const propsWithUser = {user, ...props};
                 return <ShowLoading until={user}>
@@ -69,5 +67,3 @@ const TrackedRouteComponent = function({component, trackingOptions, componentPro
         throw new Error("TrackedRoute only works on components, got: " + JSON.stringify(rest));
     }
 };
-
-export const TrackedRoute = connect(mapStateToProps)(TrackedRouteComponent);
