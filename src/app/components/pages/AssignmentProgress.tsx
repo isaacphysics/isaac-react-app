@@ -17,7 +17,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {orderBy, sortBy} from "lodash";
 import {AppAssignmentProgress, AppGroup} from "../../../IsaacAppTypes";
-import {groups} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
@@ -55,7 +55,7 @@ const stateFromProps = (state: AppState) => {
             });
         }
 
-        const activeGroups = groups.active()(state);
+        const activeGroups = selectors.groups.active()(state);
         if (activeGroups) {
             const activeGroupsWithAssignments = activeGroups.map(g => {
                 return {

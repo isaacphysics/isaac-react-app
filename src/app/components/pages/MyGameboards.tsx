@@ -20,7 +20,7 @@ import {
 } from 'reactstrap';
 import {ActualBoardLimit, AppGameBoard, BoardOrder} from "../../../IsaacAppTypes";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {boards as ThisBoards} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {sortIcon} from "../../services/constants";
 import {
@@ -162,7 +162,7 @@ function orderName(order: BoardOrder) {
 export const MyGameboards = () => {
     //Redux state and dispatch
     const dispatch = useDispatch();
-    const boards = useSelector(ThisBoards.boards()) as Boards;
+    const boards = useSelector(selectors.boards.boards()) as Boards;
     const user = useSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);

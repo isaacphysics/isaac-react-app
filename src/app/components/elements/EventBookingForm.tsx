@@ -5,7 +5,7 @@ import {SchoolInput} from "./inputs/SchoolInput";
 import {useDispatch, useSelector} from "react-redux";
 import {requestEmailVerification} from "../../state/actions";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
-import {userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
@@ -16,7 +16,7 @@ interface EventBookingFormProps {
 
 export const EventBookingForm = ({event, targetUser, additionalInformation, updateAdditionalInformation}: EventBookingFormProps) => {
     const dispatch = useDispatch();
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
     const editingSelf = user && user.loggedIn && targetUser.id === user.id;
 
     const [verifyEmailRequestSent, setVerifyEmailRequestSent] = useState(false);

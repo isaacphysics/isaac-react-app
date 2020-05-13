@@ -5,11 +5,11 @@ import {EXAM_BOARD} from "../../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {setTempExamBoard} from "../../../state/actions";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {userOrNull} from "../../../state/selectors";
+import {selectors} from "../../../state/selectors";
 
 export const TempExamBoardPicker = ({className, hideLabel = true}: {className?: string; hideLabel?: boolean}) => {
     const dispatch = useDispatch();
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
     const currentExamBoard = useCurrentExamBoard();
 
     return SITE_SUBJECT === SITE.CS ? <React.Fragment>

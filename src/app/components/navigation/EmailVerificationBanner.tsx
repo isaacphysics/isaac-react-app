@@ -5,12 +5,12 @@ import * as RS from 'reactstrap';
 import {Button} from 'reactstrap';
 import {requestEmailVerification} from "../../state/actions";
 import {WEBMASTER_EMAIL} from '../../services/siteConstants';
-import {userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 export const EmailVerificationBanner = () => {
     const dispatch = useDispatch();
     const [hidden, setHidden] = useState(false);
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
     const status = user?.loggedIn && user?.emailVerificationStatus || null;
     const show = user?.loggedIn && status != "VERIFIED" && !hidden;
 

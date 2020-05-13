@@ -7,11 +7,11 @@ import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
-import {userOrNull} from "../../../state/selectors";
+import {selectors} from "../../../state/selectors";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
 
     return <div id="homepage">
         <section id="call-to-action" className="homepageHero">

@@ -18,14 +18,14 @@ import {ShortcutResponses} from "../../../IsaacAppTypes";
 import {filterOnExamBoard, useCurrentExamBoard} from "../../services/examBoard";
 import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 
 export const Search = withRouter((props: {history: History; location: Location}) => {
     const {location, history} = props;
     const dispatch = useDispatch();
     const searchResults = useSelector((state: AppState) => state && state.search && state.search.searchResults || null);
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
     const examBoard = useCurrentExamBoard();
 
     const searchParsed = queryString.parse(location.search);

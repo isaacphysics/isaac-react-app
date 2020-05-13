@@ -4,10 +4,10 @@ import {useSelector} from "react-redux";
 import {Col, Container, Row} from "reactstrap";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarPhy} from "./NavigationBarPhy";
-import {userOrNull} from "../../../state/selectors";
+import {selectors} from "../../../state/selectors";
 
 export const HeaderPhy = () => {
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
     return <header className="light">
         <Container className="container-fluid px-0">
             <Row>

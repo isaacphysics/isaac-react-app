@@ -22,7 +22,7 @@ import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {PageFragment} from "../elements/PageFragment";
-import {userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 const determineUrlQueryPresets = (user?: LoggedInUser | null) => {
     const urlQuery = queryString.parse(location.search);
@@ -56,7 +56,7 @@ const siteSpecific = {
 
 export const Contact = () => {
     const dispatch = useDispatch();
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
     const errorMessage = useSelector((state: AppState) => state?.error || null);
     const [presetSubject, presetMessage] = determineUrlQueryPresets(user);
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");

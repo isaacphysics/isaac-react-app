@@ -7,13 +7,13 @@ import {getContentVersion, requestConstantsSegueVersion, setContentVersion} from
 import {ShowLoading} from "../handlers/ShowLoading";
 import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {segue} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import classnames from "classnames";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useDispatch();
-    const segueVersion = useSelector(segue.versionOrUnknown());
-    const contentVersion = useSelector(segue.contentVersion());
+    const segueVersion = useSelector(selectors.segue.versionOrUnknown());
+    const contentVersion = useSelector(selectors.segue.contentVersion());
     useEffect(() => {
         dispatch(getContentVersion());
         dispatch(requestConstantsSegueVersion());

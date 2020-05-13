@@ -18,7 +18,7 @@ import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {isStaff, isTeacher} from "../../services/user";
-import {userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 
 function formatDate(date: Date|number) {
@@ -32,7 +32,7 @@ interface EventDetailsProps {
 export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventDetailsProps) => {
     const dispatch = useDispatch();
     const event = useSelector((state: AppState) => state && state.currentEvent);
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
     useEffect(() => {dispatch(getEvent(eventId))}, [eventId]);
 
     const [bookingFormOpen, setBookingFormOpen] = useState(false);

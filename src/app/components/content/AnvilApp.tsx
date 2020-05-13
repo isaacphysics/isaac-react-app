@@ -3,7 +3,7 @@ import {AnvilAppDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
 import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
-import {questions, userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 interface AnvilAppProps {
     doc: AnvilAppDTO;
@@ -15,14 +15,14 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
     const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${sessionIdentifier}`;
     const title = doc.value || "Anvil app";
     const page = useSelector((state: AppState) => (state && state.doc) || null);
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
 
     let iframeRef = React.useRef() as RefObject<HTMLIFrameElement>;
 
     let accordionSectionId = useContext(AccordionSectionContext).id;
     let questionId = useContext(QuestionContext);
 
-    let parentQuestion = useSelector(questions.selectQuestionPart(questionId)) || undefined;
+    let parentQuestion = useSelector(selectors.questions.selectQuestionPart(questionId)) || undefined;
 
     let appParams: {[s: string]: string} = {};
 

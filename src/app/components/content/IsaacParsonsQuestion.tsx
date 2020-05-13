@@ -18,7 +18,7 @@ import {
     ResponderProvided
 } from "react-beautiful-dnd";
 import _differenceBy from "lodash/differenceBy";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 interface IsaacParsonsQuestionProps {
     doc: IsaacParsonsQuestionDTO;
@@ -260,7 +260,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
 }
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = questions.selectQuestionPart(questionId)(state);
+    const questionPart = selectors.questions.selectQuestionPart(questionId)(state);
     return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
 };
 const dispatchToProps = {setCurrentAttempt};

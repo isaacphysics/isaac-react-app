@@ -5,14 +5,14 @@ import {handleProviderLoginRedirect, logInUser, resetPassword} from "../../state
 import {history} from "../../services/history";
 import {Redirect} from "react-router";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {error, userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 export const LogIn = () => {
     useEffect( () => {document.title = "Login — Isaac " + SITE_SUBJECT_TITLE;}, []);
 
     const dispatch = useDispatch();
-    const user = useSelector(userOrNull());
-    const errorMessage = useSelector(error.general());
+    const user = useSelector(selectors.user.orNull());
+    const errorMessage = useSelector(selectors.error.general());
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [logInAttempted, setLoginAttempted] = useState(false);

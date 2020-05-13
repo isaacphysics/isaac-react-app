@@ -8,7 +8,7 @@ import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
 import {EXAM_BOARD} from "../../services/constants";
 import {useCurrentExamBoard} from "../../services/examBoard";
-import {userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 type MathJaxMacro = string|[string, number];
 
@@ -324,7 +324,7 @@ function manipulateHtml(html: string) {
 }
 
 export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
     const examBoard = useCurrentExamBoard();

@@ -1,4 +1,5 @@
 import {
+    AppState,
     boards,
     BoardsState,
     constants,
@@ -14,7 +15,7 @@ import {Action, AppGameBoard, AppGroupMembership, LoggedInUser} from "../../Isaa
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
 import {mapValues, union, without} from "lodash";
-import {boards as boardsSelector, groups as groupsSelector} from "../../app/state/selectors";
+import {selectors} from "../../app/state/selectors";
 import {UserGroupDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
@@ -221,7 +222,7 @@ describe("groups reducer", () => {
     });
 
     // @ts-ignore It's not a complete state
-    const groupSelector = mapValues(groupsSelector, f => () => (groupsState: GroupsState) => f()({groups: groupsState}));
+    const groupSelector = mapValues(selectors.groups, f => () => (groupsState: GroupsState) => f()({groups: groupsState}));
 
     it("can get new active groups", () => {
         const testGroups = {1: userGroupDTOs.one, 2: userGroupDTOs.two};
@@ -395,7 +396,7 @@ describe("boards reducer", () => {
     const groupsState = groups(null, groupCreationAction);
 
     // @ts-ignore It's not a complete state
-    const selector = mapValues(boardsSelector, f => () => (boardsState: BoardsState) => f()({boards: boardsState, groups: groupsState}));
+    const selector = mapValues(selectors.boards, f => () => (boardsState: BoardsState) => f()({boards: boardsState, groups: groupsState}));
 
     const testBoards: AppGameBoard[] = [{id: "abc", title: "ABC Board"}, {id: "def", title: "DEF Board"}];
 

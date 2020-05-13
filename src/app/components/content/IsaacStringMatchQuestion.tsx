@@ -4,12 +4,12 @@ import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacStringMatchQuestionDTO} from "../../../IsaacApiTypes";
 import {Input} from "reactstrap";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 
 export const IsaacStringMatchQuestion = ({doc, questionId}: {doc: IsaacStringMatchQuestionDTO; questionId: string}) => {
     const dispatch = useDispatch();
-    const questionPart = useSelector(questions.selectQuestionPart(questionId));
+    const questionPart = useSelector(selectors.questions.selectQuestionPart(questionId));
     const currentAttemptValue = questionPart?.currentAttempt?.value;
 
     return <div className="stringmatch-question">

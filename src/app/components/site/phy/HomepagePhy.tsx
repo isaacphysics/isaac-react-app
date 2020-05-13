@@ -4,11 +4,11 @@ import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
-import {userOrNull} from "../../../state/selectors";
+import {selectors} from "../../../state/selectors";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
 
     return <div id="homepage" className="pb-5">
         <section id="call-to-action" className="homepageHero">

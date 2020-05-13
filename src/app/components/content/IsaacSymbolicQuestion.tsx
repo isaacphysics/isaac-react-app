@@ -8,7 +8,7 @@ import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
 import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {Inequality, makeInequality} from "inequality";
 import {parseExpression} from "inequality-grammar";
 
@@ -40,7 +40,7 @@ function isError(p: {error: string} | any[]): p is {error: string} {
 }
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = questions.selectQuestionPart(questionId)(state);
+    const questionPart = selectors.questions.selectQuestionPart(questionId)(state);
     let r: {currentAttempt?: FormulaDTO | null} = {};
     if (questionPart) {
         r.currentAttempt = questionPart.currentAttempt;

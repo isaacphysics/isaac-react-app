@@ -8,13 +8,13 @@ import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {EXAM_BOARD} from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 import _flattenDeep from 'lodash/flattenDeep';
 import {useCurrentExamBoard} from "../../services/examBoard";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = questions.selectQuestionPart(questionId)(state);
+    const questionPart = selectors.questions.selectQuestionPart(questionId)(state);
     let r: {currentAttempt?: LogicFormulaDTO | null} = {};
     if (questionPart) {
         r.currentAttempt = questionPart.currentAttempt;

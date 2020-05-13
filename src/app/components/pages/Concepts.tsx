@@ -16,18 +16,16 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
 import {searchResultIsPublic} from "../../services/search"
 import {ShortcutResponses} from "../../../IsaacAppTypes";
-import {userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 
 export const Concepts = withRouter((props: {history: History; location: Location}) => {
     const {location, history} = props;
     const dispatch = useDispatch();
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
     const concepts = useSelector((state: AppState) => state && state.concepts && state.concepts.results || null);
 
-    useEffect(() => {
-        dispatch(fetchConcepts());
-    }, []);
+    useEffect(() => {dispatch(fetchConcepts());}, [dispatch]);
 
     const searchParsed = queryString.parse(location.search);
 

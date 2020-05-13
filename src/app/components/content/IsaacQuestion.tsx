@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import * as RS from "reactstrap";
 import {QUESTION_TYPES} from "../../services/questions";
 import {DateString, NUMERIC_DATE_AND_TIME} from "../elements/DateString";
@@ -14,7 +14,7 @@ import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 
 export const IsaacQuestion = ({doc}: {doc: ApiTypes.IsaacQuestionBaseDTO}) => {
     const dispatch = useDispatch();
-    const questionPart = useSelector(questions.selectQuestionPart(doc.id));
+    const questionPart = useSelector(selectors.questions.selectQuestionPart(doc.id));
     const validationResponse = questionPart?.validationResponse;
     const currentAttempt = questionPart?.currentAttempt;
     const locked = questionPart?.locked;

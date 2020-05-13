@@ -8,7 +8,7 @@ import {AppState} from "../../state/reducers";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {TrustedHtml} from "./TrustedHtml";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface AccordionsProps {
@@ -90,7 +90,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, locatio
     // Check results of questions in this accordion
     let accordianIcon;
     const questionsInsideThis = useSelector((state: AppState) => {
-        return questions.filter(q => q.accordionClientId === clientId.current)(state);
+        return selectors.questions.filter(q => q.accordionClientId === clientId.current)(state);
     });
     if (questionsInsideThis.length > 0) {
         let allCorrect = true;

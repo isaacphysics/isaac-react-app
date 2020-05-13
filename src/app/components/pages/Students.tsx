@@ -5,10 +5,10 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
 import {Link} from "react-router-dom";
 import {LinkCard} from "../elements/cards/LinkCard";
-import {userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 export const Students = () => {
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
     const pageTitle = user && user.loggedIn ? "My Isaac" : "How we help students";
     const registrationButton = <div className="text-center">
         <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>Sign up</RS.Button>

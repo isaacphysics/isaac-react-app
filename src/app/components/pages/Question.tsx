@@ -18,7 +18,7 @@ import {RelatedContent} from "../elements/RelatedContent";
 import {isStudent, isTeacher} from "../../services/user";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
-import {doc as selectDoc, userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 import tags from "../../services/tags";
@@ -41,8 +41,8 @@ function getTags(docTags?: string[]) {
 
 export const Question = withRouter(({questionIdOverride, match}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
-    const doc = useSelector(selectDoc.ifNotAQuizId(questionId));
-    const user = useSelector(userOrNull());
+    const doc = useSelector(selectors.doc.ifNotAQuizId(questionId));
+    const user = useSelector(selectors.user.orNull());
     const navigation = useNavigation(questionId);
 
     const dispatch = useDispatch();

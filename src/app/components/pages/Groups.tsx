@@ -40,12 +40,15 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
-import {groups} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 
-const stateFromProps = (state: AppState) => (state && {groups: groups.groups()(state), group: groups.current()(state)});
+const stateFromProps = (state: AppState) => (state && {
+    groups: selectors.groups.groups()(state),
+    group: selectors.groups.current()(state)
+});
 const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal};
 
 interface GroupsPageProps {

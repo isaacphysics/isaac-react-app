@@ -7,7 +7,7 @@ import {AppState} from "../../state/reducers";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
 import {Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Row} from "reactstrap";
 import {TrustedHtml} from "../elements/TrustedHtml";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 interface IsaacNumericQuestionProps {
     doc: IsaacNumericQuestionDTO;
@@ -87,7 +87,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: Isaa
     const dispatch = useDispatch();
     const userId = useSelector((state: AppState) => state?.user?.loggedIn && state.user.id || undefined);
     const units = useSelector((state: AppState) => state?.constants?.units || undefined);
-    const questionPart = useSelector(questions.selectQuestionPart(questionId));
+    const questionPart = useSelector(selectors.questions.selectQuestionPart(questionId));
 
     const currentAttempt = questionPart?.currentAttempt as QuantityDTO;
     const currentAttemptValue = currentAttempt?.value;

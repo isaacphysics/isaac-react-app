@@ -13,7 +13,7 @@ import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
-import {userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 function getTags(docTags?: string[]) {
     if (SITE_SUBJECT !== SITE.PHY) {
@@ -73,7 +73,7 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
 export const Gameboard = withRouter(({location: {hash}}: {location: {hash: string}}) => {
     const dispatch = useDispatch();
     const gameboard = useSelector((state: AppState) => state?.currentGameboard || null);
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
     let gameboardId = hash ? hash.slice(1) : null;
 
     useEffect(() => {dispatch(loadGameboard(gameboardId))}, [gameboardId]);

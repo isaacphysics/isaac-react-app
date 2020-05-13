@@ -5,11 +5,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {isLoggedIn, isStudent} from "../../services/user";
 import {Hexagon} from "../elements/Hexagon";
 import {openIsaacBooksModal} from "../../state/actions";
-import {userOrNull} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 export const TeacherFeatures = () => {
 
-    const user = useSelector(userOrNull());
+    const user = useSelector(selectors.user.orNull());
     const dispatch = useDispatch();
 
     const isDisabled = (isStudent(user) || !isLoggedIn(user));

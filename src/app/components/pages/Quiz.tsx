@@ -17,15 +17,15 @@ import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {EditContentButton} from "../elements/EditContentButton";
-import {doc as selectDoc, questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 
 export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId: string}}}) => {
     const dispatch = useDispatch();
-    const doc = useSelector(selectDoc.ifQuizId(match.params.quizId));
-    const allQuestionsAttempted = useSelector(questions.allQuestionsAttempted());
-    const anyQuestionPreviouslyAttempted = useSelector(questions.anyQuestionPreviouslyAttempted());
+    const doc = useSelector(selectors.doc.ifQuizId(match.params.quizId));
+    const allQuestionsAttempted = useSelector(selectors.questions.allQuestionsAttempted());
+    const anyQuestionPreviouslyAttempted = useSelector(selectors.questions.anyQuestionPreviouslyAttempted());
 
     function submitQuiz(event: React.FormEvent) {
         if (event) {event.preventDefault();}
