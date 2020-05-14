@@ -26,7 +26,7 @@ export const Concepts = withRouter((props: {history: History; location: Location
 
     useEffect(() => {
         dispatch(fetchConcepts());
-    }, []);
+    }, [dispatch]);
 
     const searchParsed = queryString.parse(location.search);
 
