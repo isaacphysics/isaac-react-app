@@ -5,7 +5,6 @@ import {ListGroupSocial} from "../elements/list-groups/ListGroupSocial";
 import {ListGroupFooterBottom} from "../elements/list-groups/ListGroupFooterBottom";
 import {Link} from "react-router-dom";
 import {SITE_SUBJECT, SITE} from "../../services/siteConstants";
-import {ListGroupPhysics} from "../elements/list-groups/ListGroupPhysics";
 
 const ExternalLink = ({href, children}: {href: string; children: any}) => (
     // eslint-disable-next-line react/jsx-no-target-blank
@@ -18,7 +17,7 @@ export const Footer = () => (
     <footer>
         <div className="footerTop d-print-none">
             <Container>
-                <Row className="px-3 px-sm-0 pb-3 pb-md-5">
+                <Row className="px-3 px-sm-0 pb-3 pb-md-4">
                     {SITE_SUBJECT === SITE.CS ?
                         <Col md='4' lg='3' className="pt-5 logo-col">
                             <div className="d-flex flex-row">
@@ -30,7 +29,7 @@ export const Footer = () => (
                                     />
                                 </Link>
                             </div>
-                            <div className="pt-5 footer-links logo-text pt-3">
+                            <div className="footer-links logo-text pt-3">
                                 <p>
                                     A <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">Department for Education</ExternalLink> project,
                                     part of the <ExternalLink href="https://teachcomputing.org/">National Centre for Computing Education</ExternalLink> and created by
@@ -50,7 +49,7 @@ export const Footer = () => (
                                     />
                                 </Link>
                             </div>
-                            <div className="pt-5 footer-links logo-text pt-3">
+                            <div className="footer-links logo-text pt-3">
                                 A&nbsp;<ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">
                                     <strong>Department for Education</strong>
                                 </ExternalLink> project at the {' '}

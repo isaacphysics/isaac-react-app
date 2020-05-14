@@ -19,6 +19,7 @@ function mapStateToProps(state: AppState) {
 
 function rewrite(src: string) {
     return src
+        .replace('youtu.be/', 'www.youtube.com/watch?v=')
         .replace('watch?v=', 'embed/')
         .replace("youtube.com", "youtube-nocookie.com")
     + "?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=" + window.location.origin

@@ -50,6 +50,7 @@ function getURLForContent(content: ContentSummaryDTO) {
 export const RelatedContentComponent = ({content, parentPage, logAction}: RelatedContentProps) => {
     const concepts = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
     const questions = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION).sort((a, b) => {
+        if (a.title && b.title) return (a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
         if (a.level === b.level) return (a.title || '').localeCompare(b.title || '');
         const aInt = parseInt(a.level || '-1');
         const bInt = parseInt(b.level || '-1');
@@ -57,22 +58,25 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
     });
 
     const makeListGroupItem = (contentSummary: ContentSummaryDTO) => (
-        <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mb-lg-3 mr-lg-3">
-            <Link to={getURLForContent(contentSummary)} className="lrg-text font-weight-bold"
+        <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
+            <Link to={getURLForContent(contentSummary)}
                 onClick={() => {logAction(getEventDetails(contentSummary, parentPage))}}
             >
-                {contentSummary.title}
+                {contentSummary.level && contentSummary.level != '0' ? (contentSummary.title + " (Level " + contentSummary.level + ")") : contentSummary.title}
             </Link>
         </ListGroupItem>
     );
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 w-lg-50 d-flex">
             <div className="flex-fill simple-card mr-lg-3 my-3 p-3 text-wrap">
-                <h2 className="mb-2"><small>Related questions</small></h2>
+                <div className="related-concepts related-title">
+                    <h5 className="mb-2">Related concepts</h5>
+                </div>
+                <hr/>
                 <div className="d-lg-flex">
-                    <ListGroup className="mb-lg-3 mr-lg-3">
-                        {questions.length > 0 ?
-                            questions.map(contentSummary => makeListGroupItem(contentSummary)) :
+                    <ListGroup className="mr-lg-3">
+                        {concepts.length > 0 ?
+                            concepts.map(contentSummary => makeListGroupItem(contentSummary)):
                             <div className="mt-2 ml-3">There are no related concepts</div>
                         }
                     </ListGroup>
@@ -81,12 +85,15 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
         </div>
         <div className="w-100 w-lg-50 d-flex">
             <div className="flex-fill simple-card ml-lg-3 my-3 p-3 text-wrap">
-                <h2 className="mb-2"><small>Related concepts</small></h2>
+                <div className="related-questions related-title">
+                    <h5 className="mb-2">Related questions</h5>
+                </div>
+                <hr/>
                 <div className="d-lg-flex">
-                    <ListGroup className="mb-lg-3 mr-lg-3">
-                        {concepts.length > 0 ?
-                            concepts.map(contentSummary => makeListGroupItem(contentSummary)):
-                            <div className="mt-2 ml-3">There are no related concepts</div>
+                    <ListGroup className="mr-lg-3">
+                        {questions.length > 0 ?
+                            questions.map(contentSummary => makeListGroupItem(contentSummary)) :
+                            <div className="mt-2 ml-3">There are no related questions</div>
                         }
                     </ListGroup>
                 </div>

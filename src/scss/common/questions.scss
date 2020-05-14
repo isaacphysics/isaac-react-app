@@ -1,6 +1,6 @@
 // ISAAC
 .question-panel > .content-value,
-.question-panel .isaac-accordion .accordion-section > .content-value{
+.question-panel .isaac-accordion .accordion-section > .content-value {
   background-color: white;
   box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
   margin: auto auto 2rem auto;
@@ -23,26 +23,6 @@ button {
   -webkit-appearance: none;
   border: none;
   outline: none !important;
-}
-.share-link {
-  font-family: $secondary-font !important;
-  display: none;
-  position: relative;
-  padding: 4px;
-  border: 1px solid gray;
-  right: 30px;
-  background: #fff;
-  height: 58px;
-}
-.share-link div {
-  margin: 14px 30px 14px 6px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  user-select: all;
-  -webkit-user-select: all;
-  -moz-user-select: all;
-  -ms-user-select: all;
-  width: 100%;
 }
 
 .question-actions {
@@ -101,12 +81,26 @@ button {
 }
 
 .numeric-question .unit-selection {
+  .dropdown-menu {
+    width: 100%;
+    min-width: unset;
+  }
   button.btn {
-    min-width: auto !important;
+    padding: 0.25rem 1.5rem;
+    min-width: unset;
+    width: 100%;
+    &.selected {
+      border-radius: 0;
+    }
+    &.dropdown-toggle::after {
+      position: absolute;
+      right: 0.5rem;
+      top: 1rem;
+    }
   }
 }
 
-.symboliclogic-question {
+.symbolic-question, .equality-page {
   .eqn-editor-preview {
     border: solid 1px $black;
     padding: 0.15em 0.6em;
@@ -117,10 +111,29 @@ button {
       color: $gray-500;
     }
   }
+
+  .equality-page {
+    .eqn-editor-preview {
+      background: $white !important;
+    }
+  }
+
+  .eqn-editor-input input {
+    font-family: monospace;
+    height: auto;
+  }
+
+  .eqn-editor-help {
+    min-width: 0;
+  }
 }
 
 @include media-breakpoint-up(md) {
   .parsons-layout {
+    -webkit-animation: gutter-overflow 1s; /* Safari 4+ */
+    -moz-animation:    gutter-overflow 1s; /* Fx 5+ */
+    -o-animation:      gutter-overflow 1s; /* Opera 12+ */
+    animation:         gutter-overflow 1s; /* IE 10+, Fx 29+ */
     @include make-col-offset(-2, 8);
     width: 150%;
   }
@@ -197,6 +210,8 @@ button {
     margin-left: -3rem;
     margin-right: -3rem;
     margin-bottom: -3rem;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
     @include media-breakpoint-down(sm) {
       margin-left: -1rem;
       margin-right: -1rem;

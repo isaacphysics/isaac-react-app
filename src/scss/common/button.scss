@@ -53,6 +53,21 @@
       font-size: 1rem;
       line-height: 1.5;
     }
+
+    &.primary-font-link {
+      font-family: $primary-font;
+      letter-spacing: inherit;
+      font-size: inherit;
+      vertical-align: inherit;
+      text-decoration: underline;
+      &:focus {
+        outline: 0.2rem solid #000 !important;
+        border-radius: inherit;
+      }
+      &:hover {
+        text-decoration: none;
+      }
+    }
   }
 
   //Button - Primary Outline
@@ -121,6 +136,14 @@
 
 
 // ISAAC
+.btn-underline {
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 a.btn {
   text-decoration: none;
 }

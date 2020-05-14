@@ -5,6 +5,7 @@ import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {extractTeacherName} from "../../services/user";
 import {formatDate} from "./DateString";
+import {determineGameboardSubjects, generateGameboardSubjectHexagons} from "../../services/gameboards";
 
 interface AssignmentsProps {
     assignments: AssignmentDTO[];
@@ -18,11 +19,19 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
         {assignments && assignments.map((assignment, index) =>
             <React.Fragment key={index}>
                 <hr />
-                <Row>
-                    <Col xs={3} md={1} className="myAssignments-percentageCompleted">
-                        <h4>{assignment.gameboard && assignment.gameboard.percentageCompleted}</h4>
+                <Row className="board-card">
+                    <Col xs={4} md={2} lg={1}>
+                        <div className="board-subject-hexagon-container">
+                            {assignment.gameboard && ((assignment.gameboard.percentageCompleted == 100) ?
+                                <span className="board-subject-hexagon subject-complete"/> :
+                                <>
+                                    {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
+                                    <div className="board-percent-completed">{assignment.gameboard.percentageCompleted}</div>
+                                </>
+                            )}
+                        </div>
                     </Col>
-                    <Col xs={9} md={4}>
+                    <Col xs={8} md={3} lg={4}>
                         <Link to={`/gameboards#${assignment.gameboardId}`}>
                             <h4>{assignment.gameboard && assignment.gameboard.title}</h4>
                         </Link>

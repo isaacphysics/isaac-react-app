@@ -5,8 +5,8 @@ import {AppState} from "../../../state/reducers";
 import {Col, Container, Row} from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
-import {NavigationBar} from "../../navigation/NavigationBar";
 import {MainSearch} from "../../elements/MainSearch";
+import {NavigationBarCS} from "./NavigationBarCS";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stateToProps = (state: AppState, _: RouteComponentProps) => (state && {user: state.user});
@@ -22,7 +22,7 @@ const HeaderComponent = ({user}: HeaderProps) => {
                 <Col>
                     <div className="header-bar mx-3 mx-md-0 py-3 d-md-flex">
                         <div className="header-logo">
-                            <Link to="/home">
+                            <Link to="/">
                                 <img src="/assets/logo.svg" alt="Isaac Computer Science" />
                             </Link>
                         </div>
@@ -66,7 +66,7 @@ const HeaderComponent = ({user}: HeaderProps) => {
                         </div>
                     </div>
 
-                    <NavigationBar />
+                    <NavigationBarCS />
                 </Col>
             </Row>
         </Container>

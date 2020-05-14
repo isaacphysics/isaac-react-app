@@ -130,65 +130,180 @@
                 overflow: hidden;
             }
 
-            ul {
-                position: relative;
-                padding: 0;
-                list-style-type: none;
-                white-space: nowrap;
-                margin: 0 auto;
-                background: darken(theme-color("primary"), 20%);
+            div.top-menu {
+                &.numbers {
+                    display: flex;
+                    flex-direction: row;
+                    max-width: 450px;
+                    margin: 0 auto;
+                    padding: 16px 0;
 
-                li {
+                    & > div {
+                        &.input-box {
+                            position: relative;
+
+                            .menu-item {
+                                &.inactive {
+                                    opacity: 0.5;
+                                }
+
+                                position: relative;
+                                display: inline-block;
+                                text-align: center;
+                                font-size: 1.8em;
+                                top: 6px;
+
+                                .katex {
+                                    text-align: center;
+                                    display: block;
+                                    line-height: 90px;
+                                    height: 90px;
+                                    width: 78px;
+                                    margin: 0 auto;
+                                    overflow: visible;
+                                }
+
+                                svg.v-hexagon {
+                                    position: absolute;
+                                    height: 90px;
+                                    left: 0;
+                                    top: 0;
+                                    overflow: visible;
+                                    fill: white;
+                                    stroke: darken(theme-color("primary"), 10%);
+                                    stroke-width: 8px;
+                                    margin: 0 auto;
+                                }
+                            }
+
+                            .clear-number {
+                                position: absolute;
+                                top: -10px;
+                                right: -15px;
+                                width: 30px;
+                                height: 30px;
+                                background: url('/assets/inequality-clear.svg');
+                                background-size: 30px;
+                            }
+                        }
+
+                        &.keypad-box {
+                            padding-right: 16px;
+
+                            .bottom-row {
+                                padding-left: 26px;
+                                margin-top: -12px;
+                            }
+
+                            .key {
+                                position: relative;
+                                display: inline-block;
+                                width: 52px;
+                                height: 57px;
+                                text-align: center;
+                                font-size: 1.8em;
+
+                                .katex {
+                                    text-align: center;
+                                    display: block;
+                                    line-height: 57px;
+                                    height: 57px;
+                                    width: 100%;
+                                    margin: 0 auto;
+                                    overflow: visible;
+                                }
+        
+                                svg.v-hexagon {
+                                    position: absolute;
+                                    padding-left: 2px;
+                                    width: 50px;
+                                    left: 0px;
+                                    top: 0px;
+                                    overflow: visible;
+                                    fill: white;
+                                    stroke: darken(theme-color("primary"), 10%);
+                                    stroke-width: 8px;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                ul {
                     position: relative;
-                    display: inline-block;
-                    box-sizing: content-box;
-                    padding: 8px;
-                    text-indent: 0;
-                    width: 48px;
-                    height: 48px;
-                    text-align: center;
-                    font-size: 1.8em;
+                    padding: 0;
+                    list-style-type: none;
+                    white-space: nowrap;
+                    margin: 0 auto;
+                    background: darken(theme-color("primary"), 20%);
 
-                    &.active {
-                        background: theme-color("primary");
-                    }
+                    li {
+                        position: relative;
+                        display: inline-block;
+                        box-sizing: content-box;
+                        padding: 8px;
+                        text-indent: 0;
+                        width: 64px;
+                        height: 70px;
+                        text-align: center;
+                        font-size: 1.8em;
 
-                    .katex {
-                        display: block;
-                        padding-top: 5px;
-                    }
+                        &.active {
+                            background: theme-color("primary");
+                        }
 
-                    svg {
-                        position: absolute;
-                        width: 48px;
-                        left: 8px;
-                        top: 4px;
-                        overflow: visible;
+                        .katex {
+                            display: block;
+                            padding-top: 5px;
+                            line-height: 52px;
+                            max-height: 52px;
+                            overflow: visible;
 
-                        .v-hexagon {
+                            span.base {
+                                max-height: 38px;
+                                vertical-align: top;
+                            }
+                        }
+
+                        &.radix, &.fraction, &.derivative {
+                            .katex span.base {
+                                line-height: 36px;
+                            }
+                        }
+
+                        svg.v-hexagon {
+                            position: absolute;
+                            width: 64px;
+                            left: 8px;
+                            top: 4px;
+                            overflow: visible;
                             fill: white;
                             stroke: darken(theme-color("primary"), 10%);
                             stroke-width: 8px;
                         }
                     }
-                }
 
-                &.sub-menu {
-                    background: theme-color("primary");
-                }
-            }
-
-            .sub-menu-tabs {
-                li {
-                    font-size: 1.4em;
-
-                    .katex {
-                        padding-top: 8px;
+                    &.sub-menu {
+                        background: theme-color("primary");
                     }
+                }
 
-                    &.inactive {
-                        svg {
-                            .v-hexagon {
+                .sub-menu-tabs {
+                    li {
+                        font-size: 1.4em;
+
+                        .katex {
+                            padding-top: 8px;
+                        }
+
+                        &.derivatives {
+                            .katex span.base {
+                                line-height: 32px;
+                            }
+                        }
+
+                        &.inactive {
+                            svg.v-hexagon {
                                 fill: theme-color("primary");
                                 stroke-width: 0;
                             }
@@ -213,10 +328,10 @@
                     box-sizing: content-box;
                     padding: 0px 8px;
                     text-indent: 0;
-                    width: 60px;
+                    width: 120px;
                     height: 36px;
                     text-align: center;
-                    font-size: 1.8em;
+                    font-size: 1.6em;
                     background: black;
                     color: white;
                     position: relative;
@@ -225,22 +340,19 @@
                         color: black;
                         background: theme-color("primary");
 
-                        svg .tab-triangle {
+                        svg.tab-triangle {
                             fill: theme-color("primary");
                         }
                     }
 
-                    svg {
+                    svg.tab-triangle {
                         position: absolute;
-                        width: 76px;
+                        width: 136px;
                         height: 23px;
                         left: 0;
                         top: 36px;
                         overflow: visible;
-
-                        .tab-triangle {
-                            fill: black;
-                        }
+                        fill: black;
                     }
                 }
             }
@@ -249,7 +361,8 @@
 }
 
 // TODO: Find a better way to unify this and the identical above (around line 137)
-li#moving-menu-item {
+// ... yeah, this is going to be a lost cause.
+#moving-menu-item {
     position: relative; // this will become absolute in InequalityModal.tsx
     display: inline-block;
     box-sizing: content-box;
@@ -260,26 +373,19 @@ li#moving-menu-item {
     text-align: center;
     font-size: 1.8em;
 
-    &.active {
-        background: theme-color("primary");
-    }
-
     .katex {
         display: block;
         padding-top: 5px;
     }
 
-    svg {
+    svg.v-hexagon {
         position: absolute;
         width: 48px;
         left: 8px;
         top: 4px;
         overflow: visible;
-
-        .v-hexagon {
-            fill: white;
-            stroke: darken(theme-color("primary"), 10%);
-            stroke-width: 8px;
-        }
+        fill: white;
+        stroke: darken(theme-color("primary"), 10%);
+        stroke-width: 8px;
     }
 }

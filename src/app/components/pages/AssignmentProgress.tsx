@@ -21,9 +21,10 @@ import {groups} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {API_PATH, TEACHERS_CRUMB} from "../../services/constants";
+import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 const stateFromProps = (state: AppState) => {
     if (state != null) {
@@ -142,8 +143,6 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
     type SortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
     const [sortOrder, setSortOrder] = useState<SortOrder>("name");
     const [reverseOrder, setReverseOrder] = useState(false);
-
-    // TODO: useMemo on this stuff if performance is a problem
 
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     let questions = assignment.gameboard.questions;
@@ -342,8 +341,10 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
                             const fullAccess = studentProgress.user.authorisedFullAccess;
                             return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " revoked"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
                                 <th className="student-name">
-                                    {studentProgress.user.givenName}
-                                    <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                    <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
+                                        {studentProgress.user.givenName}
+                                        <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                    </Link>
                                 </th>
                                 {questions.map((q, index) =>
                                     <td key={q.id} className={markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestion(index)}>
@@ -536,7 +537,11 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
 
     return <React.Fragment>
         <Container>
-            <TitleAndBreadcrumb currentPageTitle="Assignment progress" subTitle="Track your class performance" intermediateCrumbs={[TEACHERS_CRUMB]} help="Click on your groups to see the assignments you have set. View your students' progress by question." />
+            <TitleAndBreadcrumb
+                currentPageTitle={{[SITE.PHY]: "Assignment Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
+                subTitle="Track your class performance"
+                help="Click on your groups to see the assignments you have set. View your students' progress by question."
+            />
             <Row className="align-items-center d-none d-md-flex">
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>

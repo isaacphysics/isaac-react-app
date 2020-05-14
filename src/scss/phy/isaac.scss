@@ -69,10 +69,11 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 // Utility
 @import "preload";
 @import "../common/mixins";
+@import "../common/animations";
 
 // Atoms
 @import "../common/fonts";
-@import "../common/typography";
+@import "typography";
 @import "../common/headings";
 @import "../common/modals";
 @import "questions";
@@ -91,9 +92,12 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/focus";
 @import "../common/progress-bar";
 @import "../common/anvil";
+@import "hints";
+@import "related-content";
 @import "button";
 @import "logo";
 @import "cards";
+@import "featured-profile";
 
 // Navigation
 @import "../common/navigation-bar";
@@ -103,13 +107,12 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 // Pages
 @import "subjects";
 @import "../common/pages";
-@import "../common/homepage";
+@import "homepage";
 @import "../common/login";
 @import "../common/registration";
 @import "../common/my-account";
 @import "../common/topic";
 @import "../common/search";
-@import "../common/my-assignments";
 @import "../common/my-progress";
 @import "../common/gameboard";
 @import "../common/assignment-progress";
@@ -165,8 +168,7 @@ body {
 
 .footer-links {
     &.footer-links-social {
-        background-image: url('/assets/phy/social_dots.svg');
-        background-size: contain;
+        background-image: none;
     }
 }
 .footerLogo {

@@ -5,7 +5,12 @@ import {Link} from "react-router-dom";
 import {IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper} from "../../../services/api";
 
-export const NewsCard = ({newsItem}: {newsItem: IsaacPodDTO}) => {
+interface NewsCardProps {
+    newsItem: IsaacPodDTO;
+    showTitle?: boolean;
+}
+
+export const NewsCard = ({newsItem, showTitle}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
 
     return <RS.Card className={classnames({'card-neat': true, 'news-carousel': true, 'm-4': true})}>
@@ -20,9 +25,19 @@ export const NewsCard = ({newsItem}: {newsItem: IsaacPodDTO}) => {
         <RS.CardBody className="d-flex flex-column">
             <RS.CardText className="m-0 mb-auto">
                 <span className="d-block my-2">
-                    <h3 className="card-title">
-                        {value}
-                    </h3>
+                    {showTitle ?
+                        <div>
+                            <h3 className="card-title">
+                                {title}
+                            </h3>
+                            <p>
+                                {value}
+                            </p>
+                        </div>:
+                        <h3 className="card-title">
+                            {value}
+                        </h3>
+                    }
                 </span>
             </RS.CardText>
             <RS.CardText>

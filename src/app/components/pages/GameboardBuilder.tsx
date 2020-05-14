@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {Spinner} from "reactstrap";
@@ -33,6 +33,7 @@ import Select from "react-select";
 import {withRouter} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -46,20 +47,20 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
     const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTags, setGameboardTags] = useState<string[]>([]);
-    const [gameboardURL, setGameboardURL] = useState();
+    const [gameboardURL, setGameboardURL] = useState<string>();
     const [questionOrder, setQuestionOrder] = useState<string[]>( []);
     const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
-    useMemo(() => {
+    useEffect(() => {
         if (baseGameboard && baseGameboard !== NOT_FOUND) {
             setGameboardTitle(`${baseGameboard.title} (Copy)`);
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
             setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
             setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
         }
-    }, [baseGameboard]);
+    }, [user, baseGameboard]);
 
     const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "";
 
@@ -75,7 +76,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
         if (baseGameboardId && (!baseGameboard || baseGameboard === NOT_FOUND)) {
             dispatch(loadGameboard(baseGameboardId));
         }
-    }, [baseGameboardId]);
+    }, [dispatch, baseGameboardId, baseGameboard]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
@@ -101,7 +102,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         <RS.Label htmlFor="gameboard-builder-name">Gameboard title:</RS.Label>
                         <RS.Input id="gameboard-builder-name"
                             type="text"
-                            placeholder="e.g. Year 12 Network components"
+                            placeholder={{[SITE.CS]: "e.g. Year 12 Network components", [SITE.PHY]: "e.g. Year 12 Dynamics"}[SITE_SUBJECT]}
                             defaultValue={gameboardTitle}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setGameboardTitle(e.target.value);

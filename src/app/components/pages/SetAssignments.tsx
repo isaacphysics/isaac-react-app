@@ -23,6 +23,7 @@ import {
     loadBoards,
     loadGroups,
     loadGroupsForBoard,
+    openIsaacBooksModal,
     showToast,
     unassignBoard
 } from "../../state/actions";
@@ -34,11 +35,15 @@ import {boards, groups} from "../../state/selectors";
 import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
-import {TEACHERS_CRUMB} from "../../services/constants";
-import {formatBoardOwner} from "../../services/gameboards";
-import {connect} from "react-redux";
+import {
+    determineGameboardSubjects,
+    formatBoardOwner,
+    generateGameboardSubjectHexagons
+} from "../../services/gameboards";
+import {connect, useDispatch} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -46,7 +51,7 @@ const stateToProps = (state: AppState) => ({
     boards: boards.boards(state)
 });
 
-const dispatchToProps = {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast};
+const dispatchToProps = {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast, openIsaacBooksModal};
 
 interface SetAssignmentsPageProps {
     user: RegisteredUserDTO;
@@ -60,7 +65,7 @@ interface SetAssignmentsPageProps {
     unassignBoard: (board: GameboardDTO, group: UserGroupDTO) => void;
     showToast: (toast: Toast) => void;
     location: {hash: string};
-
+    openIsaacBooksModal: () => void;
 }
 
 type BoardProps = SetAssignmentsPageProps & {
@@ -135,24 +140,31 @@ const Board = (props: BoardProps) => {
 
     const hexagonId = `board-hex-${board.id}`;
 
+    const boardSubjects = determineGameboardSubjects(board);
+
     return <Card className="board-card">
         <CardBody className="pb-4 pt-4">
             <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
-            <button onClick={() => setShowAssignments(!showAssignments)} className="groups-assigned subject-compsci" id={hexagonId}>
-                <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
-                group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
-                {board.assignedGroups && <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length == 0 ?
-                    "No groups have been assigned."
-                    : ("Gameboard assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}</UncontrolledTooltip>
-                }
+            <button onClick={() => setShowAssignments(!showAssignments)} id={hexagonId} className="board-subject-hexagon-container">
+                {generateGameboardSubjectHexagons(boardSubjects)}
+                <span className="groups-assigned">
+                    <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
+                    group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
+                    {board.assignedGroups &&
+                        <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length === 0 ?
+                            "No groups have been assigned."
+                            : ("Gameboard assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}
+                        </UncontrolledTooltip>
+                    }
+                </span>
             </button>
             <aside>
                 <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                 <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
             </aside>
 
-            <div className="my-4">
-                <ShareLink linkUrl={assignmentLink}/>
+            <div className="mt-4 mb-3">
+                <div className="card-share-link"><ShareLink linkUrl={assignmentLink} reducedWidthLink /></div>
                 <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
                 <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
             </div>
@@ -202,7 +214,7 @@ function orderName(order: BoardOrder) {
 }
 
 const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
-    const {groups, loadGroups, boards, loadBoards} = props;
+    const {groups, loadGroups, boards, loadBoards, openIsaacBooksModal} = props;
 
     useEffect(() => {loadGroups(false);}, []);
 
@@ -212,6 +224,28 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
 
     let [actualBoardLimit, setActualBoardLimit] = useState<ActualBoardLimit>(toActual(boardLimit));
+
+    const dispatch = useDispatch();
+
+
+    const isaacAssignmentButtons = {
+        second: {
+            link: {
+                [SITE.CS]: "/topics",
+                [SITE.PHY]: "/pages/pre_made_gameboards"
+            },
+            text: {
+                [SITE.CS]: "Topics list",
+                [SITE.PHY]: "our Boards for Lessons"
+            }
+        },
+        third: {
+            text: {
+                [SITE.CS]: "Create gameboard",
+                [SITE.PHY]: "create a gameboard"
+            }
+        }
+    };
 
     function loadInitial() {
         loadBoards(0, actualBoardLimit, boardOrder);
@@ -258,24 +292,29 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Set assignments" intermediateCrumbs={[TEACHERS_CRUMB]} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="Set assignments" help={pageHelp} />
         <h4 className="mt-4 mb-3">
-            Add a board from ...
+            Add a gameboard from ...
         </h4>
         <RS.Row className="mb-4">
             <RS.Col md={6} lg={4} className="pt-1">
-                <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
-                    {"Pre-made gameboards"}
-                </RS.Button>
+                {SITE_SUBJECT === SITE.PHY ?
+                    <RS.Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block>
+                        our GCSE &amp; A-Level books
+                    </RS.Button> :
+                    <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
+                        Pre-made gameboards
+                    </RS.Button>
+                }
             </RS.Col>
             <RS.Col md={6} lg={4} className="pt-1">
-                <RS.Button tag={Link} to={"/topics"} color="secondary" block>
-                    {"Topics list"}
+                <RS.Button tag={Link} to={isaacAssignmentButtons.second.link[SITE_SUBJECT]} color="secondary" block>
+                    {isaacAssignmentButtons.second.text[SITE_SUBJECT]}
                 </RS.Button>
             </RS.Col>
             <RS.Col md={12} lg={4} className="pt-1">
                 <RS.Button tag={Link} to={"/gameboard_builder"} color="secondary" block>
-                    {"Create gameboard"}
+                    {isaacAssignmentButtons.third.text[SITE_SUBJECT]}
                 </RS.Button>
             </RS.Col>
         </RS.Row>

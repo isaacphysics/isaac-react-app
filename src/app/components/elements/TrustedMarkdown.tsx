@@ -13,6 +13,7 @@ import {Token} from "remarkable";
 import uuid from "uuid";
 import {history} from "../../services/history";
 import {useCurrentExamBoard} from "../../services/examBoard";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 // eslint-disable-next-line @typescript-eslint/camelcase
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
@@ -108,9 +109,13 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     // RegEx replacements to match Latex inspired Isaac Physics functionality
     const regexRules = {
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
-        "[**Glossary**](/glossary)": /\*\*Glossary\*\*/g,
-        // "[**Concepts**](/concepts)": /\*\*Concepts\*\*/g,
     };
+    if (SITE_SUBJECT === SITE.PHY) {
+        Object.assign(regexRules, {
+            "[**Glossary**](/glossary)": /\*\*Glossary\*\*/g,
+            "[**Concepts**](/concepts)": /\*\*Concepts\*\*/g,
+        });
+    }
     let regexProcessedMarkdown = markdown;
     Object.entries(regexRules).forEach(([replacement, rule]) =>
         regexProcessedMarkdown = regexProcessedMarkdown.replace(rule, replacement)
