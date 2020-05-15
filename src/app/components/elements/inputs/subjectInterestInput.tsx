@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useReducer, useState} from "react";
 import {CustomInput} from "reactstrap";
 
 interface SubjectInterestInputProps<T> {
@@ -6,12 +6,23 @@ interface SubjectInterestInputProps<T> {
     propertyName: string;
     setStateFunction: (stateObject: T) => void;
 }
+
 export const SubjectInterestInput = (props: SubjectInterestInputProps<any>) => {
     const {stateObject, propertyName, setStateFunction} = props;
-    return <CustomInput id={`${propertyName}-checkbox`} type="checkbox" className="isaac-checkbox" defaultChecked={stateObject[propertyName] === true}
+    const [thisPref, setThisPref] = useState(stateObject[propertyName]);
+    useEffect(() => {
+        setThisPref(stateObject[propertyName])
+    }, [stateObject]);
+
+    function alterChecked(choice: boolean){
+        setThisPref(choice);
+    }
+
+    return <CustomInput id={`${propertyName}-checkbox`} type="checkbox" className="isaac-checkbox" checked={thisPref}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            alterChecked(e.target.checked);
             stateObject[propertyName] = e.target.checked;
-            setStateFunction(Object.assign(stateObject, stateObject[propertyName]));
+            setStateFunction(Object.assign(stateObject, {propertyName: e.target.checked}));
         }}
     />;
 };
