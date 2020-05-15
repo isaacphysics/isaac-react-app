@@ -13,6 +13,7 @@ import {Inequality, makeInequality} from "inequality";
 import {parseExpression} from "inequality-grammar";
 
 import _flattenDeep from 'lodash/flatMapDeep';
+import {parsePseudoSymbolicAvailableSymbols} from "../../services/questions";
 
 // Magic starts here
 interface ChildrenMap {
@@ -195,6 +196,8 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     };
 
     const helpTooltipId = `eqn-editor-help-${(doc.id || "").split('|').pop()}`;
+    const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(
+        function (str) {return str.trim().replace(/;/g, ',')}).sort().join(", ");
     return (
         <div className="symbolic-question">
             <div className="question-content">
@@ -239,6 +242,9 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 {errors && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
                     {errors.map(e => (<li key={e}>{e}</li>))}
                 </ul></div>}
+                {symbolList && <div className="eqn-editor-symbols">
+                    The following symbols may be useful: <pre>{symbolList}</pre>
+                </div>}
             </div>
         </div>
     );
