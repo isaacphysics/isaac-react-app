@@ -30,6 +30,11 @@ const EDITOR_BASE_URL = {
 export const EDITOR_URL = EDITOR_BASE_URL + "/#!/edit/master/";
 export const EDITOR_COMPARE_URL = EDITOR_BASE_URL + "/#!/compare";
 
+export const GOOGLE_ANALYTICS_ACCOUNT_ID = {
+    [SITE.PHY]: "UA-122616705-1",
+    [SITE.CS]: "UA-137475074-1",
+}[SITE_SUBJECT];
+
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
 
