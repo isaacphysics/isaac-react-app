@@ -36,8 +36,8 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
         if (queryParams.topic) dispatch(fetchTopicSummary(queryParams.topic as TAG_ID));
     }, [queryParams.board, queryParams.topic, currentDocId, dispatch]);
 
-    const currentGameboard = useSelector((state: AppState) => state && state.currentGameboard);
-    const currentTopic = useSelector((state: AppState) => state && state.currentTopic);
+    const currentGameboard = useSelector((state: AppState) => state?.currentGameboard);
+    const currentTopic = useSelector((state: AppState) => state?.currentTopic);
     const examBoard = useCurrentExamBoard();
 
     if (doc === null || doc === NOT_FOUND) {
@@ -57,7 +57,7 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
                 to: makeUrl(`/questions/${previousQuestion}`, {questionHistory: questionHistory.join(","),
                     board: currentGameboard && currentGameboard !== NOT_FOUND ? currentGameboard.id : undefined})} : undefined,
             nextItem: currentGameboard && currentGameboard != NOT_FOUND ? {title: "Return to Top 10 Questions",
-                to: `/gameboard#${currentGameboard.id}`} : undefined
+                to: `/gameboards#${currentGameboard.id}`} : undefined
         };
     }
 
