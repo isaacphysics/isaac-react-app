@@ -3,15 +3,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {Button, Col, Row} from "reactstrap";
 import {closeActiveModal} from "../../../state/actions";
-import {store} from "../../../state/store";
-import { api } from '../../../services/api';
+import {api} from '../../../services/api';
 
-const NotificationModalBody = () => {
+const NotificationModalBody = (notification: { notification: any }) => {
     const dispatch = useDispatch();
-    const notifications = useSelector((state: AppState) => state && state.notifications && state.notifications.notifications || undefined);
     const user = useSelector((state: AppState) => state && state.user || null);
 
-    const currentNotification = notifications && notifications[0];
+    const currentNotification = notification.notification;
 
     function respond(response: string) {
         api.notifications.respond(currentNotification.id, response);
@@ -24,29 +22,29 @@ const NotificationModalBody = () => {
                 var newUrl = currentNotification.externalReference.url.replace(userIdToken, user.id);
 
                 window.open(newUrl, "_blank");
+            } else {
+                window.open(currentNotification.externalReference.url, "_blank");
             }
-        } else {
-            window.open(currentNotification.externalReference.url, "_blank");
         }
     }
 
     return <React.Fragment>
         <Col>
-            <Row className="justify-content-md-center">
+            <Row className="justify-content-md-center mb-3">
                 <Col>
                     {currentNotification ? currentNotification.value : "no content"}
                 </Col>
             </Row>
             <Row>
                 <Col>
-                    <Button
+                    <Button className="selection-buttons"
                         color="secondary" block onClick={() => respond("ACKNOWLEDGED")}
                     >
                         Yes, view questionnaire
                     </Button>
                 </Col>
                 <Col>
-                    <Button
+                    <Button className="selection-buttons"
                         color="secondary" block
                         onClick={() => respond("DISABLED")}
                     >
@@ -54,7 +52,7 @@ const NotificationModalBody = () => {
                     </Button>
                 </Col>
                 <Col>
-                    <Button
+                    <Button className="selection-buttons"
                         color="secondary" block
                         onClick={() => respond("POSTPONED")}
                     >
@@ -69,6 +67,6 @@ const NotificationModalBody = () => {
 export const notificationModal = (notification: any) => {
     return {
         title: notification.title,
-        body: <NotificationModalBody/>
+        body: <NotificationModalBody notification={notification}/>
     }
 };

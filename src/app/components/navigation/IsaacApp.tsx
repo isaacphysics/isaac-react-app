@@ -24,7 +24,7 @@ import {
     requestCurrentUser,
     requestNotifications
 } from "../../state/actions";
-import {AppState, user} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 import {Admin} from "../pages/Admin";
@@ -67,7 +67,6 @@ import {Redirect} from "react-router";
 import {UnsupportedBrowserBanner} from "./UnsupportedBrowserWarningBanner";
 import {notificationModal} from "../elements/modals/NotificationModal";
 import {showNotification} from "../../services/notificationChecker";
-import {validateUserSchool} from "../../services/validation";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 
