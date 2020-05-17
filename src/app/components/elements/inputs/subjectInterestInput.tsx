@@ -1,28 +1,19 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {CustomInput} from "reactstrap";
+import {SubjectInterests} from "../../../../IsaacAppTypes";
 
 interface SubjectInterestInputProps<T> {
     stateObject: T;
-    propertyName: string;
+    propertyName: keyof T;
     setStateFunction: (stateObject: T) => void;
 }
 
-export const SubjectInterestInput = (props: SubjectInterestInputProps<any>) => {
+export const SubjectInterestInput = (props: SubjectInterestInputProps<SubjectInterests>) => {
     const {stateObject, propertyName, setStateFunction} = props;
-    const [thisPref, setThisPref] = useState(stateObject[propertyName]);
-    useEffect(() => {
-        setThisPref(stateObject[propertyName])
-    }, [stateObject]);
 
-    function alterChecked(choice: boolean){
-        setThisPref(choice);
-    }
-
-    return <CustomInput id={`${propertyName}-checkbox`} type="checkbox" className="isaac-checkbox" checked={thisPref}
+    return <CustomInput id={`${propertyName}-checkbox`} type="checkbox" className="isaac-checkbox" checked={!!stateObject[propertyName]}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            alterChecked(e.target.checked);
-            stateObject[propertyName] = e.target.checked;
-            setStateFunction(Object.assign(stateObject, {propertyName: e.target.checked}));
+            setStateFunction({...stateObject, [propertyName]: e.target.checked});
         }}
     />;
 };
