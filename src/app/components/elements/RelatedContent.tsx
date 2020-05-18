@@ -50,8 +50,7 @@ function getURLForContent(content: ContentSummaryDTO) {
 export const RelatedContentComponent = ({content, parentPage, logAction}: RelatedContentProps) => {
     const concepts = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
     const questions = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION).sort((a, b) => {
-        if (a.title && b.title) return (a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
-        if (a.level === b.level) return (a.title || '').localeCompare(b.title || '');
+        if (a.level === b.level) return ((a.title || '').localeCompare((b.title || ''), undefined, { numeric: true, sensitivity: 'base' }));
         const aInt = parseInt(a.level || '-1');
         const bInt = parseInt(b.level || '-1');
         return aInt > bInt ? 1 : aInt != bInt ? -1 : 0;

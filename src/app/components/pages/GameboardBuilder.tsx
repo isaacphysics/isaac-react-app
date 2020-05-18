@@ -227,6 +227,14 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
                         }
 
+                        let subjects = [];
+
+                        if (SITE_SUBJECT == SITE.CS) {
+                            subjects.push("computer_science");
+                        } else {
+                            subjects.push("physics");
+                        }
+
                         dispatch(createGameboard({
                             id: gameboardURL,
                             title: gameboardTitle,
@@ -236,7 +244,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             }).filter((question) => question !== undefined) as GameboardItem[],
                             wildCard: wildcard,
                             wildCardPosition: 0,
-                            gameFilter: {subjects: ["computer_science"]},
+                            gameFilter: {subjects: subjects},
                             tags: gameboardTags
                         }));
 

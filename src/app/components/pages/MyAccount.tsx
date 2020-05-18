@@ -123,7 +123,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     // - User preferences
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
-    const [subjectInterests, setSubjectInterests] = useState<SubjectInterests>({});
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
 
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
@@ -137,7 +136,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         };
 
         setEmailPreferences(currentEmailPreferences);
-        setSubjectInterests(currentSubjectInterests);
         setMyUserPreferences(currentUserPreferences);
     }, [userPreferences]);
 
@@ -155,8 +153,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     // Values derived from inputs (props and state)
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
+    function setSubjectInterests(newSubjectInterests: SubjectInterests) {
+        setMyUserPreferences({...myUserPreferences, SUBJECT_INTEREST: newSubjectInterests});
+    }
+
     // Form's submission method
-    const updateAccount = (event: React.FormEvent<HTMLFormElement>) => {
+    function updateAccount(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setAttemptedAccountUpdate(true);
 
@@ -171,12 +173,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
-            allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null}) &&
+            allRequiredInformationIsPresent(userToUpdate, {...myUserPreferences, EMAIL_PREFERENCE: null}) &&
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
             (!userToUpdate.password || isNewPasswordConfirmed)) {
             updateCurrentUser(userToUpdate, editingOtherUser ? {} : myUserPreferences, currentPassword, user);
         }
-    };
+    }
 
     return <Container id="account-page" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} className="mb-4" />
@@ -239,7 +241,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                             <TabPane tabId={ACCOUNT_TAB.account}>
                                 <UserDetails
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                    subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
+                                    subjectInterests={myUserPreferences.SUBJECT_INTEREST || {}}
+                                    setSubjectInterests={setSubjectInterests}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />
