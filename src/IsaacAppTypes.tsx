@@ -537,14 +537,17 @@ export interface AppAssignmentProgress {
 }
 
 export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
-    multiDay?: boolean;
-    expired?: boolean;
-    withinBookingDeadline?: boolean;
-    inProgress?: boolean;
-    teacher?: boolean;
-    student?: boolean;
-    virtual?: boolean;
-    recurring?: boolean;
+    isMultiDay?: boolean;
+    hasExpired?: boolean;
+    isWithinBookingDeadline?: boolean;
+    isInProgress?: boolean;
+    isATeacherEvent?: boolean;
+    isAStudentEvent?: boolean;
+    isVirtual?: boolean;
+    isStudentOnly?: boolean;
+    isRecurring?: boolean;
+    isWaitingListOnly?: boolean;
+    isNotClosed?: boolean;
     field?: "physics" | "maths";
 }
 

@@ -7,9 +7,9 @@ import {DateString} from "../DateString";
 import {formatEventCardDate} from "../../../services/events";
 
 export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolean}) => {
-    const {id, title, subtitle, eventThumbnail, location, expired, date} = event;
+    const {id, title, subtitle, eventThumbnail, location, hasExpired, date} = event;
 
-    return <RS.Card className={classnames({'card-neat': true, 'disabled text-muted': expired, 'm-4': pod, 'mb-4': !pod})}>
+    return <RS.Card className={classnames({'card-neat': true, 'disabled text-muted': hasExpired, 'm-4': pod, 'mb-4': !pod})}>
         {eventThumbnail && <div className={'event-card-image text-center'}>
             <RS.CardImg top src={eventThumbnail.src} alt="" />
         </div>}
@@ -25,7 +25,7 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
                 </span>
                 {location && location.address && <span className='d-block my-2'>
                     <span className="font-weight-bold">Location:</span> {" "}
-                    {!event.virtual ?
+                    {!event.isVirtual ?
                         <span>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</span> :
                         <span>Online</span>
                     }
