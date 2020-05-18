@@ -4,6 +4,7 @@ import {AppState} from "../../../state/reducers";
 import {Button, Col, Row} from "reactstrap";
 import {closeActiveModal} from "../../../state/actions";
 import {api} from '../../../services/api';
+import {store} from "../../../state/store";
 
 const NotificationModalBody = (notification: { notification: any }) => {
     const dispatch = useDispatch();
@@ -66,6 +67,7 @@ const NotificationModalBody = (notification: { notification: any }) => {
 
 export const notificationModal = (notification: any) => {
     return {
+        closeAction: () => {store.dispatch(closeActiveModal())},
         title: notification.title,
         body: <NotificationModalBody notification={notification}/>
     }
