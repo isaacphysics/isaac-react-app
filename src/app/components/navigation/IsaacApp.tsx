@@ -104,7 +104,6 @@ export const IsaacApp = () => {
             <CookieBanner />
             <UnsupportedBrowserBanner />
             <EmailVerificationBanner />
-            {/*<Notifications />*/}
             <main id="main" role="main" className="flex-fill content-body">
                 <Switch>
                     {/* Errors; these paths work but aren't really used */}
