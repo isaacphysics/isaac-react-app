@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { makeGraphSketcher } from "isaac-graph-sketcher/src/GraphSketcher";
+import { GraphSketcher, makeGraphSketcher } from "isaac-graph-sketcher/src/GraphSketcher";
 
 const GraphSketcherModalComponent = (props: any) => {
     const [graphSketcherElement, setGraphSketcherElement] = useState<HTMLElement>();
-    const [sketch, setSketch] = useState();
+    const [sketch, setSketch] = useState<GraphSketcher|undefined>();
 
     useEffect(() => {
         const e = document.getElementById('graph-sketcher-modal') as HTMLElement
