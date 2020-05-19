@@ -11,7 +11,7 @@ export function hasGameboard(assignment: AssignmentDTO): assignment is SingleEnh
     return assignment.gameboard != undefined;
 }
 export function getCSVDownloadLink(assignmentId: number) {
-    return API_PATH + "/assignments/assign/" + assignmentId + "/progress/download";
+    return `${API_PATH}/assignments/assign/${assignmentId}/progress/download`;
 }
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | null) => {
     const now = new Date();
