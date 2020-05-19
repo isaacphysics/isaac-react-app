@@ -13,12 +13,13 @@ import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {makeUrl} from "./fastTrack";
 
 export interface LinkInfo {title: string; to?: string}
-export type CollectionType = "Gameboard" | "Topic" | "FastTrack";
+export type CollectionType = "Gameboard" | "Topic" | "Master Mathematics";
 export interface PageNavigation {
     collectionType?: CollectionType;
     breadcrumbHistory: LinkInfo[];
     backToCollection?: LinkInfo;
     nextItem?: LinkInfo;
+    previousItem?: LinkInfo;
     queryParams?: string;
 }
 
@@ -37,7 +38,9 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
     }, [queryParams.board, queryParams.topic, currentDocId, dispatch]);
 
     const currentGameboard = useSelector((state: AppState) => state?.currentGameboard);
+    const foundGameboard = currentGameboard !== NOT_FOUND ? currentGameboard : null;
     const currentTopic = useSelector((state: AppState) => state?.currentTopic);
+    const foundTopic = currentTopic !== NOT_FOUND ? currentTopic : null;
     const examBoard = useCurrentExamBoard();
 
     if (doc === null || doc === NOT_FOUND) {
@@ -45,25 +48,28 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
     }
 
     if (doc.type === "isaacFastTrackQuestionPage") {
-        const gameboardHistory = (currentGameboard && currentGameboard != 404 && queryParams.board === currentGameboard.id) ?
-            determineGameboardHistory(currentGameboard) :
+        const gameboardHistory = (foundGameboard && queryParams.board === foundGameboard?.id) ?
+            determineGameboardHistory(foundGameboard) :
             [];
         const questionHistory = (queryParams.questionHistory as string || "").split(",");
         const previousQuestion = questionHistory.pop();
         return {
-            collectionType: "FastTrack",
+            collectionType: "Master Mathematics",
             breadcrumbHistory: gameboardHistory,
-            backToCollection: previousQuestion ? {title: "Return to Previous Question",
-                to: makeUrl(`/questions/${previousQuestion}`, {questionHistory: questionHistory.join(","),
-                    board: currentGameboard && currentGameboard !== NOT_FOUND ? currentGameboard.id : undefined})} : undefined,
-            nextItem: currentGameboard && currentGameboard != NOT_FOUND ? {title: "Return to Top 10 Questions",
-                to: `/gameboards#${currentGameboard.id}`} : undefined
+            backToCollection: foundGameboard ? {title: "Return to Top 10 Questions", to: `/gameboards#${foundGameboard.id}`} : undefined,
+            nextItem: !previousQuestion ? determineNextGameboardItem(currentGameboard, currentDocId) : undefined,
+            previousItem: previousQuestion ? {title: "Return to Previous Question", to: `/questions/${previousQuestion}`} : undefined,
+            queryParams: queryString.stringify(
+                previousQuestion ?
+                    {questionHistory: questionHistory.length ? questionHistory.join(",") : undefined, board: foundGameboard?.id} :
+                    {board: foundGameboard?.id}
+            ),
         };
     }
 
     if (queryParams.board) {
-        const gameboardHistory = (currentGameboard && currentGameboard != 404 && queryParams.board === currentGameboard.id) ?
-            determineGameboardHistory(currentGameboard) :
+        const gameboardHistory = (foundGameboard && queryParams.board === foundGameboard.id) ?
+            determineGameboardHistory(foundGameboard) :
             [];
         return {
             collectionType: "Gameboard",
@@ -75,8 +81,8 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
     }
 
     if (queryParams.topic) {
-        const topicHistory = (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && queryParams.topic === currentTopic.id.slice("topic_summary_".length)) ?
-            determineTopicHistory(currentTopic, currentDocId) :
+        const topicHistory = (foundTopic &&  queryParams.topic === foundTopic?.id?.slice("topic_summary_".length)) ?
+            determineTopicHistory(foundTopic, currentDocId) :
             makeAttemptAtTopicHistory();
         return {
             collectionType: "Topic",
