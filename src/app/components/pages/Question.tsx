@@ -119,7 +119,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
 
                         <NavigationLinks navigation={navigation}/>
 
-                        {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                        {doc.relatedContent && doc.type !== "isaacFastTrackQuestionPage" && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>
