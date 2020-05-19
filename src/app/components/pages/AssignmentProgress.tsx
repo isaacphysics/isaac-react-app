@@ -25,7 +25,6 @@ import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {history} from "../../services/history";
 
 const stateFromProps = (state: AppState) => {
     if (state != null) {
