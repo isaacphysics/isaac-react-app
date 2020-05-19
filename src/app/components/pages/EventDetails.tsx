@@ -76,10 +76,9 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
             (atLeastOne(event.placesAvailable) || teacherAtAStudentEvent);
         const canBeAddedToWaitingList =
             !canMakeABooking &&
-            !event.userOnWaitList &&
             event.isNotClosed &&
-            studentOnlyRestrictionSatisfied &&
-            (event.isWaitingListOnly || zeroOrLess(event.placesAvailable) || !event.isWithinBookingDeadline);
+            !event.userOnWaitList &&
+            studentOnlyRestrictionSatisfied;
 
         const submissionTitle = canMakeABooking ? "Book now" : event.isWithinBookingDeadline ? "Apply" : "Apply -deadline past";
 
