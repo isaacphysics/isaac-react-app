@@ -63,7 +63,7 @@ export const SingleAssignmentProgress = () => {
         <ShowLoading until={assignment && assignmentProgress}>
 
             <TitleAndBreadcrumb intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
-                currentPageTitle={`${assignment?.gameboard?.title || "Single Assignment Progress" }`}
+                currentPageTitle={`Assignment Progress: ${assignment?.gameboard?.title || "Assignment Progress" }`}
                 className="mb-4" />
 
             {assignment && assignmentProgress && hasGameboard(assignment) &&
