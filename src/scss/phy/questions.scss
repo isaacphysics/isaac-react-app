@@ -39,6 +39,12 @@
       }
     }
   }
+
+  form + form {
+    .question-component {
+      margin-top: 3rem;
+    }
+  }
 }
 
 .quick-question {
