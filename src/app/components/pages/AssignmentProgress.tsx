@@ -87,6 +87,10 @@ type EnhancedAssignment = AssignmentDTO & {
     progress?: AppAssignmentProgress[];
 };
 
+type SingleEnhancedAssignment = AssignmentDTO & {
+    gameboard: EnhancedGameboard;
+};
+
 type AppGroupWithAssignments = AppGroup & {assignments: EnhancedAssignment[]};
 
 interface AssignmentProgressPageProps {
@@ -108,6 +112,16 @@ interface PageSettings {
     setColourBlind: (newValue: boolean) => void;
     formatAsPercentage: boolean;
     setFormatAsPercentage: (newValue: boolean) => void;
+}
+
+interface SingleProgressDetailsProps {
+    assignment: SingleEnhancedAssignment;
+    progress: AppAssignmentProgress[];
+    pageSettings: PageSettings;
+}
+
+interface AssignmentProgressLegendProps {
+    pageSettings: PageSettings;
 }
 
 type GroupDetailsProps = AssignmentProgressPageProps & {
@@ -135,7 +149,7 @@ function formatMark(numerator: number, denominator: number, formatAsPercentage: 
     return result;
 }
 
-const ProgressDetails = (props: ProgressDetailsProps) => {
+export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDetailsProps) => {
     const {assignment, progress, pageSettings} = props;
 
     const [selectedQuestionNumber, setSelectedQuestion] = useState(0);
@@ -402,10 +416,10 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
         openActiveModal(downloadLinkModal(event.currentTarget.href));
     }
 
-    function openIndividualAssignment(event: React.MouseEvent<HTMLAnchorElement>) {
+    function openSingleAssignment(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
-        history.push(`/assignment_progress/${assignment._id}`)
+        window.open(event.currentTarget.href, '_blank');
     }
 
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
@@ -418,7 +432,7 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
                 <span className="d-none d-md-inline">or</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" onClick={openIndividualAssignment}>View this assignment</Button>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={"/assignment_progress/" + assignment._id} onClick={openSingleAssignment}>View individual assignment</Button>
             </div>
         </div>
         {isExpanded && <ProgressLoader {...props} />}
@@ -427,6 +441,47 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
 
 function hasGameboard(assignment: AssignmentDTO): assignment is EnhancedAssignment {
     return assignment.gameboard != undefined;
+}
+
+export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) => {
+    const {pageSettings} = props;
+    return <div className="p-4"><div className="assignment-progress-legend">
+        <ul className="block-grid-xs-5">
+            <li className="d-flex flex-wrap">
+                <div className="key-cell">
+                    <span className="completed"></span>
+                </div>
+                <div className="key-description">100% correct</div>
+            </li>
+            <li className="d-flex flex-wrap">
+                <div className="key-cell"><span className="passed">&nbsp;</span>
+                </div>
+                <div className="key-description">&ge;{passMark * 100}% correct
+                    {/*<span className="d-none d-xl-inline"> (or Mastery)</span>*/}
+                </div>
+            </li>
+            <li className="d-flex flex-wrap">
+                <div className="key-cell"><span className="in-progress">&nbsp;</span>
+                </div>
+                <div className="key-description">&lt;{passMark * 100}% correct</div>
+            </li>
+            <li className="d-flex flex-wrap">
+                <div className="key-cell"><span>&nbsp;</span>
+                </div>
+                <div className="key-description"><span className="d-none d-md-inline">Not attempted</span><span
+                    className="d-inline d-md-none">No attempt</span></div>
+            </li>
+            <li className="d-flex flex-wrap">
+                <div className="key-cell"><span className="failed">&nbsp;</span>
+                </div>
+                <div className="key-description">&gt;{100 -(passMark * 100)}% incorrect</div>
+            </li>
+        </ul>
+        <div className="assignment-progress-options">
+            <label>Colour-blind&nbsp;<input type="checkbox" checked={pageSettings.colourBlind} onChange={e => pageSettings.setColourBlind(e.target.checked)}/></label>
+            <label>Percent view&nbsp;<input type="checkbox" checked={pageSettings.formatAsPercentage} onChange={e => pageSettings.setFormatAsPercentage(e.target.checked)}/></label>
+        </div>
+    </div></div>
 }
 
 const GroupDetails = (props: GroupDetailsProps) => {
@@ -441,43 +496,7 @@ const GroupDetails = (props: GroupDetailsProps) => {
     const gameboardsLoaded = group.assignments.every(assignment => assignment.gameboard != null);
 
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
-        <div className="p-4"><div className="assignment-progress-legend">
-            <ul className="block-grid-xs-5">
-                <li className="d-flex flex-wrap">
-                    <div className="key-cell">
-                        <span className="completed"></span>
-                    </div>
-                    <div className="key-description">100% correct</div>
-                </li>
-                <li className="d-flex flex-wrap">
-                    <div className="key-cell"><span className="passed">&nbsp;</span>
-                    </div>
-                    <div className="key-description">&ge;{passMark * 100}% correct
-                        {/*<span className="d-none d-xl-inline"> (or Mastery)</span>*/}
-                    </div>
-                </li>
-                <li className="d-flex flex-wrap">
-                    <div className="key-cell"><span className="in-progress">&nbsp;</span>
-                    </div>
-                    <div className="key-description">&lt;{passMark * 100}% correct</div>
-                </li>
-                <li className="d-flex flex-wrap">
-                    <div className="key-cell"><span>&nbsp;</span>
-                    </div>
-                    <div className="key-description"><span className="d-none d-md-inline">Not attempted</span><span
-                        className="d-inline d-md-none">No attempt</span></div>
-                </li>
-                <li className="d-flex flex-wrap">
-                    <div className="key-cell"><span className="failed">&nbsp;</span>
-                    </div>
-                    <div className="key-description">&gt;{100 -(passMark * 100)}% incorrect</div>
-                </li>
-            </ul>
-            <div className="assignment-progress-options">
-                <label>Colour-blind&nbsp;<input type="checkbox" checked={pageSettings.colourBlind} onChange={e => pageSettings.setColourBlind(e.target.checked)}/></label>
-                <label>Percent view&nbsp;<input type="checkbox" checked={pageSettings.formatAsPercentage} onChange={e => pageSettings.setFormatAsPercentage(e.target.checked)}/></label>
-            </div>
-        </div></div>
+        <AssignmentProgressLegend pageSettings={pageSettings}/>
         {gameboardsLoaded ? group.assignments.map(assignment => hasGameboard(assignment) && <AssignmentDetails key={assignment.gameboardId} {...props} assignment={assignment}/>)
             : <div className="p-4 text-center"><Spinner color="primary" size="lg" /></div>}
     </div>;

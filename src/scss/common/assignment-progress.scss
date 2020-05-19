@@ -340,6 +340,12 @@ $failed-bg-size: 25%;
   bottom: 0px;
 }
 
+.single-download {
+  position: relative;
+  text-align: right;
+  padding-right: 1rem;
+}
+
 .progress-table {
 
   overflow-x: auto;
