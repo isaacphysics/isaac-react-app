@@ -6,19 +6,15 @@ import {loadAssignmentsOwnedByMe, loadProgress, openActiveModal} from "../../sta
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {SingleProgressDetailsProps} from "../../../IsaacAppTypes";
-import {API_PATH, ASSIGNMENT_PROGRESS_CRUMB} from "../../services/constants";
+import {ASSIGNMENT_PROGRESS_CRUMB} from "../../services/constants";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
-import {hasGameboard} from "../../services/assignments";
+import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
 
 const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
     const {assignmentId, assignment, progress, pageSettings} = props;
     const dispatch = useDispatch();
-
-    function getCSVDownloadLink(assignmentId: number) {
-        return API_PATH + "/assignments/assign/" + assignmentId + "/progress/download";
-    }
 
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();

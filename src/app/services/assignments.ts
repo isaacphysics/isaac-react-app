@@ -1,6 +1,7 @@
 import {AssignmentDTO} from "../../IsaacApiTypes";
 import {orderBy} from "lodash";
 import {SingleEnhancedAssignment} from "../../IsaacAppTypes";
+import {API_PATH} from "./constants";
 
 function notMissing<T>(item: T | undefined): T {
     if (item === undefined) throw new Error("Missing item");
@@ -8,6 +9,9 @@ function notMissing<T>(item: T | undefined): T {
 }
 export function hasGameboard(assignment: AssignmentDTO): assignment is SingleEnhancedAssignment {
     return assignment.gameboard != undefined;
+}
+export function getCSVDownloadLink(assignmentId: number) {
+    return API_PATH + "/assignments/assign/" + assignmentId + "/progress/download";
 }
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | null) => {
     const now = new Date();

@@ -32,7 +32,7 @@ import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {hasGameboard} from "../../services/assignments";
+import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
 
 const stateFromProps = (state: AppState) => {
     if (state != null) {
@@ -385,10 +385,6 @@ const ProgressLoader = (props: AssignmentDetailsProps) => {
     return progress ? <ProgressDetails {...props} progress={progress} />
         : <div className="p-4 text-center"><Spinner color="primary" size="lg" /></div>;
 };
-
-function getCSVDownloadLink(assignmentId: number) {
-    return API_PATH + "/assignments/assign/" + assignmentId + "/progress/download";
-}
 
 const AssignmentDetails = (props: AssignmentDetailsProps) => {
     const {assignment, openActiveModal} = props;
