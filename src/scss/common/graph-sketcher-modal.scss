@@ -8,3 +8,18 @@
     background: #ffffff;
     z-index: 250;
 }
+
+#graph-sketcher-modal {
+    .graph-sketcher-ui {
+        position: absolute;
+        width: 100%;
+        z-index: 255;
+
+        &.button {
+            background: black;
+            display: block;
+            position: absolute;
+            top: 0;
+        }
+    }
+}

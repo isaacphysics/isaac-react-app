@@ -21,13 +21,19 @@ const GraphSketcherModalComponent = (props: any) => {
     }, []);
 
     return <div id='graph-sketcher-modal' style={{border: '5px solid black'}}>
-        <div id="graph-sketcher-ui-redo">.</div>
-        <div id="graph-sketcher-ui-undo">.</div>
-        <div id="graph-sketcher-ui-poly">.</div>
-        <div id="graph-sketcher-ui-straight">.</div>
-        <div id="graph-sketcher-ui-trash-button">.</div>
-        <div id="graph-sketcher-ui-submit">.</div>
-        <div id="graph-sketcher-ui-color-select">.</div>
+        <div className="graph-sketcher-ui">
+            <div className="button" id="graph-sketcher-ui-redo">.</div>
+            <div className="button" id="graph-sketcher-ui-undo">.</div>
+            <div className="button" id="graph-sketcher-ui-poly">.</div>
+            <div className="button" id="graph-sketcher-ui-straight">.</div>
+            <div className="button" id="graph-sketcher-ui-trash-button">.</div>
+            <div className="button" id="graph-sketcher-ui-submit">.</div>
+            <select className="dropdown" id="graph-sketcher-ui-color-select">
+                <option value="0" selected>0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+        </div>
     </div>
 }
 
