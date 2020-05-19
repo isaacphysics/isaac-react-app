@@ -2,6 +2,9 @@ import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {AuthenticationProvider, ChoiceDTO, ContentBase, ContentSummaryDTO, ResultsWrapper, TestCaseDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
+import {AssignmentDTO} from "./IsaacApiTypes";
+import {GameboardDTO} from "./IsaacApiTypes";
+import {GameboardItem} from "./IsaacApiTypes";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -715,3 +718,25 @@ export interface FreeTextRule extends Choice {
 }
 
 export type Concepts = ResultsWrapper<ContentSummaryDTO>;
+
+export type EnhancedGameboard = GameboardDTO & {
+    questions: (GameboardItem & { questionPartsTotal: number })[];
+};
+
+export type SingleEnhancedAssignment = AssignmentDTO & {
+    gameboard: EnhancedGameboard;
+};
+
+export interface PageSettings {
+    colourBlind: boolean;
+    setColourBlind: (newValue: boolean) => void;
+    formatAsPercentage: boolean;
+    setFormatAsPercentage: (newValue: boolean) => void;
+}
+
+export interface SingleProgressDetailsProps {
+    assignmentId: number;
+    assignment: SingleEnhancedAssignment;
+    progress: AppAssignmentProgress[];
+    pageSettings: PageSettings;
+}

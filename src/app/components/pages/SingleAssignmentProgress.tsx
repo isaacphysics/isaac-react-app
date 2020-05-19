@@ -5,38 +5,13 @@ import {Button, Container} from "reactstrap";
 import {loadAssignmentsOwnedByMe, loadProgress, openActiveModal} from "../../state/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {AssignmentDTO, GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
-import {AppAssignmentProgress} from "../../../IsaacAppTypes";
+import {AssignmentDTO} from "../../../IsaacApiTypes";
+import {SingleEnhancedAssignment, SingleProgressDetailsProps} from "../../../IsaacAppTypes";
 import {API_PATH, ASSIGNMENT_PROGRESS_CRUMB} from "../../services/constants";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
-
-interface PageSettings {
-    colourBlind: boolean;
-    setColourBlind: (newValue: boolean) => void;
-    formatAsPercentage: boolean;
-    setFormatAsPercentage: (newValue: boolean) => void;
-}
-
-type EnhancedGameboard = GameboardDTO & {
-    questions: (GameboardItem & { questionPartsTotal: number })[];
-};
-
-type SingleEnhancedAssignment = AssignmentDTO & {
-    gameboard: EnhancedGameboard;
-};
-
-interface SingleProgressDetailsProps {
-    assignmentId: number;
-    assignment: SingleEnhancedAssignment;
-    progress: AppAssignmentProgress[];
-    pageSettings: PageSettings;
-}
-
-function hasGameboard(assignment: AssignmentDTO): assignment is SingleEnhancedAssignment {
-    return assignment.gameboard != undefined;
-}
+import {hasGameboard} from "../../services/assignments";
 
 const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
     const {assignmentId, assignment, progress, pageSettings} = props;
@@ -57,7 +32,7 @@ const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
         <div className="single-download mb-2">
             <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignmentId)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
         </div>
-        <ProgressDetails pageSettings={pageSettings} assignment={assignment} progress={progress}/>
+        <ProgressDetails assignmentId={assignmentId} pageSettings={pageSettings} assignment={assignment} progress={progress}/>
     </div>;
 };
 

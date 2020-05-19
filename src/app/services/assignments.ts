@@ -1,9 +1,13 @@
 import {AssignmentDTO} from "../../IsaacApiTypes";
 import {orderBy} from "lodash";
+import {SingleEnhancedAssignment} from "../../IsaacAppTypes";
 
 function notMissing<T>(item: T | undefined): T {
     if (item === undefined) throw new Error("Missing item");
     return item;
+}
+export function hasGameboard(assignment: AssignmentDTO): assignment is SingleEnhancedAssignment {
+    return assignment.gameboard != undefined;
 }
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | null) => {
     const now = new Date();

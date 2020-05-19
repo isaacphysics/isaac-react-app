@@ -16,7 +16,14 @@ import {loadAssignmentsOwnedByMe, loadBoard, loadGroups, loadProgress, openActiv
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {orderBy, sortBy} from "lodash";
-import {ActiveModal, AppAssignmentProgress, AppGroup} from "../../../IsaacAppTypes";
+import {
+    ActiveModal,
+    AppAssignmentProgress,
+    AppGroup,
+    EnhancedGameboard,
+    PageSettings,
+    SingleProgressDetailsProps
+} from "../../../IsaacAppTypes";
 import {groups} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
@@ -25,6 +32,7 @@ import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {hasGameboard} from "../../services/assignments";
 
 const stateFromProps = (state: AppState) => {
     if (state != null) {
@@ -75,19 +83,10 @@ const stateFromProps = (state: AppState) => {
 
 const dispatchFromProps = {loadGroups, loadAssignmentsOwnedByMe, loadBoard, loadProgress, openActiveModal};
 
-
-type EnhancedGameboard = GameboardDTO & {
-    questions: (GameboardItem & { questionPartsTotal: number })[];
-};
-
 type EnhancedAssignment = AssignmentDTO & {
     gameboard: EnhancedGameboard;
     _id: number;
     progress?: AppAssignmentProgress[];
-};
-
-type SingleEnhancedAssignment = AssignmentDTO & {
-    gameboard: EnhancedGameboard;
 };
 
 type AppGroupWithAssignments = AppGroup & {assignments: EnhancedAssignment[]};
@@ -104,19 +103,6 @@ interface AssignmentProgressPageProps {
 enum SortOrder {
     "Alphabetical" = "Alphabetical",
     "Date Created" = "Date Created"
-}
-
-interface PageSettings {
-    colourBlind: boolean;
-    setColourBlind: (newValue: boolean) => void;
-    formatAsPercentage: boolean;
-    setFormatAsPercentage: (newValue: boolean) => void;
-}
-
-interface SingleProgressDetailsProps {
-    assignment: SingleEnhancedAssignment;
-    progress: AppAssignmentProgress[];
-    pageSettings: PageSettings;
 }
 
 interface AssignmentProgressLegendProps {
@@ -437,10 +423,6 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
         {isExpanded && <ProgressLoader {...props} />}
     </div>
 };
-
-function hasGameboard(assignment: AssignmentDTO): assignment is EnhancedAssignment {
-    return assignment.gameboard != undefined;
-}
 
 export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) => {
     const {pageSettings} = props;
