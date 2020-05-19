@@ -4,7 +4,7 @@ import { GraphSketcher, makeGraphSketcher } from "isaac-graph-sketcher/src/Graph
 
 const GraphSketcherModalComponent = (props: any) => {
     const [graphSketcherElement, setGraphSketcherElement] = useState<HTMLElement>();
-    const [sketch, setSketch] = useState<GraphSketcher|undefined>();
+    const [sketch, setSketch] = useState<GraphSketcher|undefined|null>();
 
     useEffect(() => {
         const e = document.getElementById('graph-sketcher-modal') as HTMLElement

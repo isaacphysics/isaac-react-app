@@ -60,6 +60,7 @@ const IsaacQuestionComponent = (props: IsaacQuestionTabsProps) => {
         {/* Difficulty bar */}
 
         <div className={`question-component p-md-5 ${doc.type === 'isaacParsonsQuestion' ? "parsons-layout" : ""}`}>
+            {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
             <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
             {SITE_SUBJECT === SITE.CS &&
                 <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />

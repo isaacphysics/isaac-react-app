@@ -19,6 +19,7 @@ export const IsaacQuizTabs = ({doc}: {doc: ApiTypes.IsaacQuestionBaseDTO}) => {
         <div className={
             classnames({"question-component p-md-5": true, "parsons-layout": doc.type === 'isaacParsonsQuestion'})
         }>
+            {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
             <QuestionComponent questionId={doc.id as string} doc={doc} />
         </div>
     </React.Fragment>;

@@ -1,10 +1,10 @@
 import {AppState} from "./reducers";
 import {sortBy} from "lodash";
 import {ACCEPTED_QUIZ_IDS, NOT_FOUND} from "../services/constants";
-import {AppQuestionDTO} from "../../IsaacAppTypes";
+import {AppQuestionDTO, AppGroup} from "../../IsaacAppTypes";
 
 export const groups = {
-    current: (state: AppState) => {
+    current: (state: AppState): AppGroup | null => {
         if (!state) return null;
         if (!state.groups) return null;
         if (!state.groups.cache) return null;
@@ -12,21 +12,19 @@ export const groups = {
         if (!activeId) return null;
         return state.groups.cache[activeId] || null;
     },
-    active: (state: AppState) => {
+    active: (state: AppState): AppGroup[] | null => {
         if (!state) return null;
         if (!state.groups) return null;
         if (!state.groups.cache) return null;
         if (!state.groups.active) return null;
-        // @ts-ignore - typescript can't pass the non-null inside the map function here
-        return state.groups.active.map(groupId => state.groups.cache[groupId]);
+        return state.groups.active.map(groupId => state?.groups?.cache?.[groupId]) as AppGroup[];
     },
-    archived: (state: AppState) => {
+    archived: (state: AppState): AppGroup[] | null => {
         if (!state) return null;
         if (!state.groups) return null;
         if (!state.groups.cache) return null;
         if (!state.groups.archived) return null;
-        // @ts-ignore - typescript can't pass the non-null inside the map function here
-        return state.groups.archived.map(groupId => state.groups.cache[groupId]);
+        return state.groups.archived.map(groupId => state?.groups?.cache?.[groupId]) as AppGroup[];
     },
     groups: (state: AppState) => {
         return {
