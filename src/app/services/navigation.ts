@@ -10,7 +10,6 @@ import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopic
 import {useCurrentExamBoard} from "./examBoard";
 import {ContentDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {makeUrl} from "./fastTrack";
 
 export interface LinkInfo {title: string; to?: string}
 export type CollectionType = "Gameboard" | "Topic" | "Master Mathematics";
