@@ -6,7 +6,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 
 export const studentOnlyEventMessage = (eventId?: string) => <React.Fragment>
-    {"This event is aimed at students. If you are not a student and want to attend, please "}
+    {"This event is aimed at students. If you are not a student but still wish to attend, please "}
     <Link to={`/contact?subject=${encodeURI("Non-student attendance at " + eventId)}`}>contact us</Link>.
 </React.Fragment>;
 
