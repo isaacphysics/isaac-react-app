@@ -80,7 +80,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
             !event.userOnWaitList &&
             studentOnlyRestrictionSatisfied;
 
-        const submissionTitle = canMakeABooking ? "Book now" : event.isWithinBookingDeadline ? "Apply" : "Apply -deadline past";
+        const submissionTitle = canMakeABooking ? "Book now" : event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past";
 
         function submitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
             formEvent.preventDefault();
