@@ -17,7 +17,13 @@ import {MyAccount} from "../pages/MyAccount";
 import {MyAssignments} from "../pages/MyAssignments";
 import {Gameboard} from "../pages/Gameboard";
 import {NotFound} from "../pages/NotFound";
-import {fetchGlossaryTerms, requestConstantsSegueEnvironment, requestCurrentUser} from "../../state/actions";
+import {
+    fetchGlossaryTerms,
+    openActiveModal,
+    requestConstantsSegueEnvironment,
+    requestCurrentUser,
+    requestNotifications
+} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
@@ -59,6 +65,10 @@ import SiteSpecific from "../site/siteSpecific";
 import StaticPageRoute from "./StaticPageRoute";
 import {Redirect} from "react-router";
 import {UnsupportedBrowserBanner} from "./UnsupportedBrowserWarningBanner";
+import {notificationModal} from "../elements/modals/NotificationModal";
+import {showNotification} from "../../services/notificationChecker";
+import * as persistence from "../../services/localStorage";
+import {KEY} from "../../services/localStorage";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -67,13 +77,23 @@ export const IsaacApp = () => {
     const serverError = useSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
     const goneAwayError = useSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
     const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
+    const notifications = useSelector((state: AppState) => state && state.notifications && state.notifications.notifications || []);
+    const user = useSelector((state: AppState) => state && state.user || null);
 
     // Run once on component mount
     useEffect(() => {
         dispatch(requestCurrentUser());
         dispatch(requestConstantsSegueEnvironment());
         dispatch(fetchGlossaryTerms());
+        dispatch(requestNotifications());
     }, []);
+
+    useEffect(() => {
+        if (showNotification(user) && notifications && notifications.length > 0) {
+            dispatch(openActiveModal(notificationModal(notifications[0])));
+            persistence.save(KEY.LAST_NOTIFICATION_TIME, Date.now().toString())
+        }
+    }, [notifications, user]);
 
     // Render
     return <Router history={history}>

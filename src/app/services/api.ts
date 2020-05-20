@@ -137,6 +137,14 @@ export const api = {
             return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
         },
     },
+    notifications: {
+        get: (): AxiosPromise => {
+            return endpoint.get(`/notifications`)
+        },
+        respond: (id: string, response: string): AxiosPromise => {
+            return endpoint.post(`/notifications/${id}/${response}`)
+        }
+    },
     admin: {
         userSearch: {
             get: (queryParams: {}): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO[]> => {
