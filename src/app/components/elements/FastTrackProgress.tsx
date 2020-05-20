@@ -32,15 +32,11 @@ interface ConceptLevelQuestions {
     lowerLevelQuestions: GameboardItem[];
 }
 
-function categoriseConceptQuestions(conceptQuestions: GameboardItem[]): ConceptLevelQuestions | null {
-    let result = null;
-    if (conceptQuestions !== null) {
-        result = {
-            upperLevelQuestions: conceptQuestions.filter(question => getFastTrackLevel(question.tags) === 'ft_upper'),
-            lowerLevelQuestions: conceptQuestions.filter(question => getFastTrackLevel(question.tags) === 'ft_lower'),
-        };
-    }
-    return result;
+function categoriseConceptQuestions(conceptQuestions: GameboardItem[]): ConceptLevelQuestions {
+    return {
+        upperLevelQuestions: conceptQuestions.filter(question => getFastTrackLevel(question.tags) === 'ft_upper'),
+        lowerLevelQuestions: conceptQuestions.filter(question => getFastTrackLevel(question.tags) === 'ft_lower'),
+    };
 }
 
 interface AugmentedQuestion {
@@ -100,8 +96,8 @@ function generateHexagonPoints(halfWidth: number, quarterHeight: number) {
 }
 
 
-export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPageDTO; search: string }) {
-    const {questionHistory: qhs}: { questionHistory?: string } = queryString.parse(search);
+export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; search: string}) {
+    const {questionHistory: qhs}: {questionHistory?: string} = queryString.parse(search);
     const questionHistory = qhs ? qhs.split(",") : [];
 
     const dispatch = useDispatch();
@@ -118,9 +114,10 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
     const hexagonQuarterHeight = hexagonUnitLength / Math.sqrt(3);
     const progressBarPadding = deviceSize !== 'xs' ? 5 : 1;
 
-    const conceptQuestions = gameboardMaybeNull && fasttrackConcepts && fasttrackConcepts.gameboardId === gameboardMaybeNull.id && fasttrackConcepts.concept === doc.title ?
-        fasttrackConcepts.items
-        : null;
+    const conceptQuestions =
+        gameboardMaybeNull && fasttrackConcepts && fasttrackConcepts.gameboardId === gameboardMaybeNull.id && fasttrackConcepts.concept === doc.title ?
+            fasttrackConcepts.items
+            : null;
 
     useEffect(() => {
         if (conceptQuestions === null && gameboardMaybeNull) {
@@ -245,9 +242,6 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
     }
 
     function orderConceptQuestionsById(unorderedConceptQuestions: ConceptLevelQuestions) {
-        if (unorderedConceptQuestions === null) {
-            throw new Error("No unoderedConceptQuestions");
-        }
         let result: ConceptLevelQuestions = {upperLevelQuestions: [], lowerLevelQuestions: []};
         for (let conceptLevelName of conceptLevels) {
             result[conceptLevelName] = unorderedConceptQuestions[conceptLevelName].slice().sort((a: { id?: string }, b: { id?: string }) => a.id === b.id ? 0 : (a.id === undefined || (b.id !== undefined && a.id > b.id)) ? 1 : -1);
@@ -393,7 +387,7 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
         }
         result += line(sourceHexagonX + hexagon.x.center, hexagon.y.center);
 
-        // Horrizontal connection
+        // Horizontal connection
         if (Math.abs(sourceIndex - targetIndex) > 1) {
             result += line(targetHexagonX + hexagon.x.center, hexagon.y.center);
         }
@@ -409,16 +403,18 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
     }
 
     function createQuestionHexagon(question: AugmentedQuestion) {
-        let fillColour = 'none';
-        if (question.isCompleted) {
-            fillColour = question.isCurrentQuestion ? hexagon.base.fill.completedColour : hexagon.base.fill.deselectedCompletedColour;
-        } else {
-            fillColour = question.isCurrentQuestion ? hexagon.base.fill.selectedColour : hexagon.base.fill.deselectedColour;
-        }
+        const fillColour = (question.isCompleted) ?
+            question.isCurrentQuestion ? hexagon.base.fill.completedColour : hexagon.base.fill.deselectedCompletedColour :
+            question.isCurrentQuestion ? hexagon.base.fill.selectedColour : hexagon.base.fill.deselectedColour;
 
         return <Link to={question.href}>
             <title>{question.title + (question.isCurrentQuestion ? ' (Current)' : '')}</title>
-            {generateHexagon([true], allVisible => allVisible === true, hexagon.base, fillColour, true)}
+            {generateHexagon(
+                [true],
+                allVisible => allVisible,
+                hexagon.base,
+                fillColour,
+                true)}
 
             {generateHexagon(
                 question.questionPartStates,
@@ -427,8 +423,9 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
                 'none',
                 false)}
 
-            {question.isCompleted ? generateCompletionTick(question.isCurrentQuestion)
-                : generateHexagonTitle(question.hexagonTitle, question.isCurrentQuestion)}
+            {question.isCompleted ?
+                generateCompletionTick(question.isCurrentQuestion) :
+                generateHexagonTitle(question.hexagonTitle, question.isCurrentQuestion)}
         </Link>;
     }
 
@@ -480,22 +477,17 @@ export function FastTrackProgress({doc, search}: { doc: IsaacFastTrackQuestionPa
                 <svg id="ft-progress" width="100%" height={progressBarHeight}>
                     <g id="progress-bar-padding" transform={`translate(${progressBarPadding}, ${progressBarPadding})`}>
                         <g id="concept-connections">
-                            {progress.connections.topTenToUpper.length > 0 &&
-                            createConceptConnectionRow(progress.connections.topTenToUpper, 'top-ten-to-upper', 0)
-                            }
-                            {progress.connections.upperToLower.length > 0 &&
-                            createConceptConnectionRow(progress.connections.upperToLower, 'upper-to-lower', 1)
-                            }
-
+                            {progress.connections.topTenToUpper.length &&
+                                createConceptConnectionRow(progress.connections.topTenToUpper, 'top-ten-to-upper', 0)}
+                            {progress.connections.upperToLower.length &&
+                                createConceptConnectionRow(progress.connections.upperToLower, 'upper-to-lower', 1)}
                         </g>
                         <g id="question-hexagons">
                             {createQuestionRow(progress.questions.topTen, 'top_ten', 0)}
-                            {progress.questions.upper.length > 0 &&
-                            createQuestionRow(progress.questions.upper, 'upper', 1)
-                            }
-                            {progress.questions.lower.length > 0 &&
-                            createQuestionRow(progress.questions.lower, 'lower', 2)
-                            }
+                            {progress.questions.upper.length &&
+                                createQuestionRow(progress.questions.upper, 'upper', 1)}
+                            {progress.questions.lower.length &&
+                                createQuestionRow(progress.questions.lower, 'lower', 2)}
                         </g>
                     </g>
                 </svg>
