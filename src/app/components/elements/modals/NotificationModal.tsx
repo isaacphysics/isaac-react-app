@@ -5,6 +5,7 @@ import {Button, Col, Row} from "reactstrap";
 import {closeActiveModal} from "../../../state/actions";
 import {api} from '../../../services/api';
 import {store} from "../../../state/store";
+import {IsaacContent} from "../../content/IsaacContent";
 
 const NotificationModalBody = (notification: { notification: any }) => {
     const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const NotificationModalBody = (notification: { notification: any }) => {
             var userIdToken = "{{currentUserId}}";
 
             // if they have a token representing the user id then replace it.
-            if (currentNotification.externalReference.url.indexOf(userIdToken) != -1 && user && user.loggedIn) {
+            if (currentNotification.externalReference.url.includes(userIdToken) && user && user.loggedIn) {
                 var newUrl = currentNotification.externalReference.url.replace(userIdToken, user.id);
 
                 window.open(newUrl, "_blank");
@@ -33,27 +34,27 @@ const NotificationModalBody = (notification: { notification: any }) => {
         <Col>
             <Row className="justify-content-md-center mb-3">
                 <Col>
-                    {currentNotification ? currentNotification.value : "no content"}
+                    {currentNotification ? <IsaacContent doc={currentNotification}/> : "Would you like to complete a survey?"}
                 </Col>
             </Row>
             <Row>
-                <Col>
-                    <Button className="selection-buttons"
+                <Col className="d-inline-flex p-2">
+                    <Button
                         color="secondary" block onClick={() => respond("ACKNOWLEDGED")}
                     >
                         Yes, view questionnaire
                     </Button>
                 </Col>
-                <Col>
-                    <Button className="selection-buttons"
+                <Col className="d-inline-flex p-2">
+                    <Button
                         color="secondary" block
                         onClick={() => respond("DISABLED")}
                     >
                         No thanks
                     </Button>
                 </Col>
-                <Col>
-                    <Button className="selection-buttons"
+                <Col className="d-inline-flex p-2">
+                    <Button
                         color="secondary" block
                         onClick={() => respond("POSTPONED")}
                     >
