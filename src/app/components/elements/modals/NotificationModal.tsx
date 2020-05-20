@@ -17,12 +17,11 @@ const NotificationModalBody = (notification: { notification: any }) => {
         api.notifications.respond(currentNotification.id, response);
         dispatch(closeActiveModal());
         if (response == 'ACKNOWLEDGED' && currentNotification.externalReference.url) {
-            var userIdToken = "{{currentUserId}}";
+            const userIdToken = "{{currentUserId}}";
 
             // if they have a token representing the user id then replace it.
             if (currentNotification.externalReference.url.includes(userIdToken) && user && user.loggedIn) {
-                var newUrl = currentNotification.externalReference.url.replace(userIdToken, user.id);
-
+                const newUrl = currentNotification.externalReference.url.replace(userIdToken, user.id);
                 window.open(newUrl, "_blank");
             } else {
                 window.open(currentNotification.externalReference.url, "_blank");
@@ -37,27 +36,19 @@ const NotificationModalBody = (notification: { notification: any }) => {
                     {currentNotification ? <IsaacContent doc={currentNotification}/> : "Would you like to complete a survey?"}
                 </Col>
             </Row>
-            <Row>
+            <Row className="mb-3">
                 <Col className="d-inline-flex p-2">
-                    <Button
-                        color="secondary" block onClick={() => respond("ACKNOWLEDGED")}
-                    >
+                    <Button color="secondary" block onClick={() => respond("ACKNOWLEDGED")}>
                         Yes, view questionnaire
                     </Button>
                 </Col>
                 <Col className="d-inline-flex p-2">
-                    <Button
-                        color="secondary" block
-                        onClick={() => respond("DISABLED")}
-                    >
+                    <Button color="secondary" block onClick={() => respond("DISABLED")}>
                         No thanks
                     </Button>
                 </Col>
                 <Col className="d-inline-flex p-2">
-                    <Button
-                        color="secondary" block
-                        onClick={() => respond("POSTPONED")}
-                    >
+                    <Button color="secondary" block onClick={() => respond("POSTPONED")}>
                         Ask me later
                     </Button>
                 </Col>
