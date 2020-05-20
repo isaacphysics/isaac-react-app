@@ -56,6 +56,8 @@ export const boards = {
     }
 };
 
+
+
 export const board = {
     currentGameboard: (state: AppState) => {
         if (!state) return null;
@@ -70,6 +72,15 @@ export const board = {
         if (state.currentGameboard === NOT_FOUND) return NOT_FOUND;
         if ('inflight' in state.currentGameboard) return null;
         return state.currentGameboard;
+    }
+};
+
+export const topic = {
+    currentTopic: (state: AppState) => {
+        if (!state) return null;
+        if (!state.currentTopic) return null;
+        if (state.currentTopic === NOT_FOUND) return null;
+        return state.currentTopic;
     }
 };
 

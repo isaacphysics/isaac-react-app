@@ -2,8 +2,13 @@ import React from "react";
 import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Hexagon} from "../elements/Hexagon";
+import {openALevelBookChoiceModal} from "../../state/actions";
+import {useDispatch} from "react-redux";
 
 export const Alevel = () => {
+
+    const dispatch = useDispatch();
+
     return <Container>
         <Row className="pb-4">
             <Col>
@@ -27,7 +32,7 @@ export const Alevel = () => {
                     title={"Browse Questions by Lessons"}/>
             </Col>
             <Col md="auto">
-                <Hexagon link={"/pages/mentor_menu"}
+                <Hexagon link={"/pages/isaac_mentor"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#teacher-hat"}
                     title={"Mentoring Schemes"}/>
             </Col>
@@ -39,9 +44,12 @@ export const Alevel = () => {
         </Row>
         <Row className="teacher-feature-body justify-content-md-center">
             <Col md="auto">
-                <Hexagon link={"/books/physics_skills_19"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
-                    title={"Physics Skills Mastery"}/>
+                <button className="hexagon hexagon-btn-link" onClick={() => dispatch(openALevelBookChoiceModal())} >
+                    <img className="hexagon hexagon-btn" src="/assets/phy/key_stage_sprite.svg#skills-book-cover" alt="" />
+                    <div className="hexagon-title">
+                        Physics Skills Mastery
+                    </div>
+                </button>
             </Col>
             <Col md="auto">
                 <Hexagon link={"/books/pre_uni_maths"}

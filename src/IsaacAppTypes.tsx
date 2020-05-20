@@ -80,6 +80,9 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST}
     | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS; errors: ContentErrorsResponse}
@@ -142,6 +145,10 @@ export type Action =
     | {type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_REQUEST}
     | {type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS; segueEnvironment: string}
+
+    | {type: ACTION_TYPE.NOTIFICATIONS_REQUEST}
+    | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS; notifications: any[]}
 
     | {type: ACTION_TYPE.DOCUMENT_REQUEST; documentType: DOCUMENT_TYPE; documentId: string}
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
@@ -410,6 +417,16 @@ export interface UserExamPreferences {
 
 export interface SubjectInterests {
     CS_ALEVEL?: boolean;
+    PHYSICS_GCSE?: boolean;
+    PHYSICS_ALEVEL?: boolean;
+    PHYSICS_UNI?: boolean;
+    CHEMISTRY_ALEVEL?: boolean;
+    CHEMISTRY_GCSE?: boolean;
+    CHEMISTRY_UNI?: boolean;
+    MATHS_GCSE?: boolean;
+    MATHS_ALEVEL?: boolean;
+    MATHS_UNI?: boolean;
+    ENGINEERING_UNI?: boolean;
 }
 
 export interface UserPreferencesDTO {
@@ -536,6 +553,7 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     teacher?: boolean;
     student?: boolean;
     virtual?: boolean;
+    recurring?: boolean;
     field?: "physics" | "maths";
 }
 
@@ -576,6 +594,7 @@ export interface AdditionalInformation {
     emergencyNumber?: string;
     authorisation?: string;
     authorisationOther?: string;
+    experienceLevel?: string;
 }
 
 export interface Credentials {

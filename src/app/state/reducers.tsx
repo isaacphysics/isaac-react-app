@@ -235,6 +235,16 @@ export const constants = (constants: ConstantsState = null, action: Action) => {
     }
 };
 
+type NotificationsState = {notifications?: any[]} | null;
+export const notifications = (notifications: NotificationsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS:
+            return {notifications: Array.from(action.notifications)};
+        default:
+            return notifications;
+    }
+};
+
 type DocState = ContentDTO | NOT_FOUND_TYPE | null;
 export const doc = (doc: DocState = null, action: Action) => {
     switch (action.type) {
@@ -893,6 +903,7 @@ const appReducer = combineReducers({
     otherUserAuthorisations,
     groupMemberships,
     constants,
+    notifications,
     doc,
     questions,
     answeredQuestionsByDate,
@@ -952,6 +963,7 @@ export type AppState = undefined | {
     contentVersion: ContentVersionState;
     search: SearchState;
     constants: ConstantsState;
+    notifications: NotificationsState;
     error: ErrorState;
     toasts: ToastsState;
     activeModals: ActiveModalsState;

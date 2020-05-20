@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteBoard, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -22,10 +22,17 @@ import {ActualBoardLimit, AppGameBoard, BoardOrder} from "../../../IsaacAppTypes
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {boards as ThisBoards} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {sortIcon, STUDENTS_CRUMB} from "../../services/constants";
-import {boardCompletionSelection, formatBoardOwner} from "../../services/gameboards";
+import {sortIcon} from "../../services/constants";
+import {
+    boardCompletionSelection,
+    determineGameboardSubjects,
+    formatBoardOwner,
+    generateGameboardSubjectHexagons
+} from "../../services/gameboards";
 import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
+import {ShareLink} from "../elements/ShareLink";
+import {Link} from "react-router-dom";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -76,10 +83,6 @@ const Board = (props: BoardTableProps) => {
     const boardLink = `/gameboards#${board.id}`;
 
     const dispatch = useDispatch();
-    const [showShareLink, setShowShareLink] = useState(false);
-    const shareLink = useRef<HTMLInputElement>(null);
-
-    const hexagonId = `board-hex-${board.id}`;
 
     const updateBoardSelection = (board: AppGameBoard, checked: boolean) => {
         if (checked) {
@@ -89,46 +92,34 @@ const Board = (props: BoardTableProps) => {
         }
     };
 
-    function toggleShareLink() {
-        if (showShareLink) {
-            setShowShareLink(false);
-        } else {
-            setShowShareLink(true);
-            setTimeout(() => {
-                if (shareLink.current) {
-                    const selection = window.getSelection();
-                    const range = document.createRange();
-                    range.selectNodeContents(shareLink.current);
-                    selection && selection.removeAllRanges();
-                    selection && selection.addRange(range);
-                }
-            });
-        }
-    }
-
     function confirmCardDeleteBoard() {
         if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
             dispatch(deleteBoard(board));
         }
     }
 
+    const boardSubjects = determineGameboardSubjects(board);
+
     return boardView == boardViews.table ?
         <tr key={board.id} className="board-card">
-            {(board.percentageCompleted == 100) ?
-                <td><div className="subject-complete" id={hexagonId}/></td> :
-                <td><div className="subject-compsci-table groups-assigned myBoardsTable-percentageCompleted" id={hexagonId}>
-                    <h4>{board.percentageCompleted}</h4>
-                </div></td>}
+            <td>
+                <div className="board-subject-hexagon-container table-view">
+                    {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
+                        <>
+                            {generateGameboardSubjectHexagons(boardSubjects)}
+                            <div className="board-percent-completed">{board.percentageCompleted}</div>
+                        </>
+                    }
+                </div>
+            </td>
             <td className="align-middle"><a href={boardLink}>{board.title}</a></td>
             {/*<td className="text-center align-middle">{board.levels.join(' ')}</td>*/}
             <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
             <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
             <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
-            <td className="align-middle">
-                <div className={`share-link-table ${showShareLink ? "d-block" : ""}`}>
-                    <div ref={shareLink}>{boardLink}</div>
-                </div>
-                <button className="ru_share" onClick={toggleShareLink}/></td>
+            <td className="text-center align-middle">
+                <div className="table-share-link"><ShareLink linkUrl={boardLink} reducedWidthLink /></div>
+            </td>
             <td><CustomInput id={`board-delete-${board.id}`} type="checkbox" checked={board && (selectedBoards.some(e => e.id === board.id))}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     board && updateBoardSelection(board, event.target.checked)
@@ -138,21 +129,22 @@ const Board = (props: BoardTableProps) => {
         <Card className="board-card card-neat">
             <CardBody className="pb-4 pt-4">
                 <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
-                {(board.percentageCompleted == 100) ?
-                    <button className="subject-complete-card" id={hexagonId}/> :
-                    <button className="groups-assigned subject-compsci myBoards-percentageCompleted" id={hexagonId}>
-                        <h4>{board.percentageCompleted}</h4>
-                    </button>
-                }
+                <div className="board-subject-hexagon-container">
+                    {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
+                        <>
+                            {generateGameboardSubjectHexagons(boardSubjects)}
+                            <div className="board-percent-completed">{board.percentageCompleted}</div>
+                        </>
+                    }
+                </div>
                 <aside>
                     <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                     <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
                 </aside>
 
-                <div className="my-4">
-                    <div className={`share-link ${showShareLink ? "d-block" : ""}`}><div ref={shareLink}>{boardLink}</div></div>
-                    <button className="ru_share" onClick={toggleShareLink}/>
-                    <CardTitle><a href={boardLink}>{board.title}</a></CardTitle>
+                <div className="mt-4 mb-2">
+                    <div className="card-share-link"><ShareLink linkUrl={boardLink} reducedWidthLink /></div>
+                    <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
                     <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                 </div>
             </CardBody>
@@ -195,7 +187,7 @@ export const MyGameboards = () => {
         loadInitial();
     }, [boardLimit]);
 
-    useMemo(() => {
+    useEffect(() => {
         if (boardView == boardViews.table) {
             setBoardLimit(BoardLimit.All)
         } else if (boardView == boardViews.card) {
@@ -244,7 +236,7 @@ export const MyGameboards = () => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My gameboards" intermediateCrumbs={[STUDENTS_CRUMB]} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="My gameboards" help={pageHelp} />
         {boards && boards.totalResults == 0 ?
             <h3 className="text-center mt-4 mb-5">You have no gameboards to view.</h3>
             :

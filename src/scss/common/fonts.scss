@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'desyrel';
+  src: url('/assets/fonts/desyrel-webfont.woff') format('woff'),
+  url('/assets/fonts/desyrel-webfont.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 // NOMENSA fonts.scss
 // REMEMBER TO REPLACE "./assets/fonts" with "/assets/fonts"
 @font-face {

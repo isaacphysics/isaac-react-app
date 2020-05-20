@@ -3,9 +3,9 @@ import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {connect, useDispatch, useSelector} from "react-redux";
-import {adminModifyUserRoles, adminUserDelete, adminUserSearch, getUserIdSchoolLookup} from "../../state/actions";
+import {adminModifyUserRoles, adminModifyUserEmailVerificationStatuses, adminUserDelete, adminUserSearch, getUserIdSchoolLookup} from "../../state/actions";
 import {AdminUserSearchState, AppState} from "../../state/reducers";
-import {Role} from "../../../IsaacApiTypes";
+import {RegisteredUserDTO, Role, EmailVerificationStatus} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
@@ -13,20 +13,23 @@ import {Link} from "react-router-dom";
 
 const stateToProps = (state: AppState) => {
     return {
-        searchResults: state && state.adminUserSearch || null
+        searchResults: state && state.adminUserSearch || null,
+        currentUser: state && state.user || null
     };
 };
-const dispatchToProps = {adminUserSearch, adminModifyUserRoles, adminUserDelete};
+const dispatchToProps = {adminUserSearch, adminModifyUserRoles, adminModifyUserEmailVerificationStatuses, adminUserDelete};
 
 interface AdminUserMangerProps {
     user: LoggedInUser;
+    currentUser: RegisteredUserDTO | null;
     adminUserSearch: (query: {}) => void;
     adminUserDelete: (userid: number | undefined) => void;
     searchResults: AdminUserSearchState;
     adminModifyUserRoles: (role: Role, userIds: number[]) => void;
+    adminModifyUserEmailVerificationStatuses: (status: EmailVerificationStatus, userIds: string[]) => void;
 }
 
-const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, adminUserDelete, searchResults}: AdminUserMangerProps) => {
+const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUserRoles, adminModifyUserEmailVerificationStatuses, adminUserDelete, searchResults}: AdminUserMangerProps) => {
     const dispatch = useDispatch();
     const [userUpdating, setUserUpdating] = useState(false);
     const [searchRequested, setSearchRequested] = useState(false);
@@ -41,6 +44,12 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
     });
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
     const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
+    let promotableRoles: Role[] = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
+    const verificationStatuses: EmailVerificationStatus[] = ["NOT_VERIFIED", "DELIVERY_FAILED"];
+    if (currentUser && currentUser.role == "ADMIN") {
+        promotableRoles = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"];
+    }
+
 
     useEffect(() => {
         if (searchResults && searchResults.length > 0) {
@@ -96,6 +105,15 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
             setUserUpdating(false);
         }
     };
+
+    const modifyUserEmailVerificationStatusesAndUpdateResults = async (status: EmailVerificationStatus) => {
+        setUserUpdating(true);
+        const selectedEmails = searchResults?.filter(user => user.id && selectedUserIds.includes(user.id)).map(user => user.email || '') || [];
+        await adminModifyUserEmailVerificationStatuses(status, selectedEmails);
+        adminUserSearch(searchQuery);
+        setSelectedUserIds([]);
+        setUserUpdating(false);
+    }
 
     const search = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -222,16 +240,30 @@ const AdminUserManagerComponent = ({adminUserSearch, adminModifyUserRoles, admin
                             <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline>Modify Role</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Promote or demote selected users to:</RS.DropdownItem>
-                                {["STUDENT", "TEACHER", "EVENT_LEADER"].map(role =>
+                                {(promotableRoles).map(role =>
                                     <RS.DropdownItem
                                         key={role} disabled={selectedUserIds.length === 0}
-                                        onClick={() => modifyUserRolesAndUpdateResults(role as Role)}
+                                        onClick={() => modifyUserRolesAndUpdateResults(role)}
                                     >
                                         {role}
                                     </RS.DropdownItem>
                                 )}
                             </RS.DropdownMenu>
                         </RS.UncontrolledButtonDropdown>
+                        {currentUser && currentUser.role === 'ADMIN' && <RS.UncontrolledButtonDropdown>
+                            <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline className="ml-3">Email Status</RS.DropdownToggle>
+                            <RS.DropdownMenu>
+                                <RS.DropdownItem header>Change email verification status for users to:</RS.DropdownItem>
+                                {(verificationStatuses).map(status =>
+                                    <RS.DropdownItem
+                                        key={status} disabled={selectedUserIds.length === 0}
+                                        onClick={() => modifyUserEmailVerificationStatusesAndUpdateResults(status)}
+                                    >
+                                        {status}
+                                    </RS.DropdownItem>
+                                )}
+                            </RS.DropdownMenu>
+                        </RS.UncontrolledButtonDropdown>}
                     </RS.Col>
                     <RS.Col>
                         <Link className="btn float-right btn-secondary border-0" to={{

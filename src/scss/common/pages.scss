@@ -76,7 +76,7 @@ main {
     padding-left: 18px;
     text-decoration: none;
   }
-  td:hover:before {
+  td:hover:before, td:focus-within:before {
     content: '';
     border-top: 30px solid #ececec;
     border-left: 15px solid #ececec;
@@ -93,7 +93,7 @@ main {
   th {
     background: theme-color("primary");
   }
-  td:hover:before {
+  td:hover:before, td:focus-within:before {
     border-left-color: theme-color("primary");
   }
 }
@@ -102,7 +102,7 @@ main {
   th {
     background: $black;
   }
-  td:hover:before {
+  td:hover:before, td:focus-within:before {
     border-left-color: $black;
   }
 }

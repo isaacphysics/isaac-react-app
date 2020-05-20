@@ -1,15 +1,16 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {LogicFormulaDTO, IsaacSymbolicLogicQuestionDTO} from "../../../IsaacApiTypes";
-import { InequalityModal } from "../elements/modals/InequalityModal";
+import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
+import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
-import {IsaacHints} from "./IsaacHints";
-import { EXAM_BOARD } from "../../services/constants";
+import {EXAM_BOARD} from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
+
+import _flattenDeep from 'lodash/flattenDeep';
 import {useCurrentExamBoard} from "../../services/examBoard";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
@@ -27,6 +28,7 @@ interface IsaacSymbolicLogicQuestionProps {
     questionId: string;
     currentAttempt?: LogicFormulaDTO | null;
     setCurrentAttempt: (questionId: string, attempt: LogicFormulaDTO) => void;
+    examBoard: EXAM_BOARD;
 }
 const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
@@ -43,15 +45,22 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
         }
     }
 
-    const closeModal = () => {
+    useEffect(() => {
+        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
+
+        setInitialEditorSymbols(_flattenDeep(currentAttemptValue.symbols));
+    }, [currentAttempt, currentAttemptValue]);
+
+    const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
+        window.scrollTo(0, previousYPosition);
     };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
     return (
-        <div className="symboliclogic-question">
+        <div className="symbolic-question">
             <div className="question-content">
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
@@ -64,7 +73,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
             />
             {modalVisible && <InequalityModal
-                close={closeModal}
+                close={closeModal(window.scrollY)}
                 onEditorStateChange={(state: any) => {
                     setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
                     setInitialEditorSymbols(state.symbols);
@@ -72,9 +81,9 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols}
                 visible={modalVisible}
-                syntax={examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
+                editorMode='logic'
+                logicSyntax={examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
             />}
-            <IsaacHints questionPartId={questionId} hints={doc.hints} />
         </div>
     );
 };

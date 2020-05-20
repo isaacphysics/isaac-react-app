@@ -22,7 +22,19 @@ export const isTest = document.location.hostname.startsWith("test.");
 
 export const API_PATH: string = apiPath;
 
-export const EDITOR_URL = "https://editor.isaaccomputerscience.org/#!/edit/master/";
+const EDITOR_BASE_URL = {
+    [SITE.PHY]: "https://editor.isaacphysics.org",
+    [SITE.CS]: "https://editor.isaaccomputerscience.org",
+}[SITE_SUBJECT];
+
+export const EDITOR_URL = EDITOR_BASE_URL + "/#!/edit/master/";
+export const EDITOR_COMPARE_URL = EDITOR_BASE_URL + "/#!/compare";
+
+export const GOOGLE_ANALYTICS_ACCOUNT_ID = {
+    [SITE.PHY]: "UA-122616705-1",
+    [SITE.CS]: "UA-137475074-1",
+}[SITE_SUBJECT];
+
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
 
@@ -121,6 +133,9 @@ export enum ACTION_TYPE {
     ADMIN_MODIFY_ROLES_REQUEST = "ADMIN_MODIFY_ROLES_REQUEST",
     ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS = "ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS",
     ADMIN_MODIFY_ROLES_RESPONSE_FAILURE = "ADMIN_MODIFY_ROLES_RESPONSE_FAILURE",
+    ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_REQUEST = "ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_REQUEST",
+    ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_SUCCESS = "ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_SUCCESS",
+    ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_FAILURE = "ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_FAILURE",
     ADMIN_CONTENT_ERRORS_REQUEST = "ADMIN_CONTENT_ERRORS_REQUEST",
     ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS = "ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS",
     ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE = "ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE",
@@ -177,6 +192,10 @@ export enum ACTION_TYPE {
     CONSTANTS_SEGUE_ENVIRONMENT_REQUEST = "CONSTANTS_SEGUE_ENVIRONMENT_REQUEST",
     CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS = "CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS",
     CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE = "CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE",
+
+    NOTIFICATIONS_REQUEST = "NOTIFICATIONS_REQUEST",
+    NOTIFICATIONS_RESPONSE_SUCCESS = "NOTIFICATIONS_RESPONSE_SUCCESS",
+    NOTIFICATIONS_RESPONSE_FAILURE = "NOTIFICATIONS_RESPONSE_FAILURE",
 
     DOCUMENT_REQUEST = "DOCUMENT_REQUEST",
     DOCUMENT_RESPONSE_SUCCESS = "DOCUMENT_RESPONSE_SUCCESS",
@@ -452,7 +471,7 @@ export enum TAG_ID {
     searchingSortingPathfinding = "searching_sorting_pathfinding",
     complexity = "complexity",
     theoryOfComputation = "theory_of_computation",
-    planningAndDebugging = "planning_and_debugging",
+    computationalThinking = "computational_thinking",
     dataStructures = "data_structures",
     // Computer networks topics
     security = "security",
@@ -480,7 +499,6 @@ export enum TAG_ID {
     programmingConcepts = "programming_concepts",
     subroutines = "subroutines",
     files = "files",
-    structureAndRobustness = "structure_and_robustness",
     recursion = "recursion",
     stringManipulation = "string_manipulation",
     guis = "guis",
@@ -488,6 +506,7 @@ export enum TAG_ID {
     // Programming paradigms topics
     objectOrientedProgramming = "object_oriented_programming",
     functionalProgramming = "functional_programming",
+    proceduralAndStructuredProgramming = "procedural_and_structured_programming",
     // Computing practical project topics
     softwareProject = "software_project",
 
@@ -589,8 +608,6 @@ export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export const HOME_CRUMB = {title: "Home", to: "/"};
 export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
-export const STUDENTS_CRUMB = {title: "For students", to: "/students"};
-export const TEACHERS_CRUMB = {title: "For teachers", to: "/teachers"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
 
@@ -601,6 +618,15 @@ export enum UserRole {
     EVENT_LEADER = "EVENT_LEADER",
     TEACHER = "TEACHER",
     STUDENT = "STUDENT"
+}
+
+export enum UserFacingRole {
+    ADMIN = "Admin",
+    EVENT_MANAGER = "Event Manager",
+    CONTENT_EDITOR = "Content Editor",
+    EVENT_LEADER = "Event Leader",
+    TEACHER = "Teacher",
+    STUDENT = "Student"
 }
 
 export enum SortOrder {

@@ -116,10 +116,8 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                         setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : undefined, schoolId: e.target.checked && undefined}));
                     }
                 })}
+                label="Not associated with a school"
             />
-            <RS.Label htmlFor={`${idPrefix}-not-associated-with-school`}>
-                Not associated with a school
-            </RS.Label>
         </div>}
 
         <div className="invalid-school">

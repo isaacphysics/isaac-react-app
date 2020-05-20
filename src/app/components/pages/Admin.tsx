@@ -6,8 +6,9 @@ import {AppState, ContentVersionState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {getContentVersion, requestConstantsSegueVersion, setContentVersion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentVersionUpdatingStatus} from "../../services/constants";
+import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import classnames from "classnames";
 
 const stateToProps = (state: AppState) => ({
     segueVersion: state && state.constants && state.constants.segueVersion || "unknown",
@@ -94,6 +95,18 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
                                             onChange={e => setNewVersion(e.target.value)}
                                             placeholder="Enter commit SHA"
                                         />
+                                        <RS.InputGroupAddon addonType="append">
+                                            <a
+                                                className={classnames({
+                                                    "p-1 border-dark btn btn-secondary": true,
+                                                    "disabled": displayVersion === contentVersion.liveVersion
+                                                })}
+                                                href={`${EDITOR_COMPARE_URL}/${contentVersion?.liveVersion}/${displayVersion}`}
+                                                target="_blank" rel="noopener"
+                                            >
+                                                Preview Changes
+                                            </a>
+                                        </RS.InputGroupAddon>
                                         <RS.InputGroupAddon addonType="append">
                                             <RS.Button
                                                 type="button" className="p-0 border-dark"

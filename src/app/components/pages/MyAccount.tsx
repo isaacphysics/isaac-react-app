@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -20,10 +20,10 @@ import {AdminUserGetState, AppState, ErrorState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
     LoggedInUser,
-    UserPreferencesDTO,
-    ValidationUser,
     SubjectInterests,
     UserEmailPreferences,
+    UserPreferencesDTO,
+    ValidationUser,
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
@@ -90,19 +90,28 @@ interface AccountPageProps {
 
 const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, userFind}: AccountPageProps) => {
     useEffect(() => {
-        userOfInterest && adminUserGet(Number(userOfInterest));
-        userOfInterest && getChosenUserAuthSettings(Number(userOfInterest));
-    }, []);
-    // - Admin user modification
-    const [editingOtherUser, _] = useState(!!userOfInterest && user && user.loggedIn && user.id && user.id.toString() !== userOfInterest || false);
-    const [userToEdit, setUserToEdit] = useState();
+        if (userOfInterest) {
+            adminUserGet(Number(userOfInterest));
+            getChosenUserAuthSettings(Number(userOfInterest));
+        }
+    }, [userOfInterest]);
 
-    useEffect(() => {editingOtherUser && userFind && setUserToEdit(Object.assign({}, userFind))}, [userFind]);
+    // - Admin user modification
+    const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
+    const [userToEdit, setUserToEdit] = useState<any>();
+
+    useEffect(() => {editingOtherUser && userFind && setUserToEdit(Object.assign({}, userFind))}, [editingOtherUser, userFind]);
 
     // - Copy of user to store changes before saving
-    const [userToUpdate, setUserToUpdate] = useState(editingOtherUser && userOfInterest && userFind ? Object.assign({}, userFind, {loggedIn: true, password: ""}) : Object.assign({}, user, {password: ""}));
+    const [userToUpdate, setUserToUpdate] = useState<any>(editingOtherUser && userOfInterest && userFind ?
+        Object.assign({}, userFind, {loggedIn: true, password: ""}) :
+        Object.assign({}, user, {password: ""}));
 
-    useEffect(() => {editingOtherUser && userToEdit && setUserToUpdate(Object.assign({}, userToEdit, {loggedIn: true}))}, [userToEdit]);
+    useEffect(() => {
+        if (editingOtherUser && userToEdit) {
+            setUserToUpdate(Object.assign({}, userToEdit, {loggedIn: true}));
+        }
+    }, [userToEdit]);
 
     // Inputs which trigger re-render
     const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
@@ -114,12 +123,11 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     // - User preferences
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
-    const [subjectInterests, setSubjectInterests] = useState<SubjectInterests>({});
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
 
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
 
-    useMemo(() => {
+    useEffect(() => {
         const currentEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
         const currentSubjectInterests = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
         const currentUserPreferences = {
@@ -128,13 +136,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         };
 
         setEmailPreferences(currentEmailPreferences);
-        setSubjectInterests(currentSubjectInterests);
         setMyUserPreferences(currentUserPreferences);
     }, [userPreferences]);
 
     // Set active tab using hash anchor
     const [activeTab, setActiveTab] = useState(ACCOUNT_TAB.account);
-    useMemo(() => {
+    useEffect(() => {
         // @ts-ignore
         let tab: ACCOUNT_TAB =
             (authToken && ACCOUNT_TAB.teacherconnections) ||
@@ -146,8 +153,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     // Values derived from inputs (props and state)
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
+    function setSubjectInterests(newSubjectInterests: SubjectInterests) {
+        setMyUserPreferences({...myUserPreferences, SUBJECT_INTEREST: newSubjectInterests});
+    }
+
     // Form's submission method
-    const updateAccount = (event: React.FormEvent<HTMLFormElement>) => {
+    function updateAccount(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setAttemptedAccountUpdate(true);
 
@@ -162,12 +173,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
-            allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null}) &&
+            allRequiredInformationIsPresent(userToUpdate, {...myUserPreferences, EMAIL_PREFERENCE: null}) &&
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
             (!userToUpdate.password || isNewPasswordConfirmed)) {
             updateCurrentUser(userToUpdate, editingOtherUser ? {} : myUserPreferences, currentPassword, user);
         }
-    };
+    }
 
     return <Container id="account-page" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} className="mb-4" />
@@ -230,7 +241,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                             <TabPane tabId={ACCOUNT_TAB.account}>
                                 <UserDetails
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                    subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
+                                    subjectInterests={myUserPreferences.SUBJECT_INTEREST || {}}
+                                    setSubjectInterests={setSubjectInterests}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />

@@ -1,7 +1,7 @@
 import React from "react";
 import {AnvilApp} from "./AnvilApp"
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {IsaacQuestionTabs} from "./IsaacQuestionTabs";
+import {IsaacQuestion} from "./IsaacQuestion";
 import {IsaacVideo} from "./IsaacVideo";
 import {IsaacImage} from "./IsaacImage";
 import {IsaacFigure} from "./IsaacFigure";
@@ -14,6 +14,7 @@ import {IsaacHorizontal} from "./IsaacHorizontal";
 import {withRouter} from "react-router-dom";
 import {IsaacQuizTabs} from "./IsaacQuizTabs";
 import {QuestionContext} from "../../../IsaacAppTypes";
+import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 
 const classBasedLayouts = {
     left: "align-left",
@@ -31,7 +32,7 @@ export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: s
         case "image": selectedComponent = <IsaacImage {...props} />; break;
         case "video": selectedComponent = <IsaacVideo {...props} />; break;
         case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...props} />; break;
-        // case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break; // TODO
+        case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break;
         case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break;
         case "anvilApp": selectedComponent = <AnvilApp {...props} />; break;
         case "isaacMultiChoiceQuestion":
@@ -48,7 +49,7 @@ export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: s
             if (match.path.startsWith("/quizzes")) {
                 tempSelectedComponent = <IsaacQuizTabs {...props} />;
             } else {
-                tempSelectedComponent = <IsaacQuestionTabs {...props} />;
+                tempSelectedComponent = <IsaacQuestion {...props} />;
             }
             selectedComponent = <QuestionContext.Provider value={props.doc.id}>{tempSelectedComponent}</QuestionContext.Provider>;
             break;

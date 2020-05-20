@@ -1,4 +1,5 @@
 import "core-js/stable";
+import "regenerator-runtime/runtime";
 import './scss/cs/isaac.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';

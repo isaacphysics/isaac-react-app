@@ -2,6 +2,7 @@ import React from "react";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import ReactGA from "react-ga";
+import {WEBMASTER_EMAIL} from "../../services/siteConstants";
 
 export const SessionExpired = () => {
 
@@ -38,7 +39,7 @@ export const SessionExpired = () => {
             <h3>
                 <small>
                     {"Please email "}
-                    <a href="mailto:webmaster@isaaccomputerscience.org">webmaster@isaaccomputerscience.org</a>
+                    <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a>
                     {" if this keeps happening."}
                 </small>
             </h3>

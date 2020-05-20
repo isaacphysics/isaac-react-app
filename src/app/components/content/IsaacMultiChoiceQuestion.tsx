@@ -4,7 +4,6 @@ import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {ChoiceDTO, IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
-import {IsaacHints} from "./IsaacHints";
 import {CustomInput, Label} from "reactstrap";
 import {questions} from "../../state/selectors";
 
@@ -49,8 +48,6 @@ const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps)
                     </Label>
                 </li>)
             }</ul>
-
-            <IsaacHints questionPartId={questionId} hints={doc.hints}/>
         </div>
     );
 };

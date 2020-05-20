@@ -8,7 +8,18 @@
     margin-bottom: 15px;
   }
 
-  a.hexagon, div.hexagon {
+  button.hexagon-btn-link {
+    color: $black;
+    text-decoration: underline;
+    min-width: initial;
+    padding: initial;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  a.hexagon, div.hexagon, button.hexagon {
     background-image:url(/assets/hexagon.svg#green);
     background-size: contain;
     background-repeat: no-repeat;
@@ -19,6 +30,7 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
+    background-color: transparent;
 
     &:focus {
       background-image:url(/assets/hexagon.svg#green-bold);
@@ -37,10 +49,14 @@
     }
   }
 
-  a.hexagon {
+  a.hexagon, button.hexagon {
     &:hover .hexagon-title {
       color: $green;
     }
+  }
+
+  img.hexagon-btn {
+    margin-top: -50px !important;
   }
 
   img.hexagon {

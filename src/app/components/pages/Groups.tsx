@@ -43,7 +43,6 @@ import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {groups} from "../../state/selectors";
 import {UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {TEACHERS_CRUMB} from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateFromProps = (state: AppState) => (state && {groups: groups.groups(state), group: groups.current(state)});
@@ -314,7 +313,10 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     if (data) {
         switch(sortOrder) {
             case SortOrder.Alphabetical:
-                data = sortBy(data, g => g.groupName && g.groupName.toLowerCase());
+                data.sort((a, b) => {
+                    if (a.groupName && b.groupName) return (a.groupName.localeCompare(b.groupName, undefined, { numeric: true, sensitivity: 'base' }));
+                    return 1;
+                });
                 break;
             case SortOrder["Date Created"]:
                 data = sortBy(data, g => g.created).reverse();
@@ -362,7 +364,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage groups" intermediateCrumbs={[TEACHERS_CRUMB]} className="mb-4" help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />
         <Row className="mb-5">
             <Col md={4}>
                 <ShowLoading until={activeTab}>

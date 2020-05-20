@@ -3,29 +3,26 @@ import {history} from "./history";
 import queryString from "query-string";
 import {fetchTopicSummary, loadGameboard} from "../state/actions";
 import {useDispatch, useSelector} from 'react-redux'
-import {AppState} from "../state/reducers";
 import {determineGameboardHistory, determineNextGameboardItem} from "./gameboards";
 import {NOT_FOUND, TAG_ID} from "./constants";
 import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopicHistory} from "./topics";
 import {useCurrentExamBoard} from "./examBoard";
 import {ContentDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {makeUrl} from "./fastTrack";
-import {board} from "../state/selectors";
+import {board, topic} from "../state/selectors";
 
 export interface LinkInfo {title: string; to?: string}
-export type CollectionType = "Gameboard" | "Topic" | "FastTrack";
+export type CollectionType = "Gameboard" | "Topic" | "Master Mathematics";
 export interface PageNavigation {
     collectionType?: CollectionType;
     breadcrumbHistory: LinkInfo[];
     backToCollection?: LinkInfo;
     nextItem?: LinkInfo;
+    previousItem?: LinkInfo;
     queryParams?: string;
 }
 
-const defaultPageNavigation = {
-    breadcrumbHistory: [],
-};
+const defaultPageNavigation = {breadcrumbHistory: []};
 
 export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigation => {
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
@@ -38,7 +35,7 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
     }, [queryParams.board, queryParams.topic, currentDocId, dispatch]);
 
     const currentGameboard = useSelector(board.currentGameboard);
-    const currentTopic = useSelector((state: AppState) => state && state.currentTopic);
+    const currentTopic = useSelector(topic.currentTopic);
     const examBoard = useCurrentExamBoard();
 
     if (doc === null || doc === NOT_FOUND) {
@@ -49,16 +46,17 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
         const gameboardHistory = (currentGameboard && queryParams.board === currentGameboard.id) ?
             determineGameboardHistory(currentGameboard) :
             [];
-        const questionHistory = (queryParams.questionHistory as string || "").split(",");
-        const previousQuestion = questionHistory.pop();
+        const questionHistoryList = (queryParams.questionHistory as string || "").split(",");
+        const previousQuestion = questionHistoryList.pop();
+        const questionHistory = questionHistoryList.length ? questionHistoryList.join(",") : undefined;
+        const board = currentGameboard?.id;
         return {
-            collectionType: "FastTrack",
+            collectionType: "Master Mathematics",
             breadcrumbHistory: gameboardHistory,
-            backToCollection: previousQuestion ? {title: "Return to Previous Question",
-                to: makeUrl(`/questions/${previousQuestion}`, {questionHistory: questionHistory.join(","),
-                    currentGameboard: currentGameboard ? currentGameboard.id : undefined})} : undefined,
-            nextItem: currentGameboard ? {title: "Return to Top 10 Questions",
-                to: `/gameboard#${currentGameboard.id}`} : undefined
+            backToCollection: currentGameboard ? {title: "Return to Top 10 Questions", to: `/gameboards#${currentGameboard.id}`} : undefined,
+            nextItem: !previousQuestion ? determineNextGameboardItem(currentGameboard, currentDocId) : undefined,
+            previousItem: previousQuestion ? {title: "Return to Previous Question", to: `/questions/${previousQuestion}`} : undefined,
+            queryParams: queryString.stringify(previousQuestion ? {board, questionHistory} : {board}),
         };
     }
 
@@ -76,7 +74,7 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
     }
 
     if (queryParams.topic) {
-        const topicHistory = (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && queryParams.topic === currentTopic.id.slice("topic_summary_".length)) ?
+        const topicHistory = (currentTopic &&  queryParams.topic === currentTopic?.id?.slice("topic_summary_".length)) ?
             determineTopicHistory(currentTopic, currentDocId) :
             makeAttemptAtTopicHistory();
         return {

@@ -46,7 +46,8 @@ import {
     TestCaseDTO,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
+    UserSummaryWithEmailAddressDTO,
+    EmailVerificationStatus
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -66,6 +67,8 @@ import ReactGA from "react-ga";
 import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {atLeastOne} from "../services/validation";
+import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
+import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -340,7 +343,7 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
 export const verifyPasswordReset = (token: string | null) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST});
-        const response = await api.users.verifyPasswordReset(token);
+        await api.users.verifyPasswordReset(token);
         dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS});
     } catch(e) {
         dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
@@ -548,7 +551,12 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
         }) as any);
     }
 };
-
+export const openALevelBookChoiceModal = () => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(aLevelBookChoiceModal()) as any);
+};
+export const openIsaacBooksModal = () => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(isaacBooksModal()) as any);
+};
 export const revokeAuthorisationAfterPrompt = (user: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(revocationConfirmationModal(user)) as any);
 };
@@ -670,6 +678,16 @@ export const requestConstantsSegueEnvironment = () => async (dispatch: Dispatch<
     }
 };
 
+export const requestNotifications = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.NOTIFICATIONS_REQUEST});
+    try {
+        const response = await api.notifications.get();
+        dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS, notifications: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE});
+    }
+}
+
 // Document & topic fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
@@ -789,15 +807,27 @@ export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|Validat
     dispatch({type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
 };
 
+let questionSearchCounter = 0;
+
 export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: Dispatch<Action>) => {
+    const searchCount = ++questionSearchCounter;
     dispatch({type: ACTION_TYPE.QUESTION_SEARCH_REQUEST});
     try {
         const questionsResponse = await api.questions.search(query);
-        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results});
+        // Because some searches might take longer to return that others, check this is the most recent search still.
+        // Otherwise, we just discard the data.
+        if (searchCount === questionSearchCounter) {
+            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results});
+        }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to search for questions", e));
     }
+};
+
+export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
+    questionSearchCounter++;
+    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: []});
 };
 
 export const getAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
@@ -1056,6 +1086,17 @@ export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (di
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("User role modification failed", e));
+    }
+};
+
+export const adminModifyUserEmailVerificationStatuses = (status: EmailVerificationStatus, emails: string[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_REQUEST});
+    try {
+        await api.admin.modifyUserEmailVerificationStatuses.post(status, emails);
+        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_SUCCESS});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Email verification status modification failed", e));
     }
 };
 
@@ -1438,7 +1479,7 @@ export const getNewsPodList = (subject: string) => async (dispatch: Dispatch<Act
         dispatch({type: ACTION_TYPE.NEWS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Unable to display news", e));
     }
-}
+};
 
 export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
     try {

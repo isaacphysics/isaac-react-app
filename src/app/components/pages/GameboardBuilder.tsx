@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {Spinner} from "reactstrap";
@@ -34,6 +34,7 @@ import {withRouter} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {board} from '../../state/selectors';
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -47,20 +48,20 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
     const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTags, setGameboardTags] = useState<string[]>([]);
-    const [gameboardURL, setGameboardURL] = useState();
+    const [gameboardURL, setGameboardURL] = useState<string>();
     const [questionOrder, setQuestionOrder] = useState<string[]>( []);
     const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
-    useMemo(() => {
+    useEffect(() => {
         if (baseGameboard) {
             setGameboardTitle(`${baseGameboard.title} (Copy)`);
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
             setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
             setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
         }
-    }, [baseGameboard]);
+    }, [user, baseGameboard]);
 
     const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "";
 
@@ -76,7 +77,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
         if (baseGameboardId && (!baseGameboard)) {
             dispatch(loadGameboard(baseGameboardId));
         }
-    }, [baseGameboardId]);
+    }, [dispatch, baseGameboardId, baseGameboard]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
@@ -102,7 +103,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         <RS.Label htmlFor="gameboard-builder-name">Gameboard title:</RS.Label>
                         <RS.Input id="gameboard-builder-name"
                             type="text"
-                            placeholder="e.g. Year 12 Network components"
+                            placeholder={{[SITE.CS]: "e.g. Year 12 Network components", [SITE.PHY]: "e.g. Year 12 Dynamics"}[SITE_SUBJECT]}
                             defaultValue={gameboardTitle}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setGameboardTitle(e.target.value);
@@ -227,6 +228,14 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
                         }
 
+                        let subjects = [];
+
+                        if (SITE_SUBJECT == SITE.CS) {
+                            subjects.push("computer_science");
+                        } else {
+                            subjects.push("physics");
+                        }
+
                         dispatch(createGameboard({
                             id: gameboardURL,
                             title: gameboardTitle,
@@ -236,7 +245,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             }).filter((question) => question !== undefined) as GameboardItem[],
                             wildCard: wildcard,
                             wildCardPosition: 0,
-                            gameFilter: {subjects: ["computer_science"]},
+                            gameFilter: {subjects: subjects},
                             tags: gameboardTags
                         }));
 

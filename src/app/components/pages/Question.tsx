@@ -8,7 +8,7 @@ import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, EDITOR_URL, TAG_ID} from "../../services/constants";
+import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, TAG_ID} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
@@ -52,9 +52,6 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
     const questionId = questionIdOverride || match.params.questionId;
     const doc = useSelector(selectDoc.ifNotAQuizId(questionId));
     const user = useSelector((state: AppState) => state && state.user);
-    const segueEnvironment = useSelector((state: AppState) =>
-        (state && state.constants && state.constants.segueEnvironment) || "unknown"
-    );
     const navigation = useNavigation(doc);
 
     const dispatch = useDispatch();
@@ -92,17 +89,15 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                     collectionType={navigation.collectionType}
                     level={doc.level}
                 />
-                <RS.Row className="no-print">
-                    {segueEnvironment === "DEV" && doc.canonicalSourceFile &&
-                        <EditContentButton canonicalSourceFile={EDITOR_URL + doc.canonicalSourceFile} />
-                    }
+                <div className="no-print d-flex align-items-center">
+                    <EditContentButton doc={doc} />
                     <div className="question-actions question-actions-leftmost mt-3">
                         <ShareLink linkUrl={`/questions/${questionId}`}/>
                     </div>
                     <div className="question-actions mt-3 not_mobile">
                         <PrintButton questionPage={true}/>
                     </div>
-                </RS.Row>
+                </div>
                 <Row className="question-content-container">
                     <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
                         <TempExamBoardPicker className="no-print text-right"/>
@@ -144,7 +139,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
 
                         <NavigationLinks navigation={navigation}/>
 
-                        {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                        {doc.relatedContent && doc.type !== "isaacFastTrackQuestionPage" && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>

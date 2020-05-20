@@ -55,7 +55,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         </RS.FormFeedback>
                     </RS.Label>
                     {editingSelf && targetUser.emailVerificationStatus != 'VERIFIED' && !verifyEmailRequestSent && <RS.Button
-                        color="link" onClick={() => {
+                        color="link" className="btn-underline" onClick={() => {
                             dispatch(requestEmailVerification());
                             setVerifyEmailRequestSent(true);
                         }}
@@ -106,7 +106,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             <option value="OTHER">N/A - Other</option>
                         </RS.Input>
                         {event.teacher && additionalInformation.yearGroup == 'TEACHER' && <div className="mt-2 text-right">
-                            <a href="/pages/contact_us_teacher" target="_blank">Click to upgrade to a teacher account</a> for free!
+                            <a href="/pages/teacher_accounts" target="_blank">Click to upgrade to a teacher account</a> for free!
                         </div>}
                     </React.Fragment>}
                 </div>
@@ -164,6 +164,13 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         </RS.Col>
                     </RS.Row>}
                 </div>}
+                {targetUser.role != 'STUDENT' && <React.Fragment>
+                    <RS.Label htmlFor="experience-level">Level of teaching experience</RS.Label>
+                    <RS.Input
+                        id="experience-level" name="experience-level" type="text" value={additionalInformation.experienceLevel  || ""}
+                        onChange={event => updateAdditionalInformation({experienceLevel: event.target.value})}
+                    />
+                </React.Fragment>}
             </RS.CardBody>
         </RS.Card>
     </React.Fragment>

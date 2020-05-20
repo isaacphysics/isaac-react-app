@@ -6,8 +6,8 @@ import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
-import {ContentBase, ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, EDITOR_URL} from "../../services/constants";
+import {ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import {DOCUMENT_TYPE} from "../../services/constants";
 import {DocumentSubject, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -24,7 +24,6 @@ const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
     return {
         urlConceptId: conceptId,
         doc: state && state.doc || null,
-        segueEnvironment: state && state.constants && state.constants.segueEnvironment || "unknown",
     };
 };
 const dispatchToProps = {fetchDoc};
@@ -34,10 +33,9 @@ interface ConceptPageProps {
     urlConceptId: string;
     doc: ContentDTO | NOT_FOUND_TYPE | null;
     fetchDoc: (documentType: DOCUMENT_TYPE, conceptId: string) => void;
-    segueEnvironment: string;
 }
 
-const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc, segueEnvironment}: ConceptPageProps) => {
+const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc}: ConceptPageProps) => {
     const conceptId = conceptIdOverride || urlConceptId;
     useEffect(() => {
         fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId)
@@ -54,17 +52,15 @@ const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc, s
                     currentPageTitle={doc.title as string}
                     collectionType={navigation.collectionType}
                 />
-                <Row className="no-print">
-                    {segueEnvironment === "DEV" && (doc as ContentBase).canonicalSourceFile &&
-                    <EditContentButton canonicalSourceFile={EDITOR_URL + (doc as ContentBase)['canonicalSourceFile']} />
-                    }
+                <div className="no-print d-flex align-items-center">
+                    <EditContentButton doc={doc} />
                     <div className="question-actions question-actions-leftmost mt-3">
                         <ShareLink linkUrl={`/concepts/${doc.id}`}/>
                     </div>
                     <div className="question-actions mt-3 not_mobile">
                         <PrintButton/>
                     </div>
-                </Row>
+                </div>
 
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4">

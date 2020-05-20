@@ -69,7 +69,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
             <RS.CardTitle tag="h2">User selection</RS.CardTitle>
             <RS.CardBody>
                 <RS.Input
-                    id="email-type-input" type="select" className="mb-4" defaultValue={selectionMode}
+                    id="email-recipient-type-input" type="select" className="mb-4" defaultValue={selectionMode}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setSelectionMode(e.target.value);
                     }}

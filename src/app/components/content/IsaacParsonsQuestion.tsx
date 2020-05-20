@@ -4,9 +4,19 @@ import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {IsaacParsonsQuestionDTO, ParsonsChoiceDTO, ParsonsItemDTO} from "../../../IsaacApiTypes";
-import {IsaacHints} from "./IsaacHints";
 import {Col, Row} from "reactstrap";
-import {DragDropContext, Droppable, Draggable, DragStart, DropResult, ResponderProvided, DroppableProvided, DroppableStateSnapshot, DraggableProvided, DraggableStateSnapshot} from "react-beautiful-dnd";
+import {
+    DragDropContext,
+    Draggable,
+    DraggableProvided,
+    DraggableStateSnapshot,
+    DragStart,
+    Droppable,
+    DroppableProvided,
+    DroppableStateSnapshot,
+    DropResult,
+    ResponderProvided
+} from "react-beautiful-dnd";
 import _differenceBy from "lodash/differenceBy";
 import {questions} from "../../state/selectors";
 
@@ -245,7 +255,6 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                     </Col>
                 </DragDropContext>
             </Row>
-            <IsaacHints questionPartId={this.props.questionId} hints={this.props.doc.hints} />
         </div>
     }
 }

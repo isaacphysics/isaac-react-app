@@ -137,6 +137,14 @@ export const api = {
             return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
         },
     },
+    notifications: {
+        get: (): AxiosPromise => {
+            return endpoint.get(`/notifications`)
+        },
+        respond: (id: string, response: string): AxiosPromise => {
+            return endpoint.post(`/notifications/${id}/${response}`)
+        }
+    },
     admin: {
         userSearch: {
             get: (queryParams: {}): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO[]> => {
@@ -156,6 +164,11 @@ export const api = {
         modifyUserRoles: {
             post: (role: ApiTypes.Role, userIds: number[]) => {
                 return endpoint.post(`/admin/users/change_role/${role}`, userIds);
+            }
+        },
+        modifyUserEmailVerificationStatuses: {
+            post: (status: ApiTypes.EmailVerificationStatus, emails: string[]) => {
+                return endpoint.post(`/admin/users/change_email_verification_status/${status}/true`, emails);
             }
         },
         getContentErrors: (): AxiosPromise<AppTypes.ContentErrorsResponse> => {

@@ -17,8 +17,15 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
         </Link>
     </div>;
 
+    const previousItemLink = navigation.previousItem && <div className="w-50 w-md-auto text-right mb-4">
+        <Link to={{pathname: navigation.previousItem.to, search: navigation.queryParams}}>
+            <div className="isaac-nav-link float-right a-alt lrg-text font-weight-bold">{navigation.previousItem.title}</div>
+            <div className="isaac-nav-link float-right  next-link">Previous</div>
+        </Link>
+    </div>;
+
     return <div className="mt-4 d-flex justify-content-between align-items-stretch no-print">
         {backToCollectionLink}
-        {nextItemLink}
+        {nextItemLink || previousItemLink}
     </div>
 };

@@ -28,6 +28,7 @@ import {DateInput} from "../elements/inputs/DateInput";
 import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../services/passwordStrength"
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {Redirect} from "react-router";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({
     errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
@@ -83,7 +84,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         setAttemptedSignUp(true);
 
         if (passwordIsValid && emailIsValid && confirmedOverThirteen) {
-            persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.BANNER_NOT_SHOWN);
+            persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             Object.assign(registrationUser, {loggedIn: false});
             updateCurrentUser(registrationUser, {}, null, (Object.assign(registrationUser, {loggedIn: true})));
             // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
@@ -118,7 +119,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
                     <small className="text-muted">
                         Sign up to {" "}
                         <Link to="/">
-                            Isaac <span className="d-none d-md-inline">Computer Science</span>
+                            Isaac <span className="d-none d-md-inline">{SITE_SUBJECT_TITLE}</span>
                         </Link>
                     </small>
                 </CardTitle>

@@ -15,9 +15,13 @@ import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
 import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
 import {Concepts} from "../../pages/Concepts";
+import {AssignmentProgress} from "../../pages/AssignmentProgress";
 
 let key = 0;
 export const RoutesPhy = [
+    // Assignments
+    <TrackedRoute key={key++} exact path="/assignment_progress" ifUser={isTeacher} component={AssignmentProgress} />,
+
     // Gameboard filter
     <TrackedRoute key={key++} exact path="/gameboards/new" component={GameboardFilter} />,
 
@@ -46,6 +50,7 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/fast_track_14" pageId="fast_track_14_index" />,
     <StaticPageRoute key={key++} exact path="/prize_draws" />,
     <StaticPageRoute key={key++} exact path="/spc" />,
+    <StaticPageRoute key={key++} exact path="/pre_made_gameboards" />,
     <StaticPageRoute key={key++} exact path="/chemistry" pageId="chemistry_landing_page" />,
     <StaticPageRoute key={key++} exact path="/survey" />,
     <StaticPageRoute key={key++} exact path="/book/question" pageId="book_question" />,

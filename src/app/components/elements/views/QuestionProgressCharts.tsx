@@ -67,7 +67,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             }));
         }
 
-        if (!isAllZero(levelColumns)) {
+        if (SITE_SUBJECT === SITE.PHY && !isAllZero(levelColumns)) {
             charts.push(bb.generate({
                 data: {columns: levelColumns, type: "donut"},
                 donut: {
@@ -137,5 +137,5 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 </div>
             </div>
         </RS.Col>}
-    </RS.Row>
+    </RS.Row>;
 };
