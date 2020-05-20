@@ -678,6 +678,16 @@ export const requestConstantsSegueEnvironment = () => async (dispatch: Dispatch<
     }
 };
 
+export const requestNotifications = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.NOTIFICATIONS_REQUEST});
+    try {
+        const response = await api.notifications.get();
+        dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS, notifications: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE});
+    }
+}
+
 // Document & topic fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
@@ -844,11 +854,11 @@ export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (d
 const generatePostQuizUrl = (quizId: string) => `/pages/post_${quizId}`;
 
 export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const currentState = getState();
+    const currentState: AppState = getState();
     try {
         dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST, quizId});
         if (currentState && currentState.questions) {
-            await Promise.all(currentState.questions.map(
+            await Promise.all(currentState.questions.questions.map(
                 question => {
                     if (question.id && question.currentAttempt) {
                         dispatch(attemptQuestion(question.id, question.currentAttempt) as any);

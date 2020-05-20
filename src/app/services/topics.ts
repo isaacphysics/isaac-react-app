@@ -1,8 +1,9 @@
-import {ContentSummaryDTO} from "../../IsaacApiTypes";
+import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, documentTypePathPrefix, EXAM_BOARD, NOT_FOUND} from "./constants";
 import {CurrentTopicState} from "../state/reducers";
 import {LinkInfo} from "./navigation";
 import {filterOnExamBoard} from "./examBoard";
+import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 
 const filterForConcepts = (contents: ContentSummaryDTO[]) => {
     return contents.filter(content => content.type === DOCUMENT_TYPE.CONCEPT);
@@ -17,6 +18,17 @@ export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], e
     const relatedConcepts = examBoardFilteredContent && filterForConcepts(examBoardFilteredContent);
     const relatedQuestions = examBoardFilteredContent && filterForQuestions(examBoardFilteredContent);
     return [relatedConcepts, relatedQuestions];
+};
+
+export const getRelatedDocs = (doc: ContentDTO | NOT_FOUND_TYPE | null, examBoard: EXAM_BOARD) => {
+    if (doc && doc != NOT_FOUND && doc.relatedContent) {
+        return filterAndSeparateRelatedContent(doc.relatedContent, examBoard);
+    }
+    return [null, null];
+};
+
+export const getRelatedConcepts = (doc: ContentDTO | NOT_FOUND_TYPE | null, examBoard: EXAM_BOARD) => {
+    return getRelatedDocs(doc, examBoard)[0];
 };
 
 const isValidIdForTopic = (contentId: string, currentTopic: CurrentTopicState) => {

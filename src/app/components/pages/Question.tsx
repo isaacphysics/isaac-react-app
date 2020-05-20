@@ -44,7 +44,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
     const questionId = questionIdOverride || match.params.questionId;
     const doc = useSelector(selectDoc.ifNotAQuizId(questionId));
     const user = useSelector((state: AppState) => state && state.user);
-    const navigation = useNavigation(questionId);
+    const navigation = useNavigation(doc);
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -119,7 +119,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
 
                         <NavigationLinks navigation={navigation}/>
 
-                        {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                        {doc.relatedContent && doc.type !== "isaacFastTrackQuestionPage" && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>

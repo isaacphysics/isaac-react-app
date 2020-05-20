@@ -10,7 +10,7 @@ import {
     boards,
     BoardsState
 } from "../../app/state/reducers";
-import {Action, AppGameBoard, AppGroupMembership, LoggedInUser, AppGroup} from "../../IsaacAppTypes";
+import {Action, AppGameBoard, AppGroupMembership, AppQuestionDTO, LoggedInUser, AppGroup} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
 import {mapValues, union, without} from "lodash";
@@ -22,6 +22,10 @@ import {
 } from "../../IsaacApiTypes";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
+
+function q(questions: AppQuestionDTO[]): { questions: AppQuestionDTO[]; pageCompleted: boolean } {
+    return {questions, pageCompleted: false};
+}
 
 describe("root reducer", () => {
 
@@ -36,7 +40,7 @@ describe("root reducer", () => {
         const actualInitialState = rootReducer(undefined, ignoredTestAction);
         actualInitialState.user = {loggedIn: false};
         const previousStates = [
-            {'questions': [{id: 'a_toboggan'}]},
+            {'questions': q([{id: 'a_toboggan'}])},
             {'questions': null},
             undefined
         ];
@@ -83,7 +87,7 @@ describe("questions reducer", () => {
     });
 
     it("returns the previous state by default", () => {
-        const previousStates = [null, [aToboggan], [aToboggan, manVsHorse]];
+        const previousStates = [null, q([aToboggan]), q([aToboggan, manVsHorse])];
         previousStates.map((previousState) => {
             const actualNextState = questions(previousState, ignoredTestAction);
             expect(actualNextState).toEqual(previousState);
@@ -93,9 +97,9 @@ describe("questions reducer", () => {
     it("should register a question correctly", () => {
         const registerManVsHorse: Action = {type: ACTION_TYPE.QUESTION_REGISTRATION, question: manVsHorse};
         const testCases = [
-            [null, [manVsHorse]],
-            [[aToboggan], [aToboggan, manVsHorse]],
-            [[aToboggan, manVsHorse], [aToboggan, manVsHorse, manVsHorse]] // TODO MT could be handled better
+            [null, q([manVsHorse])],
+            [q([aToboggan]), q([aToboggan, manVsHorse])],
+            [q([aToboggan, manVsHorse]), q([aToboggan, manVsHorse, manVsHorse])] // TODO MT could be handled better
         ];
         testCases.map(([previousState, expectedNextState]) => {
             const actualNextState = questions(previousState, registerManVsHorse);
@@ -108,10 +112,10 @@ describe("questions reducer", () => {
             {type: ACTION_TYPE.QUESTION_DEREGISTRATION, questionId: (manVsHorse.id as string)};
         const testCases = [
             [null, null],
-            [[manVsHorse], null],
-            [[aToboggan, manVsHorse], [aToboggan]],
-            [[aToboggan, manVsHorse, manVsHorse], [aToboggan]],
-            [[aToboggan, aToboggan], [aToboggan, aToboggan]]
+            [q([manVsHorse]), null],
+            [q([aToboggan, manVsHorse]), q([aToboggan])],
+            [q([aToboggan, manVsHorse, manVsHorse]), q([aToboggan])],
+            [q([aToboggan, aToboggan]), q([aToboggan, aToboggan])]
         ];
         testCases.map(([previousState, expectedNextState]) => {
             const actualNextState = questions(previousState, deregisterManVsHorse);
