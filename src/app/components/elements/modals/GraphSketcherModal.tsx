@@ -11,7 +11,6 @@ const GraphSketcherModalComponent = (props: any) => {
 
     const updateGraphSketcherState = (state: { canvasWidth: number; canvasHeight: number; curves: Curve[] }) => {
         setGraphSketcherState(state);
-        console.log(state);
     };
 
     const setLineType = (type: LineType) => {
@@ -63,10 +62,10 @@ const GraphSketcherModalComponent = (props: any) => {
             <div className="button" role="button" onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-straight">straight</div>
             <div className="button" role="button" onClick={deleteSelected} onKeyUp={deleteSelected} tabIndex={0} id="graph-sketcher-ui-trash-button">trash</div>
             <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit">submit</div>
-            <select className="dropdown" id="graph-sketcher-ui-color-select" defaultValue="0">
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
+            <select className="dropdown" id="graph-sketcher-ui-color-select" defaultValue="Blue">
+                <option value="Blue">Blue</option>
+                <option value="Orange">Orange</option>
+                <option value="Green">Green</option>
             </select>
         </div>
     </div>
