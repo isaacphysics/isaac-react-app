@@ -17,7 +17,7 @@ const fastTrackStates: LevelTag[] = ['ft_top_ten', 'ft_upper', 'ft_lower'];
 function getFastTrackLevel(tags?: string[]): LevelTag {
     if (!tags) throw new Error("Unknown level for undefined tags");
     for (let state of fastTrackStates) {
-        if (tags.indexOf(state) != -1) {
+        if (tags.includes(state)) {
             return state;
         }
     }
@@ -439,10 +439,10 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         />;
     }
 
-    function createQuestionRow(conceptQuestions: AugmentedQuestion[], fastTrackLevel: string, conceptRowIndex: number) {
+    function createQuestionRow(questions: AugmentedQuestion[], fastTrackLevel: string, conceptRowIndex: number) {
         return <g key={fastTrackLevel + '-question-hexagons'}
             transform={'translate(0,' + conceptRowIndex * (6 * hexagon.quarterHeight + 2 * hexagon.padding) + ')'}>
-            {conceptQuestions.map((question, columnIndex) => (
+            {questions.map((question, columnIndex) => (
                 <g key={question.id} className={fastTrackLevel + '-question-hexagon'}
                     transform={'translate(' + columnIndex * 2 * (hexagon.halfWidth + hexagon.padding) + ', 0)'}>
                     {createQuestionHexagon(question)}
@@ -464,7 +464,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     }
 
     function renderProgress(progress: Progress) {
-        return <RS.Row className="mt-sm-3">
+        return <RS.Row className="my-sm-3">
             <RS.Col cols={12} md={3} lg={4}>
                 <h4>{gameboard.title}</h4>
                 <div className="d-none d-md-block">

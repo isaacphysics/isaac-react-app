@@ -77,18 +77,15 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
 
         return <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <Container>
-                {isFastTrack && <FastTrackProgress doc={doc} search={location.search} />}
-                {/*Print options*/}
                 {/*High contrast option*/}
                 <TitleAndBreadcrumb
                     currentPageTitle={title}
-                    intermediateCrumbs={[
-                        ...navigation.breadcrumbHistory,
-                        ...getTags(doc.tags)
-                    ]}
+                    intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
                     collectionType={navigation.collectionType}
                     level={doc.level}
-                />
+                >
+                    {isFastTrack && <FastTrackProgress doc={doc} search={location.search} />}
+                </TitleAndBreadcrumb>
                 <div className="no-print d-flex align-items-center">
                     <EditContentButton doc={doc} />
                     <div className="question-actions question-actions-leftmost mt-3">
@@ -139,7 +136,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
 
                         <NavigationLinks navigation={navigation}/>
 
-                        {doc.relatedContent && doc.type !== "isaacFastTrackQuestionPage" && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                        {doc.relatedContent && !isFastTrack && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>
