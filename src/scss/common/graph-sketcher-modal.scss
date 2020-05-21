@@ -13,13 +13,96 @@
     .graph-sketcher-ui {
         position: absolute;
         width: 100%;
+        height: 100%;
         z-index: 255;
 
-        &.button {
-            background: black;
+        .button {
+            background: yellow;
             display: block;
             position: absolute;
-            top: 0;
+            width: 90px;
+            height: 90px;
+            cursor: pointer;
+            background-color: transparent;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position-y: center;
+            text-indent: -1000px;
+            overflow: hidden;
+
+            &.visible {
+                visibility: visible;
+            }
+
+            &.hidden {
+                visibility: hidden;
+            }
+
+            &#graph-sketcher-ui-trash-button {
+                top: 20px;
+                right: 0;
+                opacity: 0.5;
+                background-image: url('/assets/inequality-trash.svg');
+            }
+
+            &#graph-sketcher-ui-bezier-button {
+                top: 20px;
+                right: 260px;
+                background-image: url('/assets/hex-button-polynomial.png');
+
+                &:hover {
+                    background-image: url('/assets/hex-button-polynomial-hover.png');
+                }
+            }
+
+            &#graph-sketcher-ui-linear-button {
+                top: 20px;
+                right: 350px;
+                background-image: url('/assets/hex-button-straight.png');
+
+                &:hover {
+                    background-image: url('/assets/hex-button-straight-hover.png');
+                }
+            }
+
+            &#graph-sketcher-ui-undo-button {
+                bottom: 20px;
+                left: 20px;
+                background-image: url('/assets/hex-button-undo.png');
+
+                &:hover {
+                    background-image: url('/assets/hex-button-undo-hover.png');
+                }
+            }
+
+            &#graph-sketcher-ui-redo-button {
+                bottom: 20px;
+                left: 110px;
+                background-image: url('/assets/hex-button-redo.png');
+
+                &:hover {
+                    background-image: url('/assets/hex-button-redo-hover.png');
+                }
+            }
+
+            &#graph-sketcher-ui-submit-button {
+                bottom: 20px;
+                right: 20px;
+                background-image: url('/assets/inequality-confirm.svg');
+            }
+        }
+
+        .dropdown {
+            position: absolute;
+
+            &#graph-sketcher-ui-color-select {
+                top: 20px;
+                right: 120px;
+                width: 120px;
+                height: 30px;
+                border: 1px solid black;
+                background: white;
+            }
         }
     }
 }
