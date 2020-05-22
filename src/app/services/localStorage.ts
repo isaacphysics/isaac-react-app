@@ -4,6 +4,7 @@ export enum KEY {
     CURRENT_USER_ID = "currentUserId",
     FIRST_LOGIN = "firstLogin",
     REQUIRED_MODAL_SHOWN_TIME = "requiredModalShownTime",
+    LAST_NOTIFICATION_TIME = "lastNotificationTime",
 }
 
 export const LOADING_FAILURE_VALUE = null;

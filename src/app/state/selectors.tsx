@@ -63,15 +63,15 @@ export const doc = {
 
 export const questions = {
     selectQuestionPart: (questionPartId?: string) => (state: AppState) => {
-        return state && state.questions && state.questions.filter(question => question.id == questionPartId)[0];
+        return state && state.questions && state.questions.questions.filter(question => question.id == questionPartId)[0];
     },
     allQuestionsAttempted: (state: AppState) => {
-        return !!state && !!state.questions && state.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
+        return !!state && !!state.questions && state.questions.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
     },
     anyQuestionPreviouslyAttempted: (state: AppState) => {
-        return !!state && !!state.questions && state.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
+        return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
     },
     filter: (predicate: (q: AppQuestionDTO) => boolean) => (state: AppState) => {
-        return state && state.questions && state.questions.filter(predicate) || [];
+        return state && state.questions && state.questions.questions.filter(predicate) || [];
     }
 };

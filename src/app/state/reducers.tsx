@@ -235,6 +235,16 @@ export const constants = (constants: ConstantsState = null, action: Action) => {
     }
 };
 
+type NotificationsState = {notifications?: any[]} | null;
+export const notifications = (notifications: NotificationsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS:
+            return {notifications: Array.from(action.notifications)};
+        default:
+            return notifications;
+    }
+};
+
 type DocState = ContentDTO | NOT_FOUND_TYPE | null;
 export const doc = (doc: DocState = null, action: Action) => {
     switch (action.type) {
@@ -297,20 +307,27 @@ export const question = (question: AppQuestionDTO, action: Action) => {
     }
 };
 
-type QuestionsState = AppQuestionDTO[] | null;
-export const questions = (questions: QuestionsState = null, action: Action) => {
+type QuestionsState = {questions: AppQuestionDTO[]; pageCompleted: boolean} | null;
+function augmentQuestions(questions: AppQuestionDTO[]): QuestionsState {
+    return {
+        questions,
+        pageCompleted: questions.every(q => q.validationResponse && q.validationResponse.correct)
+    }
+}
+export const questions = (qs: QuestionsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.QUESTION_REGISTRATION: {
-            const currentQuestions = questions !== null ? [...questions] : [];
+            const currentQuestions = qs !== null ? [...qs.questions] : [];
             const bestAttempt = action.question.bestAttempt;
             const newQuestion: AppQuestionDTO = bestAttempt ?
                 {...action.question, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer, accordionClientId: action.accordionClientId} :
                 {...action.question, accordionClientId: action.accordionClientId};
-            return [...currentQuestions, newQuestion];
+            const newQuestions = [...currentQuestions, newQuestion];
+            return augmentQuestions(newQuestions);
         }
         case ACTION_TYPE.QUESTION_DEREGISTRATION: {
-            const filteredQuestions = questions && questions.filter((q) => q.id != action.questionId);
-            return filteredQuestions && filteredQuestions.length ? filteredQuestions : null;
+            const filteredQuestions = qs && qs.questions.filter((q) => q.id != action.questionId);
+            return filteredQuestions && filteredQuestions.length ? augmentQuestions(filteredQuestions) : null;
         }
         // Delegate processing the question matching action.questionId to the question reducer
         case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
@@ -318,10 +335,10 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
         case ACTION_TYPE.QUESTION_UNLOCK:
         case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE:
         case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS: {
-            return questions && questions.map((q) => q.id === action.questionId ? question(q, action) : q);
+            return qs && augmentQuestions(qs.questions.map((q) => q.id === action.questionId ? question(q, action) : q));
         }
         default: {
-            return questions;
+            return qs;
         }
     }
 };
@@ -876,6 +893,7 @@ const appReducer = combineReducers({
     otherUserAuthorisations,
     groupMemberships,
     constants,
+    notifications,
     doc,
     questions,
     answeredQuestionsByDate,
@@ -934,6 +952,7 @@ export type AppState = undefined | {
     contentVersion: ContentVersionState;
     search: SearchState;
     constants: ConstantsState;
+    notifications: NotificationsState;
     error: ErrorState;
     toasts: ToastsState;
     activeModals: ActiveModalsState;

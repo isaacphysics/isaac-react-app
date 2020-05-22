@@ -41,7 +41,7 @@ const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc}: 
         fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId)
     }, [conceptId, fetchDoc]);
 
-    const navigation = useNavigation(conceptId);
+    const navigation = useNavigation(doc);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
