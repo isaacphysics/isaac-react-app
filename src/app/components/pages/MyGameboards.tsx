@@ -320,17 +320,17 @@ export const MyGameboards = () => {
                                                     Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
                                                 </Label>
                                             </Col>
-                                            <Col sm={6} lg={{size: 3, offset: 1}}>
+                                            {SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 1}}>
                                                 <Label className="w-100">Levels
                                                     <Select inputId="levels-select"
                                                         isMulti
                                                         options={[
-                                                            { value: '1', label: '1' },
-                                                            { value: '2', label: '2' },
-                                                            { value: '3', label: '3' },
-                                                            { value: '4', label: '4' },
-                                                            { value: '5', label: '5' },
-                                                            { value: '6', label: '6' },
+                                                            {value: '1', label: '1'},
+                                                            {value: '2', label: '2'},
+                                                            {value: '3', label: '3'},
+                                                            {value: '4', label: '4'},
+                                                            {value: '5', label: '5'},
+                                                            {value: '6', label: '6'},
                                                         ]}
                                                         className="basic-multi-select"
                                                         classNamePrefix="select"
@@ -339,7 +339,8 @@ export const MyGameboards = () => {
                                                     />
                                                 </Label>
                                             </Col>
-                                            <Col sm={6} lg={2}>
+                                            }
+                                            <Col sm={6} lg={SITE_SUBJECT == SITE.PHY ? 2 : {size: 2, offset: 4}}>
                                                 <Label className="w-100">
                                                     Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
                                                         {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
