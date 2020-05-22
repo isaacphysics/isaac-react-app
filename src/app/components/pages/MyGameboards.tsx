@@ -392,7 +392,7 @@ export const MyGameboards = () => {
                                                         .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
                                                         && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
                                                         && (boardCompletionSelection(board, boardCompletion))
-                                                        && (boardLevelsSelection(board, levels))) // && (boardCompletionSelection(board, boardCompletion)
+                                                        && (boardLevelsSelection(board, levels)))
                                                         .map(board =>
                                                             <Board
                                                                 key={board.id}
