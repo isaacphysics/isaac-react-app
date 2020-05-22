@@ -25,6 +25,8 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {sortIcon} from "../../services/constants";
 import {
     boardCompletionSelection,
+    boardLevelsSelection,
+    determineGameboardLevels,
     determineGameboardSubjects,
     formatBoardOwner,
     generateGameboardSubjectHexagons
@@ -33,6 +35,9 @@ import {isMobile} from "../../services/device";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import Select from "react-select";
+import {multiSelectOnChange} from "../../services/gameboardBuilder";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -113,7 +118,7 @@ const Board = (props: BoardTableProps) => {
                 </div>
             </td>
             <td className="align-middle"><a href={boardLink}>{board.title}</a></td>
-            {/*<td className="text-center align-middle">{board.levels.join(' ')}</td>*/}
+            {SITE_SUBJECT == SITE.PHY && <td className="text-center align-middle">{determineGameboardLevels(board).join(' ')}</td>}
             <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
             <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
             <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
@@ -173,6 +178,7 @@ export const MyGameboards = () => {
     const [selectedBoards, setSelectedBoards] = useState<AppGameBoard[]>([]);
     const [boardCreator, setBoardCreator] = useState<boardCreators>(boardCreators.all);
     const [boardCompletion, setBoardCompletion] = useState<boardCompletions>(boardCompletions.any);
+    const [levels, setLevels] = useState<string[]>([]);
 
     let actualBoardLimit: ActualBoardLimit = toActual(boardLimit);
 
@@ -309,12 +315,32 @@ export const MyGameboards = () => {
                                 <Card className="mt-2 mb-5">
                                     <CardBody id="boards-table">
                                         <Row>
-                                            <Col lg={5}>
+                                            <Col lg={4}>
                                                 <Label className="w-100">
                                                     Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
                                                 </Label>
                                             </Col>
-                                            <Col sm={6} lg={{size: 2, offset: 3}}>
+                                            <Col sm={6} lg={{size: 3, offset: 1}}>
+                                                <Label className="w-100">Levels
+                                                    <Select inputId="levels-select"
+                                                        isMulti
+                                                        options={[
+                                                            { value: '1', label: '1' },
+                                                            { value: '2', label: '2' },
+                                                            { value: '3', label: '3' },
+                                                            { value: '4', label: '4' },
+                                                            { value: '5', label: '5' },
+                                                            { value: '6', label: '6' },
+                                                        ]}
+                                                        name="colors"
+                                                        className="basic-multi-select"
+                                                        classNamePrefix="select"
+                                                        placeholder="None"
+                                                        onChange={multiSelectOnChange(setLevels)}
+                                                    />
+                                                </Label>
+                                            </Col>
+                                            <Col sm={6} lg={2}>
                                                 <Label className="w-100">
                                                     Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
                                                         {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
@@ -340,7 +366,7 @@ export const MyGameboards = () => {
                                                                 Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                                                             </button>
                                                         </th>
-                                                        {/*<th className="text-center">Levels</th>*/}
+                                                        {SITE_SUBJECT == SITE.PHY && <th className="text-center align-middle">Levels</th>}
                                                         <th className="text-center align-middle">Creator</th>
                                                         <th className="text-center align-middle pointer-cursor">
                                                             <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
@@ -365,7 +391,8 @@ export const MyGameboards = () => {
                                                     {boards.boards
                                                         .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
                                                         && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                                                        && (boardCompletionSelection(board, boardCompletion))) // && (boardCompletionSelection(board, boardCompletion)
+                                                        && (boardCompletionSelection(board, boardCompletion))
+                                                        && (boardLevelsSelection(board, levels))) // && (boardCompletionSelection(board, boardCompletion)
                                                         .map(board =>
                                                             <Board
                                                                 key={board.id}
