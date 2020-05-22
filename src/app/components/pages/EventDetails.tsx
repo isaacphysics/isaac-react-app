@@ -193,7 +193,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                 additionalInformation={additionalInformation}
                                                 updateAdditionalInformation={updateAdditionalInformation}
                                             />
-                                            {(canMakeABooking || canBeAddedToWaitingList) && <div>
+                                            <div>
                                                 <p className="mb-3">
                                                     <small>
                                                         By requesting to book on this event, you are granting event organisers access to the information provided in the form above.
@@ -210,7 +210,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                 <div className="text-center mt-4 mb-2">
                                                     <RS.Input type="submit" value={submissionTitle} className="btn btn-xl btn-secondary border-0" />
                                                 </div>
-                                            </div>}
+                                            </div>
                                         </RS.Form>
                                     </RS.CardBody>
                                 </RS.Card>
@@ -221,7 +221,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                 {/* Options for un-logged-in users */}
                                 {!isLoggedIn(user) && event.isNotClosed && !event.hasExpired &&
                                     <RS.Button onClick={loginAndReturn}>
-                                        {atLeastOne(event.numberOfPlaces) && event.isWithinBookingDeadline ?
+                                        {atLeastOne(event.placesAvailable) && event.isWithinBookingDeadline ?
                                             "Login to book" :
                                             "login to apply"
                                         }
