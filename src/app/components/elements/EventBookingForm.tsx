@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {requestEmailVerification} from "../../state/actions";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
+import {studentOnlyEventMessage} from "../../services/events";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
@@ -97,21 +98,22 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             onChange={event => updateAdditionalInformation({yearGroup: event.target.value})}
                         >
                             <option value="" />
-                            {event.student && <option value="9">Year 9</option>}
-                            {event.student && <option value="10">Year 10</option>}
-                            {event.student && <option value="11">Year 11</option>}
-                            {event.student && <option value="12">Year 12</option>}
-                            {event.student && <option value="13">Year 13</option>}
-                            <option value="TEACHER">N/A - Teacher</option>
-                            <option value="OTHER">N/A - Other</option>
+                            {event.isAStudentEvent && <option value="9">Year 9</option>}
+                            {event.isAStudentEvent && <option value="10">Year 10</option>}
+                            {event.isAStudentEvent && <option value="11">Year 11</option>}
+                            {event.isAStudentEvent && <option value="12">Year 12</option>}
+                            {event.isAStudentEvent && <option value="13">Year 13</option>}
+                            {!event.isStudentOnly && <option value="TEACHER">N/A - Teacher</option>}
+                            {!event.isStudentOnly && <option value="OTHER">N/A - Other</option>}
                         </RS.Input>
-                        {event.teacher && additionalInformation.yearGroup == 'TEACHER' && <div className="mt-2 text-right">
+                        {event.isStudentOnly && <div className="text-muted">{studentOnlyEventMessage(event.id)}</div>}
+                        {(event.isATeacherEvent || additionalInformation.yearGroup == 'TEACHER') && <div className="mt-2 text-right">
                             <a href="/pages/teacher_accounts" target="_blank">Click to upgrade to a teacher account</a> for free!
                         </div>}
                     </React.Fragment>}
                 </div>
 
-                {!event.virtual && <div>
+                {!event.isVirtual && <div>
                     <div>
                         <RS.Label htmlFor="medical-reqs">
                             Dietary requirements or relevant medical conditions

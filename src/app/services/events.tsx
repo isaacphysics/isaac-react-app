@@ -3,6 +3,12 @@ import {apiHelper} from "./api";
 import {AugmentedEvent} from "../../IsaacAppTypes";
 import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateString";
 import React from "react";
+import {Link} from "react-router-dom";
+
+export const studentOnlyEventMessage = (eventId?: string) => <React.Fragment>
+    {"This event is aimed at students. If you are not a student but still wish to attend, please "}
+    <Link to={`/contact?subject=${encodeURI("Non-student attendance at " + eventId)}`}>contact us</Link>.
+</React.Fragment>;
 
 export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
     const augmentedEvent: AugmentedEvent = Object.assign({}, event);
@@ -11,27 +17,31 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
         const now = Date.now();
         if (event.endDate != null) {  // Non-breaking change; if endDate not specified, behaviour as before
             const endDate = new Date(event.endDate);
-            augmentedEvent.multiDay = startDate.toDateString() != endDate.toDateString();
-            augmentedEvent.expired = now > endDate.getTime();
-            augmentedEvent.withinBookingDeadline = event.bookingDeadline ? now <= new Date(event.bookingDeadline).getTime() : true;
-            augmentedEvent.inProgress = startDate.getTime() <= now && now <= endDate.getTime();
+            augmentedEvent.isMultiDay = startDate.toDateString() != endDate.toDateString();
+            augmentedEvent.hasExpired = now > endDate.getTime();
+            augmentedEvent.isWithinBookingDeadline = event.bookingDeadline ? now <= new Date(event.bookingDeadline).getTime() : true;
+            augmentedEvent.isInProgress = startDate.getTime() <= now && now <= endDate.getTime();
         } else {
-            augmentedEvent.expired = now > startDate.getTime();
-            augmentedEvent.inProgress = false;
-            augmentedEvent.multiDay = false;
+            augmentedEvent.hasExpired = now > startDate.getTime();
+            augmentedEvent.isInProgress = false;
+            augmentedEvent.isMultiDay = false;
         }
     }
 
     if (event.tags) {
-        augmentedEvent.teacher = event.tags.includes("teacher");
-        augmentedEvent.student = event.tags.includes("student");
-        augmentedEvent.virtual = event.tags.includes("virtual");
-        augmentedEvent.recurring = event.tags.includes("recurring");
+        augmentedEvent.isATeacherEvent = event.tags.includes("teacher");
+        augmentedEvent.isAStudentEvent = event.tags.includes("student");
+        augmentedEvent.isVirtual = event.tags.includes("virtual");
+        augmentedEvent.isRecurring = event.tags.includes("recurring");
+        augmentedEvent.isStudentOnly = event.tags.includes("student_only");
         augmentedEvent.field =
             (event.tags.includes("physics") && "physics") ||
             (event.tags.includes("maths") && "maths") ||
             undefined;
     }
+
+    augmentedEvent.isNotClosed = event.eventStatus !== "CLOSED";
+    augmentedEvent.isWaitingListOnly = event.eventStatus === "WAITING_LIST_ONLY";
 
     // we have to fix the event image url.
     if(augmentedEvent.eventThumbnail && augmentedEvent.eventThumbnail.src) {
@@ -48,21 +58,21 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
 };
 
 export const formatEventDetailsDate = (event: AugmentedEvent) => {
-    if (event.recurring) {
+    if (event.isRecurring) {
         return <span>Series starts <DateString>{event.date}</DateString></span>;
-    } else if (event.multiDay) {
+    } else if (event.isMultiDay) {
         return <><DateString>{event.date}</DateString>{" — "}<DateString>{event.endDate}</DateString></>;
     } else {
         return <><DateString>{event.date}</DateString>{" — "}<DateString formatter={TIME_ONLY}>{event.endDate}</DateString></>;
     }
-}
+};
 
 export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) => {
-    if (event.recurring) {
+    if (event.isRecurring) {
         return <span>Series starts <DateString formatter={FRIENDLY_DATE}>{event.date}</DateString><br />
             <DateString formatter={TIME_ONLY}>{event.date}</DateString> — <DateString formatter={TIME_ONLY}>{event.endDate}</DateString>
         </span>;
-    } else if (event.multiDay) {
+    } else if (event.isMultiDay) {
         return <>
             <DateString>{event.date}</DateString><br/>
             <DateString>{event.endDate}</DateString>
@@ -73,4 +83,4 @@ export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) =>
             <DateString formatter={TIME_ONLY}>{event.date}</DateString> — <DateString formatter={TIME_ONLY}>{event.endDate}</DateString>
         </>;
     }
-}
+};
