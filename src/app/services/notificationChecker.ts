@@ -4,8 +4,10 @@ import {KEY} from "./localStorage";
 
 
 export function showNotification(user: RegisteredUserDTO | null) {
-    if (user && user.registrationDate && (Date.now() - (Number(user.registrationDate)) > 14*24*60*60*1000)) {
-        if (Date.now() - Number(persistence.load(KEY.LAST_NOTIFICATION_TIME)) > 24*60*60*1000) {
+    const dateNow = new Date();
+    const notificationTime = persistence.load(KEY.LAST_NOTIFICATION_TIME);
+    if (user && user.registrationDate && (dateNow.getTime() - new Date(user.registrationDate).getTime()) > 14*24*60*60*1000) {
+        if (dateNow.getTime() - (new Date(notificationTime || "0").getTime()) > 24*60*60*1000) {
             return true
         }
     } else return false
