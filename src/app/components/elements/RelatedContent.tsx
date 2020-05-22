@@ -5,6 +5,7 @@ import {Link} from "react-router-dom";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../services/constants";
 import {connect} from "react-redux";
 import {logAction} from "../../state/actions";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
@@ -48,23 +49,31 @@ function getURLForContent(content: ContentSummaryDTO) {
 }
 
 export const RelatedContentComponent = ({content, parentPage, logAction}: RelatedContentProps) => {
-    const concepts = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
-    const questions = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION).sort((a, b) => {
-        if (a.level === b.level) return ((a.title || '').localeCompare((b.title || ''), undefined, { numeric: true, sensitivity: 'base' }));
-        const aInt = parseInt(a.level || '-1');
-        const bInt = parseInt(b.level || '-1');
-        return aInt > bInt ? 1 : aInt != bInt ? -1 : 0;
-    });
+    const concepts = content
+        .filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
+
+    const questions = content
+        .filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION)
+        .sort((a, b) => {
+            if (a.level === b.level) return ((a.title || '').localeCompare((b.title || ''), undefined, { numeric: true, sensitivity: 'base' }));
+            const aInt = parseInt(a.level || '-1');
+            const bInt = parseInt(b.level || '-1');
+            return aInt > bInt ? 1 : aInt != bInt ? -1 : 0;
+        });
 
     const makeListGroupItem = (contentSummary: ContentSummaryDTO) => (
         <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
             <Link to={getURLForContent(contentSummary)}
                 onClick={() => {logAction(getEventDetails(contentSummary, parentPage))}}
             >
-                {contentSummary.level && contentSummary.level != '0' ? (contentSummary.title + " (Level " + contentSummary.level + ")") : contentSummary.title}
+                {contentSummary.title}
+                {SITE_SUBJECT === SITE.PHY && contentSummary.level && contentSummary.level != '0' &&
+                    " (Level " + contentSummary.level + ")"
+                }
             </Link>
         </ListGroupItem>
     );
+
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 w-lg-50 d-flex">
             <div className="flex-fill simple-card mr-lg-3 my-3 p-3 text-wrap">
