@@ -332,7 +332,6 @@ export const MyGameboards = () => {
                                                             { value: '5', label: '5' },
                                                             { value: '6', label: '6' },
                                                         ]}
-                                                        name="colors"
                                                         className="basic-multi-select"
                                                         classNamePrefix="select"
                                                         placeholder="None"
