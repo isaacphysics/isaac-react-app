@@ -50,7 +50,8 @@
                 right: 260px;
                 background-image: url('/assets/hex-button-polynomial.png');
 
-                &:hover {
+                &:hover,
+                &.active {
                     background-image: url('/assets/hex-button-polynomial-hover.png');
                 }
             }
@@ -60,7 +61,8 @@
                 right: 350px;
                 background-image: url('/assets/hex-button-straight.png');
 
-                &:hover {
+                &:hover,
+                &.active {
                     background-image: url('/assets/hex-button-straight-hover.png');
                 }
             }
