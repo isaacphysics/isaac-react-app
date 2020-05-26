@@ -8,6 +8,7 @@ import {logAction} from "../../state/actions";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {sortByNumberStringValue, sortByStringValue} from "../../services/sorting";
 
+
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
     parentPage: ContentDTO;
@@ -141,6 +142,7 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
                 target={openInNewTab ? "_blank" : undefined}
             >
                 {contentSummary.title}
+                {/*TODO CS Level*/}
                 {SITE_SUBJECT === SITE.PHY && contentSummary.level && contentSummary.level != '0' && " (Level " + contentSummary.level + ")"}
             </Link>
         </ListGroupItem>
