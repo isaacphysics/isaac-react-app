@@ -231,7 +231,6 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         let subjects = [];
 
                         if (SITE_SUBJECT == SITE.CS) {
-                            // TODO change to compsci in editor and here
                             subjects.push("computer_science");
                         } else {
                             const definedSubjects = ["physics", "maths", "chemistry"];
