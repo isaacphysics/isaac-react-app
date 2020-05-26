@@ -51,8 +51,8 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
                 <CardBody>
                     <Form name="passwordReset">
                         <FormGroup>
-                            <Label htmlFor="password-input">New password</Label>
-                            <Input id="password" type="password" name="password"
+                            <Label htmlFor="password">New password</Label>
+                            <Input id="password" type="password" name="password-new"
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     passwordDebounce(e.target.value, setPasswordFeedback);
                                 }}
@@ -71,7 +71,7 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
                         </FormGroup>
                         <FormGroup>
                             <Label htmlFor="password-confirm">Re-enter new password</Label>
-                            <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password" onBlur={(e: any) => {
+                            <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password-new-confirm" onBlur={(e: any) => {
                                 validateAndSetPassword(e);
                                 (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ? setCurrentPassword(e.target.value) : null}
                             } aria-describedby="invalidPassword" required/>
@@ -83,7 +83,12 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
                     <h4 role="alert" className="text-danger text-center mb-0">
                         {errorMessage && errorMessage.type === "generalError" && errorMessage.generalError}
                     </h4>
-                    <Button color="secondary" className="mb-2" block onClick={(e: any) => (isValidPassword && !errorMessage) ? handleResetPassword({token: urlToken, password: currentPassword}) : null}>Change Password</Button>
+                    <Button color="secondary" className="mb-2" block
+                        onClick={() => (isValidPassword && !errorMessage) ? handleResetPassword({token: urlToken, password: currentPassword}) : null}
+                        id="change-password"
+                    >
+                        Change Password
+                    </Button>
                 </CardFooter>
             </Card>
         </div>
