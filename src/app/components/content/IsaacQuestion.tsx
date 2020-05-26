@@ -256,14 +256,14 @@ const IsaacQuestionComponent = ({doc, validationResponse, currentAttempt, canSub
             {(!validationResponse || !validationResponse.correct || canSubmit) && !locked &&
                 <div className="d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row">
                     {secondaryAction && <div
-                        className={`text-center pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ${primaryAction ? "pr-sm-2 pr-md-0 pr-lg-3" : ""}`}
+                        className={`m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ${primaryAction ? "pr-sm-2 pr-md-0 pr-lg-3" : ""}`}
                     >
-                        <input {...secondaryAction} className="btn btn-outline-primary btn-block" />
+                        <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block" />
                     </div>}
                     {primaryAction && <div
-                        className={`text-center pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ${secondaryAction ? "pl-sm-2 pl-md-0 pl-lg-3" : ""}`}
+                        className={`m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ${secondaryAction ? "pl-sm-2 pl-md-0 pl-lg-3" : ""}`}
                     >
-                        <input {...primaryAction} className="btn btn-secondary btn-block" />
+                        <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />
                     </div>}
                 </div>
             }

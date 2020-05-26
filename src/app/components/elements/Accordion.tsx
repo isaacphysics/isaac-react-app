@@ -140,7 +140,8 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
                 }}
                 aria-expanded={open ? "true" : "false"}
             >
-                {level && <span className="accordion-level badge-secondary">Level {level}</span>}
+                {/*TODO CS Level*/}
+                {SITE_SUBJECT === SITE.PHY && level && <span className="accordion-level badge-secondary">Level {level}</span>}
                 <div className="accordion-title pl-3">
                     <RS.Row><span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
                         {trustedTitle && <div className="p-3"><TrustedHtml html={trustedTitle} /></div>}</RS.Row>

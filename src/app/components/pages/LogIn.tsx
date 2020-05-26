@@ -122,7 +122,9 @@ const LogInPageComponent = ({user, handleProviderLoginRedirect, logInUser, reset
                                             Forgotten your password?
                                         </Button> :
                                         <p>
-                                            <strong className="d-block">Your password reset request is being processed.</strong>
+                                            <strong id="password-reset-processing" className="d-block">
+                                                Your password reset request is being processed.
+                                            </strong>
                                             <strong className="d-block">Please check your inbox.</strong>
                                         </p>
                                     }
