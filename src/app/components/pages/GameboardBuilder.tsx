@@ -34,6 +34,7 @@ import {withRouter} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import intersection from "lodash/intersection"
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -230,9 +231,20 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         let subjects = [];
 
                         if (SITE_SUBJECT == SITE.CS) {
+                            // TODO change to compsci in editor and here
                             subjects.push("computer_science");
                         } else {
-                            subjects.push("physics");
+                            const definedSubjects = ["physics", "maths", "chemistry"];
+                            selectedQuestions?.forEach((item) => {
+                                let tags = intersection(definedSubjects, item.tags || []);
+                                tags.forEach((tag: string) => subjects.push(tag));
+                            }
+                            );
+                            // If none of the questions have a subject tag, default to physics
+                            if (subjects.length === 0) {
+                                subjects.push("physics");
+                            }
+                            subjects = Array.from(new Set(subjects));
                         }
 
                         dispatch(createGameboard({
