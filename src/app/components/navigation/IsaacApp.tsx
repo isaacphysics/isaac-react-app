@@ -89,9 +89,10 @@ export const IsaacApp = () => {
     }, []);
 
     useEffect(() => {
+        const dateNow = new Date();
         if (showNotification(user) && notifications && notifications.length > 0) {
             dispatch(openActiveModal(notificationModal(notifications[0])));
-            persistence.save(KEY.LAST_NOTIFICATION_TIME, Date.now().toString())
+            persistence.save(KEY.LAST_NOTIFICATION_TIME, dateNow.toString())
         }
     }, [notifications, user]);
 
