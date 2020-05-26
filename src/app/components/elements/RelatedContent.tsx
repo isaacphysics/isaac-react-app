@@ -5,6 +5,7 @@ import {Link} from "react-router-dom";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../services/constants";
 import {connect} from "react-redux";
 import {logAction} from "../../state/actions";
+import {SITE_SUBJECT, SITE} from "../../services/siteConstants";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
@@ -61,7 +62,8 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
             <Link to={getURLForContent(contentSummary)}
                 onClick={() => {logAction(getEventDetails(contentSummary, parentPage))}}
             >
-                {contentSummary.level && contentSummary.level != '0' ? (contentSummary.title + " (Level " + contentSummary.level + ")") : contentSummary.title}
+                {/*TODO CS Level*/}
+                {SITE_SUBJECT === SITE.PHY && contentSummary.level && contentSummary.level != '0' ? (contentSummary.title + " (Level " + contentSummary.level + ")") : contentSummary.title}
             </Link>
         </ListGroupItem>
     );
