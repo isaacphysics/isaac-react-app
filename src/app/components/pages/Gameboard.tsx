@@ -69,7 +69,7 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
                 </div>}
             </div>
             {/*TODO CS Level*/}
-            {SITE_SUBJECT == SITE.PHY && question.level !== undefined && question.level !== 0 &&
+            {SITE_SUBJECT === SITE.PHY && question.level !== undefined && question.level !== 0 &&
                 <span className="gameboard-tags">Level {question.level}</span>}
         </Link>
     </RS.ListGroupItem>;

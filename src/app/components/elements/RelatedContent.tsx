@@ -63,7 +63,7 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
                 onClick={() => {logAction(getEventDetails(contentSummary, parentPage))}}
             >
                 {/*TODO CS Level*/}
-                {SITE_SUBJECT == SITE.PHY && contentSummary.level && contentSummary.level != '0' ? (contentSummary.title + " (Level " + contentSummary.level + ")") : contentSummary.title}
+                {SITE_SUBJECT === SITE.PHY && contentSummary.level && contentSummary.level != '0' ? (contentSummary.title + " (Level " + contentSummary.level + ")") : contentSummary.title}
             </Link>
         </ListGroupItem>
     );
