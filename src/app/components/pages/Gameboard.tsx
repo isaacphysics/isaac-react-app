@@ -68,7 +68,8 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
                     {tags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
                 </div>}
             </div>
-            {question.level !== undefined && question.level !== 0 &&
+            {/*TODO CS Level*/}
+            {SITE_SUBJECT == SITE.PHY && question.level !== undefined && question.level !== 0 &&
                 <span className="gameboard-tags">Level {question.level}</span>}
         </Link>
     </RS.ListGroupItem>;
