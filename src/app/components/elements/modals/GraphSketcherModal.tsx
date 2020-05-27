@@ -1,9 +1,14 @@
-import React, { useState, useEffect, FocusEvent, ChangeEvent } from "react";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { connect } from "react-redux";
 import { GraphSketcher, LineType, Curve, makeGraphSketcher } from "isaac-graph-sketcher/src/GraphSketcher";
 
-const GraphSketcherModalComponent = (props: any) => {
+interface GraphSketcherModalProps {
+    close: () => void;
+    onGraphSketcherStateChange: (state: any) => void;
+}
+
+const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
+    const { onGraphSketcherStateChange, close } = props;
     const [ , setGraphSketcherElement] = useState<HTMLElement>();
     const [sketch, setSketch] = useState<GraphSketcher|undefined|null>();
     const [ , setGraphSketcherState] = useState<object|undefined|null>();
@@ -12,6 +17,7 @@ const GraphSketcherModalComponent = (props: any) => {
 
     const updateGraphSketcherState = (state: { canvasWidth: number; canvasHeight: number; curves: Curve[] }) => {
         setGraphSketcherState(state);
+        onGraphSketcherStateChange(state);
     };
 
     const undo = () => sketch?.undo();
@@ -19,10 +25,6 @@ const GraphSketcherModalComponent = (props: any) => {
     const redo = () => sketch?.redo();
 
     const deleteSelected = () => {
-        // TODO: Implement this
-    };
-
-    const close = () => {
         // TODO: Implement this
     };
 

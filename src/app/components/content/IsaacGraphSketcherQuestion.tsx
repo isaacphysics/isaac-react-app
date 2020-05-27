@@ -1,13 +1,12 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
-import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacTabbedHints} from "./IsaacHints";
-import {ifKeyIsEnter} from "../../services/navigation";
 import {questions} from "../../state/selectors";
 import { GraphSketcherModal } from "../elements/modals/GraphSketcherModal";
+import {debounce} from "lodash";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
@@ -43,6 +42,16 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
         }
     }
 
+    // This is debounced here because the graph sketcher upstream calls this
+    // on every redraw, which happens on every mouse movement.
+    // TODO: Ideally fix this upstream.
+    const updateCurrentAttempt = useCallback(
+        debounce((newState: any) => {
+            setCurrentAttempt(questionId, {type: 'graphChoice', value: JSON.stringify(newState)});
+        }, 250),
+        []
+    );
+
     useEffect(() => {
         // componentDidMount
         window.addEventListener('keyup', handleKeyPress);
@@ -56,7 +65,10 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
 
     return <div className="graph-sketcher-question">
         <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>PREVIEW: Click here to answer.</div>
-        {modalVisible && <GraphSketcherModal></GraphSketcherModal>}
+        {modalVisible && <GraphSketcherModal
+            close={closeModal}
+            onGraphSketcherStateChange={updateCurrentAttempt}
+        />}
         Hints: <IsaacTabbedHints questionPartId={questionId} hints={doc.hints} />
     </div>
 };
