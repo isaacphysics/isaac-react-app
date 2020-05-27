@@ -103,9 +103,9 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     const gameboardMaybeNull = useSelector(board.currentGameboard);
     const fasttrackConcepts = useSelector((appState: AppState) => appState && appState.fasttrackConcepts);
 
-    const smDevice = useMediaQuery({query: '(min-device-width: 768px)'});
-    const mdDevice = useMediaQuery({query: '(min-device-width: 992px)'});
-    const lgDevice = useMediaQuery({query: '(min-device-width: 1200px)'});
+    const smDevice = useMediaQuery({query: '(min-width: 768px)'});
+    const mdDevice = useMediaQuery({query: '(min-width: 992px)'});
+    const lgDevice = useMediaQuery({query: '(min-width: 1200px)'});
     const deviceSize = lgDevice ? "lg" : mdDevice ? "md" : smDevice ? "sm" : "xs";
     const hexagonUnitLength = {lg: 28, md: 26, sm: 22, xs: 12.5}[deviceSize];
     const hexagonPadding = {lg: 4, md: 4, sm: 3, xs: 2}[deviceSize];
@@ -462,16 +462,16 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     }
 
     function renderProgress(progress: Progress) {
-        return <RS.Row className="mt-sm-3 mb-sm-4">
-            <RS.Col cols={12} md={3} lg={4}>
+        return <RS.Row className="mt-sm-3 mb-3 mb-sm-4">
+            <RS.Col cols={12} lg={4}>
                 <h4 className="mt-lg-1">{gameboard.title}</h4>
-                <div className="d-none d-md-block">
-                    <br className="d-none d-md-block"/>
+                <div className="d-none d-lg-block">
                     <br className="d-none d-lg-block"/>
-                    {currentlyWorkingOn.isConcept && <h4 className="mt-lg-1">{currentlyWorkingOn.title} Practice</h4>}
+                    <br className="d-none d-xl-block"/>
+                    {currentlyWorkingOn.isConcept && <h4 className="mt-lg-1 mt-xl-3">{currentlyWorkingOn.title} Practice</h4>}
                 </div>
             </RS.Col>
-            <RS.Col cols={12} md={9} lg={8}>
+            <RS.Col cols={12} lg={8}>
                 <svg id="ft-progress" width="100%" height={progressBarHeight}>
                     <g id="progress-bar-padding" transform={`translate(${progressBarPadding}, ${progressBarPadding})`}>
                         <g id="concept-connections">
@@ -490,7 +490,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                     </g>
                 </svg>
             </RS.Col>
-            <RS.Col cols={12} className="d-block d-md-none">
+            <RS.Col cols={12} className="d-block d-lg-none">
                 <div>
                     {currentlyWorkingOn.isConcept && <h4>{currentlyWorkingOn.title} Practice</h4>}
                 </div>
