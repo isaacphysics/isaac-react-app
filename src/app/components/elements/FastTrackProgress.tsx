@@ -492,7 +492,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             </RS.Col>
             <RS.Col cols={12} className="d-block d-lg-none">
                 <div>
-                    {currentlyWorkingOn.isConcept && <h4>{currentlyWorkingOn.title} Practice</h4>}
+                    {currentlyWorkingOn.isConcept && <h4 className="mt-2">{currentlyWorkingOn.title} Practice</h4>}
                 </div>
             </RS.Col>
         </RS.Row>;
