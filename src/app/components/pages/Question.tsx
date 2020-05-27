@@ -66,9 +66,10 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
 
         let title = doc.title as string;
 
-        if (doc.tags && (doc.tags.indexOf('ft_upper') != -1 || doc.tags.indexOf('ft_lower') != -1)) {
+        // FastTrack title renaming
+        if (doc.tags?.includes('ft_upper') || doc.tags?.includes('ft_lower')) {
             title += " " + fastTrackConceptEnumerator(questionId);
-            if (doc.tags.indexOf('ft_lower') != -1) {
+            if (doc.tags.includes('ft_lower')) {
                 title += " (Easier)";
             }
         }

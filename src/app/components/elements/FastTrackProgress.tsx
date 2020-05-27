@@ -99,7 +99,6 @@ function generateHexagonPoints(halfWidth: number, quarterHeight: number) {
 export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; search: string}) {
     const {questionHistory: qhs}: {questionHistory?: string} = queryString.parse(search);
     const questionHistory = qhs ? qhs.split(",") : [];
-
     const dispatch = useDispatch();
     const gameboardMaybeNull = useSelector(board.currentGameboard);
     const fasttrackConcepts = useSelector((appState: AppState) => appState && appState.fasttrackConcepts);
@@ -127,7 +126,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         }
     }, [gameboardMaybeNull, doc, conceptQuestions]);
 
-    if (!gameboardMaybeNull || conceptQuestions === null) return null;
+    if (gameboardMaybeNull === null && conceptQuestions === null) return null;
 
     // @ts-ignore Assert the properties we use and we know the API returns
     const gameboard: GameboardDTO & { id: string; title: string; questions: GameboardItem[] } = gameboardMaybeNull;
@@ -143,8 +142,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     }
 
     const currentlyWorkingOn = getCurrentlyWorkingOn();
-
-    if (!currentlyWorkingOn.isConcept || currentlyWorkingOn.fastTrackLevel === undefined) {
+    if (currentlyWorkingOn.fastTrackLevel === undefined) {
         return null;
     }
 
@@ -259,7 +257,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     interface Progress {
         title: string;
         conceptTitle: string;
-        questions: { [key in QuestionLevel]: AugmentedQuestion[] };
+        questions: {[key in QuestionLevel]: AugmentedQuestion[]};
         connections: {
             topTenToUpper: Connection[];
             upperToLower: Connection[];
@@ -464,13 +462,13 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     }
 
     function renderProgress(progress: Progress) {
-        return <RS.Row className="my-sm-3">
+        return <RS.Row className="mt-sm-3 mb-sm-4">
             <RS.Col cols={12} md={3} lg={4}>
-                <h4>{gameboard.title}</h4>
+                <h4 className="mt-lg-1">{gameboard.title}</h4>
                 <div className="d-none d-md-block">
                     <br className="d-none d-md-block"/>
                     <br className="d-none d-lg-block"/>
-                    {currentlyWorkingOn.isConcept && <h4>{currentlyWorkingOn.title} Practice</h4>}
+                    {currentlyWorkingOn.isConcept && <h4 className="mt-lg-1">{currentlyWorkingOn.title} Practice</h4>}
                 </div>
             </RS.Col>
             <RS.Col cols={12} md={9} lg={8}>
@@ -500,8 +498,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         </RS.Row>;
     }
 
-    const categorisedConceptQuestions = categoriseConceptQuestions(conceptQuestions);
-    if (!categorisedConceptQuestions) return null;
+    const categorisedConceptQuestions = categoriseConceptQuestions(conceptQuestions || []);
     const progress = evaluateProgress(categorisedConceptQuestions, questionHistory);
     return renderProgress(progress);
 }
