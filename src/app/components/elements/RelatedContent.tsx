@@ -1,17 +1,21 @@
-import React from "react";
+import React, {ReactNode} from "react";
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../services/constants";
 import {connect} from "react-redux";
 import {logAction} from "../../state/actions";
-import {SITE_SUBJECT, SITE} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {sortByNumberStringValue, sortByStringValue} from "../../services/sorting";
+
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
     parentPage: ContentDTO;
     logAction: (eventDetails: object) => void;
 }
+
+type RenderItemFunction = (contentSummary: ContentSummaryDTO, openInNewTab?: boolean) => ReactNode;
 
 function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentDTO) {
     const eventDetails: any = {};
@@ -48,36 +52,51 @@ function getURLForContent(content: ContentSummaryDTO) {
     return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`
 }
 
-export const RelatedContentComponent = ({content, parentPage, logAction}: RelatedContentProps) => {
-    const concepts = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
-    const questions = content.filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION).sort((a, b) => {
-        if (a.level === b.level) return ((a.title || '').localeCompare((b.title || ''), undefined, { numeric: true, sensitivity: 'base' }));
-        const aInt = parseInt(a.level || '-1');
-        const bInt = parseInt(b.level || '-1');
-        return aInt > bInt ? 1 : aInt != bInt ? -1 : 0;
-    });
+function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction) {
+    const evenQuestions = allQuestions.filter((q, i) => i % 2 == 0);
+    const oddQuestions = allQuestions.filter((q, i) => i % 2 == 1);
 
-    const makeListGroupItem = (contentSummary: ContentSummaryDTO) => (
-        <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
-            <Link to={getURLForContent(contentSummary)}
-                onClick={() => {logAction(getEventDetails(contentSummary, parentPage))}}
-            >
-                {/*TODO CS Level*/}
-                {SITE_SUBJECT === SITE.PHY && contentSummary.level && contentSummary.level != '0' ? (contentSummary.title + " (Level " + contentSummary.level + ")") : contentSummary.title}
-            </Link>
-        </ListGroupItem>
-    );
+    if (allQuestions.length == 0) return null;
+    return <div className="d-flex align-items-stretch flex-wrap no-print">
+        <div className="w-100 d-flex">
+            <div className="flex-fill simple-card my-3 p-3 text-wrap">
+                <div className="related-questions related-title">
+                    <h5 className="my-2">Related questions</h5>
+                </div>
+                <hr/>
+                {/* Large devices - multi column */}
+                <div className="d-none d-lg-flex">
+                    <ListGroup className="w-50">
+                        {evenQuestions.map(contentSummary => renderItem(contentSummary, SITE_SUBJECT == SITE.CS))}
+                    </ListGroup>
+                    <ListGroup className="w-50">
+                        {oddQuestions.map(contentSummary => renderItem(contentSummary, SITE_SUBJECT == SITE.CS))}
+                    </ListGroup>
+                </div>
+                {/* Small devices - single column */}
+                <div className="d-lg-none">
+                    <ListGroup>
+                        {allQuestions.map(contentSummary => renderItem(contentSummary, SITE_SUBJECT == SITE.CS))}
+                    </ListGroup>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: ContentSummaryDTO[], renderItem: RenderItemFunction) {
+    if (concepts.length == 0 && questions.length == 0) return null;
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 w-lg-50 d-flex">
             <div className="flex-fill simple-card mr-lg-3 my-3 p-3 text-wrap">
                 <div className="related-concepts related-title">
-                    <h5 className="mb-2">Related concepts</h5>
+                    <h5 className="mb-2">Related Concepts</h5>
                 </div>
                 <hr/>
                 <div className="d-lg-flex">
                     <ListGroup className="mr-lg-3">
                         {concepts.length > 0 ?
-                            concepts.map(contentSummary => makeListGroupItem(contentSummary)):
+                            concepts.map(contentSummary => renderItem(contentSummary)):
                             <div className="mt-2 ml-3">There are no related concepts</div>
                         }
                     </ListGroup>
@@ -87,13 +106,13 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
         <div className="w-100 w-lg-50 d-flex">
             <div className="flex-fill simple-card ml-lg-3 my-3 p-3 text-wrap">
                 <div className="related-questions related-title">
-                    <h5 className="mb-2">Related questions</h5>
+                    <h5 className="mb-2">Related Questions</h5>
                 </div>
                 <hr/>
                 <div className="d-lg-flex">
                     <ListGroup className="mr-lg-3">
                         {questions.length > 0 ?
-                            questions.map(contentSummary => makeListGroupItem(contentSummary)) :
+                            questions.map(contentSummary => renderItem(contentSummary, SITE_SUBJECT == SITE.CS)) :
                             <div className="mt-2 ml-3">There are no related questions</div>
                         }
                     </ListGroup>
@@ -101,6 +120,38 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
             </div>
         </div>
     </div>
+}
+
+export const RelatedContentComponent = ({content, parentPage, logAction}: RelatedContentProps) => {
+    // level, difficulty, title; all ascending (reverse the calls for required ordering)
+    const sortedContent = content
+        .sort(sortByStringValue("title"))
+        .sort(sortByNumberStringValue("difficulty"))
+        .sort(sortByNumberStringValue("level"));
+
+    const concepts = sortedContent
+        .filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
+    const questions = sortedContent
+        .filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION);
+
+    const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO, openInNewTab?: boolean) => (
+        <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
+            <Link
+                to={getURLForContent(contentSummary)}
+                onClick={() => {logAction(getEventDetails(contentSummary, parentPage))}}
+                target={openInNewTab ? "_blank" : undefined}
+            >
+                {contentSummary.title}
+                {/*TODO CS Level*/}
+                {SITE_SUBJECT === SITE.PHY && contentSummary.level && contentSummary.level != '0' && " (Level " + contentSummary.level + ")"}
+            </Link>
+        </ListGroupItem>
+    );
+
+    return {
+        [SITE.PHY]: renderConceptsAndQuestions(concepts, questions, makeListGroupItem),
+        [SITE.CS]: renderQuestions(questions, makeListGroupItem)
+    }[SITE_SUBJECT];
 };
 
 export const RelatedContent = connect(null, {logAction: logAction})(RelatedContentComponent);
