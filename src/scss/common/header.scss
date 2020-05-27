@@ -93,6 +93,20 @@ a.skip-main:focus, a.skip-main:active {
   z-index:999;
 }
 
+// reverse final element in the navigation bar to keep options on the screen
+ul#main-menu {
+  li.dropdown.nav-item:last-child {
+    div.dropdown-menu {
+      right: 0;
+      left: auto;
+      &::before {
+        right: 1rem;
+        left: auto;
+      }
+    }
+  }
+}
+
 // NOMENSA header.scss
 // !important used to override bootstraps use of !important :(
 
