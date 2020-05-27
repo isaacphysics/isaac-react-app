@@ -37,6 +37,7 @@ import {
     AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
+    EmailVerificationStatus,
     GameboardDTO,
     GlossaryTermDTO,
     IsaacQuestionPageDTO,
@@ -46,8 +47,7 @@ import {
     TestCaseDTO,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO,
-    EmailVerificationStatus
+    UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -1711,8 +1711,11 @@ export const fetchConcepts = () => async (dispatch: Dispatch<Action>) => {
 
 
 // SERVICE ACTIONS (w/o dispatch)
-// Page change
 export const changePage = (path: string) => {
+    history.push(path);
+};
+
+export const registerPageChange = (path: string) => {
     store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});
 };
 
