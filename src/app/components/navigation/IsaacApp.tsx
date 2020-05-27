@@ -85,8 +85,13 @@ export const IsaacApp = () => {
         dispatch(requestCurrentUser());
         dispatch(requestConstantsSegueEnvironment());
         dispatch(fetchGlossaryTerms());
-        dispatch(requestNotifications());
     }, []);
+
+    useEffect(() => {
+        if (isLoggedIn(user)) {
+            dispatch(requestNotifications());
+        }
+    }, [user]);
 
     useEffect(() => {
         const dateNow = new Date();
@@ -94,7 +99,7 @@ export const IsaacApp = () => {
             dispatch(openActiveModal(notificationModal(notifications[0])));
             persistence.save(KEY.LAST_NOTIFICATION_TIME, dateNow.toString())
         }
-    }, [notifications, user]);
+    }, [notifications]);
 
     // Render
     return <Router history={history}>
