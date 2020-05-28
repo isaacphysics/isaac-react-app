@@ -204,7 +204,7 @@ const ReservationsModal = () => {
                                 <tbody>
                                     {eventBookingsForGroup.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => {
                                         return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
-                                            <td className="align-middle">
+                                            <td className="align-middle text-center">
                                                 {booking.userBooked &&
                                                 (booking.reservedById === user?.id) &&
                                                 (booking.bookingStatus === 'RESERVED') &&
@@ -218,7 +218,10 @@ const ReservationsModal = () => {
                                                     onChange={() => toggleCancelReservationCheckboxForUser(booking.userBooked?.id)}
                                                 />}
                                             </td>
-                                            <td className="align-middle">{booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)} {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <span className="text-danger pl-2">E-mail not verified</span>}</td>
+                                            <td className="align-middle">
+                                                {booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)}
+                                                {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">E-mail not verified</div>}
+                                            </td>
                                             <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
                                             <td className="align-middle">{!booking.reservedById ? '' : (booking.reservedById === user?.id ? 'You' : 'Someone else')}</td>
                                         </tr>);
@@ -257,7 +260,7 @@ const ReservationsModal = () => {
                                 <tbody>
                                     {unbookedUsers.length > 0 && unbookedUsers.map(user => {
                                         return (user.id && <tr key={user.id}>
-                                            <td className="w-auto align-middle">
+                                            <td className="w-auto align-middle text-center">
                                                 <CustomInput
                                                     key={user.id}
                                                     id={`${user.id}`}
@@ -268,7 +271,10 @@ const ReservationsModal = () => {
                                                     onChange={() => toggleCheckboxForUser(user.id)}
                                                 />
                                             </td>
-                                            <td className="w-100 align-middle">{user.givenName + " " + user.familyName} {user.emailVerificationStatus !== 'VERIFIED' && <span className="text-danger pl-2">E-mail not verified</span>}</td>
+                                            <td className="w-100 align-middle">
+                                                {user.givenName + " " + user.familyName}
+                                                {user.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">E-mail not verified</div>}
+                                            </td>
                                         </tr>)
                                     })}
                                 </tbody>
