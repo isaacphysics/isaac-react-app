@@ -1,12 +1,14 @@
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect, useCallback, useRef} from "react";
 import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacTabbedHints} from "./IsaacHints";
 import {questions} from "../../state/selectors";
-import { GraphSketcherModal } from "../elements/modals/GraphSketcherModal";
+import {GraphSketcherModal} from "../elements/modals/GraphSketcherModal";
 import {debounce} from "lodash";
+
+import {GraphSketcher, makeGraphSketcher, LineType, Curve, GraphSketcherState} from "isaac-graph-sketcher/src/GraphSketcher";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
@@ -27,6 +29,8 @@ interface IsaacGraphSketcherQuestionProps {
 const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
+    const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
+    const [initialCurves, setInitialCurves] = useState<Curve[]>([]);
 
     function openModal() {
         setModalVisible(true);
@@ -46,15 +50,16 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     // on every redraw, which happens on every mouse movement.
     // TODO: Ideally fix this upstream.
     const updateCurrentAttempt = useCallback(
-        debounce((newState: any) => {
+        debounce((newState: GraphSketcherState) => {
             setCurrentAttempt(questionId, {type: 'graphChoice', value: JSON.stringify(newState)});
-        }, 250),
-        []
-    );
+        }, 250), []);
 
     useEffect(() => {
         // componentDidMount
         window.addEventListener('keyup', handleKeyPress);
+        if (currentAttempt?.value) {
+            setInitialCurves(JSON.parse(currentAttempt.value).curves);
+        }
 
         return () => {
             // componentWillUnmount
@@ -62,12 +67,34 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
         }
     }, []);
 
+    const previewRef = useRef(null);
+    useEffect(() => {
+        if (previewSketch) return;
+        if (makeGraphSketcher && previewRef.current) {
+            const { sketch, p } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true, initialCurves: initialCurves});
+
+            if (sketch) {
+                sketch.selectedLineType = LineType.BEZIER;
+                setPreviewSketch(sketch);
+            }
+        }
+    }, [previewRef, initialCurves]);
+
+    useEffect(() => {
+        if (previewSketch && currentAttempt?.value) {
+            previewSketch.curves = JSON.parse(currentAttempt.value).curves;
+        }
+    }, [currentAttempt, previewSketch]);
 
     return <div className="graph-sketcher-question">
-        <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>PREVIEW: Click here to answer.</div>
+        <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
+            <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
+            PREVIEW: Click here to answer.
+        </div>
         {modalVisible && <GraphSketcherModal
             close={closeModal}
             onGraphSketcherStateChange={updateCurrentAttempt}
+            initialCurves={initialCurves}
         />}
         Hints: <IsaacTabbedHints questionPartId={questionId} hints={doc.hints} />
     </div>
