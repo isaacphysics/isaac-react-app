@@ -132,7 +132,7 @@ const ReservationsModal = () => {
             dispatch(cancelReservationsOnEvent(selectedEvent.id, cancellableIds, currentGroup.id));
         }
         setCheckAllCancelReservationsCheckbox(false);
-    }
+    };
 
     const isReservationLimitReached = () => {
         if (selectedEvent && selectedEvent.groupReservationLimit) {
@@ -183,7 +183,7 @@ const ReservationsModal = () => {
                                                 id="check_all_reserved"
                                                 type="checkbox"
                                                 label="All"
-                                                checked={checkAllCancelReservationsCheckbox}
+                                                checked={checkAllCancelReservationsCheckbox || false}
                                                 onChange={() => toggleAllCancelReservationCheckboxes()}
                                             />
                                         </th>
@@ -209,7 +209,7 @@ const ReservationsModal = () => {
                                                     id={`${booking.userBooked.id}`}
                                                     type="checkbox"
                                                     name={`reserved_student-${booking.userBooked.id}`}
-                                                    checked={cancelReservationCheckboxes[booking.userBooked.id]}
+                                                    checked={cancelReservationCheckboxes[booking.userBooked.id] || false}
                                                     // I'm including the full access autorisation here because we do the same in the next table
                                                     disabled={!booking.userBooked.authorisedFullAccess && booking.userBooked.emailVerificationStatus !== 'VERIFIED'}
                                                     onChange={() => toggleCancelReservationCheckboxForUser(booking.userBooked?.id)}
@@ -241,7 +241,7 @@ const ReservationsModal = () => {
                                                 id="check_all_unbooked"
                                                 type="checkbox"
                                                 label="All"
-                                                checked={checkAllCheckbox}
+                                                checked={checkAllCheckbox || false}
                                                 onChange={() => toggleAllUnbooked()}
                                                 disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
                                             />
@@ -260,7 +260,7 @@ const ReservationsModal = () => {
                                                     id={`${user.id}`}
                                                     type="checkbox"
                                                     name={`unbooked_student-${user.id}`}
-                                                    checked={userCheckboxes[user.id]}
+                                                    checked={userCheckboxes[user.id] || false}
                                                     disabled={!user.authorisedFullAccess && user.emailVerificationStatus !== 'VERIFIED'}
                                                     onChange={() => toggleCheckboxForUser(user.id)}
                                                 />
