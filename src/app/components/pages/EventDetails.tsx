@@ -255,12 +255,12 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             Book a place
                                         </RS.Button>
                                     }
-                                    {event.isNotClosed && event.allowGroupReservations && isTeacher(user) &&
+                                    {event.isNotClosed && event.allowGroupReservations && event.isWithinBookingDeadline && isTeacher(user) &&
                                         <RS.Button color="primary" onClick={() => {dispatch(openActiveModal(reservationsModal()))}}>
                                             Reserve spaces
                                         </RS.Button>
                                     }
-                                    {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") && !event.hasExpired &&
+                                    {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
                                         <RS.Button color="primary" outline onClick={() => {dispatch(cancelMyBooking(eventId))}}>
                                             {{
                                                 CONFIRMED: "Cancel your booking",
