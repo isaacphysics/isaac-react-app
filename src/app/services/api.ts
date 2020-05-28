@@ -137,6 +137,14 @@ export const api = {
             return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
         },
     },
+    notifications: {
+        get: (): AxiosPromise => {
+            return endpoint.get(`/notifications`)
+        },
+        respond: (id: string, response: string): AxiosPromise => {
+            return endpoint.post(`/notifications/${id}/${response}`)
+        }
+    },
     admin: {
         userSearch: {
             get: (queryParams: {}): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO[]> => {
@@ -468,4 +476,9 @@ export const api = {
             return endpoint.post(`/log`, eventDetails);
         },
     },
+    fasttrack: {
+        concepts: (gameboardId: string, concept: string, upperQuestionId: string): AxiosPromise<ApiTypes.GameboardItem[]> => {
+            return endpoint.get(`/fasttrack/${gameboardId}/concepts`, {params: {concept, "upper_question_id": upperQuestionId}});
+        }
+    }
 };

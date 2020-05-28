@@ -56,6 +56,34 @@ export const boards = {
     }
 };
 
+
+
+export const board = {
+    currentGameboard: (state: AppState) => {
+        if (!state) return null;
+        if (!state.currentGameboard) return null;
+        if (state.currentGameboard === NOT_FOUND) return null;
+        if ('inflight' in state.currentGameboard) return null;
+        return state.currentGameboard;
+    },
+    currentGameboardOrNotFound: (state: AppState) => {
+        if (!state) return null;
+        if (!state.currentGameboard) return null;
+        if (state.currentGameboard === NOT_FOUND) return NOT_FOUND;
+        if ('inflight' in state.currentGameboard) return null;
+        return state.currentGameboard;
+    }
+};
+
+export const topic = {
+    currentTopic: (state: AppState) => {
+        if (!state) return null;
+        if (!state.currentTopic) return null;
+        if (state.currentTopic === NOT_FOUND) return null;
+        return state.currentTopic;
+    }
+};
+
 export const doc = {
     ifNotAQuizId: (id: string) => (state: AppState) => ACCEPTED_QUIZ_IDS.includes(id) ? NOT_FOUND : (state && state.doc) || null,
     ifQuizId: (id: string) => (state: AppState) => ACCEPTED_QUIZ_IDS.includes(id) ? (state && state.doc) || null : NOT_FOUND,
@@ -63,15 +91,15 @@ export const doc = {
 
 export const questions = {
     selectQuestionPart: (questionPartId?: string) => (state: AppState) => {
-        return state && state.questions && state.questions.filter(question => question.id == questionPartId)[0];
+        return state && state.questions && state.questions.questions.filter(question => question.id == questionPartId)[0];
     },
     allQuestionsAttempted: (state: AppState) => {
-        return !!state && !!state.questions && state.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
+        return !!state && !!state.questions && state.questions.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
     },
     anyQuestionPreviouslyAttempted: (state: AppState) => {
-        return !!state && !!state.questions && state.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
+        return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
     },
     filter: (predicate: (q: AppQuestionDTO) => boolean) => (state: AppState) => {
-        return state && state.questions && state.questions.filter(predicate) || [];
+        return state && state.questions && state.questions.questions.filter(predicate) || [];
     }
 };

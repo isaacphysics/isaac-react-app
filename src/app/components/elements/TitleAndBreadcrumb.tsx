@@ -1,9 +1,10 @@
-import React from "react";
+import React, {ReactElement} from "react";
 import {BreadcrumbTrailProps, BreadcrumbTrail} from "./BreadcrumbTrail";
 import {PageTitleProps, PageTitle} from "./PageTitle";
 
 type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & {
     breadcrumbTitleOverride?: string;
+    children?: ReactElement | boolean;
 };
 
 export const TitleAndBreadcrumb = (props: TitleAndBreadcrumbProps) => {
@@ -13,6 +14,7 @@ export const TitleAndBreadcrumb = (props: TitleAndBreadcrumbProps) => {
     }
     return <React.Fragment>
         <BreadcrumbTrail {...breadcrumbProps} />
+        {props.children}
         <PageTitle {...props} />
     </React.Fragment>;
 };

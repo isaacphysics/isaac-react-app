@@ -10,7 +10,7 @@ import {
     EventStatusFilter,
     EventTypeFilter,
     EXAM_BOARD,
-    MEMBERSHIP_STATUS,
+    MEMBERSHIP_STATUS, NOT_FOUND,
     TAG_ID
 } from "../services/constants";
 import {
@@ -37,6 +37,7 @@ import {
     AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
+    EmailVerificationStatus,
     GameboardDTO,
     GlossaryTermDTO,
     IsaacQuestionPageDTO,
@@ -46,8 +47,7 @@ import {
     TestCaseDTO,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO,
-    EmailVerificationStatus
+    UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -678,6 +678,16 @@ export const requestConstantsSegueEnvironment = () => async (dispatch: Dispatch<
     }
 };
 
+export const requestNotifications = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.NOTIFICATIONS_REQUEST});
+    try {
+        const response = await api.notifications.get();
+        dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS, notifications: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE});
+    }
+}
+
 // Document & topic fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
@@ -844,11 +854,11 @@ export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (d
 const generatePostQuizUrl = (quizId: string) => `/pages/post_${quizId}`;
 
 export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const currentState = getState();
+    const currentState: AppState = getState();
     try {
         dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST, quizId});
         if (currentState && currentState.questions) {
-            await Promise.all(currentState.questions.map(
+            await Promise.all(currentState.questions.questions.map(
                 question => {
                     if (question.id && question.currentAttempt) {
                         dispatch(attemptQuestion(question.id, question.currentAttempt) as any);
@@ -889,7 +899,9 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
 };
 
 // Current gameboard
-export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>) => {
+export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    if (state && state.currentGameboard && state.currentGameboard !== NOT_FOUND && 'inflight' in state.currentGameboard && state.currentGameboard.id === gameboardId) return;
     dispatch({type: ACTION_TYPE.GAMEBOARD_REQUEST, gameboardId});
     try {
         // TODO MT handle local storage load if gameboardId == null
@@ -1743,10 +1755,24 @@ export const fetchConcepts = () => async (dispatch: Dispatch<Action>) => {
         dispatch(showErrorToastIfNeeded("Loading Concepts Failed", e));
     }};
 
+// Fasttrack concepts
+export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upperQuestionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    if (state && state.fasttrackConcepts && state.fasttrackConcepts.gameboardId === gameboardId && state.fasttrackConcepts.concept === concept) return;
+    dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST});
+    try {
+        const concepts = await api.fasttrack.concepts(gameboardId, concept, upperQuestionId);
+        dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS, concepts: {gameboardId, concept, items: concepts.data}});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE});
+    }};
 
 // SERVICE ACTIONS (w/o dispatch)
-// Page change
 export const changePage = (path: string) => {
+    history.push(path);
+};
+
+export const registerPageChange = (path: string) => {
     store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});
 };
 

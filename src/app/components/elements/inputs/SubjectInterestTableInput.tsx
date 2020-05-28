@@ -1,13 +1,14 @@
 import {FormGroup, Label, Table} from "reactstrap";
 import {SubjectInterestInput} from "./subjectInterestInput";
 import React from "react";
+import {SubjectInterests} from "../../../../IsaacAppTypes";
 
 interface SubjectInterestTableInputProps<T> {
     stateObject: T;
     setStateFunction: (stateObject: T) => void;
 }
 
-export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<any>) => {
+export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<SubjectInterests>) => {
     const {stateObject, setStateFunction} = props;
 
     return <FormGroup>

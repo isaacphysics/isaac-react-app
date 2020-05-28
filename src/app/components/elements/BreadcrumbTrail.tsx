@@ -3,6 +3,7 @@ import {Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {Link} from "react-router-dom";
 import {HOME_CRUMB} from "../../services/constants";
 import {CollectionType, LinkInfo} from "../../services/navigation";
+import {TrustedHtml} from "./TrustedHtml";
 
 export interface BreadcrumbTrailProps {
     currentPageTitle: string;
@@ -24,15 +25,14 @@ export const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], coll
         {breadcrumbHistory.map((breadcrumb) => (
             <BreadcrumbItem key={breadcrumb.title}>
                 {breadcrumb.to ?
-                    <Link to={breadcrumb.to}>
-                        {breadcrumb.title}
-                    </Link>
-                    : breadcrumb.title
+                    <Link to={breadcrumb.to}><TrustedHtml html={breadcrumb.title} span /></Link>
+                    :
+                    <TrustedHtml html={breadcrumb.title} span />
                 }
             </BreadcrumbItem>
         ))}
         <BreadcrumbItem active>
-            {currentPageTitle}
+            <TrustedHtml html={currentPageTitle} span />
         </BreadcrumbItem>
     </Breadcrumb>;
 };

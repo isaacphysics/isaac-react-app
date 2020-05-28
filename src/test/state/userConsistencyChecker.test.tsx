@@ -1,6 +1,6 @@
+import "../../app/state/actions"; // very annoying but this needs to be imported early to avoid a cyclic dependency issue
 import {getUserId, setUserId} from "../../app/state/userConsistencyCheckerCurrentUser";
 import {ACTION_TYPE} from "../../app/services/constants";
-
 import {userConsistencyCheckerMiddleware} from "../../app/state/userConsistencyChecker";
 import {AnyAction, Dispatch, MiddlewareAPI} from "redux";
 

@@ -14,10 +14,11 @@ import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
+import {board} from "../../state/selectors";
 
 const stateFromProps = (state: AppState) => {
     return state && {
-        gameboard: state.currentGameboard,
+        gameboard: board.currentGameboardOrNotFound(state),
         user: state.user,
     };
 };
@@ -68,7 +69,8 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
                     {tags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
                 </div>}
             </div>
-            {question.level !== undefined && question.level !== 0 &&
+            {/*TODO CS Level*/}
+            {SITE_SUBJECT === SITE.PHY && question.level !== undefined && question.level !== 0 &&
                 <span className="gameboard-tags">Level {question.level}</span>}
         </Link>
     </RS.ListGroupItem>;

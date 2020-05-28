@@ -7,10 +7,10 @@ import {AppState} from "../../state/reducers";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
 import {Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Row} from "reactstrap";
 import {TrustedHtml} from "../elements/TrustedHtml";
-import {IsaacHints} from "./IsaacHints";
+import {questions} from "../../state/selectors";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const question = state && state.questions && state.questions.filter((question) => question.id == questionId)[0];
+    const question = questions.selectQuestionPart(questionId)(state);
     const userId = state && state.user && state.user.loggedIn && state.user.id || undefined;
     const units = state && state.constants && state.constants.units || undefined;
     const props = {userId, units};
@@ -138,43 +138,36 @@ const IsaacNumericQuestionComponent = (props: IsaacNumericQuestionProps) => {
                 </IsaacContentValueOrChildren>
             </div>
             <Row className="no-print">
-                <Col sm={4}>
-                    <Label className="w-100">
-                        Value
-                        <br />
-                        <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong || undefined}
-                            onChange={updateValue}
-                        />
-                    </Label>
-                    {/*<br />*/}
-                    {/*<small>Please answer to an appropriate number of significant figures.</small>*/}
+                <Col className="d-flex flex-column flex-sm-row flex-md-column flex-lg-row">
+                    <div className="w-100 w-sm-50 w-md-100 w-lg-50">
+                        <Label className="w-100">
+                            Value <br />
+                            <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong || undefined}
+                                onChange={updateValue}
+                            />
+                        </Label>
+                    </div>
+                    {doc.requireUnits && <div className="unit-selection w-100 w-sm-50 w-md-100 w-lg-25">
+                        <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-2">
+                            Units <br/>
+                            <Dropdown isOpen={isOpen} toggle={() => {setIsOpen(!isOpen);}}>
+                                <DropdownToggle caret className="px-2 py-1" color={currentAttemptUnitsWrong ? "danger" : undefined}>
+                                    <TrustedHtml span html={wrapUnitForSelect(currentAttemptUnits)}/>
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    {selectedUnits.map((unit) =>
+                                        <DropdownItem key={wrapUnitForSelect(unit)}
+                                            className={unit == currentAttemptUnits ? "btn btn-primary bg-grey selected" : ""}
+                                            onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
+                                            <TrustedHtml span html={wrapUnitForSelect(unit)}/>
+                                        </DropdownItem>
+                                    )}
+                                </DropdownMenu>
+                            </Dropdown>
+                        </Label>
+                    </div>}
                 </Col>
-                {doc.requireUnits &&
-                <Col sm={3} className="unit-selection">
-                    <Label>
-                        Units
-                        <br/>
-                        <Dropdown isOpen={isOpen} toggle={() => {setIsOpen(!isOpen);}}>
-                            <DropdownToggle caret className="px-2 py-1" color={currentAttemptUnitsWrong ? "danger" : undefined}>
-                                <TrustedHtml span html={wrapUnitForSelect(currentAttemptUnits)}/>
-                            </DropdownToggle>
-                            <DropdownMenu right>
-                                {selectedUnits.map((unit) =>
-                                    <DropdownItem key={wrapUnitForSelect(unit)}
-                                        className={unit == currentAttemptUnits ? "btn btn-primary" : undefined}
-                                        onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
-                                        <TrustedHtml span html={wrapUnitForSelect(unit)}/>
-                                    </DropdownItem>
-                                )}
-                            </DropdownMenu>
-                        </Dropdown>
-                    </Label>
-                    {/*<br />*/}
-                    {/*<small>Please choose an appropriate unit of measurement.</small>*/}
-                </Col>
-                }
             </Row>
-            <IsaacHints questionPartId={questionId} hints={doc.hints}/>
         </div>
     );
 };

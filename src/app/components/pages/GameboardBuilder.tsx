@@ -27,12 +27,13 @@ import {
     multiSelectOnChange
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
-import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM, NOT_FOUND} from "../../services/constants";
+import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM} from "../../services/constants";
 import {history} from "../../services/history"
 import Select from "react-select";
 import {withRouter} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
+import {board} from '../../state/selectors';
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
@@ -43,7 +44,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
     const user = useSelector((state: AppState) => state && state.user);
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
-    const baseGameboard = useSelector((state: AppState) => state && state.currentGameboard);
+    const baseGameboard = useSelector(board.currentGameboard);
 
     const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTags, setGameboardTags] = useState<string[]>([]);
@@ -54,7 +55,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
     useEffect(() => {
-        if (baseGameboard && baseGameboard !== NOT_FOUND) {
+        if (baseGameboard) {
             setGameboardTitle(`${baseGameboard.title} (Copy)`);
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
             setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
@@ -73,7 +74,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
     useEffect(() => {if (!wildcards) dispatch(getWildcards())}, [user]);
     useEffect(() => {
-        if (baseGameboardId && (!baseGameboard || baseGameboard === NOT_FOUND)) {
+        if (baseGameboardId && (!baseGameboard)) {
             dispatch(loadGameboard(baseGameboardId));
         }
     }, [dispatch, baseGameboardId, baseGameboard]);
@@ -186,7 +187,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                                     <div className="img-center">
                                                         <ShowLoading
                                                             placeholder={<div className="text-center"><Spinner color="primary" /></div>}
-                                                            until={!baseGameboardId || baseGameboard == NOT_FOUND || baseGameboard}
+                                                            until={!baseGameboardId || baseGameboard}
                                                         >
                                                             <input
                                                                 type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
@@ -227,6 +228,14 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
                         }
 
+                        let subjects = [];
+
+                        if (SITE_SUBJECT == SITE.CS) {
+                            subjects.push("computer_science");
+                        } else {
+                            subjects.push("physics");
+                        }
+
                         dispatch(createGameboard({
                             id: gameboardURL,
                             title: gameboardTitle,
@@ -236,7 +245,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             }).filter((question) => question !== undefined) as GameboardItem[],
                             wildCard: wildcard,
                             wildCardPosition: 0,
-                            gameFilter: {subjects: ["computer_science"]},
+                            gameFilter: {subjects: subjects},
                             tags: gameboardTags
                         }));
 

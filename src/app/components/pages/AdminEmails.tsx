@@ -123,7 +123,9 @@ export const AdminEmails = (props: AdminEmailsProps) => {
         <RS.Card className="p-3 my-3">
             <RS.CardTitle tag="h2">Email type</RS.CardTitle>
             <RS.CardBody>
-                <RS.Label>The type of email you are sending. Users who have opted out of this type of email will not receive anything. </RS.Label>
+                <RS.Label>The type of email you are sending.</RS.Label>
+                <p>Users who have opted out of this type of email will
+                    not receive anything. Administrative emails cannot be opted out of and should be avoided.</p>
                 <RS.Input
                     id="email-type-input" type="select" defaultValue={emailType}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,6 +136,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                     <option value="ASSIGNMENTS">Assignments</option>
                     <option value="NEWS_AND_UPDATES">News and updates</option>
                     <option value="EVENTS">Events</option>
+                    <option value="ADMIN">Urgent administrative email</option>
                 </RS.Input>
             </RS.CardBody>
         </RS.Card>

@@ -313,7 +313,10 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     if (data) {
         switch(sortOrder) {
             case SortOrder.Alphabetical:
-                data = sortBy(data, g => g.groupName && g.groupName.toLowerCase());
+                data.sort((a, b) => {
+                    if (a.groupName && b.groupName) return (a.groupName.localeCompare(b.groupName, undefined, { numeric: true, sensitivity: 'base' }));
+                    return 1;
+                });
                 break;
             case SortOrder["Date Created"]:
                 data = sortBy(data, g => g.created).reverse();

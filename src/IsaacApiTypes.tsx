@@ -247,6 +247,7 @@ export interface ContentSummaryDTO {
     summary?: string;
     type?: string;
     level?: string;
+    difficulty?: string;
     tags?: string[];
     url?: string;
     correct?: boolean;
