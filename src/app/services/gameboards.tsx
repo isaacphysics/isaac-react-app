@@ -47,7 +47,7 @@ export const determineGameboardHistory = (currentGameboard: GameboardDTO) => {
 
 export const determineNextGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
     const boardQuestions: (string | undefined)[] = [];
-    if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.questions) {
+    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.questions) {
         currentGameboard.questions.map(question => boardQuestions.push(question.id));
         if (boardQuestions.includes(currentDocId)) {
             const gameboardContentIds = currentGameboard.questions.map(q => q.id);

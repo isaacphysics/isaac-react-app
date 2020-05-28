@@ -56,6 +56,34 @@ export const boards = {
     }
 };
 
+
+
+export const board = {
+    currentGameboard: (state: AppState) => {
+        if (!state) return null;
+        if (!state.currentGameboard) return null;
+        if (state.currentGameboard === NOT_FOUND) return null;
+        if ('inflight' in state.currentGameboard) return null;
+        return state.currentGameboard;
+    },
+    currentGameboardOrNotFound: (state: AppState) => {
+        if (!state) return null;
+        if (!state.currentGameboard) return null;
+        if (state.currentGameboard === NOT_FOUND) return NOT_FOUND;
+        if ('inflight' in state.currentGameboard) return null;
+        return state.currentGameboard;
+    }
+};
+
+export const topic = {
+    currentTopic: (state: AppState) => {
+        if (!state) return null;
+        if (!state.currentTopic) return null;
+        if (state.currentTopic === NOT_FOUND) return null;
+        return state.currentTopic;
+    }
+};
+
 export const doc = {
     ifNotAQuizId: (id: string) => (state: AppState) => ACCEPTED_QUIZ_IDS.includes(id) ? NOT_FOUND : (state && state.doc) || null,
     ifQuizId: (id: string) => (state: AppState) => ACCEPTED_QUIZ_IDS.includes(id) ? (state && state.doc) || null : NOT_FOUND,
