@@ -156,7 +156,7 @@ const ReservationsModal = () => {
                         <ShowLoading until={activeFilteredGroups}>
                             <React.Fragment>
                                 {activeFilteredGroups && activeFilteredGroups.length > 0 && <Dropdown isOpen={groupDropdownOpen} toggle={() => setGroupDropdownOpen(!groupDropdownOpen)}>
-                                    <DropdownToggle caret color="primary">
+                                    <DropdownToggle caret color="primary mb-4">
                                         {currentGroup ? currentGroup.groupName : "Select group"}
                                     </DropdownToggle>
                                     <DropdownMenu>
@@ -178,7 +178,7 @@ const ReservationsModal = () => {
                         {activeFilteredGroups && activeFilteredGroups.length > 0 && (!currentGroup || !currentGroup.members) && <p>Select one of your groups from the dropdown menu to see its members.</p>}
                         {currentGroup && currentGroup.members && currentGroup.members.length == 0 && <p>This group has no members. Please select another group.</p>}
                         {currentGroup && currentGroup.members && currentGroup.members.length > 0 && <React.Fragment>
-                            <Table bordered className="bg-white reserved">
+                            <Table bordered responsive className="bg-white reserved">
                                 <thead>
                                     <tr>
                                         <th className="align-middle checkbox">
@@ -227,13 +227,13 @@ const ReservationsModal = () => {
                                 </tbody>
                             </Table>
 
-                            <div className="text-center">
+                            <div className="text-center mb-3">
                                 <Button color="primary" outline disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
                                     Cancel reservations
                                 </Button>
                             </div>
 
-                            <Table bordered className="mt-3 bg-white unreserved">
+                            <Table bordered responsive className="mt-3 bg-white unreserved">
                                 <thead>
                                     <tr>
                                         <th colSpan={2}>Other students in this group</th>
