@@ -14,7 +14,7 @@ import {Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Col, Custo
 import {AppState} from "../../../state/reducers";
 import {groups} from '../../../state/selectors';
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {AppGroupMembership, AppGroup} from "../../../../IsaacAppTypes";
+import {AppGroupMembership, AppGroup, ActiveModal} from "../../../../IsaacAppTypes";
 import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
 import _orderBy from "lodash/orderBy";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
@@ -154,20 +154,23 @@ const ReservationsModal = () => {
                 <Row className="mb-5">
                     <Col md={3}>
                         <ShowLoading until={activeFilteredGroups}>
-                            {activeFilteredGroups && activeFilteredGroups.length > 0 && <Dropdown isOpen={groupDropdownOpen} toggle={() => setGroupDropdownOpen(!groupDropdownOpen)}>
-                                <DropdownToggle caret color="primary">
-                                    {currentGroup ? currentGroup.groupName : "Select group"}
-                                </DropdownToggle>
-                                <DropdownMenu>{
-                                    activeFilteredGroups.map(group =>
-                                        <DropdownItem onClick={() => dispatch(selectGroup(group))}
-                                            key={group.id}
-                                            active={currentGroup === group}
-                                        >{group.groupName}</DropdownItem>
-                                    )
-                                }</DropdownMenu>
-                            </Dropdown>}
-                            &nbsp; {/* ShowLoading needs to contain something. */}
+                            <React.Fragment>
+                                {activeFilteredGroups && activeFilteredGroups.length > 0 && <Dropdown isOpen={groupDropdownOpen} toggle={() => setGroupDropdownOpen(!groupDropdownOpen)}>
+                                    <DropdownToggle caret color="primary">
+                                        {currentGroup ? currentGroup.groupName : "Select group"}
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        {activeFilteredGroups.map(group =>
+                                            <DropdownItem onClick={() => dispatch(selectGroup(group))}
+                                                key={group.id}
+                                                active={currentGroup === group}
+                                            >
+                                                {group.groupName}
+                                            </DropdownItem>
+                                        )}
+                                    </DropdownMenu>
+                                </Dropdown>}
+                            </React.Fragment>
                         </ShowLoading>
                     </Col>
                     {activeFilteredGroups && activeFilteredGroups.length === 0 && <p>Create a groups from the <Link to="/groups" onClick={() => store.dispatch(closeActiveModal())}>Manage groups</Link> page to book your students onto an event</p>}
@@ -291,11 +294,12 @@ const ReservationsModal = () => {
     </React.Fragment>
 };
 
-export const reservationsModal = () => {
+export const reservationsModal = (): ActiveModal => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         size: 'xl',
         title: "Group reservations",
         body: <ReservationsModal />,
+        overflowVisible: true
     }
 };
