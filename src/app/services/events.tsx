@@ -19,13 +19,15 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
             const endDate = new Date(event.endDate);
             augmentedEvent.isMultiDay = startDate.toDateString() != endDate.toDateString();
             augmentedEvent.hasExpired = now > endDate.getTime();
-            augmentedEvent.isWithinBookingDeadline = event.bookingDeadline ? now <= new Date(event.bookingDeadline).getTime() : true;
             augmentedEvent.isInProgress = startDate.getTime() <= now && now <= endDate.getTime();
         } else {
             augmentedEvent.hasExpired = now > startDate.getTime();
             augmentedEvent.isInProgress = false;
             augmentedEvent.isMultiDay = false;
         }
+        augmentedEvent.isWithinBookingDeadline =
+            !augmentedEvent.hasExpired &&
+            event.bookingDeadline ? now <= new Date(event.bookingDeadline).getTime() : true;
     }
 
     if (event.tags) {
