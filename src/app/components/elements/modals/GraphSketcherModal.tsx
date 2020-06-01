@@ -16,6 +16,22 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
 
+    // useEffect(() => {
+    //     // const s = sketch;
+    //     // return () => {
+    //     //     debugger;
+    //     //     s?.teardown();
+    //     //     sketch?.teardown();
+    //     //     setSketch(null);
+    //     //     const e = document.getElementById('graph-sketcher-modal') as HTMLElement
+    //     //     if (e) {
+    //     //         for (const canvas of e.getElementsByTagName('canvas')) {
+    //     //             e.removeChild(canvas);
+    //     //         }
+    //     //     }
+    //     // }
+    // }, []);
+
     useEffect(() => {
         sketch?.setCurves(initialCurves);
     }, [initialCurves]);
@@ -39,14 +55,21 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
             setSketch(sketch);
         }
         setGraphSketcherElement(e);
+    }, [initialCurves, updateGraphSketcherState]);
 
+    useEffect(() => {
         return () => {
+            debugger;
+            sketch?.teardown();
+            setSketch(null);
             const e = document.getElementById('graph-sketcher-modal') as HTMLElement
             if (e) {
-                e.removeChild(e.getElementsByTagName('canvas')[0]);
+                for (const canvas of e.getElementsByTagName('canvas')) {
+                    e.removeChild(canvas);
+                }
             }
         }
-    }, [initialCurves, updateGraphSketcherState]);
+    }, [sketch]);
 
     useEffect(() => {
         if (sketch) {
@@ -60,13 +83,25 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
         }
     }, [sketch, lineType]);
 
+    const isRedoable = () => {
+        return sketch?.isRedoable();
+    };
+
+    const isUndoable = () => {
+        return sketch?.isUndoable();
+    }
+
+    const isTrashActive = () => {
+        return sketch?.isTrashActive;
+    }
+
     return <div id='graph-sketcher-modal' style={{border: '5px solid black'}}>
         <div className="graph-sketcher-ui">
-            <div className={ [ 'button', sketch?.isRedoable() ? 'visible' : 'hidden' ].join(' ') } role="button" onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">redo</div>
-            <div className={ [ 'button', sketch?.isUndoable() ? 'visible' : 'hidden' ].join(' ') } role="button" onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">undo</div>
+            <div className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } role="button" onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">redo</div>
+            <div className={ [ 'button', isUndoable() ? 'visible' : 'hidden' ].join(' ') } role="button" onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">undo</div>
             <div className={ [ 'button', lineType === LineType.BEZIER ? 'active' : '' ].join(' ') } role="button" onClick={ () => setLineType(LineType.BEZIER) } onKeyUp={ () => setLineType(LineType.BEZIER) } tabIndex={0} id="graph-sketcher-ui-bezier-button">poly</div>
             <div className={ [ 'button', lineType === LineType.LINEAR ? 'active' : '' ].join(' ') } role="button" onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-linear-button">straight</div>
-            <div className={ [ 'button', sketch?.isTrashActive ? 'active' : '' ].join(' ') } role="button" tabIndex={0} id="graph-sketcher-ui-trash-button">trash</div>
+            <div className={ [ 'button', isTrashActive() ? 'active' : '' ].join(' ') } role="button" tabIndex={0} id="graph-sketcher-ui-trash-button">trash</div>
             <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">submit</div>
 
             {/* eslint-disable-next-line jsx-a11y/no-onchange */}

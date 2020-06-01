@@ -90,6 +90,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
         <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
             PREVIEW: Click here to answer.
+            {JSON.stringify(currentAttempt?.value)}
         </div>
         {modalVisible && <GraphSketcherModal
             close={closeModal}
