@@ -7,6 +7,7 @@ import {requestEmailVerification} from "../../state/actions";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {studentOnlyEventMessage} from "../../services/events";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
@@ -45,27 +46,41 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                 </RS.Row>
 
                 <div>
-                    <RS.Label>
-                        <span className="form-required">Email address</span>
-                        <RS.Input id="account-email" name="email" type="email" disabled value={targetUser.email || ""} invalid={targetUser.emailVerificationStatus != 'VERIFIED'} />
-                        <RS.FormFeedback>
-                            {editingSelf ?
-                                "You must verify your email address to book on events. This is so we can send you details about the event." :
-                                "WARNING: This email is not verified. The details about the event might not reach the user."
-                            }
-                        </RS.FormFeedback>
-                    </RS.Label>
-                    {editingSelf && targetUser.emailVerificationStatus != 'VERIFIED' && !verifyEmailRequestSent && <RS.Button
-                        color="link" className="btn-underline" onClick={() => {
-                            dispatch(requestEmailVerification());
-                            setVerifyEmailRequestSent(true);
-                        }}
-                    >
-                        Verify your email before booking
-                    </RS.Button>}
-                    {targetUser.emailVerificationStatus != 'VERIFIED' && verifyEmailRequestSent && <span>
-                        We have sent an email to {targetUser.email}. Please follow the instructions in the email prior to booking.
-                    </span>}
+                    <RS.Row>
+                        <RS.Col md={6}>
+                            <RS.Label htmlFor="account-email" className="form-required">
+                                Email address
+                            </RS.Label>
+                            <RS.Input id="account-email" name="email" type="email" disabled value={targetUser.email || ""} invalid={targetUser.emailVerificationStatus != 'VERIFIED'} />
+                            <RS.FormFeedback>
+                                {editingSelf ?
+                                    "You must verify your email address to book on events. This is so we can send you details about the event." :
+                                    "WARNING: This email is not verified. The details about the event might not reach the user."
+                                }
+                            </RS.FormFeedback>
+                        </RS.Col>
+                        {SITE_SUBJECT == SITE.CS && <RS.Col md={6}>
+                            <RS.Label htmlFor="account-examboard" className="form-required">
+                                Exam board
+                            </RS.Label>
+                            <RS.Input id="account-examboard" name="examboard" type="text" disabled value={targetUser.examBoard || ""} />
+                        </RS.Col>}
+                    </RS.Row>
+                    <RS.Row>
+                        <RS.Col>
+                            {editingSelf && targetUser.emailVerificationStatus != 'VERIFIED' && !verifyEmailRequestSent && <RS.Button
+                                color="link" className="btn-underline" onClick={() => {
+                                    dispatch(requestEmailVerification());
+                                    setVerifyEmailRequestSent(true);
+                                }}
+                            >
+                                Verify your email before booking
+                            </RS.Button>}
+                            {targetUser.emailVerificationStatus != 'VERIFIED' && verifyEmailRequestSent && <span>
+                            We have sent an email to {targetUser.email}. Please follow the instructions in the email prior to booking.
+                            </span>}
+                        </RS.Col>
+                    </RS.Row>
                 </div>
                 {editingSelf && <div>
                     <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} disableInput={true} submissionAttempted required />
