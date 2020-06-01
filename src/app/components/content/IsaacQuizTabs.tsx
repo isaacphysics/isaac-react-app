@@ -13,7 +13,7 @@ export const IsaacQuizTabs = ({doc}: {doc: ApiTypes.IsaacQuestionBaseDTO}) => {
         return () => dispatch(deregisterQuestion(doc.id as string));
     }, [doc.id]);
 
-    const QuestionComponent = QUESTION_TYPES.get(doc.type) || QUESTION_TYPES.get("default");
+    const QuestionComponent = QUESTION_TYPES.get(doc.type || "default");
 
     return <React.Fragment>
         <div className={

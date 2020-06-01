@@ -161,7 +161,7 @@ const IsaacQuestionComponent = ({doc, validationResponse, currentAttempt, canSub
         }
     }
 
-    const QuestionComponent = QUESTION_TYPES.get(doc.type) || QUESTION_TYPES.get("default");
+    const QuestionComponent = QUESTION_TYPES.get(doc.type || "default");
 
     const sigFigsError = validationResponse && validationResponse.explanation &&
         (validationResponse.explanation.tags || []).includes("sig_figs");

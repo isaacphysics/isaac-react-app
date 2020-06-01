@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "downlevelIteration": true,
+    "importHelpers": true,
     "lib": [
       "dom",
       "dom.iterable",
       "esnext",
-      "es2020.string"
+      "es2020.string",
+      "ES2015.Collection",
+      "ES2015.Iterable"
     ],
     "allowJs": true,
     "skipLibCheck": true,
