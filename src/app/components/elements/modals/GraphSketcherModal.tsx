@@ -11,7 +11,7 @@ interface GraphSketcherModalProps {
 const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     const { onGraphSketcherStateChange, close, initialCurves } = props;
     const [ , setGraphSketcherElement] = useState<HTMLElement>();
-    const [sketch, setSketch] = useState<GraphSketcher|undefined|null>();
+    const [modalSketch, setModalSketch] = useState<GraphSketcher|undefined|null>();
     const [ , setGraphSketcherState] = useState<object|undefined|null>();
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
@@ -33,12 +33,12 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     // }, []);
 
     useEffect(() => {
-        sketch?.setCurves(initialCurves);
+        modalSketch?.setCurves(initialCurves);
     }, [initialCurves]);
 
-    const undo = () => sketch?.undo();
+    const undo = () => modalSketch?.undo();
 
-    const redo = () => sketch?.redo();
+    const redo = () => modalSketch?.redo();
 
     const updateGraphSketcherState = useCallback((state: { canvasWidth: number; canvasHeight: number; curves: Curve[] }) => {
         setGraphSketcherState(state);
@@ -52,47 +52,48 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
             sketch.selectedLineType = LineType.BEZIER;
             sketch.updateGraphSketcherState = updateGraphSketcherState;
             sketch.curves = initialCurves;
-            setSketch(sketch);
+            setModalSketch(sketch);
         }
         setGraphSketcherElement(e);
     }, [initialCurves, updateGraphSketcherState]);
 
     useEffect(() => {
-        return () => {
-            debugger;
-            sketch?.teardown();
-            setSketch(null);
-            const e = document.getElementById('graph-sketcher-modal') as HTMLElement
-            if (e) {
-                for (const canvas of e.getElementsByTagName('canvas')) {
-                    e.removeChild(canvas);
+        if (modalSketch) {
+            return () => {
+                modalSketch?.teardown();
+                setModalSketch(null);
+                const e = document.getElementById('graph-sketcher-modal') as HTMLElement
+                if (e) {
+                    for (const canvas of e.getElementsByTagName('canvas')) {
+                        e.removeChild(canvas);
+                    }
                 }
             }
         }
-    }, [sketch]);
+    }, [modalSketch]);
 
     useEffect(() => {
-        if (sketch) {
-            sketch.drawingColorName = drawingColorName;
+        if (modalSketch) {
+            modalSketch.drawingColorName = drawingColorName;
         }
-    }, [sketch, drawingColorName]);
+    }, [modalSketch, drawingColorName]);
 
     useEffect(() => {
-        if (sketch) {
-            sketch.selectedLineType = lineType;
+        if (modalSketch) {
+            modalSketch.selectedLineType = lineType;
         }
-    }, [sketch, lineType]);
+    }, [modalSketch, lineType]);
 
     const isRedoable = () => {
-        return sketch?.isRedoable();
+        return modalSketch?.isRedoable();
     };
 
     const isUndoable = () => {
-        return sketch?.isUndoable();
+        return modalSketch?.isUndoable();
     }
 
     const isTrashActive = () => {
-        return sketch?.isTrashActive;
+        return modalSketch?.isTrashActive;
     }
 
     return <div id='graph-sketcher-modal' style={{border: '5px solid black'}}>
