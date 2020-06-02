@@ -39,7 +39,7 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
             augmentedEvent.field = "physics";
         }
         if (event.tags.includes("maths")) {
-            augmentedEvent.field = "physics";
+            augmentedEvent.field = "maths";
         }
     }
 
