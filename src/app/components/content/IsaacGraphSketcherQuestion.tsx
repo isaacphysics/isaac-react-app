@@ -47,15 +47,15 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     }
 
     // This is debounced here because the graph sketcher upstream calls this
-    // on every redraw, which happens on every mouse movement.
+    // on every redraw, which happens on every mouse event.
     // TODO: Ideally fix this upstream.
-    const updateCurrentAttempt = useCallback(
-        debounce((newState: GraphSketcherState) => {
-            setCurrentAttempt(questionId, {type: 'graphChoice', value: JSON.stringify(newState)});
-        }, 250), []);
+    const updateCurrentAttempt = useCallback(debounce((newState: GraphSketcherState) => {
+        setCurrentAttempt(questionId, {type: 'graphChoice', value: JSON.stringify(newState)});
+    }, 250), []);
 
     useEffect(() => {
         // componentDidMount
+        console.log("componentDidMount: ", questionId);
         window.addEventListener('keyup', handleKeyPress);
         if (currentAttempt?.value) {
             setInitialCurves(JSON.parse(currentAttempt.value).curves);
@@ -78,11 +78,15 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
                 setPreviewSketch(sketch);
             }
         }
-    }, [previewRef, initialCurves]);
+    }, [previewRef]);
 
     useEffect(() => {
         if (previewSketch && currentAttempt?.value) {
-            previewSketch.curves = JSON.parse(currentAttempt.value).curves;
+            console.log(questionId, currentAttempt?.value);
+            const curves = JSON.parse(currentAttempt.value).curves;
+            curves.canvasWidth = 600;
+            curves.canvasHeight = 400;
+            previewSketch.curves = curves;
         }
     }, [currentAttempt, previewSketch]);
 

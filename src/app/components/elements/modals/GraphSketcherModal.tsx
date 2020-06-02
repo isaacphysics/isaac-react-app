@@ -33,7 +33,9 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     // }, []);
 
     useEffect(() => {
-        modalSketch?.setCurves(initialCurves);
+        if (modalSketch) {
+            modalSketch.curves = initialCurves;
+        }
     }, [initialCurves]);
 
     const undo = () => modalSketch?.undo();
