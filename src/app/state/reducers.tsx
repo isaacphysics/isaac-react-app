@@ -29,7 +29,7 @@ import {
     ContentDTO,
     ContentSummaryDTO,
     EventBookingDTO,
-    GameboardDTO,
+    GameboardDTO, GameboardItem,
     GameboardListDTO,
     GlossaryTermDTO,
     IsaacPodDTO,
@@ -420,11 +420,11 @@ export const progress = (progress: ProgressState = null, action: Action) => {
     }
 };
 
-export type CurrentGameboardState = GameboardDTO | NOT_FOUND_TYPE | null;
-export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action) => {
+export type CurrentGameboardState = GameboardDTO | NOT_FOUND_TYPE | null | {inflight: true; id: string | null};
+export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action): CurrentGameboardState => {
     switch (action.type) {
         case ACTION_TYPE.GAMEBOARD_REQUEST:
-            return null;
+            return {inflight: true, id: action.gameboardId} as {inflight: true; id: string | null};
         case ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;
         case ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS:
@@ -877,6 +877,16 @@ export const concepts = (concepts: ConceptsState = null, action: Action) => {
     }
 };
 
+export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;
+export const fasttrackConcepts = (state: FasttrackConceptsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS:
+            return action.concepts;
+        default:
+            return state;
+    }
+};
+
 
 const appReducer = combineReducers({
     adminUserGet,
@@ -922,7 +932,8 @@ const appReducer = combineReducers({
     glossaryTerms,
     testQuestions,
     printingSettings,
-    concepts
+    concepts,
+    fasttrackConcepts
 });
 
 export type AppState = undefined | {
@@ -971,6 +982,7 @@ export type AppState = undefined | {
     glossaryTerms: GlossaryTermsState;
     testQuestions: TestQuestionsState;
     concepts: ConceptsState;
+    fasttrackConcepts: FasttrackConceptsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

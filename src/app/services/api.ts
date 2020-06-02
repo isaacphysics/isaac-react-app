@@ -467,4 +467,9 @@ export const api = {
             return endpoint.post(`/log`, eventDetails);
         },
     },
+    fasttrack: {
+        concepts: (gameboardId: string, concept: string, upperQuestionId: string): AxiosPromise<ApiTypes.GameboardItem[]> => {
+            return endpoint.get(`/fasttrack/${gameboardId}/concepts`, {params: {concept, "upper_question_id": upperQuestionId}});
+        }
+    }
 };

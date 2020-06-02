@@ -77,6 +77,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
         const canBeAddedToWaitingList =
             !canMakeABooking &&
             event.isNotClosed &&
+            !event.hasExpired &&
             !event.userOnWaitList &&
             studentOnlyRestrictionSatisfied;
 

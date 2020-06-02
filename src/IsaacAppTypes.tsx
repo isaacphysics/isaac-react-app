@@ -2,6 +2,7 @@ import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {AuthenticationProvider, ChoiceDTO, ContentBase, ContentSummaryDTO, ResultsWrapper, TestCaseDTO} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
+import {FasttrackConceptsState} from "./app/state/reducers";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -364,6 +365,10 @@ export type Action =
     | {type: ACTION_TYPE.CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts}
+
+    | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST}
+    | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
 
     | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
 ;

@@ -3,6 +3,7 @@ import * as RS from "reactstrap";
 import {Col, Container, Row} from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
+
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
@@ -22,12 +23,19 @@ import {PrintButton} from "../elements/PrintButton";
 import {doc as selectDoc} from "../../state/selectors";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
-import tags from "../../services/tags";
+import {FastTrackProgress} from "../elements/FastTrackProgress";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import tags from "../../services/tags";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
     match: {params: {questionId: string}};
+    location: {search: string};
+}
+
+function fastTrackConceptEnumerator(questionId: string) {
+    // Magic, unfortunately
+    return "_abcdefghijk".indexOf(questionId.split('_')[2].slice(-1));
 }
 
 function getTags(docTags?: string[]) {
@@ -40,7 +48,7 @@ function getTags(docTags?: string[]) {
         .map(tag => ({title: tag.title}));
 }
 
-export const Question = withRouter(({questionIdOverride, match}: QuestionPageProps) => {
+export const Question = withRouter(({questionIdOverride, match, location}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
     const doc = useSelector(selectDoc.ifNotAQuizId(questionId));
     const user = useSelector((state: AppState) => state && state.user);
@@ -55,20 +63,30 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+
+        let title = doc.title as string;
+
+        // FastTrack title renaming
+        if (doc.tags?.includes('ft_upper') || doc.tags?.includes('ft_lower')) {
+            title += " " + fastTrackConceptEnumerator(questionId);
+            if (doc.tags.includes('ft_lower')) {
+                title += " (Easier)";
+            }
+        }
+
+        const isFastTrack = doc && doc.type === "isaacFastTrackQuestionPage";
+
         return <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <Container>
-                {/*FastTrack progress bar*/}
-                {/*Print options*/}
                 {/*High contrast option*/}
                 <TitleAndBreadcrumb
-                    currentPageTitle={doc.title as string}
-                    intermediateCrumbs={[
-                        ...navigation.breadcrumbHistory,
-                        ...getTags(doc.tags)
-                    ]}
+                    currentPageTitle={title}
+                    intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
                     collectionType={navigation.collectionType}
                     level={doc.level}
-                />
+                >
+                    {isFastTrack && <FastTrackProgress doc={doc} search={location.search} />}
+                </TitleAndBreadcrumb>
                 <div className="no-print d-flex align-items-center">
                     <EditContentButton doc={doc} />
                     <div className="question-actions question-actions-leftmost mt-3">
@@ -119,7 +137,7 @@ export const Question = withRouter(({questionIdOverride, match}: QuestionPagePro
 
                         <NavigationLinks navigation={navigation}/>
 
-                        {doc.relatedContent && doc.type !== "isaacFastTrackQuestionPage" && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                        {doc.relatedContent && !isFastTrack && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>

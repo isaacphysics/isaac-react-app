@@ -2,6 +2,7 @@ import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE} from "../services/constants";
 import {getUserId, setUserId} from "./userConsistencyCheckerCurrentUser";
+import {changePage} from "./actions";
 
 // Generic log action:
 // This is not imported from actions to avoid a circular dependency through store.
@@ -40,6 +41,7 @@ const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
     if (setUserId(user._id)) {
         scheduleNextCheck(api);
     } else {
+        // eslint-disable-next-line no-console
         console.error("Cannot perform user consistency checking!");
         const eventDetails = {
             type: "USER_CONSISTENCY_CHECKING_FAILED",
@@ -52,7 +54,7 @@ const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
 const clearCurrentUser = () => {
     clearTimeout(timeoutHandle);
     setUserId(undefined);
-    window.document.location.href = "/";
+    changePage("/");
 };
 
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
