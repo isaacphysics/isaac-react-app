@@ -104,6 +104,7 @@ const Board = (props: BoardTableProps) => {
     }
 
     const boardSubjects = determineGameboardSubjects(board);
+    const boardLevels = determineGameboardLevels(board);
 
     return boardView == boardViews.table ?
         <tr key={board.id} className="board-card">
@@ -118,7 +119,7 @@ const Board = (props: BoardTableProps) => {
                 </div>
             </td>
             <td className="align-middle"><a href={boardLink}>{board.title}</a></td>
-            {SITE_SUBJECT == SITE.PHY && <td className="text-center align-middle">{determineGameboardLevels(board).join(' ')}</td>}
+            {SITE_SUBJECT == SITE.PHY && <td className="text-center align-middle">{boardLevels.join(', ')}</td>}
             <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
             <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
             <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
@@ -145,9 +146,10 @@ const Board = (props: BoardTableProps) => {
                 <aside>
                     <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                     <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
+                    {SITE_SUBJECT == SITE.PHY && <CardSubtitle>Levels: <strong>{boardLevels.join(', ')}</strong></CardSubtitle>}
                 </aside>
 
-                <div className="mt-4 mb-2">
+                <div className="mt-1 mb-2">
                     <div className="card-share-link"><ShareLink linkUrl={boardLink} reducedWidthLink /></div>
                     <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
                     <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
