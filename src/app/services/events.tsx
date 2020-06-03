@@ -26,7 +26,8 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
             augmentedEvent.isMultiDay = false;
         }
         augmentedEvent.isWithinBookingDeadline =
-            !augmentedEvent.hasExpired && (event.bookingDeadline ? now <= new Date(event.bookingDeadline).getTime() : true);
+            !augmentedEvent.hasExpired &&
+            (event.bookingDeadline ? now <= new Date(event.bookingDeadline).getTime() : true);
     }
 
     if (event.tags) {
