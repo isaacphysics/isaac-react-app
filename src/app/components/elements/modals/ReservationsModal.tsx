@@ -65,8 +65,12 @@ const ReservationsModal = () => {
                 }
             }
             setCancelReservationCheckboxes(newCancelReservationCheckboxes);
+
             const newUnbookedUsers = _orderBy(
-                currentGroup.members.filter(member => !bookedUserIds.includes(member.id as number)),
+                currentGroup.members
+                    .filter(member => !bookedUserIds.includes(member.id as number))
+                    // do not allow the reservation of teachers on a student only event
+                    .filter(member => !(selectedEvent?.isStudentOnly && member.role !== "STUDENT")),
                 ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']
             );
             let newUserCheckboxes: boolean[] = [];
