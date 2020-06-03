@@ -16,27 +16,11 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
 
-    // useEffect(() => {
-    //     // const s = sketch;
-    //     // return () => {
-    //     //     debugger;
-    //     //     s?.teardown();
-    //     //     sketch?.teardown();
-    //     //     setSketch(null);
-    //     //     const e = document.getElementById('graph-sketcher-modal') as HTMLElement
-    //     //     if (e) {
-    //     //         for (const canvas of e.getElementsByTagName('canvas')) {
-    //     //             e.removeChild(canvas);
-    //     //         }
-    //     //     }
-    //     // }
-    // }, []);
-
     useEffect(() => {
         if (modalSketch) {
             modalSketch.curves = initialCurves;
         }
-    }, [initialCurves]);
+    }, [initialCurves, modalSketch]);
 
     const undo = () => modalSketch?.undo();
 
@@ -49,15 +33,21 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     
     useEffect(() => {
         const e = document.getElementById('graph-sketcher-modal') as HTMLElement
-        const { sketch } = makeGraphSketcher(e, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialCurves });
+        const { sketch } = makeGraphSketcher(e, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: [] });
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
             sketch.updateGraphSketcherState = updateGraphSketcherState;
-            sketch.curves = initialCurves;
+            // sketch.curves = initialCurves;
             setModalSketch(sketch);
         }
         setGraphSketcherElement(e);
-    }, [initialCurves, updateGraphSketcherState]);
+    }, [updateGraphSketcherState]);
+
+    useEffect(() => {
+        if (modalSketch) {
+            modalSketch.curves = initialCurves;
+        }
+    }, [initialCurves]);
 
     useEffect(() => {
         if (modalSketch) {

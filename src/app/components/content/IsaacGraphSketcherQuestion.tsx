@@ -9,6 +9,7 @@ import {GraphSketcherModal} from "../elements/modals/GraphSketcherModal";
 import {debounce} from "lodash";
 
 import {GraphSketcher, makeGraphSketcher, LineType, Curve, GraphSketcherState} from "isaac-graph-sketcher/src/GraphSketcher";
+import { isDefined } from 'isaac-graph-sketcher/src/GraphUtils';
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
@@ -55,7 +56,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
 
     useEffect(() => {
         // componentDidMount
-        console.log("componentDidMount: ", questionId);
+        // console.log("componentDidMount: ", questionId);
         window.addEventListener('keyup', handleKeyPress);
         if (currentAttempt?.value) {
             setInitialCurves(JSON.parse(currentAttempt.value).curves);
@@ -67,11 +68,17 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
         }
     }, []);
 
+    useEffect(() => {
+        if (currentAttempt?.value) {
+            setInitialCurves(JSON.parse(currentAttempt?.value).curves);
+        }
+    }, [currentAttempt]);
+
     const previewRef = useRef(null);
     useEffect(() => {
         if (previewSketch) return;
         if (makeGraphSketcher && previewRef.current) {
-            const { sketch, p } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true, initialCurves: initialCurves});
+            const { sketch } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true, initialCurves: initialCurves});
 
             if (sketch) {
                 sketch.selectedLineType = LineType.BEZIER;
@@ -82,7 +89,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
 
     useEffect(() => {
         if (previewSketch && currentAttempt?.value) {
-            console.log(questionId, currentAttempt?.value);
+            // console.log(questionId, currentAttempt?.value);
             const curves = JSON.parse(currentAttempt.value).curves;
             curves.canvasWidth = 600;
             curves.canvasHeight = 400;
@@ -94,7 +101,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
         <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
             PREVIEW: Click here to answer.
-            {JSON.stringify(currentAttempt?.value)}
+            {JSON.stringify(initialCurves)}
         </div>
         {modalVisible && <GraphSketcherModal
             close={closeModal}
