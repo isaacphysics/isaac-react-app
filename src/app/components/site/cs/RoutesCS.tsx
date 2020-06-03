@@ -8,6 +8,8 @@ import {Students} from "../../pages/Students";
 import {TeacherTools} from "../../pages/TeacherTools";
 import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {Redirect} from "react-router";
+import {isTeacher} from "../../../services/user";
+import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 
 let key = 0;
 export const RoutesCS = [
@@ -18,6 +20,8 @@ export const RoutesCS = [
     // Assignments
     <TrackedRoute key={key++} exact path="/my_markbook" component={AssignmentProgress} />,
     <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,
+    <TrackedRoute key={key++} exact path="/my_markbook/:assignmentId" ifUser={isTeacher} component={SingleAssignmentProgress} />,
+    <Redirect key={key++} from="/assignment_progress/:assignmentId" to="/my_markbook/:assignmentId" />,
 
     // Topics
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
