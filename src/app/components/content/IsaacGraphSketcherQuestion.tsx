@@ -31,6 +31,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     const [modalVisible, setModalVisible] = useState(false);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
     const [initialCurves, setInitialCurves] = useState<Curve[]>([]);
+    const [initialCurvesAssigned, setInitialCurvesAssigned] = useState(false);
 
     function openModal() {
         setModalVisible(true);
@@ -49,9 +50,9 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     // This is debounced here because the graph sketcher upstream calls this
     // on every redraw, which happens on every mouse event.
     // TODO: Ideally fix this upstream.
-    const updateCurrentAttempt = useCallback(debounce((newState: GraphSketcherState) => {
+    const onGraphSketcherStateChange = useCallback((newState: GraphSketcherState) => {
         setCurrentAttempt(questionId, {type: 'graphChoice', value: JSON.stringify(newState)});
-    }, 250), []);
+    }, []);
 
     useEffect(() => {
         // componentDidMount
@@ -68,7 +69,9 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     }, []);
 
     useEffect(() => {
-        if (currentAttempt?.value) {
+        // Only ever set initial curves once and not on every currentAttempt update (state var seems to work)
+        if (currentAttempt?.value && !initialCurvesAssigned) {
+            setInitialCurvesAssigned(true);
             setInitialCurves(JSON.parse(currentAttempt?.value).curves);
         }
     }, [currentAttempt]);
@@ -104,7 +107,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
         </div>
         {modalVisible && <GraphSketcherModal
             close={closeModal}
-            onGraphSketcherStateChange={updateCurrentAttempt}
+            onGraphSketcherStateChange={onGraphSketcherStateChange}
             initialCurves={initialCurves}
         />}
         Hints: <IsaacTabbedHints questionPartId={questionId} hints={doc.hints} />

@@ -16,16 +16,18 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     const [modalSketch, setModalSketch] = useState<GraphSketcher|undefined|null>();
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
+    const [initialCurvesAssigned, setInitialCurvesAssigned] = useState(false);
 
-    const updateGraphSketcherState = useCallback(debounce((state: { canvasWidth: number; canvasHeight: number; curves: Curve[] }) => {
+    const updateGraphSketcherState = useCallback((state: { canvasWidth: number; canvasHeight: number; curves: Curve[] }) => {
         onGraphSketcherStateChange(state);
-    }, 250), []);
+    }, []);
     
     useEffect(() => {
         if (isDefined(modalSketch)) return;
 
         const e = document.getElementById('graph-sketcher-modal') as HTMLElement
         const { sketch } = makeGraphSketcher(e, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: [] });
+
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
             sketch.updateGraphSketcherState = updateGraphSketcherState;
@@ -35,7 +37,9 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     }, []);
 
     useEffect(() => {
-        if (isDefined(modalSketch)) {
+        // Only ever take one assignment to initialCurves (state var seems to work)
+        if (isDefined(modalSketch) && !initialCurvesAssigned) {
+            setInitialCurvesAssigned(true);
             modalSketch.curves = initialCurves;
         }
     }, [initialCurves]);
