@@ -1,6 +1,8 @@
 import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { connect } from "react-redux";
 import { GraphSketcher, LineType, Curve, makeGraphSketcher } from "isaac-graph-sketcher/src/GraphSketcher";
+import { isDefined } from "isaac-graph-sketcher/src/GraphUtils";
+import {debounce} from "lodash";
 
 interface GraphSketcherModalProps {
     close: () => void;
@@ -12,43 +14,33 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     const { onGraphSketcherStateChange, close, initialCurves } = props;
     const [ , setGraphSketcherElement] = useState<HTMLElement>();
     const [modalSketch, setModalSketch] = useState<GraphSketcher|undefined|null>();
-    const [ , setGraphSketcherState] = useState<object|undefined|null>();
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
 
-    useEffect(() => {
-        if (modalSketch) {
-            modalSketch.curves = initialCurves;
-        }
-    }, [initialCurves, modalSketch]);
-
-    const undo = () => modalSketch?.undo();
-
-    const redo = () => modalSketch?.redo();
-
-    const updateGraphSketcherState = useCallback((state: { canvasWidth: number; canvasHeight: number; curves: Curve[] }) => {
-        setGraphSketcherState(state);
+    const updateGraphSketcherState = useCallback(debounce((state: { canvasWidth: number; canvasHeight: number; curves: Curve[] }) => {
         onGraphSketcherStateChange(state);
-    }, [onGraphSketcherStateChange]);
+    }, 250), []);
     
     useEffect(() => {
+        if (isDefined(modalSketch)) return;
+
         const e = document.getElementById('graph-sketcher-modal') as HTMLElement
         const { sketch } = makeGraphSketcher(e, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: [] });
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
             sketch.updateGraphSketcherState = updateGraphSketcherState;
-            // sketch.curves = initialCurves;
             setModalSketch(sketch);
         }
         setGraphSketcherElement(e);
-    }, [updateGraphSketcherState]);
+    }, []);
 
     useEffect(() => {
-        if (modalSketch) {
+        if (isDefined(modalSketch)) {
             modalSketch.curves = initialCurves;
         }
     }, [initialCurves]);
 
+    // Teardown
     useEffect(() => {
         if (modalSketch) {
             return () => {
@@ -83,6 +75,10 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     const isUndoable = () => {
         return modalSketch?.isUndoable();
     }
+
+    const undo = () => modalSketch?.undo();
+
+    const redo = () => modalSketch?.redo();
 
     const isTrashActive = () => {
         return modalSketch?.isTrashActive;

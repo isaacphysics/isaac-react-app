@@ -9,7 +9,6 @@ import {GraphSketcherModal} from "../elements/modals/GraphSketcherModal";
 import {debounce} from "lodash";
 
 import {GraphSketcher, makeGraphSketcher, LineType, Curve, GraphSketcherState} from "isaac-graph-sketcher/src/GraphSketcher";
-import { isDefined } from 'isaac-graph-sketcher/src/GraphUtils';
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
