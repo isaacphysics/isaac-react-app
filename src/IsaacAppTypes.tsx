@@ -1,6 +1,14 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
-import {AuthenticationProvider, ChoiceDTO, ContentBase, ContentSummaryDTO, ResultsWrapper, TestCaseDTO} from "./IsaacApiTypes";
+import {
+    AuthenticationProvider,
+    ChoiceDTO,
+    ContentBase,
+    ContentSummaryDTO,
+    ResultsWrapper,
+    TestCaseDTO,
+    TOTPSharedSecretDTO
+} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
 import {FasttrackConceptsState} from "./app/state/reducers";
 
@@ -27,6 +35,12 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_LINK_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS; provider: AuthenticationProvider; redirectUrl: string}
     | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS; totpSharedSecretDTO: TOTPSharedSecretDTO}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS; provider: AuthenticationProvider}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE; errorMessage: string}

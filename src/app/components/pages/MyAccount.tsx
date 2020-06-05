@@ -27,6 +27,7 @@ import {
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
+import {UserMFA} from "../elements/panels/UserMFA";
 import {UserEmailPreference} from "../elements/panels/UserEmailPreferences";
 import {
     allRequiredInformationIsPresent,
@@ -122,6 +123,11 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
     const [currentPassword, setCurrentPassword] = useState("");
 
+    // - MFA
+    const [updateMFARequest, setUpdateMFARequest] = useState(false);
+    const [, setMFASetupSecret] = useState("");
+    const [mfaVerificationCode, setMFAVerificationCode] = useState("");
+
     // - User preferences
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
@@ -206,7 +212,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.passwordreset})} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                             >
-                                <span className="d-none d-lg-block">Change password</span>
+                                <span className="d-none d-lg-block">Security Settings</span>
                                 <span className="d-block d-lg-none">Password</span>
                             </NavLink>
                         </NavItem>
@@ -256,6 +262,14 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
                                     isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
+                                />
+                                <UserMFA
+                                    userAuthSettings={userAuthSettings}
+                                    myUser={userToUpdate} setMyUser={setUserToUpdate}
+                                    setMFASetupSecret={setMFASetupSecret}
+                                    editingOtherUser={editingOtherUser}
+                                    mfaVerificationCode={mfaVerificationCode} setMFAVerificationCode= {setMFAVerificationCode}
+                                    updateMFARequest={updateMFARequest} setUpdateMFARequest={setUpdateMFARequest}
                                 />
                             </TabPane>
 

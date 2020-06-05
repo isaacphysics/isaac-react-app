@@ -43,7 +43,8 @@ import {
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO
+    UserSummaryWithGroupMembershipDTO,
+    TOTPSharedSecretDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
@@ -93,6 +94,19 @@ export const userPreferences = (userPreferences: UserPreferencesState = null, ac
             return userPreferences;
     }
 };
+
+type TotpSharedSecretState = TOTPSharedSecretDTO | null;
+export const totpSharedSecret = (totpSharedSecret: TotpSharedSecretState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS:
+            return {...action.totpSharedSecretDTO};
+        case ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS:
+            return null;
+        default:
+            return totpSharedSecret;
+    }
+};
+
 
 export type UserSchoolLookupState = UserSchoolLookup | null;
 export const userSchoolLookup = (userSchoolLookup: UserSchoolLookupState = null, action: Action) => {
@@ -901,6 +915,7 @@ const appReducer = combineReducers({
     userSchoolLookup,
     activeAuthorisations,
     otherUserAuthorisations,
+    totpSharedSecret,
     groupMemberships,
     constants,
     notifications,
@@ -950,6 +965,7 @@ export type AppState = undefined | {
     userSchoolLookup: UserSchoolLookupState;
     activeAuthorisations: ActiveAuthorisationsState;
     otherUserAuthorisations: OtherUserAuthorisationsState;
+    totpSharedSecret: TotpSharedSecretState;
     groupMemberships: GroupMembershipsState;
     doc: DocState;
     questions: QuestionsState;

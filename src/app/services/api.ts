@@ -110,6 +110,9 @@ export const api = {
         login: (provider: ApiTypes.AuthenticationProvider, credentials: Credentials): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/auth/${provider}/authenticate`, securePadCredentials(credentials));
         },
+        mfaCompleteLogin: (mfaChallengeResponse : string): AxiosPromise => {
+            return endpoint.post(`/auth/mfa/challenge`, {mfaVerificationCode: mfaChallengeResponse});
+        },
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings`)
         },
@@ -121,7 +124,13 @@ export const api = {
         },
         unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
             return endpoint.delete(`/auth/${provider}/link`);
-        }
+        },
+        getNewMFASecret: (): AxiosPromise => {
+            return endpoint.get(`/users/current_user/mfa/new_secret`)
+        },
+        setupMFAOnAccount: (sharedSecret: string, mfaVerificationCode: string): AxiosPromise => {
+            return endpoint.post(`/users/current_user/mfa`, {sharedSecret: sharedSecret, mfaVerificationCode: mfaVerificationCode})
+        },
     },
     email: {
         verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {

@@ -198,6 +198,31 @@ export const unlinkAccount = (provider: AuthenticationProvider) => async (dispat
     }
 };
 
+export const getNewTotpSecret = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_REQUEST});
+    try {
+        const mfaSetupResponse = await api.authentication.getNewMFASecret();
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS, totpSharedSecretDTO: mfaSetupResponse.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_FAILURE, errorMessage: extractMessage(e)});
+        dispatch(showErrorToastIfNeeded("Failed to get MFA secret", e));
+    }
+};
+
+export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_REQUEST});
+    try {
+        const mfaSetupResponse = await api.authentication.setupMFAOnAccount(sharedSecret, mfaVerificationCode);
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS});
+        dispatch(showToast({
+            color: "success", title: "2FA Configured", body: "You have enabled 2FA on your account!"}) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_FAILURE, errorMessage: extractMessage(e)});
+        dispatch(showErrorToastIfNeeded("Failed to setup MFA on account", e));
+    }
+};
+
+
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
     try {
@@ -318,11 +343,14 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
 export const logInUser = (provider: AuthenticationProvider, credentials: Credentials) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-    persistence.remove(KEY.AFTER_AUTH_PATH);
+
     try {
         const result = await api.authentication.login(provider, credentials);
+        // TODO - switch if MFA 202 comes back to dispatch MFA_REQUIRED_REQUEST
+
         await dispatch(requestCurrentUser() as any); // Request user preferences
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+        persistence.remove(KEY.AFTER_AUTH_PATH);
         history.push(afterAuthPath);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? extractMessage(e) : API_REQUEST_FAILURE_MESSAGE})
