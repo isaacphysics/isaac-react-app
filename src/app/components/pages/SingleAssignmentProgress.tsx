@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Button, Container} from "reactstrap";
-import {loadAssignmentsOwnedByMe, loadProgress, openActiveModal} from "../../state/actions";
+import {loadAssignmentsOwnedByMe, loadProgress, openActiveModal, loadBoard} from "../../state/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {SingleProgressDetailsProps} from "../../../IsaacAppTypes";
@@ -36,24 +36,44 @@ export const SingleAssignmentProgress = () => {
     const params = useParams();
     const assignmentId = params.assignmentId;
 
-    dispatch(loadProgress({_id: assignmentId}));
-    dispatch(loadAssignmentsOwnedByMe());
+    useEffect(() => {
+        dispatch(loadProgress({_id: assignmentId}));
+        dispatch(loadAssignmentsOwnedByMe());
+    }, []);
 
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
 
     const myOwnedAssignments = useSelector((state: AppState) => {
-        return state?.assignments
+        return state?.assignmentsByMe
     });
+
+    useEffect(() => {
+        let thisAssignment = myOwnedAssignments?.filter(obj => {
+            return obj._id == assignmentId
+        })[0];
+        let boardId = thisAssignment?.gameboardId;
+        boardId && dispatch(loadBoard(boardId));
+    }, [myOwnedAssignments]);
 
     const assignmentProgress = useSelector((state: AppState) => {
         return state?.progress
+    });
+
+    const boards = useSelector((state: AppState) => {
+        return state?.boards?.boards?.boards;
     });
 
     const pageSettings = {colourBlind, setColourBlind, formatAsPercentage, setFormatAsPercentage};
 
 
     const [assignment, setAssignment] = useState(myOwnedAssignments?.find(x => x._id == assignmentId));
+
+    useEffect(() => {
+        if (boards && (boards[0].id = assignment?.gameboardId)) {
+            setAssignment({...assignment, gameboard: boards[0]})
+        }
+    }, [boards]);
 
     useEffect(() => {
         setAssignment(myOwnedAssignments?.find(x => x._id == assignmentId));
