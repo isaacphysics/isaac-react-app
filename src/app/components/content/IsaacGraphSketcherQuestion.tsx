@@ -30,7 +30,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
-    const [initialCurves, setInitialCurves] = useState<Curve[]>([]);
+    const [initialCurves, setInitialCurves] = useState<Curve[]>();
     const [initialCurvesAssigned, setInitialCurvesAssigned] = useState(false);
 
     function openModal() {
@@ -51,6 +51,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     // on every redraw, which happens on every mouse event.
     // TODO: Ideally fix this upstream.
     const onGraphSketcherStateChange = useCallback((newState: GraphSketcherState) => {
+        console.log(newState);
         setCurrentAttempt(questionId, {type: 'graphChoice', value: JSON.stringify(newState)});
     }, []);
 
@@ -80,7 +81,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     useEffect(() => {
         if (previewSketch) return;
         if (makeGraphSketcher && previewRef.current) {
-            const { sketch } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true, initialCurves: initialCurves});
+            const { sketch } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true });
 
             if (sketch) {
                 sketch.selectedLineType = LineType.BEZIER;
@@ -103,7 +104,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
         <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
             PREVIEW: Click here to answer.
-            {JSON.stringify(initialCurves)}
+            {currentAttempt?.value}
         </div>
         {modalVisible && <GraphSketcherModal
             close={closeModal}

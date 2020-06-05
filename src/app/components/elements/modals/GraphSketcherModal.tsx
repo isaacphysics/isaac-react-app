@@ -2,11 +2,11 @@ import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { connect } from "react-redux";
 import { GraphSketcher, LineType, Curve, makeGraphSketcher } from "isaac-graph-sketcher/src/GraphSketcher";
 import { isDefined } from "isaac-graph-sketcher/src/GraphUtils";
-import {debounce} from "lodash";
+// import {debounce} from "lodash";
 
 interface GraphSketcherModalProps {
     close: () => void;
-    initialCurves: Curve[];
+    initialCurves?: Curve[];
     onGraphSketcherStateChange: (state: any) => void;
 }
 
@@ -16,9 +16,9 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     const [modalSketch, setModalSketch] = useState<GraphSketcher|undefined|null>();
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
-    const [initialCurvesAssigned, setInitialCurvesAssigned] = useState(false);
 
     const updateGraphSketcherState = useCallback((state: { canvasWidth: number; canvasHeight: number; curves: Curve[] }) => {
+        console.log(state);
         onGraphSketcherStateChange(state);
     }, []);
     
@@ -26,7 +26,7 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
         if (isDefined(modalSketch)) return;
 
         const e = document.getElementById('graph-sketcher-modal') as HTMLElement
-        const { sketch } = makeGraphSketcher(e, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: [] });
+        const { sketch } = makeGraphSketcher(e, window.innerWidth, window.innerHeight, { previewMode: false });
 
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
@@ -37,12 +37,11 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     }, []);
 
     useEffect(() => {
-        // Only ever take one assignment to initialCurves (state var seems to work)
-        if (isDefined(modalSketch) && !initialCurvesAssigned) {
-            setInitialCurvesAssigned(true);
-            modalSketch.curves = initialCurves;
+        if (isDefined(modalSketch)) {
+            modalSketch.curves = modalSketch.curves || initialCurves;
+            modalSketch.reDraw();
         }
-    }, [initialCurves]);
+    }, [modalSketch, initialCurves]);
 
     // Teardown
     useEffect(() => {
@@ -56,6 +55,7 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
                         e.removeChild(canvas);
                     }
                 }
+                // setInitialCurvesAssigned(false);
             }
         }
     }, [modalSketch]);
