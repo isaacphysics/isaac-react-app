@@ -454,7 +454,7 @@ export const api = {
         resendUserConfirmationEmail: (eventId: string, userId: number) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}/resend_confirmation`);
         },
-        promoteUserFromWaitingList: (eventId: string, userId: number) => {
+        promoteUserBooking: (eventId: string, userId: number) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}/promote`, {eventId, userId});
         },
         cancelUserBooking: (eventId: string, userId: number) => {

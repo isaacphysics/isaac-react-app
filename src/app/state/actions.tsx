@@ -1671,12 +1671,12 @@ export const resendUserConfirmationEmail = (eventBookingId: string, userId?: num
     }
 };
 
-export const promoteUserFromWaitingList = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
+export const promoteUserBooking = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
     const promote = window.confirm('Are you sure you want to convert this to a confirmed booking?');
     if (promote && userId) {
         try {
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_REQUEST});
-            await api.eventBookings.promoteUserFromWaitingList(eventBookingId, userId);
+            await api.eventBookings.promoteUserBooking(eventBookingId, userId);
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_RESPONSE_SUCCESS});
             dispatch(getEventBookings(eventBookingId) as any);
         } catch (error) {
