@@ -17,11 +17,13 @@ interface UserMFAProps {
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     updateMFARequest?: boolean;
     setUpdateMFARequest: (e: any) => void;
+    successfulMFASetup?: boolean;
+    setSuccessfulMFASetup: (e: any) => void;
     editingOtherUser: boolean;
 }
 
 export const UserMFA = (
-    {mfaVerificationCode, setMFASetupSecret, setMFAVerificationCode, myUser, setMyUser, userAuthSettings, updateMFARequest, setUpdateMFARequest, editingOtherUser}: UserMFAProps) => {
+    {mfaVerificationCode, setMFASetupSecret, setMFAVerificationCode, myUser, setMyUser, userAuthSettings, updateMFARequest, setUpdateMFARequest, successfulMFASetup, setSuccessfulMFASetup, editingOtherUser}: UserMFAProps) => {
 
     const dispatch = useDispatch();
     const totpSharedSecret = useSelector((state: AppState) => {
@@ -49,11 +51,12 @@ export const UserMFA = (
 
     }, [totpSharedSecret]);
 
+
     if (totpSharedSecret == null && mfaVerificationCode) {
         // assume we have just completed a successful configuration of MFA as secret is clear and tidy up
         setUpdateMFARequest(false);
         setMFAVerificationCode(null);
-
+        setSuccessfulMFASetup(true);
     }
 
     return <CardBody>
@@ -66,11 +69,14 @@ export const UserMFA = (
         {!editingOtherUser && userAuthSettings && userAuthSettings.hasSegueAccount ?
             <Row>
                 <Col>
-                    {!userAuthSettings.mfaStatus || updateMFARequest ?
+                    <Row>
+                        <Col md={{size: 6, offset: 3}}>
+                            <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>
+                        </Col>
+                    </Row>
+                    {updateMFARequest ?
                         <Row>
                             <Col md={{size: 6, offset: 3}}>
-                                <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus ? "Enabled" : "Disabled"}</p>
-
                                 <h5>Configure Two-factor Authentication (2FA)</h5>
                                 <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
                                 <div className="qrcode-mfa vertical-center">
@@ -83,7 +89,7 @@ export const UserMFA = (
                                     <Input
                                         id="setup-verification-code" type="text" name="setup-verification-code"
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                            setMFAVerificationCode(e.target.value)
+                                            setMFAVerificationCode(e.target.value.replace(" ", ""))
                                         }
                                     />
                                 </FormGroup>
@@ -103,8 +109,6 @@ export const UserMFA = (
                         <Row>
                             <Col md={{size: 6, offset: 3}}>
                                 <FormGroup>
-                                    <p><strong>2FA Status: </strong> Enabled</p>
-
                                     <Button className="btn-secondary"
                                             disabled={SITE_SUBJECT === SITE.PHY}
                                             onClick={() => {setUpdateMFARequest(true); dispatch(getNewTotpSecret())}}>
@@ -131,23 +135,16 @@ export const UserMFA = (
                 </Row>
             </React.Fragment>
         }
-        {editingOtherUser ?
+        {editingOtherUser &&
             <React.Fragment>
                 <Row className="pt-4">
                     <Col className="text-center">
                         {userAuthSettings && userAuthSettings.mfaStatus && userAuthSettings && userAuthSettings.linkedAccounts && <p>
-                            <p>Disable 2FA for this user - WARNING You must have verified the user's identity before doing this.</p>
-                            <Button className="btn-secondary"
-                                    disabled={SITE_SUBJECT === SITE.PHY}
-                                    onClick={() => {return null}}>
-                                Disable 2FA (not yet implemented)
-                            </Button>
+                            No administrative actions available at the moment.
                         </p>}
                     </Col>
                 </Row>
             </React.Fragment>
-            :
-            null
         }
 
     </CardBody>

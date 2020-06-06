@@ -222,6 +222,25 @@ export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: strin
     }
 };
 
+export const submitTotpChallengeResponse = (mfaVerificationCode: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
+    try {
+        const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
+        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode);
+
+        await dispatch(requestCurrentUser() as any); // Request user preferences
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+        persistence.remove(KEY.AFTER_AUTH_PATH);
+
+        history.push(afterAuthPath);
+
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
+        dispatch(showErrorToastIfNeeded("Error with verification code.", e));
+    }
+    dispatch(requestCurrentUser() as any)
+};
 
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
@@ -346,12 +365,18 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
 
     try {
         const result = await api.authentication.login(provider, credentials);
-        // TODO - switch if MFA 202 comes back to dispatch MFA_REQUIRED_REQUEST
+
+        if (result.status === 202) {
+            // indicates MFA is required for this user and user isn't logged in yet.
+            dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
+            return;
+        }
 
         await dispatch(requestCurrentUser() as any); // Request user preferences
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         persistence.remove(KEY.AFTER_AUTH_PATH);
         history.push(afterAuthPath);
+
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? extractMessage(e) : API_REQUEST_FAILURE_MESSAGE})
     }

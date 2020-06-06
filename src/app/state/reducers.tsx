@@ -107,6 +107,17 @@ export const totpSharedSecret = (totpSharedSecret: TotpSharedSecretState = null,
     }
 };
 
+type TotpChallengePendingState = boolean;
+export const totpChallengePending = (totpChallengePending: TotpChallengePendingState = false, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED:
+            return true;
+        case ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS:
+            return false;
+        default:
+            return totpChallengePending;
+    }
+};
 
 export type UserSchoolLookupState = UserSchoolLookup | null;
 export const userSchoolLookup = (userSchoolLookup: UserSchoolLookupState = null, action: Action) => {
@@ -916,6 +927,7 @@ const appReducer = combineReducers({
     activeAuthorisations,
     otherUserAuthorisations,
     totpSharedSecret,
+    totpChallengePending,
     groupMemberships,
     constants,
     notifications,
@@ -966,6 +978,7 @@ export type AppState = undefined | {
     activeAuthorisations: ActiveAuthorisationsState;
     otherUserAuthorisations: OtherUserAuthorisationsState;
     totpSharedSecret: TotpSharedSecretState;
+    totpChallengePending: TotpChallengePendingState;
     groupMemberships: GroupMembershipsState;
     doc: DocState;
     questions: QuestionsState;

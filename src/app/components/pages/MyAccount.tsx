@@ -125,6 +125,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     // - MFA
     const [updateMFARequest, setUpdateMFARequest] = useState(false);
+    const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
     const [, setMFASetupSecret] = useState("");
     const [mfaVerificationCode, setMFAVerificationCode] = useState("");
 
@@ -213,7 +214,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                             >
                                 <span className="d-none d-lg-block">Security Settings</span>
-                                <span className="d-block d-lg-none">Password</span>
+                                <span className="d-block d-lg-none">Security</span>
                             </NavLink>
                         </NavItem>
                         {!editingOtherUser &&
@@ -270,6 +271,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     editingOtherUser={editingOtherUser}
                                     mfaVerificationCode={mfaVerificationCode} setMFAVerificationCode= {setMFAVerificationCode}
                                     updateMFARequest={updateMFARequest} setUpdateMFARequest={setUpdateMFARequest}
+                                    successfulMFASetup={successfulMFASetup} setSuccessfulMFASetup={setSuccessfulMFASetup}
                                 />
                             </TabPane>
 
