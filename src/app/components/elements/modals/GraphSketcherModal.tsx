@@ -6,7 +6,7 @@ import { isDefined } from "isaac-graph-sketcher/src/GraphUtils";
 
 interface GraphSketcherModalProps {
     close: () => void;
-    initialCurves?: Curve[];
+    initialCurves?: { curves: Curve[]; canvasWidth: number; canvasHeight: number };
     onGraphSketcherStateChange: (state: any) => void;
 }
 
@@ -38,7 +38,7 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
 
     useEffect(() => {
         if (isDefined(modalSketch)) {
-            modalSketch.curves = modalSketch.curves || initialCurves;
+            modalSketch.data.curves = modalSketch.data.curves || initialCurves;
             modalSketch.reDraw();
         }
     }, [modalSketch, initialCurves]);

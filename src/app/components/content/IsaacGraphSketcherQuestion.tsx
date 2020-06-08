@@ -30,8 +30,8 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
-    const [initialCurves, setInitialCurves] = useState<Curve[]>();
-    const [initialCurvesAssigned, setInitialCurvesAssigned] = useState(false);
+    const [initialData, setInitialData] = useState<{ curves: Curve[]; canvasWidth: number; canvasHeight: number }>();
+    const [initialDataAssigned, setInitialDataAssigned] = useState(false);
 
     function openModal() {
         setModalVisible(true);
@@ -60,7 +60,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
         // console.log("componentDidMount: ", questionId);
         window.addEventListener('keyup', handleKeyPress);
         if (currentAttempt?.value) {
-            setInitialCurves(JSON.parse(currentAttempt.value).curves);
+            setInitialData(JSON.parse(currentAttempt.value).curves);
         }
 
         return () => {
@@ -71,9 +71,9 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
 
     useEffect(() => {
         // Only ever set initial curves once and not on every currentAttempt update (state var seems to work)
-        if (currentAttempt?.value && !initialCurvesAssigned) {
-            setInitialCurvesAssigned(true);
-            setInitialCurves(JSON.parse(currentAttempt?.value).curves);
+        if (currentAttempt?.value && !initialDataAssigned) {
+            setInitialDataAssigned(true);
+            setInitialData(JSON.parse(currentAttempt?.value).curves);
         }
     }, [currentAttempt]);
 
@@ -93,10 +93,10 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     useEffect(() => {
         if (previewSketch && currentAttempt?.value) {
             // console.log(questionId, currentAttempt?.value);
-            const curves = JSON.parse(currentAttempt.value).curves;
-            curves.canvasWidth = 600;
-            curves.canvasHeight = 400;
-            previewSketch.curves = curves;
+            const data = JSON.parse(currentAttempt.value);
+            data.canvasWidth = 600;
+            data.canvasHeight = 400;
+            previewSketch.data = data;
         }
     }, [currentAttempt, previewSketch]);
 
@@ -109,7 +109,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
         {modalVisible && <GraphSketcherModal
             close={closeModal}
             onGraphSketcherStateChange={onGraphSketcherStateChange}
-            initialCurves={initialCurves}
+            initialCurves={initialData}
         />}
         Hints: <IsaacTabbedHints questionPartId={questionId} hints={doc.hints} />
     </div>
