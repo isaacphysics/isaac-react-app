@@ -39,6 +39,8 @@ const ReservationsModal = () => {
     const [cancelReservationCheckboxes, setCancelReservationCheckboxes] = useState<{[key: number]: boolean}>({});
     const [checkAllCancelReservationsCheckbox, setCheckAllCancelReservationsCheckbox] = useState<boolean>();
     const [groupDropdownOpen, setGroupDropdownOpen] = useState(false);
+    const unbookedUsersById: {[id: number]: AppGroupMembership} = {};
+    unbookedUsers.forEach(unbookedUser => unbookedUsersById[unbookedUser.id || 0] = unbookedUser);
 
     useEffect(() => {
         dispatch(loadGroups(false));
@@ -140,11 +142,19 @@ const ReservationsModal = () => {
 
     const isReservationLimitReached = () => {
         if (selectedEvent && selectedEvent.groupReservationLimit) {
-            const bookings = eventBookingsForGroup.filter(booking =>
-                (booking.bookingStatus === "CONFIRMED" || booking.bookingStatus === "RESERVED" || booking.bookingStatus ==="WAITING_LIST")
-                && booking.reservedById === user?.id
-            );
-            const candidateBookings = Object.values(userCheckboxes).filter(c => c);
+            const bookings = eventBookingsForGroup
+                .filter(booking =>
+                    (booking.bookingStatus === "CONFIRMED" || booking.bookingStatus === "RESERVED" || booking.bookingStatus ==="WAITING_LIST")
+                    && booking.reservedById === user?.id
+                )
+                // teachers should not count toward student event limits
+                .filter(booking => !selectedEvent.isAStudentEvent || booking.userBooked?.role === "STUDENT");
+
+            const candidateBookings = Object.entries(userCheckboxes)
+                .filter(([,selected]) => selected)
+                // teachers should not count toward student event limits
+                .filter(([id,]) => !selectedEvent.isAStudentEvent || unbookedUsersById[id as any]?.role === "STUDENT");
+
             return (candidateBookings.length + bookings.length) > selectedEvent.groupReservationLimit;
         }
         // By default, return true to disable all the checkboxes: prevents awkward situations.
@@ -198,10 +208,10 @@ const ReservationsModal = () => {
                                             Student
                                         </th>
                                         <th className="align-middle booking-status">
-                                            Booking Status
+                                            Booking status
                                         </th>
                                         <th className="align-middle reserved-by">
-                                            Reserved By
+                                            Reserved by
                                         </th>
                                     </tr>
                                 </thead>
