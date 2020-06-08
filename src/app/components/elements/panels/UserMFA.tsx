@@ -33,7 +33,7 @@ export const UserMFA = (
     let qrCodeStringBase64SVG: string | null = null;
     let authenticatorURL: string | null = null;;
     if (totpSharedSecret) {
-        authenticatorURL = `otpauth://totp/Isaac%20${SITE_SUBJECT_TITLE.replace(" ", "%20")}%20%28${myUser.email}%29?secret=${totpSharedSecret}`
+        authenticatorURL = `otpauth://totp/Isaac%20${SITE_SUBJECT_TITLE.replace(/ /g, "%20")}%20%28${myUser.email}%29?secret=${totpSharedSecret}`
         QRCode.toString(authenticatorURL, {type:'svg'}, function (err, val) {
             if (err) {
                 console.error(err)
@@ -89,7 +89,7 @@ export const UserMFA = (
                                     <Input
                                         id="setup-verification-code" type="text" name="setup-verification-code"
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                            setMFAVerificationCode(e.target.value.replace(" ", ""))
+                                            setMFAVerificationCode(e.target.value.replace(/ /g, ""))
                                         }
                                     />
                                 </FormGroup>

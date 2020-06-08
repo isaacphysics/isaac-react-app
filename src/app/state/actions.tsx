@@ -212,7 +212,7 @@ export const getNewTotpSecret = () => async (dispatch: Dispatch<Action>) => {
 export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_REQUEST});
     try {
-        const mfaSetupResponse = await api.authentication.setupMFAOnAccount(sharedSecret, mfaVerificationCode);
+        await api.authentication.setupMFAOnAccount(sharedSecret, mfaVerificationCode);
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS});
         dispatch(showToast({
             color: "success", title: "2FA Configured", body: "You have enabled 2FA on your account!"}) as any);
