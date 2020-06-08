@@ -264,15 +264,20 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
                                 />
-                                <UserMFA
-                                    userAuthSettings={userAuthSettings}
-                                    myUser={userToUpdate} setMyUser={setUserToUpdate}
-                                    setMFASetupSecret={setMFASetupSecret}
-                                    editingOtherUser={editingOtherUser}
-                                    mfaVerificationCode={mfaVerificationCode} setMFAVerificationCode= {setMFAVerificationCode}
-                                    updateMFARequest={updateMFARequest} setUpdateMFARequest={setUpdateMFARequest}
-                                    successfulMFASetup={successfulMFASetup} setSuccessfulMFASetup={setSuccessfulMFASetup}
-                                />
+                                {user.role === 'ADMIN' &&
+                                    // beta feature just for admins
+                                    <UserMFA
+                                        userAuthSettings={userAuthSettings}
+                                        myUser={userToUpdate} setMyUser={setUserToUpdate}
+                                        setMFASetupSecret={setMFASetupSecret}
+                                        editingOtherUser={editingOtherUser}
+                                        mfaVerificationCode={mfaVerificationCode}
+                                        setMFAVerificationCode={setMFAVerificationCode}
+                                        updateMFARequest={updateMFARequest} setUpdateMFARequest={setUpdateMFARequest}
+                                        successfulMFASetup={successfulMFASetup}
+                                        setSuccessfulMFASetup={setSuccessfulMFASetup}
+                                    />
+                                }
                             </TabPane>
 
                             {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
