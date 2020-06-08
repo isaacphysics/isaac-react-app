@@ -205,7 +205,7 @@ export const getNewTotpSecret = () => async (dispatch: Dispatch<Action>) => {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS, totpSharedSecretDTO: mfaSetupResponse.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showErrorToastIfNeeded("Failed to get MFA secret", e));
+        dispatch(showErrorToastIfNeeded("Failed to get 2FA secret", e));
     }
 };
 
@@ -218,7 +218,7 @@ export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: strin
             color: "success", title: "2FA Configured", body: "You have enabled 2FA on your account!"}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showErrorToastIfNeeded("Failed to setup MFA on account", e));
+        dispatch(showErrorToastIfNeeded("Failed to setup 2FA on account", e));
     }
 };
 
@@ -240,6 +240,19 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string) => asyn
         dispatch(showErrorToastIfNeeded("Error with verification code.", e));
     }
     dispatch(requestCurrentUser() as any)
+};
+
+export const disableTotpForAccount = (userId: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_REQUEST});
+    try {
+        await api.authentication.disableMFAOnAccount(userId);
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_SUCCESS});
+        dispatch(showToast({
+            color: "success", title: "2FA Disabled", body: "You have disabled 2FA on this account!"}) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_FAILURE, errorMessage: extractMessage(e)});
+        dispatch(showErrorToastIfNeeded("Failed to disable 2FA on account.", e));
+    }
 };
 
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {

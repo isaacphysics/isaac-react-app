@@ -4,7 +4,7 @@ import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
-import {getNewTotpSecret, setupAccountMFA} from "../../../state/actions";
+import {disableTotpForAccount, getNewTotpSecret, setupAccountMFA} from "../../../state/actions";
 import QRCode from 'qrcode'
 import {AppState} from "../../../state/reducers";
 
@@ -112,7 +112,7 @@ export const UserMFA = (
                                     <Button className="btn-secondary"
                                             disabled={SITE_SUBJECT === SITE.PHY}
                                             onClick={() => {setUpdateMFARequest(true); dispatch(getNewTotpSecret())}}>
-                                        Change 2FA device
+                                        {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
                                     </Button>
                                 </FormGroup>
                             </Col>
@@ -139,8 +139,14 @@ export const UserMFA = (
             <React.Fragment>
                 <Row className="pt-4">
                     <Col className="text-center">
-                        {userAuthSettings && userAuthSettings.mfaStatus && userAuthSettings && userAuthSettings.linkedAccounts && <p>
-                            No administrative actions available at the moment.
+                        {userAuthSettings && userAuthSettings.mfaStatus && <p>
+                            <FormGroup>
+                                <Button className="btn-secondary"
+                                        onClick={() => {myUser.id && dispatch(disableTotpForAccount(myUser.id))}}
+                                        disabled={!userAuthSettings.mfaStatus}>
+                                    Disable 2FA for user
+                                </Button>
+                            </FormGroup>
                         </p>}
                     </Col>
                 </Row>

@@ -131,6 +131,9 @@ export const api = {
         setupMFAOnAccount: (sharedSecret: string, mfaVerificationCode: string): AxiosPromise => {
             return endpoint.post(`/users/current_user/mfa`, {sharedSecret: sharedSecret, mfaVerificationCode: mfaVerificationCode})
         },
+        disableMFAOnAccount: (userId: number): AxiosPromise => {
+            return endpoint.delete(`/users/${userId}/mfa`)
+        },
     },
     email: {
         verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
