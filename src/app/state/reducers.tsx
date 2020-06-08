@@ -107,8 +107,8 @@ export const totpSharedSecret = (totpSharedSecret: TotpSharedSecretState = null,
     }
 };
 
-type TotpChallengePendingState = boolean;
-export const totpChallengePending = (totpChallengePending: TotpChallengePendingState = false, action: Action) => {
+type TotpChallengePendingState = boolean | null;
+export const totpChallengePending = (totpChallengePending: TotpChallengePendingState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED:
             return true;

@@ -139,11 +139,10 @@ export const UserMFA = (
             <React.Fragment>
                 <Row className="pt-4">
                     <Col className="text-center">
-                        {userAuthSettings && userAuthSettings.mfaStatus && <p>
+                        {userAuthSettings && <p>
                             <FormGroup>
                                 <Button className="btn-secondary"
-                                        onClick={() => {myUser.id && dispatch(disableTotpForAccount(myUser.id))}}
-                                        disabled={!userAuthSettings.mfaStatus}>
+                                        onClick={() => {myUser.id && dispatch(disableTotpForAccount(myUser.id))}}>
                                     Disable 2FA for user
                                 </Button>
                             </FormGroup>
