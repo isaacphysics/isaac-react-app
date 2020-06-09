@@ -723,7 +723,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     // math sad, therefore ROUND EVERYTHING OR FACE MADNESS
 
     private onMouseDown(e: MouseEvent) {
-        // debugger;
         if ((e.target as any).id === 'numeric-input') return; // this works but a cast to any is probably not an acceptable solution.
         // preventDefault here to stop selection on desktop
         e.preventDefault();

@@ -1,26 +1,28 @@
 import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { connect } from "react-redux";
-import { GraphSketcher, LineType, Curve, makeGraphSketcher } from "isaac-graph-sketcher/src/GraphSketcher";
+import { GraphSketcher, LineType, Curve, makeGraphSketcher, GraphSketcherState } from "isaac-graph-sketcher/src/GraphSketcher";
 import { isDefined } from "isaac-graph-sketcher/src/GraphUtils";
-// import {debounce} from "lodash";
+import {debounce} from "lodash";
 
 interface GraphSketcherModalProps {
     close: () => void;
-    initialCurves?: { curves: Curve[]; canvasWidth: number; canvasHeight: number };
-    onGraphSketcherStateChange: (state: any) => void;
+    initialState?: GraphSketcherState;
+    onGraphSketcherStateChange: (state: GraphSketcherState) => void;
 }
 
 const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
-    const { onGraphSketcherStateChange, close, initialCurves } = props;
+    const { onGraphSketcherStateChange, close, initialState } = props;
     const [ , setGraphSketcherElement] = useState<HTMLElement>();
     const [modalSketch, setModalSketch] = useState<GraphSketcher|undefined|null>();
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
 
-    const updateGraphSketcherState = useCallback((state: { canvasWidth: number; canvasHeight: number; curves: Curve[] }) => {
-        console.log(state);
+    // This is debounced here because the graph sketcher upstream calls this
+    // on every redraw, which happens on every mouse event.
+    const updateGraphSketcherState = useCallback(debounce((state: GraphSketcherState) => {
+        console.log('modal :: updateGraphSketcherState ::', state);
         onGraphSketcherStateChange(state);
-    }, []);
+    }, 250), []);
     
     useEffect(() => {
         if (isDefined(modalSketch)) return;
@@ -38,10 +40,10 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
 
     useEffect(() => {
         if (isDefined(modalSketch)) {
-            modalSketch.data.curves = modalSketch.data.curves || initialCurves;
+            modalSketch.state.curves = modalSketch.state.curves || initialState?.curves || [];
             modalSketch.reDraw();
         }
-    }, [modalSketch, initialCurves]);
+    }, [modalSketch, initialState]);
 
     // Teardown
     useEffect(() => {
@@ -55,7 +57,6 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
                         e.removeChild(canvas);
                     }
                 }
-                // setInitialCurvesAssigned(false);
             }
         }
     }, [modalSketch]);

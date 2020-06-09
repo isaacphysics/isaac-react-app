@@ -30,8 +30,9 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
-    const [initialData, setInitialData] = useState<{ curves: Curve[]; canvasWidth: number; canvasHeight: number }>();
-    const [initialDataAssigned, setInitialDataAssigned] = useState(false);
+    const [initialState, setInitialState] = useState<GraphSketcherState>();
+    const [initialStateAssigned, setInitialStateAssigned] = useState(false);
+    const previewRef = useRef(null);
 
     function openModal() {
         setModalVisible(true);
@@ -47,69 +48,60 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
         }
     }
 
-    // This is debounced here because the graph sketcher upstream calls this
-    // on every redraw, which happens on every mouse event.
-    // TODO: Ideally fix this upstream.
-    const onGraphSketcherStateChange = useCallback((newState: GraphSketcherState) => {
-        console.log(newState);
-        setCurrentAttempt(questionId, {type: 'graphChoice', value: JSON.stringify(newState)});
-    }, []);
-
     useEffect(() => {
-        // componentDidMount
-        // console.log("componentDidMount: ", questionId);
         window.addEventListener('keyup', handleKeyPress);
-        if (currentAttempt?.value) {
-            setInitialData(JSON.parse(currentAttempt.value).curves);
-        }
 
         return () => {
-            // componentWillUnmount
             window.removeEventListener('keyup', handleKeyPress);
         }
     }, []);
 
-    useEffect(() => {
-        // Only ever set initial curves once and not on every currentAttempt update (state var seems to work)
-        if (currentAttempt?.value && !initialDataAssigned) {
-            setInitialDataAssigned(true);
-            setInitialData(JSON.parse(currentAttempt?.value).curves);
+    const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
+        console.log('preview :: onGraphSketcherStateChange ::', newState);
+        setCurrentAttempt(questionId, {type: 'graphChoice', value: JSON.stringify(newState)});
+        if (previewSketch) {
+            previewSketch.state = newState;
+            previewSketch.state.curves = previewSketch.state.curves || [];
         }
-    }, [currentAttempt]);
+    };
 
-    const previewRef = useRef(null);
     useEffect(() => {
         if (previewSketch) return;
         if (makeGraphSketcher && previewRef.current) {
             const { sketch } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true });
-
             if (sketch) {
                 sketch.selectedLineType = LineType.BEZIER;
                 setPreviewSketch(sketch);
             }
         }
-    }, [previewRef]);
+    }, [previewRef, previewSketch]);
 
     useEffect(() => {
+        // Only ever set initial curves once and not on every currentAttempt update (state var seems to work)
+        if (currentAttempt?.value && !initialStateAssigned) {
+            setInitialStateAssigned(true);
+            setInitialState(JSON.parse(currentAttempt.value));
+        }
+        // Set the state of the preview box whenever currentAttempt changes
         if (previewSketch && currentAttempt?.value) {
-            // console.log(questionId, currentAttempt?.value);
-            const data = JSON.parse(currentAttempt.value);
+            const data: GraphSketcherState = JSON.parse(currentAttempt.value);
             data.canvasWidth = 600;
             data.canvasHeight = 400;
-            previewSketch.data = data;
+            data.curves = data.curves || initialState?.curves || [];
+            previewSketch.state = data;
         }
-    }, [currentAttempt, previewSketch]);
+    }, [currentAttempt]);
 
     return <div className="graph-sketcher-question">
         <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
             PREVIEW: Click here to answer.
-            {currentAttempt?.value}
+            {JSON.stringify(previewSketch?.state)}
         </div>
         {modalVisible && <GraphSketcherModal
             close={closeModal}
             onGraphSketcherStateChange={onGraphSketcherStateChange}
-            initialCurves={initialData}
+            initialState={initialState}
         />}
         Hints: <IsaacTabbedHints questionPartId={questionId} hints={doc.hints} />
     </div>
