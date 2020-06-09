@@ -76,11 +76,12 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
         const canMakeABooking =
             event.isNotClosed &&
-            event.userBookingStatus !== "CONFIRMED" &&
-            !event.isWaitingListOnly &&
             event.isWithinBookingDeadline &&
+            !event.isWaitingListOnly &&
+            event.userBookingStatus !== "CONFIRMED" &&
             studentOnlyRestrictionSatisfied &&
             (atLeastOne(event.placesAvailable) || teacherAtAStudentEvent || event.userBookingStatus === "RESERVED");
+
         const canBeAddedToWaitingList =
             !canMakeABooking &&
             event.isNotClosed &&
@@ -88,7 +89,16 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
             event.userBookingStatus !== "WAITING_LIST" &&
             studentOnlyRestrictionSatisfied;
 
-        const submissionTitle = canMakeABooking ? "Book now" : event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past";
+        const canReserveSpaces =
+            event.allowGroupReservations &&
+            event.isNotClosed &&
+            event.isWithinBookingDeadline &&
+            !event.isWaitingListOnly &&
+            isTeacher(user);
+
+        const submissionTitle = canMakeABooking ?
+            "Book now" :
+            event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past";
 
         function submitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
             formEvent.preventDefault();
@@ -255,7 +265,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             Book a place
                                         </RS.Button>
                                     }
-                                    {event.isNotClosed && event.allowGroupReservations && event.isWithinBookingDeadline && isTeacher(user) &&
+                                    {canReserveSpaces &&
                                         <RS.Button color="primary" onClick={() => {dispatch(openActiveModal(reservationsModal()))}}>
                                             Reserve spaces
                                         </RS.Button>
