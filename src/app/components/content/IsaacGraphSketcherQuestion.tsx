@@ -35,10 +35,12 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     const previewRef = useRef(null);
 
     function openModal() {
+        console.log('---===[ open modal', questionId, ']===---');
         setModalVisible(true);
     }
 
     function closeModal() {
+        console.log('---===[ close modal', questionId, ']===---');
         setModalVisible(false);
     }
 
@@ -57,7 +59,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     }, []);
 
     const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
-        console.log('preview :: onGraphSketcherStateChange ::', newState);
+        console.log('C preview :: onGraphSketcherStateChange ::', newState.canvasWidth, newState.canvasHeight, newState.curves?.length, newState.curves?.[0]?.pts.slice(0,2).map(p => p.join(', ')));
         setCurrentAttempt(questionId, {type: 'graphChoice', value: JSON.stringify(newState)});
         if (previewSketch) {
             previewSketch.state = newState;
@@ -96,7 +98,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
         <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
             PREVIEW: Click here to answer.
-            {JSON.stringify(previewSketch?.state)}
+            {JSON.stringify(currentAttempt?.value)}
         </div>
         {modalVisible && <GraphSketcherModal
             close={closeModal}
