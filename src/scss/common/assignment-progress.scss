@@ -62,6 +62,11 @@
   margin-top: -1rem;
 }
 
+.single-assignment {
+  background: none !important;
+  margin-top: 0 !important;
+}
+
 .assignment-progress-legend {
   background: #fff;
   border: 1px solid $gray-118;
@@ -293,6 +298,7 @@ $failed-bg-size: 25%;
 }
 
 .progress-header {
+  border-top: 1px solid $gray-118;
   text-align: center;
   padding: 0.5rem 0;
   @include respond-above(sm) {

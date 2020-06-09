@@ -22,7 +22,7 @@ const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
-    return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
+    return <div className={"assignment-progress-details single-assignment" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend pageSettings={pageSettings}/>
         <div className="single-download mb-2">
             <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignmentId)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
@@ -79,18 +79,21 @@ export const SingleAssignmentProgress = () => {
         setAssignment(myOwnedAssignments?.find(x => x._id == assignmentId));
     }, [myOwnedAssignments, assignmentId]);
 
-    return <Container id={`single-assignment-${assignmentId}`} className="mb-5">
+    return <React.Fragment>
         <ShowLoading until={assignment && assignmentProgress}>
+            <Container>
+                <TitleAndBreadcrumb intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
+                    currentPageTitle={`Assignment Progress: ${assignment?.gameboard?.title || "Assignment Progress" }`}
+                    className="mb-4" />
+            </Container>
 
-            <TitleAndBreadcrumb intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
-                currentPageTitle={`Assignment Progress: ${assignment?.gameboard?.title || "Assignment Progress" }`}
-                className="mb-4" />
-
-            {assignment && assignmentProgress && hasGameboard(assignment) &&
-            <SingleProgressDetails assignmentId={assignmentId} assignment={assignment}
-                progress={assignmentProgress[assignmentId]} pageSettings={pageSettings}/>
-            }
+            <div className="assignment-progress-container mb-5">
+                {assignment && assignmentProgress && hasGameboard(assignment) &&
+                <SingleProgressDetails assignmentId={assignmentId} assignment={assignment}
+                    progress={assignmentProgress[assignmentId]} pageSettings={pageSettings}/>
+                }
+            </div>
 
         </ShowLoading>
-    </Container>
+    </React.Fragment>
 };
