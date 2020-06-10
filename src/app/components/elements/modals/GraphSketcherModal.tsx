@@ -2,7 +2,7 @@ import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { connect } from "react-redux";
 import { GraphSketcher, LineType, makeGraphSketcher, GraphSketcherState } from "isaac-graph-sketcher/src/GraphSketcher";
 import { isDefined } from "isaac-graph-sketcher/src/GraphUtils";
-import {debounce} from "lodash";
+import debounce from "lodash/debounce";
 
 interface GraphSketcherModalProps {
     close: () => void;
@@ -20,7 +20,6 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
     // This is debounced here because the graph sketcher upstream calls this
     // on every redraw, which happens on every mouse event.
     const updateGraphSketcherState = useCallback(debounce((newState: GraphSketcherState) => {
-        console.log('C modal   :: updateGraphSketcherState   ::', newState.canvasWidth, newState.canvasHeight, newState.curves?.length, newState.curves?.[0]?.pts.slice(0,2).map(p => p.join(', ')));
         onGraphSketcherStateChange(newState);
     }, 250), []);
     
