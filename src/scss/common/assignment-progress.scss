@@ -65,6 +65,9 @@
 .single-assignment {
   background: none !important;
   margin-top: 0 !important;
+  .progress-header {
+    border-top: 1px solid $gray-118;
+  }
 }
 
 .assignment-progress-legend {
@@ -288,7 +291,7 @@ $failed-bg-size: 25%;
   margin-left: auto;
 }
 .gameboard-links > * {
-  margin-right: 0.3rem !important;
+  margin-right: 0.3rem;
 }
 
 .assignment-progress-progress {
@@ -298,7 +301,6 @@ $failed-bg-size: 25%;
 }
 
 .progress-header {
-  border-top: 1px solid $gray-118;
   text-align: center;
   padding: 0.5rem 0;
   @include respond-above(sm) {
@@ -349,11 +351,9 @@ $failed-bg-size: 25%;
 .single-download {
   position: relative;
   text-align: right;
-  padding-right: 1rem;
 }
 
 .progress-table {
-
   overflow-x: auto;
   overflow-y: visible;
   padding-bottom: 1px; // Fixes odd broswer bugs around the magic :after borders

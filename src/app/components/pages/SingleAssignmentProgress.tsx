@@ -24,10 +24,12 @@ const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
 
     return <div className={"assignment-progress-details single-assignment" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend pageSettings={pageSettings}/>
-        <div className="single-download mb-2">
+        <div className="single-download mb-2 mx-4">
             <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignmentId)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
         </div>
-        <ProgressDetails assignmentId={assignmentId} pageSettings={pageSettings} assignment={assignment} progress={progress}/>
+        <div className="mx-md-4 mx-sm-2">
+            <ProgressDetails assignmentId={assignmentId} pageSettings={pageSettings} assignment={assignment} progress={progress}/>
+        </div>
     </div>;
 };
 

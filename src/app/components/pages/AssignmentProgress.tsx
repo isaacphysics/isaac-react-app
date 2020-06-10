@@ -391,7 +391,7 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
 
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const singleLink = SITE_SUBJECT == SITE.PHY ? "assignment_progress" : "my_markbook";
+    const assignmentPath = SITE_SUBJECT == SITE.PHY ? "assignment_progress" : "my_markbook";
 
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
@@ -411,12 +411,11 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
                 <span>{assignment.gameboard.title}{assignment.dueDate && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(assignment.dueDate)})</span>}</span>
             </Button>
             <div className="gameboard-links align-items-center">
-                <Button color="link">{isExpanded ? "Hide " : "View "} <span className="d-none d-md-inline">mark sheet</span></Button>
+                <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
                 <span className="d-none d-md-inline">,</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
-                < Button className="d-none d-md-inline" color="link" tag="a" href={`/${singleLink}/` + assignment._id} onClick={openSingleAssignment}>View individual assignment</Button>
-
+                < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + assignment._id} onClick={openSingleAssignment}>View individual assignment</Button>
             </div>
         </div>
         {isExpanded && <ProgressLoader {...props} />}
