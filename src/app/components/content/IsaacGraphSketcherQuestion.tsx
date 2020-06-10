@@ -30,8 +30,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
-    const [initialState, setInitialState] = useState<GraphSketcherState>();
-    const [initialStateAssigned, setInitialStateAssigned] = useState(false);
+    const initialState: GraphSketcherState = currentAttempt?.value ? JSON.parse(currentAttempt?.value) : null;
     const previewRef = useRef(null);
 
     function openModal() {
@@ -79,12 +78,6 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     }, [previewRef, previewSketch]);
 
     useEffect(() => {
-        // Only ever set initial curves once and not on every currentAttempt update (state var seems to work)
-        // FIXME This blocks any subsequent reloads, but if I remove the initial state guard it goes in a re-render loop.
-        if (currentAttempt?.value && !initialStateAssigned) {
-            setInitialStateAssigned(true);
-            setInitialState(JSON.parse(currentAttempt.value));
-        }
         // Set the state of the preview box whenever currentAttempt changes
         if (previewSketch && currentAttempt?.value) {
             const data: GraphSketcherState = JSON.parse(currentAttempt.value);
