@@ -80,6 +80,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
 
     useEffect(() => {
         // Only ever set initial curves once and not on every currentAttempt update (state var seems to work)
+        // FIXME This blocks any subsequent reloads, but if I remove the initial state guard it goes in a re-render loop.
         if (currentAttempt?.value && !initialStateAssigned) {
             setInitialStateAssigned(true);
             setInitialState(JSON.parse(currentAttempt.value));
