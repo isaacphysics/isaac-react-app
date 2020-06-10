@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, useRef} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {AppState} from "../../state/reducers";
@@ -6,9 +6,8 @@ import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTy
 import {IsaacTabbedHints} from "./IsaacHints";
 import {questions} from "../../state/selectors";
 import {GraphSketcherModal} from "../elements/modals/GraphSketcherModal";
-import {debounce} from "lodash";
 
-import {GraphSketcher, makeGraphSketcher, LineType, Curve, GraphSketcherState} from "isaac-graph-sketcher/src/GraphSketcher";
+import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher/src/GraphSketcher";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
@@ -31,16 +30,13 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     const [modalVisible, setModalVisible] = useState(false);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
     const [initialState, setInitialState] = useState<GraphSketcherState>();
-    const [initialStateAssigned, setInitialStateAssigned] = useState(false);
     const previewRef = useRef(null);
 
     function openModal() {
-        console.log('---===[ open modal', questionId, ']===---');
         setModalVisible(true);
     }
 
     function closeModal() {
-        console.log('---===[ close modal', questionId, ']===---');
         setModalVisible(false);
     }
 
@@ -59,7 +55,6 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     }, []);
 
     const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
-        console.log('C preview :: onGraphSketcherStateChange ::', newState.canvasWidth, newState.canvasHeight, newState.curves?.length, newState.curves?.[0]?.pts.slice(0,2).map(p => p.join(', ')));
         setCurrentAttempt(questionId, {type: 'graphChoice', value: JSON.stringify(newState)});
         if (previewSketch) {
             previewSketch.state = newState;
@@ -79,15 +74,10 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     }, [previewRef, previewSketch]);
 
     useEffect(() => {
-        // Only ever set initial curves once and not on every currentAttempt update (state var seems to work)
-        // FIXME This blocks any subsequent reloads, but if I remove the initial state guard it goes in a re-render loop.
-        if (currentAttempt?.value && !initialStateAssigned) {
-            setInitialStateAssigned(true);
-            setInitialState(JSON.parse(currentAttempt.value));
-        }
         // Set the state of the preview box whenever currentAttempt changes
         if (previewSketch && currentAttempt?.value) {
             const data: GraphSketcherState = JSON.parse(currentAttempt.value);
+            setInitialState({ ...data });
             data.canvasWidth = 600;
             data.canvasHeight = 400;
             data.curves = data.curves || initialState?.curves || [];
@@ -98,15 +88,13 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     return <div className="graph-sketcher-question">
         <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
-            PREVIEW: Click here to answer.
-            {JSON.stringify(currentAttempt?.value)}
         </div>
         {modalVisible && <GraphSketcherModal
             close={closeModal}
             onGraphSketcherStateChange={onGraphSketcherStateChange}
             initialState={initialState}
         />}
-        Hints: <IsaacTabbedHints questionPartId={questionId} hints={doc.hints} />
+        <IsaacTabbedHints questionPartId={questionId} hints={doc.hints} />
     </div>
 };
 
