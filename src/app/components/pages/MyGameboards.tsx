@@ -146,7 +146,9 @@ const Board = (props: BoardTableProps) => {
                 <aside>
                     <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                     <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                    {SITE_SUBJECT == SITE.PHY && <CardSubtitle>Levels: <strong>{boardLevels.join(', ')}</strong></CardSubtitle>}
+                    {SITE_SUBJECT == SITE.PHY && <CardSubtitle>
+                        {`Level${boardLevels.length !== 1 ? "s" : ""}: `}<strong>{boardLevels.join(', ') || "N/A"}</strong>
+                    </CardSubtitle>}
                 </aside>
 
                 <div className="mt-1 mb-2">
