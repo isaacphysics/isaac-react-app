@@ -29,7 +29,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
-    const initialState: GraphSketcherState = currentAttempt?.value ? JSON.parse(currentAttempt?.value) : null;
+    const initialState: GraphSketcherState | undefined = currentAttempt?.value ? JSON.parse(currentAttempt?.value) : undefined;
     const previewRef = useRef(null);
 
     function openModal() {

@@ -69,6 +69,7 @@ import {notificationModal} from "../elements/modals/NotificationModal";
 import {showNotification} from "../../services/notificationChecker";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
+import {GraphSketcherPage} from '../pages/GraphSketcher';
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -185,6 +186,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/equality" component={Equality} />
                     <TrackedRoute exact path="/markdown" ifUser={isStaff} component={MarkdownBuilder} />
                     <TrackedRoute exact path="/free_text" ifUser={isStaff} component={FreeTextBuilder} />
+                    <TrackedRoute exact path="/sketcher" component={GraphSketcherPage} />
 
                     {/* Support pages */}
                     <TrackedRoute exact path="/support/:type?/:category?" component={Support} />
