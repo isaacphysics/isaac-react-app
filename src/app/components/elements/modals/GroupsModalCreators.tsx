@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {connect, ResolveThunks} from "react-redux";
+import {connect, ResolveThunks, useDispatch, useSelector} from "react-redux";
 import {sortBy} from "lodash";
 import {history} from "../../../services/history";
 import * as RS from "reactstrap";
@@ -14,14 +14,13 @@ import {AppState} from "../../../state/reducers";
 import {selectors} from "../../../state/selectors";
 import {bindActionCreators, Dispatch} from "redux";
 
-const mapStateToPropsForInvite = (state: AppState) => {return {group: selectors.groups.current(state)};};
 
 interface CurrentGroupInviteModalProps {
-    group: AppGroup | null;
     firstTime: boolean;
 }
 
-const CurrentGroupInviteModal = ({group, firstTime}: CurrentGroupInviteModalProps) => {
+const CurrentGroupInviteModal = ({firstTime}: CurrentGroupInviteModalProps) => {
+    const group = useSelector(selectors.groups.current);
     return group && <React.Fragment>
         {firstTime && <h1>Invite users</h1>}
 
@@ -47,13 +46,11 @@ const CurrentGroupInviteModal = ({group, firstTime}: CurrentGroupInviteModalProp
     </React.Fragment>;
 };
 
-const ConnectedCurrentGroupInviteModal = connect(mapStateToPropsForInvite)(CurrentGroupInviteModal);
-
 export const groupInvitationModal = (firstTime: boolean) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         title: firstTime ? "Group Created" : "Invite Users",
-        body: <ConnectedCurrentGroupInviteModal firstTime={firstTime} />,
+        body: <CurrentGroupInviteModal firstTime={firstTime} />,
         buttons: [
             <RS.Row key={0}>
                 <RS.Col>
