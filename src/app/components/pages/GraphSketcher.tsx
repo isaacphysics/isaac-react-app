@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Col, Container, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from '../../../IsaacApiTypes';
-import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from 'isaac-graph-sketcher/src/GraphSketcher';
+import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from 'isaac-graph-sketcher/dist/src/GraphSketcher';
 import {GraphSketcherModal} from '../elements/modals/GraphSketcherModal';
 
 const GraphSketcherPageComponent = () => {

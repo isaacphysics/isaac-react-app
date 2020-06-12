@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { connect } from "react-redux";
-import { GraphSketcher, LineType, makeGraphSketcher, GraphSketcherState } from "isaac-graph-sketcher/src/GraphSketcher";
-import { isDefined } from "isaac-graph-sketcher/src/GraphUtils";
+import { GraphSketcher, LineType, makeGraphSketcher, GraphSketcherState } from "isaac-graph-sketcher/dist/src/GraphSketcher";
+import { isDefined } from "isaac-graph-sketcher/dist/src/GraphUtils";
 import debounce from "lodash/debounce";
 
 interface GraphSketcherModalProps {

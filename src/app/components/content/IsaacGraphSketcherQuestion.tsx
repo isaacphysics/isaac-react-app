@@ -7,7 +7,7 @@ import {IsaacTabbedHints} from "./IsaacHints";
 import {questions} from "../../state/selectors";
 import {GraphSketcherModal} from "../elements/modals/GraphSketcherModal";
 
-import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher/src/GraphSketcher";
+import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher/dist/src/GraphSketcher";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = questions.selectQuestionPart(questionId)(state);
