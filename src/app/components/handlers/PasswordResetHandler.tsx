@@ -1,29 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {handlePasswordReset, verifyPasswordReset} from "../../state/actions";
 import {Button, Card, CardBody, CardFooter, Container, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
-import {AppState, ErrorState} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {ZxcvbnResult} from "../../../IsaacAppTypes";
 import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../services/passwordStrength";
+import {RouteComponentProps} from "react-router";
 
-const stateToProps = (state: AppState, {match: {params: {token}}}: any) => ({
-    errorMessage: state ? state.error : null,
-    urlToken: token
-});
 
-const dispatchToProps = {
-    handleResetPassword: handlePasswordReset,
-    verifyPasswordReset: verifyPasswordReset
-};
-
-interface PasswordResetHandlerProps {
-    urlToken: string;
-    handleResetPassword: (params: {token: string; password: string}) => void;
-    verifyPasswordReset: (token: string | null) => void;
-    errorMessage: ErrorState;
-}
-
-const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPasswordReset, errorMessage}: PasswordResetHandlerProps) => {
+export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: string}>) => {
+    const dispatch = useDispatch();
+    const errorMessage = useSelector((state: AppState) => state?.error || null);
+    const urlToken = match.params.token || null;
 
     const [isValidPassword, setValidPassword] = useState(true);
     const [currentPassword, setCurrentPassword] = useState("");
@@ -39,10 +27,7 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
         )
     };
 
-    useEffect(
-        () => {verifyPasswordReset(urlToken)},
-        []
-    );
+    useEffect(() => {dispatch(verifyPasswordReset(urlToken))}, [dispatch, urlToken]);
 
     return <Container id="email-verification">
         <div>
@@ -71,10 +56,12 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
                         </FormGroup>
                         <FormGroup>
                             <Label htmlFor="password-confirm">Re-enter new password</Label>
-                            <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password-new-confirm" onBlur={(e: any) => {
+                            <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password-new-confirm" onBlur={e => {
                                 validateAndSetPassword(e);
-                                (e.target.value == (document.getElementById("password") as HTMLInputElement).value) ? setCurrentPassword(e.target.value) : null}
-                            } aria-describedby="invalidPassword" required/>
+                                if (e.target.value == (document.getElementById("password") as HTMLInputElement).value) {
+                                    setCurrentPassword(e.target.value)
+                                }
+                            }} aria-describedby="invalidPassword" required/>
                             <FormFeedback id="invalidPassword">{(!isValidPassword) ? "Passwords must match and be at least 6 characters long" : null}</FormFeedback>
                         </FormGroup>
                     </Form>
@@ -84,7 +71,11 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
                         {errorMessage && errorMessage.type === "generalError" && errorMessage.generalError}
                     </h4>
                     <Button color="secondary" className="mb-2" block
-                        onClick={() => (isValidPassword && !errorMessage) ? handleResetPassword({token: urlToken, password: currentPassword}) : null}
+                        onClick={() => {
+                            if (isValidPassword && !errorMessage && urlToken) {
+                                dispatch(handlePasswordReset({token: urlToken, password: currentPassword}));
+                            }
+                        }}
                         id="change-password"
                     >
                         Change Password
@@ -94,5 +85,3 @@ const ResetPasswordHandlerComponent = ({urlToken, handleResetPassword, verifyPas
         </div>
     </Container>;
 };
-
-export const ResetPasswordHandler = connect(stateToProps, dispatchToProps)(ResetPasswordHandlerComponent);
