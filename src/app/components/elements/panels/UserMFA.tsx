@@ -25,21 +25,25 @@ interface UserMFAProps {
 export const UserMFA = (
     {mfaVerificationCode, setMFASetupSecret, setMFAVerificationCode, myUser, setMyUser, userAuthSettings, updateMFARequest, setUpdateMFARequest, successfulMFASetup, setSuccessfulMFASetup, editingOtherUser}: UserMFAProps) => {
 
+    const segueEnvironment = useSelector((state: AppState) => state?.constants?.segueEnvironment || "unknown");
     const dispatch = useDispatch();
     const totpSharedSecret = useSelector((state: AppState) => {
         return state?.totpSharedSecret?.sharedSecret;
     });
 
     let qrCodeStringBase64SVG: string | null = null;
-    let authenticatorURL: string | null = null;;
+    let authenticatorURL: string | null = null;
     if (totpSharedSecret) {
-        authenticatorURL = `otpauth://totp/Isaac%20${SITE_SUBJECT_TITLE.replace(/ /g, "%20")}%20%28${myUser.email}%29?secret=${totpSharedSecret}`
+        let issuer = encodeURIComponent(`Isaac ${SITE_SUBJECT_TITLE}`);
+        if (segueEnvironment === "DEV") {
+            issuer += encodeURIComponent(` (${window.location.host})`);
+        }
+        authenticatorURL = `otpauth://totp/${myUser.email}?secret=${totpSharedSecret}&issuer=${issuer}`
         QRCode.toString(authenticatorURL, {type:'svg'}, function (err, val) {
             if (err) {
                 console.error(err)
                 return;
             }
-
             qrCodeStringBase64SVG = new Buffer(val).toString('base64');
         });
     }
