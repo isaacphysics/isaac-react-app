@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {connect} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import ReactGA from "react-ga";
 import {
@@ -16,7 +16,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {LoggedInUser, UserPreferencesDTO, ValidationUser, ZxcvbnResult} from "../../../IsaacAppTypes";
+import {LoggedInUser, ZxcvbnResult} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {updateCurrentUser} from "../../state/actions";
 import {history} from "../../services/history"
@@ -27,33 +27,17 @@ import {KEY} from "../../services/localStorage"
 import {DateInput} from "../elements/inputs/DateInput";
 import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../services/passwordStrength"
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
-import {Redirect} from "react-router";
+import {Redirect, RouteComponentProps, withRouter} from "react-router";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {selectors} from "../../state/selectors";
 
-const stateToProps = (state: AppState) => ({
-    errorMessage: (state && state.error && state.error.type == "generalError" && state.error.generalError) || undefined,
-    userEmail: (history.location && history.location.state && history.location.state.email) || undefined,
-    userPassword: (history.location && history.location.state && history.location.state.password) || undefined,
-    user: state && state.user || null,
-});
-const dispatchToProps = {
-    updateCurrentUser
-};
+export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
+    const dispatch = useDispatch();
+    const user = useSelector(selectors.user.orNull);
+    const errorMessage = useSelector(selectors.error.general);
+    const userEmail = location.state?.email || undefined;
+    const userPassword = location.state?.password || undefined;
 
-interface RegistrationPageProps {
-    user: LoggedInUser | null;
-    updateCurrentUser: (
-        registeredUser: ValidationUser,
-        userPreferences: UserPreferencesDTO,
-        passwordCurrent: string | null,
-        currentUser: LoggedInUser
-    ) => void;
-    errorMessage: string | undefined;
-    userEmail: string | undefined;
-    userPassword: string | undefined;
-}
-
-const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userEmail, userPassword}:  RegistrationPageProps) => {
     // Inputs which trigger re-render
     const [registrationUser, setRegistrationUser] = useState(
         Object.assign({}, user,{
@@ -86,7 +70,7 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
         if (passwordIsValid && emailIsValid && confirmedOverThirteen) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             Object.assign(registrationUser, {loggedIn: false});
-            updateCurrentUser(registrationUser, {}, null, (Object.assign(registrationUser, {loggedIn: true})));
+            dispatch(updateCurrentUser(registrationUser, {}, null, (Object.assign(registrationUser, {loggedIn: true}))));
             // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
             ReactGA.event({
                 category: 'user',
@@ -288,6 +272,4 @@ const RegistrationPageComponent = ({user, updateCurrentUser, errorMessage, userE
             </CardBody>
         </Card>
     </Container>;
-};
-
-export const Registration = connect(stateToProps, dispatchToProps)(RegistrationPageComponent);
+});
