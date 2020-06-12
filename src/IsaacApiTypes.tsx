@@ -55,9 +55,9 @@ export interface IsaacEventPageDTO extends ContentDTO {
     numberOfPlaces?: number;
     eventStatus?: EventStatus;
     placesAvailable?: number;
-    userOnWaitList?: boolean;
     endDate?: Date;
-    userBooked?: boolean;
+    groupReservationLimit?: number;
+    allowGroupReservations?: boolean;
 }
 
 export interface IsaacFastTrackQuestionPageDTO extends IsaacQuestionPageDTO {
@@ -151,6 +151,7 @@ export interface QuestionPartConceptDTO {
 export interface EventBookingDTO {
     bookingId?: number;
     userBooked?: UserSummaryDTO;
+    reservedById?: number;
     eventId?: string;
     eventTitle?: string;
     eventDate?: Date;
@@ -246,6 +247,7 @@ export interface ContentSummaryDTO {
     summary?: string;
     type?: string;
     level?: string;
+    difficulty?: string;
     tags?: string[];
     url?: string;
     correct?: boolean;
@@ -492,7 +494,7 @@ export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WA
 
 export type FastTrackConceptState = "ft_top_ten" | "ft_upper" | "ft_lower";
 
-export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT";
+export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT" | "RESERVED";
 
 export type Role = "STUDENT" | "TEACHER" | "EVENT_LEADER"| "CONTENT_EDITOR" | "EVENT_MANAGER" | "ADMIN";
 

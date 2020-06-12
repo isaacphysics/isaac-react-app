@@ -8,7 +8,7 @@ import {
     cancelUserBooking,
     deleteUserBooking, getEventBookingCSV,
     getEventBookings,
-    promoteUserFromWaitingList,
+    promoteUserBooking,
     resendUserConfirmationEmail
 } from "../../../state/actions";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
@@ -93,6 +93,11 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                                 </RS.Button>
                             </th>
                             <th className="align-middle">
+                                <RS.Button color="link" onClick={setSortPredicateAndDirection('reservedById')}>
+                                    Reserved by ID
+                                </RS.Button>
+                            </th>
+                            <th className="align-middle">
                                 Level of teaching experience
                             </th>
                             <th className="align-middle">
@@ -116,19 +121,21 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                                 const userId = booking.userBooked && booking.userBooked.id;
                                 return <tr key={booking.bookingId}>
                                     <td className="align-middle">
-                                        {(booking.bookingStatus == 'WAITING_LIST' || booking.bookingStatus == 'CANCELLED') &&
-                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(promoteUserFromWaitingList(eventBookingId, userId))}>
+                                        {(['WAITING_LIST', 'CANCELLED'].includes(booking.bookingStatus as string)) &&
+                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(promoteUserBooking(eventBookingId, userId))}>
                                                 Promote
                                             </RS.Button>
                                         }
-                                        {(booking.bookingStatus == 'WAITING_LIST' || booking.bookingStatus == 'CONFIRMED') &&
+                                        {(['WAITING_LIST', 'CONFIRMED'].includes(booking.bookingStatus as string)) &&
                                             <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(cancelUserBooking(eventBookingId, userId))}>
                                                 Cancel
                                             </RS.Button>
                                         }
-                                        {isAdmin(user) && <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(deleteUserBooking(eventBookingId, userId))}>
-                                            Delete
-                                        </RS.Button>}
+                                        {isAdmin(user) &&
+                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(deleteUserBooking(eventBookingId, userId))}>
+                                                Delete
+                                            </RS.Button>
+                                        }
                                         <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(resendUserConfirmationEmail(eventBookingId, userId))}>
                                             Resend email
                                         </RS.Button>
@@ -146,6 +153,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                                     <td className="align-middle">{booking.bookingStatus}</td>
                                     <td className="align-middle"><DateString>{booking.bookingDate}</DateString></td>
                                     <td className="align-middle"><DateString>{booking.updated}</DateString></td>
+                                    <td className="align-middle text-center">{booking.reservedById}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.experienceLevel}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.accessibilityRequirements}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.medicalRequirements}</td>

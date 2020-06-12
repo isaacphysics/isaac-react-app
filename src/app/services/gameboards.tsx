@@ -47,7 +47,7 @@ export const determineGameboardHistory = (currentGameboard: GameboardDTO) => {
 
 export const determineNextGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
     const boardQuestions: (string | undefined)[] = [];
-    if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.questions) {
+    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.questions) {
         currentGameboard.questions.map(question => boardQuestions.push(question.id));
         if (boardQuestions.includes(currentDocId)) {
             const gameboardContentIds = currentGameboard.questions.map(q => q.id);
@@ -86,4 +86,22 @@ export const determineGameboardSubjects = (board: GameboardDTO) => {
     let enumeratedSubjects = countBy(allSubjects);
     return Object.keys(enumeratedSubjects).sort(function (a, b) {return subjects.indexOf(a) - subjects.indexOf(b)})
         .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a]});
+};
+
+export const determineGameboardLevels = (board: GameboardDTO) => {
+    // TODO alter functionality for CS when required
+    let allLevels: string[] = [];
+    board.questions?.map((item) => {
+        item.level && allLevels.push(item.level.toString());
+    });
+    allLevels.sort();
+    return Array.from(new Set(allLevels));
+};
+
+export const boardLevelsSelection = (board: GameboardDTO, levels: string[]) => {
+    // TODO alter functionality for CS when required
+    if (levels == []) {
+        return true;
+    }
+    return levels.every(level => determineGameboardLevels(board).includes(level));
 };

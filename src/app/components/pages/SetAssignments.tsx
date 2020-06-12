@@ -36,6 +36,7 @@ import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
+    determineGameboardLevels,
     determineGameboardSubjects,
     formatBoardOwner,
     generateGameboardSubjectHexagons
@@ -141,6 +142,7 @@ const Board = (props: BoardProps) => {
     const hexagonId = `board-hex-${board.id}`;
 
     const boardSubjects = determineGameboardSubjects(board);
+    const boardLevels = determineGameboardLevels(board);
 
     return <Card className="board-card">
         <CardBody className="pb-4 pt-4">
@@ -161,9 +163,10 @@ const Board = (props: BoardProps) => {
             <aside>
                 <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                 <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
+                {SITE_SUBJECT == SITE.PHY && <CardSubtitle>Levels: <strong>{boardLevels.join(', ')}</strong></CardSubtitle>}
             </aside>
 
-            <div className="mt-4 mb-3">
+            <div className="mt-1 mb-3">
                 <div className="card-share-link"><ShareLink linkUrl={assignmentLink} reducedWidthLink /></div>
                 <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
                 <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>

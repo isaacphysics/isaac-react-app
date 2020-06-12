@@ -10,7 +10,7 @@ import {
     EventStatusFilter,
     EventTypeFilter,
     EXAM_BOARD,
-    MEMBERSHIP_STATUS,
+    MEMBERSHIP_STATUS, NOT_FOUND,
     TAG_ID
 } from "../services/constants";
 import {
@@ -37,6 +37,7 @@ import {
     AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
+    EmailVerificationStatus,
     GameboardDTO,
     GlossaryTermDTO,
     IsaacQuestionPageDTO,
@@ -46,8 +47,7 @@ import {
     TestCaseDTO,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO,
-    EmailVerificationStatus
+    UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -678,6 +678,16 @@ export const requestConstantsSegueEnvironment = () => async (dispatch: Dispatch<
     }
 };
 
+export const requestNotifications = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.NOTIFICATIONS_REQUEST});
+    try {
+        const response = await api.notifications.get();
+        dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS, notifications: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE});
+    }
+}
+
 // Document & topic fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
@@ -844,11 +854,11 @@ export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (d
 const generatePostQuizUrl = (quizId: string) => `/pages/post_${quizId}`;
 
 export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const currentState = getState();
+    const currentState: AppState = getState();
     try {
         dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST, quizId});
         if (currentState && currentState.questions) {
-            await Promise.all(currentState.questions.map(
+            await Promise.all(currentState.questions.questions.map(
                 question => {
                     if (question.id && question.currentAttempt) {
                         dispatch(attemptQuestion(question.id, question.currentAttempt) as any);
@@ -889,7 +899,9 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
 };
 
 // Current gameboard
-export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>) => {
+export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    if (state && state.currentGameboard && state.currentGameboard !== NOT_FOUND && 'inflight' in state.currentGameboard && state.currentGameboard.id === gameboardId) return;
     dispatch({type: ACTION_TYPE.GAMEBOARD_REQUEST, gameboardId});
     try {
         // TODO MT handle local storage load if gameboardId == null
@@ -1515,6 +1527,17 @@ export const getEventBookings = (eventId: string) => async (dispatch: Dispatch<A
     }
 };
 
+export const getEventBookingsForGroup = (eventId: string, groupId: number) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_REQUEST});
+        const response = await api.eventBookings.getEventBookingsForGroup(eventId, groupId);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS, eventBookingsForGroup: response.data});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
+    }
+}
+
 export const getEventBookingCSV = (eventId: string) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST});
@@ -1536,10 +1559,43 @@ export const bookMyselfOnEvent = (eventId: string, additionalInformation: Additi
             title: "Event booking confirmed", body: "You have been successfully booked onto this event.",
             color: "success", timeout: 5000, closable: false,
         }) as any);
-        dispatch(getEvent(eventId) as any);
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
+    }
+};
+
+export const reserveUsersOnEvent = (eventId: string, userIds: number[], groupId: number) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_RESERVATION_REQUEST});
+        await api.eventBookings.reserveUsersOnEvent(eventId, userIds);
+        await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
+        await dispatch(getEvent(eventId) as any);
+        dispatch({type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            title: "Reservations confirmed", body: "You have successfully reserved students onto this event.",
+            color: "success", timeout: 5000, closable: false,
+        }) as any);
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Reservation failed", error) as any);
+    }
+};
+
+export const cancelReservationsOnEvent = (eventId: string, userIds: number[], groupId: number) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_REQUEST});
+        await api.eventBookings.cancelUsersReservationsOnEvent(eventId, userIds);
+        await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
+        await dispatch(getEvent(eventId) as any);
+        dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            title: "Reservations cancelled", body: "You have successfully cancelled students reservations for this event.",
+            color: "success", timeout: 5000, closable: false,
+        }) as any);
+    } catch (error) {
+        dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Unable to cancel some of the reservations", error) as any);
     }
 };
 
@@ -1615,12 +1671,12 @@ export const resendUserConfirmationEmail = (eventBookingId: string, userId?: num
     }
 };
 
-export const promoteUserFromWaitingList = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
+export const promoteUserBooking = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
     const promote = window.confirm('Are you sure you want to convert this to a confirmed booking?');
     if (promote && userId) {
         try {
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_REQUEST});
-            await api.eventBookings.promoteUserFromWaitingList(eventBookingId, userId);
+            await api.eventBookings.promoteUserBooking(eventBookingId, userId);
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_RESPONSE_SUCCESS});
             dispatch(getEventBookings(eventBookingId) as any);
         } catch (error) {
@@ -1699,10 +1755,24 @@ export const fetchConcepts = () => async (dispatch: Dispatch<Action>) => {
         dispatch(showErrorToastIfNeeded("Loading Concepts Failed", e));
     }};
 
+// Fasttrack concepts
+export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upperQuestionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const state = getState();
+    if (state && state.fasttrackConcepts && state.fasttrackConcepts.gameboardId === gameboardId && state.fasttrackConcepts.concept === concept) return;
+    dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST});
+    try {
+        const concepts = await api.fasttrack.concepts(gameboardId, concept, upperQuestionId);
+        dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS, concepts: {gameboardId, concept, items: concepts.data}});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE});
+    }};
 
 // SERVICE ACTIONS (w/o dispatch)
-// Page change
 export const changePage = (path: string) => {
+    history.push(path);
+};
+
+export const registerPageChange = (path: string) => {
     store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});
 };
 

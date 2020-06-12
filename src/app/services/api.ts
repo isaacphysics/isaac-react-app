@@ -137,6 +137,14 @@ export const api = {
             return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
         },
     },
+    notifications: {
+        get: (): AxiosPromise => {
+            return endpoint.get(`/notifications`)
+        },
+        respond: (id: string, response: string): AxiosPromise => {
+            return endpoint.post(`/notifications/${id}/${response}`)
+        }
+    },
     admin: {
         userSearch: {
             get: (queryParams: {}): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO[]> => {
@@ -431,13 +439,22 @@ export const api = {
         getEventBookings: (eventId: string): AxiosPromise<EventBookingDTO[]> => {
             return endpoint.get(`/events/${eventId}/bookings`);
         },
+        getEventBookingsForGroup: (eventId: string, groupId: number): AxiosPromise<EventBookingDTO[]> => {
+            return endpoint.get(`/events/${eventId}/bookings/for_group/${groupId}`);
+        },
         bookUserOnEvent: (eventId: string, userId: number, additionalInformation: AdditionalInformation) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}`, additionalInformation);
+        },
+        reserveUsersOnEvent: (eventId: string, userIds: number[]) => {
+            return endpoint.post(`/events/${eventId}/reservations`, userIds);
+        },
+        cancelUsersReservationsOnEvent: (eventId: string, userIds: number[]) => {
+            return endpoint.post(`/events/${eventId}/reservations/cancel`, userIds);
         },
         resendUserConfirmationEmail: (eventId: string, userId: number) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}/resend_confirmation`);
         },
-        promoteUserFromWaitingList: (eventId: string, userId: number) => {
+        promoteUserBooking: (eventId: string, userId: number) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}/promote`, {eventId, userId});
         },
         cancelUserBooking: (eventId: string, userId: number) => {
@@ -459,4 +476,9 @@ export const api = {
             return endpoint.post(`/log`, eventDetails);
         },
     },
+    fasttrack: {
+        concepts: (gameboardId: string, concept: string, upperQuestionId: string): AxiosPromise<ApiTypes.GameboardItem[]> => {
+            return endpoint.get(`/fasttrack/${gameboardId}/concepts`, {params: {concept, "upper_question_id": upperQuestionId}});
+        }
+    }
 };

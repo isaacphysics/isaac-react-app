@@ -29,7 +29,7 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
     const conceptId = conceptIdOverride || params.conceptId;
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
     const doc = useSelector((state: AppState) => state?.doc || null);
-    const navigation = useNavigation(conceptId);
+    const navigation = useNavigation(doc);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;

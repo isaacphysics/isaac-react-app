@@ -45,7 +45,8 @@ export const Events = withRouter(({history, location}: {history: History; locati
         dispatch(clearEventsList);
         dispatch(getEventsList(startIndex, EVENTS_PER_PAGE, typeFilter, statusFilter));
         dispatch(getEventMapData(startIndex, -1, typeFilter, statusFilter));
-    }, [typeFilter, statusFilter]);
+    }, [dispatch, typeFilter, statusFilter]);
+
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help="Follow the links below to find out more about our FREE events." />

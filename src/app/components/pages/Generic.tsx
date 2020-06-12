@@ -14,6 +14,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
+import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -44,7 +45,9 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
 
                 <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4">
-                        <IsaacContent doc={doc} />
+                        <WithFigureNumbering doc={doc}>
+                            <IsaacContent doc={doc} />
+                        </WithFigureNumbering>
                     </Col>
                 </Row>
 

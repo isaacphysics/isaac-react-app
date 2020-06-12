@@ -29,7 +29,7 @@ import {
     ContentDTO,
     ContentSummaryDTO,
     EventBookingDTO,
-    GameboardDTO,
+    GameboardDTO, GameboardItem,
     GameboardListDTO,
     GlossaryTermDTO,
     IsaacPodDTO,
@@ -235,6 +235,16 @@ export const constants = (constants: ConstantsState = null, action: Action) => {
     }
 };
 
+type NotificationsState = {notifications?: any[]} | null;
+export const notifications = (notifications: NotificationsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS:
+            return {notifications: Array.from(action.notifications)};
+        default:
+            return notifications;
+    }
+};
+
 type DocState = ContentDTO | NOT_FOUND_TYPE | null;
 export const doc = (doc: DocState = null, action: Action) => {
     switch (action.type) {
@@ -297,20 +307,27 @@ export const question = (question: AppQuestionDTO, action: Action) => {
     }
 };
 
-type QuestionsState = AppQuestionDTO[] | null;
-export const questions = (questions: QuestionsState = null, action: Action) => {
+type QuestionsState = {questions: AppQuestionDTO[]; pageCompleted: boolean} | null;
+function augmentQuestions(questions: AppQuestionDTO[]): QuestionsState {
+    return {
+        questions,
+        pageCompleted: questions.every(q => q.validationResponse && q.validationResponse.correct)
+    }
+}
+export const questions = (qs: QuestionsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.QUESTION_REGISTRATION: {
-            const currentQuestions = questions !== null ? [...questions] : [];
+            const currentQuestions = qs !== null ? [...qs.questions] : [];
             const bestAttempt = action.question.bestAttempt;
             const newQuestion: AppQuestionDTO = bestAttempt ?
                 {...action.question, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer, accordionClientId: action.accordionClientId} :
                 {...action.question, accordionClientId: action.accordionClientId};
-            return [...currentQuestions, newQuestion];
+            const newQuestions = [...currentQuestions, newQuestion];
+            return augmentQuestions(newQuestions);
         }
         case ACTION_TYPE.QUESTION_DEREGISTRATION: {
-            const filteredQuestions = questions && questions.filter((q) => q.id != action.questionId);
-            return filteredQuestions && filteredQuestions.length ? filteredQuestions : null;
+            const filteredQuestions = qs && qs.questions.filter((q) => q.id != action.questionId);
+            return filteredQuestions && filteredQuestions.length ? augmentQuestions(filteredQuestions) : null;
         }
         // Delegate processing the question matching action.questionId to the question reducer
         case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
@@ -318,10 +335,10 @@ export const questions = (questions: QuestionsState = null, action: Action) => {
         case ACTION_TYPE.QUESTION_UNLOCK:
         case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE:
         case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS: {
-            return questions && questions.map((q) => q.id === action.questionId ? question(q, action) : q);
+            return qs && augmentQuestions(qs.questions.map((q) => q.id === action.questionId ? question(q, action) : q));
         }
         default: {
-            return questions;
+            return qs;
         }
     }
 };
@@ -403,11 +420,11 @@ export const progress = (progress: ProgressState = null, action: Action) => {
     }
 };
 
-export type CurrentGameboardState = GameboardDTO | NOT_FOUND_TYPE | null;
-export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action) => {
+export type CurrentGameboardState = GameboardDTO | NOT_FOUND_TYPE | null | {inflight: true; id: string | null};
+export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action): CurrentGameboardState => {
     switch (action.type) {
         case ACTION_TYPE.GAMEBOARD_REQUEST:
-            return null;
+            return {inflight: true, id: action.gameboardId} as {inflight: true; id: string | null};
         case ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS:
             return action.gameboard;
         case ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS:
@@ -509,6 +526,17 @@ export const eventBookings = (eventBookings: EventBookingsState = null, action: 
             return null;
         default:
             return eventBookings;
+    }
+};
+
+export const eventBookingsForGroup = (eventBookingsForGroup: EventBookingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS:
+            return [...action.eventBookingsForGroup];
+        case ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_REQUEST:
+            return null;
+        default:
+            return eventBookingsForGroup;
     }
 };
 
@@ -860,6 +888,16 @@ export const concepts = (concepts: ConceptsState = null, action: Action) => {
     }
 };
 
+export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;
+export const fasttrackConcepts = (state: FasttrackConceptsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS:
+            return action.concepts;
+        default:
+            return state;
+    }
+};
+
 
 const appReducer = combineReducers({
     adminUserGet,
@@ -876,6 +914,7 @@ const appReducer = combineReducers({
     otherUserAuthorisations,
     groupMemberships,
     constants,
+    notifications,
     doc,
     questions,
     answeredQuestionsByDate,
@@ -900,11 +939,13 @@ const appReducer = combineReducers({
     eventOverviews,
     eventMapData,
     eventBookings,
+    eventBookingsForGroup,
     fragments,
     glossaryTerms,
     testQuestions,
     printingSettings,
-    concepts
+    concepts,
+    fasttrackConcepts
 });
 
 export type AppState = undefined | {
@@ -934,6 +975,7 @@ export type AppState = undefined | {
     contentVersion: ContentVersionState;
     search: SearchState;
     constants: ConstantsState;
+    notifications: NotificationsState;
     error: ErrorState;
     toasts: ToastsState;
     activeModals: ActiveModalsState;
@@ -947,11 +989,13 @@ export type AppState = undefined | {
     eventOverviews: EventOverviewsState;
     eventMapData: EventMapDataState;
     eventBookings: EventBookingsState;
+    eventBookingsForGroup: EventBookingsState;
     fragments: FragmentsState;
     printingSettings: PrintingSettingsState;
     glossaryTerms: GlossaryTermsState;
     testQuestions: TestQuestionsState;
     concepts: ConceptsState;
+    fasttrackConcepts: FasttrackConceptsState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

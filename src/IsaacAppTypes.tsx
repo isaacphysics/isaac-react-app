@@ -1,7 +1,18 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
-import {AuthenticationProvider, ChoiceDTO, ContentBase, ContentSummaryDTO, ResultsWrapper, TestCaseDTO} from "./IsaacApiTypes";
+import {
+    AssignmentDTO,
+    AuthenticationProvider,
+    ChoiceDTO,
+    ContentBase,
+    ContentSummaryDTO,
+    GameboardDTO,
+    GameboardItem,
+    ResultsWrapper,
+    TestCaseDTO
+} from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
+import {FasttrackConceptsState} from "./app/state/reducers";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -144,6 +155,10 @@ export type Action =
     | {type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_REQUEST}
     | {type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS; segueEnvironment: string}
+
+    | {type: ACTION_TYPE.NOTIFICATIONS_REQUEST}
+    | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS; notifications: any[]}
 
     | {type: ACTION_TYPE.DOCUMENT_REQUEST; documentType: DOCUMENT_TYPE; documentId: string}
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
@@ -290,6 +305,10 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS; eventBookings: ApiTypes.EventBookingDTO[]}
     | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS; eventBookingsForGroup: ApiTypes.EventBookingDTO[]}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_SUCCESS; eventBookingCSV: any}
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_FAILURE}
@@ -301,6 +320,14 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_BOOKING_USER_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_RESERVATION_REQUEST}
+    | {type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_REQUEST}
+    | {type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_SUCCESS}
@@ -360,6 +387,10 @@ export type Action =
     | {type: ACTION_TYPE.CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts}
+
+    | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST}
+    | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
 
     | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
 ;
@@ -479,6 +510,7 @@ export interface ActiveModal {
     title: string;
     body: any;
     buttons?: any[];
+    overflowVisible?: boolean;
 }
 
 export enum BoardOrder {
@@ -537,14 +569,19 @@ export interface AppAssignmentProgress {
 }
 
 export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
-    multiDay?: boolean;
-    expired?: boolean;
-    withinBookingDeadline?: boolean;
-    inProgress?: boolean;
-    teacher?: boolean;
-    student?: boolean;
-    virtual?: boolean;
+    isMultiDay?: boolean;
+    hasExpired?: boolean;
+    isWithinBookingDeadline?: boolean;
+    isInProgress?: boolean;
+    isATeacherEvent?: boolean;
+    isAStudentEvent?: boolean;
+    isVirtual?: boolean;
+    isStudentOnly?: boolean;
+    isRecurring?: boolean;
+    isWaitingListOnly?: boolean;
+    isNotClosed?: boolean;
     field?: "physics" | "maths";
+    userBookingStatus?: ApiTypes.BookingStatus;
 }
 
 export interface EventOverview {
@@ -719,3 +756,25 @@ export interface FreeTextRule extends Choice {
 }
 
 export type Concepts = ResultsWrapper<ContentSummaryDTO>;
+
+export type EnhancedGameboard = GameboardDTO & {
+    questions: (GameboardItem & { questionPartsTotal: number })[];
+};
+
+export type SingleEnhancedAssignment = AssignmentDTO & {
+    gameboard: EnhancedGameboard;
+};
+
+export interface PageSettings {
+    colourBlind: boolean;
+    setColourBlind: (newValue: boolean) => void;
+    formatAsPercentage: boolean;
+    setFormatAsPercentage: (newValue: boolean) => void;
+}
+
+export interface SingleProgressDetailsProps {
+    assignmentId: number;
+    assignment: SingleEnhancedAssignment;
+    progress: AppAssignmentProgress[];
+    pageSettings: PageSettings;
+}

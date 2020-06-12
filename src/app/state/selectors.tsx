@@ -37,6 +37,32 @@ export const selectors = {
         }
     },
 
+    topic: {
+        currentTopic: () => (state: AppState) => {
+            if (!state) return null;
+            if (!state.currentTopic) return null;
+            if (state.currentTopic === NOT_FOUND) return null;
+            return state.currentTopic;
+        }
+    },
+
+    board: {
+        currentGameboard: () => (state: AppState) => {
+            if (!state) return null;
+            if (!state.currentGameboard) return null;
+            if (state.currentGameboard === NOT_FOUND) return null;
+            if ('inflight' in state.currentGameboard) return null;
+            return state.currentGameboard;
+        },
+        currentGameboardOrNotFound: () => (state: AppState) => {
+            if (!state) return null;
+            if (!state.currentGameboard) return null;
+            if (state.currentGameboard === NOT_FOUND) return NOT_FOUND;
+            if ('inflight' in state.currentGameboard) return null;
+            return state.currentGameboard;
+        }
+    },
+
     boards: {
         boards: () => (state: AppState) => {
             if (!state) return null;
@@ -64,16 +90,16 @@ export const selectors = {
 
     questions: {
         selectQuestionPart: (questionPartId?: string) => (state: AppState) => {
-            return state?.questions?.filter(question => question.id == questionPartId)[0];
+            return state && state.questions && state.questions.questions.filter(question => question.id == questionPartId)[0];
         },
         allQuestionsAttempted: () => (state: AppState) => {
-            return !!state && !!state.questions && state.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
+            return !!state && !!state.questions && state.questions.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
         },
         anyQuestionPreviouslyAttempted: () => (state: AppState) => {
-            return !!state && !!state.questions && state.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
+            return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
         },
         filter: (predicate: (q: AppQuestionDTO) => boolean) => (state: AppState) => {
-            return state && state.questions && state.questions.filter(predicate) || [];
+            return state && state.questions && state.questions.questions.filter(predicate) || [];
         }
     },
 
@@ -100,7 +126,3 @@ interface CacheSafeSelectors {
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const cacheSafeSelector: CacheSafeSelectors = selectors; // LGTM ignore, I don't want to lose selectors' type inference
-
-
-
-

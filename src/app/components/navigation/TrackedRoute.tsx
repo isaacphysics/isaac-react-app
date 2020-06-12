@@ -9,8 +9,9 @@ import {KEY} from "../../services/localStorage";
 import {Unauthorised} from "../pages/Unauthorised";
 import {isTeacher} from "../../services/user";
 import {selectors} from "../../state/selectors";
+import {GOOGLE_ANALYTICS_ACCOUNT_ID} from "../../services/constants";
 
-ReactGA.initialize("UA-137475074-1");
+ReactGA.initialize(GOOGLE_ANALYTICS_ACCOUNT_ID);
 ReactGA.set({ anonymizeIp: true });
 
 const trackPage = (page: string, options?: FieldsObject) => {

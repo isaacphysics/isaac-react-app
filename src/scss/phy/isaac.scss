@@ -92,6 +92,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/focus";
 @import "../common/progress-bar";
 @import "../common/anvil";
+@import "../common/reservation-modal";
 @import "hints";
 @import "related-content";
 @import "button";
@@ -118,9 +119,11 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/assignment-progress";
 @import "../common/groups";
 @import "../common/events";
+@import "../common/fasttrack";
 @import "books";
 @import "gameboard";
 @import "menu-page-phy";
+
 
 // Print
 @import "../common/print";

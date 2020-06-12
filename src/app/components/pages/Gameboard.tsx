@@ -6,7 +6,6 @@ import * as RS from "reactstrap"
 import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
-import {AppState} from "../../state/reducers";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {NOT_FOUND, TAG_ID} from "../../services/constants";
 import {isTeacher} from "../../services/user";
@@ -52,7 +51,8 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
                     {tags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
                 </div>}
             </div>
-            {question.level !== undefined && question.level !== 0 &&
+            {/*TODO CS Level*/}
+            {SITE_SUBJECT === SITE.PHY && question.level !== undefined && question.level !== 0 &&
                 <span className="gameboard-tags">Level {question.level}</span>}
         </Link>
     </RS.ListGroupItem>;
@@ -72,7 +72,7 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
 
 export const Gameboard = withRouter(({location: {hash}}: {location: {hash: string}}) => {
     const dispatch = useDispatch();
-    const gameboard = useSelector((state: AppState) => state?.currentGameboard || null);
+    const gameboard = useSelector(selectors.board.currentGameboardOrNotFound());
     const user = useSelector(selectors.user.orNull());
     let gameboardId = hash ? hash.slice(1) : null;
 
@@ -83,7 +83,7 @@ export const Gameboard = withRouter(({location: {hash}}: {location: {hash: strin
         if (gameboard !== null && gameboard !== NOT_FOUND) {
             dispatch(logAction({type: "VIEW_GAMEBOARD_BY_ID", gameboardId: gameboard.id}));
         }
-    }, [gameboard]);
+    }, [dispatch, gameboard]);
 
     const userButtons = user && isTeacher(user) ?
         <RS.Row className="col-8 offset-2">

@@ -101,7 +101,7 @@ export const EventAttendance = ({user, eventId}: {user: LoggedInUser; eventId: s
                             .filter(filterOnSurname)
                             .map(booking => {
                                 const userBooked = booking.userBooked as UserSummaryWithEmailAddressDTO;
-                                const additionalInformation = booking.additionalInformation as {[index: string]: string};
+                                const additionalInformation = booking.additionalInformation;
                                 const userSchool = booking.userBooked && userIdToSchoolMapping[booking.userBooked.id as number];
 
                                 return <tr key={booking.bookingId}>
@@ -119,17 +119,17 @@ export const EventAttendance = ({user, eventId}: {user: LoggedInUser; eventId: s
                                     </td>
                                     <td className="align-middle text-center">{displayAttendanceAsSymbol(booking.bookingStatus)}</td>
                                     <td className="align-middle">{userBooked.familyName}, {userBooked.givenName}</td>
-                                    <td className="align-middle">{additionalInformation.jobTitle ? additionalInformation.jobTitle : additionalInformation.yearGroup}</td>
+                                    <td className="align-middle">{additionalInformation?.jobTitle || additionalInformation?.yearGroup || ""}</td>
                                     {(userSchool === undefined || !userSchool.urn) && <td className="align-middle">{userSchool ? userSchool.name : ""}</td>}
                                     {userSchool && userSchool.urn && <td className="align-middle">{userSchool.name}</td>} {/* In future can add link to school stats page */}
                                     <td className="align-middle">{userBooked.role}</td>
                                     <td className="align-middle">{userBooked.email}</td>
                                     <td className="align-middle"><DateString>{booking.bookingDate}</DateString></td>
                                     <td className="align-middle"><DateString>{booking.updated}</DateString></td>
-                                    <td className="align-middle">{additionalInformation.accessibilityRequirements}</td>
-                                    <td className="align-middle">{additionalInformation.medicalRequirements}</td>
-                                    <td className="align-middle">{additionalInformation.emergencyName}</td>
-                                    <td className="align-middle">{additionalInformation.emergencyNumber}</td>
+                                    <td className="align-middle">{additionalInformation?.accessibilityRequirements || ""}</td>
+                                    <td className="align-middle">{additionalInformation?.medicalRequirements || ""}</td>
+                                    <td className="align-middle">{additionalInformation?.emergencyName || ""}</td>
+                                    <td className="align-middle">{additionalInformation?.emergencyNumber || ""}</td>
                                 </tr>
                             })
                         }

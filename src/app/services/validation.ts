@@ -102,7 +102,7 @@ export function validateBookingSubmission(event: AugmentedEvent, user: UserSumma
             return Object.assign({}, FAILURE_TOAST, {title:"Year group required", body: "You must enter a year group to proceed."});
         }
 
-        if (!event.virtual && (!additionalInformation.emergencyName || !additionalInformation.emergencyNumber)) {
+        if (!event.isVirtual && (!additionalInformation.emergencyName || !additionalInformation.emergencyNumber)) {
             return Object.assign({}, FAILURE_TOAST, {title: "Emergency contact details required", body: "You must enter a emergency contact details in order to book on to this event."});
         }
     }

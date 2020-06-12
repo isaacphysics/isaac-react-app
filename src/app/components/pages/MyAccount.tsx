@@ -56,7 +56,7 @@ const stateToProps = (state: AppState, props: any) => {
         hashAnchor: (hash && hash.slice(1)) || null,
         authToken: (searchParams && searchParams.authToken) ? (searchParams.authToken as string) : null,
         userOfInterest: (searchParams && searchParams.userId) ? (searchParams.userId as string) : null,
-        userFind: state && Object.assign({}, state.adminUserGet, {loggedIn: true}) || {loggedIn: false}
+        userToEdit: state && {...state.adminUserGet, loggedIn: true} || {loggedIn: false}
     }
 };
 
@@ -85,10 +85,10 @@ interface AccountPageProps {
     authToken: string | null;
     userOfInterest: string | null;
     adminUserGet: (userid: number | undefined) => void;
-    userFind: AdminUserGetState;
+    userToEdit: AdminUserGetState;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, userFind}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, userToEdit}: AccountPageProps) => {
     useEffect(() => {
         if (userOfInterest) {
             adminUserGet(Number(userOfInterest));
@@ -98,20 +98,21 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     // - Admin user modification
     const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
-    const [userToEdit, setUserToEdit] = useState<any>();
-
-    useEffect(() => {editingOtherUser && userFind && setUserToEdit(Object.assign({}, userFind))}, [editingOtherUser, userFind]);
 
     // - Copy of user to store changes before saving
-    const [userToUpdate, setUserToUpdate] = useState<any>(editingOtherUser && userOfInterest && userFind ?
-        Object.assign({}, userFind, {loggedIn: true, password: ""}) :
-        Object.assign({}, user, {password: ""}));
+    const [userToUpdate, setUserToUpdate] = useState<any>(
+        editingOtherUser && userToEdit ?
+            {...userToEdit, loggedIn: true, password: ""} :
+            {...user, password: ""}
+    );
 
     useEffect(() => {
         if (editingOtherUser && userToEdit) {
-            setUserToUpdate(Object.assign({}, userToEdit, {loggedIn: true}));
+            setUserToUpdate({...userToEdit, loggedIn: true});
+        } else if (user) {
+            setUserToUpdate({...user, password: ""});
         }
-    }, [userToEdit]);
+    }, [user, editingOtherUser, userToEdit]);
 
     // Inputs which trigger re-render
     const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
@@ -123,7 +124,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     // - User preferences
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
-    const [subjectInterests, setSubjectInterests] = useState<SubjectInterests>({});
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
 
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
@@ -137,7 +137,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         };
 
         setEmailPreferences(currentEmailPreferences);
-        setSubjectInterests(currentSubjectInterests);
         setMyUserPreferences(currentUserPreferences);
     }, [userPreferences]);
 
@@ -145,7 +144,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const [activeTab, setActiveTab] = useState(ACCOUNT_TAB.account);
     useEffect(() => {
         // @ts-ignore
-        let tab: ACCOUNT_TAB =
+        const tab: ACCOUNT_TAB =
             (authToken && ACCOUNT_TAB.teacherconnections) ||
             (hashAnchor && ACCOUNT_TAB[hashAnchor as any]) ||
             ACCOUNT_TAB.account;
@@ -155,8 +154,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     // Values derived from inputs (props and state)
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
+    function setSubjectInterests(newSubjectInterests: SubjectInterests) {
+        setMyUserPreferences({...myUserPreferences, SUBJECT_INTEREST: newSubjectInterests});
+    }
+
     // Form's submission method
-    const updateAccount = (event: React.FormEvent<HTMLFormElement>) => {
+    function updateAccount(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setAttemptedAccountUpdate(true);
 
@@ -171,12 +174,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
-            allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null}) &&
+            allRequiredInformationIsPresent(userToUpdate, {...myUserPreferences, EMAIL_PREFERENCE: null}) &&
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
             (!userToUpdate.password || isNewPasswordConfirmed)) {
             updateCurrentUser(userToUpdate, editingOtherUser ? {} : myUserPreferences, currentPassword, user);
         }
-    };
+    }
 
     return <Container id="account-page" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} className="mb-4" />
@@ -239,7 +242,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                             <TabPane tabId={ACCOUNT_TAB.account}>
                                 <UserDetails
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                    subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
+                                    subjectInterests={myUserPreferences.SUBJECT_INTEREST || {}}
+                                    setSubjectInterests={setSubjectInterests}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />

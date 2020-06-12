@@ -4,8 +4,8 @@ import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, I
 import {handleProviderLoginRedirect, logInUser, resetPassword} from "../../state/actions";
 import {history} from "../../services/history";
 import {Redirect} from "react-router";
-import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 export const LogIn = () => {
     useEffect( () => {document.title = "Login — Isaac " + SITE_SUBJECT_TITLE;}, []);
@@ -102,7 +102,9 @@ export const LogIn = () => {
                                             Forgotten your password?
                                         </Button> :
                                         <p>
-                                            <strong className="d-block">Your password reset request is being processed.</strong>
+                                            <strong id="password-reset-processing" className="d-block">
+                                                Your password reset request is being processed.
+                                            </strong>
                                             <strong className="d-block">Please check your inbox.</strong>
                                         </p>
                                     }
@@ -129,9 +131,13 @@ export const LogIn = () => {
 
                             <Row className="my-4">
                                 <Col className="text-center">
-                                    <Button block className="login-google" color="link" onClick={logInWithGoogle}>
+                                    {/* TODO:ENABLE_GOOGLE */}
+                                    <Button block className="login-google" disabled={SITE_SUBJECT === SITE.PHY} color="link" onClick={logInWithGoogle}>
                                         Log in with Google
                                     </Button>
+                                    {SITE_SUBJECT === SITE.PHY && <p className="mt-3 mb-0">
+                                        Google authentication is <strong>temporarily disabled</strong><br />for the beta version of the site.
+                                    </p>}
                                 </Col>
                             </Row>
 
