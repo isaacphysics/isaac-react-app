@@ -1,5 +1,5 @@
 import React from "react";
-import {connect} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
@@ -19,6 +19,7 @@ import {
 } from "react-beautiful-dnd";
 import _differenceBy from "lodash/differenceBy";
 import {selectors} from "../../state/selectors";
+import {selectQuestionPart} from "../../services/questions";
 
 interface IsaacParsonsQuestionProps {
     doc: IsaacParsonsQuestionDTO;
@@ -260,7 +261,8 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
 }
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = selectors.questions.selectQuestionPart(questionId)(state);
+    const pageQuestions = selectors.questions.getQuestions()(state);
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
     return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
 };
 const dispatchToProps = {setCurrentAttempt};

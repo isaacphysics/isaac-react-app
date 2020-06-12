@@ -5,6 +5,7 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacItemQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
 import {CustomInput, Label} from "reactstrap";
 import {selectors} from "../../state/selectors";
+import {selectQuestionPart} from "../../services/questions";
 
 interface IsaacItemQuestionProps {
     doc: IsaacItemQuestionDTO;
@@ -13,7 +14,8 @@ interface IsaacItemQuestionProps {
 
 export const IsaacItemQuestion = ({doc, questionId}: IsaacItemQuestionProps) => {
     const dispatch = useDispatch();
-    const questionPart = useSelector(selectors.questions.selectQuestionPart(questionId));
+    const pageQuestions = useSelector(selectors.questions.getQuestions());
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
     const currentAttempt = questionPart?.currentAttempt as ItemChoiceDTO;
 
     function updateItems(changeEvent: ChangeEvent<HTMLInputElement>, item: ItemDTO) {

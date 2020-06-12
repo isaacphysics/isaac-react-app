@@ -5,11 +5,13 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacStringMatchQuestionDTO} from "../../../IsaacApiTypes";
 import {Input} from "reactstrap";
 import {selectors} from "../../state/selectors";
+import {selectQuestionPart} from "../../services/questions";
 
 
 export const IsaacStringMatchQuestion = ({doc, questionId}: {doc: IsaacStringMatchQuestionDTO; questionId: string}) => {
     const dispatch = useDispatch();
-    const questionPart = useSelector(selectors.questions.selectQuestionPart(questionId));
+    const pageQuestions = useSelector(selectors.questions.getQuestions());
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
     const currentAttemptValue = questionPart?.currentAttempt?.value;
 
     return <div className="stringmatch-question">

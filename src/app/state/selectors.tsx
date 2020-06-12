@@ -1,7 +1,6 @@
 import {AppState} from "./reducers";
 import {sortBy} from "lodash";
-import {ACCEPTED_QUIZ_IDS, NOT_FOUND} from "../services/constants";
-import {AppQuestionDTO} from "../../IsaacAppTypes";
+import {NOT_FOUND} from "../services/constants";
 
 export const selectors = {
     groups: {
@@ -84,22 +83,16 @@ export const selectors = {
     },
 
     doc: {
-        ifNotAQuizId: (id: string) => (state: AppState) => ACCEPTED_QUIZ_IDS.includes(id) ? NOT_FOUND : (state && state.doc) || null,
-        ifQuizId: (id: string) => (state: AppState) => ACCEPTED_QUIZ_IDS.includes(id) ? (state && state.doc) || null : NOT_FOUND,
+        get: () => (state: AppState) => state?.doc || null,
     },
 
     questions: {
-        selectQuestionPart: (questionPartId?: string) => (state: AppState) => {
-            return state && state.questions && state.questions.questions.filter(question => question.id == questionPartId)[0];
-        },
+        getQuestions: () => (state: AppState) => state?.questions?.questions,
         allQuestionsAttempted: () => (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
         },
         anyQuestionPreviouslyAttempted: () => (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
-        },
-        filter: (predicate: (q: AppQuestionDTO) => boolean) => (state: AppState) => {
-            return state && state.questions && state.questions.questions.filter(predicate) || [];
         }
     },
 
@@ -122,7 +115,7 @@ export const selectors = {
 interface CacheSafeSelectors {
     // It is important that the actual selector is not the top level function because useSelector reserve the right to
     // cache calls from functions with the same reference...
-    [type: string]: {[name: string]: (...args: any[]) => (state: AppState) => any};
+    [type: string]: {[name: string]: () => (state: AppState) => any};
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const cacheSafeSelector: CacheSafeSelectors = selectors; // LGTM ignore, I don't want to lose selectors' type inference

@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {connect} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -13,7 +13,7 @@ import {Inequality, makeInequality} from "inequality";
 import {parseExpression} from "inequality-grammar";
 
 import _flattenDeep from 'lodash/flatMapDeep';
-import {parsePseudoSymbolicAvailableSymbols} from "../../services/questions";
+import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart} from "../../services/questions";
 
 // Magic starts here
 interface ChildrenMap {
@@ -41,7 +41,8 @@ function isError(p: {error: string} | any[]): p is {error: string} {
 }
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = selectors.questions.selectQuestionPart(questionId)(state);
+    const pageQuestions = selectors.questions.getQuestions()(state);
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
     let r: {currentAttempt?: FormulaDTO | null} = {};
     if (questionPart) {
         r.currentAttempt = questionPart.currentAttempt;

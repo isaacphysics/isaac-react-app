@@ -12,7 +12,7 @@ import {
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE} from "../../services/constants";
+import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, NOT_FOUND} from "../../services/constants";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -23,7 +23,8 @@ import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 
 export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId: string}}}) => {
     const dispatch = useDispatch();
-    const doc = useSelector(selectors.doc.ifQuizId(match.params.quizId));
+    const docWhichCouldBeQuiz = useSelector(selectors.doc.get());
+    const doc = ACCEPTED_QUIZ_IDS.includes(match.params.quizId) ? docWhichCouldBeQuiz : NOT_FOUND;
     const allQuestionsAttempted = useSelector(selectors.questions.allQuestionsAttempted());
     const anyQuestionPreviouslyAttempted = useSelector(selectors.questions.anyQuestionPreviouslyAttempted());
 

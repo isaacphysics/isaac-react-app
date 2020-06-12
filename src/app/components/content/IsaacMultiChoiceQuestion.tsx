@@ -5,6 +5,7 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
 import {CustomInput, Label} from "reactstrap";
 import {selectors} from "../../state/selectors";
+import {selectQuestionPart} from "../../services/questions";
 
 interface IsaacMultiChoiceQuestionProps {
     doc: IsaacMultiChoiceQuestionDTO;
@@ -12,7 +13,8 @@ interface IsaacMultiChoiceQuestionProps {
 }
 export const IsaacMultiChoiceQuestion = ({doc, questionId}: IsaacMultiChoiceQuestionProps) => {
     const dispatch = useDispatch();
-    const questionPart = useSelector(selectors.questions.selectQuestionPart(questionId));
+    const pageQuestions = useSelector(selectors.questions.getQuestions());
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
     const currentAttemptValue = questionPart?.currentAttempt?.value;
 
     return <div className="multichoice-question">

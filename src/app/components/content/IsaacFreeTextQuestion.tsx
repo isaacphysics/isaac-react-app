@@ -6,6 +6,7 @@ import {IsaacFreeTextQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes"
 import {Alert, FormGroup, Input} from "reactstrap";
 import {ValidatedChoice} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
+import {selectQuestionPart} from "../../services/questions";
 
 interface Limit {
     exceeded: boolean;
@@ -63,7 +64,8 @@ const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
 
 export const IsaacFreeTextQuestion = ({doc, questionId}: {doc: IsaacFreeTextQuestionDTO; questionId: string}) => {
     const dispatch = useDispatch();
-    const questionPart = useSelector(selectors.questions.selectQuestionPart(questionId));
+    const questionsOnPage = useSelector(selectors.questions.getQuestions());
+    const questionPart = selectQuestionPart(questionsOnPage, questionId);
     const currentAttemptValue = questionPart?.currentAttempt?.value || "";
     const validation = validate(currentAttemptValue);
 

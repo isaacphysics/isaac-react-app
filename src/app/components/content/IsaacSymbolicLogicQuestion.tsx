@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {connect} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
@@ -12,9 +12,11 @@ import {selectors} from "../../state/selectors";
 
 import _flattenDeep from 'lodash/flattenDeep';
 import {useCurrentExamBoard} from "../../services/examBoard";
+import {selectQuestionPart} from "../../services/questions";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = selectors.questions.selectQuestionPart(questionId)(state);
+    const pageQuestions = selectors.questions.getQuestions()(state);
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
     let r: {currentAttempt?: LogicFormulaDTO | null} = {};
     if (questionPart) {
         r.currentAttempt = questionPart.currentAttempt;

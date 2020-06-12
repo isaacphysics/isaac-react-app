@@ -5,7 +5,7 @@ import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import * as RS from "reactstrap";
-import {QUESTION_TYPES} from "../../services/questions";
+import {QUESTION_TYPES, selectQuestionPart} from "../../services/questions";
 import {DateString, NUMERIC_DATE_AND_TIME} from "../elements/DateString";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {NOT_FOUND} from "../../services/constants";
@@ -119,7 +119,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
     const dispatch = useDispatch();
     const page = useSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
     const pageCompleted = useSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : undefined);
-    const questionPart = useSelector(selectors.questions.selectQuestionPart(doc.id));
+    const pageQuestions = useSelector(selectors.questions.getQuestions());
+    const questionPart = selectQuestionPart(pageQuestions, doc.id);
     const validationResponse = questionPart?.validationResponse;
     const currentAttempt = questionPart?.currentAttempt;
     const locked = questionPart?.locked;

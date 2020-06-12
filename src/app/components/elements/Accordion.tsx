@@ -88,30 +88,27 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, locatio
     const clientId = useRef('c' + nextClientId++);
 
     // Check results of questions in this accordion
-    let accordianIcon;
-    const questionsInsideThis = useSelector((state: AppState) => {
-        return selectors.questions.filter(q => q.accordionClientId === clientId.current)(state);
-    });
-    if (questionsInsideThis.length > 0) {
+    let accordionIcon;
+    const questionsOnPage = useSelector(selectors.questions.getQuestions()) || [];
+    const questionsInsideAccordionSection = questionsOnPage?.filter(q => q.accordionClientId === clientId.current);
+    if (questionsInsideAccordionSection.length > 0) {
         let allCorrect = true;
         let allWrong = true;
         let allValidated = true;
-        questionsInsideThis.forEach(question => {
-            if (question) {
-                if (question.validationResponse) {
-                    const correct = question.validationResponse.correct;
-                    if (correct) {
-                        allWrong = false;
-                    } else {
-                        allCorrect = false;
-                    }
+        questionsInsideAccordionSection.forEach(question => {
+            if (question.validationResponse) {
+                const correct = question.validationResponse.correct;
+                if (correct) {
+                    allWrong = false;
                 } else {
-                    allValidated = false;
+                    allCorrect = false;
                 }
+            } else {
+                allValidated = false;
             }
         });
-        if (allValidated && allCorrect) accordianIcon = "tick";
-        if (allValidated && allWrong) accordianIcon = "cross";
+        if (allValidated && allCorrect) accordionIcon = "tick";
+        if (allValidated && allWrong) accordionIcon = "cross";
     }
 
 
@@ -146,8 +143,8 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, locatio
                         {trustedTitle && <div className="p-3"><TrustedHtml html={trustedTitle} /></div>}</RS.Row>
                 </div>
 
-                {accordianIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon accordion-icon-" + accordianIcon}>
-                    <span className="sr-only">{accordianIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
+                {accordionIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon accordion-icon-" + accordionIcon}>
+                    <span className="sr-only">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
                 </span>}
             </RS.Button>
         </div>

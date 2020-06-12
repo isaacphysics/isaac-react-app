@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, TAG_ID} from "../../services/constants";
+import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, NOT_FOUND, TAG_ID} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
@@ -49,7 +49,8 @@ function getTags(docTags?: string[]) {
 
 export const Question = withRouter(({questionIdOverride, match, location}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
-    const doc = useSelector(selectors.doc.ifNotAQuizId(questionId));
+    const docWhichCouldBeQuestion = useSelector(selectors.doc.get());
+    const doc = ACCEPTED_QUIZ_IDS.includes(questionId) ? NOT_FOUND : docWhichCouldBeQuestion;
     const user = useSelector(selectors.user.orNull());
     const navigation = useNavigation(doc);
 
