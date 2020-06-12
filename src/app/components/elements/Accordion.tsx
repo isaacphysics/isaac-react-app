@@ -89,7 +89,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, locatio
 
     // Check results of questions in this accordion
     let accordionIcon;
-    const questionsOnPage = useSelector(selectors.questions.getQuestions()) || [];
+    const questionsOnPage = useSelector(selectors.questions.getQuestions) || [];
     const questionsInsideAccordionSection = questionsOnPage?.filter(q => q.accordionClientId === clientId.current);
     if (questionsInsideAccordionSection.length > 0) {
         let allCorrect = true;

@@ -13,7 +13,7 @@ interface IsaacMultiChoiceQuestionProps {
 }
 export const IsaacMultiChoiceQuestion = ({doc, questionId}: IsaacMultiChoiceQuestionProps) => {
     const dispatch = useDispatch();
-    const pageQuestions = useSelector(selectors.questions.getQuestions());
+    const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     const currentAttemptValue = questionPart?.currentAttempt?.value;
 

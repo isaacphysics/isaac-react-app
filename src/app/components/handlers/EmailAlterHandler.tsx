@@ -10,7 +10,7 @@ import {selectors} from "../../state/selectors";
 
 export const EmailAlterHandler = () => {
     const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
     const errorMessage = useSelector((state: AppState) => state && state.error);
 
     const {userid, token}: {userid?: string; token?: string} = queryString.parse(location.search);

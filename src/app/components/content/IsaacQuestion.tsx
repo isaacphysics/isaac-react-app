@@ -119,7 +119,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
     const dispatch = useDispatch();
     const page = useSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
     const pageCompleted = useSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : undefined);
-    const pageQuestions = useSelector(selectors.questions.getQuestions());
+    const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, doc.id);
     const validationResponse = questionPart?.validationResponse;
     const currentAttempt = questionPart?.currentAttempt;

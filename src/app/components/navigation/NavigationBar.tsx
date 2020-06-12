@@ -53,7 +53,7 @@ export const NavigationSection = ({children, title, topLevelLink, to}: Navigatio
 
 export const useAssignmentBadge = () => {
     const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
 
     useEffect(() => {
         if (user?.loggedIn) {

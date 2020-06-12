@@ -22,7 +22,7 @@ import {selectors} from "../../state/selectors";
 export const Concepts = withRouter((props: {history: History; location: Location}) => {
     const {location, history} = props;
     const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
     const concepts = useSelector((state: AppState) => state && state.concepts && state.concepts.results || null);
 
     useEffect(() => {dispatch(fetchConcepts());}, [dispatch]);

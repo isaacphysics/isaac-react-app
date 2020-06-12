@@ -4,7 +4,7 @@ import {NOT_FOUND} from "../services/constants";
 
 export const selectors = {
     groups: {
-        current: () => (state: AppState) => {
+        current: (state: AppState) => {
             if (!state) return null;
             if (!state.groups) return null;
             if (!state.groups.cache) return null;
@@ -12,7 +12,7 @@ export const selectors = {
             if (!activeId) return null;
             return state.groups.cache[activeId] || null;
         },
-        active: () => (state: AppState) => {
+        active: (state: AppState) => {
             if (!state) return null;
             if (!state.groups) return null;
             if (!state.groups.cache) return null;
@@ -20,7 +20,7 @@ export const selectors = {
             // @ts-ignore - typescript can't pass the non-null inside the map function here
             return state.groups.active.map(groupId => state.groups.cache[groupId]);
         },
-        archived: () => (state: AppState) => {
+        archived: (state: AppState) => {
             if (!state) return null;
             if (!state.groups) return null;
             if (!state.groups.cache) return null;
@@ -28,16 +28,16 @@ export const selectors = {
             // @ts-ignore - typescript can't pass the non-null inside the map function here
             return state.groups.archived.map(groupId => state.groups.cache[groupId]);
         },
-        groups: () => (state: AppState) => {
+        groups: (state: AppState) => {
             return {
-                active: selectors.groups.active()(state),
-                archived: selectors.groups.archived()(state)
+                active: selectors.groups.active(state),
+                archived: selectors.groups.archived(state)
             }
         }
     },
 
     topic: {
-        currentTopic: () => (state: AppState) => {
+        currentTopic: (state: AppState) => {
             if (!state) return null;
             if (!state.currentTopic) return null;
             if (state.currentTopic === NOT_FOUND) return null;
@@ -46,14 +46,14 @@ export const selectors = {
     },
 
     board: {
-        currentGameboard: () => (state: AppState) => {
+        currentGameboard: (state: AppState) => {
             if (!state) return null;
             if (!state.currentGameboard) return null;
             if (state.currentGameboard === NOT_FOUND) return null;
             if ('inflight' in state.currentGameboard) return null;
             return state.currentGameboard;
         },
-        currentGameboardOrNotFound: () => (state: AppState) => {
+        currentGameboardOrNotFound: (state: AppState) => {
             if (!state) return null;
             if (!state.currentGameboard) return null;
             if (state.currentGameboard === NOT_FOUND) return NOT_FOUND;
@@ -63,7 +63,7 @@ export const selectors = {
     },
 
     boards: {
-        boards: () => (state: AppState) => {
+        boards: (state: AppState) => {
             if (!state) return null;
             if (!state.boards) return null;
             if (!state.boards.boards) return null;
@@ -83,39 +83,42 @@ export const selectors = {
     },
 
     doc: {
-        get: () => (state: AppState) => state?.doc || null,
+        get: (state: AppState) => state?.doc || null,
     },
 
     questions: {
-        getQuestions: () => (state: AppState) => state?.questions?.questions,
-        allQuestionsAttempted: () => (state: AppState) => {
+        getQuestions: (state: AppState) => state?.questions?.questions,
+        allQuestionsAttempted: (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
         },
-        anyQuestionPreviouslyAttempted: () => (state: AppState) => {
+        anyQuestionPreviouslyAttempted: (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
         }
     },
 
     segue: {
-        contentVersion: () => (state: AppState) => state?.contentVersion || null,
-        versionOrUnknown: () => (state: AppState) => state?.constants?.segueVersion || "unknown",
-        environmentOrUnknown: () => (state: AppState) => state?.constants?.segueEnvironment || "unknown",
+        contentVersion: (state: AppState) => state?.contentVersion || null,
+        versionOrUnknown: (state: AppState) => state?.constants?.segueVersion || "unknown",
+        environmentOrUnknown: (state: AppState) => state?.constants?.segueEnvironment || "unknown",
     },
 
     error: {
-        general: () => (state: AppState) => state?.error && state.error.type == "generalError" && state.error.generalError || null,
+        general: (state: AppState) => state?.error && state.error.type == "generalError" && state.error.generalError || null,
     },
 
     user:  {
-        orNull: () => (state: AppState) => state?.user || null
+        orNull: (state: AppState) => state?.user || null
     },
 };
 
-// Important
-interface CacheSafeSelectors {
-    // It is important that the actual selector is not the top level function because useSelector reserve the right to
-    // cache calls from functions with the same reference...
-    [type: string]: {[name: string]: () => (state: AppState) => any};
+// Important type checking to avoid an awkward bug
+interface SelectorsWithNoPropArgs {
+    // It is important that the selectors do not use the component's props to filter the results as they can be
+    // out-of-date. In some cases this can lead to zombie children.
+    // A full explanation can be found here: https://react-redux.js.org/next/api/hooks#stale-props-and-zombie-children
+    // We avoid this problem by forcing the selectors to be simple, accepting only the app state as an argument.
+    // Filtering using the props can be safely done later during the component's render on useSelector(...)'s result.
+    [type: string]: {[name: string]: (state: AppState) => unknown};
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const cacheSafeSelector: CacheSafeSelectors = selectors; // LGTM ignore, I don't want to lose selectors' type inference
+const selectorsWithoutZombies: SelectorsWithNoPropArgs = selectors; // LGTM ignore, I don't want to lose selectors' type inference

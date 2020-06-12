@@ -8,7 +8,7 @@ import {LinkCard} from "../elements/cards/LinkCard";
 import {selectors} from "../../state/selectors";
 
 export const Students = () => {
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
     const pageTitle = user && user.loggedIn ? "My Isaac" : "How we help students";
     const registrationButton = <div className="text-center">
         <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>Sign up</RS.Button>

@@ -88,7 +88,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: Isaa
     const dispatch = useDispatch();
     const userId = useSelector((state: AppState) => state?.user?.loggedIn && state.user.id || undefined);
     const units = useSelector((state: AppState) => state?.constants?.units || undefined);
-    const pageQuestions = useSelector(selectors.questions.getQuestions());
+    const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
 
     const currentAttempt = questionPart?.currentAttempt as QuantityDTO;

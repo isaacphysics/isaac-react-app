@@ -34,8 +34,8 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
         if (queryParams.topic) dispatch(fetchTopicSummary(queryParams.topic as TAG_ID));
     }, [queryParams.board, queryParams.topic, currentDocId, dispatch]);
 
-    const currentGameboard = useSelector(selectors.board.currentGameboard());
-    const currentTopic = useSelector(selectors.topic.currentTopic());
+    const currentGameboard = useSelector(selectors.board.currentGameboard);
+    const currentTopic = useSelector(selectors.topic.currentTopic);
     const examBoard = useCurrentExamBoard();
 
     if (doc === null || doc === NOT_FOUND) {

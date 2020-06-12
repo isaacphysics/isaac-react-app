@@ -1275,7 +1275,7 @@ export const showGroupInvitationModal = (firstTime: boolean) => async (dispatch:
 
 export const showGroupManagersModal = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const state = getState();
-    const group = selectors.groups.current()(state);
+    const group = selectors.groups.current(state);
     const user = state && state.user && state.user.loggedIn && state.user || null;
     const userIsOwner = group && user && group.ownerId == user.id || false;
     dispatch(openActiveModal(groupManagersModal(userIsOwner)) as any);

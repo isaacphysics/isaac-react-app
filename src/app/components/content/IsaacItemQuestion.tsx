@@ -14,7 +14,7 @@ interface IsaacItemQuestionProps {
 
 export const IsaacItemQuestion = ({doc, questionId}: IsaacItemQuestionProps) => {
     const dispatch = useDispatch();
-    const pageQuestions = useSelector(selectors.questions.getQuestions());
+    const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     const currentAttempt = questionPart?.currentAttempt as ItemChoiceDTO;
 

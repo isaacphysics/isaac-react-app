@@ -26,7 +26,7 @@ function toCSV<T>(items: Item<T>[]) {
 export const GameboardFilter = withRouter((props: {location: {hash?: string}}) => {
     const dispatch = useDispatch();
 
-    const gameboard = useSelector(selectors.board.currentGameboard());
+    const gameboard = useSelector(selectors.board.currentGameboard);
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>([]);
 

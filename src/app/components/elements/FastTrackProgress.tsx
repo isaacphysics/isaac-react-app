@@ -100,7 +100,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     const {questionHistory: qhs}: {questionHistory?: string} = queryString.parse(search);
     const questionHistory = qhs ? qhs.split(",") : [];
     const dispatch = useDispatch();
-    const gameboardMaybeNull = useSelector(selectors.board.currentGameboard());
+    const gameboardMaybeNull = useSelector(selectors.board.currentGameboard);
     const fasttrackConcepts = useSelector((appState: AppState) => appState && appState.fasttrackConcepts);
 
     const deviceSize = useDeviceSize();

@@ -8,7 +8,7 @@ import {selectors} from "../../../state/selectors";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
 
     return <div id="homepage" className="pb-5">
         <section id="call-to-action" className="homepageHero">

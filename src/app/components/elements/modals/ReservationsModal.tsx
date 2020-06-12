@@ -24,13 +24,13 @@ import {Link} from "react-router-dom";
 const ReservationsModal = () => {
     const dispatch = useDispatch();
     const user = useSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
-    const activeGroups = useSelector(selectors.groups.active());
+    const activeGroups = useSelector(selectors.groups.active);
     const activeFilteredGroups = useMemo(() => activeGroups?.filter(group => !group.archived), [activeGroups])?.sort((a: AppGroup, b: AppGroup): number => {
         if (!a.groupName || !b.groupName || (a.groupName === b.groupName)) return 0;
         if (a.groupName > b.groupName) return 1;
         return -1;
     });
-    const currentGroup = useSelector(selectors.groups.current());
+    const currentGroup = useSelector(selectors.groups.current);
     const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
     const eventBookingsForGroup = useSelector((state: AppState) => state && state.eventBookingsForGroup || []);
     const [unbookedUsers, setUnbookedUsers] = useState<AppGroupMembership[]>([]);

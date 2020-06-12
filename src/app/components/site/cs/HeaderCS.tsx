@@ -7,7 +7,7 @@ import {NavigationBarCS} from "./NavigationBarCS";
 import {selectors} from "../../../state/selectors";
 
 export const HeaderCS = () => {
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
     return <header className="light">
         <Container className="container-fluid px-0">
             <Row>

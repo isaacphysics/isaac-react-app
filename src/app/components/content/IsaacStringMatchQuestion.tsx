@@ -10,7 +10,7 @@ import {selectQuestionPart} from "../../services/questions";
 
 export const IsaacStringMatchQuestion = ({doc, questionId}: {doc: IsaacStringMatchQuestionDTO; questionId: string}) => {
     const dispatch = useDispatch();
-    const pageQuestions = useSelector(selectors.questions.getQuestions());
+    const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     const currentAttemptValue = questionPart?.currentAttempt?.value;
 

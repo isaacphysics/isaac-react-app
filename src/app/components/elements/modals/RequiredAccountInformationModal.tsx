@@ -25,7 +25,7 @@ import {selectors} from "../../../state/selectors";
 const RequiredAccountInfoBody = () => {
     // Redux state
     const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
     const userPreferences = useSelector((state: AppState) => state && state.userPreferences);
 
     // Local state

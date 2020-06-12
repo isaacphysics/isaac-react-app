@@ -10,7 +10,7 @@ import {selectors} from "../../state/selectors";
 export const EmailVerificationBanner = () => {
     const dispatch = useDispatch();
     const [hidden, setHidden] = useState(false);
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
     const status = user?.loggedIn && user?.emailVerificationStatus || null;
     const show = user?.loggedIn && status != "VERIFIED" && !hidden;
 

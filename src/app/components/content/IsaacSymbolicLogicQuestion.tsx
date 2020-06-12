@@ -15,7 +15,7 @@ import {useCurrentExamBoard} from "../../services/examBoard";
 import {selectQuestionPart} from "../../services/questions";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const pageQuestions = selectors.questions.getQuestions()(state);
+    const pageQuestions = selectors.questions.getQuestions(state);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     let r: {currentAttempt?: LogicFormulaDTO | null} = {};
     if (questionPart) {

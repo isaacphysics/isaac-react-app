@@ -40,7 +40,7 @@ interface EventDetailsProps {
 export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventDetailsProps) => {
     const dispatch = useDispatch();
     const event = useSelector((state: AppState) => state && state.currentEvent);
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
     useEffect(() => {dispatch(getEvent(eventId))}, [eventId]);
 
     const [bookingFormOpen, setBookingFormOpen] = useState(false);

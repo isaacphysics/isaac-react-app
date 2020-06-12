@@ -13,7 +13,7 @@ import _flattenDeep from 'lodash/flattenDeep';
 import {selectQuestionPart} from "../../services/questions";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const pageQuestions = selectors.questions.getQuestions()(state);
+    const pageQuestions = selectors.questions.getQuestions(state);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     let r: {currentAttempt?: ChemicalFormulaDTO | null} = {};
     if (questionPart) {

@@ -23,10 +23,10 @@ import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 
 export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId: string}}}) => {
     const dispatch = useDispatch();
-    const docWhichCouldBeQuiz = useSelector(selectors.doc.get());
+    const docWhichCouldBeQuiz = useSelector(selectors.doc.get);
     const doc = ACCEPTED_QUIZ_IDS.includes(match.params.quizId) ? docWhichCouldBeQuiz : NOT_FOUND;
-    const allQuestionsAttempted = useSelector(selectors.questions.allQuestionsAttempted());
-    const anyQuestionPreviouslyAttempted = useSelector(selectors.questions.anyQuestionPreviouslyAttempted());
+    const allQuestionsAttempted = useSelector(selectors.questions.allQuestionsAttempted);
+    const anyQuestionPreviouslyAttempted = useSelector(selectors.questions.anyQuestionPreviouslyAttempted);
 
     function submitQuiz(event: React.FormEvent) {
         if (event) {event.preventDefault();}

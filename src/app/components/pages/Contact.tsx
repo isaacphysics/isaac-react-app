@@ -56,7 +56,7 @@ const siteSpecific = {
 
 export const Contact = () => {
     const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
     const errorMessage = useSelector((state: AppState) => state?.error || null);
     const [presetSubject, presetMessage] = determineUrlQueryPresets(user);
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");

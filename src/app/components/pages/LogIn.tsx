@@ -11,8 +11,8 @@ export const LogIn = () => {
     useEffect( () => {document.title = "Login — Isaac " + SITE_SUBJECT_TITLE;}, []);
 
     const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull());
-    const errorMessage = useSelector(selectors.error.general());
+    const user = useSelector(selectors.user.orNull);
+    const errorMessage = useSelector(selectors.error.general);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [logInAttempted, setLoginAttempted] = useState(false);

@@ -14,7 +14,7 @@ import {AppState} from "../../../state/reducers";
 import {selectors} from "../../../state/selectors";
 import {bindActionCreators, Dispatch} from "redux";
 
-const mapStateToPropsForInvite = (state: AppState) => {return {group: selectors.groups.current()(state)};};
+const mapStateToPropsForInvite = (state: AppState) => {return {group: selectors.groups.current(state)};};
 
 interface CurrentGroupInviteModalProps {
     group: AppGroup | null;
@@ -86,7 +86,7 @@ export const groupInvitationModal = (firstTime: boolean) => {
 };
 
 const mapStateToPropsForManagers = (state: AppState) => {return {
-    group: selectors.groups.current()(state),
+    group: selectors.groups.current(state),
     user: state && state.user && state.user.loggedIn && state.user || null
 };};
 

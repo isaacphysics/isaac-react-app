@@ -9,7 +9,7 @@ import {selectors} from "../../state/selectors";
 
 export const TeacherFeatures = () => {
 
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
     const dispatch = useDispatch();
 
     const isDisabled = (isStudent(user) || !isLoggedIn(user));

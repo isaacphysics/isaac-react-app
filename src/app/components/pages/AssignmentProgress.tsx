@@ -62,7 +62,7 @@ const stateFromProps = (state: AppState) => {
             });
         }
 
-        const activeGroups = selectors.groups.active()(state);
+        const activeGroups = selectors.groups.active(state);
         if (activeGroups) {
             const activeGroupsWithAssignments = activeGroups.map(g => {
                 return {

@@ -37,7 +37,7 @@ const WrapperComponent = function({component: Component, trackingOptions, ...pro
 };
 
 export const TrackedRoute = function({component, trackingOptions, componentProps, ...rest}: TrackedRouteProps) {
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
     if (component) {
         if (rest.ifUser !== undefined) {
             const {ifUser, ...rest$} = rest;

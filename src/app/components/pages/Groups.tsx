@@ -46,8 +46,8 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 
 const stateFromProps = (state: AppState) => (state && {
-    groups: selectors.groups.groups()(state),
-    group: selectors.groups.current()(state)
+    groups: selectors.groups.groups(state),
+    group: selectors.groups.current(state)
 });
 const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal};
 

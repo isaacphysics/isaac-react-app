@@ -261,7 +261,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
 }
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const pageQuestions = selectors.questions.getQuestions()(state);
+    const pageQuestions = selectors.questions.getQuestions(state);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
 };

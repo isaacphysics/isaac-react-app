@@ -9,7 +9,7 @@ import {selectors} from "../../../state/selectors";
 
 export const TempExamBoardPicker = ({className, hideLabel = true}: {className?: string; hideLabel?: boolean}) => {
     const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
     const currentExamBoard = useCurrentExamBoard();
 
     return SITE_SUBJECT === SITE.CS ? <React.Fragment>

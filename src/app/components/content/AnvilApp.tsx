@@ -16,14 +16,14 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
     const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${sessionIdentifier}`;
     const title = doc.value || "Anvil app";
     const page = useSelector((state: AppState) => (state && state.doc) || null);
-    const user = useSelector(selectors.user.orNull());
+    const user = useSelector(selectors.user.orNull);
 
     const iframeRef = React.useRef() as RefObject<HTMLIFrameElement>;
 
     const accordionSectionId = useContext(AccordionSectionContext).id;
     const questionId = useContext(QuestionContext);
 
-    const pageQuestions = useSelector(selectors.questions.getQuestions());
+    const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
 
     const appParams: {[s: string]: string} = {};

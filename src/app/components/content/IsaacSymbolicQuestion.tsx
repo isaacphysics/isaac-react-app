@@ -41,7 +41,7 @@ function isError(p: {error: string} | any[]): p is {error: string} {
 }
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const pageQuestions = selectors.questions.getQuestions()(state);
+    const pageQuestions = selectors.questions.getQuestions(state);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     let r: {currentAttempt?: FormulaDTO | null} = {};
     if (questionPart) {

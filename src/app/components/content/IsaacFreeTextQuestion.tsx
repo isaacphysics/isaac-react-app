@@ -64,7 +64,7 @@ const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
 
 export const IsaacFreeTextQuestion = ({doc, questionId}: {doc: IsaacFreeTextQuestionDTO; questionId: string}) => {
     const dispatch = useDispatch();
-    const questionsOnPage = useSelector(selectors.questions.getQuestions());
+    const questionsOnPage = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(questionsOnPage, questionId);
     const currentAttemptValue = questionPart?.currentAttempt?.value || "";
     const validation = validate(currentAttemptValue);
