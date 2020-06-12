@@ -35,7 +35,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
             >
                 {activeModal.title}
             </RS.ModalHeader>
-            <RS.ModalBody className="pb-2 mx-4">
+            <RS.ModalBody className={`pb-2 mx-4 ${activeModal?.overflowVisible ? "overflow-visible" : ""}`}>
                 {typeof ModalBody === "function" ? <ModalBody /> : ModalBody}
             </RS.ModalBody>
             {activeModal.buttons &&

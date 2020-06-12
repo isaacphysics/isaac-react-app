@@ -1593,6 +1593,17 @@ export const getEventBookings = (eventId: string) => async (dispatch: Dispatch<A
     }
 };
 
+export const getEventBookingsForGroup = (eventId: string, groupId: number) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_REQUEST});
+        const response = await api.eventBookings.getEventBookingsForGroup(eventId, groupId);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS, eventBookingsForGroup: response.data});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
+    }
+}
+
 export const getEventBookingCSV = (eventId: string) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST});
@@ -1614,10 +1625,43 @@ export const bookMyselfOnEvent = (eventId: string, additionalInformation: Additi
             title: "Event booking confirmed", body: "You have been successfully booked onto this event.",
             color: "success", timeout: 5000, closable: false,
         }) as any);
-        dispatch(getEvent(eventId) as any);
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
+    }
+};
+
+export const reserveUsersOnEvent = (eventId: string, userIds: number[], groupId: number) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_RESERVATION_REQUEST});
+        await api.eventBookings.reserveUsersOnEvent(eventId, userIds);
+        await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
+        await dispatch(getEvent(eventId) as any);
+        dispatch({type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            title: "Reservations confirmed", body: "You have successfully reserved students onto this event.",
+            color: "success", timeout: 5000, closable: false,
+        }) as any);
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Reservation failed", error) as any);
+    }
+};
+
+export const cancelReservationsOnEvent = (eventId: string, userIds: number[], groupId: number) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_REQUEST});
+        await api.eventBookings.cancelUsersReservationsOnEvent(eventId, userIds);
+        await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
+        await dispatch(getEvent(eventId) as any);
+        dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            title: "Reservations cancelled", body: "You have successfully cancelled students reservations for this event.",
+            color: "success", timeout: 5000, closable: false,
+        }) as any);
+    } catch (error) {
+        dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Unable to cancel some of the reservations", error) as any);
     }
 };
 
@@ -1693,12 +1737,12 @@ export const resendUserConfirmationEmail = (eventBookingId: string, userId?: num
     }
 };
 
-export const promoteUserFromWaitingList = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
+export const promoteUserBooking = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
     const promote = window.confirm('Are you sure you want to convert this to a confirmed booking?');
     if (promote && userId) {
         try {
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_REQUEST});
-            await api.eventBookings.promoteUserFromWaitingList(eventBookingId, userId);
+            await api.eventBookings.promoteUserBooking(eventBookingId, userId);
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_RESPONSE_SUCCESS});
             dispatch(getEventBookings(eventBookingId) as any);
         } catch (error) {

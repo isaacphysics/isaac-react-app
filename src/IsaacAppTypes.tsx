@@ -1,10 +1,13 @@
 import React from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
+    AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
     ContentBase,
     ContentSummaryDTO,
+    GameboardDTO,
+    GameboardItem,
     ResultsWrapper,
     TestCaseDTO,
     TOTPSharedSecretDTO
@@ -316,6 +319,10 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS; eventBookings: ApiTypes.EventBookingDTO[]}
     | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS; eventBookingsForGroup: ApiTypes.EventBookingDTO[]}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_SUCCESS; eventBookingCSV: any}
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_FAILURE}
@@ -327,6 +334,14 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_BOOKING_USER_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_RESERVATION_REQUEST}
+    | {type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_REQUEST}
+    | {type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_SUCCESS}
@@ -509,6 +524,7 @@ export interface ActiveModal {
     title: string;
     body: any;
     buttons?: any[];
+    overflowVisible?: boolean;
 }
 
 export enum BoardOrder {
@@ -579,6 +595,7 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     isWaitingListOnly?: boolean;
     isNotClosed?: boolean;
     field?: "physics" | "maths";
+    userBookingStatus?: ApiTypes.BookingStatus;
 }
 
 export interface EventOverview {
@@ -753,3 +770,25 @@ export interface FreeTextRule extends Choice {
 }
 
 export type Concepts = ResultsWrapper<ContentSummaryDTO>;
+
+export type EnhancedGameboard = GameboardDTO & {
+    questions: (GameboardItem & { questionPartsTotal: number })[];
+};
+
+export type SingleEnhancedAssignment = AssignmentDTO & {
+    gameboard: EnhancedGameboard;
+};
+
+export interface PageSettings {
+    colourBlind: boolean;
+    setColourBlind: (newValue: boolean) => void;
+    formatAsPercentage: boolean;
+    setFormatAsPercentage: (newValue: boolean) => void;
+}
+
+export interface SingleProgressDetailsProps {
+    assignmentId: number;
+    assignment: SingleEnhancedAssignment;
+    progress: AppAssignmentProgress[];
+    pageSettings: PageSettings;
+}
