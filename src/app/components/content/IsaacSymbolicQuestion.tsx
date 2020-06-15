@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {connect, useSelector} from "react-redux";
+import {connect} from "react-redux";
 import * as RS from "reactstrap";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";

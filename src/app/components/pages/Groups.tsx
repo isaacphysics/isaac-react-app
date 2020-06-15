@@ -453,4 +453,4 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     </Container>;
 };
 
-export const Groups = connect(stateFromProps, dispatchFromProps)(GroupsPageComponent);
+export const Groups = connect(stateFromProps, dispatchFromProps)(GroupsPageComponent); // Cannot remove connect here yet because we depend on an dispatched action's result

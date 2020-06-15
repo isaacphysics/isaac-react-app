@@ -354,4 +354,4 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     </Container>;
 };
 
-export const SetAssignments = withRouter(connect(stateToProps, dispatchToProps)(SetAssignmentsPageComponent));
+export const SetAssignments = withRouter(connect(stateToProps, dispatchToProps)(SetAssignmentsPageComponent)); // Cautious about removing connect as there is a promise then callback on assignBoard

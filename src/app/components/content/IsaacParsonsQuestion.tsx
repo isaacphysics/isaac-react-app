@@ -267,4 +267,4 @@ const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
 };
 const dispatchToProps = {setCurrentAttempt};
 
-export const IsaacParsonsQuestion = connect(stateToProps, dispatchToProps)(IsaacParsonsQuestionComponent);
+export const IsaacParsonsQuestion = connect(stateToProps, dispatchToProps)(IsaacParsonsQuestionComponent); // Cannot remove connect as this is a class based component
