@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {connect, ResolveThunks, useDispatch, useSelector} from "react-redux";
+import {connect, ResolveThunks, useSelector} from "react-redux";
 import {sortBy} from "lodash";
 import {history} from "../../../services/history";
 import * as RS from "reactstrap";
@@ -8,8 +8,14 @@ import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../Isa
 import {Action, AppGroup} from "../../../../IsaacAppTypes";
 
 import {store} from "../../../state/store";
-import {closeActiveModal, selectGroup, addGroupManager, deleteGroupManager, showGroupInvitationModal,
-    showGroupManagersModal} from "../../../state/actions";
+import {
+    addGroupManager,
+    closeActiveModal,
+    deleteGroupManager,
+    selectGroup,
+    showGroupInvitationModal,
+    showGroupManagersModal
+} from "../../../state/actions";
 import {AppState} from "../../../state/reducers";
 import {selectors} from "../../../state/selectors";
 import {bindActionCreators, Dispatch} from "redux";

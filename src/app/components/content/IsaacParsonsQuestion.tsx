@@ -1,5 +1,5 @@
 import React from "react";
-import {connect, useSelector} from "react-redux";
+import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
