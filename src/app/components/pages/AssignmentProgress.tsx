@@ -1,5 +1,5 @@
 import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {connect, useDispatch} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {
     Button,
     Col,
@@ -33,9 +33,9 @@ import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
 
-const stateFromProps = (state: AppState) => {
+function selectGroups(state: AppState) {
     if (state != null) {
-        const gameboards: { [id: string]: GameboardDTO} = {};
+        const gameboards: {[id: string]: GameboardDTO} = {};
         if (state.boards && state.boards.boards) {
             state.boards.boards.boards.forEach(board => {
                 gameboards[board.id as string] = board;
@@ -78,7 +78,7 @@ const stateFromProps = (state: AppState) => {
     return {
         groups: null
     };
-};
+}
 
 type EnhancedAssignment = AssignmentDTO & {
     gameboard: EnhancedGameboard;
@@ -510,9 +510,9 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
     </React.Fragment>;
 };
 
-const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => {
+export function AssignmentProgress(props: AssignmentProgressPageProps) {
     const dispatch = useDispatch();
-    const {groups} = props;
+    const {groups} = useSelector(selectGroups);
 
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
@@ -536,7 +536,7 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
     useEffect(() => {
         dispatch(loadGroups(false));
         dispatch(loadAssignmentsOwnedByMe());
-    }, []);
+    }, [dispatch]);
 
     return <React.Fragment>
         <Container>
@@ -572,6 +572,4 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
             </ShowLoading>
         </div>
     </React.Fragment>;
-};
-
-export const AssignmentProgress = connect(stateFromProps)(AssignmentProgressPageComponent);
+}
