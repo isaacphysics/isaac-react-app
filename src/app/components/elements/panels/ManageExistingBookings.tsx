@@ -6,7 +6,8 @@ import {AppState} from "../../../state/reducers";
 import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {
     cancelUserBooking,
-    deleteUserBooking, getEventBookingCSV,
+    deleteUserBooking,
+    getEventBookingCSV,
     getEventBookings,
     promoteUserBooking,
     resendUserConfirmationEmail

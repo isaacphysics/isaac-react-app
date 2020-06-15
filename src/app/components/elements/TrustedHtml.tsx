@@ -3,11 +3,12 @@ import katex from "katex";
 import 'katex/dist/contrib/mhchem.js';
 import renderA11yString from '../../services/katex-a11y';
 import he from "he";
-import {LoggedInUser, FigureNumberingContext, FigureNumbersById} from "../../../IsaacAppTypes";
+import {FigureNumberingContext, FigureNumbersById, LoggedInUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
 import {EXAM_BOARD} from "../../services/constants";
 import {useCurrentExamBoard} from "../../services/examBoard";
+import {selectors} from "../../state/selectors";
 
 type MathJaxMacro = string|[string, number];
 
@@ -323,7 +324,7 @@ function manipulateHtml(html: string) {
 }
 
 export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
-    const user = useSelector((state: AppState) => state && state.user || null);
+    const user = useSelector(selectors.user.orNull);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
     const examBoard = useCurrentExamBoard();

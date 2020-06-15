@@ -1,36 +1,24 @@
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {connect, useDispatch, useSelector} from "react-redux";
-import {adminModifyUserRoles, adminModifyUserEmailVerificationStatuses, adminUserDelete, adminUserSearch, getUserIdSchoolLookup} from "../../state/actions";
-import {AdminUserSearchState, AppState} from "../../state/reducers";
-import {RegisteredUserDTO, Role, EmailVerificationStatus} from "../../../IsaacApiTypes";
+import {useDispatch, useSelector} from "react-redux";
+import {
+    adminModifyUserEmailVerificationStatuses,
+    adminModifyUserRoles,
+    adminUserDelete,
+    adminUserSearch,
+    getUserIdSchoolLookup
+} from "../../state/actions";
+import {AppState} from "../../state/reducers";
+import {EmailVerificationStatus, Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
 import {Link} from "react-router-dom";
 
-const stateToProps = (state: AppState) => {
-    return {
-        searchResults: state && state.adminUserSearch || null,
-        currentUser: state && state.user || null
-    };
-};
-const dispatchToProps = {adminUserSearch, adminModifyUserRoles, adminModifyUserEmailVerificationStatuses, adminUserDelete};
-
-interface AdminUserMangerProps {
-    user: LoggedInUser;
-    currentUser: RegisteredUserDTO | null;
-    adminUserSearch: (query: {}) => void;
-    adminUserDelete: (userid: number | undefined) => void;
-    searchResults: AdminUserSearchState;
-    adminModifyUserRoles: (role: Role, userIds: number[]) => void;
-    adminModifyUserEmailVerificationStatuses: (status: EmailVerificationStatus, userIds: string[]) => void;
-}
-
-const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUserRoles, adminModifyUserEmailVerificationStatuses, adminUserDelete, searchResults}: AdminUserMangerProps) => {
+export const AdminUserManager = () => {
     const dispatch = useDispatch();
+    const searchResults = useSelector((state: AppState) => state?.adminUserSearch || null);
     const [userUpdating, setUserUpdating] = useState(false);
     const [searchRequested, setSearchRequested] = useState(false);
     const [searchQuery, setSearchQuery] = useState({
@@ -44,18 +32,18 @@ const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUse
     });
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
     const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
+    const currentUser = useSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
     let promotableRoles: Role[] = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
     const verificationStatuses: EmailVerificationStatus[] = ["NOT_VERIFIED", "DELIVERY_FAILED"];
     if (currentUser && currentUser.role == "ADMIN") {
         promotableRoles = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"];
     }
 
-
     useEffect(() => {
         if (searchResults && searchResults.length > 0) {
             dispatch(getUserIdSchoolLookup(searchResults.map((result) => result.id).filter((result) => result != undefined) as number[]));
         }
-    }, [searchResults]);
+    }, [dispatch, searchResults]);
 
     const updateQuery = (update: {[key: string]: string | null}) => {
         // Replace empty strings with nulls
@@ -99,8 +87,8 @@ const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUse
         let confirmed = (role === "STUDENT") || confirmUnverifiedUserPromotions();
         if (confirmed) {
             setUserUpdating(true);
-            await adminModifyUserRoles(role, selectedUserIds);
-            adminUserSearch(searchQuery);
+            await dispatch(adminModifyUserRoles(role, selectedUserIds));
+            dispatch(adminUserSearch(searchQuery));
             setSelectedUserIds([]);
             setUserUpdating(false);
         }
@@ -109,16 +97,16 @@ const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUse
     const modifyUserEmailVerificationStatusesAndUpdateResults = async (status: EmailVerificationStatus) => {
         setUserUpdating(true);
         const selectedEmails = searchResults?.filter(user => user.id && selectedUserIds.includes(user.id)).map(user => user.email || '') || [];
-        await adminModifyUserEmailVerificationStatuses(status, selectedEmails);
-        adminUserSearch(searchQuery);
+        await dispatch(adminModifyUserEmailVerificationStatuses(status, selectedEmails));
+        dispatch(adminUserSearch(searchQuery));
         setSelectedUserIds([]);
         setUserUpdating(false);
-    }
+    };
 
     const search = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSearchRequested(true);
-        adminUserSearch(searchQuery);
+        dispatch(adminUserSearch(searchQuery));
     };
 
     const editUser = (userid: number | undefined) => {
@@ -126,8 +114,8 @@ const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUse
     };
 
     const deleteUser = async (userid: number | undefined) => {
-        await adminUserDelete(userid);
-        adminUserSearch(searchQuery);
+        await dispatch(adminUserDelete(userid));
+        dispatch(adminUserSearch(searchQuery));
     };
 
     return <RS.Container>
@@ -340,5 +328,3 @@ const AdminUserManagerComponent = ({currentUser, adminUserSearch, adminModifyUse
         </RS.Card>
     </RS.Container>;
 };
-
-export const AdminUserManager = connect(stateToProps, dispatchToProps)(AdminUserManagerComponent);

@@ -57,7 +57,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
             dispatch(getProgress(userIdOfInterest));
             dispatch(getAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
         }
-    }, [userIdOfInterest, viewingOwnData, user, dispatch]);
+    }, [dispatch, userIdOfInterest, viewingOwnData, user]);
 
     const tabRefs: FlushableRef[] = [useRef(), useRef()];
 

@@ -1,55 +1,41 @@
 import React from "react";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {AppState} from "../../state/reducers";
-import {ChoiceDTO, IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
+import {IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
 import {CustomInput, Label} from "reactstrap";
-import {questions} from "../../state/selectors";
-
-const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = questions.selectQuestionPart(questionId)(state);
-    return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
-};
-const dispatchToProps = {setCurrentAttempt};
+import {selectors} from "../../state/selectors";
+import {selectQuestionPart} from "../../services/questions";
 
 interface IsaacMultiChoiceQuestionProps {
     doc: IsaacMultiChoiceQuestionDTO;
     questionId: string;
-    currentAttempt?: ChoiceDTO;
-    setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => void;
 }
+export const IsaacMultiChoiceQuestion = ({doc, questionId}: IsaacMultiChoiceQuestionProps) => {
+    const dispatch = useDispatch();
+    const pageQuestions = useSelector(selectors.questions.getQuestions);
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
+    const currentAttemptValue = questionPart?.currentAttempt?.value;
 
-const IsaacMultiChoiceQuestionComponent = (props: IsaacMultiChoiceQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
-    const currentAttemptValue = currentAttempt && currentAttempt.value;
-
-    return (
-        <div className="multichoice-question">
-            <div className="question-content">
-                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
-                    {doc.children}
-                </IsaacContentValueOrChildren>
-            </div>
-
-            <ul>{doc.choices && doc.choices.map((choice, index) =>
-                <li key={choice.value} className="list-unstyled">
-                    <Label className="label-radio multichoice-option d-flex">
-                        <CustomInput
-                            id={`${questionId}${index}`}
-                            color="secondary"
-                            type="radio"
-                            checked={currentAttemptValue == choice.value}
-                            onChange={() => setCurrentAttempt(questionId, choice)}
-                        />
-                        <div className="flex-fill">
-                            <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} />
-                        </div>
-                    </Label>
-                </li>)
-            }</ul>
+    return <div className="multichoice-question">
+        <div className="question-content">
+            <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                {doc.children}
+            </IsaacContentValueOrChildren>
         </div>
-    );
+        <ul>{doc?.choices?.map((choice, index) =>
+            <li key={choice.value} className="list-unstyled">
+                <Label className="label-radio multichoice-option d-flex">
+                    <CustomInput
+                        id={`${questionId}${index}`} color="secondary" type="radio"
+                        checked={currentAttemptValue == choice.value}
+                        onChange={() => dispatch(setCurrentAttempt(questionId, choice))}
+                    />
+                    <div className="flex-fill">
+                        <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} />
+                    </div>
+                </Label>
+            </li>)}
+        </ul>
+    </div>;
 };
-
-export const IsaacMultiChoiceQuestion = connect(stateToProps, dispatchToProps)(IsaacMultiChoiceQuestionComponent);

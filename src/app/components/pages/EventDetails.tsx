@@ -22,9 +22,10 @@ import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
-import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isLoggedIn, isStaff, isStudent, isTeacher} from "../../services/user";
+import {selectors} from "../../state/selectors";
+import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
 import {formatEventDetailsDate, studentOnlyEventMessage} from "../../services/events";
 
@@ -39,8 +40,8 @@ interface EventDetailsProps {
 export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventDetailsProps) => {
     const dispatch = useDispatch();
     const event = useSelector((state: AppState) => state && state.currentEvent);
-    const user = useSelector((state: AppState) => state && state.user);
-    useEffect(() => {dispatch(getEvent(eventId))}, [eventId]);
+    const user = useSelector(selectors.user.orNull);
+    useEffect(() => {dispatch(getEvent(eventId))}, [dispatch, eventId]);
 
     const [bookingFormOpen, setBookingFormOpen] = useState(false);
     const [additionalInformation, setAdditionalInformation] = useState<AdditionalInformation>({});

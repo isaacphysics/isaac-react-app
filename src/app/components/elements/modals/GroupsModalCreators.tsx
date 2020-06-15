@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {connect, ResolveThunks} from "react-redux";
+import {connect, ResolveThunks, useSelector} from "react-redux";
 import {sortBy} from "lodash";
 import {history} from "../../../services/history";
 import * as RS from "reactstrap";
@@ -8,20 +8,25 @@ import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../Isa
 import {Action, AppGroup} from "../../../../IsaacAppTypes";
 
 import {store} from "../../../state/store";
-import {closeActiveModal, selectGroup, addGroupManager, deleteGroupManager, showGroupInvitationModal,
-    showGroupManagersModal} from "../../../state/actions";
+import {
+    addGroupManager,
+    closeActiveModal,
+    deleteGroupManager,
+    selectGroup,
+    showGroupInvitationModal,
+    showGroupManagersModal
+} from "../../../state/actions";
 import {AppState} from "../../../state/reducers";
-import {groups} from "../../../state/selectors";
+import {selectors} from "../../../state/selectors";
 import {bindActionCreators, Dispatch} from "redux";
 
-const mapStateToPropsForInvite = (state: AppState) => {return {group: groups.current(state)};};
 
 interface CurrentGroupInviteModalProps {
-    group: AppGroup | null;
     firstTime: boolean;
 }
 
-const CurrentGroupInviteModal = ({group, firstTime}: CurrentGroupInviteModalProps) => {
+const CurrentGroupInviteModal = ({firstTime}: CurrentGroupInviteModalProps) => {
+    const group = useSelector(selectors.groups.current);
     return group && <React.Fragment>
         {firstTime && <h1>Invite users</h1>}
 
@@ -47,13 +52,11 @@ const CurrentGroupInviteModal = ({group, firstTime}: CurrentGroupInviteModalProp
     </React.Fragment>;
 };
 
-const ConnectedCurrentGroupInviteModal = connect(mapStateToPropsForInvite)(CurrentGroupInviteModal);
-
 export const groupInvitationModal = (firstTime: boolean) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         title: firstTime ? "Group Created" : "Invite Users",
-        body: <ConnectedCurrentGroupInviteModal firstTime={firstTime} />,
+        body: <CurrentGroupInviteModal firstTime={firstTime} />,
         buttons: [
             <RS.Row key={0}>
                 <RS.Col>
@@ -86,7 +89,7 @@ export const groupInvitationModal = (firstTime: boolean) => {
 };
 
 const mapStateToPropsForManagers = (state: AppState) => {return {
-    group: groups.current(state),
+    group: selectors.groups.current(state),
     user: state && state.user && state.user.loggedIn && state.user || null
 };};
 

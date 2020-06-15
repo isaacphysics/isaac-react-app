@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Button, Container} from "reactstrap";
-import {loadAssignmentsOwnedByMe, loadProgress, openActiveModal, loadBoard} from "../../state/actions";
+import {loadAssignmentsOwnedByMe, loadBoard, loadProgress, openActiveModal} from "../../state/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {SingleProgressDetailsProps} from "../../../IsaacAppTypes";
@@ -41,7 +41,7 @@ export const SingleAssignmentProgress = () => {
     useEffect(() => {
         dispatch(loadProgress({_id: assignmentId}));
         dispatch(loadAssignmentsOwnedByMe());
-    }, []);
+    }, [dispatch, assignmentId]);
 
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
@@ -56,7 +56,7 @@ export const SingleAssignmentProgress = () => {
         })[0];
         let boardId = thisAssignment?.gameboardId;
         boardId && dispatch(loadBoard(boardId));
-    }, [myOwnedAssignments]);
+    }, [dispatch, myOwnedAssignments]);
 
     const assignmentProgress = useSelector((state: AppState) => {
         return state?.progress

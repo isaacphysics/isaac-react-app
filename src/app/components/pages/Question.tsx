@@ -3,12 +3,10 @@ import * as RS from "reactstrap";
 import {Col, Container, Row} from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState} from "../../state/reducers";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, TAG_ID} from "../../services/constants";
+import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, NOT_FOUND, TAG_ID} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
@@ -20,7 +18,7 @@ import {RelatedContent} from "../elements/RelatedContent";
 import {isStudent, isTeacher} from "../../services/user";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
-import {doc as selectDoc} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
@@ -50,8 +48,9 @@ function getTags(docTags?: string[]) {
 
 export const Question = withRouter(({questionIdOverride, match, location}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
-    const doc = useSelector(selectDoc.ifNotAQuizId(questionId));
-    const user = useSelector((state: AppState) => state && state.user);
+    const docWhichCouldBeQuestion = useSelector(selectors.doc.get);
+    const doc = ACCEPTED_QUIZ_IDS.includes(questionId) ? NOT_FOUND : docWhichCouldBeQuestion;
+    const user = useSelector(selectors.user.orNull);
     const navigation = useNavigation(doc);
 
     const dispatch = useDispatch();
@@ -59,7 +58,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
         if (!ACCEPTED_QUIZ_IDS.includes(questionId)) {
             dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, questionId));
         }
-    }, [questionId, dispatch]);
+    }, [dispatch, questionId]);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;

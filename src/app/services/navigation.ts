@@ -9,7 +9,7 @@ import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopic
 import {useCurrentExamBoard} from "./examBoard";
 import {ContentDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {board, topic} from "../state/selectors";
+import {selectors} from "../state/selectors";
 
 export interface LinkInfo {title: string; to?: string}
 export type CollectionType = "Gameboard" | "Topic" | "Master Mathematics";
@@ -34,8 +34,8 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
         if (queryParams.topic) dispatch(fetchTopicSummary(queryParams.topic as TAG_ID));
     }, [queryParams.board, queryParams.topic, currentDocId, dispatch]);
 
-    const currentGameboard = useSelector(board.currentGameboard);
-    const currentTopic = useSelector(topic.currentTopic);
+    const currentGameboard = useSelector(selectors.board.currentGameboard);
+    const currentTopic = useSelector(selectors.topic.currentTopic);
     const examBoard = useCurrentExamBoard();
 
     if (doc === null || doc === NOT_FOUND) {

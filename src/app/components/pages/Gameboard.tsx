@@ -1,36 +1,18 @@
 import React, {useEffect} from "react";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Link, withRouter} from "react-router-dom"
 import {loadGameboard, logAction} from "../../state/actions";
 import * as RS from "reactstrap"
 import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
-import {AppState} from "../../state/reducers";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {LoggedInUser, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {NOT_FOUND, TAG_ID} from "../../services/constants";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
-import {board} from "../../state/selectors";
-
-const stateFromProps = (state: AppState) => {
-    return state && {
-        gameboard: board.currentGameboardOrNotFound(state),
-        user: state.user,
-    };
-};
-const dispatchFromProps = {loadGameboard, logAction};
-
-interface GameboardPageProps {
-    location: {hash: string};
-    gameboard: GameboardDTO | NOT_FOUND_TYPE | null;
-    loadGameboard: (gameboardId: string | null) => void;
-    logAction: (eventDetails: object) => void;
-    user: LoggedInUser | null;
-}
+import {selectors} from "../../state/selectors";
 
 function getTags(docTags?: string[]) {
     if (SITE_SUBJECT !== SITE.PHY) {
@@ -79,7 +61,7 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
 export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => {
     return <RS.Row className={className}>
         <RS.Col lg={{size: 10, offset: 1}}>
-            <RS.ListGroup className="link-list list-group-links list-gameboard">
+            <RS.ListGroup className="link-list list-group-links list-gameboard">a
                 {gameboard && gameboard.questions && gameboard.questions.map(
                     gameboardItem.bind(null, gameboard)
                 )}
@@ -88,17 +70,20 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
     </RS.Row>;
 };
 
-const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboard, logAction}: GameboardPageProps) => {
+export const Gameboard = withRouter(({location: {hash}}: {location: {hash: string}}) => {
+    const dispatch = useDispatch();
+    const gameboard = useSelector(selectors.board.currentGameboardOrNotFound);
+    const user = useSelector(selectors.user.orNull);
     let gameboardId = hash ? hash.slice(1) : null;
 
-    useEffect(() => {loadGameboard(gameboardId);}, [gameboardId]);
+    useEffect(() => {dispatch(loadGameboard(gameboardId))}, [dispatch, gameboardId]);
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
         if (gameboard !== null && gameboard !== NOT_FOUND) {
-            logAction({type: "VIEW_GAMEBOARD_BY_ID", gameboardId: gameboard.id});
+            dispatch(logAction({type: "VIEW_GAMEBOARD_BY_ID", gameboardId: gameboard.id}));
         }
-    }, [gameboard]);
+    }, [dispatch, gameboard]);
 
     const userButtons = user && isTeacher(user) ?
         <RS.Row className="col-8 offset-2">
@@ -150,6 +135,4 @@ const GameboardPageComponent = ({location: {hash}, gameboard, user, loadGameboar
         </RS.Container>
         :
         <Redirect to={{[SITE.PHY]: "/gameboards/new", [SITE.CS]: "/gameboards#example-gameboard"}[SITE_SUBJECT]} />
-};
-
-export const Gameboard = withRouter(connect(stateFromProps, dispatchFromProps)(GameboardPageComponent));
+});

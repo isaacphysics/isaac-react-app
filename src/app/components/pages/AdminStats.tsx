@@ -1,21 +1,10 @@
 import React, {useEffect} from 'react';
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {getAdminSiteStats} from "../../state/actions";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AdminStatsState, AppState} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
-
-const stateToProps = (state: AppState) => ({
-    adminStats: state && state.adminStats || null,
-});
-
-const dispatchToProps = {getAdminSiteStats};
-
-interface AdminPageProps {
-    adminStats: AdminStatsState;
-    getAdminSiteStats: () => void;
-}
 
 function asPercentage(value: number | undefined, total: number)  {
     return value !== undefined ? Math.round(100 * value / total) : 0;
@@ -26,11 +15,10 @@ function addTotalToMapOfCounts(counts: {[key: string]: number}) {
     counts['TOTAL'] = Object.values(counts).reduce((a, b) => a + b, 0);
 }
 
-const AdminStatsPageComponent = ({adminStats, getAdminSiteStats}: AdminPageProps) => {
-    useEffect(() => {
-        getAdminSiteStats();
-    }, []);
-
+export const AdminStats = () => {
+    const dispatch = useDispatch();
+    useEffect(() => {dispatch(getAdminSiteStats());}, []);
+    const adminStats = useSelector((state: AppState) => state?.adminStats || null);
 
     if (adminStats != null) {
         // Add total value to each of the active user ranges
@@ -170,5 +158,3 @@ const AdminStatsPageComponent = ({adminStats, getAdminSiteStats}: AdminPageProps
         </ShowLoading>
     </RS.Container>;
 };
-
-export const AdminStats = connect(stateToProps, dispatchToProps)(AdminStatsPageComponent);

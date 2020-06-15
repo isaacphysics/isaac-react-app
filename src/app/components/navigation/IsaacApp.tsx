@@ -52,7 +52,7 @@ import {AddGameboard} from "../handlers/AddGameboard";
 import {isTest} from "../../services/constants";
 import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
-import {RedirectToEvent} from "../navigation/RedirectToEvent";
+import {RedirectToEvent} from "./RedirectToEvent";
 import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
@@ -86,13 +86,13 @@ export const IsaacApp = () => {
         dispatch(requestCurrentUser());
         dispatch(requestConstantsSegueEnvironment());
         dispatch(fetchGlossaryTerms());
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         if (isLoggedIn(user)) {
             dispatch(requestNotifications());
         }
-    }, [user]);
+    }, [dispatch, user]);
 
     useEffect(() => {
         const dateNow = new Date();
@@ -100,7 +100,7 @@ export const IsaacApp = () => {
             dispatch(openActiveModal(notificationModal(notifications[0])));
             persistence.save(KEY.LAST_NOTIFICATION_TIME, dateNow.toString())
         }
-    }, [notifications]);
+    }, [dispatch, user, notifications]);
 
     // Render
     return <Router history={history}>

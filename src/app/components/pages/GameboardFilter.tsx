@@ -10,7 +10,7 @@ import {Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
 import {generateTemporaryGameboard, loadGameboard} from '../../state/actions';
 import {ShowLoading} from "../handlers/ShowLoading";
-import {board} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 interface Item<T> {
     value: T;
@@ -26,7 +26,7 @@ function toCSV<T>(items: Item<T>[]) {
 export const GameboardFilter = withRouter((props: {location: {hash?: string}}) => {
     const dispatch = useDispatch();
 
-    const gameboard = useSelector(board.currentGameboard);
+    const gameboard = useSelector(selectors.board.currentGameboard);
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>([]);
 

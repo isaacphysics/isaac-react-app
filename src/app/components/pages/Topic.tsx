@@ -22,7 +22,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
 
     useEffect(
         () => {dispatch(fetchTopicSummary(topicName))},
-        [topicName]
+        [dispatch, topicName]
     );
 
     let [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage, examBoard);
