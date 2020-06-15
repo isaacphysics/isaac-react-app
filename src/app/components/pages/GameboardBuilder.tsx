@@ -35,6 +35,7 @@ import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
+import intersection from "lodash/intersection";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -223,6 +224,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                     id="gameboard-save-button" type="button" value="Save gameboard" disabled={!canSubmit}
                     className={"btn btn-block btn-secondary border-0 mt-2"} aria-describedby="gameboard-help"
                     onClick={() => {
+                        // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
                         let wildcard = undefined;
                         if (wildcardId && resourceFound(wildcards) && wildcards.length > 0) {
                             wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
@@ -233,7 +235,17 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         if (SITE_SUBJECT == SITE.CS) {
                             subjects.push("computer_science");
                         } else {
-                            subjects.push("physics");
+                            const definedSubjects = ["physics", "maths", "chemistry"];
+                            selectedQuestions?.forEach((item) => {
+                                let tags = intersection(definedSubjects, item.tags || []);
+                                tags.forEach((tag: string) => subjects.push(tag));
+                            }
+                            );
+                            // If none of the questions have a subject tag, default to physics
+                            if (subjects.length === 0) {
+                                subjects.push("physics");
+                            }
+                            subjects = Array.from(new Set(subjects));
                         }
 
                         dispatch(createGameboard({
