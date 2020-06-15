@@ -51,7 +51,7 @@ export const Search = withRouter((props: {history: History; location: Location})
             setSearchFilterConcepts(concepts);
             dispatch(fetchSearch(query, calculateSearchTypes(problems, concepts)));
         },
-        [query, problems, concepts]
+        [dispatch, query, problems, concepts]
     );
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {

@@ -14,9 +14,9 @@ export const EventsCarousel = () => {
     useEffect(() => {
         dispatch(getEventsPodList(NUMBER_OF_EVENTS_IN_CAROUSEL));
         return function cleanUp() { dispatch(clearEventsList); }
-    }, []);
+    }, [dispatch]);
 
-    return <ShowLoading until={eventsState} thenRender={({events, total}) => <div className="events-carousel">
+    return <ShowLoading until={eventsState} thenRender={({events}) => <div className="events-carousel">
         <ResponsiveCarousel groupingLimit={3}>
             {events.map((event, index) => <EventCard event={event} pod key={index} />)}
         </ResponsiveCarousel>

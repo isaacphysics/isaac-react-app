@@ -12,7 +12,7 @@ interface ProviderCallbackHandlerProps {
 export const ProviderCallbackHandler = withRouter((props: ProviderCallbackHandlerProps) => {
     const {match: {params: {provider}}, location: {search}} = props;
     const dispatch = useDispatch();
-    useEffect(() => {dispatch(handleProviderCallback(provider, search))}, [handleProviderCallback, provider, search]);
+    useEffect(() => {dispatch(handleProviderCallback(provider, search))}, [dispatch, provider, search]);
 
     return <React.Fragment>
         <div className="w-100 text-center">

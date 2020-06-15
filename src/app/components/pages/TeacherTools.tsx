@@ -20,7 +20,7 @@ export const TeacherTools = () => {
         if (!achievementsSelector) {
             dispatch(getProgress());
         }
-    }, [user]);
+    }, [dispatch, user]);
 
     const pageTitle = user && isTeacher(user) ? "Teacher tools" : "How we help teachers";
 

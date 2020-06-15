@@ -22,7 +22,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
         if (!isOpen) {
             dispatch(closeActiveModal());
         }
-    }, [isOpen]);
+    }, [dispatch, isOpen]);
 
     return <RS.Modal toggle={toggle} isOpen={isOpen} size={(activeModal && activeModal.size) || "lg"}>
         {activeModal && <React.Fragment>

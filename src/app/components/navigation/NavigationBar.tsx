@@ -59,7 +59,7 @@ export const useAssignmentBadge = () => {
         if (user?.loggedIn) {
             dispatch(loadMyAssignments());
         }
-    }, [user]);
+    }, [dispatch, user]);
 
     const assignmentBadge = useSelector((state: AppState) => {
         if (state?.assignments) {

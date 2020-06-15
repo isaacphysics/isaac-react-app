@@ -3,7 +3,6 @@ import * as RS from "reactstrap";
 import {Col, Container, Row} from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
@@ -59,7 +58,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
         if (!ACCEPTED_QUIZ_IDS.includes(questionId)) {
             dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, questionId));
         }
-    }, [questionId, dispatch]);
+    }, [dispatch, questionId]);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;

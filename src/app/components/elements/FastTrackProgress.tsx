@@ -121,7 +121,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             const upper = uppers.pop() || "";
             dispatch(fetchFasttrackConcepts(gameboardMaybeNull.id as string, doc.title as string, upper));
         }
-    }, [gameboardMaybeNull, doc, conceptQuestions]);
+    }, [dispatch, gameboardMaybeNull, doc, conceptQuestions]);
 
     if (gameboardMaybeNull === null && conceptQuestions === null) return null;
 

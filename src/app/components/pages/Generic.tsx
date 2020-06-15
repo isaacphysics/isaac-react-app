@@ -25,7 +25,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
     const pageId = pageIdOverride || params.pageId;
 
     const dispatch = useDispatch();
-    useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.GENERIC, pageId))}, [pageId]);
+    useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.GENERIC, pageId))}, [dispatch, pageId]);
     const doc = useSelector((state: AppState) => state?.doc || null);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {

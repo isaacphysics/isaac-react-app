@@ -12,8 +12,8 @@ import {Assignments} from "../elements/Assignments";
 
 export const MyAssignments = () => {
     const dispatch = useDispatch();
-    useEffect(() => {dispatch(loadMyAssignments())}, []);
-    useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}))}, []);
+    useEffect(() => {dispatch(loadMyAssignments())}, [dispatch]);
+    useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}))}, [dispatch]);
 
     const assignments = useSelector((state: AppState) => state?.assignments || null);
     const myAssignments = filterAssignmentsByStatus(assignments);

@@ -41,7 +41,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
     const dispatch = useDispatch();
     const event = useSelector((state: AppState) => state && state.currentEvent);
     const user = useSelector(selectors.user.orNull);
-    useEffect(() => {dispatch(getEvent(eventId))}, [eventId]);
+    useEffect(() => {dispatch(getEvent(eventId))}, [dispatch, eventId]);
 
     const [bookingFormOpen, setBookingFormOpen] = useState(false);
     const [additionalInformation, setAdditionalInformation] = useState<AdditionalInformation>({});

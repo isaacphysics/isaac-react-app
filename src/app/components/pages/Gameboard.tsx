@@ -61,7 +61,7 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
 export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => {
     return <RS.Row className={className}>
         <RS.Col lg={{size: 10, offset: 1}}>
-            <RS.ListGroup className="link-list list-group-links list-gameboard">
+            <RS.ListGroup className="link-list list-group-links list-gameboard">a
                 {gameboard && gameboard.questions && gameboard.questions.map(
                     gameboardItem.bind(null, gameboard)
                 )}
@@ -76,7 +76,7 @@ export const Gameboard = withRouter(({location: {hash}}: {location: {hash: strin
     const user = useSelector(selectors.user.orNull);
     let gameboardId = hash ? hash.slice(1) : null;
 
-    useEffect(() => {dispatch(loadGameboard(gameboardId))}, [gameboardId]);
+    useEffect(() => {dispatch(loadGameboard(gameboardId))}, [dispatch, gameboardId]);
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {

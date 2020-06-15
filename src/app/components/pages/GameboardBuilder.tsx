@@ -12,7 +12,6 @@ import {
     logAction,
     openActiveModal
 } from "../../state/actions";
-import {store} from "../../state/store";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import {AppState} from "../../state/reducers";
@@ -73,7 +72,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
         }
     };
 
-    useEffect(() => {if (!wildcards) dispatch(getWildcards())}, [user]);
+    useEffect(() => {if (!wildcards) dispatch(getWildcards())}, [dispatch, user, wildcards]);
     useEffect(() => {
         if (baseGameboardId && (!baseGameboard)) {
             dispatch(loadGameboard(baseGameboardId));
@@ -196,7 +195,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                                                 onClick={() => {
                                                                     logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
                                                                     dispatch(openActiveModal({
-                                                                        closeAction: () => {store.dispatch(closeActiveModal())},
+                                                                        closeAction: () => {dispatch(closeActiveModal())},
                                                                         size: "xl",
                                                                         title: "Search questions",
                                                                         body: <QuestionSearchModal
@@ -262,7 +261,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         }));
 
                         dispatch(openActiveModal({
-                            closeAction: () => {store.dispatch(closeActiveModal())},
+                            closeAction: () => {dispatch(closeActiveModal())},
                             title: "Gameboard created",
                             body: <GameboardCreatedModal/>
                         }));

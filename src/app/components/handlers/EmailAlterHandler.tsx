@@ -33,7 +33,7 @@ export const EmailAlterHandler = () => {
         if (userid && token) {
             dispatch(handleEmailAlter({userid, token}));
         }
-    }, [userid, token]);
+    }, [dispatch, userid, token]);
 
     return <Container id="email-verification">
         <TitleAndBreadcrumb currentPageTitle="Email verification" />

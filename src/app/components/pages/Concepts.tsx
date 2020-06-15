@@ -11,10 +11,9 @@ import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {TAG_ID} from "../../services/constants";
-import {pushConceptsToHistory} from "../../services/search";
+import {pushConceptsToHistory, searchResultIsPublic} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
-import {searchResultIsPublic} from "../../services/search"
 import {ShortcutResponses} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 

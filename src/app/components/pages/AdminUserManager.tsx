@@ -43,7 +43,7 @@ export const AdminUserManager = () => {
         if (searchResults && searchResults.length > 0) {
             dispatch(getUserIdSchoolLookup(searchResults.map((result) => result.id).filter((result) => result != undefined) as number[]));
         }
-    }, [searchResults]);
+    }, [dispatch, searchResults]);
 
     const updateQuery = (update: {[key: string]: string | null}) => {
         // Replace empty strings with nulls
@@ -97,11 +97,11 @@ export const AdminUserManager = () => {
     const modifyUserEmailVerificationStatusesAndUpdateResults = async (status: EmailVerificationStatus) => {
         setUserUpdating(true);
         const selectedEmails = searchResults?.filter(user => user.id && selectedUserIds.includes(user.id)).map(user => user.email || '') || [];
-        await adminModifyUserEmailVerificationStatuses(status, selectedEmails);
-        adminUserSearch(searchQuery);
+        await dispatch(adminModifyUserEmailVerificationStatuses(status, selectedEmails));
+        dispatch(adminUserSearch(searchQuery));
         setSelectedUserIds([]);
         setUserUpdating(false);
-    }
+    };
 
     const search = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

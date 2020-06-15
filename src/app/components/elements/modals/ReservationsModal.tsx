@@ -1,20 +1,20 @@
-import React, {useEffect, useState, useMemo} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    cancelReservationsOnEvent,
     closeActiveModal,
     getEventBookingsForGroup,
     getGroupMembers,
     loadGroups,
     reserveUsersOnEvent,
-    selectGroup,
-    cancelReservationsOnEvent
+    selectGroup
 } from "../../../state/actions";
 import {store} from "../../../state/store";
-import {Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Col, CustomInput, Row, Table} from "reactstrap";
+import {Button, Col, CustomInput, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row, Table} from "reactstrap";
 import {AppState} from "../../../state/reducers";
 import {selectors} from '../../../state/selectors';
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {AppGroupMembership, AppGroup, ActiveModal} from "../../../../IsaacAppTypes";
+import {ActiveModal, AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
 import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
 import _orderBy from "lodash/orderBy";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
@@ -187,7 +187,7 @@ const ReservationsModal = () => {
                             </React.Fragment>
                         </ShowLoading>
                     </Col>
-                    {activeFilteredGroups && activeFilteredGroups.length === 0 && <p>Create a groups from the <Link to="/groups" onClick={() => store.dispatch(closeActiveModal())}>Manage groups</Link> page to book your students onto an event</p>}
+                    {activeFilteredGroups && activeFilteredGroups.length === 0 && <p>Create a groups from the <Link to="/groups" onClick={() => dispatch(closeActiveModal())}>Manage groups</Link> page to book your students onto an event</p>}
                     <Col cols={12} lg={{size: 8, offset: 1}} xl={{size: 9, offset: 0}}>
                         {activeFilteredGroups && activeFilteredGroups.length > 0 && (!currentGroup || !currentGroup.members) && <p>Select one of your groups from the dropdown menu to see its members.</p>}
                         {currentGroup && currentGroup.members && currentGroup.members.length == 0 && <p>This group has no members. Please select another group.</p>}

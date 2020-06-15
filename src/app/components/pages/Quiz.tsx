@@ -54,13 +54,13 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
         if (ACCEPTED_QUIZ_IDS.includes(match.params.quizId)) {
             dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, match.params.quizId));
         }
-    }, [match.params.quizId]);
+    }, [dispatch, match.params.quizId]);
 
     useEffect(() => {
         if (doc && anyQuestionPreviouslyAttempted) {
             dispatch(redirectForCompletedQuiz(match.params.quizId));
         }
-    }, [anyQuestionPreviouslyAttempted, match.params.quizId]);
+    }, [dispatch, anyQuestionPreviouslyAttempted, match.params.quizId]);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;

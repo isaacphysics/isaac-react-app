@@ -1,5 +1,5 @@
 import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {connect, useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
     Button,
     Col,
@@ -373,7 +373,7 @@ const ProgressLoader = (props: AssignmentDetailsProps) => {
 
     useEffect( () => {
         dispatch(loadProgress(assignment));
-    }, [assignment._id]);
+    }, [dispatch, assignment._id]);
 
     const progress = assignment.progress;
 

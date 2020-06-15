@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {connect, useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import ReactGA from "react-ga";
 import {
@@ -16,10 +16,8 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {LoggedInUser, ZxcvbnResult} from "../../../IsaacAppTypes";
-import {AppState} from "../../state/reducers";
+import {ZxcvbnResult} from "../../../IsaacAppTypes";
 import {updateCurrentUser} from "../../state/actions";
-import {history} from "../../services/history"
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistence from "../../services/localStorage"

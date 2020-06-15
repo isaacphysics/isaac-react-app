@@ -17,7 +17,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     useEffect(() => {
         dispatch(getContentVersion());
         dispatch(requestConstantsSegueVersion());
-    }, []);
+    }, [dispatch]);
 
     const [newVersion, setNewVersion] = useState<string | null>(null);
 

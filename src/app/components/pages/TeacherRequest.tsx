@@ -71,7 +71,7 @@ export const TeacherRequest = () => {
 
     useEffect(() => {
         dispatch(fetchFragment(warningFragmentId));
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         setFirstName(user && user.loggedIn && user.givenName || "");

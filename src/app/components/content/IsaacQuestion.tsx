@@ -130,7 +130,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
     useEffect((): (() => void) => {
         dispatch(registerQuestion(doc, accordion.clientId));
         return () => dispatch(deregisterQuestion(doc.id as string));
-    }, [doc.id]);
+    }, [dispatch, doc.id]);
 
     const examBoard = useCurrentExamBoard();
 

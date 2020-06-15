@@ -11,7 +11,7 @@ export const IsaacQuizTabs = ({doc}: {doc: ApiTypes.IsaacQuestionBaseDTO}) => {
     useEffect((): (() => void) => {
         dispatch(registerQuestion(doc));
         return () => dispatch(deregisterQuestion(doc.id as string));
-    }, [doc.id]);
+    }, [dispatch, doc.id]);
 
     const QuestionComponent = QUESTION_TYPES.get(doc.type) || QUESTION_TYPES.get("default");
 

@@ -32,7 +32,7 @@ const contentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
 
 export const AdminContentErrors = () => {
     const dispatch = useDispatch();
-    useEffect(() => {dispatch(getAdminContentErrors());}, []);
+    useEffect(() => {dispatch(getAdminContentErrors());}, [dispatch]);
     const errors = useSelector((state: AppState) => state?.adminContentErrors || null);
 
     return <Container>
