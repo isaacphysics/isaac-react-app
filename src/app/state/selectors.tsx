@@ -121,4 +121,4 @@ interface SelectorsWithNoPropArgs {
     [type: string]: {[name: string]: (state: AppState) => unknown};
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const selectorsWithoutZombies: SelectorsWithNoPropArgs = selectors; // lgtm ignore[js/unused-local-variable], I don't want to lose selectors' type inference
+const selectorsWithoutZombies: SelectorsWithNoPropArgs = selectors; // lgtm [js/unused-local-variable], I don't want to lose selectors' type inference
