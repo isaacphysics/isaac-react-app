@@ -223,6 +223,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                     id="gameboard-save-button" type="button" value="Save gameboard" disabled={!canSubmit}
                     className={"btn btn-block btn-secondary border-0 mt-2"} aria-describedby="gameboard-help"
                     onClick={() => {
+                        // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
                         let wildcard = undefined;
                         if (wildcardId && resourceFound(wildcards) && wildcards.length > 0) {
                             wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
