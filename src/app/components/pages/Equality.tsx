@@ -1,34 +1,16 @@
 import React, {useState} from "react";
 import {withRouter} from "react-router-dom";
-import {connect} from "react-redux";
 import {Col, Container, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
-import {fetchDoc} from "../../state/actions";
-import {AppState} from "../../state/reducers";
-import {DOCUMENT_TYPE} from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
-
 import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {RouteComponentProps} from "react-router";
 
 
-const stateToProps = (state: AppState, {match: {params: {questionId}}, location: {search}}: any) => {
-    return {
-        doc: state ? state.doc : null,
-        urlQuestionId: questionId,
-        queryParams: queryString.parse(search)
-    };
-};
-const dispatchToProps = {fetchDoc};
-
-interface EqualityPageProps {
-    queryParams: {board?: string; mode?: string; symbols?: string};
-    history: any;
-    fetchDoc: (documentType: DOCUMENT_TYPE, questionId: string) => void;
-}
-const EqualityPageComponent = (props: EqualityPageProps) => {
-    const {queryParams} = props;
+export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
+    const queryParams = queryString.parse(location.search);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
@@ -37,7 +19,7 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
     // Does this really need to be a state variable if it is immutable?
     const [editorMode, setEditorMode] = useState(queryParams.mode || 'logic');
 
-    let availableSymbols = queryParams.symbols && queryParams.symbols.split(',').map(s => s.trim());
+    let availableSymbols = queryParams.symbols && (queryParams.symbols as string).split(',').map(s => s.trim());
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -96,7 +78,7 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
                             }}
                             availableSymbols={availableSymbols || []}
                             initialEditorSymbols={initialEditorSymbols}
-                            editorMode={editorMode}
+                            editorMode={editorMode as string}
                             logicSyntax={editorSyntax}
                             visible={modalVisible}
                         />}
@@ -119,6 +101,4 @@ const EqualityPageComponent = (props: EqualityPageProps) => {
             </Row>}
         </Container>
     </div>;
-};
-
-export const Equality = withRouter(connect(stateToProps, dispatchToProps)(EqualityPageComponent));
+});
