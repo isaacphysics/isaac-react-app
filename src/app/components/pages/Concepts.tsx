@@ -11,22 +11,20 @@ import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {TAG_ID} from "../../services/constants";
-import {pushConceptsToHistory} from "../../services/search";
+import {pushConceptsToHistory, searchResultIsPublic} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
-import {searchResultIsPublic} from "../../services/search"
 import {ShortcutResponses} from "../../../IsaacAppTypes";
+import {selectors} from "../../state/selectors";
 
 
 export const Concepts = withRouter((props: {history: History; location: Location}) => {
     const {location, history} = props;
     const dispatch = useDispatch();
-    const user = useSelector((state: AppState) => state && state.user || null);
+    const user = useSelector(selectors.user.orNull);
     const concepts = useSelector((state: AppState) => state && state.concepts && state.concepts.results || null);
 
-    useEffect(() => {
-        dispatch(fetchConcepts());
-    }, [dispatch]);
+    useEffect(() => {dispatch(fetchConcepts());}, [dispatch]);
 
     const searchParsed = queryString.parse(location.search);
 

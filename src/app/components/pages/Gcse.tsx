@@ -21,7 +21,7 @@ export const Gcse = () => {
                     title={"Problem Solving"}/>
             </Col>
             <Col md="auto">
-                <Hexagon link={"/pages/mentor_menu"}
+                <Hexagon link={"/pages/isaac_mentor"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#teacher-hat"}
                     title={"Mentoring Schemes"}/>
             </Col>

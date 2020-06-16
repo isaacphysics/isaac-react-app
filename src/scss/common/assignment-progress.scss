@@ -62,6 +62,14 @@
   margin-top: -1rem;
 }
 
+.single-assignment {
+  background: none !important;
+  margin-top: 0 !important;
+  .progress-header {
+    border-top: 1px solid $gray-118;
+  }
+}
+
 .assignment-progress-legend {
   background: #fff;
   border: 1px solid $gray-118;
@@ -283,7 +291,7 @@ $failed-bg-size: 25%;
   margin-left: auto;
 }
 .gameboard-links > * {
-  margin-right: 0.3rem !important;
+  margin-right: 0.3rem;
 }
 
 .assignment-progress-progress {
@@ -340,8 +348,12 @@ $failed-bg-size: 25%;
   bottom: 0px;
 }
 
-.progress-table {
+.single-download {
+  position: relative;
+  text-align: right;
+}
 
+.progress-table {
   overflow-x: auto;
   overflow-y: visible;
   padding-bottom: 1px; // Fixes odd broswer bugs around the magic :after borders

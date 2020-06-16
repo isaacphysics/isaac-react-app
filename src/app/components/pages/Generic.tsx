@@ -2,41 +2,31 @@ import React, {useEffect} from "react";
 import {Col, Container, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {fetchDoc} from "../../state/actions";
-import {ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
-import {DocumentSubject, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 
-const stateToProps = (state: AppState, {match: {params: {pageId}}}: any) => {
-    return {
-        doc: state ? state.doc : null,
-        urlPageId: pageId,
-    };
-};
-const dispatchToProps = {fetchDoc};
-
 interface GenericPageComponentProps {
-    doc: ContentDTO | NOT_FOUND_TYPE | null;
     pageIdOverride?: string;
-    urlPageId: string;
-    fetchDoc: (documentType: DOCUMENT_TYPE, pageId: string) => void;
+    match: {params: {pageId: string}};
 }
 
-export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}: GenericPageComponentProps) => {
-    const pageId = pageIdOverride || urlPageId;
-    useEffect(
-        () => {fetchDoc(DOCUMENT_TYPE.GENERIC, pageId);},
-        [pageId]
-    );
+export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
+    const pageId = pageIdOverride || params.pageId;
+
+    const dispatch = useDispatch();
+    useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.GENERIC, pageId))}, [dispatch, pageId]);
+    const doc = useSelector((state: AppState) => state?.doc || null);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
@@ -61,12 +51,8 @@ export const GenericPageComponent = ({pageIdOverride, urlPageId, doc, fetchDoc}:
                     </Col>
                 </Row>
 
-                {doc.relatedContent &&
-                <RelatedContent content={doc.relatedContent} parentPage={doc} />
-                }
+                {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
             </Container>
         </div>
     }}/>;
-};
-
-export const Generic = withRouter(connect(stateToProps, dispatchToProps)(GenericPageComponent));
+});

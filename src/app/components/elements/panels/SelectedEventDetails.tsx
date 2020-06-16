@@ -10,7 +10,7 @@ import {zeroOrLess} from "../../../services/validation";
 
 export const SelectedEventDetails = ({eventId}: {eventId: string}) => {
     const dispatch = useDispatch();
-    useEffect(() => {dispatch(getEvent(eventId))}, [eventId]);
+    useEffect(() => {dispatch(getEvent(eventId))}, [dispatch, eventId]);
     const selectedEvent = useSelector((state: AppState) => {return state && state.currentEvent;});
 
     return <RS.Card>

@@ -27,7 +27,7 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
         }
         augmentedEvent.isWithinBookingDeadline =
             !augmentedEvent.hasExpired &&
-            event.bookingDeadline ? now <= new Date(event.bookingDeadline).getTime() : true;
+            (event.bookingDeadline ? now <= new Date(event.bookingDeadline).getTime() : true);
     }
 
     if (event.tags) {
@@ -36,10 +36,12 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
         augmentedEvent.isVirtual = event.tags.includes("virtual");
         augmentedEvent.isRecurring = event.tags.includes("recurring");
         augmentedEvent.isStudentOnly = event.tags.includes("student_only");
-        augmentedEvent.field =
-            (event.tags.includes("physics") && "physics") ||
-            (event.tags.includes("maths") && "maths") ||
-            undefined;
+        if (event.tags.includes("physics")) {
+            augmentedEvent.field = "physics";
+        }
+        if (event.tags.includes("maths")) {
+            augmentedEvent.field = "maths";
+        }
     }
 
     augmentedEvent.isNotClosed = event.eventStatus !== "CLOSED";

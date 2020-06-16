@@ -7,9 +7,15 @@ import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {EVENTS_CRUMB, NOT_FOUND} from "../../services/constants";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
-import {addMyselfToWaitingList, bookMyselfOnEvent, cancelMyBooking, getEvent, showToast} from "../../state/actions";
+import {
+    addMyselfToWaitingList,
+    bookMyselfOnEvent,
+    cancelMyBooking,
+    getEvent,
+    openActiveModal,
+    showToast
+} from "../../state/actions";
 import {DateString} from "../elements/DateString";
-import {IsaacContent} from "../content/IsaacContent";
 import {Link} from "react-router-dom";
 import {EventBookingForm} from "../elements/EventBookingForm";
 import * as persistence from "../../services/localStorage";
@@ -18,8 +24,10 @@ import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isLoggedIn, isStaff, isStudent, isTeacher} from "../../services/user";
+import {selectors} from "../../state/selectors";
+import {reservationsModal} from "../elements/modals/ReservationsModal";
+import {IsaacContent} from "../content/IsaacContent";
 import {formatEventDetailsDate, studentOnlyEventMessage} from "../../services/events";
-
 
 function formatDate(date: Date|number) {
     return moment(date).format("YYYYMMDD[T]HHmmss");
@@ -32,8 +40,8 @@ interface EventDetailsProps {
 export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventDetailsProps) => {
     const dispatch = useDispatch();
     const event = useSelector((state: AppState) => state && state.currentEvent);
-    const user = useSelector((state: AppState) => state && state.user);
-    useEffect(() => {dispatch(getEvent(eventId))}, [eventId]);
+    const user = useSelector(selectors.user.orNull);
+    useEffect(() => {dispatch(getEvent(eventId))}, [dispatch, eventId]);
 
     const [bookingFormOpen, setBookingFormOpen] = useState(false);
     const [additionalInformation, setAdditionalInformation] = useState<AdditionalInformation>({});
@@ -69,19 +77,29 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
         const canMakeABooking =
             event.isNotClosed &&
-            !event.userBooked &&
-            !event.isWaitingListOnly &&
             event.isWithinBookingDeadline &&
+            !event.isWaitingListOnly &&
+            event.userBookingStatus !== "CONFIRMED" &&
             studentOnlyRestrictionSatisfied &&
-            (atLeastOne(event.placesAvailable) || teacherAtAStudentEvent);
+            (atLeastOne(event.placesAvailable) || teacherAtAStudentEvent || event.userBookingStatus === "RESERVED");
+
         const canBeAddedToWaitingList =
             !canMakeABooking &&
             event.isNotClosed &&
             !event.hasExpired &&
-            !event.userOnWaitList &&
+            event.userBookingStatus !== "WAITING_LIST" &&
             studentOnlyRestrictionSatisfied;
 
-        const submissionTitle = canMakeABooking ? "Book now" : event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past";
+        const canReserveSpaces =
+            event.allowGroupReservations &&
+            event.isNotClosed &&
+            event.isWithinBookingDeadline &&
+            !event.isWaitingListOnly &&
+            isTeacher(user);
+
+        const submissionTitle = canMakeABooking ?
+            "Book now" :
+            event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past";
 
         function submitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
             formEvent.preventDefault();
@@ -97,6 +115,12 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                     dispatch(addMyselfToWaitingList(event.id as string, additionalInformation));
                 }
             }
+        }
+
+        function openAndScrollToBookingForm() {
+            document.getElementById("open_booking_form_button")?.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById("booking_form")?.scrollIntoView({ behavior: 'smooth' });
+            setBookingFormOpen(true);
         }
 
         return <RS.Container className="events mb-5">
@@ -156,9 +180,15 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                 <strong className="text-danger">FULL</strong>
                                                 {event.isAStudentEvent && isTeacher(user) && <span> - for student bookings</span>}
                                             </div>}
-                                            {event.userBooked && <span> - <span className="text-success">You are booked on this event!</span></span>}
+                                            {event.userBookingStatus == "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
+                                            {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
+                                                You have been reserved a place on this event!
+                                                <RS.Button color="link text-success" onClick={openAndScrollToBookingForm}>
+                                                    <u>Complete your registration below</u>.
+                                                </RS.Button>
+                                            </span></span>}
                                             {canBeAddedToWaitingList && <span> - Waiting list booking is available!</span>}
-                                            {event.userOnWaitList && <span> - You are on the waiting list for this event.</span>}
+                                            {event.userBookingStatus == "WAITING_LIST" && <span> - You are on the waiting list for this event.</span>}
                                             {event.isStudentOnly && !studentOnlyRestrictionSatisfied &&
                                                 <div className="text-muted font-weight-normal">
                                                     {studentOnlyEventMessage(eventId)}
@@ -230,18 +260,24 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                 }
 
                                 {/* Options for logged-in users */}
-                                {isLoggedIn(user) && <React.Fragment>
+                                {isLoggedIn(user) && !event.hasExpired && <React.Fragment>
                                     {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen &&
                                         <RS.Button onClick={() => {setBookingFormOpen(true)}}>
                                             Book a place
                                         </RS.Button>
                                     }
-                                    {(event.userBooked || event.userOnWaitList) && !event.hasExpired &&
+                                    {canReserveSpaces &&
+                                        <RS.Button color="primary" onClick={() => {dispatch(openActiveModal(reservationsModal()))}}>
+                                            Reserve spaces
+                                        </RS.Button>
+                                    }
+                                    {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
                                         <RS.Button color="primary" outline onClick={() => {dispatch(cancelMyBooking(eventId))}}>
-                                            {event.userBooked ?
-                                                "Cancel your booking" :
-                                                "Leave waiting list"
-                                            }
+                                            {{
+                                                CONFIRMED: "Cancel your booking",
+                                                WAITING_LIST: "Leave waiting list",
+                                                RESERVED: "Cancel your reservation"
+                                            }[event.userBookingStatus]}
                                         </RS.Button>
                                     }
                                 </React.Fragment>}

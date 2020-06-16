@@ -1,14 +1,14 @@
 import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Col, Container, Row} from "reactstrap";
 import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
-import {ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE} from "../../services/constants";
-import {DocumentSubject, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {DocumentSubject} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -20,27 +20,15 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 
-const stateToProps = (state: AppState, {match: {params: {conceptId}}}: any) => {
-    return {
-        urlConceptId: conceptId,
-        doc: state && state.doc || null,
-    };
-};
-const dispatchToProps = {fetchDoc};
-
 interface ConceptPageProps {
     conceptIdOverride?: string;
-    urlConceptId: string;
-    doc: ContentDTO | NOT_FOUND_TYPE | null;
-    fetchDoc: (documentType: DOCUMENT_TYPE, conceptId: string) => void;
+    match: {params: {conceptId: string}};
 }
-
-const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc}: ConceptPageProps) => {
-    const conceptId = conceptIdOverride || urlConceptId;
-    useEffect(() => {
-        fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId)
-    }, [conceptId, fetchDoc]);
-
+export const Concept = withRouter(({match: {params}, conceptIdOverride}: ConceptPageProps) => {
+    const dispatch = useDispatch();
+    const conceptId = conceptIdOverride || params.conceptId;
+    useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
+    const doc = useSelector((state: AppState) => state?.doc || null);
     const navigation = useNavigation(doc);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
@@ -81,6 +69,4 @@ const ConceptPageComponent = ({urlConceptId, conceptIdOverride, doc, fetchDoc}: 
             </Container>
         </div>
     }}/>;
-};
-
-export const Concept = withRouter(connect(stateToProps, dispatchToProps)(ConceptPageComponent));
+});

@@ -31,11 +31,12 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState, Boards} from "../../state/reducers";
 import {ActualBoardLimit, AppGameBoard, BoardOrder, Toast} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
-import {boards, groups} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
+    determineGameboardLevels,
     determineGameboardSubjects,
     formatBoardOwner,
     generateGameboardSubjectHexagons
@@ -47,8 +48,8 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
-    groups: groups.active(state),
-    boards: boards.boards(state)
+    groups: selectors.groups.active(state),
+    boards: selectors.boards.boards(state)
 });
 
 const dispatchToProps = {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast, openIsaacBooksModal};
@@ -141,6 +142,7 @@ const Board = (props: BoardProps) => {
     const hexagonId = `board-hex-${board.id}`;
 
     const boardSubjects = determineGameboardSubjects(board);
+    const boardLevels = determineGameboardLevels(board);
 
     return <Card className="board-card">
         <CardBody className="pb-4 pt-4">
@@ -161,9 +163,10 @@ const Board = (props: BoardProps) => {
             <aside>
                 <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                 <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
+                {SITE_SUBJECT == SITE.PHY && <CardSubtitle>Levels: <strong>{boardLevels.join(', ')}</strong></CardSubtitle>}
             </aside>
 
-            <div className="mt-4 mb-3">
+            <div className="mt-1 mb-3">
                 <div className="card-share-link"><ShareLink linkUrl={assignmentLink} reducedWidthLink /></div>
                 <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
                 <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
@@ -351,4 +354,4 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     </Container>;
 };
 
-export const SetAssignments = withRouter(connect(stateToProps, dispatchToProps)(SetAssignmentsPageComponent));
+export const SetAssignments = withRouter(connect(stateToProps, dispatchToProps)(SetAssignmentsPageComponent)); // Cautious about removing connect as there is a promise then callback on assignBoard

@@ -5,7 +5,7 @@ import {AppState} from "../../state/reducers";
 import React, {useEffect} from "react";
 import {fetchFasttrackConcepts} from "../../state/actions";
 import * as RS from "reactstrap";
-import {board} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {Link} from "react-router-dom";
 import {useDeviceSize} from "../../services/device";
 
@@ -100,7 +100,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     const {questionHistory: qhs}: {questionHistory?: string} = queryString.parse(search);
     const questionHistory = qhs ? qhs.split(",") : [];
     const dispatch = useDispatch();
-    const gameboardMaybeNull = useSelector(board.currentGameboard);
+    const gameboardMaybeNull = useSelector(selectors.board.currentGameboard);
     const fasttrackConcepts = useSelector((appState: AppState) => appState && appState.fasttrackConcepts);
 
     const deviceSize = useDeviceSize();
@@ -121,7 +121,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             const upper = uppers.pop() || "";
             dispatch(fetchFasttrackConcepts(gameboardMaybeNull.id as string, doc.title as string, upper));
         }
-    }, [gameboardMaybeNull, doc, conceptQuestions]);
+    }, [dispatch, gameboardMaybeNull, doc, conceptQuestions]);
 
     if (gameboardMaybeNull === null && conceptQuestions === null) return null;
 

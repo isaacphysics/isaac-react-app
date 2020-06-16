@@ -7,12 +7,14 @@ import {ChemicalFormulaDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../Is
 import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 
 import _flattenDeep from 'lodash/flattenDeep';
+import {selectQuestionPart} from "../../services/questions";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = questions.selectQuestionPart(questionId)(state);
+    const pageQuestions = selectors.questions.getQuestions(state);
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
     let r: {currentAttempt?: ChemicalFormulaDTO | null} = {};
     if (questionPart) {
         r.currentAttempt = questionPart.currentAttempt;

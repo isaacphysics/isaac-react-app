@@ -18,7 +18,8 @@ import {
     ResponderProvided
 } from "react-beautiful-dnd";
 import _differenceBy from "lodash/differenceBy";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
+import {selectQuestionPart} from "../../services/questions";
 
 interface IsaacParsonsQuestionProps {
     doc: IsaacParsonsQuestionDTO;
@@ -260,9 +261,10 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
 }
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = questions.selectQuestionPart(questionId)(state);
+    const pageQuestions = selectors.questions.getQuestions(state);
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
     return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
 };
 const dispatchToProps = {setCurrentAttempt};
 
-export const IsaacParsonsQuestion = connect(stateToProps, dispatchToProps)(IsaacParsonsQuestionComponent);
+export const IsaacParsonsQuestion = connect(stateToProps, dispatchToProps)(IsaacParsonsQuestionComponent); // Cannot remove connect as this is a class based component

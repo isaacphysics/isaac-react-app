@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {Button, Modal, ModalBody, ModalHeader} from "reactstrap";
 import {IsaacContent} from "./IsaacContent";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {connect} from "react-redux";
+import {useDispatch} from "react-redux";
 import {logAction} from "../../state/actions";
 
 interface HintModalProps {
@@ -12,10 +12,10 @@ interface HintModalProps {
     scrollable: boolean;
     questionPartId: string;
     hintIndex: number;
-    logAction: (eventDetails: object) => void;
 }
-const IsaacHintModalComponent = (props: HintModalProps) => {
-    const {logAction, questionPartId, hintIndex, label, title, body, ...restOfProps} = props;
+export const IsaacHintModal = (props: HintModalProps) => {
+    const dispatch = useDispatch();
+    const {questionPartId, hintIndex, label, title, body, ...restOfProps} = props;
     const [isOpen, setIsOpen] = useState(false);
 
     const toggle = () => {
@@ -23,7 +23,7 @@ const IsaacHintModalComponent = (props: HintModalProps) => {
         setIsOpen(isNowOpen);
         if (isNowOpen) {
             const eventDetails = {type: "VIEW_HINT", questionId: questionPartId, hintIndex: hintIndex};
-            logAction(eventDetails);
+            dispatch(logAction(eventDetails));
         }
     };
 
@@ -44,5 +44,3 @@ const IsaacHintModalComponent = (props: HintModalProps) => {
         </Modal>
     </div>
 };
-
-export const IsaacHintModal = connect(null, {logAction: logAction})(IsaacHintModalComponent);

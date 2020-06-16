@@ -4,7 +4,6 @@ import {examBoardTagMap, IS_CS_PLATFORM, TAG_ID, TAG_LEVEL, tagExamBoardMap} fro
 import React from "react";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
-import {store} from "../../state/store";
 import {useDispatch} from "react-redux";
 import {DraggableProvided} from "react-beautiful-dnd";
 import tags from "../../services/tags";
@@ -32,7 +31,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
 
     const openQuestionModal = (urlQuestionId: string) => {
         dispatch(openActiveModal({
-            closeAction: () => {store.dispatch(closeActiveModal())}, size: "xl",
+            closeAction: () => {dispatch(closeActiveModal())}, size: "xl",
             title: "Question preview", body: <Question questionIdOverride={urlQuestionId} />
         }))
     };

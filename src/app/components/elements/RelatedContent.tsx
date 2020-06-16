@@ -3,16 +3,14 @@ import {ListGroup, ListGroupItem} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../services/constants";
-import {connect} from "react-redux";
-import {logAction} from "../../state/actions";
+import {useDispatch} from "react-redux";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {sortByNumberStringValue, sortByStringValue} from "../../services/sorting";
-
+import {logAction} from "../../state/actions";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
     parentPage: ContentDTO;
-    logAction: (eventDetails: object) => void;
 }
 
 type RenderItemFunction = (contentSummary: ContentSummaryDTO, openInNewTab?: boolean) => ReactNode;
@@ -122,7 +120,9 @@ function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: Co
     </div>
 }
 
-export const RelatedContentComponent = ({content, parentPage, logAction}: RelatedContentProps) => {
+export function RelatedContent({content, parentPage}: RelatedContentProps) {
+    const dispatch = useDispatch();
+
     // level, difficulty, title; all ascending (reverse the calls for required ordering)
     const sortedContent = content
         .sort(sortByStringValue("title"))
@@ -138,7 +138,7 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
         <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
             <Link
                 to={getURLForContent(contentSummary)}
-                onClick={() => {logAction(getEventDetails(contentSummary, parentPage))}}
+                onClick={() => {dispatch(logAction(getEventDetails(contentSummary, parentPage)))}}
                 target={openInNewTab ? "_blank" : undefined}
             >
                 {contentSummary.title}
@@ -152,6 +152,4 @@ export const RelatedContentComponent = ({content, parentPage, logAction}: Relate
         [SITE.PHY]: renderConceptsAndQuestions(concepts, questions, makeListGroupItem),
         [SITE.CS]: renderQuestions(questions, makeListGroupItem)
     }[SITE_SUBJECT];
-};
-
-export const RelatedContent = connect(null, {logAction: logAction})(RelatedContentComponent);
+}

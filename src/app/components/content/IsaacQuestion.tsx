@@ -1,12 +1,11 @@
 import React, {useContext, useEffect} from "react";
-import {connect, useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
-import {AppState} from "../../state/reducers";
 import * as ApiTypes from "../../../IsaacApiTypes";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import * as RS from "reactstrap";
-import {QUESTION_TYPES} from "../../services/questions";
+import {QUESTION_TYPES, selectQuestionPart} from "../../services/questions";
 import {DateString, NUMERIC_DATE_AND_TIME} from "../elements/DateString";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {NOT_FOUND} from "../../services/constants";
@@ -18,38 +17,8 @@ import {makeUrl} from "../../services/fastTrack";
 import queryString from "query-string";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
+import {AppState} from "../../state/reducers";
 
-
-type OwnProps = { doc: ApiTypes.IsaacQuestionPageDTO } & RouteComponentProps;
-const stateToProps = (state: AppState, {doc, location: {search}}: OwnProps) => {
-    const {board, questionHistory}: {board?: string; questionHistory?: string} = queryString.parse(search);
-    const questionPart = questions.selectQuestionPart(doc.id)(state);
-    const rest = {
-        page: state && state.doc && state.doc !== NOT_FOUND ? state.doc : undefined,
-        pageCompleted: state && state.questions ? state.questions.pageCompleted : undefined,
-        board,
-        questionHistory: questionHistory ? questionHistory.split(",") : []
-    };
-    return questionPart ? {
-        validationResponse: questionPart.validationResponse,
-        currentAttempt: questionPart.currentAttempt,
-        canSubmit: questionPart.canSubmit && !questionPart.locked,
-        locked: questionPart.locked,
-        ...rest
-    } : rest;
-};
-
-interface IsaacQuestionTabsProps {
-    doc: ApiTypes.IsaacQuestionBaseDTO;
-    currentAttempt?: ApiTypes.ChoiceDTO;
-    canSubmit?: boolean;
-    locked?: Date;
-    validationResponse?: ApiTypes.QuestionValidationResponseDTO;
-    page?: ApiTypes.ContentDTO;
-    pageCompleted?: boolean;
-    board?: string;
-    questionHistory: string[];
-}
 
 function goToUrl(url: string, queryParams?: {[key: string]: string | undefined}) {
     history.push(makeUrl(url, queryParams));
@@ -142,15 +111,26 @@ function getRelatedUnansweredSupportingQuestions(doc: ApiTypes.IsaacQuestionBase
     }) : [];
 }
 
-const IsaacQuestionComponent = ({doc, validationResponse, currentAttempt, canSubmit, locked, page, pageCompleted, board, questionHistory}: IsaacQuestionTabsProps) => {
-    const dispatch = useDispatch();
 
+export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQuestionBaseDTO} & RouteComponentProps) => {
+    const {board, questionHistory: questionHistoryUrl}: {board?: string; questionHistory?: string} = queryString.parse(location.search);
+    const questionHistory = questionHistoryUrl?.split(",") || [];
+
+    const dispatch = useDispatch();
+    const page = useSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
+    const pageCompleted = useSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : undefined);
+    const pageQuestions = useSelector(selectors.questions.getQuestions);
+    const questionPart = selectQuestionPart(pageQuestions, doc.id);
+    const validationResponse = questionPart?.validationResponse;
+    const currentAttempt = questionPart?.currentAttempt;
+    const locked = questionPart?.locked;
+    const canSubmit = questionPart?.canSubmit && !locked;
     const accordion = useContext(AccordionSectionContext);
 
     useEffect((): (() => void) => {
         dispatch(registerQuestion(doc, accordion.clientId));
         return () => dispatch(deregisterQuestion(doc.id as string));
-    }, [doc.id]);
+    }, [dispatch, doc.id]);
 
     const examBoard = useCurrentExamBoard();
 
@@ -282,6 +262,4 @@ const IsaacQuestionComponent = ({doc, validationResponse, currentAttempt, canSub
             }
         </div>
     </RS.Form>;
-};
-
-export const IsaacQuestion = withRouter<OwnProps>(connect(stateToProps)(IsaacQuestionComponent));
+});

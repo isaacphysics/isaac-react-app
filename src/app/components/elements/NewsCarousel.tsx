@@ -19,7 +19,7 @@ export const NewsCarousel = (props: NewsCarouselProps) => {
     const newsState = useSelector((state: AppState) => state && state.news);
     useEffect(() => {
         dispatch(getNewsPodList(subject));
-    }, []);
+    }, [dispatch, subject]);
 
     function compare(a: IsaacPodDTO, b: IsaacPodDTO) {
         if (a.id && b.id) {

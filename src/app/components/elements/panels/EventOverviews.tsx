@@ -18,7 +18,6 @@ export enum EventOverviewFilter {
     "Recent events" = "RECENT",
     "Past events" = "PAST",
 }
-
 export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; setSelectedEventId: (eventId: string | null) => void}) => {
     const dispatch = useDispatch();
     const eventOverviews = useSelector((state: AppState) => state && state.eventOverviews);
@@ -30,7 +29,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; 
     useEffect(() => {
         setSelectedEventId(null);
         dispatch(getEventOverviews(overviewFilter));
-    }, [overviewFilter]);
+    }, [dispatch, setSelectedEventId, overviewFilter]);
 
     return <Accordion trustedTitle="Events overview" index={0}>
         {isEventLeader(user) && <div className="bg-grey p-2 mb-4 text-center">

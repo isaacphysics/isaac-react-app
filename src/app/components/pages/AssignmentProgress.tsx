@@ -1,5 +1,5 @@
 import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
     Button,
     Col,
@@ -16,8 +16,14 @@ import {loadAssignmentsOwnedByMe, loadBoard, loadGroups, loadProgress, openActiv
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {orderBy, sortBy} from "lodash";
-import {ActiveModal, AppAssignmentProgress, AppGroup} from "../../../IsaacAppTypes";
-import {groups} from "../../state/selectors";
+import {
+    AppAssignmentProgress,
+    AppGroup,
+    EnhancedGameboard,
+    PageSettings,
+    SingleProgressDetailsProps
+} from "../../../IsaacAppTypes";
+import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
@@ -25,10 +31,11 @@ import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
 
-const stateFromProps = (state: AppState) => {
+function selectGroups(state: AppState) {
     if (state != null) {
-        const gameboards: { [id: string]: GameboardDTO} = {};
+        const gameboards: {[id: string]: GameboardDTO} = {};
         if (state.boards && state.boards.boards) {
             state.boards.boards.boards.forEach(board => {
                 gameboards[board.id as string] = board;
@@ -55,7 +62,7 @@ const stateFromProps = (state: AppState) => {
             });
         }
 
-        const activeGroups = groups.active(state);
+        const activeGroups = selectors.groups.active(state);
         if (activeGroups) {
             const activeGroupsWithAssignments = activeGroups.map(g => {
                 return {
@@ -71,14 +78,7 @@ const stateFromProps = (state: AppState) => {
     return {
         groups: null
     };
-};
-
-const dispatchFromProps = {loadGroups, loadAssignmentsOwnedByMe, loadBoard, loadProgress, openActiveModal};
-
-
-type EnhancedGameboard = GameboardDTO & {
-    questions: (GameboardItem & { questionPartsTotal: number })[];
-};
+}
 
 type EnhancedAssignment = AssignmentDTO & {
     gameboard: EnhancedGameboard;
@@ -90,11 +90,6 @@ type AppGroupWithAssignments = AppGroup & {assignments: EnhancedAssignment[]};
 
 interface AssignmentProgressPageProps {
     groups: AppGroupWithAssignments[] | null;
-    loadGroups: (getArchived: boolean) => void;
-    loadAssignmentsOwnedByMe: () => void;
-    loadBoard: (boardId: string) => void;
-    loadProgress: (assignment: AssignmentDTO) => void;
-    openActiveModal: (modal: ActiveModal) => void;
 }
 
 enum SortOrder {
@@ -102,11 +97,8 @@ enum SortOrder {
     "Date Created" = "Date Created"
 }
 
-interface PageSettings {
-    colourBlind: boolean;
-    setColourBlind: (newValue: boolean) => void;
-    formatAsPercentage: boolean;
-    setFormatAsPercentage: (newValue: boolean) => void;
+interface AssignmentProgressLegendProps {
+    pageSettings: PageSettings;
 }
 
 type GroupDetailsProps = AssignmentProgressPageProps & {
@@ -134,7 +126,7 @@ function formatMark(numerator: number, denominator: number, formatAsPercentage: 
     return result;
 }
 
-const ProgressDetails = (props: ProgressDetailsProps) => {
+export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDetailsProps) => {
     const {assignment, progress, pageSettings} = props;
 
     const [selectedQuestionNumber, setSelectedQuestion] = useState(0);
@@ -376,11 +368,12 @@ const ProgressDetails = (props: ProgressDetailsProps) => {
 };
 
 const ProgressLoader = (props: AssignmentDetailsProps) => {
-    const {assignment, loadProgress} = props;
+    const dispatch = useDispatch();
+    const {assignment} = props;
 
     useEffect( () => {
-        loadProgress(assignment);
-    }, [assignment._id]);
+        dispatch(loadProgress(assignment));
+    }, [dispatch, assignment._id]);
 
     const progress = assignment.progress;
 
@@ -388,19 +381,23 @@ const ProgressLoader = (props: AssignmentDetailsProps) => {
         : <div className="p-4 text-center"><Spinner color="primary" size="lg" /></div>;
 };
 
-function getCSVDownloadLink(assignmentId: number) {
-    return API_PATH + "/assignments/assign/" + assignmentId + "/progress/download";
-}
-
 const AssignmentDetails = (props: AssignmentDetailsProps) => {
-    const {assignment, openActiveModal} = props;
-
+    const {assignment} = props;
+    const dispatch = useDispatch();
     const [isExpanded, setIsExpanded] = useState(false);
+
+    const assignmentPath = SITE_SUBJECT == SITE.PHY ? "assignment_progress" : "my_markbook";
 
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
-        openActiveModal(downloadLinkModal(event.currentTarget.href));
+        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
+    }
+
+    function openSingleAssignment(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.stopPropagation();
+        event.preventDefault();
+        window.open(event.currentTarget.href, '_blank');
     }
 
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
@@ -409,68 +406,72 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
                 <span>{assignment.gameboard.title}{assignment.dueDate && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(assignment.dueDate)})</span>}</span>
             </Button>
             <div className="gameboard-links align-items-center">
-                <Button color="link">{isExpanded ? "Hide " : "View "} <span className="d-none d-md-inline">mark sheet</span></Button>
-                <span className="d-none d-md-inline">or</span>
+                <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
+                <span className="d-none d-md-inline">,</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+                <span className="d-none d-md-inline">or</span>
+                < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + assignment._id} onClick={openSingleAssignment}>View individual assignment</Button>
             </div>
         </div>
         {isExpanded && <ProgressLoader {...props} />}
     </div>
 };
 
-function hasGameboard(assignment: AssignmentDTO): assignment is EnhancedAssignment {
-    return assignment.gameboard != undefined;
-}
+export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) => {
+    const {pageSettings} = props;
+    return <div className="p-4"><div className="assignment-progress-legend">
+        <ul className="block-grid-xs-5">
+            <li className="d-flex flex-wrap">
+                <div className="key-cell">
+                    <span className="completed"></span>
+                </div>
+                <div className="key-description">100% correct</div>
+            </li>
+            <li className="d-flex flex-wrap">
+                <div className="key-cell"><span className="passed">&nbsp;</span>
+                </div>
+                <div className="key-description">&ge;{passMark * 100}% correct
+                    {/*<span className="d-none d-xl-inline"> (or Mastery)</span>*/}
+                </div>
+            </li>
+            <li className="d-flex flex-wrap">
+                <div className="key-cell"><span className="in-progress">&nbsp;</span>
+                </div>
+                <div className="key-description">&lt;{passMark * 100}% correct</div>
+            </li>
+            <li className="d-flex flex-wrap">
+                <div className="key-cell"><span>&nbsp;</span>
+                </div>
+                <div className="key-description"><span className="d-none d-md-inline">Not attempted</span><span
+                    className="d-inline d-md-none">No attempt</span></div>
+            </li>
+            <li className="d-flex flex-wrap">
+                <div className="key-cell"><span className="failed">&nbsp;</span>
+                </div>
+                <div className="key-description">&gt;{100 -(passMark * 100)}% incorrect</div>
+            </li>
+        </ul>
+        <div className="assignment-progress-options">
+            <label>Colour-blind&nbsp;<input type="checkbox" checked={pageSettings.colourBlind} onChange={e => pageSettings.setColourBlind(e.target.checked)}/></label>
+            <label>Percent view&nbsp;<input type="checkbox" checked={pageSettings.formatAsPercentage} onChange={e => pageSettings.setFormatAsPercentage(e.target.checked)}/></label>
+        </div>
+    </div></div>
+};
 
 const GroupDetails = (props: GroupDetailsProps) => {
-    const {group, pageSettings, loadBoard} = props;
+    const dispatch = useDispatch();
+    const {group, pageSettings} = props;
 
     const gameboardIs = group.assignments.map(assignment => assignment.gameboardId as string);
     const joinedGameboardIds = gameboardIs.join(",");
     useEffect( () => {
-        gameboardIs.forEach(gameboardId => loadBoard(gameboardId));
+        gameboardIs.forEach(gameboardId => dispatch(loadBoard(gameboardId)));
     }, [joinedGameboardIds]);
 
     const gameboardsLoaded = group.assignments.every(assignment => assignment.gameboard != null);
 
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
-        <div className="p-4"><div className="assignment-progress-legend">
-            <ul className="block-grid-xs-5">
-                <li className="d-flex flex-wrap">
-                    <div className="key-cell">
-                        <span className="completed"></span>
-                    </div>
-                    <div className="key-description">100% correct</div>
-                </li>
-                <li className="d-flex flex-wrap">
-                    <div className="key-cell"><span className="passed">&nbsp;</span>
-                    </div>
-                    <div className="key-description">&ge;{passMark * 100}% correct
-                        {/*<span className="d-none d-xl-inline"> (or Mastery)</span>*/}
-                    </div>
-                </li>
-                <li className="d-flex flex-wrap">
-                    <div className="key-cell"><span className="in-progress">&nbsp;</span>
-                    </div>
-                    <div className="key-description">&lt;{passMark * 100}% correct</div>
-                </li>
-                <li className="d-flex flex-wrap">
-                    <div className="key-cell"><span>&nbsp;</span>
-                    </div>
-                    <div className="key-description"><span className="d-none d-md-inline">Not attempted</span><span
-                        className="d-inline d-md-none">No attempt</span></div>
-                </li>
-                <li className="d-flex flex-wrap">
-                    <div className="key-cell"><span className="failed">&nbsp;</span>
-                    </div>
-                    <div className="key-description">&gt;{100 -(passMark * 100)}% incorrect</div>
-                </li>
-            </ul>
-            <div className="assignment-progress-options">
-                <label>Colour-blind&nbsp;<input type="checkbox" checked={pageSettings.colourBlind} onChange={e => pageSettings.setColourBlind(e.target.checked)}/></label>
-                <label>Percent view&nbsp;<input type="checkbox" checked={pageSettings.formatAsPercentage} onChange={e => pageSettings.setFormatAsPercentage(e.target.checked)}/></label>
-            </div>
-        </div></div>
+        <AssignmentProgressLegend pageSettings={pageSettings}/>
         {gameboardsLoaded ? group.assignments.map(assignment => hasGameboard(assignment) && <AssignmentDetails key={assignment.gameboardId} {...props} assignment={assignment}/>)
             : <div className="p-4 text-center"><Spinner color="primary" size="lg" /></div>}
     </div>;
@@ -481,7 +482,8 @@ function getGroupProgressCSVDownloadLink(groupId: number) {
 }
 
 const GroupAssignmentProgress = (props: GroupDetailsProps) => {
-    const {group, openActiveModal} = props;
+    const dispatch = useDispatch();
+    const {group} = props;
     const [isExpanded, setExpanded] = useState(false);
 
     const assignmentCount = group.assignments.length;
@@ -490,7 +492,7 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
         event.stopPropagation();
         event.preventDefault();
         //showDownloadModal(event.currentTarget.href);
-        openActiveModal(downloadLinkModal(event.currentTarget.href));
+        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
     return <React.Fragment>
@@ -508,8 +510,9 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
     </React.Fragment>;
 };
 
-const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => {
-    const {groups, loadGroups, loadAssignmentsOwnedByMe} = props;
+export function AssignmentProgress(props: AssignmentProgressPageProps) {
+    const dispatch = useDispatch();
+    const {groups} = useSelector(selectGroups);
 
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
@@ -531,9 +534,9 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
     }
 
     useEffect(() => {
-        loadGroups(false);
-        loadAssignmentsOwnedByMe();
-    }, []);
+        dispatch(loadGroups(false));
+        dispatch(loadAssignmentsOwnedByMe());
+    }, [dispatch]);
 
     return <React.Fragment>
         <Container>
@@ -569,6 +572,4 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
             </ShowLoading>
         </div>
     </React.Fragment>;
-};
-
-export const AssignmentProgress = connect(stateFromProps, dispatchFromProps)(AssignmentProgressPageComponent);
+}

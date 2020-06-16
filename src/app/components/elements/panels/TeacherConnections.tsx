@@ -12,75 +12,37 @@ import {
     releaseAuthorisationAfterPrompt,
     revokeAuthorisationAfterPrompt
 } from "../../../state/actions";
-import {connect} from "react-redux";
-import {
-    ActiveAuthorisationsState,
-    AppState,
-    GroupMembershipsState,
-    OtherUserAuthorisationsState
-} from "../../../state/reducers";
-import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
+import {useDispatch, useSelector} from "react-redux";
+import {AppState} from "../../../state/reducers";
 import classnames from "classnames";
 import {MEMBERSHIP_STATUS} from "../../../services/constants";
 import {extractTeacherName} from "../../../services/user";
 
-const stateToProps = (state: AppState) => ({
-    activeAuthorisations: state ? state.activeAuthorisations : null,
-    studentAuthorisations: state ? state.otherUserAuthorisations : null,
-    groupMemberships: state ? state.groupMemberships : null,
-});
 
-const dispatchToProps = {
-    getActiveAuthorisations, processAuthenticateWithToken: authenticateWithTokenAfterPrompt, processRevokeAuthorisation: revokeAuthorisationAfterPrompt,
-    getStudentAuthorisations, processReleaseAuthorisation: releaseAuthorisationAfterPrompt, processReleaseAllAuthorisations: releaseAllAuthorisationsAfterPrompt,
-    getGroupMemberships: getMyGroupMemberships, changeMyMembershipStatus
-};
-
-interface TeacherConnectionsProps {
-    user: LoggedInUser;
-    authToken: string | null;
-    getActiveAuthorisations: () => void;
-    getStudentAuthorisations: () => void;
-    getGroupMemberships: () => void;
-    activeAuthorisations: ActiveAuthorisationsState;
-    studentAuthorisations: OtherUserAuthorisationsState;
-    groupMemberships: GroupMembershipsState;
-    processAuthenticateWithToken: (token: string | null) => void;
-    processRevokeAuthorisation: (user: UserSummaryWithEmailAddressDTO) => void;
-    processReleaseAuthorisation: (student: UserSummaryDTO) => void;
-    processReleaseAllAuthorisations: () => void;
-    changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => void;
-}
-
-const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
-    const {
-        // state
-        user, authToken, activeAuthorisations, studentAuthorisations, groupMemberships,
-        // authorisation actions
-        getActiveAuthorisations, processAuthenticateWithToken, processRevokeAuthorisation,
-        // student authorisation actions
-        getStudentAuthorisations, processReleaseAuthorisation, processReleaseAllAuthorisations,
-        // group membership actions
-        getGroupMemberships, changeMyMembershipStatus,
-    } = props;
+interface TeacherConnectionsProps {user: LoggedInUser; authToken: string | null}
+export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) => {
+    const dispatch = useDispatch();
+    const activeAuthorisations = useSelector((state: AppState) => state?.activeAuthorisations || null);
+    const studentAuthorisations = useSelector((state: AppState) => state?.otherUserAuthorisations || null);
+    const groupMemberships = useSelector((state: AppState) => state?.groupMemberships || null);
 
     useEffect(() => {
-        getActiveAuthorisations();
-        getGroupMemberships();
-        getStudentAuthorisations();
-    }, []);
+        dispatch(getActiveAuthorisations());
+        dispatch(getMyGroupMemberships());
+        dispatch(getStudentAuthorisations());
+    }, [dispatch]);
 
     useEffect(() => {
         if (authToken) {
-            processAuthenticateWithToken(authToken);
+            dispatch(authenticateWithTokenAfterPrompt(authToken));
         }
-    }, [authToken]);
+    }, [dispatch, authToken]);
 
     const [authenticationToken, setAuthenticationToken] = useState<string | null>(authToken);
 
     function processToken(event: React.FormEvent<HTMLFormElement>) {
         if (event) {event.preventDefault();}
-        processAuthenticateWithToken(authenticationToken);
+        dispatch(authenticateWithTokenAfterPrompt(authenticationToken));
     }
 
     const editingSelf = true;
@@ -132,7 +94,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                                             </RS.UncontrolledTooltip>
                                             <RS.Button
                                                 color="link" className="revoke-teacher"
-                                                onClick={() => processRevokeAuthorisation(teacherAuthorisation)}
+                                                onClick={() => dispatch(revokeAuthorisationAfterPrompt(teacherAuthorisation))}
                                             >
                                                 Revoke
                                             </RS.Button>
@@ -184,7 +146,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                                             </RS.UncontrolledTooltip>
                                             <RS.Button
                                                 color="link" className="revoke-teacher"
-                                                onClick={() => processReleaseAuthorisation(student)}
+                                                onClick={() => dispatch(releaseAuthorisationAfterPrompt(student))}
                                             >
                                                 Remove
                                             </RS.Button>
@@ -197,7 +159,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                                 </p>}
                             </div>
                             {studentAuthorisations && studentAuthorisations.length > 0 && <p className="remove-link">
-                                <RS.Button color="link" onClick={() => processReleaseAllAuthorisations()}>
+                                <RS.Button color="link" onClick={() => dispatch(releaseAllAuthorisationsAfterPrompt())}>
                                     Remove all
                                 </RS.Button>
                             </p>}
@@ -254,7 +216,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
                                     <td>
                                         {membership.membershipStatus == MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
                                             <RS.Button color="link" onClick={() =>
-                                                changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.INACTIVE)
+                                                dispatch(changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.INACTIVE))
                                             }>
                                                 Leave group
                                             </RS.Button>
@@ -266,7 +228,7 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
 
                                         {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE && <React.Fragment>
                                             <RS.Button color="link" onClick={() =>
-                                                changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.ACTIVE)
+                                                dispatch(changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.ACTIVE))
                                             }>
                                                 Rejoin group
                                             </RS.Button>
@@ -288,5 +250,3 @@ const TeacherConnectionsComponent = (props: TeacherConnectionsProps) => {
         </RS.Container>}
     </RS.CardBody>
 };
-
-export const TeacherConnections = connect(stateToProps, dispatchToProps)(TeacherConnectionsComponent);
