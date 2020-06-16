@@ -4,13 +4,14 @@ import {setCurrentAttempt} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacTabbedHints} from "./IsaacHints";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {GraphSketcherModal} from "../elements/modals/GraphSketcherModal";
-
+import {selectQuestionPart} from "../../services/questions";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher/dist/src/GraphSketcher";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const questionPart = questions.selectQuestionPart(questionId)(state);
+    const pageQuestions = selectors.questions.getQuestions(state);
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
     let r: {currentAttempt?: GraphChoiceDTO | null} = {};
     if (questionPart) {
         r.currentAttempt = questionPart.currentAttempt;
