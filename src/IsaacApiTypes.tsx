@@ -384,6 +384,7 @@ export interface UserSummaryDTO extends AbstractSegueUserDTO {
     emailVerificationStatus?: EmailVerificationStatus;
     examBoard?: string;
     id?: number;
+    examBoard?: EXAM_BOARD; // This is odd, it shouldn't be here.
 }
 
 export interface UserSummaryForAdminUsersDTO extends UserSummaryWithEmailAddressDTO {
