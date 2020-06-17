@@ -207,7 +207,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.passwordreset})} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                             >
-                                <span className="d-none d-lg-block">Security Settings</span>
+                                <span className="d-none d-lg-block">Account security</span>
                                 <span className="d-block d-lg-none">Security</span>
                             </NavLink>
                         </NavItem>
