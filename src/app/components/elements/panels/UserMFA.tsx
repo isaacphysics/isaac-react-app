@@ -9,12 +9,12 @@ import QRCode from 'qrcode'
 import {AppState} from "../../../state/reducers";
 
 interface UserMFAProps {
-    myUser: ValidationUser;
+    userToUpdate: ValidationUser;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     editingOtherUser: boolean;
 }
 
-export const UserMFA = ({myUser, userAuthSettings, editingOtherUser}: UserMFAProps) => {
+export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
     const dispatch = useDispatch();
     const segueEnvironment = useSelector((state: AppState) => state?.constants?.segueEnvironment || "unknown");
     const totpSharedSecret = useSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
@@ -29,7 +29,7 @@ export const UserMFA = ({myUser, userAuthSettings, editingOtherUser}: UserMFAPro
         if (segueEnvironment === "DEV") {
             issuer += encodeURIComponent(` (${window.location.host})`);
         }
-        authenticatorURL = `otpauth://totp/${myUser.email}?secret=${totpSharedSecret}&issuer=${issuer}`;
+        authenticatorURL = `otpauth://totp/${userToUpdate.email}?secret=${totpSharedSecret}&issuer=${issuer}`;
         QRCode.toString(authenticatorURL, {type:'svg'}, function (err, val) {
             if (err) {
                 console.error(err);
@@ -134,7 +134,7 @@ export const UserMFA = ({myUser, userAuthSettings, editingOtherUser}: UserMFAPro
                             <FormGroup>
                                 <Button
                                     className="btn-secondary"
-                                    onClick={() => {myUser.id && dispatch(disableTotpForAccount(myUser.id))}}
+                                    onClick={() => {userToUpdate.id && dispatch(disableTotpForAccount(userToUpdate.id))}}
                                 >
                                     Disable 2FA for user
                                 </Button>

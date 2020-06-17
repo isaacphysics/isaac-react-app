@@ -262,7 +262,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     // beta feature just for admins
                                     <UserMFA
                                         userAuthSettings={userAuthSettings}
-                                        myUser={userToUpdate}
+                                        userToUpdate={userToUpdate}
                                         editingOtherUser={editingOtherUser}
                                     />
                                 }
