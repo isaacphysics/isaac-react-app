@@ -9,17 +9,18 @@ import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
 import {getProgress} from "../../state/actions";
+import {selectors} from "../../state/selectors";
 
 export const TeacherTools = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state: AppState) => state && state.user);
+    const user = useSelector(selectors.user.orNull);
     const achievementsSelector = useSelector((state: AppState) => state && state.userProgress && state.userProgress.userSnapshot && state.userProgress.userSnapshot.achievementsRecord);
 
     useEffect(() => {
         if (!achievementsSelector) {
             dispatch(getProgress());
         }
-    }, [user]);
+    }, [dispatch, user]);
 
     const pageTitle = user && isTeacher(user) ? "Teacher tools" : "How we help teachers";
 

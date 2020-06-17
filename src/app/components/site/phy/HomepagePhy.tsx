@@ -1,22 +1,15 @@
 import React, {useEffect} from "react";
-import {connect} from "react-redux";
+import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
-import {AppState} from "../../../state/reducers";
-import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import {selectors} from "../../../state/selectors";
 
-const stateToProps = (state: AppState) => ({user: state ? state.user : null});
-const dispatchToProps = null;
+export const HomepagePhy = () => {
+    useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
+    const user = useSelector(selectors.user.orNull);
 
-interface HomePageProps {
-    user: LoggedInUser | null;
-}
-export const HomepageComponent = ({user}: HomePageProps) => {
-    useEffect( () => {
-        document.title = "Isaac " + SITE_SUBJECT_TITLE;
-    }, []);
     return <div id="homepage" className="pb-5">
         <section id="call-to-action" className="homepageHero">
             <Container className="pt-4">
@@ -94,5 +87,3 @@ export const HomepageComponent = ({user}: HomePageProps) => {
         </section>}
     </div>
 };
-
-export const HomepagePhy = connect(stateToProps, dispatchToProps)(HomepageComponent);

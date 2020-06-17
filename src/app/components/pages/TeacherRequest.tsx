@@ -23,13 +23,14 @@ import {Link} from "react-router-dom";
 import {isTeacher} from "../../services/user";
 import {IsaacContent} from "../content/IsaacContent";
 import {WEBMASTER_EMAIL} from "../../services/siteConstants";
+import {selectors} from "../../state/selectors";
 
 const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
 
 export const TeacherRequest = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state: AppState) => (state && state.user) || null);
+    const user = useSelector(selectors.user.orNull);
     const errorMessage = useSelector((state: AppState) => (state && state.error) || null);
     const warningFragment = useSelector((state: AppState) => state && state.fragments && state.fragments[warningFragmentId] || null);
 
@@ -70,7 +71,7 @@ export const TeacherRequest = () => {
 
     useEffect(() => {
         dispatch(fetchFragment(warningFragmentId));
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         setFirstName(user && user.loggedIn && user.givenName || "");

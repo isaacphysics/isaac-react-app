@@ -1,20 +1,12 @@
 import React, {useCallback} from 'react';
 import {VideoDTO} from "../../../IsaacApiTypes";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
-import {AppState} from "../../state/reducers";
+import {selectors} from "../../state/selectors";
+import {NOT_FOUND} from "../../services/constants";
 
 interface IsaacVideoProps {
     doc: VideoDTO;
-    pageId?: string;
-    logAction: (eventDetails: object) => void;
-}
-
-function mapStateToProps(state: AppState) {
-    // TODO: This reference to 404 may want refactoring!
-    if (state && state.doc && state.doc != 404) {
-        return {pageId: state.doc.id};
-    }
 }
 
 function rewrite(src: string) {
@@ -25,7 +17,7 @@ function rewrite(src: string) {
     + "?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=" + window.location.origin
 }
 
-function onPlayerStateChange(event: any, logAction: (eventDetails: object) => void, pageId?: string) {
+function onPlayerStateChange(event: any, wrappedLogAction: (eventDetails: object) => void, pageId?: string) {
     const YT = (window as any).YT;
     let logEventDetails: any = {
         videoUrl: event.target.getVideoUrl(),
@@ -51,21 +43,25 @@ function onPlayerStateChange(event: any, logAction: (eventDetails: object) => vo
             return; // Don't send a log message.
     }
 
-    logAction(logEventDetails);
+    wrappedLogAction(logEventDetails);
 }
 
-const IsaacVideoComponent = (props: IsaacVideoProps) => {
-    const {doc: {src, altText}, pageId, logAction} = props;
+export function IsaacVideo(props: IsaacVideoProps) {
+    const dispatch = useDispatch();
+    const {doc: {src, altText}} = props;
+    const page = useSelector(selectors.doc.get);
+    const pageId = page && page !== NOT_FOUND && page.id || undefined;
 
     const videoRef = useCallback( node => {
         const $window: any = window;
         if (node !== null && $window.YT) {
             $window.YT.ready(function() {
-                const stateChangeCallback = (event: any) => onPlayerStateChange(event, logAction, pageId);
+                const stateChangeCallback = (event: any) =>
+                    onPlayerStateChange(event, eventDetails => dispatch(logAction(eventDetails)), pageId);
                 new $window.YT.Player(node, {events: {'onStateChange': stateChangeCallback}});
             });
         }
-    }, [logAction, pageId]);
+    }, [dispatch, pageId]);
 
     return <div>
         <div className="no-print content-value text-center">
@@ -78,6 +74,4 @@ const IsaacVideoComponent = (props: IsaacVideoProps) => {
             Video description: {altText || "No text description available"}
         </div>
     </div>;
-};
-
-export const IsaacVideo = connect(mapStateToProps, {logAction: logAction})(IsaacVideoComponent);
+}

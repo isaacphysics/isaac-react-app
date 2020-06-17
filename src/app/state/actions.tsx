@@ -59,7 +59,7 @@ import * as persistence from "../services/localStorage";
 import {KEY} from "../services/localStorage";
 import {groupInvitationModal, groupManagersModal} from "../components/elements/modals/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
-import {groups} from "./selectors";
+import {selectors} from "./selectors";
 import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
 import {isTeacher} from "../services/user";
@@ -1341,7 +1341,7 @@ export const showGroupInvitationModal = (firstTime: boolean) => async (dispatch:
 
 export const showGroupManagersModal = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const state = getState();
-    const group = groups.current(state);
+    const group = selectors.groups.current(state);
     const user = state && state.user && state.user.loggedIn && state.user || null;
     const userIsOwner = group && user && group.ownerId == user.id || false;
     dispatch(openActiveModal(groupManagersModal(userIsOwner)) as any);

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {FreeTextRule, LoggedInUser} from "../../../IsaacAppTypes";
+import {FreeTextRule} from "../../../IsaacAppTypes";
 import * as RS from "reactstrap";
 import {TestCaseDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -116,7 +116,7 @@ function isEditableExplanation(explanation?: any) {
     return explanation?.children && explanation.children.length > 0 && explanation.children[0].value !== undefined;
 }
 
-export const FreeTextBuilder = ({user}: {user: LoggedInUser}) => {
+export const FreeTextBuilder = () => {
     const dispatch = useDispatch();
     const testCaseResponses = useSelector((state: AppState) => state && state.testQuestions || []);
 

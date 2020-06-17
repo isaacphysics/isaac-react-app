@@ -6,7 +6,8 @@ import {AppState} from "../../../state/reducers";
 import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {
     cancelUserBooking,
-    deleteUserBooking, getEventBookingCSV,
+    deleteUserBooking,
+    getEventBookingCSV,
     getEventBookings,
     promoteUserBooking,
     resendUserConfirmationEmail
@@ -17,6 +18,7 @@ import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../Isaac
 import {DateString} from "../DateString";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 import {API_PATH} from "../../../services/constants";
+import {SITE_SUBJECT, SITE} from "../../../services/siteConstants";
 
 
 export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUser; eventBookingId: string}) => {
@@ -92,6 +94,9 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                                     Booking updated
                                 </RS.Button>
                             </th>
+                            {SITE_SUBJECT == SITE.CS && <th className="align-middle">
+                                Exam board
+                            </th>}
                             <th className="align-middle">
                                 <RS.Button color="link" onClick={setSortPredicateAndDirection('reservedById')}>
                                     Reserved by ID
@@ -153,6 +158,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                                     <td className="align-middle">{booking.bookingStatus}</td>
                                     <td className="align-middle"><DateString>{booking.bookingDate}</DateString></td>
                                     <td className="align-middle"><DateString>{booking.updated}</DateString></td>
+                                    {SITE_SUBJECT == SITE.CS && <td className="align-middle">{booking.userBooked && booking.userBooked.examBoard}</td>}
                                     <td className="align-middle text-center">{booking.reservedById}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.experienceLevel}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.accessibilityRequirements}</td>

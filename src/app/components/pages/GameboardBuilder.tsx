@@ -12,7 +12,6 @@ import {
     logAction,
     openActiveModal
 } from "../../state/actions";
-import {store} from "../../state/store";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import {AppState} from "../../state/reducers";
@@ -33,8 +32,9 @@ import Select from "react-select";
 import {withRouter} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {board} from '../../state/selectors';
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {selectors} from "../../state/selectors";
+import intersection from "lodash/intersection";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -42,9 +42,9 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
     const dispatch = useDispatch();
 
-    const user = useSelector((state: AppState) => state && state.user);
+    const user = useSelector(selectors.user.orNull);
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
-    const baseGameboard = useSelector(board.currentGameboard);
+    const baseGameboard = useSelector(selectors.board.currentGameboard);
 
     const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTags, setGameboardTags] = useState<string[]>([]);
@@ -72,7 +72,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
         }
     };
 
-    useEffect(() => {if (!wildcards) dispatch(getWildcards())}, [user]);
+    useEffect(() => {if (!wildcards) dispatch(getWildcards())}, [dispatch, user, wildcards]);
     useEffect(() => {
         if (baseGameboardId && (!baseGameboard)) {
             dispatch(loadGameboard(baseGameboardId));
@@ -195,7 +195,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                                                 onClick={() => {
                                                                     logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
                                                                     dispatch(openActiveModal({
-                                                                        closeAction: () => {store.dispatch(closeActiveModal())},
+                                                                        closeAction: () => {dispatch(closeActiveModal())},
                                                                         size: "xl",
                                                                         title: "Search questions",
                                                                         body: <QuestionSearchModal
@@ -223,6 +223,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                     id="gameboard-save-button" type="button" value="Save gameboard" disabled={!canSubmit}
                     className={"btn btn-block btn-secondary border-0 mt-2"} aria-describedby="gameboard-help"
                     onClick={() => {
+                        // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
                         let wildcard = undefined;
                         if (wildcardId && resourceFound(wildcards) && wildcards.length > 0) {
                             wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
@@ -233,7 +234,17 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         if (SITE_SUBJECT == SITE.CS) {
                             subjects.push("computer_science");
                         } else {
-                            subjects.push("physics");
+                            const definedSubjects = ["physics", "maths", "chemistry"];
+                            selectedQuestions?.forEach((item) => {
+                                let tags = intersection(definedSubjects, item.tags || []);
+                                tags.forEach((tag: string) => subjects.push(tag));
+                            }
+                            );
+                            // If none of the questions have a subject tag, default to physics
+                            if (subjects.length === 0) {
+                                subjects.push("physics");
+                            }
+                            subjects = Array.from(new Set(subjects));
                         }
 
                         dispatch(createGameboard({
@@ -250,7 +261,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         }));
 
                         dispatch(openActiveModal({
-                            closeAction: () => {store.dispatch(closeActiveModal())},
+                            closeAction: () => {dispatch(closeActiveModal())},
                             title: "Gameboard created",
                             body: <GameboardCreatedModal/>
                         }));

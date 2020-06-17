@@ -1,4 +1,6 @@
 import {
+    boards,
+    BoardsState,
     constants,
     groups,
     GroupsState,
@@ -6,22 +8,14 @@ import {
     rootReducer,
     search,
     toasts,
-    user,
-    boards,
-    BoardsState
+    user
 } from "../../app/state/reducers";
 import {Action, AppGameBoard, AppGroupMembership, AppQuestionDTO, LoggedInUser} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
 import {mapValues, union, without} from "lodash";
-import {groups as groupsSelector, boards as boardsSelector} from "../../app/state/selectors";
-import {
-    GameboardDTO,
-    UserGroupDTO,
-    UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO
-} from "../../IsaacApiTypes";
-import {act} from "react-dom/test-utils";
+import {selectors} from "../../app/state/selectors";
+import {UserGroupDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
@@ -231,7 +225,7 @@ describe("groups reducer", () => {
     });
 
     // @ts-ignore It's not a complete state
-    const groupSelector = mapValues(groupsSelector, f => (groupsState: GroupsState) => f({groups: groupsState}));
+    const groupSelector = mapValues(selectors.groups, f => (groupsState: GroupsState) => f({groups: groupsState}));
 
     it("can get new active groups", () => {
         const testGroups = {1: userGroupDTOs.one, 2: userGroupDTOs.two};
@@ -405,7 +399,7 @@ describe("boards reducer", () => {
     const groupsState = groups(null, groupCreationAction);
 
     // @ts-ignore It's not a complete state
-    const selector = mapValues(boardsSelector, f => (boardsState: BoardsState) => f({boards: boardsState, groups: groupsState}));
+    const selector = mapValues(selectors.boards, f => (boardsState: BoardsState) => f({boards: boardsState, groups: groupsState}));
 
     const testBoards: AppGameBoard[] = [{id: "abc", title: "ABC Board"}, {id: "def", title: "DEF Board"}];
 

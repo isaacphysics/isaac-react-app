@@ -1,5 +1,5 @@
 import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
     Button,
     Col,
@@ -17,14 +17,13 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {orderBy, sortBy} from "lodash";
 import {
-    ActiveModal,
     AppAssignmentProgress,
     AppGroup,
     EnhancedGameboard,
     PageSettings,
     SingleProgressDetailsProps
 } from "../../../IsaacAppTypes";
-import {groups} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
@@ -34,9 +33,9 @@ import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
 
-const stateFromProps = (state: AppState) => {
+function selectGroups(state: AppState) {
     if (state != null) {
-        const gameboards: { [id: string]: GameboardDTO} = {};
+        const gameboards: {[id: string]: GameboardDTO} = {};
         if (state.boards && state.boards.boards) {
             state.boards.boards.boards.forEach(board => {
                 gameboards[board.id as string] = board;
@@ -63,7 +62,7 @@ const stateFromProps = (state: AppState) => {
             });
         }
 
-        const activeGroups = groups.active(state);
+        const activeGroups = selectors.groups.active(state);
         if (activeGroups) {
             const activeGroupsWithAssignments = activeGroups.map(g => {
                 return {
@@ -79,9 +78,7 @@ const stateFromProps = (state: AppState) => {
     return {
         groups: null
     };
-};
-
-const dispatchFromProps = {loadGroups, loadAssignmentsOwnedByMe, loadBoard, loadProgress, openActiveModal};
+}
 
 type EnhancedAssignment = AssignmentDTO & {
     gameboard: EnhancedGameboard;
@@ -93,11 +90,6 @@ type AppGroupWithAssignments = AppGroup & {assignments: EnhancedAssignment[]};
 
 interface AssignmentProgressPageProps {
     groups: AppGroupWithAssignments[] | null;
-    loadGroups: (getArchived: boolean) => void;
-    loadAssignmentsOwnedByMe: () => void;
-    loadBoard: (boardId: string) => void;
-    loadProgress: (assignment: AssignmentDTO) => void;
-    openActiveModal: (modal: ActiveModal) => void;
 }
 
 enum SortOrder {
@@ -376,11 +368,12 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
 };
 
 const ProgressLoader = (props: AssignmentDetailsProps) => {
-    const {assignment, loadProgress} = props;
+    const dispatch = useDispatch();
+    const {assignment} = props;
 
     useEffect( () => {
-        loadProgress(assignment);
-    }, [assignment._id]);
+        dispatch(loadProgress(assignment));
+    }, [dispatch, assignment._id]);
 
     const progress = assignment.progress;
 
@@ -389,8 +382,8 @@ const ProgressLoader = (props: AssignmentDetailsProps) => {
 };
 
 const AssignmentDetails = (props: AssignmentDetailsProps) => {
-    const {assignment, openActiveModal} = props;
-
+    const {assignment} = props;
+    const dispatch = useDispatch();
     const [isExpanded, setIsExpanded] = useState(false);
 
     const assignmentPath = SITE_SUBJECT == SITE.PHY ? "assignment_progress" : "my_markbook";
@@ -398,7 +391,7 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
-        openActiveModal(downloadLinkModal(event.currentTarget.href));
+        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
     function openSingleAssignment(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -463,15 +456,16 @@ export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) =
             <label>Percent view&nbsp;<input type="checkbox" checked={pageSettings.formatAsPercentage} onChange={e => pageSettings.setFormatAsPercentage(e.target.checked)}/></label>
         </div>
     </div></div>
-}
+};
 
 const GroupDetails = (props: GroupDetailsProps) => {
-    const {group, pageSettings, loadBoard} = props;
+    const dispatch = useDispatch();
+    const {group, pageSettings} = props;
 
     const gameboardIs = group.assignments.map(assignment => assignment.gameboardId as string);
     const joinedGameboardIds = gameboardIs.join(",");
     useEffect( () => {
-        gameboardIs.forEach(gameboardId => loadBoard(gameboardId));
+        gameboardIs.forEach(gameboardId => dispatch(loadBoard(gameboardId)));
     }, [joinedGameboardIds]);
 
     const gameboardsLoaded = group.assignments.every(assignment => assignment.gameboard != null);
@@ -488,7 +482,8 @@ function getGroupProgressCSVDownloadLink(groupId: number) {
 }
 
 const GroupAssignmentProgress = (props: GroupDetailsProps) => {
-    const {group, openActiveModal} = props;
+    const dispatch = useDispatch();
+    const {group} = props;
     const [isExpanded, setExpanded] = useState(false);
 
     const assignmentCount = group.assignments.length;
@@ -497,7 +492,7 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
         event.stopPropagation();
         event.preventDefault();
         //showDownloadModal(event.currentTarget.href);
-        openActiveModal(downloadLinkModal(event.currentTarget.href));
+        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
     return <React.Fragment>
@@ -515,8 +510,9 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
     </React.Fragment>;
 };
 
-const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => {
-    const {groups, loadGroups, loadAssignmentsOwnedByMe} = props;
+export function AssignmentProgress(props: AssignmentProgressPageProps) {
+    const dispatch = useDispatch();
+    const {groups} = useSelector(selectGroups);
 
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
@@ -538,9 +534,9 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
     }
 
     useEffect(() => {
-        loadGroups(false);
-        loadAssignmentsOwnedByMe();
-    }, []);
+        dispatch(loadGroups(false));
+        dispatch(loadAssignmentsOwnedByMe());
+    }, [dispatch]);
 
     return <React.Fragment>
         <Container>
@@ -576,6 +572,4 @@ const AssignmentProgressPageComponent = (props: AssignmentProgressPageProps) => 
             </ShowLoading>
         </div>
     </React.Fragment>;
-};
-
-export const AssignmentProgress = connect(stateFromProps, dispatchFromProps)(AssignmentProgressPageComponent);
+}

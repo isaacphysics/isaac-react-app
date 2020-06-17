@@ -1,28 +1,18 @@
 import React, {useEffect} from 'react';
-import {connect} from "react-redux";
+import {useDispatch} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {handleProviderCallback} from "../../state/actions";
-import {AppState} from "../../state/reducers";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 import {Spinner} from "reactstrap";
-
-const stateToProps = (state: AppState) => (state && {user: state.user});
-const dispatchToProps = {handleProviderCallback: handleProviderCallback};
 
 interface ProviderCallbackHandlerProps {
     match: {params: {provider: AuthenticationProvider}};
     location: {search: string};
-    user: LoggedInUser | null;
-    handleProviderCallback: (provider: AuthenticationProvider, search: string) => void;
 }
-
-const ProviderCallbackHandlerComponent = (props: ProviderCallbackHandlerProps) => {
-    const {match: {params: {provider}}, location: {search}, user, handleProviderCallback} = props;
-
-    useEffect(() => {
-        handleProviderCallback(provider, search);
-    }, [handleProviderCallback, provider, search]);
+export const ProviderCallbackHandler = withRouter((props: ProviderCallbackHandlerProps) => {
+    const {match: {params: {provider}}, location: {search}} = props;
+    const dispatch = useDispatch();
+    useEffect(() => {dispatch(handleProviderCallback(provider, search))}, [dispatch, provider, search]);
 
     return <React.Fragment>
         <div className="w-100 text-center">
@@ -30,7 +20,4 @@ const ProviderCallbackHandlerComponent = (props: ProviderCallbackHandlerProps) =
             <Spinner color="primary" />
         </div>
     </React.Fragment>;
-};
-
-export const ProviderCallbackHandler =
-    withRouter(connect(stateToProps, dispatchToProps)(ProviderCallbackHandlerComponent));
+});

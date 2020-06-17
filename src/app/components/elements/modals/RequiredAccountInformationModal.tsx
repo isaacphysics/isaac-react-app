@@ -20,11 +20,12 @@ import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {EXAM_BOARD} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {selectors} from "../../../state/selectors";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
     const dispatch = useDispatch();
-    const user = useSelector((state: AppState) => state && state.user);
+    const user = useSelector(selectors.user.orNull);
     const userPreferences = useSelector((state: AppState) => state && state.userPreferences);
 
     // Local state

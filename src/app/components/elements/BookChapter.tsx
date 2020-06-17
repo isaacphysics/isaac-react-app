@@ -1,7 +1,6 @@
 import React from "react";
 import * as RS from "reactstrap";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
-import {store} from "../../state/store";
 import {useDispatch} from "react-redux";
 import {PageFragment} from "./PageFragment";
 import {SUBJECTS} from "../../services/constants";
@@ -19,7 +18,7 @@ export const BookChapter = ({chapterId, chapterTitle, chapterSubHeading, chapter
 
     function bookChapterLoad() {
         dispatch(openActiveModal({
-            closeAction: () => {store.dispatch(closeActiveModal())},
+            closeAction: () => {dispatch(closeActiveModal())},
             title: chapterTitle,
             body: <div className={"book-chapter-options" + " " + chapterSubject}>
                 <PageFragment fragmentId={chapterId}/>

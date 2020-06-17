@@ -383,6 +383,7 @@ export interface UserSummaryDTO extends AbstractSegueUserDTO {
     role?: Role;
     authorisedFullAccess?: boolean;
     emailVerificationStatus?: EmailVerificationStatus;
+    examBoard?: EXAM_BOARD;
     id?: number;
 }
 

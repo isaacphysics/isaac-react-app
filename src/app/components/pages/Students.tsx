@@ -1,22 +1,14 @@
 import React from "react";
-import {connect} from "react-redux";
+import {useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
-import {AppState} from "../../state/reducers";
-import {LoggedInUser} from "../../../IsaacAppTypes";
 import {Link} from "react-router-dom";
 import {LinkCard} from "../elements/cards/LinkCard";
+import {selectors} from "../../state/selectors";
 
-const stateToProps = (state: AppState) => ({
-    user: (state && state.user) || null
-});
-
-interface StudentProps {
-    user: LoggedInUser | null;
-}
-
-const StudentsComponent = ({user}: StudentProps) => {
+export const Students = () => {
+    const user = useSelector(selectors.user.orNull);
     const pageTitle = user && user.loggedIn ? "My Isaac" : "How we help students";
     const registrationButton = <div className="text-center">
         <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>Sign up</RS.Button>
@@ -78,5 +70,3 @@ const StudentsComponent = ({user}: StudentProps) => {
         </RS.Row>}
     </RS.Container>;
 };
-
-export const Students = connect(stateToProps)(StudentsComponent);

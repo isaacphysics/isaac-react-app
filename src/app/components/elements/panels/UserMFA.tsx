@@ -11,7 +11,7 @@ import {AppState} from "../../../state/reducers";
 interface UserMFAProps {
     setMFASetupSecret: (e: any) => void;
     mfaVerificationCode: string;
-    setMFAVerificationCode: (e: any) => void,
+    setMFAVerificationCode: (e: any) => void;
     myUser: ValidationUser;
     setMyUser: (e: any) => void;
     userAuthSettings: UserAuthenticationSettingsDTO | null;

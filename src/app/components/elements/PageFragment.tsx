@@ -18,7 +18,7 @@ export const PageFragment = ({fragmentId, renderFragmentNotFound}: PageFragmentC
 
     useEffect(() => {
         dispatch(fetchFragment(fragmentId))
-    }, [fragmentId]);
+    }, [dispatch, fragmentId]);
 
     const notFoundComponent = <div>
         <h2>Content not found</h2>

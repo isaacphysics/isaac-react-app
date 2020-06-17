@@ -11,21 +11,21 @@ import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {DOCUMENT_TYPE} from "../../services/constants";
-import {calculateSearchTypes, pushSearchToHistory} from "../../services/search";
+import {calculateSearchTypes, pushSearchToHistory, searchResultIsPublic} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
-import {searchResultIsPublic} from "../../services/search"
 import {ShortcutResponses} from "../../../IsaacAppTypes";
 import {filterOnExamBoard, useCurrentExamBoard} from "../../services/examBoard";
 import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {selectors} from "../../state/selectors";
 
 
 export const Search = withRouter((props: {history: History; location: Location}) => {
     const {location, history} = props;
     const dispatch = useDispatch();
     const searchResults = useSelector((state: AppState) => state && state.search && state.search.searchResults || null);
-    const user = useSelector((state: AppState) => state && state.user || null);
+    const user = useSelector(selectors.user.orNull);
     const examBoard = useCurrentExamBoard();
 
     const searchParsed = queryString.parse(location.search);
@@ -51,7 +51,7 @@ export const Search = withRouter((props: {history: History; location: Location})
             setSearchFilterConcepts(concepts);
             dispatch(fetchSearch(query, calculateSearchTypes(problems, concepts)));
         },
-        [query, problems, concepts]
+        [dispatch, query, problems, concepts]
     );
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {

@@ -1,39 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
-import {AppState, ContentVersionState} from "../../state/reducers";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {getContentVersion, requestConstantsSegueVersion, setContentVersion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {selectors} from "../../state/selectors";
 import classnames from "classnames";
 
-const stateToProps = (state: AppState) => ({
-    segueVersion: state && state.constants && state.constants.segueVersion || "unknown",
-    contentVersion: state && state.contentVersion || null,
-});
-
-const dispatchToProps = {getContentVersion, setContentVersion, requestConstantsSegueVersion};
-
-interface AdminPageProps {
-    user: RegisteredUserDTO;
-    segueVersion: string;
-    contentVersion: ContentVersionState;
-    getContentVersion: () => void;
-    setContentVersion: (version: string) => void;
-    requestConstantsSegueVersion: () => void;
-}
-
-const AdminPageComponent = ({user, getContentVersion, setContentVersion, contentVersion, segueVersion, requestConstantsSegueVersion}: AdminPageProps) => {
+export const Admin = ({user}: {user: RegisteredUserDTO}) => {
+    const dispatch = useDispatch();
+    const segueVersion = useSelector(selectors.segue.versionOrUnknown);
+    const contentVersion = useSelector(selectors.segue.contentVersion);
     useEffect(() => {
-        getContentVersion();
-    }, []);
-
-    useEffect(() => {
-        requestConstantsSegueVersion();
-    }, []);
+        dispatch(getContentVersion());
+        dispatch(requestConstantsSegueVersion());
+    }, [dispatch]);
 
     const [newVersion, setNewVersion] = useState<string | null>(null);
 
@@ -44,7 +28,7 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
             event.preventDefault();
         }
         if (contentVersion && displayVersion !== contentVersion.liveVersion && newVersion != null) {
-            setContentVersion(newVersion);
+            dispatch(setContentVersion(newVersion));
         }
     };
 
@@ -143,5 +127,3 @@ const AdminPageComponent = ({user, getContentVersion, setContentVersion, content
         </div>
     </RS.Container>;
 };
-
-export const Admin = connect(stateToProps, dispatchToProps)(AdminPageComponent);

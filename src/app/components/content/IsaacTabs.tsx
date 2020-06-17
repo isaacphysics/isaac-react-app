@@ -6,7 +6,6 @@ import {useCurrentExamBoard} from "../../services/examBoard";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {useDispatch} from "react-redux";
 import {closeActiveModal, openActiveModal} from '../../state/actions';
-import {store} from '../../state/store';
 
 interface IsaacTabsProps {
     doc: {children: {title?: string; children?: ContentDTO[]}[]};
@@ -20,7 +19,7 @@ export const IsaacTabs = (props: any) => {
 
     function expandToModal(content: any) {
         dispatch(openActiveModal({
-            closeAction: () => {store.dispatch(closeActiveModal())},
+            closeAction: () => {dispatch(closeActiveModal())},
             title: '',
             body: content
         }))

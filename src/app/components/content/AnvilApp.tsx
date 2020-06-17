@@ -3,7 +3,8 @@ import {AnvilAppDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
 import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
+import {selectQuestionPart} from "../../services/questions";
 
 interface AnvilAppProps {
     doc: AnvilAppDTO;
@@ -15,16 +16,17 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
     const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${sessionIdentifier}`;
     const title = doc.value || "Anvil app";
     const page = useSelector((state: AppState) => (state && state.doc) || null);
-    const user = useSelector((state: AppState) => (state && state.user) || null);
+    const user = useSelector(selectors.user.orNull);
 
-    let iframeRef = React.useRef() as RefObject<HTMLIFrameElement>;
+    const iframeRef = React.useRef() as RefObject<HTMLIFrameElement>;
 
-    let accordionSectionId = useContext(AccordionSectionContext).id;
-    let questionId = useContext(QuestionContext);
+    const accordionSectionId = useContext(AccordionSectionContext).id;
+    const questionId = useContext(QuestionContext);
 
-    let parentQuestion = useSelector((state: AppState) => questions.selectQuestionPart(questionId)(state)) || undefined;
+    const pageQuestions = useSelector(selectors.questions.getQuestions);
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
 
-    let appParams: {[s: string]: string} = {};
+    const appParams: {[s: string]: string} = {};
 
     appParams["hostname"] = window.location.hostname;
     if (user && user.loggedIn) {
@@ -36,15 +38,15 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
         }
     }
 
-    if (parentQuestion !== undefined) {
-        if (parentQuestion.id != null) {
-            appParams["problem_id"] = parentQuestion.id;
+    if (questionPart !== undefined) {
+        if (questionPart.id != null) {
+            appParams["problem_id"] = questionPart.id;
         }
-        if (parentQuestion.type != null) {
-            appParams["problem_type"] = parentQuestion.type;
+        if (questionPart.type != null) {
+            appParams["problem_type"] = questionPart.type;
         }
-        if (parentQuestion.bestAttempt && parentQuestion.bestAttempt.correct) {
-            appParams["problem_previously_correct"] = parentQuestion.bestAttempt.correct.toString();
+        if (questionPart.bestAttempt && questionPart.bestAttempt.correct) {
+            appParams["problem_previously_correct"] = questionPart.bestAttempt.correct.toString();
         }
     }
 
@@ -61,13 +63,13 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
         }
     }
 
-    let queryParams = Object.keys(appParams).map((key) => {
+    const queryParams = Object.keys(appParams).map((key) => {
         return encodeURIComponent(key) + '=' + encodeURIComponent(appParams[key])
     }).join('&');
 
-    let iframeSrc = `${baseURL}#?${queryParams}`;
+    const iframeSrc = `${baseURL}#?${queryParams}`;
 
-    let onMessage = function(e: any) {
+    const onMessage = function(e: any) {
         if (iframeRef.current && e.source !== (iframeRef.current as HTMLIFrameElement).contentWindow) {
             return;
         }

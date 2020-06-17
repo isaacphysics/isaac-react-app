@@ -1,20 +1,20 @@
-import React, {useEffect, useState, useMemo} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    cancelReservationsOnEvent,
     closeActiveModal,
     getEventBookingsForGroup,
     getGroupMembers,
     loadGroups,
     reserveUsersOnEvent,
-    selectGroup,
-    cancelReservationsOnEvent
+    selectGroup
 } from "../../../state/actions";
 import {store} from "../../../state/store";
-import {Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Col, CustomInput, Row, Table} from "reactstrap";
+import {Button, Col, CustomInput, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row, Table} from "reactstrap";
 import {AppState} from "../../../state/reducers";
-import {groups} from '../../../state/selectors';
+import {selectors} from '../../../state/selectors';
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {AppGroupMembership, AppGroup, ActiveModal} from "../../../../IsaacAppTypes";
+import {ActiveModal, AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
 import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
 import _orderBy from "lodash/orderBy";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
@@ -24,13 +24,13 @@ import {Link} from "react-router-dom";
 const ReservationsModal = () => {
     const dispatch = useDispatch();
     const user = useSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
-    const activeGroups = useSelector(groups.active);
+    const activeGroups = useSelector(selectors.groups.active);
     const activeFilteredGroups = useMemo(() => activeGroups?.filter(group => !group.archived), [activeGroups])?.sort((a: AppGroup, b: AppGroup): number => {
         if (!a.groupName || !b.groupName || (a.groupName === b.groupName)) return 0;
         if (a.groupName > b.groupName) return 1;
         return -1;
     });
-    const currentGroup = useSelector(groups.current);
+    const currentGroup = useSelector(selectors.groups.current);
     const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
     const eventBookingsForGroup = useSelector((state: AppState) => state && state.eventBookingsForGroup || []);
     const [unbookedUsers, setUnbookedUsers] = useState<AppGroupMembership[]>([]);
@@ -187,7 +187,7 @@ const ReservationsModal = () => {
                             </React.Fragment>
                         </ShowLoading>
                     </Col>
-                    {activeFilteredGroups && activeFilteredGroups.length === 0 && <p>Create a groups from the <Link to="/groups" onClick={() => store.dispatch(closeActiveModal())}>Manage groups</Link> page to book your students onto an event</p>}
+                    {activeFilteredGroups && activeFilteredGroups.length === 0 && <p>Create a groups from the <Link to="/groups" onClick={() => dispatch(closeActiveModal())}>Manage groups</Link> page to book your students onto an event</p>}
                     <Col cols={12} lg={{size: 8, offset: 1}} xl={{size: 9, offset: 0}}>
                         {activeFilteredGroups && activeFilteredGroups.length > 0 && (!currentGroup || !currentGroup.members) && <p>Select one of your groups from the dropdown menu to see its members.</p>}
                         {currentGroup && currentGroup.members && currentGroup.members.length == 0 && <p>This group has no members. Please select another group.</p>}

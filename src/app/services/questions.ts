@@ -7,6 +7,7 @@ import {IsaacFreeTextQuestion} from "../components/content/IsaacFreeTextQuestion
 import {IsaacSymbolicLogicQuestion} from "../components/content/IsaacSymbolicLogicQuestion";
 import {IsaacSymbolicQuestion} from "../components/content/IsaacSymbolicQuestion";
 import {IsaacSymbolicChemistryQuestion} from "../components/content/IsaacSymbolicChemistryQuestion";
+import {AppQuestionDTO} from "../../IsaacAppTypes";
 
 // @ts-ignore as TypeScript is struggling to infer common type for questions
 export const QUESTION_TYPES = new Map([
@@ -68,4 +69,8 @@ export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[])
         }
     }
     return theseSymbols;
+}
+
+export function selectQuestionPart(questions?: AppQuestionDTO[], questionPartId?: string) {
+    return questions?.filter(question => question.id == questionPartId)[0];
 }

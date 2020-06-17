@@ -2,13 +2,13 @@ import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {ALPHABET, NOT_FOUND} from "../../services/constants";
-import {connect, useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {TrustedHtml} from "./TrustedHtml";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
-import {questions} from "../../state/selectors";
+import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface AccordionsProps {
@@ -17,12 +17,13 @@ interface AccordionsProps {
     index: number;
     location: {hash: string};
     children?: React.ReactElement;
-    logAction: (eventDetails: object) => void;
 }
 
 let nextClientId = 0;
 
-const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}}: AccordionsProps) => {
+export const Accordion = withRouter(({id, trustedTitle, index, children, location: {hash}}: AccordionsProps) => {
+    const dispatch = useDispatch();
+
     // Toggle
     const isFirst = index === 0;
     const [open, setOpen] = useState(isFirst);
@@ -54,34 +55,32 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
 
     function logAccordionOpen() {
         if (page && page != NOT_FOUND) {
-            switch (page.type) {
-                case "isaacQuestionPage":
-                    logAction({
-                        type: "QUESTION_PART_OPEN",
-                        questionPageId: page.id,
-                        questionPartIndex: index,
-                        questionPartId: id
-                    });
-                    break;
-                case "isaacConceptPage":
-                    logAction({
-                        type: "CONCEPT_SECTION_OPEN",
-                        conceptPageId: page.id,
-                        conceptSectionIndex: index,
-                        conceptSectionLevel: null,
-                        conceptSectionId: id
-                    });
-                    // TODO for IP add doc.level for conceptSectionLevel event
-                    break;
-                default:
-                    logAction({
-                        type: "ACCORDION_SECTION_OPEN",
-                        pageId: page.id,
-                        accordionId: id,
-                        accordionTitle: trustedTitle,
-                        accordionIndex: index
-                    })
+            let eventDetails;
+            if (page.type === "isaacQuestionPage") {
+                eventDetails = {
+                    type: "QUESTION_PART_OPEN",
+                    questionPageId: page.id,
+                    questionPartIndex: index,
+                    questionPartId: id
+                };
+            } else if (page.type === "isaacConceptPage") {
+                eventDetails = {
+                    type: "CONCEPT_SECTION_OPEN",
+                    conceptPageId: page.id,
+                    conceptSectionIndex: index,
+                    conceptSectionLevel: null,
+                    conceptSectionId: id
+                };
+            } else {
+                eventDetails = {
+                    type: "ACCORDION_SECTION_OPEN",
+                    pageId: page.id,
+                    accordionId: id,
+                    accordionTitle: trustedTitle,
+                    accordionIndex: index
+                };
             }
+            dispatch(logAction(eventDetails));
         }
     }
 
@@ -89,30 +88,27 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
     const clientId = useRef('c' + nextClientId++);
 
     // Check results of questions in this accordion
-    let accordianIcon;
-    const questionsInsideThis = useSelector((state: AppState) => {
-        return questions.filter(q => q.accordionClientId === clientId.current)(state);
-    });
-    if (questionsInsideThis.length > 0) {
+    let accordionIcon;
+    const questionsOnPage = useSelector(selectors.questions.getQuestions) || [];
+    const questionsInsideAccordionSection = questionsOnPage?.filter(q => q.accordionClientId === clientId.current);
+    if (questionsInsideAccordionSection.length > 0) {
         let allCorrect = true;
         let allWrong = true;
         let allValidated = true;
-        questionsInsideThis.forEach(question => {
-            if (question) {
-                if (question.validationResponse) {
-                    const correct = question.validationResponse.correct;
-                    if (correct) {
-                        allWrong = false;
-                    } else {
-                        allCorrect = false;
-                    }
+        questionsInsideAccordionSection.forEach(question => {
+            if (question.validationResponse) {
+                const correct = question.validationResponse.correct;
+                if (correct) {
+                    allWrong = false;
                 } else {
-                    allValidated = false;
+                    allCorrect = false;
                 }
+            } else {
+                allValidated = false;
             }
         });
-        if (allValidated && allCorrect) accordianIcon = "tick";
-        if (allValidated && allWrong) accordianIcon = "cross";
+        if (allValidated && allCorrect) accordionIcon = "tick";
+        if (allValidated && allWrong) accordionIcon = "cross";
     }
 
 
@@ -147,8 +143,8 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
                         {trustedTitle && <div className="p-3"><TrustedHtml html={trustedTitle} /></div>}</RS.Row>
                 </div>
 
-                {accordianIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon accordion-icon-" + accordianIcon}>
-                    <span className="sr-only">{accordianIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
+                {accordionIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon accordion-icon-" + accordionIcon}>
+                    <span className="sr-only">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
                 </span>}
             </RS.Button>
         </div>
@@ -162,6 +158,4 @@ const AccordionComponent = ({id, trustedTitle, index, children, location: {hash}
             </AccordionSectionContext.Provider>
         </RS.Collapse>
     </div>;
-};
-
-export const Accordion = withRouter(connect(null, {logAction: logAction})(AccordionComponent));
+});
