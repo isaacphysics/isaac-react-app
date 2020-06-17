@@ -93,7 +93,7 @@ const GraphSketcherPageComponent = () => {
                         />}
                     </div>
                     {/* TODO af599 This needs checking, not sure why graphSpec is a {[key: number]: string} instead of a string[] */}
-                    {graphSpec && Object.keys(graphSpec).map((key) => <pre>{graphSpec[key as unknown as number]}</pre>)}
+                    {graphSpec && Object.keys(graphSpec).map((key) => <pre key={key}>{graphSpec[key as unknown as number]}</pre>)}
                 </Col>
             </Row>
         </Container>
