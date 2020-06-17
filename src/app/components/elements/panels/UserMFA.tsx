@@ -1,5 +1,5 @@
 import {Button, CardBody, Col, FormGroup, Input, Label, Row} from "reactstrap";
-import React, {useEffect} from "react";
+import React, {useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
@@ -9,23 +9,18 @@ import QRCode from 'qrcode'
 import {AppState} from "../../../state/reducers";
 
 interface UserMFAProps {
-    mfaVerificationCode: string;
-    setMFAVerificationCode: (e: any) => void;
     myUser: ValidationUser;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
-    updateMFARequest?: boolean;
-    setUpdateMFARequest: (e: any) => void;
-    successfulMFASetup?: boolean;
-    setSuccessfulMFASetup: (e: any) => void;
     editingOtherUser: boolean;
 }
 
-export const UserMFA = (
-    {mfaVerificationCode, setMFAVerificationCode, myUser, userAuthSettings, updateMFARequest, setUpdateMFARequest, successfulMFASetup, setSuccessfulMFASetup, editingOtherUser}: UserMFAProps) => {
-
+export const UserMFA = ({myUser, userAuthSettings, editingOtherUser}: UserMFAProps) => {
     const dispatch = useDispatch();
     const segueEnvironment = useSelector((state: AppState) => state?.constants?.segueEnvironment || "unknown");
     const totpSharedSecret = useSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
+    const [updateMFARequest, setUpdateMFARequest] = useState(false);
+    const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
+    const [mfaVerificationCode, setMFAVerificationCode] = useState<string | null>("");
 
     let qrCodeStringBase64SVG: string | null = null;
     let authenticatorURL: string | null = null;
@@ -34,7 +29,7 @@ export const UserMFA = (
         if (segueEnvironment === "DEV") {
             issuer += encodeURIComponent(` (${window.location.host})`);
         }
-        authenticatorURL = `otpauth://totp/${myUser.email}?secret=${totpSharedSecret}&issuer=${issuer}`
+        authenticatorURL = `otpauth://totp/${myUser.email}?secret=${totpSharedSecret}&issuer=${issuer}`;
         QRCode.toString(authenticatorURL, {type:'svg'}, function (err, val) {
             if (err) {
                 console.error(err);
@@ -90,7 +85,7 @@ export const UserMFA = (
                                         className="btn-secondary"
                                         disabled={SITE_SUBJECT === SITE.PHY || !mfaVerificationCode}
                                         onClick={() => {
-                                            if (totpSharedSecret)
+                                            if (totpSharedSecret && mfaVerificationCode)
                                                 dispatch(setupAccountMFA(totpSharedSecret, mfaVerificationCode))
                                         }}
                                     >

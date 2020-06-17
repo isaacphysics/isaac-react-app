@@ -123,11 +123,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
     const [currentPassword, setCurrentPassword] = useState("");
 
-    // - MFA
-    const [updateMFARequest, setUpdateMFARequest] = useState(false);
-    const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
-    const [mfaVerificationCode, setMFAVerificationCode] = useState("");
-
     // - User preferences
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
@@ -263,17 +258,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
                                 />
-                                {user.role === 'ADMIN' &&
+                                {user.role === 'ADMIN' && !editingOtherUser &&
                                     // beta feature just for admins
                                     <UserMFA
                                         userAuthSettings={userAuthSettings}
                                         myUser={userToUpdate}
                                         editingOtherUser={editingOtherUser}
-                                        mfaVerificationCode={mfaVerificationCode}
-                                        setMFAVerificationCode={setMFAVerificationCode}
-                                        updateMFARequest={updateMFARequest} setUpdateMFARequest={setUpdateMFARequest}
-                                        successfulMFASetup={successfulMFASetup}
-                                        setSuccessfulMFASetup={setSuccessfulMFASetup}
                                     />
                                 }
                             </TabPane>
