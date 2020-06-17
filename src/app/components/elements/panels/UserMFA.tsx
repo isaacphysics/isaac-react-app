@@ -20,7 +20,7 @@ export const UserMFA = ({myUser, userAuthSettings, editingOtherUser}: UserMFAPro
     const totpSharedSecret = useSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
     const [updateMFARequest, setUpdateMFARequest] = useState(false);
     const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
-    const [mfaVerificationCode, setMFAVerificationCode] = useState<string | null>("");
+    const [mfaVerificationCode, setMFAVerificationCode] = useState<string | undefined>(undefined);
 
     let qrCodeStringBase64SVG: string | null = null;
     let authenticatorURL: string | null = null;
@@ -42,7 +42,7 @@ export const UserMFA = ({myUser, userAuthSettings, editingOtherUser}: UserMFAPro
     if (totpSharedSecret == null && mfaVerificationCode) {
         // assume we have just completed a successful configuration of MFA as secret is clear and tidy up
         setUpdateMFARequest(false);
-        setMFAVerificationCode(null);
+        setMFAVerificationCode(undefined);
         setSuccessfulMFASetup(true);
     }
 
@@ -75,6 +75,7 @@ export const UserMFA = ({myUser, userAuthSettings, editingOtherUser}: UserMFAPro
                                     <Label htmlFor="setup-verification-code">Verification Code</Label>
                                     <Input
                                         id="setup-verification-code" type="text" name="setup-verification-code"
+                                        value={mfaVerificationCode || ""}
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                             setMFAVerificationCode(e.target.value.replace(/ /g, ""))
                                         }
