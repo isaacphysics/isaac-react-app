@@ -25,11 +25,9 @@ interface UserMFAProps {
 export const UserMFA = (
     {mfaVerificationCode, setMFASetupSecret, setMFAVerificationCode, myUser, setMyUser, userAuthSettings, updateMFARequest, setUpdateMFARequest, successfulMFASetup, setSuccessfulMFASetup, editingOtherUser}: UserMFAProps) => {
 
-    const segueEnvironment = useSelector((state: AppState) => state?.constants?.segueEnvironment || "unknown");
     const dispatch = useDispatch();
-    const totpSharedSecret = useSelector((state: AppState) => {
-        return state?.totpSharedSecret?.sharedSecret;
-    });
+    const segueEnvironment = useSelector((state: AppState) => state?.constants?.segueEnvironment || "unknown");
+    const totpSharedSecret = useSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
 
     let qrCodeStringBase64SVG: string | null = null;
     let authenticatorURL: string | null = null;
@@ -41,7 +39,7 @@ export const UserMFA = (
         authenticatorURL = `otpauth://totp/${myUser.email}?secret=${totpSharedSecret}&issuer=${issuer}`
         QRCode.toString(authenticatorURL, {type:'svg'}, function (err, val) {
             if (err) {
-                console.error(err)
+                console.error(err);
                 return;
             }
             qrCodeStringBase64SVG = new Buffer(val).toString('base64');
@@ -98,12 +96,14 @@ export const UserMFA = (
                                     />
                                 </FormGroup>
                                 <FormGroup>
-                                    <Button className="btn-secondary"
-                                            disabled={SITE_SUBJECT === SITE.PHY || !mfaVerificationCode}
-                                            onClick={() => {
-                                                if (totpSharedSecret)
-                                                    dispatch(setupAccountMFA(totpSharedSecret, mfaVerificationCode))
-                                            }}>
+                                    <Button
+                                        className="btn-secondary"
+                                        disabled={SITE_SUBJECT === SITE.PHY || !mfaVerificationCode}
+                                        onClick={() => {
+                                            if (totpSharedSecret)
+                                                dispatch(setupAccountMFA(totpSharedSecret, mfaVerificationCode))
+                                        }}
+                                    >
                                         {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
                                     </Button>
                                 </FormGroup>
@@ -113,9 +113,10 @@ export const UserMFA = (
                         <Row>
                             <Col md={{size: 6, offset: 3}}>
                                 <FormGroup>
-                                    <Button className="btn-secondary"
-                                            disabled={SITE_SUBJECT === SITE.PHY}
-                                            onClick={() => {setUpdateMFARequest(true); dispatch(getNewTotpSecret())}}>
+                                    <Button
+                                        className="btn-secondary" disabled={SITE_SUBJECT === SITE.PHY}
+                                        onClick={() => {setUpdateMFARequest(true); dispatch(getNewTotpSecret())}}
+                                    >
                                         {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
                                     </Button>
                                 </FormGroup>
@@ -145,8 +146,10 @@ export const UserMFA = (
                     <Col className="text-center">
                         {userAuthSettings && <p>
                             <FormGroup>
-                                <Button className="btn-secondary"
-                                        onClick={() => {myUser.id && dispatch(disableTotpForAccount(myUser.id))}}>
+                                <Button
+                                    className="btn-secondary"
+                                    onClick={() => {myUser.id && dispatch(disableTotpForAccount(myUser.id))}}
+                                >
                                     Disable 2FA for user
                                 </Button>
                             </FormGroup>
