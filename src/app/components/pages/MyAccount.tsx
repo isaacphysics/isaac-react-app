@@ -126,7 +126,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     // - MFA
     const [updateMFARequest, setUpdateMFARequest] = useState(false);
     const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
-    const [, setMFASetupSecret] = useState("");
     const [mfaVerificationCode, setMFAVerificationCode] = useState("");
 
     // - User preferences
@@ -269,7 +268,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     <UserMFA
                                         userAuthSettings={userAuthSettings}
                                         myUser={userToUpdate}
-                                        setMFASetupSecret={setMFASetupSecret}
                                         editingOtherUser={editingOtherUser}
                                         mfaVerificationCode={mfaVerificationCode}
                                         setMFAVerificationCode={setMFAVerificationCode}

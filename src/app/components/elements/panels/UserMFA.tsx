@@ -9,7 +9,6 @@ import QRCode from 'qrcode'
 import {AppState} from "../../../state/reducers";
 
 interface UserMFAProps {
-    setMFASetupSecret: (e: any) => void;
     mfaVerificationCode: string;
     setMFAVerificationCode: (e: any) => void;
     myUser: ValidationUser;
@@ -22,7 +21,7 @@ interface UserMFAProps {
 }
 
 export const UserMFA = (
-    {mfaVerificationCode, setMFASetupSecret, setMFAVerificationCode, myUser, userAuthSettings, updateMFARequest, setUpdateMFARequest, successfulMFASetup, setSuccessfulMFASetup, editingOtherUser}: UserMFAProps) => {
+    {mfaVerificationCode, setMFAVerificationCode, myUser, userAuthSettings, updateMFARequest, setUpdateMFARequest, successfulMFASetup, setSuccessfulMFASetup, editingOtherUser}: UserMFAProps) => {
 
     const dispatch = useDispatch();
     const segueEnvironment = useSelector((state: AppState) => state?.constants?.segueEnvironment || "unknown");
@@ -44,14 +43,6 @@ export const UserMFA = (
             qrCodeStringBase64SVG = new Buffer(val).toString('base64');
         });
     }
-
-    useEffect(() => {
-        if (totpSharedSecret) {
-            setMFASetupSecret(totpSharedSecret);
-        }
-
-    }, [totpSharedSecret]);
-
 
     if (totpSharedSecret == null && mfaVerificationCode) {
         // assume we have just completed a successful configuration of MFA as secret is clear and tidy up
