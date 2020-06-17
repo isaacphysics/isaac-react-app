@@ -13,7 +13,6 @@ interface UserMFAProps {
     mfaVerificationCode: string;
     setMFAVerificationCode: (e: any) => void;
     myUser: ValidationUser;
-    setMyUser: (e: any) => void;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     updateMFARequest?: boolean;
     setUpdateMFARequest: (e: any) => void;
@@ -23,7 +22,7 @@ interface UserMFAProps {
 }
 
 export const UserMFA = (
-    {mfaVerificationCode, setMFASetupSecret, setMFAVerificationCode, myUser, setMyUser, userAuthSettings, updateMFARequest, setUpdateMFARequest, successfulMFASetup, setSuccessfulMFASetup, editingOtherUser}: UserMFAProps) => {
+    {mfaVerificationCode, setMFASetupSecret, setMFAVerificationCode, myUser, userAuthSettings, updateMFARequest, setUpdateMFARequest, successfulMFASetup, setSuccessfulMFASetup, editingOtherUser}: UserMFAProps) => {
 
     const dispatch = useDispatch();
     const segueEnvironment = useSelector((state: AppState) => state?.constants?.segueEnvironment || "unknown");
