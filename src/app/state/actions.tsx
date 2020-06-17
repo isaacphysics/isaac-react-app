@@ -47,7 +47,8 @@ import {
     TestCaseDTO,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
+    UserSummaryWithEmailAddressDTO,
+    GraphChoiceDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -897,6 +898,18 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
         dispatch(showErrorToastIfNeeded("Failed to test question", e));
     }
 };
+
+// Generate answer spec for graph sketcher
+export const generateSpecification = (graphChoice: GraphChoiceDTO) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST});
+        const specResponse = await api.questions.generateSpecification(graphChoice);
+        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS, specResponse: specResponse.data });
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("There was a problem generating a graph specification", e));
+    }
+}
 
 // Current gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {

@@ -239,6 +239,9 @@ export const api = {
         },
         testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
             return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
+        },
+        generateSpecification: (graphChoice: ApiTypes.GraphChoiceDTO) => {
+            return endpoint.post("/questions/generateSpecification", graphChoice);
         }
     },
     concepts: {

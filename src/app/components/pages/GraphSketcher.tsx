@@ -1,24 +1,31 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import {Col, Container, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
-import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from '../../../IsaacApiTypes';
+import {GraphChoiceDTO} from '../../../IsaacApiTypes';
+import {generateSpecification} from '../../state/actions';
+import {selectors} from '../../state/selectors';
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from 'isaac-graph-sketcher/dist/src/GraphSketcher';
 import {GraphSketcherModal} from '../elements/modals/GraphSketcherModal';
 
 const GraphSketcherPageComponent = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [currentAttempt, setCurrentAttempt] = useState<GraphChoiceDTO | undefined>();
+    const graphSpec = useSelector(selectors.questions.graphSketcherSpec);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
     const initialState: GraphSketcherState | undefined = undefined;
     const previewRef = useRef(null);
+    const dispatch = useDispatch();
 
     function openModal() {
         setModalVisible(true);
     }
 
     function closeModal() {
+        if (currentAttempt?.value) {
+            dispatch(generateSpecification({ type: 'graphChoice', value: currentAttempt.value}));
+        }
         setModalVisible(false);
     }
 
@@ -85,6 +92,8 @@ const GraphSketcherPageComponent = () => {
                             initialState={initialState}
                         />}
                     </div>
+                    {/* TODO af599 This needs checking, not sure why graphSpec is a {[key: number]: string} instead of a string[] */}
+                    {graphSpec && Object.keys(graphSpec).map((key) => <pre>{graphSpec[key as unknown as number]}</pre>)}
                 </Col>
             </Row>
         </Container>
