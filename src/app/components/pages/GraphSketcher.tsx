@@ -14,7 +14,7 @@ const GraphSketcherPageComponent = () => {
     const [currentAttempt, setCurrentAttempt] = useState<GraphChoiceDTO | undefined>();
     const graphSpec = useSelector(selectors.questions.graphSketcherSpec);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
-    const initialState: GraphSketcherState | undefined = undefined;
+    const [initialState, setInitialState] = useState<GraphSketcherState>();
     const previewRef = useRef(null);
     const dispatch = useDispatch();
 
@@ -44,6 +44,7 @@ const GraphSketcherPageComponent = () => {
     }, []);
 
     const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
+        setInitialState(newState);
         setCurrentAttempt({type: 'graphChoice', value: JSON.stringify(newState)});
         if (previewSketch) {
             previewSketch.state = newState;
@@ -54,7 +55,7 @@ const GraphSketcherPageComponent = () => {
     useEffect(() => {
         if (previewSketch) return;
         if (makeGraphSketcher && previewRef.current) {
-            const { sketch } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true });
+            const { sketch } = makeGraphSketcher(previewRef.current || undefined, 1000, 600, { previewMode: true });
             if (sketch) {
                 sketch.selectedLineType = LineType.BEZIER;
                 setPreviewSketch(sketch);
@@ -66,8 +67,8 @@ const GraphSketcherPageComponent = () => {
         // Set the state of the preview box whenever currentAttempt changes
         if (previewSketch && currentAttempt?.value) {
             const data: GraphSketcherState = JSON.parse(currentAttempt.value);
-            data.canvasWidth = 600;
-            data.canvasHeight = 400;
+            data.canvasWidth = 1000;
+            data.canvasHeight = 600;
             data.curves = data.curves || [];
             previewSketch.state = data;
         }
