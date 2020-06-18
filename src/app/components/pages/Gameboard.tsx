@@ -61,7 +61,7 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
 export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => {
     return <RS.Row className={className}>
         <RS.Col lg={{size: 10, offset: 1}}>
-            <RS.ListGroup className="link-list list-group-links list-gameboard">a
+            <RS.ListGroup className="link-list list-group-links list-gameboard">
                 {gameboard && gameboard.questions && gameboard.questions.map(
                     gameboardItem.bind(null, gameboard)
                 )}
