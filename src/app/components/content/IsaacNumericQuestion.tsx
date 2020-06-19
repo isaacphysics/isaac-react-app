@@ -129,7 +129,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: Isaa
             </div>
             <Row className="no-print">
                 <Col className="d-flex flex-column flex-sm-row flex-md-column flex-lg-row">
-                    <div className="w-100 w-sm-50 w-md-100 w-lg-50">
+                    <div className="numeric-value w-100 w-sm-50 w-md-100 w-lg-50">
                         <Label className="w-100">
                             Value <br />
                             <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong || undefined}
@@ -147,6 +147,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: Isaa
                                 <DropdownMenu right>
                                     {selectedUnits.map((unit) =>
                                         <DropdownItem key={wrapUnitForSelect(unit)}
+                                            data-unit={unit || 'None'}
                                             className={unit == currentAttemptUnits ? "btn btn-primary bg-grey selected" : ""}
                                             onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
                                             <TrustedHtml span html={wrapUnitForSelect(unit)}/>
