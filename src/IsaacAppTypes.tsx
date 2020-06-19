@@ -645,6 +645,12 @@ export interface ZxcvbnResult {
     sequence: any;
 }
 
+export interface PasswordFeedback {
+    zxcvbn?: ZxcvbnResult;
+    pwnedPasswordCount?: number;
+    feedbackText: string;
+}
+
 export interface EmailUserRoles {
     ADMIN: boolean;
     EVENT_MANAGER: boolean;
