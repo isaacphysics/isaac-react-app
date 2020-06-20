@@ -1,5 +1,5 @@
-import {Button, Card, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactstrap";
-import React, {FormEvent, useEffect, useMemo, useState} from "react";
+import {Button, CardBody, Col, FormGroup, Input, Label, Row} from "reactstrap";
+import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
@@ -7,7 +7,6 @@ import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../../services/siteCons
 import {disableTotpForAccount, getNewTotpSecret, setupAccountMFA} from "../../../state/actions";
 import QRCode from 'qrcode'
 import {AppState} from "../../../state/reducers";
-import setPrototypeOf = Reflect.setPrototypeOf;
 
 interface UserMFAProps {
     userToUpdate: ValidationUser;
