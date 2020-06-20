@@ -1,5 +1,5 @@
-import {Button, CardBody, Col, FormGroup, Input, Label, Row} from "reactstrap";
-import React, {useState} from "react";
+import {Button, Card, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactstrap";
+import React, {FormEvent, useEffect, useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
@@ -7,6 +7,7 @@ import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../../services/siteCons
 import {disableTotpForAccount, getNewTotpSecret, setupAccountMFA} from "../../../state/actions";
 import QRCode from 'qrcode'
 import {AppState} from "../../../state/reducers";
+import setPrototypeOf = Reflect.setPrototypeOf;
 
 interface UserMFAProps {
     userToUpdate: ValidationUser;
@@ -21,23 +22,26 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
     const [updateMFARequest, setUpdateMFARequest] = useState(false);
     const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
     const [mfaVerificationCode, setMFAVerificationCode] = useState<string | undefined>(undefined);
+    const [qrCodeStringBase64SVG, setQrCodeStringBase64SVG] = useState<string | undefined>(undefined);
 
-    let qrCodeStringBase64SVG: string | null = null;
     let authenticatorURL: string | null = null;
-    if (totpSharedSecret) {
-        let issuer = encodeURIComponent(`Isaac ${SITE_SUBJECT_TITLE}`);
-        if (segueEnvironment === "DEV") {
-            issuer += encodeURIComponent(` (${window.location.host})`);
-        }
-        authenticatorURL = `otpauth://totp/${userToUpdate.email}?secret=${totpSharedSecret}&issuer=${issuer}`;
-        QRCode.toString(authenticatorURL, {type:'svg'}, function (err, val) {
-            if (err) {
-                console.error(err);
-                return;
+
+    useMemo(() => {
+        if (totpSharedSecret) {
+            let issuer = encodeURIComponent(`Isaac ${SITE_SUBJECT_TITLE}`);
+            if (segueEnvironment === "DEV") {
+                issuer += encodeURIComponent(` (${window.location.host})`);
             }
-            qrCodeStringBase64SVG = new Buffer(val).toString('base64');
-        });
-    }
+            authenticatorURL = `otpauth://totp/${userToUpdate.email}?secret=${totpSharedSecret}&issuer=${issuer}`;
+            QRCode.toString(authenticatorURL, {type:'svg'}, function (err, val) {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                setQrCodeStringBase64SVG(new Buffer(val).toString('base64'));
+            });
+        }
+    },[totpSharedSecret])
 
     if (totpSharedSecret == null && mfaVerificationCode) {
         // assume we have just completed a successful configuration of MFA as secret is clear and tidy up
@@ -56,6 +60,7 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
         {!editingOtherUser && userAuthSettings && userAuthSettings.hasSegueAccount ?
             <Row>
                 <Col>
+
                     <Row>
                         <Col md={{size: 6, offset: 3}}>
                             <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>
