@@ -11,6 +11,7 @@ import {
     DraggableProvided,
     DraggableStateSnapshot,
     DragStart,
+    DragUpdate,
     Droppable,
     DroppableProvided,
     DroppableStateSnapshot,
@@ -33,6 +34,7 @@ interface IsaacParsonsQuestionState {
     draggedElement?: HTMLElement | null;
     initialX?: number | null;
     currentIndent?: number | null;
+    currentMaxIndent: number;
 }
 
 // REMINDER: If you change this, you also have to change $parsons-step in questions.scss
@@ -40,9 +42,9 @@ const PARSONS_MAX_INDENT = 3;
 const PARSONS_INDENT_STEP = 45;
 
 class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestionProps> {
-    state: IsaacParsonsQuestionState;
+    public state: IsaacParsonsQuestionState;
 
-    constructor(props: IsaacParsonsQuestionProps) {
+    public constructor(props: IsaacParsonsQuestionProps) {
         super(props);
 
         this.state = {
@@ -50,19 +52,20 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             draggedElement: null,
             initialX: null,
             currentIndent: null,
+            currentMaxIndent: 0,
         };
         window.addEventListener('mousemove', this.onMouseMove);
         window.addEventListener('touchmove', this.onMouseMove);
         window.addEventListener('keyup', this.onKeyUp);
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         window.removeEventListener('mousemove', this.onMouseMove);
         window.removeEventListener('touchmove', this.onMouseMove);
         window.removeEventListener('keyup', this.onKeyUp);
     }
 
-    componentDidUpdate = (prevProps: IsaacParsonsQuestionProps, prevState: IsaacParsonsQuestionState) => {
+    public componentDidUpdate = (prevProps: IsaacParsonsQuestionProps, prevState: IsaacParsonsQuestionState) => {
         if (!prevProps.currentAttempt && !this.props.currentAttempt) {
             const defaultAttempt: ParsonsChoiceDTO = {
                 type: "parsonsChoice",
@@ -100,7 +103,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         }
     }
 
-    onDragStart = (initial: DragStart) => {
+    private onDragStart = (initial: DragStart) => {
         const draggedElement: HTMLElement | null = document.getElementById(`parsons-item-${initial.draggableId}`);
         const choiceElement: HTMLElement | null = document.getElementById("parsons-choice-area");
         this.setState({
@@ -110,22 +113,18 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
     }
 
     // WARNING: There's a limit to how far right an element can be dragged, presumably due to react-beautiful-dnd
-    onMouseMove = (e: MouseEvent | TouchEvent) => {
+    private onMouseMove = (e: MouseEvent | TouchEvent) => {
         if (this.state.draggedElement) {
             const x = this.state.draggedElement.getBoundingClientRect().left;
             if (this.state.initialX && x) {
                 const d = Math.max(0, x - this.state.initialX);
-                const i = Math.min(Math.floor(d/PARSONS_INDENT_STEP), PARSONS_MAX_INDENT);
-                if (i != this.state.currentIndent) {
-                    this.setState({
-                        currentIndent: i,
-                    });
-                }
+                const i = Math.min(Math.floor(d/PARSONS_INDENT_STEP), Math.min(this.state.currentMaxIndent, PARSONS_MAX_INDENT));
+                this.setState({ currentIndent: i });
             }
         }
     }
 
-    onKeyUp = (e: KeyboardEvent) => {
+    private onKeyUp = (e: KeyboardEvent) => {
         // There's a bug somewhere that adds this event twice, but only one has a non-zero timestamp.
         // The condition on draggedElement *might* be sufficient, but let's be explicit.
         if (e.timeStamp > 0 && this.state.draggedElement) {
@@ -136,21 +135,27 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             if (e.key === '[' || e.code === 'BracketLeft' || e.keyCode === 91) {
                 newIndent = Math.max(currentIndent - 1, 0);
             } else if (e.key === ']' || e.code === 'BracketRight' || e.keyCode === 93) {
-                newIndent = Math.min(currentIndent + 1, PARSONS_MAX_INDENT);
+                newIndent = Math.min(currentIndent + 1, Math.min(this.state.currentMaxIndent, PARSONS_MAX_INDENT));
             }
-            this.setState({ currentIndent: newIndent });
-            this.state.draggedElement.className = className.replace((matches && matches[0]) || `indent-${currentIndent}`, `indent-${newIndent}`);
+            this.setState({
+                currentIndent: newIndent,
+                draggedElement: Object.assign(
+                    {},
+                    this.state.draggedElement,
+                    { className: className.replace((matches && matches[0]) || `indent-${currentIndent}`, `indent-${newIndent}`) }
+                )
+            });
         }
     }
 
-    moveItem = (src: ParsonsItemDTO[] | undefined, fromIndex: number, dst: ParsonsItemDTO[] | undefined, toIndex: number, indent: number) => {
+    private moveItem = (src: ParsonsItemDTO[] | undefined, fromIndex: number, dst: ParsonsItemDTO[] | undefined, toIndex: number, indent: number) => {
         if (!src || !dst) return;
         const srcItem = src.splice(fromIndex, 1)[0];
         srcItem.indentation = indent;
         dst.splice(toIndex, 0, srcItem);
     }
 
-    onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    private onDragEnd = (result: DropResult, provided: ResponderProvided) => {
         if (!result.source || !result.destination) {
             return;
         }
@@ -188,7 +193,20 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         });
     }
 
-    render() {
+    private onDragUpdate = (initial: DragUpdate, provided: ResponderProvided): void => {
+        if (!initial.destination || initial.destination.index <= 0) {
+            this.setState({ currentMaxIndent: 0 });
+        } else {
+            const previousItem = this.props.currentAttempt?.items?.[initial.destination.index - 1];
+            if (previousItem) {
+                this.setState({ currentMaxIndent: (previousItem.indentation || 0) + 1 });
+            } else {
+                this.setState({ currentMaxIndent: 0 });
+            }
+        }
+    }
+
+    public render() {
         return <div className="parsons-question">
             <div className="question-content">
                 <IsaacContentValueOrChildren value={this.props.doc.value} encoding={this.props.doc.encoding}>
@@ -197,7 +215,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             </div>
             {/* TODO Accessibility */}
             <Row className="my-md-3">
-                <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
+                <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart} onDragUpdate={this.onDragUpdate}>
                     <Col md={{size: 6}} className="parsons-available-items">
                         <h4>Available items</h4>
                         <Droppable droppableId="availableItems">

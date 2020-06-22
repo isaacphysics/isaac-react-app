@@ -174,7 +174,7 @@ button {
     $parsons-step: 45;
 
     .parsons-item {
-      @for $i from 1 through $parsons-max-indent {
+      @for $i from 0 through $parsons-max-indent {
         &.indent-#{$i} {
           margin-left: #{$i * $parsons-step}px;
         }
@@ -182,7 +182,7 @@ button {
     }
 
     &#parsons-choice-area {
-      @for $i from 1 through $parsons-max-indent {
+      @for $i from 0 through $parsons-max-indent {
         &.ghost-indent-#{$i} {
           background: linear-gradient(to right,
             white #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 7}px, white #{$i * $parsons-step + 7}px
