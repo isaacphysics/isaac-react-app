@@ -7,8 +7,7 @@ a.skip-main:focus, a.skip-main:active {
 header {
   z-index: 20;
   background-image: url('/assets/phy/line.svg');
-  background-color: $phy_green !important;
   @include respond-above(sm) {
-    background-size: 100% 63%;
+    background-size: 100% 65%;
   }
 }
