@@ -31,9 +31,9 @@ interface IsaacParsonsQuestionProps {
 
 interface IsaacParsonsQuestionState {
     availableItems: ParsonsItemDTO[];
-    draggedElement?: HTMLElement | null;
+    draggedElement?: HTMLElement;
     initialX?: number | null;
-    currentIndent?: number | null;
+    currentIndent?: number;
     currentMaxIndent: number;
 }
 
@@ -49,9 +49,9 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
 
         this.state = {
             availableItems: [...(this.props.doc.items || [])],
-            draggedElement: null,
-            initialX: null,
-            currentIndent: null,
+            draggedElement: undefined,
+            initialX: undefined,
+            currentIndent: undefined,
             currentMaxIndent: 0,
         };
         window.addEventListener('mousemove', this.onMouseMove);
@@ -104,7 +104,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
     }
 
     private onDragStart = (initial: DragStart) => {
-        const draggedElement: HTMLElement | null = document.getElementById(`parsons-item-${initial.draggableId}`);
+        const draggedElement: HTMLElement | null = document.getElementById(initial.draggableId);
         const choiceElement: HTMLElement | null = document.getElementById("parsons-choice-area");
         this.setState({
             draggedElement: draggedElement,
@@ -116,9 +116,21 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
     private onMouseMove = (e: MouseEvent | TouchEvent) => {
         if (this.state.draggedElement) {
             const x = this.state.draggedElement.getBoundingClientRect().left;
+            let cursorX = -1;
+            if (e instanceof MouseEvent) {
+                cursorX = e.clientX;
+            } else if (e instanceof TouchEvent && e.touches[0]) {
+                cursorX = e.touches[0].clientX;
+            }
             if (this.state.initialX && x) {
                 const d = Math.max(0, x - this.state.initialX);
                 const i = Math.min(Math.floor(d/PARSONS_INDENT_STEP), Math.min(this.state.currentMaxIndent, PARSONS_MAX_INDENT));
+                if (cursorX >= this.state.initialX) {
+                    const movingElement = document.getElementById(this.state.draggedElement.id);
+                    if (movingElement?.style) {
+                        // movingElement.style.transform = `translate(${i*PARSONS_INDENT_STEP}px, 0px)`;
+                    }
+                }
                 this.setState({ currentIndent: i });
             }
         }
@@ -187,13 +199,15 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             console.error("Not sure how we got here...");
         }
         this.setState({
-            draggedElement: null,
-            initialX: null,
-            currentIndent: null,
+            draggedElement: undefined,
+            // choiceElement: undefined,
+            initialX: undefined,
+            currentIndent: undefined,
         });
     }
 
     private onDragUpdate = (initial: DragUpdate, provided: ResponderProvided): void => {
+        // FIXME: Needs moving because onDragUpdate is not called at all the times we need it.
         if (!initial.destination || initial.destination.index <= 0) {
             this.setState({ currentMaxIndent: 0 });
         } else {
@@ -204,6 +218,17 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                 this.setState({ currentMaxIndent: 0 });
             }
         }
+    }
+
+    private getStyle = (style: any, snapshot: DraggableStateSnapshot) => {
+        if (!snapshot.isDropAnimating) {
+            return style;
+        }
+        return {
+            ...style,
+            // cannot be 0, but make it super tiny
+            transitionDuration: `0.001s`,
+        };
     }
 
     public render() {
@@ -224,16 +249,17 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                     {this.state.availableItems && this.state.availableItems.map((item, index) => {
                                         return <Draggable
                                             key={item.id}
-                                            draggableId={item.id || `${index}`}
+                                            draggableId={`${item.id || index}|parsons-item-available`}
                                             index={index}
                                         >
                                             {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
                                                 return <div
-                                                    id={`parsons-item-${item.id}`}
+                                                    id={`${item.id || index}|parsons-item-available`}
                                                     className={`parsons-item indent-${item.indentation}`}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
+                                                    style={this.getStyle(provided.draggableProps.style, snapshot)}
                                                 ><pre>{item.value}</pre></div>
                                             }}
                                         </Draggable>
@@ -252,16 +278,17 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                     {this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.map((item, index) => {
                                         return <Draggable
                                             key={item.id}
-                                            draggableId={item.id || `${index}`}
+                                            draggableId={`${item.id || index}|parsons-item-choice`}
                                             index={index}
                                         >
                                             {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
                                                 return <div
-                                                    id={`parsons-item-${item.id}`}
+                                                    id={`${item.id || index}|parsons-item-choice`}
                                                     className={`parsons-item indent-${item.indentation}`}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
+                                                    style={this.getStyle(provided.draggableProps.style, snapshot)}
                                                 ><pre>{item.value}</pre></div>
                                             }}
                                         </Draggable>
