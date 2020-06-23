@@ -96,6 +96,13 @@
   outline: none !important;
 }
 
+.menu-card:focus {
+  border: none;
+  box-shadow: 0 0 0 3px $phy_green !important;
+  border-radius: 0;
+  outline: none !important;
+}
+
 .login-b:focus {
   box-shadow: none;
   border: 0.2rem solid $focus-blue;

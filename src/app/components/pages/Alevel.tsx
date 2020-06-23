@@ -4,6 +4,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Hexagon} from "../elements/Hexagon";
 import {openALevelBookChoiceModal} from "../../state/actions";
 import {useDispatch} from "react-redux";
+import {MenuCard} from "../elements/MenuCard";
 
 export const Alevel = () => {
 
@@ -15,31 +16,43 @@ export const Alevel = () => {
                 <TitleAndBreadcrumb currentPageTitle={"A Level Resources"} />
             </Col>
         </Row>
-        <Row className="teacher-feature-body justify-content-md-center">
-            <Col md="auto">
-                <Hexagon link={"/gameboards?filter=true#c052917f-5b7b-4b7f-b2a3-41d9de0a17c4"}
+        <Row className="teacher-feature-body">
+            <Col>
+                <MenuCard link={"/gameboards?filter=true#c052917f-5b7b-4b7f-b2a3-41d9de0a17c4"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#question"}
                     title={"Problem Solving"}/>
             </Col>
-            <Col md="auto">
-                <Hexagon link={"/pages/master_maths"}
+            <Col>
+                <MenuCard link={"/pages/master_maths"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#teacher-hat"}
                     title={"Master Mathematics"}/>
             </Col>
-            <Col md="auto">
-                <Hexagon link={"/pages/pre_made_gameboards"}
+            <Col>
+                <MenuCard link={"/pages/pre_made_gameboards"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#triple"}
                     title={"Browse Questions by Lessons"}/>
             </Col>
-            <Col md="auto">
-                <Hexagon link={"/pages/isaac_mentor"}
+        </Row>
+        <Row className="teacher-feature-body">
+            <Col>
+                <MenuCard link={"/pages/isaac_mentor"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#teacher-hat"}
+                    title={"Mentoring Schemes"}/>
+            </Col>
+            <Col>
+                <MenuCard link={"/pages/isaac_mentor"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#teacher-hat"}
+                    title={"Mentoring Schemes"}/>
+            </Col>
+            <Col>
+                <MenuCard link={"/pages/isaac_mentor"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#teacher-hat"}
                     title={"Mentoring Schemes"}/>
             </Col>
         </Row>
         <Row>
             <Col>
-                <h3>Isaac Books</h3>
+                <h3 className="h-title-center">Isaac Books</h3>
             </Col>
         </Row>
         <Row className="teacher-feature-body justify-content-md-center">
@@ -69,7 +82,7 @@ export const Alevel = () => {
         </Row>
         <Row>
             <Col>
-                <h3>Extension Resources</h3>
+                <h3 className="h-title-right">Extension Resources</h3>
             </Col>
         </Row>
         <Row className="teacher-feature-body mb-5 justify-content-md-center">

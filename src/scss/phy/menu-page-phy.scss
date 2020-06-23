@@ -1,11 +1,39 @@
 .teacher-feature-body {
 
-  col {
-    padding-right: 200px;
-  }
-
   .row {
     margin-bottom: 15px;
+  }
+
+  a.menu-card {
+    width: 94%;
+    margin: 10px 3%;
+    text-decoration: none;
+  }
+
+  .card-title {
+    padding-left: 20px;
+  }
+
+  .card-body {
+    padding-left: 20px !important;
+    padding: 0;
+  }
+
+  .card {
+    border-width: 3px;
+    border-color: $phy_green;
+    border-radius: 0;
+    &:focus {
+      border: none;
+      box-shadow: 0 0 0 3px $phy_green !important;
+      border-radius: 0;
+      outline: none !important;
+    }
+    &:hover {
+      box-shadow: 0 0 0 3px $phy_green !important;
+      border-radius: 0;
+      outline: none !important;
+    }
   }
 
   button.hexagon-btn-link {
@@ -61,11 +89,26 @@
 
   img.hexagon {
     display: block;
-    width:80px;
-    height:80px;
+    //width:80px;
+    //height:80px;
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
+
+    &.disabled {
+      -webkit-filter: grayscale(100%);
+      -webkit-filter: grayscale(1);
+      filter: grayscale(100%);
+      filter:gray;
+      opacity: .5;
+    }
+  }
+
+  img.menu-card {
+    float: left;
+    width:100px;
+    height:100px;
+    margin-right: 10px;
 
     &.disabled {
       -webkit-filter: grayscale(100%);
