@@ -231,6 +231,27 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         };
     }
 
+    private reduceIndentation = (index: number) => {
+        if (!this.props.currentAttempt?.items) return;
+
+        let items = [...(this.props.currentAttempt.items || [])];
+        if (items[index].indentation) {
+            items[index].indentation = Math.max((items[index].indentation || 0) - 1, 0);
+        }
+        this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items }});
+    }
+
+    private increaseIndentation = (index: number) => {
+        if (index === 0 || !this.props.currentAttempt?.items) return;
+
+        let items = [...(this.props.currentAttempt.items || [])];
+        // This condition is insane but of course 0, undefined, and null are all false-y.
+        if (items[index].indentation !== undefined && items[index].indentation !== null) {
+            items[index].indentation = Math.min((items[index].indentation || 0) + 1, Math.min((items[Math.max(index-1, 0)].indentation || 0) + 1, PARSONS_MAX_INDENT));
+        }
+        this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items }});
+    }
+
     public render() {
         return <div className="parsons-question">
             <div className="question-content">
@@ -282,14 +303,27 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                             index={index}
                                         >
                                             {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
+                                                // eslint-disable-next-line jsx-a11y/no-static-element-interactions
                                                 return <div
+                                                    onMouseEnter={e => (e.target as HTMLElement).classList.add('show-controls')}
+                                                    onMouseLeave={e => (e.target as HTMLElement).classList.remove('show-controls')}
                                                     id={`${item.id || index}|parsons-item-choice`}
                                                     className={`parsons-item indent-${item.indentation}`}
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
                                                     style={this.getStyle(provided.draggableProps.style, snapshot)}
-                                                ><pre>{item.value}</pre></div>
+                                                >
+                                                    <pre>
+                                                        {item.value}
+                                                        <div className="controls">
+                                                            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+                                                            <span className="reduce" role="img" onMouseUp={() => { this.reduceIndentation(index) }} aria-label="reduce indentation">&nbsp;</span>
+                                                            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+                                                            <span className="increase" role="img" onMouseUp={() => { this.increaseIndentation(index) }} aria-label="increase indentation">&nbsp;</span>
+                                                        </div>
+                                                    </pre>
+                                                </div>
                                             }}
                                         </Draggable>
                                     })}

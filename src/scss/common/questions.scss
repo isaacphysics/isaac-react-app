@@ -179,6 +179,38 @@ button {
           margin-left: #{$i * $parsons-step}px;
         }
       }
+
+      position: relative;
+
+      .controls {
+        display: none;
+      }
+
+      .show-controls {
+        .controls {
+          position: absolute;
+          right: 0.5rem;
+          top: 0.5rem;
+          display: block;
+
+          span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: yellow;
+            cursor: pointer;
+
+            &.reduce {
+              background: lightgrey url('/assets/chevron_left.svg') no-repeat center;
+              margin-right: 4px;
+            }
+
+            &.increase {
+              background: lightgrey url('/assets/chevron_right.svg') no-repeat center;
+            }
+          }
+        }
+      }
     }
 
     &#parsons-choice-area {
