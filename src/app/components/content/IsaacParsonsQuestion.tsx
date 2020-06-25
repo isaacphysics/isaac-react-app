@@ -112,7 +112,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         });
     }
 
-    // WARNING: There's a limit to how far right an element can be dragged, presumably due to react-beautiful-dnd
+    // WARNING: There's a limit to how far to the right we can drag an element, presumably due to react-beautiful-dnd
     private onMouseMove = (e: MouseEvent | TouchEvent) => {
         if (this.state.draggedElement) {
             const x = this.state.draggedElement.getBoundingClientRect().left;
@@ -142,21 +142,21 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         if (e.timeStamp > 0 && this.state.draggedElement) {
             let className = this.state.draggedElement.className;
             const matches = className.match(/indent-([0-3])/);
-            let currentIndent: number = this.state.currentIndent || (matches && parseInt(matches[1])) || 0;
+            const currentIndent: number = this.state.currentIndent || (matches && parseInt(matches[1])) || 0;
             let newIndent = currentIndent;
             if (e.key === '[' || e.code === 'BracketLeft' || e.keyCode === 91) {
                 newIndent = Math.max(currentIndent - 1, 0);
             } else if (e.key === ']' || e.code === 'BracketRight' || e.keyCode === 93) {
                 newIndent = Math.min(currentIndent + 1, Math.min(this.state.currentMaxIndent, PARSONS_MAX_INDENT));
             }
-            this.setState({
+            this.setState((prevState: IsaacParsonsQuestionState) => ({
                 currentIndent: newIndent,
                 draggedElement: Object.assign(
                     {},
-                    this.state.draggedElement,
+                    prevState.draggedElement,
                     { className: className.replace((matches && matches[0]) || `indent-${currentIndent}`, `indent-${newIndent}`) }
                 )
-            });
+            }));
         }
     }
 
