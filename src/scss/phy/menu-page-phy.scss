@@ -2,6 +2,13 @@
   font-size: 1.25rem;
 }
 
+.menu-card:focus {
+  border: none;
+  box-shadow: 0 0 0 3px $phy_green !important;
+  border-radius: 0;
+  outline: none !important;
+}
+
 .teacher-feature-body {
 
   .row {
