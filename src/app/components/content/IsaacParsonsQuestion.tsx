@@ -32,6 +32,7 @@ interface IsaacParsonsQuestionProps {
 interface IsaacParsonsQuestionState {
     availableItems: ParsonsItemDTO[];
     draggedElement?: HTMLElement;
+    currentDestinationIndex?: number;
     initialX?: number | null;
     currentIndent?: number;
     currentMaxIndent: number;
@@ -131,7 +132,18 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                         // movingElement.style.transform = `translate(${i*PARSONS_INDENT_STEP}px, 0px)`;
                     }
                 }
-                this.setState({ currentIndent: i });
+                const previousItem = this.props.currentAttempt?.items?.[(this.state.currentDestinationIndex || 0) - 1];
+                if (previousItem) {
+                    this.setState({
+                        currentMaxIndent: (previousItem.indentation || 0) + 1,
+                        currentIndent: i,
+                    });
+                } else {
+                    this.setState({
+                        currentMaxIndent: 0,
+                        currentIndent: i,
+                    });
+                }
             }
         }
     }
@@ -209,14 +221,9 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
     private onDragUpdate = (initial: DragUpdate, provided: ResponderProvided): void => {
         // FIXME: Needs moving because onDragUpdate is not called at all the times we need it.
         if (!initial.destination || initial.destination.index <= 0) {
-            this.setState({ currentMaxIndent: 0 });
+            this.setState({ currentMaxIndent: 0, currentDestinationIndex: undefined });
         } else {
-            const previousItem = this.props.currentAttempt?.items?.[initial.destination.index - 1];
-            if (previousItem) {
-                this.setState({ currentMaxIndent: (previousItem.indentation || 0) + 1 });
-            } else {
-                this.setState({ currentMaxIndent: 0 });
-            }
+            this.setState({ currentDestinationIndex: initial.destination.index })
         }
     }
 
