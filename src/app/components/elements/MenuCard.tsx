@@ -6,28 +6,49 @@ interface HexagonProps {
     link: string;
     imageSrc: string;
     title: string;
+    subtitle?: string;
     disabled?: boolean;
+    teacherFeature?: boolean;
 }
 
-export const MenuCard = ({link, imageSrc, title, disabled}: HexagonProps ) => {
-    let classes = classNames({"menu-card": true, "disabled": disabled});
-    return <a href={link} className="menu-card" aria-disabled={disabled} >
-        <Card outline color="green">
-            <CardTitle>
-                <h4>{title}</h4>
-            </CardTitle>
-            <CardBody>
+export const MenuCard = ({link, imageSrc, title, subtitle, disabled, teacherFeature}: HexagonProps ) => {
+    let classes = classNames({"menu-card": true, "disabled": disabled, "teacher-feature": teacherFeature});
+    return <a href={link} className={classes} aria-disabled={disabled} >
+        {teacherFeature ?
+            <Card className={classes}>
                 <Row>
-                    <Col md="3">
-                        <img className={classes} src={imageSrc} alt="" />
-                    </Col>
-                    <Col md="9">
-                        <aside>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </aside>
+                    <Col className="justify-content-md-center">
+                        <img className={classes} src={imageSrc} alt=""/>
                     </Col>
                 </Row>
-            </CardBody>
-        </Card>
+                <CardTitle>
+                    {title}
+                </CardTitle>
+                <CardBody>
+                    <Row>
+                        <Col>
+                            {subtitle}
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card> :
+            <Card>
+                <CardTitle>
+                    {title}
+                </CardTitle>
+                <CardBody>
+                    <Row>
+                        <Col md="3">
+                            <img className={classes} src={imageSrc} alt=""/>
+                        </Col>
+                        <Col md="9">
+                            <aside>
+                                {subtitle}
+                            </aside>
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
+        }
     </a>
 };
