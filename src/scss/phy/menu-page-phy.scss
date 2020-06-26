@@ -4,7 +4,7 @@
 
 .menu-card:focus {
   border: none;
-  box-shadow: 0 0 0 3px $phy_green !important;
+  box-shadow: 0 0 0 1px $phy_green !important;
   border-radius: 0;
   outline: none !important;
 }
@@ -34,7 +34,7 @@
       }
       &:focus {
         border: none;
-        box-shadow: 0 0 0 3px #ccc !important;
+        box-shadow: 0 0 0 1px #ccc !important;
         border-radius: 0;
         outline: none !important;
       }
@@ -66,7 +66,7 @@
 
   .card {
     height: 100%;
-    border-width: 3px;
+    border-width: 1px;
     border-color: $phy_green;
     border-radius: 0;
     &.disabled {
@@ -74,12 +74,12 @@
     }
     &:focus {
       border: none;
-      box-shadow: 0 0 0 3px $phy_green !important;
+      box-shadow: 0 0 0 1px $phy_green !important;
       border-radius: 0;
       outline: none !important;
     }
     &:hover {
-      box-shadow: 0 0 0 3px $phy_green !important;
+      box-shadow: 0 0 0 1px $phy_green !important;
       border-radius: 0;
       outline: none !important;
     }
