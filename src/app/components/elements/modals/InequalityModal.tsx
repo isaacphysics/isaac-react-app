@@ -162,8 +162,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         const inequalityElement = document.getElementById('inequality-modal') as HTMLElement;
         const { sketch, p } = makeInequality(
             inequalityElement,
-            window.innerWidth * Math.ceil(window.devicePixelRatio),
-            window.innerHeight * Math.ceil(window.devicePixelRatio),
+            window.innerWidth,
+            window.innerHeight,
             this.props.initialEditorSymbols,
             {
                 editorMode: this.props.editorMode || 'logic',
