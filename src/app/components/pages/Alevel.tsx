@@ -25,7 +25,7 @@ export const Alevel = () => {
                 <button className="menu-card" onClick={() => dispatch(openALevelBookChoiceModal())} >
                     <Card outline color="green">
                         <CardTitle>
-                            <h4>Physics Skills Mastery</h4>
+                            Physics Skills Mastery
                         </CardTitle>
                         <CardBody>
                             <Row>
