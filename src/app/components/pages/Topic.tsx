@@ -7,7 +7,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {getRelatedDocs} from "../../services/topics";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Button, Col, Container, Row, ListGroupItem} from "reactstrap";
 import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID} from "../../services/constants";
 import {useCurrentExamBoard} from "../../services/examBoard";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -35,7 +35,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     return <ShowLoading until={topicPage} thenRender={topicPage =>
         <Container id="topic-page">
             <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
-            <Row className="pb-5">
+            <Row className="pb-3">
                 <Col md={{size: 8, offset: 2}} className="py-3">
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
@@ -55,6 +55,21 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                         </div>
                     </div>
                     }
+                </Col>
+            </Row>
+
+            {linkedRelevantGameboards && linkedRelevantGameboards.length > 0 && <Row className="pb-2">
+                <Col md={{size: 8, offset: 2}} className="py-0">
+                    <h2>Gameboards</h2>
+                    <p>You can work through the questions above directly, but if you&apos;d like them grouped into gameboards, try these:</p>
+                    <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
+                        <li><Link to={`/gameboards#${gameboard.id}`}>{gameboard.title || '-'}</Link></li>
+                    </div>)}</ul>
+                </Col>
+            </Row>}
+            
+            <Row className="pb-5">
+                <Col md={{size: 8, offset: 2}} className="py-3">
 
                     <Row>
                         <Col size={6} className="text-center">
@@ -62,11 +77,11 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                                 <span className="d-none d-md-inline">Back to</span> {" "} All topics
                             </Button>
                         </Col>
-                        {linkedRelevantGameboards && linkedRelevantGameboards.length > 0 && <Col size={6} className="text-center">
+                        {/* {linkedRelevantGameboards && linkedRelevantGameboards.length > 0 && <Col size={6} className="text-center">
                             <Button tag={Link} to={`/gameboards#${linkedRelevantGameboards[0].id}`} color="secondary" size="lg" className="my-4" block>
                                 Topic gameboard
                             </Button>
-                        </Col>}
+                        </Col>} */}
                     </Row>
                 </Col>
             </Row>
