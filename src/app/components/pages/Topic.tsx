@@ -61,7 +61,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
             {linkedRelevantGameboards && linkedRelevantGameboards.length > 0 && <Row className="pb-2">
                 <Col md={{size: 8, offset: 2}} className="py-0">
                     <h2>Gameboards</h2>
-                    <p>You can work through the questions above directly, but if you&apos;d like them grouped into gameboards, try these:</p>
+                    <p>You can work through the individual questions above or try a group of questions by clicking on the topic gameboards below.</p>
                     <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
                         <li><Link to={`/gameboards#${gameboard.id}`}>{gameboard.title || '-'}</Link></li>
                     </div>)}</ul>
