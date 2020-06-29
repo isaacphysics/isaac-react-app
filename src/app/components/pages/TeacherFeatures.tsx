@@ -75,7 +75,7 @@ export const TeacherFeatures = () => {
                     subtitle={"Answers to your questions and how-to guides."}/>
             </Col>
             <Col md="4">
-                <MenuCard link={"/support/teacher/general"}
+                <MenuCard link={"/pages/teacher_mentoring"}
                     imageSrc={"/assets/phy/teacher_features_sprite.svg#use-with-class"}
                     title={"Teacher Mentoring"}
                     teacherFeature={true}
