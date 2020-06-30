@@ -140,7 +140,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 chemicalOperations: [],
             },
             defaultMenu: true,
-            disableLetters: this._availableSymbols?.includes('_no_alphabet') || false,
+            disableLetters: props.availableSymbols?.includes('_no_alphabet') || false,
             numberInputValue: void 0,
         }
 
@@ -926,7 +926,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             }
         }
         let mathsOtherFunctionsMenu: JSX.Element;
-        if (this.state.defaultMenu) {
+        if (this.state.defaultMenu || (this.state.menuItems.otherFunctions.length === 0 && this.state.menuItems.mathsDerivatives.length === 0)) {
             mathsOtherFunctionsMenu = <div className="top-menu maths other-functions">
                 <ul className="sub-menu-tabs">
                     <li className={`trig-functions ${this.state.activeSubMenu === "trigFunctions" ? 'active' : 'inactive'}`}
@@ -944,11 +944,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                         onClick={() => this.setSubMenuOpen("logFunctions") }
                         onKeyUp={() => this.setSubMenuOpen("logFunctions") }
                     />
-                    <li className={`derivatives ${this.state.activeSubMenu === "derivatives" ? 'active' : 'inactive'}`}
+                    {this.state.menuItems.mathsDerivatives.length > 0 && <li className={`derivatives ${this.state.activeSubMenu === "derivatives" ? 'active' : 'inactive'}`}
                         dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("\\frac{\\mathrm{d}y}{\\mathrm{d}x}") }}
                         onClick={() => this.setSubMenuOpen("derivatives") }
                         onKeyUp={() => this.setSubMenuOpen("derivatives") }
-                    />
+                    />}
                 </ul>
                 {this.state.activeSubMenu === "trigFunctions" && <ul className="sub-menu trig-functions">{
                     this.state.menuItems.mathsTrigFunctions.map(this.menuItem)
