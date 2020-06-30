@@ -80,7 +80,7 @@ export const NavigationBar = ({children}: {children: React.ReactNode}) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return <MenuOpenContext.Provider value={{menuOpen, setMenuOpen}}>
-        <Navbar className="main-nav p-0" expand="md">
+        <Navbar className="main-nav p-0" color="light" light expand="md">
             <NavbarToggler onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close menu' : 'Open menu'}>
                 Menu
             </NavbarToggler>
