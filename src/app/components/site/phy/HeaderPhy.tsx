@@ -12,7 +12,7 @@ export const HeaderPhy = () => {
         <Container className="container-fluid px-0">
             <Row>
                 <Col>
-                    <div className="header-bar mx-3 mx-md-0 d-md-flex">
+                    <div className="header-bar mb-3 mx-3 mx-md-0 d-md-flex">
                         <div className="header-logo">
                             <Link to="/">
                                 <img src="/assets/phy/logo.svg" alt="Isaac Physics" className="d-none d-md-block"/>
