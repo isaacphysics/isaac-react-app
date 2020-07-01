@@ -7,6 +7,7 @@ import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../../services/siteCons
 import {disableTotpForAccount, getNewTotpSecret, setupAccountMFA} from "../../../state/actions";
 import QRCode from 'qrcode'
 import {AppState} from "../../../state/reducers";
+import {selectors} from "../../../state/selectors";
 
 interface UserMFAProps {
     userToUpdate: ValidationUser;
@@ -16,22 +17,20 @@ interface UserMFAProps {
 
 export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
     const dispatch = useDispatch();
-    const segueEnvironment = useSelector((state: AppState) => state?.constants?.segueEnvironment || "unknown");
+    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     const totpSharedSecret = useSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
     const [updateMFARequest, setUpdateMFARequest] = useState(false);
     const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
     const [mfaVerificationCode, setMFAVerificationCode] = useState<string | undefined>(undefined);
     const [qrCodeStringBase64SVG, setQrCodeStringBase64SVG] = useState<string | undefined>(undefined);
 
-    let authenticatorURL: string | null = null;
-
-    useMemo(() => {
+    const authenticatorURL: string | null = useMemo(() => {
         if (totpSharedSecret) {
             let issuer = encodeURIComponent(`Isaac ${SITE_SUBJECT_TITLE}`);
             if (segueEnvironment === "DEV") {
                 issuer += encodeURIComponent(` (${window.location.host})`);
             }
-            authenticatorURL = `otpauth://totp/${userToUpdate.email}?secret=${totpSharedSecret}&issuer=${issuer}`;
+            const authenticatorURL = `otpauth://totp/${userToUpdate.email}?secret=${totpSharedSecret}&issuer=${issuer}`;
             QRCode.toString(authenticatorURL, {type:'svg'}, function (err, val) {
                 if (err) {
                     console.error(err);
@@ -39,8 +38,10 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
                 }
                 setQrCodeStringBase64SVG(new Buffer(val).toString('base64'));
             });
+            return authenticatorURL;
         }
-    },[totpSharedSecret])
+        return null;
+    }, [totpSharedSecret]);
 
     if (totpSharedSecret == null && mfaVerificationCode) {
         // assume we have just completed a successful configuration of MFA as secret is clear and tidy up
@@ -71,7 +72,10 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
                                 <h5>Configure Two-factor Authentication (2FA)</h5>
                                 <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
                                 <div className="qrcode-mfa vertical-center">
-                                    <img src={'data:image/svg+xml;base64,' + qrCodeStringBase64SVG} alt={"Follow this URL to setup 2FA: " + authenticatorURL} />
+                                    {qrCodeStringBase64SVG && <img
+                                        src={'data:image/svg+xml;base64,' + qrCodeStringBase64SVG}
+                                        alt={"Follow this URL to setup 2FA: " + authenticatorURL}
+                                    />}
                                 </div>
 
                                 <FormGroup>
@@ -80,9 +84,7 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
                                     <Input
                                         id="setup-verification-code" type="text" name="setup-verification-code"
                                         value={mfaVerificationCode || ""}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                            setMFAVerificationCode(e.target.value.replace(/ /g, ""))
-                                        }
+                                        onChange={e => setMFAVerificationCode(e.target.value.replace(/ /g, ""))}
                                     />
                                 </FormGroup>
                                 <FormGroup>
@@ -90,8 +92,9 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
                                         className="btn-secondary"
                                         disabled={SITE_SUBJECT === SITE.PHY || !mfaVerificationCode}
                                         onClick={() => {
-                                            if (totpSharedSecret && mfaVerificationCode)
-                                                dispatch(setupAccountMFA(totpSharedSecret, mfaVerificationCode))
+                                            if (totpSharedSecret && mfaVerificationCode) {
+                                                dispatch(setupAccountMFA(totpSharedSecret, mfaVerificationCode));
+                                            }
                                         }}
                                     >
                                         {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
