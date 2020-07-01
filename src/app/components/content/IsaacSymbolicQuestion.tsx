@@ -13,7 +13,7 @@ import {Inequality, makeInequality} from "inequality";
 import {parseExpression} from "inequality-grammar";
 
 import _flattenDeep from 'lodash/flatMapDeep';
-import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart} from "../../services/questions";
+import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
 
 // Magic starts here
 interface ChildrenMap {
@@ -73,10 +73,11 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     }
 
     const updateState = (state: any) => {
-        const pythonExpression = state?.result?.python || "";
+        const newState = sanitiseInequalityState(state);
+        const pythonExpression = newState?.result?.python || "";
         const previousPythonExpression = currentAttemptValue?.result?.python || "";
         if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
-            setCurrentAttempt(questionId, {type: 'formula', value: JSON.stringify(state), pythonExpression});
+            setCurrentAttempt(questionId, {type: 'formula', value: JSON.stringify(newState), pythonExpression});
         }
         setInitialEditorSymbols(state.symbols);
     };
@@ -181,7 +182,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 setErrors(undefined);
                 if (pycode === '') {
                     const state = {result: {tex: "", python: "", mathml: ""}};
-                    setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(state), pythonExpression: ""});
+                    setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
                     setInitialEditorSymbols([]);
                 } else if (parsedExpression.length === 1) {
                     // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
