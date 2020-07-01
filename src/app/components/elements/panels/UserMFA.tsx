@@ -1,4 +1,4 @@
-import {Button, CardBody, Col, FormGroup, Input, Label, Row} from "reactstrap";
+import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactstrap";
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
@@ -50,6 +50,13 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
         setSuccessfulMFASetup(true);
     }
 
+    function setupMFA(event?: React.FormEvent<HTMLFormElement>) {
+        if (event) {event.preventDefault(); event.stopPropagation();}
+        if (totpSharedSecret && mfaVerificationCode) {
+            dispatch(setupAccountMFA(totpSharedSecret, mfaVerificationCode));
+        }
+    }
+
     return <CardBody>
         <Row>
             <Col md={{size: 6, offset: 3}}>
@@ -67,41 +74,39 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
                         </Col>
                     </Row>
                     {updateMFARequest ?
-                        <Row>
-                            <Col md={{size: 6, offset: 3}}>
-                                <h5>Configure Two-factor Authentication (2FA)</h5>
-                                <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
-                                <div className="qrcode-mfa vertical-center">
-                                    {qrCodeStringBase64SVG && <img
-                                        src={'data:image/svg+xml;base64,' + qrCodeStringBase64SVG}
-                                        alt={"Follow this URL to setup 2FA: " + authenticatorURL}
-                                    />}
-                                </div>
+                        <Form onSubmit={setupMFA}>
+                            <Row>
+                                <Col md={{size: 6, offset: 3}}>
+                                    <h5>Configure Two-factor Authentication (2FA)</h5>
+                                    <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
+                                    <div className="qrcode-mfa vertical-center">
+                                        {qrCodeStringBase64SVG && <img
+                                            src={'data:image/svg+xml;base64,' + qrCodeStringBase64SVG}
+                                            alt={"Follow this URL to setup 2FA: " + authenticatorURL}
+                                        />}
+                                    </div>
 
-                                <FormGroup>
-                                    <p><strong>Step 2:</strong> Enter the code provided by your app</p>
-                                    <Label htmlFor="setup-verification-code">Verification Code</Label>
-                                    <Input
-                                        id="setup-verification-code" type="text" name="setup-verification-code"
-                                        value={mfaVerificationCode || ""}
-                                        onChange={e => setMFAVerificationCode(e.target.value.replace(/ /g, ""))}
-                                    />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Button
-                                        className="btn-secondary"
-                                        disabled={SITE_SUBJECT === SITE.PHY || !mfaVerificationCode}
-                                        onClick={() => {
-                                            if (totpSharedSecret && mfaVerificationCode) {
-                                                dispatch(setupAccountMFA(totpSharedSecret, mfaVerificationCode));
-                                            }
-                                        }}
-                                    >
-                                        {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
-                                    </Button>
-                                </FormGroup>
-                            </Col>
-                        </Row>
+                                    <FormGroup>
+                                        <p><strong>Step 2:</strong> Enter the code provided by your app</p>
+                                        <Label htmlFor="setup-verification-code">Verification Code</Label>
+                                        <Input
+                                            id="setup-verification-code" type="text" name="setup-verification-code"
+                                            value={mfaVerificationCode || ""}
+                                            onChange={e => setMFAVerificationCode(e.target.value.replace(/ /g, ""))}
+                                        />
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Button
+                                            className="btn-secondary"
+                                            disabled={SITE_SUBJECT === SITE.PHY || !mfaVerificationCode}
+                                            onClick={setupMFA}
+                                        >
+                                            {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
+                                        </Button>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                        </Form>
                         :
                         <Row>
                             <Col md={{size: 6, offset: 3}}>
