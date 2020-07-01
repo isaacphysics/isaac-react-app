@@ -58,7 +58,7 @@ export const TeacherFeatures = () => {
                     title={"3. Assignment Progress"}
                     disabled={isDisabled}
                     teacherFeature={true}
-                    subtitle={isLoggedIn(user) ? "Track your students’ assignment progress in real-time." : "View your students’ progress through the assignments."}/>
+                    subtitle={"View your students’ progress through their assignments."}/>
             </Col>
         </Row>
         <Row>
