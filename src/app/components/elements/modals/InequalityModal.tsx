@@ -5,7 +5,7 @@ import katex from "katex";
 import _uniqWith from 'lodash/uniqWith';
 import _isEqual from 'lodash/isEqual';
 import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState} from "../../../services/questions";
-import {GREEK_LETTERS} from '../../../services/constants';
+import {GREEK_LETTERS_MAP} from '../../../services/constants';
 
 class MenuItem {
     public type: string;
@@ -89,7 +89,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private _movingMenuBar?: HTMLElement | null = null;
     private _potentialSymbolSpec?: MenuItem | null = null;
 
-    private _greekLetterMap = GREEK_LETTERS;
+    private _greekLetterMap = GREEK_LETTERS_MAP;
     private _lowerCaseGreekLetters = ["alpha", "beta", "gamma", "delta", "varepsilon", "zeta", "eta", "theta", "iota", "kappa", "lambda", "mu", "nu", "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "chi", "psi", "omega"];
     private _upperCaseGreekLetters = ["Gamma", "Delta", "Theta", "Lambda", "Xi", "Pi", "Sigma", "Upsilon", "Phi", "Psi", "Omega"];
 

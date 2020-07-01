@@ -8,7 +8,7 @@ import {IsaacSymbolicLogicQuestion} from "../components/content/IsaacSymbolicLog
 import {IsaacSymbolicQuestion} from "../components/content/IsaacSymbolicQuestion";
 import {IsaacSymbolicChemistryQuestion} from "../components/content/IsaacSymbolicChemistryQuestion";
 import {AppQuestionDTO} from "../../IsaacAppTypes";
-import {REVERSE_GREEK_LETTERS} from '../services/constants';
+import {REVERSE_GREEK_LETTERS_MAP} from '../services/constants';
 
 // @ts-ignore as TypeScript is struggling to infer common type for questions
 export const QUESTION_TYPES = new Map([
@@ -79,21 +79,21 @@ export function selectQuestionPart(questions?: AppQuestionDTO[], questionPartId?
 export function sanitiseInequalityState(state: any) {
     const saneState = JSON.parse(JSON.stringify(state));
     if (saneState.result?.tex) {
-        saneState.result.tex = saneState.result.tex.split('').map((l: string) => REVERSE_GREEK_LETTERS[l] ? '\\' + REVERSE_GREEK_LETTERS[l] : l).join('');
+        saneState.result.tex = saneState.result.tex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
     }
     if (saneState.result?.python) {
-        saneState.result.python = saneState.result.python.split('').map((l: string) => REVERSE_GREEK_LETTERS[l] || l).join('');
+        saneState.result.python = saneState.result.python.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
     }
     if (saneState.result?.uniqueSymbols) {
-        saneState.result.uniqueSymbols = saneState.result.uniqueSymbols.split('').map((l: string) => REVERSE_GREEK_LETTERS[l] || l).join('');
+        saneState.result.uniqueSymbols = saneState.result.uniqueSymbols.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
     }
     if (saneState.symbols) {
         for (let symbol of saneState.symbols) {
             if (symbol.expression.latex) {
-                symbol.expression.latex = symbol.expression.latex.split('').map((l: string) => REVERSE_GREEK_LETTERS[l] ? '\\' + REVERSE_GREEK_LETTERS[l] : l).join('');
+                symbol.expression.latex = symbol.expression.latex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
             }
             if (symbol.expression.python) {
-                symbol.expression.python = symbol.expression.python.split('').map((l: string) => REVERSE_GREEK_LETTERS[l] || l).join('');
+                symbol.expression.python = symbol.expression.python.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
             }
         }
     }

@@ -677,7 +677,7 @@ export enum EventTypeFilter {
     "Online tutorials" = "virtual",
 }
 
-export const GREEK_LETTERS: { [letter: string]: string } = {
+export const GREEK_LETTERS_MAP: { [letter: string]: string } = {
     "alpha": "α",
     "beta": "β",
     "gamma": "γ",
@@ -716,4 +716,4 @@ export const GREEK_LETTERS: { [letter: string]: string } = {
     "Omega": "Ω",
 };
 
-export const REVERSE_GREEK_LETTERS = Object.fromEntries(Object.entries(GREEK_LETTERS).map(e => [e[1], e[0]]));
+export const REVERSE_GREEK_LETTERS_MAP = Object.fromEntries(Object.entries(GREEK_LETTERS_MAP).map(e => [e[1], e[0]]));
