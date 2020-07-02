@@ -1,24 +1,26 @@
-import React, {useEffect} from "react"
+import React, {useEffect, useState} from "react"
 import {Link, withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {fetchTopicSummary} from "../../state/actions";
+import {fetchTopicSummary, setTempExamBoard} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {getRelatedDocs} from "../../services/topics";
-import {Button, Col, Container, Row, ListGroupItem} from "reactstrap";
-import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID} from "../../services/constants";
+import {Button, Col, Container, Row, Card, CardBody, CardTitle, Nav, NavItem, NavLink} from "reactstrap";
+import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID, EXAM_BOARD} from "../../services/constants";
 import {useCurrentExamBoard} from "../../services/examBoard";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {atLeastOne} from "../../services/validation";
+import {selectors} from '../../state/selectors';
 
 export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
     const dispatch = useDispatch();
     const topicPage = useSelector((state: AppState) => state ? state.currentTopic : null);
-
-    const examBoard = useCurrentExamBoard();
+    const user = useSelector(selectors.user.orNull);
+    let examBoard = useCurrentExamBoard();
+    const [activeTab, setActiveTab] = useState({ [EXAM_BOARD.AQA]: 'AQA', [EXAM_BOARD.OCR]: 'OCR', [EXAM_BOARD.NONE]: undefined, [EXAM_BOARD.OTHER]: undefined }[examBoard]);
 
     useEffect(
         () => {dispatch(fetchTopicSummary(topicName))},
@@ -60,11 +62,40 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
 
             {linkedRelevantGameboards && linkedRelevantGameboards.length > 0 && <Row className="pb-2">
                 <Col md={{size: 8, offset: 2}} className="py-0">
-                    <h2>Gameboards</h2>
-                    <p>You can work through the individual questions above or try a group of questions by clicking on the topic gameboards below.</p>
-                    <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
-                        <li><Link to={`/gameboards#${gameboard.id}`}>{gameboard.title || '-'}</Link></li>
-                    </div>)}</ul>
+                    <Card className="board-card card-neat">
+                        <CardBody className="pb-4 pt-4">
+                            <CardTitle>Gameboards</CardTitle>
+                            <Nav tabs className="flex-wrap">
+                                {['OCR', 'AQA'].map((tabKey, mapIndex) => {
+                                    const tabIndex = mapIndex + 1;
+                                    const examBoardTitleMap: { [key: string]: string } = { 'OCR': 'OCR exam board', 'AQA': 'AQA exam board' };
+                                    const tabTitle = examBoardTitleMap[tabKey];
+                                    const classes = activeTab === tabKey ? `${tabTitle} active` : tabTitle;
+                                    return <NavItem key={tabKey} className="px-3 text-center">
+                                        <NavLink
+                                            tag="button" type="button" name={tabKey.replace(" ", "_")}
+                                            tabIndex={0} className={classes} onClick={() => {
+                                                dispatch(setTempExamBoard(tabKey as EXAM_BOARD));
+                                            }}
+                                        >
+                                            {tabTitle}
+                                        </NavLink>
+                                    </NavItem>;
+                                })}
+                            </Nav>
+                            <p>You can work through the individual questions above or try a group of questions by clicking on the topic gameboards below.</p>
+                            <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
+                                {user?.loggedIn && user?.role === "TEACHER" &&
+                                    <li>
+                                        <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`/gameboards#${gameboard.id}`}>Preview</Link> | <Link to={`/add_gameboard/${gameboard.id}`}>Assign</Link>
+                                    </li>
+                                }
+                                {(!user?.loggedIn || user?.role !== "TEACHER") &&
+                                    <li><strong><Link to={`/gameboards#${gameboard.id}`}>{gameboard.title || '-'}</Link></strong></li>
+                                }
+                            </div>)}</ul>
+                        </CardBody>
+                    </Card>
                 </Col>
             </Row>}
             
@@ -77,11 +108,6 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                                 <span className="d-none d-md-inline">Back to</span> {" "} All topics
                             </Button>
                         </Col>
-                        {/* {linkedRelevantGameboards && linkedRelevantGameboards.length > 0 && <Col size={6} className="text-center">
-                            <Button tag={Link} to={`/gameboards#${linkedRelevantGameboards[0].id}`} color="secondary" size="lg" className="my-4" block>
-                                Topic gameboard
-                            </Button>
-                        </Col>} */}
                     </Row>
                 </Col>
             </Row>
