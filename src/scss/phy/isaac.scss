@@ -8,6 +8,7 @@ $phy_burgundy: #991846;
 $phy_chemistry: $phy_orangered;
 $phy_maths: $phy_blue;
 $phy_physics: $phy_purple;
+$phy_extra_force_yellow: #fea100;
 
 // Colour Overrides
 $purple: #9148bc;
@@ -19,8 +20,8 @@ $reddish: #d7335f; // Used as an active colour on secondary buttons
 $focus-blue: #3E59A3; // Used as focus indicator colour on inputs
 
 //Colours
-$primary: $phy_green;
-$secondary: $phy_purple;
+$primary: $phy_extra_force_yellow;
+$secondary: $phy_green;
 $theme-colors: (
     "primary": $primary,
     "secondary": $secondary
@@ -87,12 +88,12 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/list-groups";
 @import "../common/inequality-modal";
 @import "../common/carousel";
-@import "../common/icons";
 @import "../common/boards";
 @import "../common/focus";
-@import "../common/progress-bar";
 @import "../common/anvil";
 @import "../common/reservation-modal";
+@import "progress-bar";
+@import "icons";
 @import "hints";
 @import "related-content";
 @import "button";
@@ -116,10 +117,10 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/search";
 @import "../common/my-progress";
 @import "../common/gameboard";
-@import "../common/assignment-progress";
 @import "../common/groups";
 @import "../common/events";
 @import "../common/fasttrack";
+@import "assignment-progress";
 @import "books";
 @import "gameboard";
 @import "menu-page-phy";
