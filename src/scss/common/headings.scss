@@ -106,42 +106,39 @@ h4 {
   padding-bottom: 1.25rem;
   position: relative;
 
-  &::after {
-    @include pseudo-element;
-    border-bottom: 1px solid $black;
-    bottom: -2px;
-    left: 0;
-    right: 0;
-  }
-
-  &::before {
-    @include pseudo-element;
-    border-bottom: 5px solid $black;
-    bottom: -4px;
-    left: 0;
-    max-width: 158px;
-    right: 0;
-    width: 32%;
-
-    @include respond-above(sm) {
-      max-width: 380px;
-    }
-  }
-
   &.text-center {
+    text-align: center;
     &::before {
-      margin: auto;
+      @include pseudo-element;
+      border-bottom: 5px solid $black;
+      bottom: -4px;
+      left: 34%;
+      max-width: 158px;
+      right: 34%;
+      width: 32%;
+
+      @include respond-above(sm) {
+        max-width: 380px;
+      }
     }
   }
-}
 
-.h-title-center {
-  font-family: $secondary-font-semi-bold;
-  font-size: 2.125rem;
-  line-height: 1.47;
-  padding-bottom: 1.25rem;
-  position: relative;
-  text-align: center;
+  &.text-right {
+    text-align: right;
+    &::before {
+      @include pseudo-element;
+      border-bottom: 5px solid $black;
+      bottom: -4px;
+      left: 68%;
+      max-width: 158px;
+      right: 0;
+      width: 32%;
+
+      @include respond-above(sm) {
+        max-width: 380px;
+      }
+    }
+  }
 
   &::after {
     @include pseudo-element;
@@ -155,44 +152,7 @@ h4 {
     @include pseudo-element;
     border-bottom: 5px solid $black;
     bottom: -4px;
-    left: 34%;
-    max-width: 158px;
-    right: 34%;
-    width: 32%;
-
-    @include respond-above(sm) {
-      max-width: 380px;
-    }
-  }
-
-  &.text-center {
-    &::before {
-      margin: auto;
-    }
-  }
-}
-
-.h-title-right {
-  font-family: $secondary-font-semi-bold;
-  font-size: 2.125rem;
-  line-height: 1.47;
-  padding-bottom: 1.25rem;
-  position: relative;
-  text-align: right;
-
-  &::after {
-    @include pseudo-element;
-    border-bottom: 1px solid $black;
-    bottom: -2px;
     left: 0;
-    right: 0;
-  }
-
-  &::before {
-    @include pseudo-element;
-    border-bottom: 5px solid $black;
-    bottom: -4px;
-    left: 68%;
     max-width: 158px;
     right: 0;
     width: 32%;

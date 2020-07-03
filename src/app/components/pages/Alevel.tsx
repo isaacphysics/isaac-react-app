@@ -24,12 +24,12 @@ export const Alevel = () => {
             <Col md="4">
                 <button className="menu-card" onClick={() => dispatch(openALevelBookChoiceModal())} >
                     <Card outline color="green">
-                        <CardTitle>
+                        <CardTitle className="px-3">
                             Physics Skills Mastery
                         </CardTitle>
-                        <CardBody>
+                        <CardBody className="px-3">
                             <Row>
-                                <Col md="3">
+                                <Col md="3" className="justify-content-md-center col-centered">
                                     <img className="menu-card" src="/assets/phy/key_stage_sprite.svg#skills-book-cover" alt="" />
                                 </Col>
                                 <Col md="9">
@@ -67,7 +67,7 @@ export const Alevel = () => {
         </Row>
         <Row>
             <Col>
-                <h3 className="h-title-center">Additional Resources</h3>
+                <h3 className="h-title text-center">Additional Resources</h3>
             </Col>
         </Row>
         <Row className="teacher-feature-body">

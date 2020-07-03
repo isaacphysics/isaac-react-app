@@ -8,23 +8,27 @@ interface HexagonProps {
     title: string;
     subtitle?: string;
     disabled?: boolean;
-    teacherFeature?: boolean;
+    verticalContent?: boolean;
 }
 
-export const MenuCard = ({link, imageSrc, title, subtitle, disabled, teacherFeature}: HexagonProps ) => {
-    let classes = classNames({"menu-card": true, "disabled": disabled, "teacher-feature": teacherFeature});
+export const MenuCard = ({link, imageSrc, title, subtitle, disabled, verticalContent}: HexagonProps ) => {
+    let classes = classNames({"menu-card": true, "disabled": disabled, "teacher-feature": verticalContent});
     return <a href={link} className={classes} aria-disabled={disabled} >
-        {teacherFeature ?
+        {verticalContent ?
             <Card className={classes}>
                 <Row>
                     <Col className="justify-content-md-center">
                         <img className={classes} src={imageSrc} alt=""/>
                     </Col>
                 </Row>
-                <CardTitle>
-                    {title}
+                <CardTitle className="px-3">
+                    <Row>
+                        <Col>
+                            {title}
+                        </Col>
+                    </Row>
                 </CardTitle>
-                <CardBody>
+                <CardBody className="px-3">
                     <Row>
                         <Col>
                             {subtitle}
@@ -33,12 +37,16 @@ export const MenuCard = ({link, imageSrc, title, subtitle, disabled, teacherFeat
                 </CardBody>
             </Card> :
             <Card>
-                <CardTitle>
-                    {title}
-                </CardTitle>
-                <CardBody>
+                <CardTitle className="px-3">
                     <Row>
-                        <Col md="3">
+                        <Col>
+                            {title}
+                        </Col>
+                    </Row>
+                </CardTitle>
+                <CardBody className="px-3">
+                    <Row>
+                        <Col md="3"  className="justify-content-md-center col-centered">
                             <img className={classes} src={imageSrc} alt=""/>
                         </Col>
                         <Col md="9">

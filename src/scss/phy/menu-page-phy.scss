@@ -4,7 +4,7 @@
 
 .menu-card:focus {
   border: none;
-  box-shadow: 0 0 0 1px $phy_green !important;
+  box-shadow: 0 0 0 2px $phy_green !important;
   border-radius: 0;
   outline: none !important;
 }
@@ -17,9 +17,10 @@
     position: relative;
   }
 
-  aside {
-    margin-left: 10px;
-    margin-right: 10px;
+  .col-centered{
+    padding: 0 0 0 0;
+    float: none;
+    margin: 0 auto;
   }
 
   a.menu-card {
@@ -54,7 +55,6 @@
   }
 
   .card-title {
-    padding-left: 20px;
     font-size: 1.4rem;
     font-weight: 600;
     font-family: exo_2regular, 'sans-serif';
@@ -76,12 +76,12 @@
     }
     &:focus {
       border: none;
-      box-shadow: 0 0 0 1px $phy_green !important;
+      box-shadow: 0 0 0 2px $phy_green !important;
       border-radius: 0;
       outline: none !important;
     }
     &:hover {
-      box-shadow: 0 0 0 1px $phy_green !important;
+      box-shadow: 0 0 0 2px $phy_green !important;
       border-radius: 0;
       outline: none !important;
     }
@@ -153,17 +153,13 @@
     }
   }
 
-  .teacher-feature .card-body {
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-
   img.menu-card {
-    float: left;
+    //float: left;
     width: 90px;
     height: 90px;
-    margin-right: 10px;
-    margin-left: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 
     &.teacher-feature {
       float: none;

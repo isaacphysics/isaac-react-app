@@ -35,13 +35,13 @@ export const TeacherFeatures = () => {
                 </Button>
             </Col>}
         </Row>
-        <Row className="teacher-feature-body">
+        <Row className="teacher-feature-body px-3">
             <Col md="4">
                 <MenuCard link={"/groups"}
                     imageSrc={"/assets/phy/teacher_features_sprite.svg#groups"}
                     title={"1. Create a Group"}
                     disabled={isDisabled}
-                    teacherFeature={true}
+                    verticalContent={true}
                     subtitle={"Create and manage class groups, and share them with colleagues."}/>
             </Col>
             <Col md="4">
@@ -49,7 +49,7 @@ export const TeacherFeatures = () => {
                     imageSrc={"/assets/phy/teacher_features_sprite.svg#set-assignments"}
                     title={"2. Set Assignments"}
                     disabled={isDisabled}
-                    teacherFeature={true}
+                    verticalContent={true}
                     subtitle={"Set assignments from our skills books, pre-made boards or create your own."}/>
             </Col>
             <Col md="4">
@@ -57,63 +57,63 @@ export const TeacherFeatures = () => {
                     imageSrc={"/assets/phy/teacher_features_sprite.svg#track-progress"}
                     title={"3. Assignment Progress"}
                     disabled={isDisabled}
-                    teacherFeature={true}
+                    verticalContent={true}
                     subtitle={"View your students’ progress through their assignments."}/>
             </Col>
         </Row>
         <Row>
             <Col>
-                <h3 className="h-title-center">Teacher Support</h3>
+                <h3 className="h-title text-center">Teacher Support</h3>
             </Col>
         </Row>
-        <Row className="teacher-feature-body mt-2">
+        <Row className="teacher-feature-body mt-2 px-3">
             <Col md="4">
                 <MenuCard link={"/support/teacher/general"}
                     imageSrc={"/assets/phy/teacher_features_sprite.svg#teacher-forum"}
                     title={"Teacher FAQ"}
-                    teacherFeature={true}
+                    verticalContent={true}
                     subtitle={"Answers to your questions and how-to guides."}/>
             </Col>
             <Col md="4">
                 <MenuCard link={"/pages/teacher_mentoring"}
                     imageSrc={"/assets/phy/teacher_features_sprite.svg#use-with-class"}
                     title={"Teacher Mentoring"}
-                    teacherFeature={true}
+                    verticalContent={true}
                     subtitle={isLoggedIn(user) ? "Fortnightly support for Physics teachers." : "Fortnightly support for teachers of Physics."}/>
             </Col>
             <Col md="4">
                 <MenuCard link={"/pages/isaac_embedded_schools"}
                     imageSrc={"/assets/phy/teacher_features_sprite.svg#groups"}
                     title={"Teacher Ambassadors"}
-                    teacherFeature={true}
+                    verticalContent={true}
                     subtitle={isLoggedIn(user) ? "Learn from real teachers how they have embedded Isaac Physics. " : "Learn from practising teachers how they have embedded Isaac Physics."}/>
             </Col>
         </Row>
         <Row>
             <Col>
-                <h3 className="h-title-right">Teacher Resources</h3>
+                <h3 className="h-title text-right">Teacher Resources</h3>
             </Col>
         </Row>
-        <Row className="teacher-feature-body mb-5 mt-2">
+        <Row className="teacher-feature-body mb-5 mt-2 px-3">
             <Col md="4">
                 <MenuCard link={"https://www.isaacbooks.org/"}
                     imageSrc={"/assets/phy/teacher_features_sprite.svg#skills-book-cover"}
                     title={"Isaac Physics Books"}
-                    teacherFeature={true}
+                    verticalContent={true}
                     subtitle={"Buy one of our Skills Mastery books at cost."}/>
             </Col>
             <Col md="4">
                 <MenuCard link={"/pages/pre_made_gameboards"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#triple"}
                     title={"Boards for Lessons"}
-                    teacherFeature={true}
+                    verticalContent={true}
                     subtitle={isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}/>
             </Col>
             <Col md="4">
                 <MenuCard link={"/events?types=teacher"}
                     imageSrc={"/assets/phy/teacher_features_sprite.svg#calendar"}
                     title={"Events"}
-                    teacherFeature={true}
+                    verticalContent={true}
                     subtitle={"Attend FREE face-to-face or virtual CPDs."}/>
             </Col>
         </Row>
