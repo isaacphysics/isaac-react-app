@@ -66,12 +66,12 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                             <CardTitle>Gameboards</CardTitle>
                             <p>You can work through the individual questions above or try a group of questions by clicking on the topic gameboards below.</p>
                             <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
-                                {user?.loggedIn && user?.role === "TEACHER" &&
+                                {user?.loggedIn && user?.role !== "STUDENT" &&
                                     <li>
                                         <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`/gameboards#${gameboard.id}`}>Preview</Link> | <Link to={`/add_gameboard/${gameboard.id}`}>Assign</Link>
                                     </li>
                                 }
-                                {(!user?.loggedIn || user?.role !== "TEACHER") &&
+                                {(!user?.loggedIn || user?.role === "STUDENT") &&
                                     <li><strong><Link to={`/gameboards#${gameboard.id}`}>{gameboard.title || '-'}</Link></strong></li>
                                 }
                             </div>)}</ul>
