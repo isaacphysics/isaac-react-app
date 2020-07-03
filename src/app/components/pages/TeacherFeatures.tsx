@@ -30,7 +30,7 @@ export const TeacherFeatures = () => {
                         Isaac Physics provides you with a huge range of resources to support your teaching of Physics – all for free.                 </p>
                 </Col>}
             {isDisabled && <Col md={6}>
-                <Button tag={Link} size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-primary float-right" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"}>
+                <Button tag={Link} size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-primary float-right" color="secondary" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"}>
                     {isLoggedIn(user) ? "Upgrade my Account" : "Get a Teacher Account"}
                 </Button>
             </Col>}

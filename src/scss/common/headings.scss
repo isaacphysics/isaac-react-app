@@ -109,34 +109,15 @@ h4 {
   &.text-center {
     text-align: center;
     &::before {
-      @include pseudo-element;
-      border-bottom: 5px solid $black;
-      bottom: -4px;
-      left: 34%;
-      max-width: 158px;
-      right: 34%;
-      width: 32%;
-
-      @include respond-above(sm) {
-        max-width: 380px;
-      }
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 
   &.text-right {
     text-align: right;
     &::before {
-      @include pseudo-element;
-      border-bottom: 5px solid $black;
-      bottom: -4px;
-      left: 68%;
-      max-width: 158px;
-      right: 0;
-      width: 32%;
-
-      @include respond-above(sm) {
-        max-width: 380px;
-      }
+      margin-left: auto;
     }
   }
 
