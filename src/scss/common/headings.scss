@@ -106,21 +106,6 @@ h4 {
   padding-bottom: 1.25rem;
   position: relative;
 
-  &.text-center {
-    text-align: center;
-    &::before {
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
-
-  &.text-right {
-    text-align: right;
-    &::before {
-      margin-left: auto;
-    }
-  }
-
   &::after {
     @include pseudo-element;
     border-bottom: 1px solid $black;
@@ -146,6 +131,12 @@ h4 {
   &.text-center {
     &::before {
       margin: auto;
+    }
+  }
+
+  &.text-right {
+    &::before {
+      margin-left: auto;
     }
   }
 }
