@@ -8,8 +8,11 @@ import {generateSpecification} from '../../state/actions';
 import {selectors} from '../../state/selectors';
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from 'isaac-graph-sketcher/dist/src/GraphSketcher';
 import {GraphSketcherModal} from '../elements/modals/GraphSketcherModal';
+import {AppState} from "../../state/reducers";
+import {isStaff} from "../../services/user";
 
 const GraphSketcherPageComponent = () => {
+    const user = useSelector((state: AppState) => state && state.user || null);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentAttempt, setCurrentAttempt] = useState<GraphChoiceDTO | undefined>();
     const graphSpec = useSelector(selectors.questions.graphSketcherSpec);
@@ -23,7 +26,7 @@ const GraphSketcherPageComponent = () => {
     }
 
     function closeModal() {
-        if (currentAttempt?.value) {
+        if (currentAttempt?.value && isStaff(user)) {
             dispatch(generateSpecification({ type: 'graphChoice', value: currentAttempt.value}));
         }
         setModalVisible(false);
