@@ -20,7 +20,6 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     const topicPage = useSelector((state: AppState) => state ? state.currentTopic : null);
     const user = useSelector(selectors.user.orNull);
     let examBoard = useCurrentExamBoard();
-    const [activeTab, setActiveTab] = useState({ [EXAM_BOARD.AQA]: 'AQA', [EXAM_BOARD.OCR]: 'OCR', [EXAM_BOARD.NONE]: undefined, [EXAM_BOARD.OTHER]: undefined }[examBoard]);
 
     useEffect(
         () => {dispatch(fetchTopicSummary(topicName))},
@@ -65,24 +64,6 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     <Card className="board-card card-neat">
                         <CardBody className="pb-4 pt-4">
                             <CardTitle>Gameboards</CardTitle>
-                            <Nav tabs className="flex-wrap">
-                                {['OCR', 'AQA'].map((tabKey, mapIndex) => {
-                                    const tabIndex = mapIndex + 1;
-                                    const examBoardTitleMap: { [key: string]: string } = { 'OCR': 'OCR exam board', 'AQA': 'AQA exam board' };
-                                    const tabTitle = examBoardTitleMap[tabKey];
-                                    const classes = activeTab === tabKey ? `${tabTitle} active` : tabTitle;
-                                    return <NavItem key={tabKey} className="px-3 text-center">
-                                        <NavLink
-                                            tag="button" type="button" name={tabKey.replace(" ", "_")}
-                                            tabIndex={0} className={classes} onClick={() => {
-                                                dispatch(setTempExamBoard(tabKey as EXAM_BOARD));
-                                            }}
-                                        >
-                                            {tabTitle}
-                                        </NavLink>
-                                    </NavItem>;
-                                })}
-                            </Nav>
                             <p>You can work through the individual questions above or try a group of questions by clicking on the topic gameboards below.</p>
                             <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
                                 {user?.loggedIn && user?.role === "TEACHER" &&
