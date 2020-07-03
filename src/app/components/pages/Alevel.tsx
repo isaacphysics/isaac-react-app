@@ -65,7 +65,7 @@ export const Alevel = () => {
                     title={"Questions by Lessons"} subtitle={"A selection of our questions organised by lesson topic."}/>
             </Col>
         </Row>
-        <Row>
+        <Row className="my-4">
             <Col>
                 <h3 className="h-title text-center">Additional Resources</h3>
             </Col>

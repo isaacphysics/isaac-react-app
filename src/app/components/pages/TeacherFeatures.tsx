@@ -14,7 +14,7 @@ export const TeacherFeatures = () => {
     const isDisabled = (isStudent(user) || !isLoggedIn(user));
 
     return<Container>
-        <Row className="pb-4">
+        <Row className="mb-4">
             <Col>
                 <TitleAndBreadcrumb currentPageTitle={"Teacher Features"} />
             </Col>
@@ -29,8 +29,8 @@ export const TeacherFeatures = () => {
                     <p className="subtitle">
                         Isaac Physics provides you with a huge range of resources to support your teaching of Physics – all for free.                 </p>
                 </Col>}
-            {isDisabled && <Col md={6}>
-                <Button tag={Link} size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-primary float-right" color="secondary" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"}>
+            {isDisabled && <Col md={6} className="text-center text-md-right">
+                <Button tag={Link} size="lg" color="secondary" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"}>
                     {isLoggedIn(user) ? "Upgrade my Account" : "Get a Teacher Account"}
                 </Button>
             </Col>}
@@ -61,7 +61,7 @@ export const TeacherFeatures = () => {
                     subtitle={"View your students’ progress through their assignments."}/>
             </Col>
         </Row>
-        <Row>
+        <Row className="my-4">
             <Col>
                 <h3 className="h-title text-center">Teacher Support</h3>
             </Col>
@@ -89,7 +89,7 @@ export const TeacherFeatures = () => {
                     subtitle={isLoggedIn(user) ? "Learn from real teachers how they have embedded Isaac Physics. " : "Learn from practising teachers how they have embedded Isaac Physics."}/>
             </Col>
         </Row>
-        <Row>
+        <Row className="my-4">
             <Col>
                 <h3 className="h-title text-right">Teacher Resources</h3>
             </Col>
