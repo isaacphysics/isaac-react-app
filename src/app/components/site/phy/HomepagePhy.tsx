@@ -20,13 +20,13 @@ export const HomepagePhy = () => {
                     <Col lg={3}>
                         {!(user && user.loggedIn) && <Row>
                             <Col size={6} className="text-center">
-                                <Button size="sm" tag={Link} to="/register" color="secondary" block>
-                                    Sign up
+                                <Button size="sm" tag={Link} to="/login" color="primary" outline block>
+                                    Log in
                                 </Button>
                             </Col>
                             <Col size={6} className="text-center">
-                                <Button size="sm" tag={Link} to="/login" color="primary" outline block>
-                                    Log in
+                                <Button size="sm" tag={Link} to="/register" color="secondary" block>
+                                    Sign up
                                 </Button>
                             </Col>
                         </Row>}
