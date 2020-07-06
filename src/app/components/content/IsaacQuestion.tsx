@@ -214,7 +214,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
         </h2> */}
         {/* Difficulty bar */}
 
-        <div className={`question-component p-md-5 ${doc.type === 'isaacParsonsQuestion' ? "parsons-layout" : ""}`}>
+        <div className={`question-component p-md-5 ${doc.type} ${doc.type === 'isaacParsonsQuestion' ? "parsons-layout" : ""}`}>
             {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
             <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
             {SITE_SUBJECT === SITE.CS &&

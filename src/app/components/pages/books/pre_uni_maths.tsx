@@ -16,7 +16,7 @@ export const PreUniMaths = () => {
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-5" currentPageTitle="Pre-University Mathematics for Sciences" help={pageHelp} />
                 <img className="book-cover" src="/assets/phy/books/pre_uni_maths.jpg" alt="Cover of the book."/>
-                <PageFragment fragmentId="phys_book_gcse_intro"/>
+                <PageFragment fragmentId="pre_uni_maths_intro"/>
             </div>
             <div className="book-levels">
                 <Col>

@@ -16,25 +16,24 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/progress" muted={!isLoggedIn(user)}>My Progress</LinkItem>
         </NavigationSection>
 
+        {isTeacher(user) && <NavigationSection title="Teach">
+            <LinkItem to="/groups">Manage Groups</LinkItem>
+            <LinkItem to="/gameboard_builder">Create Gameboard</LinkItem>
+            <LinkItem to="/set_assignments">Set Assignments</LinkItem>
+            <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
+        </NavigationSection>}
+
         <NavigationSection title="Learn">
-            <LinkItem to="/alevel">A Level Resources</LinkItem>
             <LinkItem to="/gcse">GCSE Resources</LinkItem>
+            <LinkItem to="/alevel">A Level Resources</LinkItem>
             <LinkItem to="/gameboards/new">Question Finder</LinkItem>
             <LinkItem to="/concepts">Concept Reference</LinkItem>
         </NavigationSection>
 
-        {isTeacher(user) && <NavigationSection title="Teach">
-            <LinkItem to="/gameboard_builder">Create Gameboard</LinkItem>
-            <LinkItem to="/set_assignments">Set Assignments</LinkItem>
-            <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
-            <LinkItem to="/groups">Manage Groups</LinkItem>
-        </NavigationSection>}
-
         <NavigationSection title="Events">
             {isLoggedIn(user) && <LinkItem to="/events?show_booked_only=true">My Booked Events</LinkItem>}
-            <LinkItem to="/events?types=student">Student Events</LinkItem>
-            <LinkItem to="/events?types=teacher">Teacher Events</LinkItem>
             <LinkItem to="/events">All Events</LinkItem>
+            <LinkItem to="/pages/isaac_mentor">Mentoring Schemes</LinkItem>
         </NavigationSection>
 
         <NavigationSection title="Help">

@@ -100,7 +100,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
         </Label>
-        <Button className="mt-3 mb-2" block color="primary" onClick={assign} disabled={groupId === null}>Assign to group</Button>
+        <Button className="mt-3 mb-2" block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]} onClick={assign} disabled={groupId === null}>Assign to group</Button>
     </Container>;
 };
 
