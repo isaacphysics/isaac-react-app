@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {bb} from "billboard.js";
 import {NUMERIC_DATE} from "../DateString";
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
+import {min} from "moment";
 
 export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDate: AnsweredQuestionsByDate}) => {
     const generateDateArray = (min: Date, max: Date) => {
@@ -16,7 +17,7 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
 
     useEffect(() => {
         const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
-        let selectedDates = [] as string[];
+        let selectedDates: string[] = [];
         let minTime;
         let maxTime;
         if (foundDates && foundDates.length > 0) {
@@ -26,8 +27,10 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
                 const maxDate = new Date(foundDates.reduce((max, date) => date > max ? date : max));
                 let tempMinTime = new Date(minNonZeroDate.getTime());
                 let tempMaxTime = new Date(maxDate.getTime());
-                tempMinTime.setMonth(minNonZeroDate.getMonth() - 1);
-                tempMaxTime.setMonth(maxDate.getMonth() + 1);
+                if (minNonZeroDate.getFullYear() == maxDate.getFullYear() && minNonZeroDate.getMonth() == maxDate.getMonth()) {
+                    tempMinTime.setMonth(minNonZeroDate.getMonth() - 1);
+                    tempMaxTime.setMonth(maxDate.getMonth() + 1);
+                }
                 minTime = Date.parse(tempMinTime.toString());
                 maxTime = Date.parse(tempMaxTime.toString());
                 selectedDates = generateDateArray(minNonZeroDate, maxDate)
