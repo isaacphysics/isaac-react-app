@@ -8,6 +8,6 @@ header {
   z-index: 20;
   background-image: url('/assets/phy/line.svg');
   @include respond-above(sm) {
-    background-size: 100% 73%;
+    background-size: 100% 70%;
   }
 }
