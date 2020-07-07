@@ -61,6 +61,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             break;
         default:
             // Do not render this item if there is no matching DOCUMENT_TYPE
+            console.error("Not able to display item as a ContentSummaryListGroupItem: ", item);
             return null;
     }
     return <RS.ListGroupItem className={itemClasses} key={linkDestination}>
