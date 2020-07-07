@@ -74,6 +74,9 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; 
                             <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('numberOfWaitingListBookings'); setReverse(!reverse);}}>
                                 Number waiting
                             </RS.Button></th>
+                            <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('numberAttended'); setReverse(!reverse);}}>
+                                Number attended
+                            </RS.Button></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,6 +93,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; 
                                 <td className="align-middle">{event.eventStatus}</td>
                                 <td className="align-middle">{event.numberOfConfirmedBookings} / {event.numberOfPlaces}</td>
                                 <td className="align-middle">{event.numberOfWaitingListBookings}</td>
+                                <td className="align-middle">{event.numberAttended}</td>
                             </tr>)
                         }
                     </tbody>

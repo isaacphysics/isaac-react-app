@@ -1,18 +1,20 @@
 import {SEARCH_RESULT_TYPE} from "./constants";
+import {SITE_SUBJECT_TITLE} from "./siteConstants";
 
 export const searchList = [
     {
         id: "assignments",
         title: "My assignments",
-        terms: ["my assignments", "assignments", "homework", "hw"],
+        terms: ["my assignments", "assignments", "homework", "hw", "my assignment", "assign", "my isaac"],
         summary: "View your assignments.",
         url: "/assignments",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "join_group",
         title: "Teacher connections",
-        terms: ["join group", "join class", "teacher connections", "class code", "join a class",
-            "classes", "share token", "groups", "group", "join", "group code"],
+        terms: ["join group", "join class", "teacher connections", "teacher connection", "class code", "join a class",
+            "classes", "share token", "groups", "group", "join", "group code", "code", "token", "teacher code",
+            "teachers connections", "join a group", "teacher conections", "teacher connect", "teachers connection"],
         summary: "Join groups and manage your teacher connections.",
         url: "/account#teacherconnections",
         type: SEARCH_RESULT_TYPE.SHORTCUT
@@ -27,7 +29,7 @@ export const searchList = [
         id: "help",
         title: "Student support",
         terms: ["help", "support"],
-        summary: "View student FAQs for using Isaac Computer Science.",
+        summary: `View student FAQs for using Isaac ${SITE_SUBJECT_TITLE}.`,
         url: "/support/student/general",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -41,20 +43,21 @@ export const searchList = [
         id: "register",
         title: "Create an account",
         terms: ["register", "signup", "sign up"],
-        summary: "Click here to register for an Isaac Computer Science account.",
+        summary: `Click here to register for an Isaac ${SITE_SUBJECT_TITLE} account.`,
         url: "/register",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     },  {
         id: "teacher_support",
         title: "Teacher support",
         terms: ["teacher", "teacher support", "teaching", "teachers", "help", "support"],
-        summary: "View teacher FAQs for using Isaac Computer Science.",
+        summary: `View teacher FAQs for using Isaac ${SITE_SUBJECT_TITLE}.`,
         url: "/support/teacher/assignments",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "my_account",
         title: "My account",
-        terms: ["my account", "account", "settings", "account settings", "password"],
+        terms: ["my account", "account", "settings", "account settings", "password", "emails", "email preferences",
+            "preferences", "my isaac"],
         summary: "Click here to view and edit your account details.",
         url: "/account",
         type: SEARCH_RESULT_TYPE.SHORTCUT

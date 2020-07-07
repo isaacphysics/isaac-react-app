@@ -1,9 +1,9 @@
 import React from "react";
-import {Col, Container, Row} from "reactstrap";
+import {Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Hexagon} from "../elements/Hexagon";
 import {openALevelBookChoiceModal} from "../../state/actions";
 import {useDispatch} from "react-redux";
+import {MenuCard} from "../elements/MenuCard";
 
 export const Alevel = () => {
 
@@ -15,83 +15,93 @@ export const Alevel = () => {
                 <TitleAndBreadcrumb currentPageTitle={"A Level Resources"} />
             </Col>
         </Row>
-        <Row className="teacher-feature-body justify-content-md-center">
-            <Col md="auto">
-                <Hexagon link={"/gameboards?filter=true#c052917f-5b7b-4b7f-b2a3-41d9de0a17c4"}
+        <Row className="teacher-feature-body">
+            <Col md="4">
+                <MenuCard link={"/gameboards?filter=true#c052917f-5b7b-4b7f-b2a3-41d9de0a17c4"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#question"}
-                    title={"Problem Solving"}/>
+                    title={"Question Finder"} subtitle={"Practise your problem solving skills."}/>
             </Col>
-            <Col md="auto">
-                <Hexagon link={"/pages/master_maths"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#teacher-hat"}
-                    title={"Master Mathematics"}/>
-            </Col>
-            <Col md="auto">
-                <Hexagon link={"/pages/pre_made_gameboards"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#triple"}
-                    title={"Browse Questions by Lessons"}/>
-            </Col>
-            <Col md="auto">
-                <Hexagon link={"/pages/isaac_mentor"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#teacher-hat"}
-                    title={"Mentoring Schemes"}/>
-            </Col>
-        </Row>
-        <Row>
-            <Col>
-                <h3>Isaac Books</h3>
-            </Col>
-        </Row>
-        <Row className="teacher-feature-body justify-content-md-center">
-            <Col md="auto">
-                <button className="hexagon hexagon-btn-link" onClick={() => dispatch(openALevelBookChoiceModal())} >
-                    <img className="hexagon hexagon-btn" src="/assets/phy/key_stage_sprite.svg#skills-book-cover" alt="" />
-                    <div className="hexagon-title">
-                        Physics Skills Mastery
-                    </div>
+            <Col md="4">
+                <button className="menu-card" onClick={() => dispatch(openALevelBookChoiceModal())} >
+                    <Card outline color="green">
+                        <CardTitle className="px-3">
+                            Physics Skills Mastery
+                        </CardTitle>
+                        <CardBody className="px-3">
+                            <Row>
+                                <Col md="3" className="justify-content-md-center col-centered">
+                                    <img className="menu-card" src="/assets/phy/key_stage_sprite.svg#skills-book-cover" alt="" />
+                                </Col>
+                                <Col md="9">
+                                    <aside>
+                                        Check your answers to our Mastering Essential Pre-University Physics book.
+                                    </aside>
+                                </Col>
+                            </Row>
+                        </CardBody>
+                    </Card>
                 </button>
             </Col>
-            <Col md="auto">
-                <Hexagon link={"/books/pre_uni_maths"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
-                    title={"Mathematics for Sciences"}/>
-            </Col>
-            <Col md="auto">
-                <Hexagon link={"/books/chemistry_16"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
-                    title={"Physical Chemistry Mastery"}/>
-            </Col>
-            <Col md="auto">
-                <Hexagon link={"/books/solve_physics_problems"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
-                    title={"Solving Physics Problems"}/>
+            <Col md="4">
+                <MenuCard link={"/pages/isaac_mentor"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#teacher-hat"}
+                    title={"Mentoring Schemes"} subtitle={"Weekly gameboards guided by an experienced teacher."}/>
             </Col>
         </Row>
-        <Row>
+        <Row className="teacher-feature-body">
+            <Col md="4">
+                <MenuCard link={"/pages/master_maths"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#teacher-hat"}
+                    title={"Master Mathematics"} subtitle={"Revise your maths skills with easier and harder questions."}/>
+            </Col>
+            <Col md="4">
+                <MenuCard link={"/books/pre_uni_maths"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
+                    title={"Maths for Sciences"} subtitle={"The collection of our Maths questions on the platform."}/>
+            </Col>
+            <Col md="4">
+                <MenuCard link={"/pages/pre_made_gameboards"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#triple"}
+                    title={"Questions by Lessons"} subtitle={"A selection of our questions organised by lesson topic."}/>
+            </Col>
+        </Row>
+        <Row className="my-4">
             <Col>
-                <h3>Extension Resources</h3>
+                <h3 className="h-title text-center">Additional Resources</h3>
             </Col>
         </Row>
-        <Row className="teacher-feature-body mb-5 justify-content-md-center">
-            <Col md="auto">
-                <Hexagon link={"/events?types=student"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#groups"}
-                    title={"Workshops"}/>
-            </Col>
-            <Col md="auto">
-                <Hexagon link={"/extraordinary_problems"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#lightning"}
-                    title={"Extraordinary Problems"}/>
-            </Col>
-            <Col md="auto">
-                <Hexagon link={"/pages/spc"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#groups"}
-                    title={"Senior Physics Challenge"}/>
-            </Col>
-            <Col md="auto">
-                <Hexagon link={"/books/quantum_mechanics_primer"}
+        <Row className="teacher-feature-body">
+            <Col md="4">
+                <MenuCard link={"/books/chemistry_16"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
-                    title={"Quantum Mechanics Primer"}/>
+                    title={"Physical Chemistry Mastery"} subtitle={"Check your answers to our Mastering Essential Pre-University Physical Chemistry book."}/>
+            </Col>
+            <Col md="4">
+                <MenuCard link={"/events?types=student"}
+                    imageSrc={"/assets/phy/teacher_features_sprite.svg#calendar"}
+                    title={"Events"} subtitle={"Find one of our face-to-face or virtual events."}/>
+            </Col>
+            <Col md="4">
+                <MenuCard link={"/extraordinary_problems"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#question"}
+                    title={"Extraordinary Problems"} subtitle={"Apply your physics skills to model real, complex situations."}/>
+            </Col>
+        </Row>
+        <Row className="teacher-feature-body mb-5">
+            <Col md="4">
+                <MenuCard link={"/books/solve_physics_problems"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
+                    title={"Solving Physics Problems"} subtitle={"A practical guide to solving unfamiliar problems using pre-university Physics."}/>
+            </Col>
+            <Col md="4">
+                <MenuCard link={"/pages/spc"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#groups"}
+                    title={"Senior Physics Challenge"} subtitle={"Apply for our popular residential summer school."}/>
+            </Col>
+            <Col md="4">
+                <MenuCard link={"/books/quantum_mechanics_primer"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
+                    title={"Quantum Mechanics Primer"} subtitle={"A first year university introduction to quantum mechanics."}/>
             </Col>
         </Row>
     </Container>

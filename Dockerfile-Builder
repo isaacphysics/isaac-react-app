@@ -1,11 +1,11 @@
 FROM ubuntu:latest
 
-RUN apt update
-RUN apt install -y ca-certificates curl openssl git apt-transport-https gnupg-agent software-properties-common
+RUN apt-get update
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y ca-certificates curl openssl git apt-transport-https gnupg-agent software-properties-common
 
 # Install Node
-RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
-RUN apt install -yy nodejs
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -yy nodejs
 
 
 # Install Docker
@@ -15,7 +15,7 @@ RUN add-apt-repository \
         "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
         $(lsb_release -cs) \
         stable"
-RUN apt update && apt install -y docker-ce docker-ce-cli containerd.io
+RUN DEBIAN_FRONTEND="noninteractive" apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io
 
 COPY ./build.sh /build.sh
 
