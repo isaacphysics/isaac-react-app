@@ -51,7 +51,7 @@ function parseLocationSearch(search: string): [string, DOCUMENT_TYPE[]] {
 }
 
 const selectStyle: Styles = {
-    multiValue: (styles: CSSProperties) => ({...styles, backgroundColor: "rgba(254,161,0, 0.7)"}),
+    multiValue: (styles: CSSProperties) => ({...styles, backgroundColor: "rgba(254,161,0, 0.9)"}),
     multiValueLabel: (styles: CSSProperties) => ({...styles, color: "black"}),
 };
 
