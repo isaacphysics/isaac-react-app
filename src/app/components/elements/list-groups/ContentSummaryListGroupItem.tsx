@@ -60,9 +60,8 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             iconLabel = "Topic summary page icon";
             break;
         default:
-            linkDestination = `/unknown/${item.id}`;
-            icon = "❓";
-            iconLabel = "Unknown page icon";
+            // Do not render this item if there is no matching DOCUMENT_TYPE
+            return null;
     }
     return <RS.ListGroupItem className={itemClasses} key={linkDestination}>
         <Link className="p-3 pr-4" to={{pathname: linkDestination, search: search}}>
