@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, CSSProperties, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
@@ -19,7 +19,7 @@ import {filterOnExamBoard, useCurrentExamBoard} from "../../services/examBoard";
 import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
-import Select, {ValueType} from "react-select";
+import Select, {Styles, ValueType} from "react-select";
 
 interface Item<T> {
     value: T;
@@ -49,6 +49,11 @@ function parseLocationSearch(search: string): [string, DOCUMENT_TYPE[]] {
 
     return [query, filters];
 }
+
+const selectStyle: Styles = {
+    multiValue: (styles: CSSProperties) => ({...styles, backgroundColor: "rgba(254,161,0, 0.7)"}),
+    multiValueLabel: (styles: CSSProperties) => ({...styles, color: "black"}),
+};
 
 export const Search = withRouter((props: {history: History; location: Location}) => {
     const {location, history} = props;
@@ -138,6 +143,7 @@ export const Search = withRouter((props: {history: History; location: Location})
                                         className="basic-multi-select w-100 w-md-50"
                                         classNamePrefix="select"
                                         onChange={unwrapValue(setFiltersState)}
+                                        styles={selectStyle}
                                     />
                                     {SITE_SUBJECT === SITE.CS && <RS.Label className="mb-2 mb-md-0">
                                         <TempExamBoardPicker className="text-right" />
