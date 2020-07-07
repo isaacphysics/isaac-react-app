@@ -31,10 +31,8 @@ export const ShareLink = ({linkUrl, reducedWidthLink}: {linkUrl: string; reduced
             shareLink.current.focus();
             const selection = window.getSelection();
             if (selection) {
-                const range = document.createRange();
-                range.selectNode(shareLink.current);
                 selection.removeAllRanges();
-                selection.addRange(range);
+                shareLink.current.setSelectionRange(0, -1);
             }
         }
     }, [showShareLink]);
