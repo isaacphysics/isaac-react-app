@@ -1,14 +1,14 @@
 import React, {useEffect, useRef, useState} from "react";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {useSelector} from "react-redux";
-import {AppState} from "../../state/reducers";
 import {isMobile} from "../../services/device";
+import {selectors} from "../../state/selectors";
+import {isTeacher} from "../../services/user";
 
-export const ShareLink = ({linkUrl, reducedWidthLink}: {linkUrl: string; reducedWidthLink?: boolean}) => {
+export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string}) => {
     const [showShareLink, setShowShareLink] = useState(false);
-    const segueEnvironment = useSelector((state: AppState) =>
-        (state && state.constants && state.constants.segueEnvironment) || "unknown"
-    );
+    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
+    const user = useSelector(selectors.user.orNull);
     const shareLink = useRef<HTMLInputElement>(null);
     const csUrlOrigin = segueEnvironment !== "DEV" ? "https://isaaccs.org" : window.location.origin;
     let shortenedLinkUrl = linkUrl;
@@ -39,10 +39,17 @@ export const ShareLink = ({linkUrl, reducedWidthLink}: {linkUrl: string; reduced
 
     const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
     const linkWidth = isMobile() || reducedWidthLink ? 180 : (shareUrl.length * 9);
+    const showCloneAndEdit = gameboardId && isTeacher(user);
     return <React.Fragment>
         <button className="share-link-icon btn-action" onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
-        <div className={`share-link ${showShareLink ? "d-block" : ""}`} style={{width: linkWidth}}>
+        <div className={`share-link ${showShareLink ? "d-block" : ""} ${showCloneAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>
             <input type="text" readOnly ref={shareLink} value={shareUrl} aria-label="Share URL" />
+            {showCloneAndEdit && <React.Fragment>
+                <hr className="text-center mt-4" />
+                <a href={`/gameboard_builder?base=${gameboardId}`} className="px-1">
+                    Clone and edit
+                </a>
+            </React.Fragment>}
         </div>
     </React.Fragment>;
 };
