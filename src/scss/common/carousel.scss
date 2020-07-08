@@ -26,11 +26,18 @@
     display: block;
     cursor: pointer;
     width: 16px;
-    &:focus {
-      background-image: none;
-      background-repeat: no-repeat;
-      background-size: contain;
-      background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position-y: center;
+    opacity: 1;
+    &:focus, &:hover {
+      height: 10%;
+      display: block;
+      margin-top: auto;
+      margin-bottom: auto;
+      box-shadow: 0 0 0 2pt black !important;
+      border-radius: 2px;
+      outline: none !important;
     }
     span {
       opacity: 0;
@@ -38,14 +45,10 @@
   }
   > a[class*='next'] {
     right: 3px;
-    &:focus {
-      background-image: url('/assets/chevron_right.svg');
-    }
+    background-image: url('/assets/chevron_right.svg');
   }
   > a[class*='prev'] {
     left: 3px;
-    &:focus {
-      background-image: url('/assets/chevron_left.svg');
-    }
+    background-image: url('/assets/chevron_left.svg');
   }
 }
