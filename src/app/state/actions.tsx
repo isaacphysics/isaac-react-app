@@ -10,7 +10,8 @@ import {
     EventStatusFilter,
     EventTypeFilter,
     EXAM_BOARD,
-    MEMBERSHIP_STATUS, NOT_FOUND,
+    MEMBERSHIP_STATUS,
+    NOT_FOUND,
     TAG_ID
 } from "../services/constants";
 import {

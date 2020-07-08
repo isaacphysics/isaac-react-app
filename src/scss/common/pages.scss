@@ -91,10 +91,10 @@ main {
 
 .homepageLearn {
   th {
-    background: theme-color("primary");
+    background: theme-color("secondary");
   }
   td:hover:before, td:focus-within:before {
-    border-left-color: theme-color("primary");
+    border-left-color: theme-color("secondary");
   }
 }
 

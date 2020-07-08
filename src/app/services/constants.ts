@@ -1,13 +1,11 @@
 import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {invert} from "lodash";
-import { BookingStatus } from "../../IsaacApiTypes";
+import {BookingStatus} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
-
-export const IS_CS_PLATFORM = SITE_SUBJECT === SITE.CS;
 
 /*
  * Configure the api provider with the server running the API:
@@ -227,7 +225,7 @@ export enum ACTION_TYPE {
     EVENT_BOOKINGS_FOR_GROUP_REQUEST = "EVENT_BOOKINGS_FOR_GROUP_REQUEST",
     EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS = "EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS",
     EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE = "EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE",
-    
+
     EVENT_BOOKING_CSV_REQUEST = "EVENT_BOOKING_CSV_REQUEST",
     EVENT_BOOKING_CSV_RESPONSE_SUCCESS = "EVENT_BOOKING_CSV_RESPONSE_SUCCESS",
     EVENT_BOOKING_CSV_RESPONSE_FAILURE = "EVENT_BOOKING_CSV_RESPONSE_FAILURE",
