@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {handleProviderLoginRedirect, logInUser, resetPassword, submitTotpChallengeResponse} from "../../state/actions";
@@ -9,7 +9,26 @@ import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 export const LogIn = () => {
-    useEffect( () => {document.title = "Login — Isaac " + SITE_SUBJECT_TITLE;}, []);
+    const headingRef = useRef<HTMLHeadingElement>(null);
+    const subHeadingRef = useRef<HTMLHeadingElement>(null);
+
+    const totpChallengePending = useSelector((state: AppState) => {
+        return state?.totpChallengePending;
+    });
+
+    useEffect( () => {
+        document.title = "Login — Isaac " + SITE_SUBJECT_TITLE;
+        if (!(window as any).followedAtLeastOneSoftLink) {
+            return;
+        }
+        const mainHeading = headingRef.current;
+        const subHeading = subHeadingRef.current;
+        if (totpChallengePending && subHeading) {
+            subHeading.focus();
+        } else if (mainHeading) {
+            mainHeading.focus();
+        }
+    }, [totpChallengePending]);
 
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
@@ -25,10 +44,6 @@ export const LogIn = () => {
     const [passwordResetRequest, setPasswordResetRequest] = useState(false);
 
     const [mfaVerificationCode, setMfaVerificationCode] = useState("");
-
-    const totpChallengePending = useSelector((state: AppState) => {
-        return state?.totpChallengePending;
-    });
 
     const validateAndLogIn = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -69,10 +84,12 @@ export const LogIn = () => {
                     <CardBody>
                         <Form name="login" onSubmit={validateAndLogIn} noValidate>
 
-                            <h2 className="h-title mb-4">Log&nbsp;in or sign&nbsp;up:</h2>
+                            <h2 className="h-title mb-4"  ref={headingRef} tabIndex={-1}>
+                                Log&nbsp;in or sign&nbsp;up:
+                            </h2>
                             {totpChallengePending ?
                                 <React.Fragment>
-                                    <h3>Two-Factor Authentication</h3>
+                                    <h3 ref={subHeadingRef} tabIndex={-1}>Two-Factor Authentication</h3>
                                     <p>Two-factor authentication has been enabled for this account.</p>
                                     <FormGroup>
                                         <Label htmlFor="verification-code">Verification Code</Label>
