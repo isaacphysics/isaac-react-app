@@ -46,15 +46,9 @@
   > a[class*='next'] {
     right: 3px;
     background-image: url('/assets/chevron_right.svg');
-    &:focus, &:hover {
-      background-image: url('/assets/chevron_right.svg');
-    }
   }
   > a[class*='prev'] {
     left: 3px;
     background-image: url('/assets/chevron_left.svg');
-    &:focus, &:hover {
-      background-image: url('/assets/chevron_left.svg');
-    }
   }
 }
