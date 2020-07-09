@@ -1,4 +1,4 @@
-import {EXAM_BOARD, examBoardTagMap} from "./constants";
+import {DOCUMENT_TYPE, EXAM_BOARD, examBoardTagMap} from "./constants";
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
@@ -19,9 +19,13 @@ export const useCurrentExamBoard = () => {
     }
 };
 
+const contentTypesToFilter = [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.CONCEPT];
 export const filterOnExamBoard = (contents: ContentSummaryDTO[], examBoard: EXAM_BOARD) => {
     if (examBoard === EXAM_BOARD.NONE) {
         return contents;
     }
-    return contents.filter(content => content.tags && content.tags.includes(examBoardTagMap[examBoard]));
+    return contents.filter(content => {
+        return !contentTypesToFilter.includes(content.type as DOCUMENT_TYPE) ||
+            content.tags?.includes(examBoardTagMap[examBoard])
+    });
 };

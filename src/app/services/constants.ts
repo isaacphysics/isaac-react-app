@@ -609,14 +609,26 @@ export enum TAG_LEVEL {
 export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
+    EVENT = "isaacEventPage",
+    TOPIC_SUMMARY = "isaacTopicSummaryPage",
     GENERIC = "page",
 }
 export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 
+export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
+    [DOCUMENT_TYPE.CONCEPT]: "Concepts",
+    [DOCUMENT_TYPE.QUESTION]: "Questions",
+    [DOCUMENT_TYPE.EVENT]: "Events",
+    [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
+    [DOCUMENT_TYPE.GENERIC]: "Other pages"
+};
+
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.GENERIC]: "pages",
     [DOCUMENT_TYPE.CONCEPT]: "concepts",
-    [DOCUMENT_TYPE.QUESTION]: "questions"
+    [DOCUMENT_TYPE.QUESTION]: "questions",
+    [DOCUMENT_TYPE.EVENT]: "events",
+    [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics"
 };
 
 export enum ContentVersionUpdatingStatus {
@@ -638,7 +650,8 @@ export const HOME_CRUMB = {title: "Home", to: "/"};
 export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
-export const ASSIGNMENT_PROGRESS_CRUMB = SITE_SUBJECT == SITE.PHY ? {title: "Assignment Progress", to: "/assignment_progress"} :
+export const ASSIGNMENT_PROGRESS_CRUMB = SITE_SUBJECT == SITE.PHY ?
+    {title: "Assignment Progress", to: "/assignment_progress"} :
     {title: "My markbook", to: "/my_markbook"};
 
 export enum UserRole {

@@ -14,7 +14,7 @@ import {TAG_ID} from "../../services/constants";
 import {pushConceptsToHistory, searchResultIsPublic} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
-import {ShortcutResponses} from "../../../IsaacAppTypes";
+import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 
 
@@ -40,7 +40,7 @@ export const Concepts = withRouter((props: {history: History; location: Location
     let [searchText, setSearchText] = useState(query);
     let [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
     let [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
-    let [shortcutResponse, setShortcutResponse] = useState<(ShortcutResponses | ContentSummaryDTO)[]>();
+    let [shortcutResponse, setShortcutResponse] = useState<(ShortcutResponse | ContentSummaryDTO)[]>();
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {

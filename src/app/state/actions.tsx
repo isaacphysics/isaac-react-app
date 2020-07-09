@@ -1084,7 +1084,7 @@ export const setContentVersion = (version: string) => async (dispatch: Dispatch<
 };
 
 // Search
-export const fetchSearch = (query: string, types: string) => async (dispatch: Dispatch<Action>) => {
+export const fetchSearch = (query: string, types: string | undefined) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query, types});
     try {
         if (query === "") {
