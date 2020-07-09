@@ -371,6 +371,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
 }
 
 export interface UserAuthenticationSettingsDTO extends AbstractSegueUserDTO {
+    mfaStatus?: boolean;
     linkedAccounts?: AuthenticationProvider[];
     hasSegueAccount?: boolean;
     id?: number;
@@ -382,7 +383,7 @@ export interface UserSummaryDTO extends AbstractSegueUserDTO {
     role?: Role;
     authorisedFullAccess?: boolean;
     emailVerificationStatus?: EmailVerificationStatus;
-    examBoard?: string;
+    examBoard?: EXAM_BOARD;
     id?: number;
 }
 
@@ -487,6 +488,12 @@ export interface Address {
 
 export interface AnsweredQuestionsByDate {
     [date: string]: number;
+}
+
+export interface TOTPSharedSecretDTO {
+    userId: number;
+    sharedSecret: string;
+    created: Date;
 }
 
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
