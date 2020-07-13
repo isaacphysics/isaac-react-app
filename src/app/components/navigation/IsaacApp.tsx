@@ -110,8 +110,8 @@ export const IsaacApp = () => {
             <Toasts />
             <ActiveModals />
             <CookieBanner />
-            {new Date() <= new Date(1596272400000) && <DowntimeWarningBanner />}
             <UnsupportedBrowserBanner />
+            <DowntimeWarningBanner />
             <EmailVerificationBanner />
             <main id="main" role="main" className="flex-fill content-body">
                 <Switch>
