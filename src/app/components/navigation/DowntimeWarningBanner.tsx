@@ -4,7 +4,7 @@ import {Alert} from 'reactstrap';
 import Cookies from 'js-cookie';
 import {Link} from "react-router-dom";
 
-const DOWNTIME_COOKIE = "downtimeCookieDismissed";
+const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 
 export const DowntimeWarningBanner = () => {
     const [show, setShow] = useState(() => {
