@@ -7,13 +7,13 @@ import {Link} from "react-router-dom";
 const DOWNTIME_COOKIE = "downtimeCookieDismissed";
 
 export const DowntimeWarningBanner = () => {
-    const [show, setShown] = useState(() => {
+    const [show, setShow] = useState(() => {
         const currentCookieValue = Cookies.get(DOWNTIME_COOKIE);
         return currentCookieValue != "1";
     });
 
     function clickDismiss() {
-        setShown(false);
+        setShow(false);
         Cookies.set(DOWNTIME_COOKIE, "1", {expires: 30 /* days*/});
     }
 
