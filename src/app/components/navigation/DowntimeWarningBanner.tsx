@@ -7,7 +7,7 @@ import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstan
 const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 
 export const DowntimeWarningBanner = () => {
-    const [show, setShow] = useState(() => {
+    const [noCookie, setCookie] = useState(() => {
         const currentCookieValue = Cookies.get(DOWNTIME_COOKIE);
         return currentCookieValue != "1";
     });
@@ -18,11 +18,13 @@ export const DowntimeWarningBanner = () => {
     }[SITE_SUBJECT];
 
     function clickDismiss() {
-        setShow(false);
+        setCookie(false);
         Cookies.set(DOWNTIME_COOKIE, "1", {expires: 30 /* days*/});
     }
 
-    return new Date() <= new Date(1596272400000) && show ? <div className="banner d-print-none" id="downtime-banner">
+    let inDateRange = new Date(1595840400000) <= new Date() && new Date() <= new Date(1596272400000);
+
+    return inDateRange && noCookie ? <div className="banner d-print-none" id="downtime-banner">
         <Alert color="danger" className="mb-0">
             <RS.Container>
                 <RS.Row style={{alignItems: "center"}}>
