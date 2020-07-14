@@ -44,6 +44,7 @@ import {selectors} from "../../state/selectors";
 import {UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 const stateFromProps = (state: AppState) => (state && {
     groups: selectors.groups.groups(state),
@@ -204,7 +205,11 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                     </Button>
                     <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
                     <span className="d-inline-block d-md-none">&nbsp;</span>
-                    <Button size="sm" color="secondary" className="text-white" onClick={() => showGroupInvitationModal(false)}>
+                    <Button
+                        size="sm" className={SITE_SUBJECT === SITE.CS ? "text-white" : ""}
+                        color={{[SITE.PHY]: "primary", [SITE.CS]: "secondary"}[SITE_SUBJECT]}
+                        onClick={() => showGroupInvitationModal(false)}
+                    >
                         Invite users
                     </Button>
                 </Col>}
@@ -216,7 +221,11 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                         onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name"
                     />
                     <InputGroupAddon addonType="append">
-                        <Button color="primary" className="p-0 border-dark" onClick={saveUpdatedGroup} disabled={newGroupName == "" || initialGroupName == newGroupName}>
+                        <Button
+                            color={{[SITE.PHY]: "secondary", [SITE.CS]: "primary"}[SITE_SUBJECT]}
+                            className="p-0 border-dark" disabled={newGroupName == "" || initialGroupName == newGroupName}
+                            onClick={saveUpdatedGroup}
+                        >
                             {group ? "Update" : "Create"}
                         </Button>
                     </InputGroupAddon>
