@@ -70,6 +70,7 @@ import {notificationModal} from "../elements/modals/NotificationModal";
 import {showNotification} from "../../services/notificationChecker";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
+import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -110,6 +111,7 @@ export const IsaacApp = () => {
             <ActiveModals />
             <CookieBanner />
             <UnsupportedBrowserBanner />
+            <DowntimeWarningBanner />
             <EmailVerificationBanner />
             <main id="main" role="main" className="flex-fill content-body">
                 <Switch>

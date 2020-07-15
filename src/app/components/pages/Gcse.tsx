@@ -1,7 +1,7 @@
 import React from "react";
 import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Hexagon} from "../elements/Hexagon";
+import {MenuCard} from "../elements/MenuCard";
 
 export const Gcse = () => {
     return<Container>
@@ -10,37 +10,46 @@ export const Gcse = () => {
                 <TitleAndBreadcrumb currentPageTitle={"GCSE Resources"} />
             </Col>
         </Row>
-        <Row className="teacher-feature-body justify-content-md-center">
-            <Col md="auto">
-                <Hexagon link={"/books/phys_book_gcse"} imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
-                    title={"Physics Skills Mastery"}/>
-            </Col>
-            <Col md="auto">
-                <Hexagon link={"/gameboards?filter=true#de583d25-93c9-4600-a6e3-6ae144b105fd"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#question"}
-                    title={"Problem Solving"}/>
-            </Col>
-            <Col md="auto">
-                <Hexagon link={"/pages/isaac_mentor"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#teacher-hat"}
-                    title={"Mentoring Schemes"}/>
-            </Col>
-            <Col md="auto">
-                <Hexagon link={"/pages/pre_made_gameboards#gcse_to_alevel"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#question"}
-                    title={"Preparation for A Level"}/>
+        <Row className="mb-3">
+            <Col>
+                <p className="subtitle">
+                    Isaac Physics provides you with a huge range of resources to support your learning of Physics, in the classroom or at home – all for free.
+                </p>
             </Col>
         </Row>
-        <Row className="teacher-feature-body mb-5 justify-content-md-center">
-            <Col className="hexagon-offset hexagon-offset-large" md="auto">
-                <Hexagon link={"/pages/gcse_quizzes"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#question"}
-                    title={"Quick Quizzes"}/>
+        <Row className="teacher-feature-body">
+            <Col md="6">
+                <MenuCard link={"/books/phys_book_gcse"} imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
+                    title={"Physics Skills Mastery"} subtitle={"Check your answers to our Mastering Essential GCSE Physics book."}/>
             </Col>
-            <Col className="hexagon-offset-large" md="auto">
-                <Hexagon link={"/events?types=student"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#groups"}
-                    title={"Workshops"}/>
+            <Col md="6">
+                <MenuCard link={"/gameboards?filter=true#de583d25-93c9-4600-a6e3-6ae144b105fd"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#triple"}
+                    title={"Question Finder"} subtitle={"Practise your problem solving skills with our level 1 questions."}/>
+            </Col>
+        </Row>
+        <Row className="teacher-feature-body">
+            <Col md="6">
+                <MenuCard link={"/pages/isaac_mentor"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#teacher-hat"}
+                    title={"Mentoring Scheme"} subtitle={"Weekly gameboards guided by an experienced teacher."}/>
+            </Col>
+            <Col md="6">
+                <MenuCard link={"/pages/pre_made_gameboards#gcse_to_alevel"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#question"}
+                    title={"Preparation for A Level"} subtitle={"Questions to smooth your transition to A Level or equivalent."}/>
+            </Col>
+        </Row>
+        <Row className="teacher-feature-body mb-5">
+            <Col md="6">
+                <MenuCard link={"/pages/gcse_quizzes"}
+                    imageSrc={"/assets/phy/key_stage_sprite.svg#lightning"}
+                    title={"Quick Quizzes"} subtitle={"Revise the equations needed at GCSE with our quick quizzes."}/>
+            </Col>
+            <Col md="6">
+                <MenuCard link={"/events?types=student"}
+                    imageSrc={"/assets/phy/teacher_features_sprite.svg#calendar"}
+                    title={"Events"} subtitle={"Find one of our face-to-face or virtual workshops."}/>
             </Col>
         </Row>
     </Container>

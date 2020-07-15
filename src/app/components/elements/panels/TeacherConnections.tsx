@@ -41,7 +41,7 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
     const [authenticationToken, setAuthenticationToken] = useState<string | null>(authToken);
 
     function processToken(event: React.FormEvent<HTMLFormElement>) {
-        if (event) {event.preventDefault();}
+        if (event) {event.preventDefault(); event.stopPropagation();}
         dispatch(authenticateWithTokenAfterPrompt(authenticationToken));
     }
 
@@ -59,7 +59,7 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
                 <RS.Col lg={7}>
                     <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
                     {/* TODO Need to handle nested form complaint */}
-                    <RS.Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => processToken(e)}>
+                    <RS.Form onSubmit={processToken}>
                         <RS.InputGroup>
                             <RS.Input
                                 type="text" placeholder="Enter your code in here" value={authToken || undefined}

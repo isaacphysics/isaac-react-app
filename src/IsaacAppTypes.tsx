@@ -9,7 +9,8 @@ import {
     GameboardDTO,
     GameboardItem,
     ResultsWrapper,
-    TestCaseDTO
+    TestCaseDTO,
+    TOTPSharedSecretDTO
 } from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
 import {FasttrackConceptsState} from "./app/state/reducers";
@@ -40,6 +41,19 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS; provider: AuthenticationProvider}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS; totpSharedSecretDTO: TOTPSharedSecretDTO}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_SUCCESS}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
@@ -230,7 +244,7 @@ export type Action =
     | {type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS; newVersion: string}
     | {type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string}
+    | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string | undefined}
     | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
 
     | {type: ACTION_TYPE.TOASTS_SHOW; toast: Toast}
@@ -413,7 +427,7 @@ export interface AppGroupMembership extends ApiTypes.UserSummaryWithGroupMembers
     groupMembershipInformation: ApiTypes.GroupMembershipDTO;
 }
 
-export interface ShortcutResponses {
+export interface ShortcutResponse {
     id: string;
     title: string;
     terms: string[];

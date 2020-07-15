@@ -1,20 +1,15 @@
 import {History} from "history";
-
 import {DOCUMENT_TYPE, TAG_ID} from "./constants";
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
 import {isStaff} from "./user";
 import {LoggedInUser} from "../../IsaacAppTypes";
 
-export function calculateSearchTypes(problems: boolean, concepts: boolean) {
-    const typesArray = [];
-    if (problems) {
-        typesArray.push(DOCUMENT_TYPE.QUESTION);
-    }
-    if (concepts) {
-        typesArray.push(DOCUMENT_TYPE.CONCEPT);
-    }
-    return typesArray.join(",");
-}
+export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: DOCUMENT_TYPE[]) {
+    history.push({
+        pathname: "/search",
+        search: `?query=${encodeURIComponent(searchQuery)}${typesFilter.length ? `&types=${typesFilter.join(",")}` : ""}`,
+    });
+};
 
 export function calculateConceptTypes(physics: boolean, maths: boolean) {
     const typesArray = [];
@@ -26,14 +21,6 @@ export function calculateConceptTypes(physics: boolean, maths: boolean) {
     }
     return typesArray.join(",");
 }
-
-export const pushSearchToHistory = function(history: History, searchText: string, problems: boolean, concepts: boolean) {
-    history.push({
-        pathname: "/search",
-        search: `?query=${encodeURIComponent(searchText)}&types=${calculateSearchTypes(problems, concepts)}`,
-    });
-};
-
 export const pushConceptsToHistory = function(history: History, searchText: string, physics: boolean, maths: boolean) {
     history.push({
         pathname: "/concepts",
