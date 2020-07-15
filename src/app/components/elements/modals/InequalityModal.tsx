@@ -144,8 +144,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             numberInputValue: void 0,
         }
 
-        // this._reverseGreekLetterMap = Object.fromEntries(Object.entries(this._greekLetterMap).map(e => [e[1], e[0]]));
-
         this.close = () => {
             props.close();
         }

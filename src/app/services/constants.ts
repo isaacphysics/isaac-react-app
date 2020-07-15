@@ -744,4 +744,8 @@ export const GREEK_LETTERS_MAP: { [letter: string]: string } = {
     "Omega": "Ω",
 };
 
-export const REVERSE_GREEK_LETTERS_MAP = Object.fromEntries(Object.entries(GREEK_LETTERS_MAP).map(e => [e[1], e[0]]));
+let _REVERSE_GREEK_LETTERS_MAP: { [key: string]: string } = {};
+for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
+    _REVERSE_GREEK_LETTERS_MAP[entry[1]] = entry[0];
+}
+export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
