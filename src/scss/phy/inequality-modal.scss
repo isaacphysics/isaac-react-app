@@ -89,3 +89,9 @@
         }
     }
 }
+
+#moving-menu-item {
+    svg.v-hexagon {
+        stroke: darken($phy_green, 10%);
+    }
+}
