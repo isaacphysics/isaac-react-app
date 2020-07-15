@@ -4,7 +4,8 @@ import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import katex from "katex";
 import _uniqWith from 'lodash/uniqWith';
 import _isEqual from 'lodash/isEqual';
-import {parsePseudoSymbolicAvailableSymbols} from "../../../services/questions";
+import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState} from "../../../services/questions";
+import {GREEK_LETTERS_MAP} from '../../../services/constants';
 
 class MenuItem {
     public type: string;
@@ -88,8 +89,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private _movingMenuBar?: HTMLElement | null = null;
     private _potentialSymbolSpec?: MenuItem | null = null;
 
-    private _greekLetterMap: { [letter: string]: string } = {"alpha": "α", "beta": "β", "gamma": "γ", "delta": "δ", "epsilon": "ε", "varepsilon": "ε", "zeta": "ζ", "eta": "η", "theta": "θ", "iota": "ι", "kappa": "κ", "lambda": "λ", "mu": "μ", "nu": "ν", "xi": "ξ", "omicron": "ο", "pi": "π", "rho": "ρ", "sigma": "σ", "tau": "τ", "upsilon": "υ", "phi": "ϕ", "chi": "χ", "psi": "ψ", "omega": "ω", "Gamma": "Γ", "Delta": "Δ", "Theta": "Θ", "Lambda": "Λ", "Xi": "Ξ", "Pi": "Π", "Sigma": "Σ", "Upsilon": "Υ", "Phi": "Φ", "Psi": "Ψ", "Omega": "Ω"};
-    private _reverseGreekLetterMap: { [letter: string]: string } = {};
+    private _greekLetterMap = GREEK_LETTERS_MAP;
     private _lowerCaseGreekLetters = ["alpha", "beta", "gamma", "delta", "varepsilon", "zeta", "eta", "theta", "iota", "kappa", "lambda", "mu", "nu", "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "chi", "psi", "omega"];
     private _upperCaseGreekLetters = ["Gamma", "Delta", "Theta", "Lambda", "Xi", "Pi", "Sigma", "Upsilon", "Phi", "Psi", "Omega"];
 
@@ -144,8 +144,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             numberInputValue: void 0,
         }
 
-        this._reverseGreekLetterMap = Object.fromEntries(Object.entries(this._greekLetterMap).map(e => [e[1], e[0]]));
-
         this.close = () => {
             props.close();
         }
@@ -180,21 +178,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 timestamp: Date.now()
             }]
         };
-        sketch.onNewEditorState = (s: any) => {
+        sketch.onNewEditorState = (state: any) => {
             const modal = document.getElementById('inequality-modal');
             if (modal) {
-                // TODO: Preprocess state to convert greek letters back to letter names
-                if (s.result && s.result.tex) {
-                    s.result.tex = s.result.tex.split('').map((l: string) => this._reverseGreekLetterMap[l] ? '\\' + this._reverseGreekLetterMap[l] : l).join('');
-                }
-                if (s.result && s.result.python) {
-                    s.result.python = s.result.python.split('').map((l: string) => this._reverseGreekLetterMap[l] || l).join('');
-                }
-                if (s.result && s.result.uniqueSymbols) {
-                    s.result.uniqueSymbols = s.result.uniqueSymbols.split('').map((l: string) => this._reverseGreekLetterMap[l] || l).join('');
-                }
-                this.setState((prevState: InequalityModalState) => ({ editorState: { ...prevState.editorState, ...s } }));
-                this.props.onEditorStateChange(s);
+                const newState = sanitiseInequalityState(state);
+                this.setState((prevState: InequalityModalState) => ({ editorState: { ...prevState.editorState, ...newState } }));
+                this.props.onEditorStateChange(newState);
             }
         };
         sketch.onCloseMenus = () => { /*this.setState({ menuOpen: false })*/ }; // TODO Maybe nice to have
@@ -723,7 +712,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     // math sad, therefore ROUND EVERYTHING OR FACE MADNESS
 
     private onMouseDown(e: MouseEvent) {
-        // debugger;
         if ((e.target as any).id === 'numeric-input') return; // this works but a cast to any is probably not an acceptable solution.
         // preventDefault here to stop selection on desktop
         e.preventDefault();
