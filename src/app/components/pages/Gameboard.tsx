@@ -25,18 +25,21 @@ function getTags(docTags?: string[]) {
 
 const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
-    let icon = "Q";
+    let icon = <img src="/assets/question.svg" alt=""/>;
     let tryAgain = false;
 
     switch (question.state) {
         case "PERFECT":
             itemClasses += " bg-success";
-            icon = "✓";
+            icon = <img src="/assets/tick-rp.svg" alt=""/>;
             break;
         case "PASSED":
         case "IN_PROGRESS":
+            icon = <img src="/assets/incomplete.svg" alt=""/>;
+            break;
         case "FAILED":
             tryAgain = true;
+            icon = <img src="/assets/cross-rp.svg" alt=""/>;
             break;
     }
 

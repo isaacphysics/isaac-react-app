@@ -29,18 +29,18 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     switch (item.type) {
         case (SEARCH_RESULT_TYPE.SHORTCUT):
             linkDestination = item.url;
-            icon = "▶"; //"🎯";
+            icon = <img src="/assets/concept.svg" alt=""/>;
             iconLabel = "Shortcut icon";
             break;
         case (DOCUMENT_TYPE.QUESTION):
             itemClasses += item.correct ? "bg-success" : "text-info";
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
-            icon = item.correct ? "✓" : "Q ";
+            icon = item.correct ? <img src="/assets/tick-rp.svg" alt=""/> : <img src="/assets/question.svg" alt=""/>;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
-            icon = "📄";
+            icon = <img src="/assets/concept.svg" alt=""/>;
             iconLabel = "Concept page icon";
             break;
         case (DOCUMENT_TYPE.EVENT):

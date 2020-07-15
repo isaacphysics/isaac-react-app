@@ -190,7 +190,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                                             until={!baseGameboardId || baseGameboard}
                                                         >
                                                             <input
-                                                                type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
+                                                                type="image" src="/assets/add.svg" className="centre img-fluid"
                                                                 alt="Add questions" title="Add questions"
                                                                 onClick={() => {
                                                                     logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
