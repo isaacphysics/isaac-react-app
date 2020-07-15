@@ -748,4 +748,5 @@ let _REVERSE_GREEK_LETTERS_MAP: { [key: string]: string } = {};
 for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
     _REVERSE_GREEK_LETTERS_MAP[entry[1]] = entry[0];
 }
+_REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
 export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
