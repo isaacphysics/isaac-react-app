@@ -19,7 +19,6 @@
         bottom: 15px;
         right: 40px;
         transform: rotate(30deg);
-        background: theme-color("secondary");
         color: white;
         font-weight: bold;
         font-size: 0.9rem;
@@ -123,7 +122,7 @@
             right: 0;
             left: 0;
             overflow: visible;
-            background: theme-color("primary");
+            background: theme-color("secondary");
 
             &.closed {
                 height: 0;

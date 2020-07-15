@@ -1,0 +1,18 @@
+@import "../common/inequality-modal.scss";
+
+#inequality-modal {
+    .beta-badge {
+        background: $cs-hot-pink;
+    }
+
+    .inequality-ui {
+        &.button {
+            &.confirm {
+                background-image: url('/assets/inequality-confirm-cs.svg');
+            }
+            &.centre {
+                background-image: url('/assets/inequality-centre-cs.svg');
+            }
+        }
+    }
+}
