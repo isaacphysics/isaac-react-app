@@ -15,6 +15,10 @@
             }
         }
 
+        &.katex-preview {
+            border: 1px solid $phy_green;
+        }
+
         &.menu-bar {
             background: $phy_green;
 
