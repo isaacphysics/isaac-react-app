@@ -19,6 +19,7 @@ import {
     ResponderProvided
 } from "react-beautiful-dnd";
 import _differenceBy from "lodash/differenceBy";
+import _isUndefined from "lodash/isUndefined";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
 
@@ -238,11 +239,17 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         };
     }
 
+    private getPreviousItemIndentation = (index: number) => {
+        if (!this.props.currentAttempt?.items) return -1;
+        let items = [...(this.props.currentAttempt.items || [])];
+        return items[Math.max(0, index-1)].indentation || 0;
+    }
+
     private reduceIndentation = (index: number) => {
         if (!this.props.currentAttempt?.items) return;
 
         let items = [...(this.props.currentAttempt.items || [])];
-        if (items[index].indentation) {
+        if (!_isUndefined(items[index].indentation)) {
             items[index].indentation = Math.max((items[index].indentation || 0) - 1, 0);
         }
         this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items }});
@@ -253,7 +260,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
 
         let items = [...(this.props.currentAttempt.items || [])];
         // This condition is insane but of course 0, undefined, and null are all false-y.
-        if (items[index].indentation !== undefined && items[index].indentation !== null) {
+        if (!_isUndefined(items[index].indentation)) {
             items[index].indentation = Math.min((items[index].indentation || 0) + 1, Math.min((items[Math.max(index-1, 0)].indentation || 0) + 1, PARSONS_MAX_INDENT));
         }
         this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items }});
@@ -325,9 +332,9 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                                         {item.value}
                                                         <div className="controls">
                                                             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                                                            <span className="reduce" role="img" onMouseUp={() => { this.reduceIndentation(index) }} aria-label="reduce indentation">&nbsp;</span>
+                                                            <span className={`reduce ${!_isUndefined(item?.indentation) && item.indentation > 0 ? 'show' : 'hide' }`} role="img" onMouseUp={() => { this.reduceIndentation(index) }} aria-label="reduce indentation">&nbsp;</span>
                                                             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                                                            <span className="increase" role="img" onMouseUp={() => { this.increaseIndentation(index) }} aria-label="increase indentation">&nbsp;</span>
+                                                            <span className={`increase ${!_isUndefined(item?.indentation) && item.indentation <= this.getPreviousItemIndentation(index) ? 'show' : 'hide' }`} role="img" onMouseUp={() => { this.increaseIndentation(index) }} aria-label="increase indentation">&nbsp;</span>
                                                         </div>
                                                     </pre>
                                                 </div>

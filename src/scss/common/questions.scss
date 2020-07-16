@@ -199,13 +199,27 @@ button {
             height: 20px;
             cursor: pointer;
 
+            &.show:hover {
+              // Assuming this is only ever going to be used on CS
+              background-color: $cs-mustard !important;
+            }
+
+            &.hide {
+              opacity: 0.2;
+              cursor: default;
+            }
+
+            &.show {
+              opacity: 1.0;
+            }
+
             &.reduce {
-              background: lightgrey url('/assets/chevron_left.svg') no-repeat center;
+              background: $gray-120 url('/assets/chevron_left.svg') no-repeat center;
               margin-right: 4px;
             }
 
             &.increase {
-              background: lightgrey url('/assets/chevron_right.svg') no-repeat center;
+              background: $gray-120 url('/assets/chevron_right.svg') no-repeat center;
             }
           }
         }
