@@ -1,12 +1,15 @@
 // NOMENSA variables.scss
 // Physics colours
 $phy_green: #509e2e;
+$a11y_green: #448525;
 $phy_orangered: #ef3e36;
+$a11y_orangered: #e22e25;
 $phy_blue: #009acd;
+$a11y_blue: #007fa9;
 $phy_purple: #944cbe;
 $phy_burgundy: #991846;
-$phy_chemistry: $phy_orangered;
-$phy_maths: $phy_blue;
+$phy_chemistry: $a11y_orangered;
+$phy_maths: $a11y_blue;
 $phy_physics: $phy_purple;
 $phy_extra_force_yellow: #fea100;
 
@@ -16,12 +19,11 @@ $cyan: #0f8294;
 $green: #208838;
 
 //Custom Colours
-$reddish: #d7335f; // Used as an active colour on secondary buttons
 $focus-blue: #3E59A3; // Used as focus indicator colour on inputs
 
 //Colours
 $primary: $phy_extra_force_yellow;
-$secondary: $phy_green;
+$secondary: $a11y_green;
 $theme-colors: (
     "primary": $primary,
     "secondary": $secondary
@@ -88,6 +90,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/list-groups";
 @import "../common/inequality-modal";
 @import "../common/graph-sketcher-modal";
+@import "inequality-modal";
 @import "../common/carousel";
 @import "../common/boards";
 @import "../common/focus";

@@ -5,15 +5,16 @@ export const searchList = [
     {
         id: "assignments",
         title: "My assignments",
-        terms: ["my assignments", "assignments", "homework", "hw"],
+        terms: ["my assignments", "assignments", "homework", "hw", "my assignment", "assign", "my isaac"],
         summary: "View your assignments.",
         url: "/assignments",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "join_group",
         title: "Teacher connections",
-        terms: ["join group", "join class", "teacher connections", "class code", "join a class",
-            "classes", "share token", "groups", "group", "join", "group code"],
+        terms: ["join group", "join class", "teacher connections", "teacher connection", "class code", "join a class",
+            "classes", "share token", "groups", "group", "join", "group code", "code", "token", "teacher code",
+            "teachers connections", "join a group", "teacher conections", "teacher connect", "teachers connection"],
         summary: "Join groups and manage your teacher connections.",
         url: "/account#teacherconnections",
         type: SEARCH_RESULT_TYPE.SHORTCUT
@@ -55,7 +56,8 @@ export const searchList = [
     }, {
         id: "my_account",
         title: "My account",
-        terms: ["my account", "account", "settings", "account settings", "password"],
+        terms: ["my account", "account", "settings", "account settings", "password", "emails", "email preferences",
+            "preferences", "my isaac"],
         summary: "Click here to view and edit your account details.",
         url: "/account",
         type: SEARCH_RESULT_TYPE.SHORTCUT
