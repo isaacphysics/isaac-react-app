@@ -9,7 +9,6 @@ import {DraggableProvided} from "react-beautiful-dnd";
 import tags from "../../services/tags";
 import {Question} from "../pages/Question";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {Col, Row} from "reactstrap";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
