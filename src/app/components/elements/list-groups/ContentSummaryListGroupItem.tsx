@@ -45,18 +45,18 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             break;
         case (DOCUMENT_TYPE.EVENT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
-            icon = "📆";
+            icon = <img src="/assets/event-md.svg" alt=""/>;
             iconLabel = "Event page icon";
             break;
         case (DOCUMENT_TYPE.TOPIC_SUMMARY):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
-            icon = "🗃️";
+            icon = <img src="/assets/work-md.svg" alt=""/>;
             iconLabel = "Topic summary page icon";
             topicTitle = "Topic"
             break;
         case (DOCUMENT_TYPE.GENERIC):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
-            icon = "ℹ️";
+            icon = <img src="/assets/info-md.svg" alt=""/>;
             iconLabel = "Topic summary page icon";
             break;
         default:
