@@ -1,8 +1,8 @@
-import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, CSSProperties, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
-import {Col, Container, CustomInput, Form, Input, Label, Row} from "reactstrap";
+import {Col, Container, Form, Input, Row} from "reactstrap";
 import queryString from "query-string";
 import {fetchSearch} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -10,80 +10,92 @@ import {AppState} from "../../state/reducers";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
-import {DOCUMENT_TYPE} from "../../services/constants";
-import {calculateSearchTypes, pushSearchToHistory, searchResultIsPublic} from "../../services/search";
+import {DOCUMENT_TYPE, documentDescription} from "../../services/constants";
+import {pushSearchToHistory, searchResultIsPublic} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
-import {ShortcutResponses} from "../../../IsaacAppTypes";
+import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {filterOnExamBoard, useCurrentExamBoard} from "../../services/examBoard";
 import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
+import Select, {Styles, ValueType} from "react-select";
 
+interface Item<T> {
+    value: T;
+    label: string;
+}
+
+function unwrapValue<T>(f: React.Dispatch<React.SetStateAction<Item<T>[]>>) {
+    return (value: ValueType<Item<T>>) => f(Array.isArray(value) ? [...value] : !value ? [] : [value]);
+}
+
+function itemise(document: DOCUMENT_TYPE): Item<DOCUMENT_TYPE> {
+    return {value: document, label: documentDescription[document]};
+}
+function deitemise(item: Item<DOCUMENT_TYPE>) {
+    return item.value;
+}
+
+function parseLocationSearch(search: string): [string, DOCUMENT_TYPE[]] {
+    const searchParsed = queryString.parse(search);
+
+    const parsedQuery = searchParsed.query || "";
+    const query = parsedQuery instanceof Array ? parsedQuery[0] : parsedQuery;
+
+    const parsedFilters = searchParsed.types || "";
+    const possibleFilters = (parsedFilters instanceof Array ? parsedFilters[0] : parsedFilters).split(",");
+    const filters = possibleFilters.filter(pf => Object.values(DOCUMENT_TYPE).includes(pf as DOCUMENT_TYPE)) as DOCUMENT_TYPE[]
+
+    return [query, filters];
+}
+
+const selectStyle: Styles = {
+    multiValue: (styles: CSSProperties) => ({...styles, backgroundColor: {[SITE.PHY]: "rgba(254, 161, 0, 0.9)", [SITE.CS]: "rgba(255, 181, 63, 0.9)"}[SITE_SUBJECT]}),
+    multiValueLabel: (styles: CSSProperties) => ({...styles, color: "black"}),
+};
 
 export const Search = withRouter((props: {history: History; location: Location}) => {
     const {location, history} = props;
     const dispatch = useDispatch();
-    const searchResults = useSelector((state: AppState) => state && state.search && state.search.searchResults || null);
+    const searchResults = useSelector((state: AppState) => state?.search?.searchResults || null);
     const user = useSelector(selectors.user.orNull);
     const examBoard = useCurrentExamBoard();
+    const [urlQuery, urlFilters] = parseLocationSearch(location.search);
+    const [queryState, setQueryState] = useState(urlQuery);
+    const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(urlFilters.map(itemise))
 
-    const searchParsed = queryString.parse(location.search);
-
-    const queryParsed = searchParsed.query || "";
-    const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
-
-    const filterParsed = (searchParsed.types || (DOCUMENT_TYPE.QUESTION + "," + DOCUMENT_TYPE.CONCEPT));
-    const filters = (filterParsed instanceof Array ? filterParsed[0] : filterParsed).split(",");
-
-    const problems = filters.includes(DOCUMENT_TYPE.QUESTION);
-    const concepts = filters.includes(DOCUMENT_TYPE.CONCEPT);
-
-    let [searchText, setSearchText] = useState(query);
-    let [searchFilterProblems, setSearchFilterProblems] = useState(problems);
-    let [searchFilterConcepts, setSearchFilterConcepts] = useState(concepts);
-    let [shortcutResponse, setShortcutResponse] = useState<(ShortcutResponses | ContentSummaryDTO)[]>();
-
+    // On search URL change trigger search action
     useEffect(
         () => {
-            setSearchText(query);
-            setSearchFilterProblems(problems);
-            setSearchFilterConcepts(concepts);
-            dispatch(fetchSearch(query, calculateSearchTypes(problems, concepts)));
+            setQueryState(urlQuery);
+            setFiltersState(urlFilters.map(itemise));
+            dispatch(fetchSearch(urlQuery, urlFilters.length ? urlFilters.join(",") : undefined));
         },
-        [dispatch, query, problems, concepts]
+        [dispatch, location.search]
     );
 
-    function doSearch(e?: FormEvent<HTMLFormElement>) {
-        if (e) {
-            e.preventDefault();
-        }
-        if (searchText != query || searchFilterProblems != problems || searchFilterConcepts != concepts) {
-            pushSearchToHistory(history, searchText, searchFilterProblems, searchFilterConcepts);
-        }
-        if (searchText) {
-            setShortcutResponse(shortcuts(searchText))
-        }
+    function updateSearchUrl(e?: FormEvent<HTMLFormElement>) {
+        if (e) {e.preventDefault();}
+        pushSearchToHistory(history, queryState, filtersState.map(deitemise));
     }
 
+    // Trigger update to search url on query or filter change
     const timer: MutableRefObject<number | undefined> = useRef();
     useEffect(() => {
-        timer.current = window.setTimeout(() => {
-            doSearch();
-        }, 800);
-        return () => {
-            clearTimeout(timer.current);
-        };
-    }, [searchText]);
+        timer.current = window.setTimeout(() => {updateSearchUrl()}, 800);
+        return () => {clearTimeout(timer.current)};
+    }, [queryState]);
 
     useEffect(() => {
-        doSearch();
-    }, [searchFilterProblems, searchFilterConcepts]);
+        updateSearchUrl()
+    }, [filtersState]);
 
-    const filteredSearchResults = searchResults && searchResults.results &&
-        filterOnExamBoard(searchResults.results.filter((result) => searchResultIsPublic(result, user)), examBoard);
-
-    const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
+    // Process results and add shortcut responses
+    const filteredSearchResults = searchResults?.results &&
+        filterOnExamBoard(searchResults.results.filter(result => searchResultIsPublic(result, user)), examBoard);
+    const shortcutResponses = (queryState ? shortcuts(queryState) : []) as (ContentSummaryDTO | ShortcutResponse)[];
+    const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
 
     return (
         <Container id="search-page">
@@ -94,12 +106,12 @@ export const Search = withRouter((props: {history: History; location: Location})
             </Row>
             <Row>
                 <Col>
-                    <Form inline onSubmit={doSearch}>
+                    <Form inline onSubmit={updateSearchUrl}>
                         <Input
                             className='search--filter-input mt-4'
-                            type="search" value={searchText}
+                            type="search" value={queryState}
                             placeholder="Search"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setQueryState(e.target.value)}
                         />
                     </Form>
                 </Col>
@@ -108,21 +120,38 @@ export const Search = withRouter((props: {history: History; location: Location})
                 <Col className="py-4">
                     <RS.Card>
                         <RS.CardHeader className="search-header">
-                            <Col md={5} xs={12}>
+                            <RS.Col md={5} xs={12}>
                                 <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
+                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
                                 </h3>
-                            </Col>
-                            <Col md={7} xs={12}>
-                                <Form inline className="search-filters">
-                                    <Label className="d-none d-sm-inline-block">Filter</Label>
-                                    <Label><CustomInput id="problem-search" type="checkbox" defaultChecked={searchFilterProblems} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterProblems(e.target.checked)} />Search questions</Label>
-                                    <Label><CustomInput id="concept-search" type="checkbox" defaultChecked={searchFilterConcepts} onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchFilterConcepts(e.target.checked)} />Search content</Label>
-                                    {SITE_SUBJECT === SITE.CS && <Label><TempExamBoardPicker className="text-right" /></Label>}
-                                </Form>
-                            </Col>
+                            </RS.Col>
+                            <RS.Col md={7} xs={12}>
+                                <RS.Form inline className="search-filters">
+                                    <RS.Label htmlFor="document-filter" className="d-none d-md-inline-block mr-1">
+                                        Filter:
+                                    </RS.Label>
+                                    <Select
+                                        inputId="document-filter" isMulti
+                                        placeholder="No filter"
+                                        defaultValue={filtersState}
+                                        options={Object.values(DOCUMENT_TYPE)
+                                            .filter(documentType =>
+                                                !(documentType == DOCUMENT_TYPE.TOPIC_SUMMARY
+                                                    && SITE_SUBJECT == SITE.PHY))
+                                            .map(itemise)
+                                        }
+                                        className="basic-multi-select w-100 w-md-50"
+                                        classNamePrefix="select"
+                                        onChange={unwrapValue(setFiltersState)}
+                                        styles={selectStyle}
+                                    />
+                                    {SITE_SUBJECT === SITE.CS && <RS.Label className="mb-2 mb-md-0">
+                                        <TempExamBoardPicker className="text-right" />
+                                    </RS.Label>}
+                                </RS.Form>
+                            </RS.Col>
                         </RS.CardHeader>
-                        {query != "" && <RS.CardBody>
+                        {urlQuery != "" && <RS.CardBody>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0 ?
                                     <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} displayTopicTitle={true}/>

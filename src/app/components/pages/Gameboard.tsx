@@ -115,7 +115,7 @@ export const Gameboard = withRouter(({location: {hash}}: {location: {hash: strin
             </small>
             {SITE.PHY === SITE_SUBJECT && <div className="mt-4 text-center">
                 <RS.Button tag={Link} to={`/gameboards/new`} color="primary" outline className="btn-lg">
-                    Generate a new gamebaord
+                    Generate a new gameboard
                 </RS.Button>
             </div>}
         </h3>

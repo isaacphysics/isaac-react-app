@@ -39,6 +39,11 @@ export const UserPassword = (
     };
 
     return <CardBody>
+        <Row>
+            <Col md={{size: 6, offset: 3}}>
+                <h4>Password</h4>
+            </Col>
+        </Row>
         {userAuthSettings && userAuthSettings.hasSegueAccount ?
             <Row>
                 <Col>

@@ -7,7 +7,7 @@ import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RouteComponentProps} from "react-router";
-
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
     const queryParams = queryString.parse(location.search);
@@ -17,7 +17,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
     const [currentAttempt, setCurrentAttempt] = useState<any>();
     const [editorSyntax, setEditorSyntax] = useState('logic');
     // Does this really need to be a state variable if it is immutable?
-    const [editorMode, setEditorMode] = useState(queryParams.mode || 'logic');
+    const [editorMode, setEditorMode] = useState(queryParams.mode || { [SITE.PHY]: 'maths', [SITE.CS]: 'logic' }[SITE_SUBJECT]);
 
     let availableSymbols = queryParams.symbols && (queryParams.symbols as string).split(',').map(s => s.trim());
 
@@ -73,7 +73,12 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                         {modalVisible && <InequalityModal
                             close={closeModal}
                             onEditorStateChange={(state: any) => {
-                                setCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
+                                setCurrentAttempt({
+                                    type: 'logicFormula',
+                                    value: JSON.stringify(state),
+                                    pythonExpression: (state && state.result && state.result.python)||"",
+                                    symbols: [],
+                                })
                                 setInitialEditorSymbols(state.symbols);
                             }}
                             availableSymbols={availableSymbols || []}

@@ -27,6 +27,7 @@ import {
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
+import {UserMFA} from "../elements/panels/UserMFA";
 import {UserEmailPreference} from "../elements/panels/UserEmailPreferences";
 import {
     allRequiredInformationIsPresent,
@@ -43,6 +44,7 @@ import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -185,7 +187,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         <TitleAndBreadcrumb currentPageTitle={pageTitle} className="mb-4" />
         <h3 className="d-md-none text-center text-muted m-3">
             <small>
-                Update your Isaac Computer Science account, or <Link to="/logout" className="text-secondary">Log out</Link>
+                {`Update your Isaac ${SITE_SUBJECT_TITLE} account, or `}
+                <Link to="/logout" className="text-secondary">Log out</Link>
             </small>
         </h3>
 
@@ -206,8 +209,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.passwordreset})} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                             >
-                                <span className="d-none d-lg-block">Change password</span>
-                                <span className="d-block d-lg-none">Password</span>
+                                <span className="d-none d-lg-block">Account security</span>
+                                <span className="d-block d-lg-none">Security</span>
                             </NavLink>
                         </NavItem>
                         {!editingOtherUser &&
@@ -257,6 +260,14 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
                                 />
+                                {user.role === 'ADMIN' && !editingOtherUser &&
+                                    // beta feature just for admins
+                                    <UserMFA
+                                        userAuthSettings={userAuthSettings}
+                                        userToUpdate={userToUpdate}
+                                        editingOtherUser={editingOtherUser}
+                                    />
+                                }
                             </TabPane>
 
                             {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.teacherconnections}>

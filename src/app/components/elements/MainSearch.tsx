@@ -20,7 +20,7 @@ const MainSearchComponent = ({history}: MainSearchProps) => {
         if (searchText == "") {
             if (searchInputRef.current) searchInputRef.current.focus();
         } else {
-            pushSearchToHistory(history, searchText, true, true);
+            pushSearchToHistory(history, searchText, []);
         }
     }
 
