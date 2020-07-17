@@ -9,6 +9,7 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../../components/content/IsaacGlossaryTerm';
 import { GlossaryTermDTO } from "../../../IsaacApiTypes";
+import {TempExamBoardPicker} from '../elements/inputs/TempExamBoardPicker';
 
 export const Glossary = withRouter(() => {
     const [glossaryTerms, setGlossaryTerms] = useState<{ [key: string]: GlossaryTermDTO[] }>();
@@ -30,7 +31,6 @@ export const Glossary = withRouter(() => {
             <Container>
                 <TitleAndBreadcrumb currentPageTitle="Glossary" />
                 <div className="no-print d-flex align-items-center">
-                    {/* <EditContentButton doc={doc} /> */}
                     <div className="question-actions question-actions-leftmost mt-3">
                         <ShareLink linkUrl={`/glossary`}/>
                     </div>
@@ -45,6 +45,11 @@ export const Glossary = withRouter(() => {
                     </Col>
                 </Row>}
                 {glossaryTerms && Object.keys(glossaryTerms).length && <Col className="py-4">
+                    <Row>
+                        <Col md={{size: 8, offset: 2}} className="py-4">
+                            <TempExamBoardPicker className="text-right" />
+                        </Col>
+                    </Row>
                     {glossaryTerms && Object.entries(glossaryTerms).map(([key, terms]) => <Row key={key} className="pb-5">
                         <Col md={{size: 1, offset: 1}}><h2>{key}</h2></Col>
                         <Col>
