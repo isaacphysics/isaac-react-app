@@ -3,7 +3,7 @@ import {history} from "./history";
 import queryString from "query-string";
 import {fetchTopicSummary, loadGameboard} from "../state/actions";
 import {useDispatch, useSelector} from 'react-redux'
-import {determineGameboardHistory, determineNextGameboardItem} from "./gameboards";
+import {determineGameboardHistory, determineNextGameboardItem, determinePreviousGameboardItem} from "./gameboards";
 import {NOT_FOUND, TAG_ID} from "./constants";
 import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopicHistory} from "./topics";
 import {useCurrentExamBoard} from "./examBoard";
@@ -69,6 +69,7 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
             breadcrumbHistory: gameboardHistory,
             backToCollection: gameboardHistory.slice(-1)[0],
             nextItem: determineNextGameboardItem(currentGameboard, currentDocId),
+            previousItem: determinePreviousGameboardItem(currentGameboard, currentDocId),
             queryParams: history.location.search,
         }
     }
