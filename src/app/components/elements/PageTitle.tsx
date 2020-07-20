@@ -22,8 +22,8 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className, level}: 
         }
     }, [currentPageTitle]);
 
-    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
-        <TrustedHtml span html={currentPageTitle} />
+    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`${SITE_SUBJECT === SITE.PHY && "title-case"} h-title h-secondary${className ? ` ${className}` : ""}`}>
+        <TrustedHtml span html={currentPageTitle}/>
         {SITE_SUBJECT === SITE.PHY && level !== undefined && level !== 0 &&
             <span className="float-right h-subtitle">Level {level}</span>}
         {help && <span id="title-help">Help</span>}

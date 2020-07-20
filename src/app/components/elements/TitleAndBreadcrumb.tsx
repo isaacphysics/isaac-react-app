@@ -1,6 +1,6 @@
 import React, {ReactElement} from "react";
-import {BreadcrumbTrailProps, BreadcrumbTrail} from "./BreadcrumbTrail";
-import {PageTitleProps, PageTitle} from "./PageTitle";
+import {BreadcrumbTrail, BreadcrumbTrailProps} from "./BreadcrumbTrail";
+import {PageTitle, PageTitleProps} from "./PageTitle";
 
 type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & {
     breadcrumbTitleOverride?: string;
