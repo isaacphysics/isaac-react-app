@@ -71,6 +71,7 @@ import {EventOverviewFilter} from "../components/elements/panels/EventOverviews"
 import {atLeastOne} from "../services/validation";
 import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
+import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -1347,6 +1348,10 @@ export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmai
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE, group, manager});
         dispatch(showErrorToastIfNeeded("Group manager removal failed", e));
     }
+};
+
+export const showGroupEmailModal = (users?: string[]) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(groupEmailModal(users)) as any);
 };
 
 export const showGroupInvitationModal = (firstTime: boolean) => async (dispatch: Dispatch<Action>) => {
