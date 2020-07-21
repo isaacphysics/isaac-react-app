@@ -66,7 +66,7 @@ export const Glossary = withRouter(() => {
                 </div>
 
                 <Row>
-                    <Col md={{size: 8, offset: 2}} className="py-4">
+                    <Col md={{size: 7, offset: 2}} className="py-4">
                         <FormGroup className='glossary-term-filter text-left'>
                             <Label for='header-search' className='sr-only'>Search</Label>
                             <Input
@@ -74,15 +74,18 @@ export const Glossary = withRouter(() => {
                                 value={searchText} onChange={e => setSearchText(e.target.value)}
                             />
                         </FormGroup>
+                    </Col>
+                    <Col md={{size: 1}} className="py-4">
                         <TempExamBoardPicker className="text-right" />
                     </Col>
                 </Row>
                 {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
                     <Col md={{size: 8, offset: 2}} className="py-4">
-                        <p>There are no glossary terms in the glossary yet! Please try again later.</p>
+                        {searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
+                        {searchText !== "" && <p>We could not find glossary terms to match your search criteria.</p>}
                     </Col>
                 </Row>}
-                {glossaryTerms && Object.keys(glossaryTerms).length && <Col className="py-4">
+                {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className="py-4">
                     {glossaryTerms && Object.entries(glossaryTerms).map(([key, terms]) => <Row key={key} className="pb-5">
                         <Col md={{size: 1, offset: 1}}><h2>{key}</h2></Col>
                         <Col>
