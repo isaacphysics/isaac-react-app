@@ -116,7 +116,9 @@ export const Glossary = withRouter(() => {
                         <Col md={{size: 1, offset: 1}}><h2>{key}</h2></Col>
                         <Col>
                             {terms.map(term => <Row key={term.id}>
-                                <Col md={{size: 10}}><IsaacGlossaryTerm doc={term} /></Col>
+                                <Col md={{size: 10}}>
+                                    <IsaacGlossaryTerm doc={term} />
+                                </Col>
                             </Row>)}
                         </Col>
                     </Row>)}

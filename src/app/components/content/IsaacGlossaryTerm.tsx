@@ -5,6 +5,7 @@ import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {useCurrentExamBoard} from "../../services/examBoard";
+import _startCase from 'lodash/startCase';
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
@@ -36,7 +37,7 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermPr
     return <React.Fragment>
         {(doc.examBoard == '' || examBoard === doc.examBoard) && <Row className="glossary_term">
             <Col md={3}>
-                <p id={anchorId}><strong>{doc.value}</strong></p>
+                <p id={anchorId}><strong>{doc.value} {doc.tags && doc.tags.length > 0 && `(${doc.tags.map(tag => _startCase(tag.replace(/[^a-zA-Z0-9]/, ' '))).join(', ')})`}</strong></p>
             </Col>
             <Col>
                 {doc.explanation && <IsaacContent doc={doc.explanation} />}
