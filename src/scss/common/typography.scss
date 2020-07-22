@@ -156,6 +156,37 @@ hr {
   margin-top: -1em;
 }
 
+.glossary-page {
+  .alphabetlist {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+    @include respond-below(xs) {
+      display: none;
+      // flex-direction: column;
+      // position: absolute;
+      // right: 0;
+      // width: 1.2em;
+      // height: 0vh;
+      // top: 0;
+
+      // div.key {
+      //   line-height: 1em;
+      //   width: 1.2em;
+      // }
+    }
+  
+    div.key {
+      line-height: 2em;
+      width: 2em;
+      text-align: center;
+      vertical-align: middle;
+    }
+  }
+}
+
 .text-decoration-skip-none {
   text-decoration-skip: none;
   text-decoration-skip-ink: none;

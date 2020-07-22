@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input, Label, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -11,6 +11,7 @@ import {IsaacGlossaryTerm} from '../../components/content/IsaacGlossaryTerm';
 import { GlossaryTermDTO } from "../../../IsaacApiTypes";
 import {TempExamBoardPicker} from '../elements/inputs/TempExamBoardPicker';
 import _startCase from 'lodash/startCase';
+import {scrollVerticallyIntoView} from "../../services/scrollManager";
 
 export const Glossary = withRouter(() => {
     const [glossaryTerms, setGlossaryTerms] = useState<{ [key: string]: GlossaryTermDTO[] }>();
@@ -18,6 +19,9 @@ export const Glossary = withRouter(() => {
     const [topics, setTopics] = useState<string[]>([]);
     const [filterTopic, setFilterTopic] = useState("");
     const [topicsDropdownOpen, setTopicsDropdownOpen] = useState(false);
+    const alphabetScroller = useRef<HTMLDivElement>(null);
+    const [alphabetScrollerTop, setAlphabetScrollerTop] = useState(0);
+
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     useEffect(() => {
         const sortedTerms = rawGlossaryTerms?.sort((a, b) => a?.value && b?.value && a.value.localeCompare(b.value) || 0);
@@ -61,6 +65,13 @@ export const Glossary = withRouter(() => {
             setGlossaryTerms(groupedTerms);
         }
     }, [searchText]);
+
+    const scrollToKey = (k: string) => {
+        const element = document.getElementById(k);
+        if (element) {
+            scrollVerticallyIntoView(element);
+        }
+    }
 
     return <ShowLoading until={glossaryTerms} thenRender={supertypedDoc => {
         return <div className="glossary-page">
@@ -111,9 +122,16 @@ export const Glossary = withRouter(() => {
                         {searchText !== "" && <p>We could not find glossary terms to match your search criteria.</p>}
                     </Col>
                 </Row>}
-                {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className="py-4">
+                {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className="pt-2 pb-4">
+                    <div className="alphabetlist pb-4" ref={alphabetScroller}>
+                        {Object.keys(glossaryTerms).map(k =>
+                            <div className="key" key={k} role="button" tabIndex={0} onKeyUp={() => scrollToKey(`key-${k}`)} onClick={() => scrollToKey(`key-${k}`)}>
+                                {k}
+                            </div>
+                        )}
+                    </div>
                     {glossaryTerms && Object.entries(glossaryTerms).map(([key, terms]) => <Row key={key} className="pb-5">
-                        <Col md={{size: 1, offset: 1}}><h2>{key}</h2></Col>
+                        <Col md={{size: 1, offset: 1}} id={`key-${key}`}><h2>{key}</h2></Col>
                         <Col>
                             {terms.map(term => <Row key={term.id}>
                                 <Col md={{size: 10}}>
