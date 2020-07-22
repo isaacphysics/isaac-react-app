@@ -46,6 +46,11 @@ function onPlayerStateChange(event: any, wrappedLogAction: (eventDetails: object
     wrappedLogAction(logEventDetails);
 }
 
+export function pauseVideo() {
+    var iframe = document.getElementsByTagName("iframe")[0].contentWindow;
+    iframe && iframe.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+}
+
 export function IsaacVideo(props: IsaacVideoProps) {
     const dispatch = useDispatch();
     const {doc: {src, altText}} = props;

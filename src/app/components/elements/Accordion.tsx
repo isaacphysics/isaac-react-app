@@ -10,6 +10,7 @@ import {TrustedHtml} from "./TrustedHtml";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {pauseVideo} from "../content/IsaacVideo";
 
 interface AccordionsProps {
     id?: string;
@@ -127,6 +128,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, locatio
                 id={anchorId || ""} block color="link"
                 className={open ? 'active' : ''}
                 onClick={(event: any) => {
+                    pauseVideo();
                     const nextState = !open;
                     setOpen(nextState);
                     if (nextState) {
