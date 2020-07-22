@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {Col, Container, FormGroup, Input, Label, Row} from "reactstrap";
+import {Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input, Label, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {useSelector} from "react-redux";
@@ -10,22 +10,32 @@ import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../../components/content/IsaacGlossaryTerm';
 import { GlossaryTermDTO } from "../../../IsaacApiTypes";
 import {TempExamBoardPicker} from '../elements/inputs/TempExamBoardPicker';
+import _startCase from 'lodash/startCase';
 
 export const Glossary = withRouter(() => {
     const [glossaryTerms, setGlossaryTerms] = useState<{ [key: string]: GlossaryTermDTO[] }>();
     const [searchText, setSearchText] = useState("");
+    const [topics, setTopics] = useState<string[]>([]);
+    const [filterTopic, setFilterTopic] = useState("");
+    const [topicsDropdownOpen, setTopicsDropdownOpen] = useState(false);
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     useEffect(() => {
         const sortedTerms = rawGlossaryTerms?.sort((a, b) => a?.value && b?.value && a.value.localeCompare(b.value) || 0);
         let groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
+        let _topics: string[] = [];
         if (sortedTerms) {
             for (const term of sortedTerms) {
+                if (filterTopic !== "" && !term.tags?.includes(filterTopic)) continue;
                 const k = term?.value?.[0] || '#';
                 groupedTerms[k] = [...(groupedTerms[k] || []), term];
+                _topics = [..._topics, ...(term.tags || [])];
             }
         }
         setGlossaryTerms(groupedTerms);
-    }, [rawGlossaryTerms]);
+        setTopics([...new Set(
+            _topics.sort((a, b) => a.localeCompare(b))
+        )]);
+    }, [rawGlossaryTerms, filterTopic]);
 
     useEffect(() => {
         if (searchText === "") {
@@ -66,14 +76,30 @@ export const Glossary = withRouter(() => {
                 </div>
 
                 <Row>
-                    <Col md={{size: 7, offset: 2}} className="py-4">
-                        <FormGroup className='glossary-term-filter text-left'>
-                            <Label for='header-search' className='sr-only'>Search</Label>
-                            <Input
-                                id="header-search" type="search" name="query" placeholder="Search" aria-label="Search"
-                                value={searchText} onChange={e => setSearchText(e.target.value)}
-                            />
-                        </FormGroup>
+                    <Col md={{size: 9}} className="py-4">
+                        <Row>
+                            <FormGroup className='glossary-term-filter text-left'>
+                                <Col>
+                                    <Label for='header-search' className='sr-only'>Search</Label>
+                                    <Input
+                                        id="header-search" type="search" name="query" placeholder="Search" aria-label="Search"
+                                        value={searchText} onChange={e => setSearchText(e.target.value)}
+                                    />
+                                </Col>
+                                <Col>
+                                    <Label for='topic-select' className='sr-only'>Topic</Label>
+                                    {topics?.length > 0 && <Dropdown isOpen={topicsDropdownOpen} toggle={() => setTopicsDropdownOpen(prevState => !prevState)}>
+                                        <DropdownToggle caret>
+                                            { filterTopic === "" ? "Topics" : _startCase(filterTopic) }
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            <DropdownItem onClick={() => setFilterTopic("")}>&nbsp;</DropdownItem>
+                                            {topics.map(e => <DropdownItem key={e} onClick={() => setFilterTopic(e)}>{_startCase(e.replace(/[^a-zA-Z0-9]/, ' '))}</DropdownItem>)}
+                                        </DropdownMenu>
+                                    </Dropdown>}
+                                </Col>
+                            </FormGroup>
+                        </Row>
                     </Col>
                     <Col md={{size: 1}} className="py-4">
                         <TempExamBoardPicker className="text-right" />
