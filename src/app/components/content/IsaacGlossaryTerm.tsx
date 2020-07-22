@@ -13,12 +13,17 @@ interface IsaacGlossaryTermProps {
 
 // TODO add figure counting and linking
 const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermProps) => {
-    let anchorId: string | undefined = doc.id && doc.id.split('|')[1];
+    let anchorId = '';
+    const idRegexp = new RegExp('([a-z0-9-_]+)\\|?(?:(aqa|ocr)\\|?)?([a-z0-9-_~]+)?');
+    const parsedAnchorId = doc.id && idRegexp.exec(doc.id.split('|').slice(1).join('|'));
+    if (parsedAnchorId) {
+        anchorId = parsedAnchorId.slice(1,3).filter(i => typeof i === 'string').join('|').toLowerCase().replace(/[^a-z0-9]/g, '-');
+    }
     const examBoard = useCurrentExamBoard();
 
     useEffect(() => {
         if (hash.includes("#")) {
-            const hashAnchor = hash.slice(1);
+            const hashAnchor = hash.slice(1).toLowerCase().replace(/[^a-z0-9]/g, '-');
             const element = document.getElementById(hashAnchor);
             if (element && anchorId) { // exists on page
                 if (anchorId.indexOf(hashAnchor) === 0) {
