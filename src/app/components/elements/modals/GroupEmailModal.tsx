@@ -10,8 +10,7 @@ interface GroupEmailModalProps {
 }
 
 const CurrentGroupEmailModal = ({users}: GroupEmailModalProps) => {
-    const group = useSelector(selectors.groups.current);
-    return group && <React.Fragment>
+    return <React.Fragment>
         <Col>
             <Row className="mb-3">
                 {users && users.join(", ")}
