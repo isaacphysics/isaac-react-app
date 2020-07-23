@@ -164,18 +164,35 @@ hr {
     justify-content: space-evenly;
 
     @include respond-below(xs) {
-      display: none;
-      // flex-direction: column;
-      // position: absolute;
-      // right: 0;
-      // width: 1.2em;
-      // height: 0vh;
-      // top: 0;
+      flex-direction: column;
+      position: fixed;
+      right: 2vw;
+      top: 10vh;
+      z-index: 255;
+      width: 1.5em;
+      height: 80vh;
+      padding-bottom: 0 !important;
 
-      // div.key {
-      //   line-height: 1em;
-      //   width: 1.2em;
-      // }
+      div.key {
+        background: rgba(0,0,0,0.5);
+        color: white;
+        font-size: 0.8rem;
+        font-weight: bold;
+        display: block;
+        line-height: 1em;
+        width: 1.2em;
+        text-align: center;
+
+        &:first-child {
+          padding-top: 0.5vh;
+          border-radius: 6px 6px 0 0;
+        }
+
+        &:last-child {
+          padding-bottom: 0.5vh;
+          border-radius: 0 0 6px 6px;
+        }
+      }
     }
   
     div.key {
