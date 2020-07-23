@@ -15,7 +15,7 @@ import {
 } from "../../../state/actions";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {isAdmin, isEventLeader} from "../../../services/user";
-import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
+import {BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 import {API_PATH, bookingStatusMap} from "../../../services/constants";
@@ -55,7 +55,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
         });
         return idsToReturn;
     }
-    
+
     return <Accordion trustedTitle="Manage current bookings">
         {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
             As an event leader, you are only able to see the bookings of users who have granted you access to their data.
@@ -192,8 +192,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                     </RS.DropdownToggle>
                     <RS.DropdownMenu>
                         {Object.keys(bookingStatusMap).map((key, index)  =>
-                            //@ts-ignore
-                            <RS.DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(relevantUsers(key)))}>Email {bookingStatusMap[key]} users</RS.DropdownItem>
+                            <RS.DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(relevantUsers(key)))}>Email {bookingStatusMap[key as BookingStatus]} users</RS.DropdownItem>
                         )}
                     </RS.DropdownMenu>
                 </RS.ButtonDropdown>
