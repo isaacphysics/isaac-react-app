@@ -1,8 +1,6 @@
 import {store} from "../../../state/store";
 import {closeActiveModal} from "../../../state/actions";
 import React from "react";
-import {useSelector} from "react-redux";
-import {selectors} from "../../../state/selectors";
 import {Col, Row} from "reactstrap";
 
 interface GroupEmailModalProps {
