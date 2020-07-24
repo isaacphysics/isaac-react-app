@@ -1,5 +1,5 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from "react";
-import {connect} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import {
     Button,
     ButtonDropdown,
@@ -32,6 +32,7 @@ import {
     loadGroups,
     resetMemberPassword,
     selectGroup,
+    showGroupEmailModal,
     showGroupInvitationModal,
     showGroupManagersModal,
     updateGroup
@@ -45,12 +46,14 @@ import {UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isStaff} from "../../services/user";
 
 const stateFromProps = (state: AppState) => (state && {
     groups: selectors.groups.groups(state),
-    group: selectors.groups.current(state)
+    group: selectors.groups.current(state),
 });
-const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal};
+
+const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal, showGroupEmailModal};
 
 interface GroupsPageProps {
     groups: {active: AppGroup[] | null; archived: AppGroup[] | null};
@@ -65,6 +68,7 @@ interface GroupsPageProps {
     deleteMember: (member: AppGroupMembership) => void;
     showGroupInvitationModal: (firstTime: boolean) => void;
     showGroupManagersModal: () => void;
+    showGroupEmailModal: (users?: number[]) => void;
 }
 
 enum SortOrder {
@@ -160,11 +164,13 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
     </div>;
 };
 
-const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupNameRef, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal}: GroupEditorProps) => {
+const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupNameRef, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal, showGroupEmailModal}: GroupEditorProps) => {
     const [isExpanded, setExpanded] = useState(false);
 
     const initialGroupName = group ? group.groupName : "";
     const [newGroupName, setNewGroupName] = useState(initialGroupName);
+
+    const user = useSelector((state: AppState) => state && state.user || null);
 
     useEffect(() => {
         setExpanded(false);
@@ -193,25 +199,47 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
         }
     }
 
+    function groupUserIds(group: AppGroup | null) {
+        let groupUserIdList: number[] = [];
+        group && group.members && group.members.map((member: AppGroupMembership) =>
+            member.groupMembershipInformation.userId && member.authorisedFullAccess &&
+            member.groupMembershipInformation.status == "ACTIVE" &&
+            groupUserIdList.push(member.groupMembershipInformation.userId)
+        );
+        return groupUserIdList;
+    }
+
     const bigGroup = group && group.members && group.members.length > 100;
+
+    const usersInGroup = groupUserIds(group);
 
     return <Card>
         <CardBody>
             <Row className="mt-2">
-                <Col xs={5} sm={6} md={5} lg={4}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
-                {group && <Col xs={7} sm={6} md={7} lg={8} className="text-right">
+                <Col xs={5} sm={6} md={3} lg={3}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
+                {group && <Col xs={7} sm={6} md={9} lg={9} className="text-right">
                     <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => showGroupManagersModal()}>
                         Edit<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
                     </Button>
                     <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
                     <span className="d-inline-block d-md-none">&nbsp;</span>
                     <Button
-                        size="sm" className={SITE_SUBJECT === SITE.CS ? "text-white" : ""}
+                        size="sm" className={SITE_SUBJECT === SITE.CS ? "text-white" : "" + " d-none d-sm-inline"}
                         color={{[SITE.PHY]: "primary", [SITE.CS]: "secondary"}[SITE_SUBJECT]}
                         onClick={() => showGroupInvitationModal(false)}
                     >
                         Invite users
                     </Button>
+                    {isStaff(user) && usersInGroup.length > 0 &&
+                        <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;
+                            <Button
+                                size="sm" className={SITE_SUBJECT === SITE.CS ? "text-white" : ""}
+                                color={{[SITE.PHY]: "primary", [SITE.CS]: "secondary"}[SITE_SUBJECT]}
+                                onClick={() => showGroupEmailModal(usersInGroup)}
+                            >
+                                Email users
+                            </Button>
+                        </span>}
                 </Col>}
             </Row>
             <Form inline onSubmit={saveUpdatedGroup} className="pt-3">
