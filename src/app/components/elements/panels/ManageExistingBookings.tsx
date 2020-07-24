@@ -191,9 +191,14 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
                         Email Users
                     </RS.DropdownToggle>
                     <RS.DropdownMenu>
-                        {Object.keys(bookingStatusMap).map((key, index)  =>
-                            <RS.DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(relevantUsers(key)))}>Email {bookingStatusMap[key as BookingStatus]} users</RS.DropdownItem>
-                        )}
+                        {Object.keys(bookingStatusMap).map((key, index)  => {
+                            let usersWithStatus = relevantUsers(key);
+                            if (atLeastOne(usersWithStatus.length)) {
+                                return <RS.DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(usersWithStatus))}>
+                                    Email {bookingStatusMap[key as BookingStatus]} users
+                                </RS.DropdownItem>;
+                            }
+                        })}
                     </RS.DropdownMenu>
                 </RS.ButtonDropdown>
                 <RS.Button
