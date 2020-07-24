@@ -11,7 +11,7 @@ const CurrentGroupEmailModal = ({users}: GroupEmailModalProps) => {
     return <React.Fragment>
         <Col>
             <Row>
-                {"An admin user can use the user IDs below to email all active users in this group:"}
+                {"An admin user can use the user IDs below to email these users:"}
             </Row>
             <Row className="my-3">
                 <pre>
