@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {MutableRefObject, useCallback, useEffect, useRef, useState} from "react";
 import {Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input, Label, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -19,8 +19,6 @@ export const Glossary = withRouter(() => {
     const [topics, setTopics] = useState<string[]>([]);
     const [filterTopic, setFilterTopic] = useState("");
     const [topicsDropdownOpen, setTopicsDropdownOpen] = useState(false);
-    const alphabetScroller = useRef<HTMLDivElement>(null);
-    const [alphabetScrollerTop, setAlphabetScrollerTop] = useState(0);
 
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     useEffect(() => {
@@ -73,75 +71,125 @@ export const Glossary = withRouter(() => {
         }
     }
 
-    return <ShowLoading until={glossaryTerms} thenRender={supertypedDoc => {
-        return <div className="glossary-page">
-            <Container>
-                <TitleAndBreadcrumb currentPageTitle="Glossary" />
-                <div className="no-print d-flex align-items-center">
-                    <div className="question-actions question-actions-leftmost mt-3">
-                        <ShareLink linkUrl={`/glossary`}/>
-                    </div>
-                    <div className="question-actions mt-3 not_mobile">
-                        <PrintButton/>
-                    </div>
-                </div>
+    /* Horror lies ahead. Sorry. */
+    const alphabetScrollerSentinel = useRef<HTMLDivElement | null>(null);
+    const alphabetScrollerFlag = useRef(false);
+    const alphabetScrollerObserver = useRef<IntersectionObserver>();
 
-                <Row>
-                    <Col md={{size: 9}} className="py-4">
-                        <Row>
-                            <FormGroup className='glossary-term-filter text-left'>
-                                <Col>
-                                    <Label for='header-search' className='sr-only'>Search</Label>
-                                    <Input
-                                        id="header-search" type="search" name="query" placeholder="Search" aria-label="Search"
-                                        value={searchText} onChange={e => setSearchText(e.target.value)}
-                                    />
-                                </Col>
-                                <Col>
-                                    <Label for='topic-select' className='sr-only'>Topic</Label>
-                                    {topics?.length > 0 && <Dropdown isOpen={topicsDropdownOpen} toggle={() => setTopicsDropdownOpen(prevState => !prevState)}>
-                                        <DropdownToggle caret>
-                                            { filterTopic === "" ? "Topics" : _startCase(filterTopic) }
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            <DropdownItem onClick={() => setFilterTopic("")}>&nbsp;</DropdownItem>
-                                            {topics.map(e => <DropdownItem key={e} onClick={() => setFilterTopic(e)}>{_startCase(e.replace(/[^a-zA-Z0-9]/, ' '))}</DropdownItem>)}
-                                        </DropdownMenu>
-                                    </Dropdown>}
-                                </Col>
-                            </FormGroup>
-                        </Row>
-                    </Col>
-                    <Col md={{size: 1}} className="py-4">
-                        <TempExamBoardPicker className="text-right" />
-                    </Col>
-                </Row>
-                {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
-                    <Col md={{size: 8, offset: 2}} className="py-4">
-                        {searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
-                        {searchText !== "" && <p>We could not find glossary terms to match your search criteria.</p>}
-                    </Col>
-                </Row>}
-                {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className="pt-2 pb-4">
-                    <div className="alphabetlist pb-4" ref={alphabetScroller}>
-                        {Object.keys(glossaryTerms).map(k =>
-                            <div className="key" key={k} role="button" tabIndex={0} onKeyUp={() => scrollToKey(`key-${k}`)} onClick={() => scrollToKey(`key-${k}`)}>
-                                {k}
-                            </div>
-                        )}
-                    </div>
-                    {glossaryTerms && Object.entries(glossaryTerms).map(([key, terms]) => <Row key={key} className="pb-5">
-                        <Col md={{size: 1, offset: 1}} id={`key-${key}`}><h2>{key}</h2></Col>
-                        <Col>
-                            {terms.map(term => <Row key={term.id}>
-                                <Col md={{size: 10}}>
-                                    <IsaacGlossaryTerm doc={term} />
-                                </Col>
-                            </Row>)}
-                        </Col>
-                    </Row>)}
-                </Col>}
-            </Container>
+    const alphabetScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+        for (const entry of entries) {
+            if (entry.target.id === 'sentinel') {
+                console.log('isIntersecting: ', entry.isIntersecting);
+                console.log('boudingCLientRect: ', entry.boundingClientRect);
+                console.log('intersectionRect:  ', entry.intersectionRect);
+                console.log('---');
+                if (entry.isIntersecting) {
+                    document.getElementById('stickyalphabetlist')?.classList.remove('active');
+                } else {
+                    if (entry.boundingClientRect.top <= 0) {
+                        // Gone up
+                        document.getElementById('stickyalphabetlist')?.classList.add('active');
+                    } else if (entry.boundingClientRect.top > 0) {
+                        // Gone down
+                        document.getElementById('stickyalphabetlist')?.classList.remove('active');
+                    }
+                }
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (alphabetScrollerSentinel.current && !alphabetScrollerFlag.current) {
+            const options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 1.0,
+            }
+
+            alphabetScrollerObserver.current = new IntersectionObserver(alphabetScrollerCallback, options);
+            alphabetScrollerObserver.current.observe(alphabetScrollerSentinel.current);
+            alphabetScrollerFlag.current = true;
+
+            return () => alphabetScrollerObserver?.current?.disconnect();
+        }
+    });
+    /* Horror stops here. Or not, depending who you ask. */
+
+    const alphabetList = glossaryTerms && Object.keys(glossaryTerms).map(k =>
+        <div className="key" key={k} role="button" tabIndex={0} onKeyUp={() => scrollToKey(`key-${k}`)} onClick={() => scrollToKey(`key-${k}`)}>
+            {k}
         </div>
-    }}/>;
+    );
+
+    const thenRender = <div className="glossary-page">
+        <Container>
+            <TitleAndBreadcrumb currentPageTitle="Glossary" />
+            <div className="no-print d-flex align-items-center">
+                <div className="question-actions question-actions-leftmost mt-3">
+                    <ShareLink linkUrl={`/glossary`}/>
+                </div>
+                <div className="question-actions mt-3 not_mobile">
+                    <PrintButton/>
+                </div>
+            </div>
+
+            <Row>
+                <Col md={{size: 9}} className="py-4">
+                    <Row>
+                        <FormGroup className='glossary-term-filter text-left'>
+                            <Col>
+                                <Label for='header-search' className='sr-only'>Search</Label>
+                                <Input
+                                    id="header-search" type="search" name="query" placeholder="Search" aria-label="Search"
+                                    value={searchText} onChange={e => setSearchText(e.target.value)}
+                                />
+                            </Col>
+                            <Col>
+                                <Label for='topic-select' className='sr-only'>Topic</Label>
+                                {topics?.length > 0 && <Dropdown isOpen={topicsDropdownOpen} toggle={() => setTopicsDropdownOpen(prevState => !prevState)}>
+                                    <DropdownToggle caret>
+                                        { filterTopic === "" ? "Topics" : _startCase(filterTopic) }
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem onClick={() => setFilterTopic("")}>&nbsp;</DropdownItem>
+                                        {topics.map(e => <DropdownItem key={e} onClick={() => setFilterTopic(e)}>{_startCase(e.replace(/[^a-zA-Z0-9]/, ' '))}</DropdownItem>)}
+                                    </DropdownMenu>
+                                </Dropdown>}
+                            </Col>
+                        </FormGroup>
+                    </Row>
+                </Col>
+                <Col md={{size: 1}} className="py-4">
+                    <TempExamBoardPicker className="text-right" />
+                </Col>
+            </Row>
+            {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
+                <Col md={{size: 8, offset: 2}} className="py-4">
+                    {searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
+                    {searchText !== "" && <p>We could not find glossary terms to match your search criteria.</p>}
+                </Col>
+            </Row>}
+            {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className="pt-2 pb-4">
+                <div id="sentinel" ref={alphabetScrollerSentinel}>&nbsp;</div>
+                <div id="stickyalphabetlist" className="alphabetlist pb-4">
+                    {alphabetList}
+                </div>
+                <div className="alphabetlist pb-4">
+                    {alphabetList}
+                </div>
+                {glossaryTerms && Object.entries(glossaryTerms).map(([key, terms]) => <Row key={key} className="pb-5">
+                    <Col md={{size: 1, offset: 1}} id={`key-${key}`}><h2 style={{position: 'sticky'}}>{key}</h2></Col>
+                    <Col>
+                        {terms.map(term => <Row key={term.id}>
+                            <Col md={{size: 10}}>
+                                <IsaacGlossaryTerm doc={term} />
+                            </Col>
+                        </Row>)}
+                    </Col>
+                </Row>)}
+            </Col>}
+        </Container>
+    </div>
+
+    return <ShowLoading until={glossaryTerms} thenRender={() => thenRender}/>;
 });

@@ -157,13 +157,34 @@ hr {
 }
 
 .glossary-page {
+  #sentinel {
+    max-height: 1px;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  #stickyalphabetlist {
+    position: fixed;
+    top: 0;
+    background: rgba(255,0,0,0.2);
+    z-index: 255;
+    display: none;
+
+    &.active {
+      display: flex;
+      @include make-col(12);
+      @include respond-below(sm) {
+        display: none;
+      }
+    }
+  }
+
   .alphabetlist {
-    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-
-    @include respond-below(xs) {
+    
+    @include respond-below(sm) {
       flex-direction: column;
       position: fixed;
       right: 2vw;
