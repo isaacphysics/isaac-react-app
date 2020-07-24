@@ -68,7 +68,7 @@ interface GroupsPageProps {
     deleteMember: (member: AppGroupMembership) => void;
     showGroupInvitationModal: (firstTime: boolean) => void;
     showGroupManagersModal: () => void;
-    showGroupEmailModal: (users?: string[]) => void;
+    showGroupEmailModal: (users?: number[]) => void;
 }
 
 enum SortOrder {
@@ -200,11 +200,11 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
     }
 
     function groupUserIds(group: AppGroup | null) {
-        let groupUserIdList: string[] = [];
+        let groupUserIdList: number[] = [];
         group && group.members && group.members.map((member: AppGroupMembership) =>
             member.groupMembershipInformation.userId && member.authorisedFullAccess &&
             member.groupMembershipInformation.status == "ACTIVE" &&
-            groupUserIdList.push(member.groupMembershipInformation.userId.toString())
+            groupUserIdList.push(member.groupMembershipInformation.userId)
         );
         return groupUserIdList;
     }

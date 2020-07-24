@@ -47,10 +47,10 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
     });
 
     function relevantUsers (bookingType: string) {
-        let idsToReturn: string[] = [];
+        let idsToReturn: number[] = [];
         augmentedEventBookings.map((booking: EventBookingDTO & {schoolName?: string}) => {
             if (booking.userBooked?.id && booking.bookingStatus == bookingType) {
-                idsToReturn.push(booking.userBooked.id.toString())
+                idsToReturn.push(booking.userBooked.id)
             }
         });
         return idsToReturn;

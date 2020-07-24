@@ -4,7 +4,7 @@ import React from "react";
 import {Col, Row} from "reactstrap";
 
 interface GroupEmailModalProps {
-    users?: string[];
+    users?: number[];
 }
 
 const CurrentGroupEmailModal = ({users}: GroupEmailModalProps) => {
@@ -17,7 +17,7 @@ const CurrentGroupEmailModal = ({users}: GroupEmailModalProps) => {
     </React.Fragment>;
 };
 
-export const groupEmailModal = (users?: string[]) => {
+export const groupEmailModal = (users?: number[]) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         title: "Email Users",

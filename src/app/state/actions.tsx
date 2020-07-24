@@ -1350,7 +1350,7 @@ export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmai
     }
 };
 
-export const showGroupEmailModal = (users?: string[]) => async (dispatch: Dispatch<Action>) => {
+export const showGroupEmailModal = (users?: number[]) => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(groupEmailModal(users)) as any);
 };
 
