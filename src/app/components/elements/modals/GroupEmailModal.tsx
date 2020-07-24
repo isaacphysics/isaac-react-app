@@ -10,8 +10,13 @@ interface GroupEmailModalProps {
 const CurrentGroupEmailModal = ({users}: GroupEmailModalProps) => {
     return <React.Fragment>
         <Col>
-            <Row className="mb-3">
-                {users && users.join(", ")}
+            <Row>
+                {"An admin user can use the user IDs below to email all active users in this group:"}
+            </Row>
+            <Row className="my-3">
+                <pre>
+                    {users && users.sort((a, b) => a - b).join(",")}
+                </pre>
             </Row>
         </Col>
     </React.Fragment>;
