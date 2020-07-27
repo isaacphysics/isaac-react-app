@@ -13,7 +13,7 @@ export const Workbook20OCR = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-5" currentPageTitle="OCR Workbook" help={pageHelp} />
-                <img className="book-cover" src="/assets/phy/books/physics_skills_19.jpg" alt="Cover of the book."/>
+                <img className="book-cover" src="/assets/books/workbook_20.png" alt="Cover of the book."/>
                 <PageFragment fragmentId="workbook_20_ocr_intro"/>
             </div>
         </Col>
