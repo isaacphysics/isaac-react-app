@@ -9,6 +9,7 @@ import {useSelector} from "react-redux";
 import {EXAM_BOARD} from "../../services/constants";
 import {useCurrentExamBoard} from "../../services/examBoard";
 import {selectors} from "../../state/selectors";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 type MathJaxMacro = string|[string, number];
 
@@ -46,16 +47,34 @@ const BooleanLogicMathsMacros: {[key: string]: MathJaxMacro} = {
     "bracketnot": ["\\lnot{(#1)}", 1],
     "xor": ["{#1} \\veebar {#2}", 2],
     "equivalent": "=", // Fall back to equals rather than the more correct "\\equiv"
+    // FIXME: remove the lowercase versions above in future!
+    "True": "\\boldsymbol{\\rm{T}}",
+    "False": "\\boldsymbol{\\rm{F}}",
+    "And": ["{#1} \\land {#2}", 2],
+    "Or": ["{#1} \\lor {#2}", 2],
+    "Not": ["\\lnot{#1}", 1],
+    "BracketNot": ["\\lnot{(#1)}", 1],
+    "Xor": ["{#1} \\veebar {#2}", 2],
+    "Equivalent": "=", // Fall back to equals rather than the more correct "\\equiv"
 };
 const BooleanLogicEngineeringMacros: {[key: string]: MathJaxMacro} = {
+    "true" : "1",
+    "false" : "0",
     "and" : ["{#1} \\cdot {#2}", 2],
     "or" : ["{#1} + {#2}", 2],
     "not" : ["\\overline{#1}", 1],
     "bracketnot" : ["\\overline{#1}", 1], // Don't do anything different to "not" for engineering syntax!
     "xor" : ["{#1} \\oplus {#2}", 2],
-    "true" : "1",
-    "false" : "0",
     "equivalent" : "=",
+    // FIXME: remove the lowercase versions above in future!
+    "True" : "1",
+    "False" : "0",
+    "And" : ["{#1} \\cdot {#2}", 2],
+    "Or" : ["{#1} + {#2}", 2],
+    "Not" : ["\\overline{#1}", 1],
+    "BracketNot" : ["\\overline{#1}", 1], // Don't do anything different to "Not" for engineering syntax!
+    "Xor" : ["{#1} \\oplus {#2}", 2],
+    "Equivalent" : "=",
 };
 
 function mathjaxToKatex(macros: {[key: string]: MathJaxMacro}) {
@@ -74,6 +93,7 @@ function mathjaxToKatex(macros: {[key: string]: MathJaxMacro}) {
 // Create MathJax versions for each of the two syntaxes, then create KaTeX versions of those:
 const MacrosWithMathsBoolean = Object.assign({}, BaseMacros, BooleanLogicMathsMacros);
 const MacrosWithEngineeringBoolean = Object.assign({}, BaseMacros, BooleanLogicEngineeringMacros);
+const KatexBaseMacros = mathjaxToKatex(BaseMacros);
 const KatexMacrosWithMathsBool = mathjaxToKatex(MacrosWithMathsBoolean);
 const KatexMacrosWithEngineeringBool = mathjaxToKatex(MacrosWithEngineeringBoolean);
 
@@ -240,9 +260,11 @@ export function katexify(html: string, user: LoggedInUser | null, examBoard: EXA
                 const latex = html.substring(index + (search.olen || 0), match.index + match[0].length - (search.clen || 0));
                 const latexUnEntitied = he.decode(latex);
                 const latexMunged = munge(latexUnEntitied);
-                let macrosToUse = KatexMacrosWithMathsBool;
-                if (examBoard == EXAM_BOARD.AQA) {
-                    macrosToUse = KatexMacrosWithEngineeringBool;
+                let macrosToUse;
+                if (SITE_SUBJECT == SITE.CS) {
+                    macrosToUse = examBoard == EXAM_BOARD.AQA ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
+                } else {
+                    macrosToUse = KatexBaseMacros;
                 }
                 macrosToUse = {...macrosToUse, "\\ref": (context: {consumeArgs: (n: number) => {text: string}[][]}) => {
                     const args = context.consumeArgs(1);
