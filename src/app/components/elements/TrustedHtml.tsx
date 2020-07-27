@@ -18,6 +18,7 @@ const BaseMacros: {[key: string]: MathJaxMacro} = {
     "quantity": ["{#1}\\,{\\rm{#2}}", 2],
     "valuedef": ["{#1}={\\quantity{#2}{#3}}", 3],
     "vtr": ["{\\underline{\\boldsymbol{#1}}}", 1],
+    "eqalign": ["\\begin{aligned}#1\\end{aligned}", 1],
     "d": "\\mathrm{d}",
     "vari": ["#1", 1],
     "s": ["_{\\sf{#1}}", 1],
