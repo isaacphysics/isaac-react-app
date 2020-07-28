@@ -937,6 +937,18 @@ export const fasttrackConcepts = (state: FasttrackConceptsState = null, action: 
     }
 };
 
+type MainContentIdState = string | null;
+export const mainContentId = (state: MainContentIdState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.SET_MAIN_CONTENT_ID:
+            return action.id;
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
+            return null;
+        default:
+            return state;
+    }
+};
+
 
 const appReducer = combineReducers({
     adminUserGet,
@@ -987,7 +999,8 @@ const appReducer = combineReducers({
     printingSettings,
     concepts,
     fasttrackConcepts,
-    graphSketcherSpec
+    graphSketcherSpec,
+    mainContentId,
 });
 
 export type AppState = undefined | {
@@ -1041,6 +1054,7 @@ export type AppState = undefined | {
     concepts: ConceptsState;
     fasttrackConcepts: FasttrackConceptsState;
     graphSketcherSpec: GraphSpecState;
+    mainContentId: MainContentIdState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

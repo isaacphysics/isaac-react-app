@@ -2,6 +2,8 @@ import React, {ReactElement, useEffect, useRef} from "react";
 import {UncontrolledTooltip} from "reactstrap";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {TrustedHtml} from "./TrustedHtml";
+import {setMainContentId} from "../../state/actions";
+import {useDispatch} from "react-redux";
 
 export interface PageTitleProps {
     currentPageTitle: string;
@@ -12,8 +14,10 @@ export interface PageTitleProps {
 }
 
 export const PageTitle = ({currentPageTitle, subTitle, help, className, level}: PageTitleProps) => {
+    const dispatch = useDispatch();
     const headerRef = useRef<HTMLHeadingElement>(null);
 
+    useEffect(() => {dispatch(setMainContentId("main-heading"));}, []);
     useEffect(() => {
         document.title = currentPageTitle + " — Isaac " + SITE_SUBJECT_TITLE;
         const element = headerRef.current;
