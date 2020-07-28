@@ -10,6 +10,8 @@
 .accordion-level {
   font-family: $secondary-font;
   padding: 1rem;
+  min-width: 110px;
+  text-align: center;
 }
 
 .accordion-icon {
