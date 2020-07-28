@@ -108,8 +108,12 @@ export const selectors = {
     },
 
     user:  {
-        orNull: (state: AppState) => state?.user || null
+        orNull: (state: AppState) => state?.user || null,
     },
+
+    mainContentId: {
+        orDefault: (state: AppState) => state?.mainContentId || "main",
+    }
 };
 
 // Important type checking to avoid an awkward bug
