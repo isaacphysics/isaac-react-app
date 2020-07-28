@@ -23,7 +23,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: ApiTypes.IsaacQuickQuestionDTO})
     const answer: ContentDTO = doc.answer as ContentDTO;
 
     return <div className="question-component p-md-5">
-        <div className="quick-question">
+        <div className="quick-question clearfix">
             <div className="question-content">
                 <IsaacContentValueOrChildren {...doc} />
             </div>
