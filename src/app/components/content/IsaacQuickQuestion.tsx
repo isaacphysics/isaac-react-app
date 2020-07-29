@@ -36,7 +36,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: ApiTypes.IsaacQuickQuestionDTO})
             </Row>
             {isVisible && <Row>
                 <Col sm="12" md={{size: 10, offset: 1}}>
-                    <Alert color="secondary">
+                    <Alert color="secondary" className="overflow-auto">
                         <IsaacContentValueOrChildren {...answer} />
                     </Alert>
                 </Col>
