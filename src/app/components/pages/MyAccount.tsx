@@ -45,6 +45,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {isStaff} from "../../services/user";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -260,8 +261,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
                                 />
-                                {user.role === 'ADMIN' && !editingOtherUser &&
-                                    // beta feature just for admins
+                                {isStaff(user) && !editingOtherUser &&
+                                    // beta feature just for staff
                                     <UserMFA
                                         userAuthSettings={userAuthSettings}
                                         userToUpdate={userToUpdate}

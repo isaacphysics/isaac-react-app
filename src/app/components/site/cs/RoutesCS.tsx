@@ -10,6 +10,8 @@ import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {Redirect} from "react-router";
 import {isTeacher} from "../../../services/user";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
+import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
+import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
 
 let key = 0;
 export const RoutesCS = [
@@ -27,6 +29,9 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
 
+    // Books:
+    <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
+    <TrackedRoute key={key++} exact path="/books/workbook_20_ocr" component={Workbook20OCR}/>,
     // Static pages:
     <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
     <StaticPageRoute key={key++} exact path="/teaching_order" pageId="teaching_order" />,
