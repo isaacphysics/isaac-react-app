@@ -1,5 +1,5 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
-import {Input, InputGroup, InputProps} from "reactstrap";
+import React, {ChangeEvent, MouseEvent, useEffect, useRef, useState} from 'react';
+import {Button, Input, InputGroup, InputProps} from "reactstrap";
 import {range} from 'lodash';
 
 // @ts-ignore This value definition is a bit dodgy but should work.
@@ -185,6 +185,29 @@ export const DateInput = (props: DateInputProps) => {
         }
     };
 
+    const clear = (e: MouseEvent<HTMLInputElement>) => {
+        values.day.set(undefined);
+        values.month.set(undefined);
+        values.year.set(undefined);
+
+        const timestamp = setHiddenValue();
+
+        if (props.onChange) {
+            props.onChange({
+                ...e,
+                currentTarget: {
+                    ...(e.currentTarget || hiddenRef.current),
+                    valueAsDate: timestamp || null
+                },
+                // @ts-ignore
+                target: {
+                    ...(e.target || hiddenRef.current),
+                    valueAsDate: timestamp || null
+                }
+            });
+        }
+    };
+
     const yearRange = props.yearRange || range(currentYear, 1899, -1);
 
     return <React.Fragment>
@@ -201,6 +224,7 @@ export const DateInput = (props: DateInputProps) => {
                 {values.year.get() === undefined && <option />}
                 {yearRange.map(year => <option key={year}>{year}</option>)}
             </Input>
+            <Button close {...controlProps} className="mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />
         </InputGroup>
         <Input innerRef={hiddenRef} type="hidden" name={props.name} value={calculateHiddenValue()} {...controlProps} />
     </React.Fragment>;
