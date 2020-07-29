@@ -42,7 +42,6 @@ const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionT
     </Breadcrumb>;
 };
 
-
 type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & {
     breadcrumbTitleOverride?: string;
     children?: ReactElement | boolean;
