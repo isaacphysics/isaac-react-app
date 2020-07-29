@@ -1,3 +1,10 @@
+@function color-level($color, $level: 0) {
+  $color-base: if($level > 0, $black, $white);
+  $level: abs($level);
+
+  @return mix($color-base, $color, $level * $theme-color-interval);
+}
+
 @mixin apply-subject-classes($color) {
   /* background classes */
   @include bg-variant(".bg-secondary", $color);
@@ -70,6 +77,14 @@
         box-shadow: 0 0 0 $input-btn-focus-width rgba($color, .25);
       }
     }
+  }
+
+  .alert-secondary {
+    @include alert-variant(
+      color-level($color, $alert-bg-level),
+      color-level($color, $alert-border-level),
+      color-level($color, $alert-color-level)
+    );
   }
 }
 

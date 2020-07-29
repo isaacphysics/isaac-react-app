@@ -71,6 +71,7 @@ import {EventOverviewFilter} from "../components/elements/panels/EventOverviews"
 import {atLeastOne} from "../services/validation";
 import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
+import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -1349,6 +1350,10 @@ export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmai
     }
 };
 
+export const showGroupEmailModal = (users?: number[]) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(groupEmailModal(users)) as any);
+};
+
 export const showGroupInvitationModal = (firstTime: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(groupInvitationModal(firstTime)) as any);
 };
@@ -1846,6 +1851,9 @@ export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upp
     } catch (e) {
         dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE});
     }};
+
+// Main anchor
+export const setMainContentId = (id: string) => ({type: ACTION_TYPE.SET_MAIN_CONTENT_ID, id});
 
 // SERVICE ACTIONS (w/o dispatch)
 export const changePage = (path: string) => {

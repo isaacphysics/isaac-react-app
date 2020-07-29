@@ -8,6 +8,7 @@ import {selectors} from "../../../state/selectors";
 
 export const HeaderPhy = () => {
     const user = useSelector(selectors.user.orNull);
+    const mainContentId = useSelector(selectors.mainContentId.orDefault);
     return <header className="light">
         <Container className="container-fluid px-0">
             <Row>
@@ -20,7 +21,7 @@ export const HeaderPhy = () => {
                             </Link>
                         </div>
 
-                        <a href="#main" className="skip-main">Skip to main content</a>
+                        <a href={`#${mainContentId}`} className="skip-main">Skip to main content</a>
 
                         <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none pt-3">
                             {user &&

@@ -17,8 +17,8 @@ export const NavigationBarPhy = () => {
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teach">
+            <LinkItem to="/teacher_features">Teacher Features</LinkItem>
             <LinkItem to="/groups">Manage Groups</LinkItem>
-            <LinkItem to="/gameboard_builder">Create Gameboard</LinkItem>
             <LinkItem to="/set_assignments">Set Assignments</LinkItem>
             <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
         </NavigationSection>}

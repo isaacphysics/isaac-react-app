@@ -60,6 +60,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
             setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
             setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
+            logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: baseGameboard.id});
         }
     }, [user, baseGameboard]);
 
