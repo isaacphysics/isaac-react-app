@@ -47,9 +47,14 @@ function onPlayerStateChange(event: any, wrappedLogAction: (eventDetails: object
 }
 
 export function pauseVideo() {
-    var iframe = document.getElementsByTagName("iframe")[0].contentWindow;
-    iframe && iframe.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+    let iframes = document.getElementsByTagName("iframe");
+    for (let i = 0; i < iframes.length; i++) {
+        if (iframes[i].contentWindow) {
+            iframes[i].contentWindow?.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+        }
+    }
 }
+
 
 export function IsaacVideo(props: IsaacVideoProps) {
     const dispatch = useDispatch();
