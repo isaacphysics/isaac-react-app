@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -35,7 +35,7 @@ interface IsaacSymbolicLogicQuestionProps {
 const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
+    const initialEditorSymbols = useRef([]);
     const examBoard = useCurrentExamBoard();
 
     let currentAttemptValue: any | undefined;
@@ -50,7 +50,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     useEffect(() => {
         if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
 
-        setInitialEditorSymbols(_flattenDeep(currentAttemptValue.symbols));
+        initialEditorSymbols.current = _flattenDeep(currentAttemptValue.symbols);
     }, [currentAttempt, currentAttemptValue]);
 
     const closeModal = (previousYPosition: number) => () => {
@@ -78,10 +78,10 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 close={closeModal(window.scrollY)}
                 onEditorStateChange={(state: any) => {
                     setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
-                    setInitialEditorSymbols(state.symbols);
+                    initialEditorSymbols.current = state.symbols;
                 }}
                 availableSymbols={doc.availableSymbols}
-                initialEditorSymbols={initialEditorSymbols}
+                initialEditorSymbols={initialEditorSymbols.current}
                 visible={modalVisible}
                 editorMode='logic'
                 logicSyntax={examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}

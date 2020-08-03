@@ -60,7 +60,7 @@ interface IsaacSymbolicQuestionProps {
 const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const [initialEditorSymbols, setInitialEditorSymbols] = useState(JSON.parse(doc.formulaSeed || '[]'));
+    const initialEditorSymbols = useRef(JSON.parse(doc.formulaSeed || '[]'));
     const [textInput, setTextInput] = useState('');
 
     let currentAttemptValue: any | undefined;
@@ -79,7 +79,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
             setCurrentAttempt(questionId, {type: 'formula', value: JSON.stringify(newState), pythonExpression});
         }
-        setInitialEditorSymbols(state.symbols);
+        initialEditorSymbols.current = state.symbols;
     };
 
     const closeModal = (previousYPosition: number) => () => {
@@ -183,7 +183,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 if (pycode === '') {
                     const state = {result: {tex: "", python: "", mathml: ""}};
                     setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
-                    setInitialEditorSymbols([]);
+                    initialEditorSymbols.current = [];
                 } else if (parsedExpression.length === 1) {
                     // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
                     // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
@@ -218,7 +218,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 close={closeModal(window.scrollY)}
                 onEditorStateChange={updateState}
                 availableSymbols={doc.availableSymbols}
-                initialEditorSymbols={initialEditorSymbols}
+                initialEditorSymbols={initialEditorSymbols.current}
                 visible={modalVisible}
                 editorMode='maths'
             />}
