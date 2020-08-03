@@ -22,26 +22,28 @@ export const IsaacQuickQuestion = ({doc}: {doc: ApiTypes.IsaacQuickQuestionDTO})
 
     const answer: ContentDTO = doc.answer as ContentDTO;
 
-    return <div className="question-component p-md-5">
-        <div className="quick-question clearfix">
-            <div className="question-content">
-                <IsaacContentValueOrChildren {...doc} />
+    return <form onSubmit={e => e.preventDefault()}>
+        <div className="question-component p-md-5">
+            <div className="quick-question clearfix">
+                <div className="question-content">
+                    <IsaacContentValueOrChildren {...doc} />
+                </div>
+                <Row>
+                    <Col sm="12" md={{size: 10, offset: 1}}>
+                        <Button color="secondary" block className={isVisible ? "active": ""} onClick={toggle}>
+                            {isVisible ? "Hide answer" : "Show answer"}
+                        </Button>
+                    </Col>
+                </Row>
+                {isVisible && <Row>
+                    <Col sm="12" md={{size: 10, offset: 1}}>
+                        <Alert color="secondary" className="overflow-auto">
+                            <IsaacContentValueOrChildren {...answer} />
+                        </Alert>
+                    </Col>
+                </Row>}
             </div>
-            <Row>
-                <Col sm="12" md={{size: 10, offset: 1}}>
-                    <Button color="secondary" block className={isVisible ? "active": ""} onClick={toggle}>
-                        {isVisible ? "Hide answer" : "Show answer"}
-                    </Button>
-                </Col>
-            </Row>
-            {isVisible && <Row>
-                <Col sm="12" md={{size: 10, offset: 1}}>
-                    <Alert color="secondary" className="overflow-auto">
-                        <IsaacContentValueOrChildren {...answer} />
-                    </Alert>
-                </Col>
-            </Row>}
         </div>
-    </div>
+    </form>
     ;
 };
