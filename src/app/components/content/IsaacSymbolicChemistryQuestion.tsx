@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -9,6 +9,7 @@ import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {selectors} from "../../state/selectors";
 
+import _flattenDeep from 'lodash/flattenDeep';
 import {selectQuestionPart} from "../../services/questions";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
@@ -42,6 +43,12 @@ const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQu
         }
     }
 
+    useEffect(() => {
+        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
+
+        initialEditorSymbols.current = _flattenDeep(currentAttemptValue.symbols);
+    }, [currentAttempt, currentAttemptValue]);
+    
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
