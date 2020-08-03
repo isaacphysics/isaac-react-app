@@ -35,7 +35,7 @@ interface IsaacSymbolicLogicQuestionProps {
 const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const initialEditorSymbols = useRef([]);
+    const initialEditorSymbols = useRef(JSON.parse(doc.formulaSeed || '[]'));
     const examBoard = useCurrentExamBoard();
 
     let currentAttemptValue: any | undefined;

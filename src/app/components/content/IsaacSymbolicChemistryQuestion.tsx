@@ -32,7 +32,7 @@ interface IsaacSymbolicChemistryQuestionProps {
 const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const initialEditorSymbols = useRef([]);
+    const initialEditorSymbols = useRef(JSON.parse(doc.formulaSeed || '[]'));
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
