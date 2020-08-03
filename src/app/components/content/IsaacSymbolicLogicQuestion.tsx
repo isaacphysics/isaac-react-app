@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -10,7 +10,6 @@ import {EXAM_BOARD} from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {selectors} from "../../state/selectors";
 
-import _flattenDeep from 'lodash/flattenDeep';
 import {useCurrentExamBoard} from "../../services/examBoard";
 import {selectQuestionPart} from "../../services/questions";
 

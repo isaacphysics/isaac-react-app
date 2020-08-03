@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -9,7 +9,6 @@ import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {selectors} from "../../state/selectors";
 
-import _flattenDeep from 'lodash/flattenDeep';
 import {selectQuestionPart} from "../../services/questions";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
