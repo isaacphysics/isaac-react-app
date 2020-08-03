@@ -221,6 +221,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 initialEditorSymbols={initialEditorSymbols.current}
                 visible={modalVisible}
                 editorMode='maths'
+                questionDoc={doc}
             />}
             <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />

@@ -85,6 +85,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 visible={modalVisible}
                 editorMode='logic'
                 logicSyntax={examBoard == EXAM_BOARD.OCR ? 'logic' : 'binary'}
+                questionDoc={doc}
             />}
         </div>
     );

@@ -80,6 +80,7 @@ const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQu
                 initialEditorSymbols={initialEditorSymbols.current}
                 visible={modalVisible}
                 editorMode='chemistry'
+                questionDoc={doc}
             />}
         </div>
     );

@@ -6,6 +6,8 @@ import _uniqWith from 'lodash/uniqWith';
 import _isEqual from 'lodash/isEqual';
 import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState} from "../../../services/questions";
 import {GREEK_LETTERS_MAP} from '../../../services/constants';
+import { IsaacContentValueOrChildren } from '../../content/IsaacContentValueOrChildren';
+import { ContentDTO } from '../../../../IsaacApiTypes';
 
 class MenuItem {
     public type: string;
@@ -36,6 +38,7 @@ interface InequalityModalProps {
     editorMode?: string;
     logicSyntax?: string;
     visible: boolean;
+    questionDoc?: ContentDTO;
 }
 
 interface InequalityModalState {
@@ -1154,6 +1157,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             >Centre</div>
             <div id="inequality-trash" className="inequality-ui trash button">Trash</div>
             <div className="beta-badge">beta</div>
+            <div className="question-reminder">
+                {this.props.questionDoc?.value || (this.props.questionDoc?.children && this.props.questionDoc?.children?.length > 0) && <IsaacContentValueOrChildren value={this.props.questionDoc.value} encoding={this.props.questionDoc.encoding}>
+                    {this.props.questionDoc?.children}
+                </IsaacContentValueOrChildren>}
+            </div>
+            <div className="orientation-warning">The Isaac Equation Editor may only be used in landscape mode. Please rotate your device.</div>
             { menu }
         </div>;
     }
