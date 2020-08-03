@@ -47,12 +47,6 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
         }
     }
 
-    useEffect(() => {
-        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
-
-        initialEditorSymbols.current = _flattenDeep(currentAttemptValue.symbols);
-    }, [currentAttempt, currentAttemptValue]);
-
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
