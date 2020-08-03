@@ -35,7 +35,7 @@ interface IsaacSymbolicLogicQuestionProps {
 const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
+    const [initialEditorSymbols, setInitialEditorSymbols] = useState(JSON.parse(doc.formulaSeed || '[]'));
     const examBoard = useCurrentExamBoard();
 
     let currentAttemptValue: any | undefined;
@@ -46,12 +46,6 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
             currentAttemptValue = { result: { tex: '\\textrm{PLACEHOLDER HERE}' } };
         }
     }
-
-    useEffect(() => {
-        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
-
-        setInitialEditorSymbols(_flattenDeep(currentAttemptValue.symbols));
-    }, [currentAttempt, currentAttemptValue]);
 
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";

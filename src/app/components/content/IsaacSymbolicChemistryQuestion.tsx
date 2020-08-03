@@ -32,7 +32,7 @@ interface IsaacSymbolicChemistryQuestionProps {
 const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
+    const [initialEditorSymbols, setInitialEditorSymbols] = useState(JSON.parse(doc.formulaSeed || '[]'));
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -42,12 +42,6 @@ const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQu
             currentAttemptValue = { result: { tex: '\\textrm{PLACEHOLDER HERE}' } };
         }
     }
-
-    useEffect(() => {
-        if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
-
-        setInitialEditorSymbols(_flattenDeep(currentAttemptValue.symbols));
-    }, [currentAttempt, currentAttemptValue]);
 
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
