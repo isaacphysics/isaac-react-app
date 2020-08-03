@@ -1157,7 +1157,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             >Centre</div>
             <div id="inequality-trash" className="inequality-ui trash button">Trash</div>
             <div className="beta-badge">beta</div>
-            {this.props.questionDoc?.value || (this.props.questionDoc?.children && this.props.questionDoc?.children?.length > 0) && <div className="question-reminder">
+            {(this.props.questionDoc?.value || (this.props.questionDoc?.children && this.props.questionDoc?.children?.length > 0)) && <div className="question-reminder">
                 <IsaacContentValueOrChildren value={this.props.questionDoc.value} encoding={this.props.questionDoc.encoding}>
                     {this.props.questionDoc?.children}
                 </IsaacContentValueOrChildren>
