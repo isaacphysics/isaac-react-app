@@ -1,4 +1,4 @@
-import React, {MutableRefObject, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input, Label, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -21,84 +21,43 @@ export const Glossary = withRouter(() => {
     const [topicsDropdownOpen, setTopicsDropdownOpen] = useState(false);
 
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
-    // useEffect(() => {
-    //     const sortedTerms = rawGlossaryTerms?.sort((a, b) => a?.value && b?.value && a.value.localeCompare(b.value) || 0);
-    //     let groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
-    //     let _topics: string[] = [];
-    //     if (sortedTerms) {
-    //         for (const term of sortedTerms) {
-    //             if (filterTopic !== "" && !term.tags?.includes(filterTopic)) continue;
-    //             const k = term?.value?.[0] || '#';
-    //             groupedTerms[k] = [...(groupedTerms[k] || []), term];
-    //             _topics = [..._topics, ...(term.tags || [])];
-    //         }
-    //     }
-    //     setGlossaryTerms(groupedTerms);
-    //     setTopics([...new Set(
-    //         _topics.sort((a, b) => a.localeCompare(b))
-    //     )]);
-    // }, [rawGlossaryTerms, filterTopic]);
 
     const glossaryTerms = useMemo(() => {
-        const sortedTerms = rawGlossaryTerms?.sort((a, b) => a?.value && b?.value && a.value.localeCompare(b.value) || 0);
-        let groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
-        let _topics: string[] = [];
-        if (sortedTerms) {
-            for (const term of sortedTerms) {
-                if (filterTopic !== "" && !term.tags?.includes(filterTopic)) continue;
-                const k = term?.value?.[0] || '#';
-                groupedTerms[k] = [...(groupedTerms[k] || []), term];
-                _topics = [..._topics, ...(term.tags || [])];
-            }
-        }
-        setTopics([...new Set(
-            _topics.sort((a, b) => a.localeCompare(b))
-        )]);
-        return groupedTerms;
-    }, [rawGlossaryTerms, filterTopic]);
-
-    useEffect(() => {
-        const sortedTerms = rawGlossaryTerms?.sort((a, b) => a?.value && b?.value && a.value.localeCompare(b.value) || 0);
-        let groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
-        let _topics: string[] = [];
-        if (sortedTerms) {
-            for (const term of sortedTerms) {
-                if (filterTopic !== "" && !term.tags?.includes(filterTopic)) continue;
-                const k = term?.value?.[0] || '#';
-                groupedTerms[k] = [...(groupedTerms[k] || []), term];
-                _topics = [..._topics, ...(term.tags || [])];
-            }
-        }
-        setGlossaryTerms(groupedTerms);
-        setTopics([...new Set(
-            _topics.sort((a, b) => a.localeCompare(b))
-        )]);
-    }, [rawGlossaryTerms, filterTopic]);
-
-    useEffect(() => {
-        if (searchText === "") {
+        if (searchText === '') {
             const sortedTerms = rawGlossaryTerms?.sort((a, b) => a?.value && b?.value && a.value.localeCompare(b.value) || 0);
             let groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
+            let _topics: string[] = [];
             if (sortedTerms) {
                 for (const term of sortedTerms) {
+                    if (filterTopic !== "" && !term.tags?.includes(filterTopic)) continue;
                     const k = term?.value?.[0] || '#';
                     groupedTerms[k] = [...(groupedTerms[k] || []), term];
+                    _topics = [..._topics, ...(term.tags || [])];
                 }
             }
-            setGlossaryTerms(groupedTerms);
+            setTopics([...new Set(
+                _topics.sort((a, b) => a.localeCompare(b))
+            )]);
+            return groupedTerms;
         } else {
             const regex = new RegExp(searchText.split(' ').join('|'), 'gi');
             const sortedTerms = rawGlossaryTerms?.filter(e => e.value?.match(regex)).sort((a, b) => a?.value && b?.value && a.value.localeCompare(b.value) || 0);
             let groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
+            let _topics: string[] = [];
             if (sortedTerms) {
                 for (const term of sortedTerms) {
+                    if (filterTopic !== "" && !term.tags?.includes(filterTopic)) continue;
                     const k = term?.value?.[0] || '#';
                     groupedTerms[k] = [...(groupedTerms[k] || []), term];
+                    _topics = [..._topics, ...(term.tags || [])];
                 }
             }
-            setGlossaryTerms(groupedTerms);
+            setTopics([...new Set(
+                _topics.sort((a, b) => a.localeCompare(b))
+            )]);
+            return groupedTerms;
         }
-    }, [searchText]);
+    }, [rawGlossaryTerms, filterTopic, searchText]);
 
     const scrollToKey = (k: string) => {
         const element = document.getElementById(k);
