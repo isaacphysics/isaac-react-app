@@ -854,10 +854,14 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             const trashCanRect = trashCan.getBoundingClientRect();
             if (trashCanRect && x >= trashCanRect.left && x <= trashCanRect.right && y >= trashCanRect.top && y <= trashCanRect.bottom) {
                 trashCan.classList.add('active');
-                this.setState({ trashActive: true });
+                if (!this.state.trashActive) {
+                    this.setState({ trashActive: true });
+                }
             } else {
                 trashCan.classList.remove('active');
-                this.setState({ trashActive: false });
+                if (this.state.trashActive) {
+                    this.setState({ trashActive: false });
+                }
             }
         }
 
