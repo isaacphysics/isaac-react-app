@@ -26,7 +26,7 @@ import {
     multiSelectOnChange
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
-import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM} from "../../services/constants";
+import {EXAM_BOARD, examBoardTagMap} from "../../services/constants";
 import {history} from "../../services/history"
 import Select from "react-select";
 import {withRouter} from "react-router-dom";
@@ -60,6 +60,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
             setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
             setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
+            logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: baseGameboard.id});
         }
     }, [user, baseGameboard]);
 
@@ -122,7 +123,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                 { value: examBoardTagMap[EXAM_BOARD.OCR], label: 'OCR' },
                                 { value: 'ISAAC_BOARD', label: 'Created by Isaac' }]}
                             name="colors"
-                            className="basic-multi-select"
+                            className={SITE_SUBJECT === SITE.CS ? "basic-multi-select" : ""}
                             classNamePrefix="select"
                             placeholder="None"
                             onChange={multiSelectOnChange(setGameboardTags)}
@@ -161,8 +162,8 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                     <th className="w-5" />
                                     <th className="w-40">Question title</th>
                                     <th className="w-25">Topic</th>
-                                    {!IS_CS_PLATFORM && <th className="w-15">Level</th>}
-                                    <th className="w-15">Exam boards</th>
+                                    {SITE_SUBJECT === SITE.PHY && <th className="w-15">Level</th>}
+                                    {SITE_SUBJECT === SITE.CS && <th className="w-15">Exam boards</th>}
                                 </tr>
                             </thead>
                             <Droppable droppableId="droppable">

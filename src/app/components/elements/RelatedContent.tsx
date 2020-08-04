@@ -51,8 +51,9 @@ function getURLForContent(content: ContentSummaryDTO) {
 }
 
 function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction) {
-    const evenQuestions = allQuestions.filter((q, i) => i % 2 == 0);
-    const oddQuestions = allQuestions.filter((q, i) => i % 2 == 1);
+    const halfWayIndex = Math.ceil(allQuestions.length / 2) - 1;
+    const firstColQuestions = allQuestions.filter((q, i) => i <= halfWayIndex);
+    const secondColQuestions = allQuestions.filter((q, i) => i > halfWayIndex);
 
     if (allQuestions.length == 0) return null;
     return <div className="d-flex align-items-stretch flex-wrap no-print">
@@ -65,10 +66,10 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
                 {/* Large devices - multi column */}
                 <div className="d-none d-lg-flex">
                     <ListGroup className="w-50">
-                        {evenQuestions.map(contentSummary => renderItem(contentSummary, SITE_SUBJECT == SITE.CS))}
+                        {firstColQuestions.map(contentSummary => renderItem(contentSummary, SITE_SUBJECT == SITE.CS))}
                     </ListGroup>
                     <ListGroup className="w-50">
-                        {oddQuestions.map(contentSummary => renderItem(contentSummary, SITE_SUBJECT == SITE.CS))}
+                        {secondColQuestions.map(contentSummary => renderItem(contentSummary, SITE_SUBJECT == SITE.CS))}
                     </ListGroup>
                 </div>
                 {/* Small devices - single column */}

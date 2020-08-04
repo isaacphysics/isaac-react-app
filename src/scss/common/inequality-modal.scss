@@ -14,12 +14,52 @@
         cursor: default;
     }
 
+    .question-reminder {
+        position: absolute;
+        bottom: 140px;
+        left: 250px;
+        right: 250px;
+        text-align: center;
+        border-radius: 20px;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 1.25rem 1px 0;
+        pointer-events: none;
+        z-index: 255 !important;
+    }
+
+    @media screen and (orientation: portrait) {
+        .question-reminder {
+            display: none;
+        }
+    }
+
+    .orientation-warning {
+        position: absolute;
+        left: 10%;
+        right: 10%;
+        top: 40%;
+        padding: 1em;
+        text-align: center;
+        border-radius: 20px;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding-top: 1.25rem;
+        pointer-events: none;
+        z-index: 255 !important;
+    }
+
+    @media screen and (orientation: landscape) {
+        .orientation-warning {
+            display: none;
+        }
+    }
+
     .beta-badge {
         position: absolute;
         bottom: 15px;
         right: 40px;
         transform: rotate(30deg);
-        background: theme-color("secondary");
         color: white;
         font-weight: bold;
         font-size: 0.9rem;
@@ -56,7 +96,7 @@
                 bottom: 25px;
                 right: 5px;
                 background-color: transparent;
-                background-image: url('/assets/inequality-confirm.svg');
+                background-image: url('/assets/inequality-confirm-cs.svg');
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position-y: center;
@@ -69,7 +109,7 @@
                 bottom: 25px;
                 left: 5px;
                 background-color: transparent;
-                background-image: url('/assets/inequality-centre.svg');
+                background-image: url('/assets/inequality-centre-cs.svg');
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position-y: center;
@@ -95,7 +135,6 @@
         }
 
         &.katex-preview {
-            border: 1px solid #208838;
             border-right: 0;
             border-top-left-radius: 45px;
             border-bottom-left-radius: 45px;
@@ -123,7 +162,7 @@
             right: 0;
             left: 0;
             overflow: visible;
-            background: theme-color("primary");
+            background: theme-color("secondary");
 
             &.closed {
                 height: 0;
@@ -212,7 +251,7 @@
                                     margin: 0 auto;
                                     overflow: visible;
                                 }
-        
+
                                 svg.v-hexagon {
                                     position: absolute;
                                     padding-left: 2px;

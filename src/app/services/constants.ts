@@ -1,13 +1,11 @@
 import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {invert} from "lodash";
-import { BookingStatus } from "../../IsaacApiTypes";
+import {BookingStatus} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
-
-export const IS_CS_PLATFORM = SITE_SUBJECT === SITE.CS;
 
 /*
  * Configure the api provider with the server running the API:
@@ -82,6 +80,23 @@ export enum ACTION_TYPE {
     USER_AUTH_UNLINK_REQUEST = "USER_AUTH_UNLINK_REQUEST",
     USER_AUTH_UNLINK_RESPONSE_SUCCESS = "USER_AUTH_UNLINK_RESPONSE_SUCCESS",
     USER_AUTH_UNLINK_RESPONSE_FAILURE = "USER_AUTH_UNLINK_RESPONSE_FAILURE",
+
+    USER_AUTH_MFA_CHALLENGE_REQUIRED = "USER_AUTH_MFA_CHALLENGE_REQUIRED",
+    USER_AUTH_MFA_CHALLENGE_REQUEST  = "USER_AUTH_MFA_CHALLENGE_REQUEST",
+    USER_AUTH_MFA_CHALLENGE_SUCCESS = "USER_AUTH_MFA_CHALLENGE_SUCCESS",
+    USER_AUTH_MFA_CHALLENGE_FAILURE = "USER_AUTH_MFA_CHALLENGE_FAILURE",
+
+    USER_AUTH_MFA_NEW_SECRET_REQUEST = "USER_AUTH_MFA_NEW_SECRET_REQUEST",
+    USER_AUTH_MFA_NEW_SECRET_SUCCESS = "USER_AUTH_MFA_NEW_SECRET_SUCCESS",
+    USER_AUTH_MFA_NEW_SECRET_FAILURE = "USER_AUTH_MFA_NEW_SECRET_FAILURE",
+
+    USER_AUTH_MFA_SETUP_REQUEST = "USER_AUTH_MFA_SETUP_REQUEST",
+    USER_AUTH_MFA_SETUP_SUCCESS = "USER_AUTH_MFA_SETUP_SUCCESS",
+    USER_AUTH_MFA_SETUP_FAILURE = "USER_AUTH_MFA_SETUP_FAILURE",
+
+    USER_AUTH_MFA_DISABLE_REQUEST = "USER_AUTH_MFA_DISABLE_REQUEST",
+    USER_AUTH_MFA_DISABLE_SUCCESS = "USER_AUTH_MFA_DISABLE_SUCCESS",
+    USER_AUTH_MFA_DISABLE_FAILURE = "USER_AUTH_MFA_DISABLE_FAILURE",
 
     USER_PREFERENCES_REQUEST = "USER_PREFERENCES_REQUEST",
     USER_PREFERENCES_RESPONSE_SUCCESS= "USER_PREFERENCES_RESPONSE_SUCCESS",
@@ -227,7 +242,7 @@ export enum ACTION_TYPE {
     EVENT_BOOKINGS_FOR_GROUP_REQUEST = "EVENT_BOOKINGS_FOR_GROUP_REQUEST",
     EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS = "EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS",
     EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE = "EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE",
-    
+
     EVENT_BOOKING_CSV_REQUEST = "EVENT_BOOKING_CSV_REQUEST",
     EVENT_BOOKING_CSV_RESPONSE_SUCCESS = "EVENT_BOOKING_CSV_RESPONSE_SUCCESS",
     EVENT_BOOKING_CSV_RESPONSE_FAILURE = "EVENT_BOOKING_CSV_RESPONSE_FAILURE",
@@ -311,6 +326,10 @@ export enum ACTION_TYPE {
     TEST_QUESTION_REQUEST = "TEST_QUESTION_REQUEST",
     TEST_QUESTION_RESPONSE_SUCCESS = "TEST_QUESTION_RESPONSE_SUCCESS",
     TEST_QUESTION_RESPONSE_FAILURE = "TEST_QUESTION_RESPONSE_FAILURE",
+    
+    GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST = "GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST",
+    GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS = "GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS",
+    GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE = "GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE",
 
     TOPIC_REQUEST = "TOPIC_REQUEST",
     TOPIC_RESPONSE_SUCCESS = "TOPIC_RESPONSE_SUCCESS",
@@ -433,7 +452,9 @@ export enum ACTION_TYPE {
     FASTTRACK_CONCEPTS_RESPONSE_SUCCESS = "FASTTRACK_CONCEPTS_RESPONSE_SUCCESS",
     FASTTRACK_CONCEPTS_RESPONSE_FAILURE = "FASTTRACK_CONCEPTS_RESPONSE_FAILURE",
 
-    LOG_EVENT = "LOG_EVENT"
+    LOG_EVENT = "LOG_EVENT",
+
+    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID",
 }
 
 export enum EXAM_BOARD {
@@ -594,14 +615,26 @@ export enum TAG_LEVEL {
 export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
+    EVENT = "isaacEventPage",
+    TOPIC_SUMMARY = "isaacTopicSummaryPage",
     GENERIC = "page",
 }
 export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 
+export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
+    [DOCUMENT_TYPE.CONCEPT]: "Concepts",
+    [DOCUMENT_TYPE.QUESTION]: "Questions",
+    [DOCUMENT_TYPE.EVENT]: "Events",
+    [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
+    [DOCUMENT_TYPE.GENERIC]: "Other pages"
+};
+
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.GENERIC]: "pages",
     [DOCUMENT_TYPE.CONCEPT]: "concepts",
-    [DOCUMENT_TYPE.QUESTION]: "questions"
+    [DOCUMENT_TYPE.QUESTION]: "questions",
+    [DOCUMENT_TYPE.EVENT]: "events",
+    [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics"
 };
 
 export enum ContentVersionUpdatingStatus {
@@ -623,7 +656,8 @@ export const HOME_CRUMB = {title: "Home", to: "/"};
 export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
-export const ASSIGNMENT_PROGRESS_CRUMB = SITE_SUBJECT == SITE.PHY ? {title: "Assignment Progress", to: "/assignment_progress"} :
+export const ASSIGNMENT_PROGRESS_CRUMB = SITE_SUBJECT == SITE.PHY ?
+    {title: "Assignment Progress", to: "/assignment_progress"} :
     {title: "My markbook", to: "/my_markbook"};
 
 export enum UserRole {
@@ -676,3 +710,49 @@ export enum EventTypeFilter {
     "Teacher events" = "teacher",
     "Online tutorials" = "virtual",
 }
+
+export const GREEK_LETTERS_MAP: { [letter: string]: string } = {
+    "alpha": "α",
+    "beta": "β",
+    "gamma": "γ",
+    "delta": "δ",
+    "epsilon": "ε",
+    "varepsilon": "ε",
+    "zeta": "ζ",
+    "eta": "η",
+    "theta": "θ",
+    "iota": "ι",
+    "kappa": "κ",
+    "lambda": "λ",
+    "mu": "μ",
+    "nu": "ν",
+    "xi": "ξ",
+    "omicron": "ο",
+    "pi": "π",
+    "rho": "ρ",
+    "sigma": "σ",
+    "tau": "τ",
+    "upsilon": "υ",
+    "phi": "ϕ",
+    "chi": "χ",
+    "psi": "ψ",
+    "omega": "ω",
+    "Gamma": "Γ",
+    "Delta": "Δ",
+    "Theta": "Θ",
+    "Lambda": "Λ",
+    "Xi": "Ξ",
+    "Pi": "Π",
+    "Sigma": "Σ",
+    "Upsilon": "Υ",
+    "Phi": "Φ",
+    "Psi": "Ψ",
+    "Omega": "Ω",
+};
+
+let _REVERSE_GREEK_LETTERS_MAP: { [key: string]: string } = {};
+for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
+    _REVERSE_GREEK_LETTERS_MAP[entry[1]] = entry[0];
+}
+_REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
+export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;

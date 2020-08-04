@@ -39,6 +39,11 @@ export const UserPassword = (
     };
 
     return <CardBody>
+        <Row>
+            <Col md={{size: 6, offset: 3}}>
+                <h4>Password</h4>
+            </Col>
+        </Row>
         {userAuthSettings && userAuthSettings.hasSegueAccount ?
             <Row>
                 <Col>
@@ -150,7 +155,6 @@ export const UserPassword = (
             <Row>
                 <Col md={{size: 6, offset: 3}}>
                     <FormGroup>
-                        {/* TODO:ENABLE_GOOGLE */}
                         <h4>Linked Accounts</h4>
                         <Col className="text-center">
                             <div className="vertical-center ml-2">
@@ -158,16 +162,12 @@ export const UserPassword = (
                                     type="button"
                                     id="linked-accounts-no-password"
                                     className="linked-account-button google-button"
-                                    disabled={SITE_SUBJECT === SITE.PHY}
                                     onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}
                                 />
-                                <Label htmlFor="linked-accounts-no-passoword" className={`ml-2 mb-0 ${SITE_SUBJECT === SITE.PHY ? "text-muted" : ""}`}>
+                                <Label htmlFor="linked-accounts-no-passoword" className="ml-2 mb-0">
                                     {authenticationProvidersUsed("GOOGLE") ? " Remove linked Google account" : " Add linked Google account"}
                                 </Label>
                             </div>
-                            {SITE_SUBJECT === SITE.PHY && <p className="mt-3 mb-0">
-                                Google authentication is <strong>temporarily disabled</strong><br />for the beta version of the site.
-                            </p>}
                         </Col>
                     </FormGroup>
                 </Col>

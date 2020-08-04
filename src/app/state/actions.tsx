@@ -10,7 +10,8 @@ import {
     EventStatusFilter,
     EventTypeFilter,
     EXAM_BOARD,
-    MEMBERSHIP_STATUS, NOT_FOUND,
+    MEMBERSHIP_STATUS,
+    NOT_FOUND,
     TAG_ID
 } from "../services/constants";
 import {
@@ -47,7 +48,8 @@ import {
     TestCaseDTO,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
+    UserSummaryWithEmailAddressDTO,
+    GraphChoiceDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -69,6 +71,7 @@ import {EventOverviewFilter} from "../components/elements/panels/EventOverviews"
 import {atLeastOne} from "../services/validation";
 import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
+import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -198,6 +201,63 @@ export const unlinkAccount = (provider: AuthenticationProvider) => async (dispat
     }
 };
 
+export const getNewTotpSecret = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_REQUEST});
+    try {
+        const mfaSetupResponse = await api.authentication.getNewMFASecret();
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS, totpSharedSecretDTO: mfaSetupResponse.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_FAILURE, errorMessage: extractMessage(e)});
+        dispatch(showErrorToastIfNeeded("Failed to get 2FA secret", e));
+    }
+};
+
+export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_REQUEST});
+    try {
+        await api.authentication.setupMFAOnAccount(sharedSecret, mfaVerificationCode);
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS});
+        dispatch(showToast({
+            color: "success", title: "2FA Configured", body: "You have enabled 2FA on your account!"}) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_FAILURE, errorMessage: extractMessage(e)});
+        dispatch(showErrorToastIfNeeded("Failed to setup 2FA on account", e));
+    }
+};
+
+export const submitTotpChallengeResponse = (mfaVerificationCode: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
+    try {
+        const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
+        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode);
+
+        await dispatch(requestCurrentUser() as any); // Request user preferences
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+        persistence.remove(KEY.AFTER_AUTH_PATH);
+
+        history.push(afterAuthPath);
+
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
+        dispatch(showErrorToastIfNeeded("Error with verification code.", e));
+    }
+    dispatch(requestCurrentUser() as any)
+};
+
+export const disableTotpForAccount = (userId: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_REQUEST});
+    try {
+        await api.authentication.disableMFAOnAccount(userId);
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_SUCCESS});
+        dispatch(showToast({
+            color: "success", title: "2FA Disabled", body: "You have disabled 2FA on this account!"}) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_FAILURE, errorMessage: extractMessage(e)});
+        dispatch(showErrorToastIfNeeded("Failed to disable 2FA on account.", e));
+    }
+};
+
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
     try {
@@ -318,12 +378,21 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
 export const logInUser = (provider: AuthenticationProvider, credentials: Credentials) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-    persistence.remove(KEY.AFTER_AUTH_PATH);
+
     try {
         const result = await api.authentication.login(provider, credentials);
+
+        if (result.status === 202) {
+            // indicates MFA is required for this user and user isn't logged in yet.
+            dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
+            return;
+        }
+
         await dispatch(requestCurrentUser() as any); // Request user preferences
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+        persistence.remove(KEY.AFTER_AUTH_PATH);
         history.push(afterAuthPath);
+
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? extractMessage(e) : API_REQUEST_FAILURE_MESSAGE})
     }
@@ -898,6 +967,18 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
     }
 };
 
+// Generate answer spec for graph sketcher
+export const generateSpecification = (graphChoice: GraphChoiceDTO) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST});
+        const specResponse = await api.questions.generateSpecification(graphChoice);
+        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS, specResponse: specResponse.data });
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("There was a problem generating a graph specification", e));
+    }
+}
+
 // Current gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const state = getState();
@@ -1017,7 +1098,7 @@ export const setContentVersion = (version: string) => async (dispatch: Dispatch<
 };
 
 // Search
-export const fetchSearch = (query: string, types: string) => async (dispatch: Dispatch<Action>) => {
+export const fetchSearch = (query: string, types: string | undefined) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query, types});
     try {
         if (query === "") {
@@ -1267,6 +1348,10 @@ export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmai
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE, group, manager});
         dispatch(showErrorToastIfNeeded("Group manager removal failed", e));
     }
+};
+
+export const showGroupEmailModal = (users?: number[]) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(groupEmailModal(users)) as any);
 };
 
 export const showGroupInvitationModal = (firstTime: boolean) => async (dispatch: Dispatch<Action>) => {
@@ -1766,6 +1851,9 @@ export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upp
     } catch (e) {
         dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE});
     }};
+
+// Main anchor
+export const setMainContentId = (id: string) => ({type: ACTION_TYPE.SET_MAIN_CONTENT_ID, id});
 
 // SERVICE ACTIONS (w/o dispatch)
 export const changePage = (path: string) => {

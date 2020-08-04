@@ -9,12 +9,19 @@
   }
 
   .search-filters {
-    justify-content: flex-end;
+    @include respond-above(sm) {
+      justify-content: flex-end;
+    }
     flex-grow: 1;
   }
 
   .search-filters label {
-    margin-left: 0.5rem;
+    @include respond-above(sm) {
+      margin-left: 0.5rem;
+    }
+    @include respond-below(sm) {
+      margin-top: 0.5rem;;
+    }
   }
 }
 

@@ -5,28 +5,30 @@ import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
+import {PhysicsSiteRedesignBanner} from "../../navigation/PhysicsSiteRedesignBanner";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
     const user = useSelector(selectors.user.orNull);
 
     return <div id="homepage" className="pb-5">
+        <PhysicsSiteRedesignBanner />
         <section id="call-to-action" className="homepageHero">
             <Container className="pt-4">
                 <Row className="mt-3">
                     <Col className="d-none d-md-flex mb-1" lg={9}>
-                        <span className="physics-strapline">Mastering Physics by Solving Problems<span className="d-none d-md-inline">: from School to University!</span></span>
+                        <span className="physics-strapline">Master Physics by Solving Problems<span className="d-none d-md-inline">: from School to University!</span></span>
                     </Col>
                     <Col lg={3}>
                         {!(user && user.loggedIn) && <Row>
                             <Col size={6} className="text-center">
-                                <Button size="sm" tag={Link} to="/register" color="secondary" block>
-                                    Sign up
+                                <Button size="sm" tag={Link} to="/login" color="primary" outline block>
+                                    Log in
                                 </Button>
                             </Col>
                             <Col size={6} className="text-center">
-                                <Button size="sm" tag={Link} to="/login" color="primary" outline block>
-                                    Log in
+                                <Button size="sm" tag={Link} to="/register" color="secondary" block>
+                                    Sign up
                                 </Button>
                             </Col>
                         </Row>}
@@ -43,7 +45,7 @@ export const HomepagePhy = () => {
                                 <td className="h5"><Link to="/alevel">A Level</Link></td>
                             </tr>
                             <tr>
-                                <td className="h5"><Link to="/support/student">Student Support</Link></td>
+                                <td className="h5"><Link to="/support/student">Student FAQs</Link></td>
                             </tr>
                         </tbody></table>
                     </Col>
@@ -57,7 +59,7 @@ export const HomepagePhy = () => {
                                 <td className="h5"><Link to="/pages/teacher_cpd">Teacher CPD</Link></td>
                             </tr>
                             <tr>
-                                <td className="h5"><Link to="/support/teacher">Teacher Support</Link></td>
+                                <td className="h5"><Link to="/support/teacher">Teacher FAQs</Link></td>
                             </tr>
                         </tbody></table>
                     </Col>
@@ -68,7 +70,9 @@ export const HomepagePhy = () => {
         <section id="news">
             <Container>
                 <Row className="eventList pt-1 pattern-03-reverse">
-                    <NewsCarousel showTitle={true} descending={true} subject="physics" />
+                    <Col>
+                        <NewsCarousel showTitle={true} descending={false} subject="physics" />
+                    </Col>
                 </Row>
             </Container>
         </section>

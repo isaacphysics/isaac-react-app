@@ -4,7 +4,10 @@ import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import katex from "katex";
 import _uniqWith from 'lodash/uniqWith';
 import _isEqual from 'lodash/isEqual';
-import {parsePseudoSymbolicAvailableSymbols} from "../../../services/questions";
+import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState} from "../../../services/questions";
+import {GREEK_LETTERS_MAP} from '../../../services/constants';
+import { IsaacContentValueOrChildren } from '../../content/IsaacContentValueOrChildren';
+import { ContentDTO } from '../../../../IsaacApiTypes';
 
 class MenuItem {
     public type: string;
@@ -35,6 +38,7 @@ interface InequalityModalProps {
     editorMode?: string;
     logicSyntax?: string;
     visible: boolean;
+    questionDoc?: ContentDTO;
 }
 
 interface InequalityModalState {
@@ -88,8 +92,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private _movingMenuBar?: HTMLElement | null = null;
     private _potentialSymbolSpec?: MenuItem | null = null;
 
-    private _greekLetterMap: { [letter: string]: string } = {"alpha": "α", "beta": "β", "gamma": "γ", "delta": "δ", "epsilon": "ε", "varepsilon": "ε", "zeta": "ζ", "eta": "η", "theta": "θ", "iota": "ι", "kappa": "κ", "lambda": "λ", "mu": "μ", "nu": "ν", "xi": "ξ", "omicron": "ο", "pi": "π", "rho": "ρ", "sigma": "σ", "tau": "τ", "upsilon": "υ", "phi": "ϕ", "chi": "χ", "psi": "ψ", "omega": "ω", "Gamma": "Γ", "Delta": "Δ", "Theta": "Θ", "Lambda": "Λ", "Xi": "Ξ", "Pi": "Π", "Sigma": "Σ", "Upsilon": "Υ", "Phi": "Φ", "Psi": "Ψ", "Omega": "Ω"};
-    private _reverseGreekLetterMap: { [letter: string]: string } = {};
+    private _greekLetterMap = GREEK_LETTERS_MAP;
     private _lowerCaseGreekLetters = ["alpha", "beta", "gamma", "delta", "varepsilon", "zeta", "eta", "theta", "iota", "kappa", "lambda", "mu", "nu", "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "chi", "psi", "omega"];
     private _upperCaseGreekLetters = ["Gamma", "Delta", "Theta", "Lambda", "Xi", "Pi", "Sigma", "Upsilon", "Phi", "Psi", "Omega"];
 
@@ -98,6 +101,48 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private _logFunctionNames = ["ln", "log"];
 
     private _chemicalElements = ["H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"];
+    private _chemicalParticles: {[key: string]: { type: string; menu: { label: string; texLabel: boolean; className?: string; fontSize?: string }; properties: object } } = {
+        alpha: {
+            type: 'Particle',
+            menu: { label: '\\alpha', texLabel: true },
+            properties: { particle: 'α', type: 'alpha' }
+        },
+        beta: {
+            type: 'Particle',
+            menu: { label: '\\beta', texLabel: true },
+            properties: { particle: 'β', type: 'beta' }
+        },
+        gamma: {
+            type: 'Particle',
+            menu: { label: '\\gamma', texLabel: true },
+            properties: { particle: 'γ', type: 'gamma' }
+        },
+        neutrino: {
+            type: 'Particle',
+            menu: { label: '\\nu', texLabel: true },
+            properties: { particle: 'ν', type: 'neutrino' }
+        },
+        antineutrino: {
+            type: 'Particle',
+            menu: { label: '\\bar{\\nu}', texLabel: true },
+            properties: { particle: 'ν̅', type: 'antineutrino' }
+        },
+        proton: {
+            type: 'Particle',
+            menu: { label: '\\text{p}', texLabel: true },
+            properties: { particle: 'p', type: 'proton' }
+        },
+        neutron: {
+            type: 'Particle',
+            menu: { label: '\\text{n}', texLabel: true },
+            properties: { particle: 'n', type: 'neutron' }
+        },
+        electron: {
+            type: 'Particle',
+            menu: { label: '\\text{e}', texLabel: true },
+            properties: { particle: 'e', type: 'electron' }
+        }
+    };    
 
     private _differentialRegex = /^(Delta|delta|d)\s*(?:\^([0-9]+))?\s*([a-zA-Z]+(?:(?:_|\^).+)?)/;
     private _availableSymbols?: string[];
@@ -140,11 +185,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 chemicalOperations: [],
             },
             defaultMenu: true,
-            disableLetters: this._availableSymbols?.includes('_no_alphabet') || false,
+            disableLetters: props.availableSymbols?.includes('_no_alphabet') || false,
             numberInputValue: void 0,
         }
-
-        this._reverseGreekLetterMap = Object.fromEntries(Object.entries(this._greekLetterMap).map(e => [e[1], e[0]]));
 
         this.close = () => {
             props.close();
@@ -162,8 +205,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         const inequalityElement = document.getElementById('inequality-modal') as HTMLElement;
         const { sketch, p } = makeInequality(
             inequalityElement,
-            window.innerWidth * Math.ceil(window.devicePixelRatio),
-            window.innerHeight * Math.ceil(window.devicePixelRatio),
+            window.innerWidth,
+            window.innerHeight,
             this.props.initialEditorSymbols,
             {
                 editorMode: this.props.editorMode || 'logic',
@@ -180,21 +223,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 timestamp: Date.now()
             }]
         };
-        sketch.onNewEditorState = (s: any) => {
+        sketch.onNewEditorState = (state: any) => {
             const modal = document.getElementById('inequality-modal');
             if (modal) {
-                // TODO: Preprocess state to convert greek letters back to letter names
-                if (s.result && s.result.tex) {
-                    s.result.tex = s.result.tex.split('').map((l: string) => this._reverseGreekLetterMap[l] ? '\\' + this._reverseGreekLetterMap[l] : l).join('');
-                }
-                if (s.result && s.result.python) {
-                    s.result.python = s.result.python.split('').map((l: string) => this._reverseGreekLetterMap[l] || l).join('');
-                }
-                if (s.result && s.result.uniqueSymbols) {
-                    s.result.uniqueSymbols = s.result.uniqueSymbols.split('').map((l: string) => this._reverseGreekLetterMap[l] || l).join('');
-                }
-                this.setState((prevState: InequalityModalState) => ({ editorState: { ...prevState.editorState, ...s } }));
-                this.props.onEditorStateChange(s);
+                const newState = sanitiseInequalityState(state);
+                this.setState((prevState: InequalityModalState) => ({ editorState: { ...prevState.editorState, ...newState } }));
+                this.props.onEditorStateChange(newState);
             }
         };
         sketch.onCloseMenus = () => { /*this.setState({ menuOpen: false })*/ }; // TODO Maybe nice to have
@@ -294,9 +328,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                     }
                 } else {
                     // Everything else is a letter, unless we are doing chemistry
-                    if (this.props.editorMode === 'chemistry' && /^[A-Z]/.test(availableSymbol)) {
+                    if (this.props.editorMode === 'chemistry') {
                         // Available chemical elements
-                        customMenuItems.chemicalElements.push(this.makeChemicalElementMenuItem(availableSymbol));
+                        const item = this.makeChemicalElementMenuItem(availableSymbol);
+                        if (item) {
+                            customMenuItems.chemicalElements.push(item);
+                        }
                     } else {
                         const item = this.makeLetterMenuItem(availableSymbol);
                         if (item) {
@@ -344,7 +381,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 this.setState((prevState: InequalityModalState) => ({
                     menuItems: {
                         ...prevState.menuItems,
-                        chemicalElements: this._chemicalElements.map( element => this.makeChemicalElementMenuItem(element) ),
+                        chemicalElements: [ ...this._chemicalElements, ...Object.keys(this._chemicalParticles) ].map( element => this.makeChemicalElementMenuItem(element) ),
                     }
                 }));
             } else {
@@ -489,7 +526,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             new MenuItem("AbsoluteValue", {}, { label: '\\small{|x|}', texLabel: true, className: 'abs' }),
             new MenuItem("Radix", {}, { label: '\\small{\\sqrt{x}}', texLabel: true, className: 'radix sqrt' }),
             new MenuItem("Relation", { relation: '=' }, { label: '=', texLabel: true, className: 'relation equal' }),
-            new MenuItem("Relation", { relation: '<' }, { label: '>', texLabel: true, className: 'relation less' }),
+            new MenuItem("Relation", { relation: '<' }, { label: '<', texLabel: true, className: 'relation less' }),
             new MenuItem("Relation", { relation: '>' }, { label: '>', texLabel: true, className: 'relation greater' }),
             new MenuItem("Relation", { relation: '<=' }, { label: '\\leq', texLabel: true, className: 'relation less-or-equal' }),
             new MenuItem("Relation", { relation: '>=' }, { label: '\\geq', texLabel: true, className: 'relation greater-or-equal' }),
@@ -683,7 +720,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private makeChemicalElementMenuItem(symbol: string) {
-        return new MenuItem('ChemicalElement', { element: symbol }, { label: `\\text{${symbol}}`, texLabel: true, className: `chemical-element ${symbol}` });
+        if (this._chemicalElements.includes(symbol)) {
+            return new MenuItem('ChemicalElement', { element: symbol }, { label: `\\text{${symbol}}`, texLabel: true, className: `chemical-element ${symbol}` });
+        } else if (this._chemicalParticles.hasOwnProperty(symbol)) {
+            return new MenuItem('Particle', this._chemicalParticles[symbol].properties, { ...this._chemicalParticles[symbol].menu, className: `chemical-particle ${symbol}` });
+        }
     }
 
     private makeChemicalStatesMenuItems() {
@@ -723,7 +764,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     // math sad, therefore ROUND EVERYTHING OR FACE MADNESS
 
     private onMouseDown(e: MouseEvent) {
-        // debugger;
         if ((e.target as any).id === 'numeric-input') return; // this works but a cast to any is probably not an acceptable solution.
         // preventDefault here to stop selection on desktop
         e.preventDefault();
@@ -814,10 +854,14 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             const trashCanRect = trashCan.getBoundingClientRect();
             if (trashCanRect && x >= trashCanRect.left && x <= trashCanRect.right && y >= trashCanRect.top && y <= trashCanRect.bottom) {
                 trashCan.classList.add('active');
-                this.setState({ trashActive: true });
+                if (!this.state.trashActive) {
+                    this.setState({ trashActive: true });
+                }
             } else {
                 trashCan.classList.remove('active');
-                this.setState({ trashActive: false });
+                if (this.state.trashActive) {
+                    this.setState({ trashActive: false });
+                }
             }
         }
 
@@ -926,7 +970,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             }
         }
         let mathsOtherFunctionsMenu: JSX.Element;
-        if (this.state.defaultMenu) {
+        if (this.state.defaultMenu || (this.state.menuItems.otherFunctions.length === 0 && this.state.menuItems.mathsDerivatives.length === 0)) {
             mathsOtherFunctionsMenu = <div className="top-menu maths other-functions">
                 <ul className="sub-menu-tabs">
                     <li className={`trig-functions ${this.state.activeSubMenu === "trigFunctions" ? 'active' : 'inactive'}`}
@@ -944,11 +988,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                         onClick={() => this.setSubMenuOpen("logFunctions") }
                         onKeyUp={() => this.setSubMenuOpen("logFunctions") }
                     />
-                    <li className={`derivatives ${this.state.activeSubMenu === "derivatives" ? 'active' : 'inactive'}`}
+                    {this.state.menuItems.mathsDerivatives.length > 0 && <li className={`derivatives ${this.state.activeSubMenu === "derivatives" ? 'active' : 'inactive'}`}
                         dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString("\\frac{\\mathrm{d}y}{\\mathrm{d}x}") }}
                         onClick={() => this.setSubMenuOpen("derivatives") }
                         onKeyUp={() => this.setSubMenuOpen("derivatives") }
-                    />
+                    />}
                 </ul>
                 {this.state.activeSubMenu === "trigFunctions" && <ul className="sub-menu trig-functions">{
                     this.state.menuItems.mathsTrigFunctions.map(this.menuItem)
@@ -1117,6 +1161,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             >Centre</div>
             <div id="inequality-trash" className="inequality-ui trash button">Trash</div>
             <div className="beta-badge">beta</div>
+            {(this.props.questionDoc?.value || (this.props.questionDoc?.children && this.props.questionDoc?.children?.length > 0)) && <div className="question-reminder">
+                <IsaacContentValueOrChildren value={this.props.questionDoc.value} encoding={this.props.questionDoc.encoding}>
+                    {this.props.questionDoc?.children}
+                </IsaacContentValueOrChildren>
+            </div>}
+            <div className="orientation-warning">The Isaac Equation Editor may only be used in landscape mode. Please rotate your device.</div>
             { menu }
         </div>;
     }

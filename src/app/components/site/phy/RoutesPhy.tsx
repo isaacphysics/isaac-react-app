@@ -17,6 +17,7 @@ import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
 import {Concepts} from "../../pages/Concepts";
 import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
+import {GraphSketcherPage} from "../../pages/GraphSketcher";
 
 let key = 0;
 export const RoutesPhy = [
@@ -61,6 +62,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/gcse" component={Gcse}/>,
     <TrackedRoute key={key++} exact path="/alevel" component={Alevel}/>,
     <TrackedRoute key={key++} exact path="/teacher_features" component={TeacherFeatures}/>,
+    <TrackedRoute key={key++}exact path="/sketcher" component={GraphSketcherPage} />,
 
     // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,

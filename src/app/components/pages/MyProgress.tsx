@@ -17,7 +17,6 @@ import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
 import {safePercentage} from "../../services/validation";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
-import {IS_CS_PLATFORM} from "../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 export const siteSpecific = {
@@ -139,7 +138,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                             </div>
                         </div>}
                     </div>,
-                    ...(viewingOwnData && isTeacher(user) && !IS_CS_PLATFORM && {"Teacher Activity": <div>
+                    ...(viewingOwnData && isTeacher(user) && SITE_SUBJECT == SITE.PHY && {"Teacher Activity": <div>
                         <TeacherAchievement
                             verb="created"
                             count={achievements && achievements.TEACHER_GROUPS_CREATED}

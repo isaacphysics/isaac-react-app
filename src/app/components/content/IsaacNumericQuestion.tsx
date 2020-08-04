@@ -148,7 +148,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: Isaa
                                     {selectedUnits.map((unit) =>
                                         <DropdownItem key={wrapUnitForSelect(unit)}
                                             data-unit={unit || 'None'}
-                                            className={unit == currentAttemptUnits ? "btn btn-primary bg-grey selected" : ""}
+                                            className={unit == currentAttemptUnits ? "btn bg-grey selected" : ""}
                                             onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
                                             <TrustedHtml span html={wrapUnitForSelect(unit)}/>
                                         </DropdownItem>

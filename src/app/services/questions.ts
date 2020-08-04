@@ -7,7 +7,9 @@ import {IsaacFreeTextQuestion} from "../components/content/IsaacFreeTextQuestion
 import {IsaacSymbolicLogicQuestion} from "../components/content/IsaacSymbolicLogicQuestion";
 import {IsaacSymbolicQuestion} from "../components/content/IsaacSymbolicQuestion";
 import {IsaacSymbolicChemistryQuestion} from "../components/content/IsaacSymbolicChemistryQuestion";
+import {IsaacGraphSketcherQuestion} from "../components/content/IsaacGraphSketcherQuestion";
 import {AppQuestionDTO} from "../../IsaacAppTypes";
+import {REVERSE_GREEK_LETTERS_MAP} from '../services/constants';
 
 // @ts-ignore as TypeScript is struggling to infer common type for questions
 export const QUESTION_TYPES = new Map([
@@ -20,6 +22,7 @@ export const QUESTION_TYPES = new Map([
     ["isaacStringMatchQuestion", IsaacStringMatchQuestion],
     ["isaacFreeTextQuestion", IsaacFreeTextQuestion],
     ["isaacSymbolicLogicQuestion", IsaacSymbolicLogicQuestion],
+    ["isaacGraphSketcherQuestion", IsaacGraphSketcherQuestion],
     ["default", IsaacMultiChoiceQuestion]
 ]);
 
@@ -33,6 +36,7 @@ export const HUMAN_QUESTION_TYPES = new Map([
     ["isaacStringMatchQuestion", "String match"],
     ["isaacFreeTextQuestion", "Free text"],
     ["isaacSymbolicLogicQuestion", "Boolean logic"],
+    ["isaacGraphSketcherQuestion", "Graph Sketcher"],
     ["default", "Multiple choice"]
 ]);
 
@@ -73,4 +77,28 @@ export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[])
 
 export function selectQuestionPart(questions?: AppQuestionDTO[], questionPartId?: string) {
     return questions?.filter(question => question.id == questionPartId)[0];
+}
+
+export function sanitiseInequalityState(state: any) {
+    const saneState = JSON.parse(JSON.stringify(state));
+    if (saneState.result?.tex) {
+        saneState.result.tex = saneState.result.tex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
+    }
+    if (saneState.result?.python) {
+        saneState.result.python = saneState.result.python.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
+    }
+    if (saneState.result?.uniqueSymbols) {
+        saneState.result.uniqueSymbols = saneState.result.uniqueSymbols.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
+    }
+    if (saneState.symbols) {
+        for (let symbol of saneState.symbols) {
+            if (symbol.expression.latex) {
+                symbol.expression.latex = symbol.expression.latex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
+            }
+            if (symbol.expression.python) {
+                symbol.expression.python = symbol.expression.python.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
+            }
+        }
+    }
+    return saneState;
 }
