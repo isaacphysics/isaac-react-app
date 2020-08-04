@@ -22,7 +22,7 @@ export const DowntimeWarningBanner = () => {
         Cookies.set(DOWNTIME_COOKIE, "1", {expires: 30 /* days*/});
     }
 
-    let inDateRange = new Date(1595840400000) <= new Date() && new Date() <= new Date(1596272400000);
+    let inDateRange = false; // new Date(1595840400000) <= new Date() && new Date() <= new Date(1596272400000);
 
     return inDateRange && noCookie ? <div className="banner d-print-none" id="downtime-banner">
         <Alert color="danger" className="mb-0">

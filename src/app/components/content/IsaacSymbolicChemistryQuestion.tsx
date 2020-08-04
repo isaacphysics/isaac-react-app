@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -32,7 +32,7 @@ interface IsaacSymbolicChemistryQuestionProps {
 const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
+    const initialEditorSymbols = useRef(JSON.parse(doc.formulaSeed || '[]'));
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -46,9 +46,9 @@ const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQu
     useEffect(() => {
         if (!currentAttempt || !currentAttemptValue || !currentAttemptValue.symbols) return;
 
-        setInitialEditorSymbols(_flattenDeep(currentAttemptValue.symbols));
+        initialEditorSymbols.current = _flattenDeep(currentAttemptValue.symbols);
     }, [currentAttempt, currentAttemptValue]);
-
+    
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
@@ -74,12 +74,13 @@ const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQu
                 close={closeModal(window.scrollY)}
                 onEditorStateChange={(state: any) => {
                     setCurrentAttempt(questionId, { type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" })
-                    setInitialEditorSymbols(state.symbols);
+                    initialEditorSymbols.current = state.symbols;
                 }}
                 availableSymbols={doc.availableSymbols}
-                initialEditorSymbols={initialEditorSymbols}
+                initialEditorSymbols={initialEditorSymbols.current}
                 visible={modalVisible}
                 editorMode='chemistry'
+                questionDoc={doc}
             />}
         </div>
     );

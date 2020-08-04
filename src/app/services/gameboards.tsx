@@ -62,6 +62,23 @@ export const determineNextGameboardItem = (currentGameboard: CurrentGameboardSta
     }
 };
 
+export const determinePreviousGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
+    const boardQuestions: (string | undefined)[] = [];
+    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.questions) {
+        currentGameboard.questions.map(question => boardQuestions.push(question.id));
+        if (boardQuestions.includes(currentDocId)) {
+            const gameboardContentIds = currentGameboard.questions.map(q => q.id);
+            if (gameboardContentIds.includes(currentDocId)) {
+                const previousIndex = gameboardContentIds.indexOf(currentDocId) - 1;
+                if (previousIndex > -1) {
+                    const previousContent = currentGameboard.questions[previousIndex];
+                    return {title: previousContent.title as string, to: `/questions/${previousContent.id}`};
+                }
+            }
+        }
+    }
+};
+
 export const generateGameboardSubjectHexagons = (boardSubjects: string[]) => {
     return boardSubjects.map((subject, i) =>
         <div key={subject} className={`board-subject-hexagon subject-${subject} z${i}`} />
