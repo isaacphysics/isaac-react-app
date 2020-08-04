@@ -526,7 +526,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             new MenuItem("AbsoluteValue", {}, { label: '\\small{|x|}', texLabel: true, className: 'abs' }),
             new MenuItem("Radix", {}, { label: '\\small{\\sqrt{x}}', texLabel: true, className: 'radix sqrt' }),
             new MenuItem("Relation", { relation: '=' }, { label: '=', texLabel: true, className: 'relation equal' }),
-            new MenuItem("Relation", { relation: '<' }, { label: '>', texLabel: true, className: 'relation less' }),
+            new MenuItem("Relation", { relation: '<' }, { label: '<', texLabel: true, className: 'relation less' }),
             new MenuItem("Relation", { relation: '>' }, { label: '>', texLabel: true, className: 'relation greater' }),
             new MenuItem("Relation", { relation: '<=' }, { label: '\\leq', texLabel: true, className: 'relation less-or-equal' }),
             new MenuItem("Relation", { relation: '>=' }, { label: '\\geq', texLabel: true, className: 'relation greater-or-equal' }),
