@@ -167,13 +167,26 @@ hr {
   #stickyalphabetlist {
     position: fixed;
     top: 0;
-    background: rgba(255,0,0,0.2);
+    left: 0;
+    width: 100%;
+    background: white;
     z-index: 255;
     display: none;
 
     &.active {
       display: flex;
       @include make-col(12);
+      box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+      padding-top: 1.2em;
+
+      div.key {
+        margin-bottom: 0;
+
+        &.unavailable {
+          // color: black;
+        }
+      }
+
       @include respond-below(sm) {
         display: none;
       }
@@ -214,14 +227,23 @@ hr {
           padding-bottom: 0.5vh;
           border-radius: 0 0 6px 6px;
         }
+
+        &.unavailable {
+          display: none;
+        }    
       }
     }
   
     div.key {
-      line-height: 2em;
+      line-height: 1.2em;
       width: 2em;
       text-align: center;
-      vertical-align: middle;
+      vertical-align: bottom;
+      margin-bottom: 0.8em;
+
+      &.unavailable {
+        color: $gray-120;
+      }  
     }
   }
 }

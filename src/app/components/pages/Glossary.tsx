@@ -74,10 +74,6 @@ export const Glossary = withRouter(() => {
     const alphabetScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
         for (const entry of entries) {
             if (entry.target.id === 'sentinel') {
-                console.log('isIntersecting: ', entry.isIntersecting);
-                console.log('boudingCLientRect: ', entry.boundingClientRect);
-                console.log('intersectionRect:  ', entry.intersectionRect);
-                console.log('---');
                 if (entry.isIntersecting) {
                     document.getElementById('stickyalphabetlist')?.classList.remove('active');
                 } else {
@@ -110,11 +106,22 @@ export const Glossary = withRouter(() => {
     });
     /* Horror stops here. Or not, depending who you ask. */
 
-    const alphabetList = glossaryTerms && Object.keys(glossaryTerms).map(k =>
-        <div className="key" key={k} role="button" tabIndex={0} onKeyUp={() => scrollToKey(`key-${k}`)} onClick={() => scrollToKey(`key-${k}`)}>
-            {k}
-        </div>
-    );
+    // const alphabetList = glossaryTerms && Object.keys(glossaryTerms).map(k =>
+    //     <div className="key" key={k} role="button" tabIndex={0} onKeyUp={() => scrollToKey(`key-${k}`)} onClick={() => scrollToKey(`key-${k}`)}>
+    //         {k}
+    //     </div>
+    // );
+    const alphabetList = glossaryTerms && '#ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(k => {
+        if (glossaryTerms.hasOwnProperty(k)) {
+            return <div className="key" key={k} role="button" tabIndex={0} onKeyUp={() => scrollToKey(`key-${k}`)} onClick={() => scrollToKey(`key-${k}`)}>
+                {k}
+            </div>
+        } else {
+            return <div className="key unavailable" key={k}>
+                {k}
+            </div>
+        }
+    })
 
     const thenRender = <div className="glossary-page">
         <Container>
@@ -172,7 +179,7 @@ export const Glossary = withRouter(() => {
                 <div className="alphabetlist pb-4">
                     {alphabetList}
                 </div>
-                {glossaryTerms && Object.entries(glossaryTerms).map(([key, terms]) => <Row key={key} className="pb-5">
+                {Object.entries(glossaryTerms).map(([key, terms]) => <Row key={key} className="pb-5">
                     <Col md={{size: 1, offset: 1}} id={`key-${key}`}><h2 style={{position: 'sticky'}}>{key}</h2></Col>
                     <Col>
                         {terms.map(term => <Row key={term.id}>
