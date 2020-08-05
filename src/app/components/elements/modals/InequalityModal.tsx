@@ -474,7 +474,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 }
                 item.children = { subscript: subscriptSymbol };
                 item.menu.label += `_{${this._greekLetterMap[subscriptLetter] ? `\\${subscriptLetter}` : subscriptLetter}}`
-                item.menu.className = `${item.menu.className} has-subscript`;
             }
         }
         return item;
