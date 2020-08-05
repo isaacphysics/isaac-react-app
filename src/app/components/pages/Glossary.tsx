@@ -133,27 +133,25 @@ export const Glossary = withRouter(() => {
             <Row>
                 <Col md={{size: 9}} className="py-4">
                     <Row>
-                        <FormGroup className='glossary-term-filter text-left'>
-                            <Col>
-                                <Label for='header-search' className='sr-only'>Search</Label>
-                                <Input
-                                    id="header-search" type="search" name="query" placeholder="Search" aria-label="Search"
-                                    value={searchText} onChange={e => setSearchText(e.target.value)}
-                                />
-                            </Col>
-                            <Col>
-                                <Label for='topic-select' className='sr-only'>Topic</Label>
-                                {topics?.length > 0 && <Dropdown isOpen={topicsDropdownOpen} toggle={() => setTopicsDropdownOpen(prevState => !prevState)}>
-                                    <DropdownToggle caret>
-                                        { filterTopic === "" ? "Topics" : _startCase(filterTopic) }
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                        <DropdownItem onClick={() => setFilterTopic("")}>&nbsp;</DropdownItem>
-                                        {topics.map(e => <DropdownItem key={e} onClick={() => setFilterTopic(e)}>{_startCase(e.replace(/[^a-zA-Z0-9]/, ' '))}</DropdownItem>)}
-                                    </DropdownMenu>
-                                </Dropdown>}
-                            </Col>
-                        </FormGroup>
+                        <Col md={{size: 3}}>
+                            <Label for='header-search' className='sr-only'>Search</Label>
+                            <Input
+                                id="header-search" type="search" name="query" placeholder="Search" aria-label="Search"
+                                value={searchText} onChange={e => setSearchText(e.target.value)}
+                            />
+                        </Col>
+                        <Col>
+                            <Label for='topic-select' className='sr-only'>Topic</Label>
+                            {topics?.length > 0 && <Dropdown isOpen={topicsDropdownOpen} toggle={() => setTopicsDropdownOpen(prevState => !prevState)}>
+                                <DropdownToggle caret>
+                                    { filterTopic === "" ? "Topics" : _startCase(filterTopic) }
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={() => setFilterTopic("")}>&nbsp;</DropdownItem>
+                                    {topics.map(e => <DropdownItem key={e} onClick={() => setFilterTopic(e)}>{_startCase(e.replace(/[^a-zA-Z0-9]/, ' '))}</DropdownItem>)}
+                                </DropdownMenu>
+                            </Dropdown>}
+                        </Col>
                     </Row>
                 </Col>
                 <Col md={{size: 1}} className="py-4">
