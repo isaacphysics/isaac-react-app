@@ -310,6 +310,12 @@
                             }
                         }
 
+                        &.has-subscript {
+                            .katex span.base {
+                                line-height: 36px;
+                            }
+                        }
+
                         svg.v-hexagon {
                             position: absolute;
                             width: 64px;
