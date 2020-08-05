@@ -62,7 +62,7 @@ export const Glossary = withRouter(() => {
     const scrollToKey = (k: string) => {
         const element = document.getElementById(k);
         if (element) {
-            scrollVerticallyIntoView(element);
+            scrollVerticallyIntoView(element, -70);
         }
     }
 
@@ -106,11 +106,6 @@ export const Glossary = withRouter(() => {
     });
     /* Horror stops here. Or not, depending who you ask. */
 
-    // const alphabetList = glossaryTerms && Object.keys(glossaryTerms).map(k =>
-    //     <div className="key" key={k} role="button" tabIndex={0} onKeyUp={() => scrollToKey(`key-${k}`)} onClick={() => scrollToKey(`key-${k}`)}>
-    //         {k}
-    //     </div>
-    // );
     const alphabetList = glossaryTerms && '#ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(k => {
         if (glossaryTerms.hasOwnProperty(k)) {
             return <div className="key" key={k} role="button" tabIndex={0} onKeyUp={() => scrollToKey(`key-${k}`)} onClick={() => scrollToKey(`key-${k}`)}>
