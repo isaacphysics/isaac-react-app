@@ -23,7 +23,7 @@ export const Gcse = () => {
                     title={"Physics Skills Mastery"} subtitle={"Check your answers to our Mastering Essential GCSE Physics book."}/>
             </Col>
             <Col md="6">
-                <MenuCard link={"/gameboards?filter=true#de583d25-93c9-4600-a6e3-6ae144b105fd"}
+                <MenuCard link={"/gameboards/new"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#triple"}
                     title={"Question Finder"} subtitle={"Practise your problem solving skills with our level 1 questions."}/>
             </Col>
