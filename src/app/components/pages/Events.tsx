@@ -15,7 +15,6 @@ import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 
-/* eslint-disable @typescript-eslint/camelcase */
 
 interface EventsPageQueryParams {
     show_booked_only?: boolean;
@@ -130,5 +129,3 @@ export const Events = withRouter(({history, location}: {history: History; locati
         </RS.Container>
     </div>
 });
-
-/* eslint-enable @typescript-eslint/camelcase */
