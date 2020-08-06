@@ -407,20 +407,16 @@ export const api = {
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
             showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
-            /* eslint-disable @typescript-eslint/camelcase */
             return endpoint.get(`/events`, {params: {
                 start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
                 show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
             }});
-            /* eslint-enable @typescript-eslint/camelcase */
         },
         getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
-            /* eslint-disable @typescript-eslint/camelcase */
             return endpoint.get(`/events`, {params: {
                 start_index: 0, limit: numberOfActiveEvents, show_active_only: active,
                 show_inactive_only: !active, show_booked_only: false, tags: null
             }});
-            /* eslint-enable @typescript-eslint/camelcase */
         },
         getEventOverviews: (eventOverviewFilter: EventOverviewFilter): AxiosPromise<{results: AppTypes.EventOverview[]; totalResults: number}> => {
             const params = {limit: -1, startIndex: 0};
@@ -433,12 +429,10 @@ export const api = {
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
             showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
         ): AxiosPromise<{results: AppTypes.EventMapData[]; totalResults: number}> => {
-            /* eslint-disable @typescript-eslint/camelcase */
             return endpoint.get(`/events/map_data`, {params: {
                 start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
                 show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
             }});
-            /* eslint-enable @typescript-eslint/camelcase */
         }
     },
     eventBookings: {
