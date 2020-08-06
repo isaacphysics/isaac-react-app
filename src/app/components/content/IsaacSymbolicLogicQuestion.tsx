@@ -13,6 +13,7 @@ import {selectors} from "../../state/selectors";
 import _flattenDeep from 'lodash/flattenDeep';
 import {useCurrentExamBoard} from "../../services/examBoard";
 import {selectQuestionPart} from "../../services/questions";
+import {jsonHelper} from "../../services/json";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const pageQuestions = selectors.questions.getQuestions(state);
@@ -35,16 +36,12 @@ interface IsaacSymbolicLogicQuestionProps {
 const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const initialEditorSymbols = useRef(JSON.parse(doc.formulaSeed || '[]'));
+    const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
     const examBoard = useCurrentExamBoard();
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
-        try {
-            currentAttemptValue = JSON.parse(currentAttempt.value);
-        } catch(e) {
-            currentAttemptValue = { result: { tex: '\\textrm{PLACEHOLDER HERE}' } };
-        }
+        currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
 
     useEffect(() => {
