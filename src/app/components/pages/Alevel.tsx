@@ -17,7 +17,7 @@ export const Alevel = () => {
         </Row>
         <Row className="teacher-feature-body">
             <Col md="4">
-                <MenuCard link={"/gameboards?filter=true#c052917f-5b7b-4b7f-b2a3-41d9de0a17c4"}
+                <MenuCard link={"/gameboards/new"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#question"}
                     title={"Question Finder"} subtitle={"Practise your problem solving skills."}/>
             </Col>
