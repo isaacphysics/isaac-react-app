@@ -105,7 +105,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                     </div>
                 </div>
                 <Row className="question-content-container">
-                    <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
+                    <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
                         <TempExamBoardPicker className="no-print text-right"/>
 
                         {doc.supersededBy && !isStudent(user) && <div className="alert alert-warning">
