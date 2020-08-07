@@ -473,7 +473,10 @@ export enum SUBJECTS {
     CS = 'computer_science'
 }
 
-export const fastTrackProgressEnabledBoards = ['ft_core_2017', 'ft_core_2018', 'ft_core_stage2'];
+export const fastTrackProgressEnabledBoards = [
+    'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
+    'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
+];
 
 export const examBoardTagMap: {[examBoard: string]: string} = {
     [EXAM_BOARD.AQA]: "examboard_aqa",
