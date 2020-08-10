@@ -5,8 +5,9 @@ import bb, {Chart} from "billboard.js";
 import tags from "../../../services/tags";
 import Select from "react-select";
 import {ValueType} from "react-select/src/types";
-import {TAG_ID} from "../../../services/constants";
+import {doughnutColours, TAG_ID} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import styles from "../../../../scss/phy/variables-export.module.scss";
 
 interface QuestionProgressChartsProps {
     subId: string;
@@ -20,6 +21,21 @@ export type FlushableRef = MutableRefObject<(() => void) | undefined>;
 const OPTIONS = {
     size: { width: 240, height: 330 }
 };
+
+const colourPicker = (names: string[]): { [key: string]: string } => {
+    const selected = {} as { [key: string]: string };
+    let currentIndex = 0;
+
+    for (let i = 0; i < names.length; i++) {
+        if (currentIndex >= doughnutColours.length) {
+            break;
+        } else {
+            selected[names[i]] = doughnutColours[currentIndex];
+            currentIndex += 1;
+        }
+    }
+    return selected;
+}
 
 export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     const {subId, questionsByTag, questionsByLevel, flushRef} = props;
@@ -41,6 +57,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             charts.push(bb.generate({
                 data: {
                     columns: categoryColumns,
+                    colors: colourPicker(categoryColumns.map((column) => column[0]) as string[]),
                     type: "donut",
                 },
                 donut: {
@@ -56,6 +73,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             charts.push(bb.generate({
                 data: {
                     columns: topicColumns,
+                    colors: colourPicker(topicColumns.map((column) => column[0]) as string[]),
                     type: "donut"
                 },
                 donut: {
@@ -69,7 +87,11 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
         if (SITE_SUBJECT === SITE.PHY && !isAllZero(levelColumns)) {
             charts.push(bb.generate({
-                data: {columns: levelColumns, type: "donut"},
+                data: {
+                    columns: levelColumns,
+                    colors: colourPicker(levelColumns.map((column) => column[0]) as string[]),
+                    type: "donut"
+                },
                 donut: {
                     title: "By Level",
                     label: {format: (value, ratio, id) => `${value}`}

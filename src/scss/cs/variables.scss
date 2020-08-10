@@ -1,0 +1,32 @@
+// NOMENSA variables.scss
+//Custom Colours
+$cs-mustard: #ffb53f;
+$cs-hot-pink: #ff3369;
+$cs-reddish: #d7335f; // Used as an active colour on secondary buttons
+$focus-blue: #3E59A3; // Used as focus indicator colour on inputs
+
+// Colour Overrides
+$purple: #9148bc;
+$cyan: #0f8294;
+$green: #208838;
+
+// Theme
+$primary: $cs-mustard;
+$secondary: $cs-hot-pink;
+$theme-colors: (
+        "primary": $primary,
+        "secondary": $secondary
+);
+
+//Greys
+$gray-103: #f8f8f8;
+$gray-107: #ececec;
+$gray-110: #e7e7e7;
+$gray-118: #d2d2d2;
+$gray-120: #c9cad1;
+$gray-136: #a3a3a3;
+$gray-142: #949494;
+$gray-160: #666;
+$gray-194: #0f0f0f;
+
+$gray-blue: #636c73;

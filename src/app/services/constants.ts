@@ -763,3 +763,24 @@ for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
 }
 _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
 export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
+
+export const doughnutColours = {
+    [SITE.PHY]: [
+        "#944cbe",
+        "#007fa9",
+        "#e22e25",
+        "#991846",
+        "#448525",
+        "#fea100"
+    ],
+    [SITE.CS]: [
+        "#feae42",
+        "#000000",
+        "#e51f6f",
+        "#ef67ac",
+        "#bf6707",
+        "#0f8294",
+        "#aaaaaa",
+        "#dbdbdb"
+    ]
+}[SITE_SUBJECT];

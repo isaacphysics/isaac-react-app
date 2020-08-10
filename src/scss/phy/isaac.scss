@@ -1,46 +1,4 @@
-// NOMENSA variables.scss
-// Physics colours
-$phy_green: #509e2e;
-$a11y_green: #448525;
-$phy_orangered: #ef3e36;
-$a11y_orangered: #e22e25;
-$phy_blue: #009acd;
-$a11y_blue: #007fa9;
-$phy_purple: #944cbe;
-$phy_burgundy: #991846;
-$phy_chemistry: $a11y_orangered;
-$phy_maths: $a11y_blue;
-$phy_physics: $phy_purple;
-$phy_extra_force_yellow: #fea100;
-
-// Colour Overrides
-$purple: #9148bc;
-$cyan: #0f8294;
-$green: #208838;
-
-//Custom Colours
-$focus-blue: #3E59A3; // Used as focus indicator colour on inputs
-
-//Colours
-$primary: $phy_extra_force_yellow;
-$secondary: $a11y_green;
-$theme-colors: (
-    "primary": $primary,
-    "secondary": $secondary
-);
-
-//Greys
-$gray-103: #f8f8f8;
-$gray-107: #ececec;
-$gray-110: #e7e7e7;
-$gray-118: #d2d2d2;
-$gray-120: #c9cad1;
-$gray-136: #a3a3a3;
-$gray-142: #949494;
-$gray-160: #666;
-$gray-194: #0f0f0f;
-
-$gray-blue: #636c73;
+@import "variables";
 
 // Shadows
 $shadow-3: rgba(0, 0, 0, 0.3);
