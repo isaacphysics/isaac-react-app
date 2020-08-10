@@ -5,7 +5,7 @@ import bb, {Chart} from "billboard.js";
 import tags from "../../../services/tags";
 import Select from "react-select";
 import {ValueType} from "react-select/src/types";
-import {doughnutColours, TAG_ID} from "../../../services/constants";
+import {doughnutColours, specificDoughnutColours, TAG_ID} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import styles from "../../../../scss/phy/variables-export.module.scss";
 
@@ -27,9 +27,9 @@ const colourPicker = (names: string[]): { [key: string]: string } => {
     let currentIndex = 0;
 
     for (let i = 0; i < names.length; i++) {
-        if (currentIndex >= doughnutColours.length) {
-            break;
-        } else {
+        if (names[i] in specificDoughnutColours) {
+            selected[names[i]] = specificDoughnutColours[names[i]];
+        } else if (currentIndex < doughnutColours.length) {
             selected[names[i]] = doughnutColours[currentIndex];
             currentIndex += 1;
         }
