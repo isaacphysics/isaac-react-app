@@ -81,7 +81,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             // and the current attempt is assigned afterwards, so we need to carve it out of the available items.
             // This also takes care of updating the two lists when a user moves items from one to the other.
             let availableItems: ParsonsItemDTO[] = [];
-            let currentAttemptItems: ParsonsItemDTO[] = (this.props.currentAttempt && this.props.currentAttempt.items) || [];
+            const currentAttemptItems: ParsonsItemDTO[] = (this.props.currentAttempt && this.props.currentAttempt.items) || [];
             if (this.props.doc.items && this.props.currentAttempt) {
                 availableItems = this.props.doc.items.filter(item => {
                     let found = false;
@@ -96,7 +96,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             }
             // WARNING: Inverting the order of the arrays breaks this.
             // TODO: Investigate if there is a method that gives more formal guarantees.
-            let diff = _differenceBy(prevState.availableItems, availableItems, 'id');
+            const diff = _differenceBy(prevState.availableItems, availableItems, 'id');
             // This stops re-rendering when availableItems have not changed from one state update to the next.
             // The set difference is empty if the two sets contain the same elements (by 'id', see above).
             if (diff.length > 0) {
@@ -153,7 +153,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         // There's a bug somewhere that adds this event twice, but only one has a non-zero timestamp.
         // The condition on draggedElement *might* be sufficient, but let's be explicit.
         if (e.timeStamp > 0 && this.state.draggedElement) {
-            let className = this.state.draggedElement.className;
+            const className = this.state.draggedElement.className;
             const matches = className.match(/indent-([0-3])/);
             const currentIndent: number = this.state.currentIndent || (matches && parseInt(matches[1])) || 0;
             let newIndent = currentIndent;
@@ -186,25 +186,25 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         }
         if (result.source.droppableId == result.destination.droppableId && result.destination.droppableId == 'answerItems' && this.props.currentAttempt) {
             // Reorder currentAttempt
-            let items = [...(this.props.currentAttempt.items || [])];
+            const items = [...(this.props.currentAttempt.items || [])];
             this.moveItem(items, result.source.index, items, result.destination.index, this.state.currentIndent || 0);
             this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items }});
         } else if (result.source.droppableId == result.destination.droppableId && result.destination.droppableId == 'availableItems') {
             // Reorder availableItems
-            let items = [...this.state.availableItems];
+            const items = [...this.state.availableItems];
             this.moveItem(items, result.source.index, items, result.destination.index, 0);
             this.setState({ availableItems: items });
         } else if (result.source.droppableId == 'availableItems' && result.destination.droppableId == 'answerItems' && this.props.currentAttempt) {
             // Move from availableItems to currentAttempt
-            let srcItems = [...this.state.availableItems];
-            let dstItems = [...(this.props.currentAttempt.items || [])];
+            const srcItems = [...this.state.availableItems];
+            const dstItems = [...(this.props.currentAttempt.items || [])];
             this.moveItem(srcItems, result.source.index, dstItems, result.destination.index, this.state.currentIndent || 0);
             this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items: dstItems }});
             this.setState({ availableItems: srcItems });
         } else if (result.source.droppableId == 'answerItems' && result.destination.droppableId == 'availableItems' && this.props.currentAttempt) {
             // Move from currentAttempt to availableItems
-            let srcItems = [...(this.props.currentAttempt.items || [])];
-            let dstItems = [...this.state.availableItems];
+            const srcItems = [...(this.props.currentAttempt.items || [])];
+            const dstItems = [...this.state.availableItems];
             this.moveItem(srcItems, result.source.index, dstItems, result.destination.index, 0);
             this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items: srcItems }});
             this.setState({ availableItems: dstItems });
@@ -241,14 +241,14 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
 
     private getPreviousItemIndentation = (index: number) => {
         if (!this.props.currentAttempt?.items) return -1;
-        let items = [...(this.props.currentAttempt.items || [])];
+        const items = [...(this.props.currentAttempt.items || [])];
         return items[Math.max(0, index-1)].indentation || 0;
     }
 
     private reduceIndentation = (index: number) => {
         if (!this.props.currentAttempt?.items) return;
 
-        let items = [...(this.props.currentAttempt.items || [])];
+        const items = [...(this.props.currentAttempt.items || [])];
         if (!_isUndefined(items[index].indentation)) {
             items[index].indentation = Math.max((items[index].indentation || 0) - 1, 0);
         }
@@ -258,7 +258,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
     private increaseIndentation = (index: number) => {
         if (index === 0 || !this.props.currentAttempt?.items) return;
 
-        let items = [...(this.props.currentAttempt.items || [])];
+        const items = [...(this.props.currentAttempt.items || [])];
         // This condition is insane but of course 0, undefined, and null are all false-y.
         if (!_isUndefined(items[index].indentation)) {
             items[index].indentation = Math.min((items[index].indentation || 0) + 1, Math.min((items[Math.max(index-1, 0)].indentation || 0) + 1, PARSONS_MAX_INDENT));
