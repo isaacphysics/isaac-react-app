@@ -14,6 +14,7 @@ import {parseExpression} from "inequality-grammar";
 
 import _flattenDeep from 'lodash/flatMapDeep';
 import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
+import {jsonHelper} from "../../services/json";
 
 // Magic starts here
 interface ChildrenMap {
@@ -60,16 +61,12 @@ interface IsaacSymbolicQuestionProps {
 const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const initialEditorSymbols = useRef(JSON.parse(doc.formulaSeed || '[]'));
+    const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
     const [textInput, setTextInput] = useState('');
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
-        try {
-            currentAttemptValue = JSON.parse(currentAttempt.value);
-        } catch(e) {
-            currentAttemptValue = { result: { tex: '\\textrm{PLACEHOLDER HERE}' } };
-        }
+        currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
 
     const updateState = (state: any) => {

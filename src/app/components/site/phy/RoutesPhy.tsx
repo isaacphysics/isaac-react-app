@@ -62,7 +62,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/gcse" component={Gcse}/>,
     <TrackedRoute key={key++} exact path="/alevel" component={Alevel}/>,
     <TrackedRoute key={key++} exact path="/teacher_features" component={TeacherFeatures}/>,
-    <TrackedRoute key={key++}exact path="/sketcher" component={GraphSketcherPage} />,
+    <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
 
     // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,
