@@ -1,6 +1,7 @@
-import {AppState} from "./reducers";
+import {AdminUserSearchState, AppState} from "./reducers";
 import {sortBy} from "lodash";
-import {NOT_FOUND} from "../services/constants";
+import {anonymousNames, anonymousSchoolNames, NOT_FOUND} from "../services/constants";
+import {UserSchoolLookup} from "../../IsaacAppTypes";
 
 export const selectors = {
     groups: {
@@ -117,14 +118,44 @@ export const selectors = {
 
     admin: {
         anonymiseUsers: (state: AppState) => state?.anonymiseUsers || false,
-        userSearch: (state: AppState) => state?.adminUserSearch?.map(user => state.anonymiseUsers ? {
-            ...user,
-            familyName: "Family name",
-            givenName: "Given name",
-            email: "email@email.com"
-            } : user) || null
+        userSearch: (state: AppState) => state?.adminUserSearch?.map(user => {
+            if (state.anonymiseUsers) {
+                let newName = anonymousNames[Math.floor((user.givenName?.charCodeAt(0) || 0) % anonymousNames.length)];
+                return {
+                    ...user,
+                    familyName: "Test",
+                    givenName: newName,
+                    email: newName + ".XYZ@email.com"
+                }
+            } else {
+                return user
+            }
+        }) || null,
+        userSchoolLookup: (state: AppState) => {
+            let anonymousSchoolLookup = {} as UserSchoolLookup;
+            if (state?.userSchoolLookup && state.anonymiseUsers) {
+                Object.keys(state.userSchoolLookup).forEach(id  => anonymousSchoolLookup[Number(id)] = {
+                    urn: "",
+                    name: anonymousSchoolNames[Math.floor((state.userSchoolLookup && state.userSchoolLookup[Number(id)].name.charCodeAt(0) || 0) % anonymousSchoolNames.length)] + "'s School",
+                    postcode: "",
+                    closed: false,
+                    dataSource: ""
+                })
+            }
+            return state && (state.anonymiseUsers ? anonymousSchoolLookup : state.userSchoolLookup)
+        }
     }
 };
+
+export const selectorEqualityFuncs = {
+    admin: {
+        userSearch: (left: AdminUserSearchState, right: AdminUserSearchState) => {
+            return (left == null && left == right) ||
+                (right != null && left?.map((userL, i) => JSON.stringify(userL) == JSON.stringify(right[i]))
+                    .filter(same => !same).length == 0);
+        }
+    }
+}
 
 // Important type checking to avoid an awkward bug
 interface SelectorsWithNoPropArgs {

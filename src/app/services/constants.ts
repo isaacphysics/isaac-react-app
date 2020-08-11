@@ -765,3 +765,20 @@ for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
 }
 _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
 export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
+
+export const anonymousNames = [
+    "Alice",
+    "Bob",
+    "Charlie",
+    "Dan",
+    "Eve",
+    "Frank",
+    "Grace"
+]
+
+export const anonymousSchoolNames = [
+    "North",
+    "South",
+    "East",
+    "West"
+]
