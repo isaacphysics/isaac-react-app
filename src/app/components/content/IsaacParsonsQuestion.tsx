@@ -311,6 +311,8 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
                                 return <div id="parsons-choice-area" ref={provided.innerRef} className={`parsons-items ${this.state.currentIndent == null ? '' : `ghost-indent-${this.state.currentIndent}`} ${this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length > 0 ? "" : "empty"}`}>
                                     {this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.map((item, index) => {
+                                        const canDecreaseIndentation = !_isUndefined(item?.indentation) && item.indentation > 0;
+                                        const canIncreaseIndentation = !_isUndefined(item?.indentation) && index !== 0 && item.indentation <= this.getPreviousItemIndentation(index) && item.indentation < PARSONS_MAX_INDENT;
                                         return <Draggable
                                             key={item.id}
                                             draggableId={`${item.id || index}|parsons-item-choice`}
@@ -332,9 +334,21 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                                         {item.value}
                                                         <div className="controls">
                                                             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                                                            <span className={`reduce ${!_isUndefined(item?.indentation) && item.indentation > 0 ? 'show' : 'hide' }`} role="img" onMouseUp={() => { this.reduceIndentation(index) }} aria-label="reduce indentation">&nbsp;</span>
+                                                            <span
+                                                                className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' }`}
+                                                                role="img" onMouseUp={() => { this.reduceIndentation(index) }}
+                                                                aria-label={`reduce indentation ${!canDecreaseIndentation ? "(disabled)" : ""}`}
+                                                            >
+                                                                &nbsp;
+                                                            </span>
                                                             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                                                            <span className={`increase ${!_isUndefined(item?.indentation) && item.indentation <= this.getPreviousItemIndentation(index) ? 'show' : 'hide' }`} role="img" onMouseUp={() => { this.increaseIndentation(index) }} aria-label="increase indentation">&nbsp;</span>
+                                                            <span
+                                                                className={`increase ${canIncreaseIndentation ? 'show' : 'hide' }`}
+                                                                role="img" onMouseUp={() => { this.increaseIndentation(index) }}
+                                                                aria-label={`increase indentation ${!canIncreaseIndentation ? "(disabled)" : ""}`}
+                                                            >
+                                                                &nbsp;
+                                                            </span>
                                                         </div>
                                                     </pre>
                                                 </div>
