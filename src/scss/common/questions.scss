@@ -200,8 +200,7 @@ button {
             cursor: pointer;
 
             &.show:hover {
-              // Assuming this is only ever going to be used on CS
-              background-color: $cs-mustard !important;
+              background-color: $primary !important;
             }
 
             &.hide {
