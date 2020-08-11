@@ -950,8 +950,8 @@ export const mainContentId = (state: MainContentIdState = null, action: Action) 
     }
 };
 
-type AnonymiseUsersState = boolean;
-export const anonymiseUsers = (state: AnonymiseUsersState = false, action: Action) => {
+type AnonymiseUsersState = boolean | null;
+export const anonymiseUsers = (state: AnonymiseUsersState = null, action: Action) => {
     switch(action.type) {
         case ACTION_TYPE.ANONYMISE_USERS_SET:
             return action.enabled;
