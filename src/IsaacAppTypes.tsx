@@ -414,6 +414,8 @@ export type Action =
     | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
 
     | {type: ACTION_TYPE.SET_MAIN_CONTENT_ID; id: string}
+
+    | {type: ACTION_TYPE.ANONYMISE_USERS_SET, enabled: boolean}
 ;
 
 export type NOT_FOUND_TYPE = 404;

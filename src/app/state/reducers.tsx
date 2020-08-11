@@ -950,6 +950,16 @@ export const mainContentId = (state: MainContentIdState = null, action: Action) 
     }
 };
 
+type AnonymiseUsersState = boolean;
+export const anonymiseUsers = (state: AnonymiseUsersState = false, action: Action) => {
+    switch(action.type) {
+        case ACTION_TYPE.ANONYMISE_USERS_SET:
+            return action.enabled;
+        default:
+            return state;
+    }
+}
+
 
 const appReducer = combineReducers({
     adminUserGet,
@@ -1002,6 +1012,7 @@ const appReducer = combineReducers({
     fasttrackConcepts,
     graphSketcherSpec,
     mainContentId,
+    anonymiseUsers
 });
 
 export type AppState = undefined | {
@@ -1056,6 +1067,7 @@ export type AppState = undefined | {
     fasttrackConcepts: FasttrackConceptsState;
     graphSketcherSpec: GraphSpecState;
     mainContentId: MainContentIdState;
+    anonymiseUsers: AnonymiseUsersState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

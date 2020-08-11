@@ -113,6 +113,16 @@ export const selectors = {
 
     mainContentId: {
         orDefault: (state: AppState) => state?.mainContentId || "main",
+    },
+
+    admin: {
+        anonymiseUsers: (state: AppState) => state?.anonymiseUsers || false,
+        userSearch: (state: AppState) => state?.adminUserSearch?.map(user => state.anonymiseUsers ? {
+            ...user,
+            familyName: "Family name",
+            givenName: "Given name",
+            email: "email@email.com"
+            } : user) || null
     }
 };
 

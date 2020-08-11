@@ -10,7 +10,8 @@ import {
     EventStatusFilter,
     EventTypeFilter,
     EXAM_BOARD,
-    MEMBERSHIP_STATUS, NO_CONTENT,
+    MEMBERSHIP_STATUS,
+    NO_CONTENT,
     NOT_FOUND,
     TAG_ID
 } from "../services/constants";
@@ -41,6 +42,7 @@ import {
     EmailVerificationStatus,
     GameboardDTO,
     GlossaryTermDTO,
+    GraphChoiceDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
     RegisteredUserDTO,
@@ -48,8 +50,7 @@ import {
     TestCaseDTO,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO,
-    GraphChoiceDTO
+    UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
@@ -1858,6 +1859,10 @@ export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upp
 
 // Main anchor
 export const setMainContentId = (id: string) => ({type: ACTION_TYPE.SET_MAIN_CONTENT_ID, id});
+
+export const setAnonymiseUsers = (enabled: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ANONYMISE_USERS_SET, enabled})
+}
 
 // SERVICE ACTIONS (w/o dispatch)
 export const changePage = (path: string) => {

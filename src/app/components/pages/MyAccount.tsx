@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {connect} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import classnames from "classnames";
 import {
     Card,
@@ -17,7 +17,13 @@ import {
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AdminUserGetState, AppState, ErrorState} from "../../state/reducers";
-import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
+import {
+    adminUserGet,
+    getChosenUserAuthSettings,
+    resetPassword,
+    setAnonymiseUsers,
+    updateCurrentUser
+} from "../../state/actions";
 import {
     LoggedInUser,
     SubjectInterests,
@@ -46,6 +52,8 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
+import {UserAdminPreferences} from "../elements/panels/UserAdminFeatures";
+import {selectors} from "../../state/selectors";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -92,6 +100,7 @@ interface AccountPageProps {
 }
 
 const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, userToEdit}: AccountPageProps) => {
+    const dispatch = useDispatch();
     useEffect(() => {
         if (userOfInterest) {
             adminUserGet(Number(userOfInterest));
@@ -128,6 +137,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     // - User preferences
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
+
+    // - Admin features
+    const [anonymiseUsersChecked, setAnonymiseUsersChecked] = useState<boolean>(useSelector(selectors.admin.anonymiseUsers))
 
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
 
@@ -174,6 +186,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                 return; // early exit
             }
         }
+
+        dispatch(setAnonymiseUsers(anonymiseUsersChecked));
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
@@ -238,6 +252,17 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                             </NavLink>
                         </NavItem>
                         }
+                        {!editingOtherUser && isStaff(user) &&
+                        <NavItem>
+                            <NavLink
+                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.adminfeatures})} tabIndex={0}
+                                onClick={() => setActiveTab(ACCOUNT_TAB.adminfeatures)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.adminfeatures))}
+                            >
+                                <span className="d-none d-lg-block">Admin features</span>
+                                <span className="d-block d-lg-none">Admin</span>
+                            </NavLink>
+                        </NavItem>
+                        }
                     </Nav>
 
                     <Form name="my-account" onSubmit={updateAccount}>
@@ -279,6 +304,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <UserEmailPreference
                                     emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                                     submissionAttempted={attemptedAccountUpdate}
+                                />
+                            </TabPane>}
+
+                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.adminfeatures}>
+                                <UserAdminPreferences
+                                    anonymiseUsersChecked={anonymiseUsersChecked} setAnonymiseUsersChecked={setAnonymiseUsersChecked}
                                 />
                             </TabPane>}
 
