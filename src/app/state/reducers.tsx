@@ -208,6 +208,8 @@ export const activeAuthorisations = (activeAuthorisations: ActiveAuthorisationsS
     switch (action.type) {
         case ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS:
             return [...action.authorisations];
+        case  ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_RESPONSE_SUCCESS:
+            return [...action.authorisations];
         default:
             return activeAuthorisations;
     }

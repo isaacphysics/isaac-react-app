@@ -1163,6 +1163,17 @@ export const adminUserDelete = (userid: number | undefined) => async (dispatch: 
     }
 };
 
+export const adminUserAuthorisations = (userid: number) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+    try {
+        dispatch({type: ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_REQUEST});
+        const response = await api.admin.getAuthorisations(userid);
+        dispatch({type: ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_RESPONSE_SUCCESS, authorisations: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get user authorisations", e));
+    }
+};
+
 export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST});
     try {
