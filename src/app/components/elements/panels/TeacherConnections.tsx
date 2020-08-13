@@ -4,6 +4,7 @@ import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {
     adminUserAuthorisations,
+    adminUserStudentAuthorisations,
     authenticateWithTokenAfterPrompt,
     changeMyMembershipStatus,
     getActiveAuthorisations,
@@ -34,8 +35,8 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
     useEffect(() => {
         dispatch(editingOtherUser && userToEdit?.id ? adminUserAuthorisations(userToEdit.id) : getActiveAuthorisations());
+        dispatch(editingOtherUser && userToEdit?.id ? adminUserStudentAuthorisations(userToEdit.id) : getStudentAuthorisations());
         dispatch(getMyGroupMemberships());
-        dispatch(getStudentAuthorisations());
     }, [dispatch, editingOtherUser, userToEdit?.id]);
 
     useEffect(() => {
@@ -116,66 +117,65 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 </RS.Col>
             </RS.Row>
 
-            {!editingOtherUser &&
-            <div>
-                {user.loggedIn && user.role !== "STUDENT" && <React.Fragment>
-                    <hr className="my-5" />
-                    <RS.Row>
-                        <RS.Col lg={7}>
-                            <h3>
-                                <span>Your student connections<span id="student-connections-title" className="icon-help" /></span>
-                                <RS.UncontrolledTooltip placement="bottom" target="student-connections-title">
-                                    These are the students who have shared their Isaac data with you.
-                                    These students are also able to view your name and email address on their Teacher connections page.
-                                </RS.UncontrolledTooltip>
-                            </h3>
-                            <p>
-                                You can invite students to share their Isaac data with you through the {" "}
-                                <Link to="/groups">group management page</Link>.
-                            </p>
-                        </RS.Col>
-                        <RS.Col lg={5}>
-                            <div className="connect-list">
-                                <h3><span className="icon-person-active" /> Student connections </h3>
+            {user.loggedIn && user.role !== "STUDENT" && <React.Fragment>
+                <hr className="my-5" />
+                <RS.Row>
+                    <RS.Col lg={7}>
+                        <h3>
+                            <span>Your student connections<span id="student-connections-title" className="icon-help" /></span>
+                            <RS.UncontrolledTooltip placement="bottom" target="student-connections-title">
+                                These are the students who have shared their Isaac data with you.
+                                These students are also able to view your name and email address on their Teacher connections page.
+                            </RS.UncontrolledTooltip>
+                        </h3>
+                        <p>
+                            You can invite students to share their Isaac data with you through the {" "}
+                            <Link to="/groups">group management page</Link>.
+                        </p>
+                    </RS.Col>
+                    <RS.Col lg={5}>
+                        <div className="connect-list">
+                            <h3><span className="icon-person-active" /> Student connections </h3>
 
-                                <div className="connect-list-inner">
-                                    <ul className="teachers-connected list-unstyled">
-                                        {studentAuthorisations && studentAuthorisations.map(student => (
-                                            <li key={student.id}>
-                                                <span className="icon-person-active" />
-                                                <span id={`student-authorisation-${student.id}`}>
-                                                    {student.givenName} {student.familyName}
-                                                </span>
-                                                <RS.UncontrolledTooltip
-                                                    placement="bottom" target={`student-authorisation-${student.id}`}
-                                                >
-                                                    You have access to this user&apos;s data and they can see your name and email address.
-                                                    To remove this access, click &apos;Remove&apos;.
-                                                </RS.UncontrolledTooltip>
-                                                <RS.Button
-                                                    color="link" className="revoke-teacher"
-                                                    onClick={() => dispatch(releaseAuthorisationAfterPrompt(student))}
-                                                >
-                                                    Remove
-                                                </RS.Button>
-                                            </li>
-                                        ))}
-                                    </ul>
+                            <div className="connect-list-inner">
+                                <ul className="teachers-connected list-unstyled">
+                                    {studentAuthorisations && studentAuthorisations.map(student => (
+                                        <li key={student.id}>
+                                            <span className="icon-person-active" />
+                                            <span id={`student-authorisation-${student.id}`}>
+                                                {student.givenName} {student.familyName}
+                                            </span>
+                                            <RS.UncontrolledTooltip
+                                                placement="bottom" target={`student-authorisation-${student.id}`}
+                                            >
+                                                You have access to this user&apos;s data and they can see your name and email address.
+                                                To remove this access, click &apos;Remove&apos;.
+                                            </RS.UncontrolledTooltip>
+                                            <RS.Button
+                                                color="link" className="revoke-teacher" disabled={editingOtherUser}
+                                                onClick={() => dispatch(releaseAuthorisationAfterPrompt(student))}
+                                            >
+                                                Remove
+                                            </RS.Button>
+                                        </li>
+                                    ))}
+                                </ul>
 
-                                    {studentAuthorisations && studentAuthorisations.length === 0 && <p className="teachers-connected">
-                                        You have no active student connections.
-                                    </p>}
-                                </div>
-                                {studentAuthorisations && studentAuthorisations.length > 0 && <p className="remove-link">
-                                    <RS.Button color="link" onClick={() => dispatch(releaseAllAuthorisationsAfterPrompt())}>
-                                        Remove all
-                                    </RS.Button>
+                                {studentAuthorisations && studentAuthorisations.length === 0 && <p className="teachers-connected">
+                                    You have no active student connections.
                                 </p>}
                             </div>
-                        </RS.Col>
-                    </RS.Row>
-                </React.Fragment>}
-
+                            {studentAuthorisations && studentAuthorisations.length > 0 && <p className="remove-link">
+                                <RS.Button color="link" onClick={() => dispatch(releaseAllAuthorisationsAfterPrompt())} disabled={editingOtherUser}>
+                                    Remove all
+                                </RS.Button>
+                            </p>}
+                        </div>
+                    </RS.Col>
+                </RS.Row>
+            </React.Fragment>}
+            {!editingOtherUser &&
+            <div>
                 <hr className="my-5" />
 
                 <RS.Row>

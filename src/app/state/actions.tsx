@@ -1174,6 +1174,17 @@ export const adminUserAuthorisations = (userid: number) => async (dispatch: Disp
     }
 };
 
+export const adminUserStudentAuthorisations = (userid: number) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+    try {
+        dispatch({type: ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_OTHER_USERS_REQUEST});
+        const response = await api.admin.getStudentAuthorisations(userid);
+        dispatch({type: ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS, otherUserAuthorisations: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_OTHER_USERS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get student authorisations", e));
+    }
+};
+
 export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST});
     try {

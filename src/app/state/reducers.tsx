@@ -220,6 +220,8 @@ export const otherUserAuthorisations = (otherUserAuthorisations: OtherUserAuthor
     switch (action.type) {
         case ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS:
             return [...action.otherUserAuthorisations];
+        case ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS:
+            return [...action.otherUserAuthorisations];
         default:
             return otherUserAuthorisations;
     }

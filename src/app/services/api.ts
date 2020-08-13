@@ -176,6 +176,9 @@ export const api = {
         getAuthorisations: (userid: number): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
             return endpoint.get(`/admin/authorisations/${userid}`);
         },
+        getStudentAuthorisations: (userid: number): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
+            return endpoint.get(`/admin/authorisations/other_users/${userid}`);
+        },
         modifyUserRoles: {
             post: (role: ApiTypes.Role, userIds: number[]) => {
                 return endpoint.post(`/admin/users/change_role/${role}`, userIds);
