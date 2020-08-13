@@ -7,7 +7,6 @@ import Select from "react-select";
 import {ValueType} from "react-select/src/types";
 import {doughnutColours, specificDoughnutColours, TAG_ID} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import styles from "../../../../scss/phy/variables-export.module.scss";
 
 interface QuestionProgressChartsProps {
     subId: string;

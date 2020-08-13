@@ -77,26 +77,10 @@ module.exports = (isProd) => {
                         },
                         {
                             test: /\.scss$/,
-                            exclude: /\.module\.scss$/,
                             use: [
                                 'style-loader',
                                 isProd ? MiniCssExtractPlugin.loader : null,
                                 'css-loader',
-                                'sass-loader',
-                            ].filter(Boolean),
-                        },
-                        {
-                            test: /\.module\.scss$/,
-                            use: [
-                                'style-loader',
-                                isProd ? MiniCssExtractPlugin.loader : null,
-                                {
-                                    loader: 'css-loader',
-                                    options: {
-                                        modules: true,
-                                        importLoaders: 1
-                                    }
-                                },
                                 'sass-loader',
                             ].filter(Boolean),
                         },
