@@ -1231,6 +1231,18 @@ export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids:
     }
 };
 
+export const mergeUsers = (targetId: number, sourceId: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_REQUEST});
+    try {
+        await api.admin.mergeUsers(targetId, sourceId);
+        dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_RESPONSE_SUCCESS});
+        dispatch(showToast({color: "success", title: "Users merged", body: `User with id: ${sourceId} was merged into user with id: ${targetId}`, timeout: 3000}) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Merging users failed", e));
+    }
+};
+
 // Groups
 export const loadGroups = (archivedGroupsOnly: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_REQUEST});
