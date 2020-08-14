@@ -645,12 +645,13 @@ export interface AdditionalInformation {
     experienceLevel?: string;
 }
 
-export interface Credentials {
+export interface CredentialsAuthDTO {
     email: string;
     password: string;
+    rememberMe: boolean;
 }
 
-export interface PaddedCredentials extends Credentials {
+export interface PaddedCredentialsAuthDTO extends CredentialsAuthDTO {
     _randomPadding: string;
 }
 

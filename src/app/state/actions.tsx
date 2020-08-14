@@ -24,7 +24,7 @@ import {
     AppGroupMembership,
     ATTENDANCE,
     BoardOrder,
-    Credentials,
+    CredentialsAuthDTO,
     EmailUserRoles,
     FreeTextRule,
     LoggedInUser,
@@ -225,11 +225,11 @@ export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: strin
     }
 };
 
-export const submitTotpChallengeResponse = (mfaVerificationCode: string) => async (dispatch: Dispatch<Action>) => {
+export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
     try {
         const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode);
+        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
 
         await dispatch(requestCurrentUser() as any); // Request user preferences
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
@@ -375,7 +375,7 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const logInUser = (provider: AuthenticationProvider, credentials: Credentials) => async (dispatch: Dispatch<Action>) => {
+export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
 

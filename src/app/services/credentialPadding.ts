@@ -1,4 +1,4 @@
-import {PaddedCredentials} from "../../IsaacAppTypes";
+import {CredentialsAuthDTO, PaddedCredentialsAuthDTO} from "../../IsaacAppTypes";
 
 export function utf8ByteLength(str: string) {
     // https://stackoverflow.com/a/23329386
@@ -22,8 +22,8 @@ function generatePadding(paddingLength: number) {
     return Array(paddingLength).fill(0).map(() => Math.random().toString(36).charAt(2)).join('');
 }
 
-export function securePadCredentials(credentials: {email: string; password: string}) {
-    let paddedCredentials: PaddedCredentials = Object.assign({_randomPadding: ""}, credentials);
+export function securePadCredentials(credentials: CredentialsAuthDTO) {
+    let paddedCredentials: PaddedCredentialsAuthDTO = Object.assign({_randomPadding: ""}, credentials);
     let requestBodyByteLength = utf8ByteLength(JSON.stringify(paddedCredentials));
     let paddingLength = paddingLengthRequired(requestBodyByteLength);
     paddedCredentials._randomPadding = generatePadding(paddingLength);
