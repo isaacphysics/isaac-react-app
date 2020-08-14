@@ -538,10 +538,10 @@ export const submitMessage = (params: {firstName: string; lastName: string; emai
 };
 
 // Teacher connections
-export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+export const getActiveAuthorisations = (userId: number) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST});
-        const authorisationsResponse = await api.authorisations.get();
+        const authorisationsResponse = await api.authorisations.get(userId);
         dispatch({
             type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS,
             authorisations: authorisationsResponse.data
@@ -552,7 +552,7 @@ export const getActiveAuthorisations = () => async (dispatch: Dispatch<Action>) 
     }
 };
 
-export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
+export const authenticateWithTokenAfterPrompt = (userId: number, userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
     if (!userSubmittedAuthenticationToken) {
         dispatch(showToast({
             color: "danger", title: "No group code provided", body: "You have to enter a group code!"}) as any);
@@ -576,7 +576,7 @@ export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToke
         // const usersAlreadyAuthorised = (state && state.activeAuthorisations && state.activeAuthorisations
         //     .filter((currentAuthorisation) => (toGrantIds as number[]).includes(currentAuthorisation.id as number)));
 
-        dispatch(openActiveModal(tokenVerificationModal(authenticationToken, usersToGrantAccess)) as any);
+        dispatch(openActiveModal(tokenVerificationModal(userId, authenticationToken, usersToGrantAccess)) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_FAILURE});
         if (e.status == 429) {
@@ -592,13 +592,13 @@ export const authenticateWithTokenAfterPrompt = (userSubmittedAuthenticationToke
         }
     }
 };
-export const authenticateWithToken = (authToken: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+export const authenticateWithToken = (userId: number, authToken: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_REQUEST});
         await api.authorisations.useToken(authToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS});
-        dispatch(getActiveAuthorisations() as any);
-        dispatch(getMyGroupMemberships() as any);
+        dispatch(getActiveAuthorisations(userId) as any);
+        dispatch(getGroupMemberships(userId) as any);
         dispatch(showToast({
             color: "success", title: "Granted access", timeout: 5000,
             body: "You have granted access to your data."
@@ -626,10 +626,10 @@ export const openALevelBookChoiceModal = () => async (dispatch: Dispatch<Action>
 export const openIsaacBooksModal = () => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(isaacBooksModal()) as any);
 };
-export const revokeAuthorisationAfterPrompt = (user: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(revocationConfirmationModal(user)) as any);
+export const revokeAuthorisationAfterPrompt = (userId: number, otherUser: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(revocationConfirmationModal(userId, otherUser)) as any);
 };
-export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
+export const revokeAuthorisation = (userId: number, userToRevoke: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_REQUEST});
         await api.authorisations.revoke(userToRevoke.id as number);
@@ -638,7 +638,7 @@ export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO
             color: "success", title: "Access revoked", timeout: 5000,
             body: "You have revoked access to your data."
         }) as any);
-        dispatch(getActiveAuthorisations() as any);
+        dispatch(getActiveAuthorisations(userId) as any);
         dispatch(closeActiveModal() as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_FAILURE});
@@ -647,10 +647,10 @@ export const revokeAuthorisation = (userToRevoke: UserSummaryWithEmailAddressDTO
 };
 
 // Student/other Connections
-export const getStudentAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+export const getStudentAuthorisations = (userId: number) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_REQUEST});
-        const otherUserAuthorisationsResponse = await api.authorisations.getOtherUsers();
+        const otherUserAuthorisationsResponse = await api.authorisations.getOtherUsers(userId);
         dispatch({
             type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS,
             otherUserAuthorisations: otherUserAuthorisationsResponse.data
@@ -661,15 +661,15 @@ export const getStudentAuthorisations = () => async (dispatch: Dispatch<Action>)
     }
 };
 
-export const releaseAuthorisationAfterPrompt = (student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(releaseConfirmationModal(student)) as any);
+export const releaseAuthorisationAfterPrompt = (userId: number, student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(releaseConfirmationModal(userId, student)) as any);
 };
-export const releaseAuthorisation = (student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
+export const releaseAuthorisation = (userId: number, student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_REQUEST});
         await api.authorisations.release(student.id as number);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_SUCCESS});
-        dispatch(getStudentAuthorisations() as any);
+        dispatch(getStudentAuthorisations(userId) as any);
         dispatch(closeActiveModal() as any);
         dispatch(showToast({
             color: "success", title: "Access removed", timeout: 5000,
@@ -681,15 +681,15 @@ export const releaseAuthorisation = (student: UserSummaryDTO) => async (dispatch
     }
 };
 
-export const releaseAllAuthorisationsAfterPrompt = () => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(releaseAllConfirmationModal()) as any);
+export const releaseAllAuthorisationsAfterPrompt = (userId: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(releaseAllConfirmationModal(userId)) as any);
 };
-export const releaseAllAuthorisations = () => async (dispatch: Dispatch<Action>) => {
+export const releaseAllAuthorisations = (userId: number) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_REQUEST});
         await api.authorisations.releaseAll();
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_SUCCESS});
-        dispatch(getStudentAuthorisations() as any);
+        dispatch(getStudentAuthorisations(userId) as any);
         dispatch(closeActiveModal() as any);
         dispatch(showToast({
             color: "success", title: "Access removed", timeout: 5000,
@@ -1163,28 +1163,6 @@ export const adminUserDelete = (userid: number | undefined) => async (dispatch: 
     }
 };
 
-export const adminUserAuthorisations = (userid: number) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
-    try {
-        dispatch({type: ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_REQUEST});
-        const response = await api.admin.getAuthorisations(userid);
-        dispatch({type: ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_RESPONSE_SUCCESS, authorisations: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Failed to get user authorisations", e));
-    }
-};
-
-export const adminUserStudentAuthorisations = (userid: number) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
-    try {
-        dispatch({type: ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_OTHER_USERS_REQUEST});
-        const response = await api.admin.getStudentAuthorisations(userid);
-        dispatch({type: ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS, otherUserAuthorisations: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_USER_AUTHORISATIONS_OTHER_USERS_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Failed to get student authorisations", e));
-    }
-};
-
 export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST});
     try {
@@ -1392,10 +1370,10 @@ export const showGroupManagersModal = () => async (dispatch: Dispatch<Action>, g
     dispatch(openActiveModal(groupManagersModal(userIsOwner)) as any);
 };
 
-export const getMyGroupMemberships = () => async (dispatch: Dispatch<Action>) => {
+export const getGroupMemberships = (userId: number) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST});
-        const groupMembershipsResponse = await api.groups.getMyMemberships();
+        const groupMembershipsResponse = await api.groups.getMemberships(userId);
         dispatch({
             type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS,
             groupMemberships: groupMembershipsResponse.data

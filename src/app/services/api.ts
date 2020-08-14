@@ -173,12 +173,6 @@ export const api = {
                 return endpoint.delete(`/admin/users/${userid}`);
             }
         },
-        getAuthorisations: (userid: number): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get(`/admin/authorisations/${userid}`);
-        },
-        getStudentAuthorisations: (userid: number): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
-            return endpoint.get(`/admin/authorisations/other_users/${userid}`);
-        },
         modifyUserRoles: {
             post: (role: ApiTypes.Role, userIds: number[]) => {
                 return endpoint.post(`/admin/users/change_role/${role}`, userIds);
@@ -197,11 +191,11 @@ export const api = {
         }
     },
     authorisations: {
-        get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get(`authorisations`);
+        get: (userId: number): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
+            return endpoint.get(`authorisations/${userId}`);
         },
-        getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
-            return endpoint.get(`/authorisations/other_users`);
+        getOtherUsers: (userId: number): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
+            return endpoint.get(`/authorisations/other_users/${userId}`);
         },
         getToken: (groupId: number): AxiosPromise<AppTypes.AppGroupTokenDTO> => {
             return endpoint.get(`/authorisations/token/${groupId}`);
@@ -360,8 +354,8 @@ export const api = {
         update: (updatedGroup: AppTypes.AppGroup): AxiosPromise => {
             return endpoint.post(`/groups/${updatedGroup.id}`, {...updatedGroup, members: undefined});
         },
-        getMyMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
-            return endpoint.get(`/groups/membership`);
+        getMemberships: (userId: number): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get(`/groups/membership/${userId}`);
         },
         changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => {
             return endpoint.post(`/groups/membership/${groupId}/${newStatus}`);

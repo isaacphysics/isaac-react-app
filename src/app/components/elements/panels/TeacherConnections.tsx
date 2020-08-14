@@ -3,12 +3,10 @@ import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {
-    adminUserAuthorisations,
-    adminUserStudentAuthorisations,
     authenticateWithTokenAfterPrompt,
     changeMyMembershipStatus,
     getActiveAuthorisations,
-    getMyGroupMemberships,
+    getGroupMemberships,
     getStudentAuthorisations,
     releaseAllAuthorisationsAfterPrompt,
     releaseAuthorisationAfterPrompt,
@@ -34,14 +32,16 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     const groupMemberships = useSelector((state: AppState) => state?.groupMemberships || null);
 
     useEffect(() => {
-        dispatch(editingOtherUser && userToEdit?.id ? adminUserAuthorisations(userToEdit.id) : getActiveAuthorisations());
-        dispatch(editingOtherUser && userToEdit?.id ? adminUserStudentAuthorisations(userToEdit.id) : getStudentAuthorisations());
-        dispatch(getMyGroupMemberships());
+        if (user.loggedIn && user.id) {
+            dispatch(getActiveAuthorisations(editingOtherUser && userToEdit?.id ? userToEdit.id : user.id));
+            dispatch(getStudentAuthorisations(editingOtherUser && userToEdit?.id ? userToEdit.id : user.id));
+            dispatch(getGroupMemberships(editingOtherUser && userToEdit?.id ? userToEdit.id : user.id));
+        }
     }, [dispatch, editingOtherUser, userToEdit?.id]);
 
     useEffect(() => {
-        if (authToken) {
-            dispatch(authenticateWithTokenAfterPrompt(authToken));
+        if (authToken && user.loggedIn && user.id) {
+            dispatch(authenticateWithTokenAfterPrompt(user.id, authToken));
         }
     }, [dispatch, authToken]);
 
@@ -49,7 +49,9 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
     function processToken(event: React.FormEvent<HTMLFormElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
-        dispatch(authenticateWithTokenAfterPrompt(authenticationToken));
+        if (user.loggedIn && user.id) {
+            dispatch(authenticateWithTokenAfterPrompt(user.id, authenticationToken));
+        }
     }
 
     return <RS.CardBody>
@@ -101,7 +103,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                             <RS.Button
                                                 color="link" className="revoke-teacher"
                                                 disabled={editingOtherUser}
-                                                onClick={() => dispatch(revokeAuthorisationAfterPrompt(teacherAuthorisation))}
+                                                onClick={() => user.loggedIn && user.id && dispatch(revokeAuthorisationAfterPrompt(user.id, teacherAuthorisation))}
                                             >
                                                 Revoke
                                             </RS.Button>
@@ -153,7 +155,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                             </RS.UncontrolledTooltip>
                                             <RS.Button
                                                 color="link" className="revoke-teacher" disabled={editingOtherUser}
-                                                onClick={() => dispatch(releaseAuthorisationAfterPrompt(student))}
+                                                onClick={() => user.loggedIn && user.id && dispatch(releaseAuthorisationAfterPrompt(user.id, student))}
                                             >
                                                 Remove
                                             </RS.Button>
@@ -166,7 +168,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                 </p>}
                             </div>
                             {studentAuthorisations && studentAuthorisations.length > 0 && <p className="remove-link">
-                                <RS.Button color="link" onClick={() => dispatch(releaseAllAuthorisationsAfterPrompt())} disabled={editingOtherUser}>
+                                <RS.Button color="link" onClick={() => user.loggedIn && user.id && dispatch(releaseAllAuthorisationsAfterPrompt(user.id))} disabled={editingOtherUser}>
                                     Remove all
                                 </RS.Button>
                             </p>}
@@ -174,88 +176,85 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     </RS.Col>
                 </RS.Row>
             </React.Fragment>}
-            {!editingOtherUser &&
-            <div>
-                <hr className="my-5" />
+            <hr className="my-5" />
 
-                <RS.Row>
-                    <RS.Col>
-                        <h3>
-                            <span>
-                                Your group memberships
-                                <span id="group-memberships-title" className="icon-help" />
-                            </span>
-                            <RS.UncontrolledTooltip placement="bottom" target="group-memberships-title">
-                                These are the groups you are currently a member of.
-                                Groups on Isaac let teachers set assignments to multiple students in one go.
-                            </RS.UncontrolledTooltip>
-                        </h3>
-                        <p>
-                            You can manage who is able to set you assignments by temporarily leaving a group. While you are
-                            inactive in a group you won&apos;t receive any assignments from that group. If you want to
-                            permanently leave a group, ask your teacher to remove you.
-                        </p>
-                        <div className="my-groups-table-section overflow-auto">
-                            <RS.Table borderless>
-                                <thead>
-                                    <tr>
-                                        <th className="align-middle">Group name</th>
-                                        <th className="align-middle">Teachers</th>
-                                        <th className="align-middle">Membership status</th>
-                                        <th className="align-middle">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {groupMemberships && groupMemberships.map((membership) => (<tr key={membership.group.id}>
-                                        <td>
-                                            {membership.group.groupName || "Group " + membership.group.id}
-                                        </td>
-                                        <td>
-                                            {membership.group.ownerSummary && <ul className="list-unstyled">
-                                                <li>{extractTeacherName(membership.group.ownerSummary)}</li>
-                                                {membership.group.additionalManagers && membership.group.additionalManagers.map(manager => (
-                                                    <li key={manager.id}>{extractTeacherName(manager)}</li>
-                                                ))}
-                                            </ul>}
-                                        </td>
-                                        <td className={classnames({danger: membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE})}>
-                                            {membership.membershipStatus}
-                                        </td>
-                                        <td>
-                                            {membership.membershipStatus == MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
-                                                <RS.Button color="link" onClick={() =>
-                                                    dispatch(changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.INACTIVE))
-                                                }>
-                                                    Leave group
-                                                </RS.Button>
-                                                <span id="leave-group-action" className="icon-help" />
-                                                <RS.UncontrolledTooltip placement="bottom" target="leave-group-action">
-                                                    If you leave a group you will no longer receive notifications of new assignments.
-                                                </RS.UncontrolledTooltip>
-                                            </React.Fragment>}
+            <RS.Row>
+                <RS.Col>
+                    <h3>
+                        <span>
+                            Your group memberships
+                            <span id="group-memberships-title" className="icon-help" />
+                        </span>
+                        <RS.UncontrolledTooltip placement="bottom" target="group-memberships-title">
+                            These are the groups you are currently a member of.
+                            Groups on Isaac let teachers set assignments to multiple students in one go.
+                        </RS.UncontrolledTooltip>
+                    </h3>
+                    <p>
+                        You can manage who is able to set you assignments by temporarily leaving a group. While you are
+                        inactive in a group you won&apos;t receive any assignments from that group. If you want to
+                        permanently leave a group, ask your teacher to remove you.
+                    </p>
+                    <div className="my-groups-table-section overflow-auto">
+                        <RS.Table borderless>
+                            <thead>
+                                <tr>
+                                    <th className="align-middle">Group name</th>
+                                    <th className="align-middle">Teachers</th>
+                                    <th className="align-middle">Membership status</th>
+                                    <th className="align-middle">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {groupMemberships && groupMemberships.map((membership) => (<tr key={membership.group.id}>
+                                    <td>
+                                        {membership.group.groupName || "Group " + membership.group.id}
+                                    </td>
+                                    <td>
+                                        {membership.group.ownerSummary && <ul className="list-unstyled">
+                                            <li>{extractTeacherName(membership.group.ownerSummary)}</li>
+                                            {membership.group.additionalManagers && membership.group.additionalManagers.map(manager => (
+                                                <li key={manager.id}>{extractTeacherName(manager)}</li>
+                                            ))}
+                                        </ul>}
+                                    </td>
+                                    <td className={classnames({danger: membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE})}>
+                                        {membership.membershipStatus}
+                                    </td>
+                                    <td>
+                                        {membership.membershipStatus == MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
+                                            <RS.Button color="link" disabled={editingOtherUser} onClick={() =>
+                                                dispatch(changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.INACTIVE))
+                                            }>
+                                                Leave group
+                                            </RS.Button>
+                                            <span id="leave-group-action" className="icon-help" />
+                                            <RS.UncontrolledTooltip placement="bottom" target="leave-group-action">
+                                                If you leave a group you will no longer receive notifications of new assignments.
+                                            </RS.UncontrolledTooltip>
+                                        </React.Fragment>}
 
-                                            {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE && <React.Fragment>
-                                                <RS.Button color="link" onClick={() =>
-                                                    dispatch(changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.ACTIVE))
-                                                }>
-                                                    Rejoin group
-                                                </RS.Button>
-                                                <span id="rejoin-group-action" className="icon-help" />
-                                                <RS.UncontrolledTooltip placement="bottom" target="rejoin-group-action">
-                                                    If you rejoin a group you will see all the assignments set since the group was created.
-                                                </RS.UncontrolledTooltip>
-                                            </React.Fragment>}
-                                        </td>
-                                    </tr>))}
-                                </tbody>
-                            </RS.Table>
-                        </div>
-                        {groupMemberships && groupMemberships.length === 0 && <p className="teachers-connected text-center">
-                            You are not a member of any groups.
-                        </p>}
-                    </RS.Col>
-                </RS.Row>
-            </div>}
+                                        {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE && <React.Fragment>
+                                            <RS.Button color="link" disabled={editingOtherUser} onClick={() =>
+                                                dispatch(changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.ACTIVE))
+                                            }>
+                                                Rejoin group
+                                            </RS.Button>
+                                            <span id="rejoin-group-action" className="icon-help" />
+                                            <RS.UncontrolledTooltip placement="bottom" target="rejoin-group-action">
+                                                If you rejoin a group you will see all the assignments set since the group was created.
+                                            </RS.UncontrolledTooltip>
+                                        </React.Fragment>}
+                                    </td>
+                                </tr>))}
+                            </tbody>
+                        </RS.Table>
+                    </div>
+                    {groupMemberships && groupMemberships.length === 0 && <p className="teachers-connected text-center">
+                        You are not a member of any groups.
+                    </p>}
+                </RS.Col>
+            </RS.Row>
         </RS.Container>
     </RS.CardBody>
 };

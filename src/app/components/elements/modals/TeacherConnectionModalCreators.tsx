@@ -10,8 +10,9 @@ import {
 import {store} from "../../../state/store";
 import * as RS from "reactstrap";
 import {extractTeacherName} from "../../../services/user";
+import {LoggedInUser} from "../../../../IsaacAppTypes";
 
-export const tokenVerificationModal = (authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
+export const tokenVerificationModal = (userId: number, authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         title: "Sharing your data",
@@ -52,14 +53,14 @@ export const tokenVerificationModal = (authToken: string, usersToGrantAccess: Us
             <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
                 Cancel
             </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(authenticateWithToken(authToken))}}>
+            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(authenticateWithToken(userId, authToken))}}>
                 Confirm
             </RS.Button>,
         ]
     }
 };
 
-export const revocationConfirmationModal = (userToRevoke: UserSummaryWithEmailAddressDTO) => {
+export const revocationConfirmationModal = (userId: number, userToRevoke: UserSummaryWithEmailAddressDTO) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         title: "Revoke access to your data",
@@ -76,20 +77,20 @@ export const revocationConfirmationModal = (userToRevoke: UserSummaryWithEmailAd
             <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
                 Cancel
             </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(revokeAuthorisation(userToRevoke))}}>
+            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(revokeAuthorisation(userId, userToRevoke))}}>
                 Confirm
             </RS.Button>,
         ]
     }
 };
 
-export const releaseConfirmationModal = (user: UserSummaryDTO) => {
+export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryDTO) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         title: "Remove access to students' data",
         body: <React.Fragment>
             <p>
-                Are you sure you want to end your access to <strong>{user.givenName} {user.familyName}</strong>
+                Are you sure you want to end your access to <strong>{otherUser.givenName} {otherUser.familyName}</strong>
                 &apos;s data?
                 <br />
                 You will need to ask them to grant access again in the future if you change your mind.
@@ -99,14 +100,14 @@ export const releaseConfirmationModal = (user: UserSummaryDTO) => {
             <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
                 Cancel
             </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(releaseAuthorisation(user))}}>
+            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(releaseAuthorisation(userId, otherUser))}}>
                 Confirm
             </RS.Button>,
         ]
     }
 };
 
-export const releaseAllConfirmationModal = () => {
+export const releaseAllConfirmationModal = (userId: number) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         title: "Remove access to all students' data",
@@ -121,7 +122,7 @@ export const releaseAllConfirmationModal = () => {
             <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
                 Cancel
             </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(releaseAllAuthorisations())}}>
+            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(releaseAllAuthorisations(userId))}}>
                 Confirm
             </RS.Button>,
         ]
