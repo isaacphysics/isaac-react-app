@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
-import {Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input, Label, Row} from "reactstrap";
+import {Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {useSelector} from "react-redux";
@@ -8,7 +8,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../../components/content/IsaacGlossaryTerm';
-import { GlossaryTermDTO } from "../../../IsaacApiTypes";
+import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {TempExamBoardPicker} from '../elements/inputs/TempExamBoardPicker';
 import _startCase from 'lodash/startCase';
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
