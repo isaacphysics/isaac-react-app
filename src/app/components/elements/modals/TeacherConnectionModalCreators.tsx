@@ -10,7 +10,6 @@ import {
 import {store} from "../../../state/store";
 import * as RS from "reactstrap";
 import {extractTeacherName} from "../../../services/user";
-import {LoggedInUser} from "../../../../IsaacAppTypes";
 
 export const tokenVerificationModal = (userId: number, authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
     return {
