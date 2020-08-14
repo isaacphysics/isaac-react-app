@@ -85,7 +85,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 chart.data.names();
                 // N.B. Of course, under the text size cache, is a more general cache, which also needs
                 // clearing, and is not exposed.
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any I'm not in the mood Typescript.
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (chart as any).internal.resetCache();
                 chart.flush();
             });

@@ -15,7 +15,6 @@ import {history} from "../../services/history";
 import {useCurrentExamBoard} from "../../services/examBoard";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
-// eslint-disable-next-line @typescript-eslint/camelcase
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
     let href = escapeHtml(tokens[idx].href || "");
     let localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:");

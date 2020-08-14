@@ -11,6 +11,7 @@ import {selectors} from "../../state/selectors";
 
 import _flattenDeep from 'lodash/flattenDeep';
 import {selectQuestionPart} from "../../services/questions";
+import {jsonHelper} from "../../services/json";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const pageQuestions = selectors.questions.getQuestions(state);
@@ -32,15 +33,11 @@ interface IsaacSymbolicChemistryQuestionProps {
 const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const initialEditorSymbols = useRef(JSON.parse(doc.formulaSeed || '[]'));
+    const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
-        try {
-            currentAttemptValue = JSON.parse(currentAttempt.value);
-        } catch(e) {
-            currentAttemptValue = { result: { tex: '\\textrm{PLACEHOLDER HERE}' } };
-        }
+        currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
 
     useEffect(() => {
@@ -48,7 +45,7 @@ const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQu
 
         initialEditorSymbols.current = _flattenDeep(currentAttemptValue.symbols);
     }, [currentAttempt, currentAttemptValue]);
-    
+
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);

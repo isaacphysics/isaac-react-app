@@ -20,6 +20,7 @@ import {EditContentButton} from "../elements/EditContentButton";
 import {selectors} from "../../state/selectors";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId: string}}}) => {
     const dispatch = useDispatch();
@@ -70,7 +71,7 @@ export const Quiz = withRouter(({match}: {match: {path: string; params: {quizId:
                 <EditContentButton doc={doc} />
 
                 <RS.Row>
-                    <RS.Col md={{size: 8, offset: 2}} className="py-4 question-panel">
+                    <RS.Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
                         <RS.Form onSubmit={submitQuiz}>
                             <WithFigureNumbering doc={doc}>
                                 <IsaacContent doc={doc} />

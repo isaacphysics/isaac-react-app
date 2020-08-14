@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React, {ChangeEvent, useLayoutEffect, useRef, useState} from "react";
 import {withRouter} from "react-router-dom";
-import {Col, Container, Input, Label, Row} from "reactstrap";
+import {Button, Col, Container, Input, InputGroup, InputGroupAddon, Label, Row, UncontrolledTooltip} from "reactstrap";
 import queryString from "query-string";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {InequalityModal} from "../elements/modals/InequalityModal";
@@ -8,16 +8,149 @@ import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RouteComponentProps} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import { Inequality, makeInequality } from 'inequality';
+import _flattenDeep from 'lodash/flattenDeep';
+import { sanitiseInequalityState } from '../../services/questions';
+import { parseExpression } from 'inequality-grammar';
 
 export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
     const queryParams = queryString.parse(location.search);
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [initialEditorSymbols, setInitialEditorSymbols] = useState([]);
-    const [currentAttempt, setCurrentAttempt] = useState<any>();
+    const initialEditorSymbols = useRef<string[]>([]);
+    const [currentAttempt, setCurrentAttempt] = useState<any>({type: 'formula', value: {}, pythonExpression: ''});
     const [editorSyntax, setEditorSyntax] = useState('logic');
+    const [textInput, setTextInput] = useState('');
+    const [errors, setErrors] = useState<string[]>();
     // Does this really need to be a state variable if it is immutable?
     const [editorMode, setEditorMode] = useState(queryParams.mode || { [SITE.PHY]: 'maths', [SITE.CS]: 'logic' }[SITE_SUBJECT]);
+
+    /*** Text based input stuff */
+    const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
+    const sketchRef = useRef<Inequality>();
+    const debounceTimer = useRef<number|null>(null);
+    const [inputState, setInputState] = useState(() => ({pythonExpression: '', userInput: '', valid: true}));
+
+    function isError(p: {error: string} | any[]): p is {error: string} {
+        return p.hasOwnProperty("error");
+    }
+
+    interface ChildrenMap {
+        children: {[key: string]: ChildrenMap};
+    }    
+
+    function countChildren(root: ChildrenMap) {
+        let q = [root];
+        let count = 1;
+        while (q.length > 0) {
+            let e = q.shift();
+            if (!e) continue;
+    
+            let c = Object.keys(e.children).length;
+            if (c > 0) {
+                count = count + c;
+                q = q.concat(Object.values(e.children));
+            }
+        }
+        return count;
+    }
+
+    function updateState(state: any) {
+        const newState = sanitiseInequalityState(state);
+        const pythonExpression = newState?.result?.python || "";
+        const previousPythonExpression = currentAttempt.value?.result?.python || "";
+        if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
+            setCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
+        }
+        initialEditorSymbols.current = state.symbols;
+    }
+
+    const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
+        const pycode = e.target.value;
+        setTextInput(pycode);
+        setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
+
+        // Parse that thing
+        if (debounceTimer.current) {
+            window.clearTimeout(debounceTimer.current);
+            debounceTimer.current = null;
+        }
+        debounceTimer.current = window.setTimeout(() => {
+            let parsedExpression = parseExpression(pycode);
+            let _errors = [];
+
+            if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
+                let openBracketsCount = pycode.split('(').length - 1;
+                let closeBracketsCount = pycode.split(')').length - 1;
+                let regexStr = "[^ (-)*-/0-9<->A-Z^-_a-z±²-³¼-¾×÷]+";
+                let badCharacters = new RegExp(regexStr);
+                setErrors([]);
+                
+                if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
+                    _errors.push('LaTeX syntax is not supported.');
+                }
+                if (/\|.+?\|/.test(pycode)) {
+                    _errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
+                }
+                if (badCharacters.test(pycode)) {
+                    const usedBadChars: string[] = [];
+                    for(let i = 0; i < pycode.length; i++) {
+                        const char = pycode.charAt(i);
+                        if (badCharacters.test(char)) {
+                            if (!usedBadChars.includes(char)) {
+                                usedBadChars.push(char);
+                            }
+                        }
+                    }
+                    _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+                }
+                if (openBracketsCount !== closeBracketsCount) {
+                    _errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
+                }
+                if (/\.[0-9]/.test(pycode)) {
+                    _errors.push('Please convert decimal numbers to fractions.');
+                }
+                setErrors(_errors);
+            } else {
+                setErrors(undefined);
+                if (pycode === '') {
+                    const state = {result: {tex: "", python: "", mathml: ""}};
+                    setCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
+                    initialEditorSymbols.current = [];
+                } else if (parsedExpression.length === 1) {
+                    // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
+                    // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
+                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
+                } else {
+                    let sizes = parsedExpression.map(countChildren);
+                    let i = sizes.indexOf(Math.max.apply(null, sizes));
+                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
+                }
+            }
+        }, 250);
+    };
+    useLayoutEffect(() => {
+        const {sketch} = makeInequality(
+            hiddenEditorRef.current,
+            100,
+            0,
+            [],
+            {
+                textEntry: true,
+                fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
+                fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf',
+            }
+        );
+        sketch.log = { initialState: [], actions: [] };
+        sketch.onNewEditorState = updateState;
+        sketch.onCloseMenus = () => {};
+        sketch.isUserPrivileged = () => { return true; };
+        sketch.onNotifySymbolDrag = () => {};
+        sketch.isTrashActive = () => { return false; };
+
+        sketchRef.current = sketch;
+    }, [hiddenEditorRef.current]);
+    /*** End of text based input stuff */
 
     let availableSymbols = queryParams.symbols && (queryParams.symbols as string).split(',').map(s => s.trim());
 
@@ -26,7 +159,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
         try {
             currentAttemptValue = JSON.parse(currentAttempt.value);
         } catch(e) {
-            currentAttemptValue = { result: { tex: '\\textrm{PLACEHOLDER HERE}' } };
+            currentAttemptValue = { result: { tex: '' } };
         }
     }
 
@@ -79,27 +212,51 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                                     pythonExpression: (state && state.result && state.result.python)||"",
                                     symbols: [],
                                 })
-                                setInitialEditorSymbols(state.symbols);
+                                setTextInput(state?.result?.python || '');
+                                initialEditorSymbols.current = state.symbols;
                             }}
                             availableSymbols={availableSymbols || []}
-                            initialEditorSymbols={initialEditorSymbols}
+                            initialEditorSymbols={initialEditorSymbols.current}
                             editorMode={editorMode as string}
                             logicSyntax={editorSyntax}
                             visible={modalVisible}
                         />}
                     </div>
+                    {editorMode === 'maths' && <div className="eqn-editor-input">
+                        <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
+                        <InputGroup className="my-2">
+                            <Input type="text" onChange={updateEquation} value={textInput}
+                                placeholder="or type your formula here"/>
+                            <InputGroupAddon addonType="append">
+                                <Button type="button" className="eqn-editor-help" id='inequality-help'>?</Button>
+                                <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
+                                    Here are some examples of expressions you can type:<br />
+                                    <br />
+                                    a*x^2 + b x + c<br />
+                                    (-b ± sqrt(b**2 - 4ac)) / (2a)<br />
+                                    1/2 mv**2<br />
+                                    log(x_a, 2) == log(x_a) / log(2)<br />
+                                    <br />
+                                    As you type, the box above will preview the result.
+                                </UncontrolledTooltip>
+                            </InputGroupAddon>
+                        </InputGroup>
+                        {errors && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
+                            {errors.map(e => (<li key={e}>{e}</li>))}
+                        </ul></div>}
+                    </div>}
                 </Col>
             </Row>
             {currentAttempt && <Row>
                 <Col md={{size: 8, offset: 2}} className="py-4 inequality-results">
+                    <h4>LaTeX</h4>
+                    <pre>${currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex}$</pre>
                     <h4>Python</h4>
                     <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python}</pre>
                     <h4>Available symbols</h4>
                     <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.uniqueSymbols}</pre>
                     <h4>Inequality seed</h4>
                     <pre>{currentAttemptValue && currentAttemptValue.symbols && JSON.stringify(currentAttemptValue.symbols)}</pre>
-                    <h4>LaTeX</h4>
-                    <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex}</pre>
                     <h4>MathML</h4>
                     <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.mathml}</pre>
                 </Col>
