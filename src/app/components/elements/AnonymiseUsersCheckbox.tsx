@@ -16,6 +16,7 @@ export const AnonymiseUsersCheckbox = ({className}: AnonymiseUsersCheckboxProps)
         onChange={e => {
             setChecked(e.target.checked);
             save(KEY.ANONYMISE_USERS, e.target.checked ? "YES": "NO");
+            window.location.reload();
         }}
         label="Anonymise users"
     />

@@ -122,7 +122,8 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                             </RS.Alert>
                         }
                     </React.Fragment>}
-                    <h3 className={"mt-2"}>Staff demonstration mode</h3>
+
+                    <h3 className={"mt-2"}>Manage users</h3>
                     <AnonymiseUsersCheckbox/>
                 </RS.CardBody>
             </RS.Card>
