@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {connect, useDispatch} from "react-redux";
+import {connect} from "react-redux";
 import classnames from "classnames";
 import {
     Card,
@@ -17,12 +17,7 @@ import {
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AdminUserGetState, AppState, ErrorState} from "../../state/reducers";
-import {
-    adminUserGet,
-    getChosenUserAuthSettings,
-    resetPassword,
-    updateCurrentUser
-} from "../../state/actions";
+import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
     LoggedInUser,
     SubjectInterests,
@@ -51,8 +46,6 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
-import {UserAdminPreferences} from "../elements/panels/UserAdminFeatures";
-import {selectors} from "../../state/selectors";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -99,7 +92,6 @@ interface AccountPageProps {
 }
 
 const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, userToEdit}: AccountPageProps) => {
-    const dispatch = useDispatch();
     useEffect(() => {
         if (userOfInterest) {
             adminUserGet(Number(userOfInterest));
