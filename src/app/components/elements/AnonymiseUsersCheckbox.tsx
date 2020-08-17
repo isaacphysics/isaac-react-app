@@ -7,14 +7,11 @@ interface AnonymiseUsersCheckboxProps {
 }
 
 export const AnonymiseUsersCheckbox = ({className}: AnonymiseUsersCheckboxProps) => {
-    const [checked, setChecked] = useState<boolean>(load(KEY.ANONYMISE_USERS) == "YES");
-
     return <RS.CustomInput
         className={className}
         type="checkbox" id={"anonymise-users-checkbox"}
-        checked={checked}
+        checked={load(KEY.ANONYMISE_USERS) == "YES"}
         onChange={e => {
-            setChecked(e.target.checked);
             save(KEY.ANONYMISE_USERS, e.target.checked ? "YES": "NO");
             window.location.reload();
         }}
