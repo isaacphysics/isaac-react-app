@@ -16,6 +16,13 @@
 }
 .question-panel .isaac-accordion {
   background: $gray-103;
+  .card-body > .content-value {
+    @extend .px-md-5;
+    @extend .pb-2;
+    @extend .pb-md-3;
+    font-size: 1.25rem;
+    line-height: 1.6;
+  }
   .question-component {
     background: none;
     box-shadow: none;
