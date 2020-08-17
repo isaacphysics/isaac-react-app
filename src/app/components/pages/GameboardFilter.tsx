@@ -110,7 +110,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
     }
 
     const pageHelp = <span>
-        You can build a gameboard by selecting the areas of interest and difficulty levels.
+        You can build a gameboard by selecting the areas of interest and levels.
         <br />
         You can select more than one entry in each area.
     </span>;
