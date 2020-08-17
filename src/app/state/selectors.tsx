@@ -1,7 +1,9 @@
-import {AdminUserSearchState, AppState} from "./reducers";
+import {AdminUserSearchState, AppState, ProgressState, user} from "./reducers";
 import {sortBy} from "lodash";
 import {anonymousNames, anonymousSchoolNames, NOT_FOUND} from "../services/constants";
-import {UserSchoolLookup} from "../../IsaacAppTypes";
+import {AppGroup, UserSchoolLookup} from "../../IsaacAppTypes";
+import {UserSummaryForAdminUsersDTO} from "../../IsaacApiTypes";
+import {KEY, load} from "../services/localStorage";
 
 export const selectors = {
     groups: {
@@ -11,7 +13,7 @@ export const selectors = {
             if (!state.groups.cache) return null;
             const activeId = state.groups.selectedGroupId;
             if (!activeId) return null;
-            return state.groups.cache[activeId] || null;
+            return load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.appGroup(state.groups.cache[activeId]) : state.groups.cache[activeId];
         },
         active: (state: AppState) => {
             if (!state) return null;
@@ -19,7 +21,7 @@ export const selectors = {
             if (!state.groups.cache) return null;
             if (!state.groups.active) return null;
             // @ts-ignore - typescript can't pass the non-null inside the map function here
-            return state.groups.active.map(groupId => state.groups.cache[groupId]);
+            return state.groups.active.map(groupId => state.groups.cache[groupId]).map(group => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.appGroup(group): group);
         },
         archived: (state: AppState) => {
             if (!state) return null;
@@ -27,7 +29,7 @@ export const selectors = {
             if (!state.groups.cache) return null;
             if (!state.groups.archived) return null;
             // @ts-ignore - typescript can't pass the non-null inside the map function here
-            return state.groups.archived.map(groupId => state.groups.cache[groupId]);
+            return state.groups.archived.map(groupId => state.groups.cache[groupId]).map(group => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.appGroup(group) : group);
         },
         groups: (state: AppState) => {
             return {
@@ -117,42 +119,83 @@ export const selectors = {
     },
 
     admin: {
-        anonymiseUsers: (state: AppState) => state?.anonymiseUsers || false,
         userSearch: (state: AppState) => state?.adminUserSearch?.map(user => {
-            if (state.anonymiseUsers) {
-                let newName = anonymousNames[Math.floor((user.givenName?.charCodeAt(0) || 0) % anonymousNames.length)];
-                return {
-                    ...user,
-                    familyName: "Test",
-                    givenName: newName,
-                    email: newName + ".XYZ@email.com"
-                }
+            if (load(KEY.ANONYMISE_USERS) === "YES") {
+                return anonymisationFunctions.userSummaryForAdminUsersDTO(user)
             } else {
                 return user
             }
         }) || null,
         userSchoolLookup: (state: AppState) => {
-            let anonymousSchoolLookup = {} as UserSchoolLookup;
-            if (state?.userSchoolLookup && state.anonymiseUsers) {
-                Object.keys(state.userSchoolLookup).forEach(id  => anonymousSchoolLookup[Number(id)] = {
-                    urn: "",
-                    name: anonymousSchoolNames[Math.floor((state.userSchoolLookup && state.userSchoolLookup[Number(id)].name.charCodeAt(0) || 0) % anonymousSchoolNames.length)] + "'s School",
-                    postcode: "",
-                    closed: false,
-                    dataSource: ""
-                })
-            }
-            return state && (state.anonymiseUsers ? anonymousSchoolLookup : state.userSchoolLookup)
+            return state?.userSchoolLookup && (load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.userSchoolLookup(state.userSchoolLookup) : state.userSchoolLookup)
         }
+    },
+
+    assignments: {
+        progress: (state: AppState) => state?.progress && load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.progressState(state?.progress) : state?.progress
     }
 };
 
-export const selectorEqualityFuncs = {
+export const anonymisationFunctions = {
+    appGroup: (appGroup: AppGroup): AppGroup => {
+        return {
+            ...appGroup,
+            members: appGroup.members?.map(member => {
+                const newName = anonymousNames[Math.floor((member.givenName?.charCodeAt(0) || 0) % anonymousNames.length)];
+                return {
+                    ...member,
+                    familyName: "Test",
+                    givenName: newName,
+                }
+            }),
+        }
+    },
+    progressState: (progress: ProgressState): ProgressState => {
+        if (!progress) return null;
+        const anonymousProgress: ProgressState = {};
+        Object.keys(progress).forEach(id  => {
+            anonymousProgress[Number(id)] = progress[Number(id)].map(userProgress => {
+                const newName = anonymousNames[Math.floor((userProgress.user.givenName?.charCodeAt(0) || 0) % anonymousNames.length)];
+                return {
+                    ...userProgress,
+                    user: {
+                        ...userProgress.user,
+                        familyName: "Test",
+                        givenName: newName
+                    }
+                }
+            })
+        });
+        return anonymousProgress;
+    },
+    userSummaryForAdminUsersDTO: (user: UserSummaryForAdminUsersDTO): UserSummaryForAdminUsersDTO => {
+        const newName = anonymousNames[Math.floor((user.givenName?.charCodeAt(0) || 0) % anonymousNames.length)];
+        return {
+            ...user,
+            familyName: "Test",
+            givenName: newName,
+            email: newName + ".XYZ@email.com"
+        }
+    },
+    userSchoolLookup: (userSchoolLookup: UserSchoolLookup): UserSchoolLookup => {
+        const anonymousSchoolLookup = {} as UserSchoolLookup;
+        Object.keys(userSchoolLookup).forEach(id  => anonymousSchoolLookup[Number(id)] = {
+            urn: "",
+            name: anonymousSchoolNames[Math.floor(((userSchoolLookup[Number(id)].name.charCodeAt(0)) || 0) % anonymousSchoolNames.length)] + "'s School",
+            postcode: "",
+            closed: false,
+            dataSource: ""
+        });
+        return anonymousSchoolLookup
+    }
+}
+
+export const selectorEqualityFunctions = {
     admin: {
         userSearch: (left: AdminUserSearchState, right: AdminUserSearchState) => {
-            return (left == null && left == right) ||
-                (right != null && left?.map((userL, i) => JSON.stringify(userL) == JSON.stringify(right[i]))
-                    .filter(same => !same).length == 0);
+            return (left == null && left === right) ||
+                (right != null && left?.map((userL, i) => JSON.stringify(userL) === JSON.stringify(right[i]))
+                    .filter(same => !same).length === 0);
         }
     }
 }

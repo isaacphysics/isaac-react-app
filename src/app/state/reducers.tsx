@@ -449,7 +449,7 @@ export const assignmentsByMe = (assignments: AssignmentsState = null, action: Ac
     }
 };
 
-type ProgressState = {[assignmentId: number]: AppAssignmentProgress[]} | null;
+export type ProgressState = {[assignmentId: number]: AppAssignmentProgress[]} | null;
 export const progress = (progress: ProgressState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS:
@@ -950,17 +950,6 @@ export const mainContentId = (state: MainContentIdState = null, action: Action) 
     }
 };
 
-type AnonymiseUsersState = boolean | null;
-export const anonymiseUsers = (state: AnonymiseUsersState = null, action: Action) => {
-    switch(action.type) {
-        case ACTION_TYPE.ANONYMISE_USERS_SET:
-            return action.enabled;
-        default:
-            return state;
-    }
-}
-
-
 const appReducer = combineReducers({
     adminUserGet,
     user,
@@ -1011,8 +1000,7 @@ const appReducer = combineReducers({
     concepts,
     fasttrackConcepts,
     graphSketcherSpec,
-    mainContentId,
-    anonymiseUsers
+    mainContentId
 });
 
 export type AppState = undefined | {
@@ -1067,7 +1055,6 @@ export type AppState = undefined | {
     fasttrackConcepts: FasttrackConceptsState;
     graphSketcherSpec: GraphSpecState;
     mainContentId: MainContentIdState;
-    anonymiseUsers: AnonymiseUsersState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

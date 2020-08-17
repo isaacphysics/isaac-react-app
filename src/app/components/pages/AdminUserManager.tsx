@@ -15,11 +15,11 @@ import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
 import {Link} from "react-router-dom";
-import {selectorEqualityFuncs, selectors} from "../../state/selectors";
+import {selectorEqualityFunctions, selectors} from "../../state/selectors";
 
 export const AdminUserManager = () => {
     const dispatch = useDispatch();
-    const searchResults = useSelector(selectors.admin.userSearch, selectorEqualityFuncs.admin.userSearch);
+    const searchResults = useSelector(selectors.admin.userSearch, selectorEqualityFunctions.admin.userSearch);
     const [userUpdating, setUserUpdating] = useState(false);
     const [searchRequested, setSearchRequested] = useState(false);
     const [searchQuery, setSearchQuery] = useState({

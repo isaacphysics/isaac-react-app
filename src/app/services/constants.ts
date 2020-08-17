@@ -456,9 +456,7 @@ export enum ACTION_TYPE {
 
     LOG_EVENT = "LOG_EVENT",
 
-    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID",
-
-    ANONYMISE_USERS_SET = "ANONYMISE_USERS_SET",
+    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID"
 }
 
 export enum EXAM_BOARD {
@@ -657,7 +655,7 @@ export enum MEMBERSHIP_STATUS {
     INACTIVE = "INACTIVE",
 }
 
-export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures, adminfeatures}
+export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {connect, useDispatch, useSelector} from "react-redux";
+import {connect, useDispatch} from "react-redux";
 import classnames from "classnames";
 import {
     Card,
@@ -21,7 +21,6 @@ import {
     adminUserGet,
     getChosenUserAuthSettings,
     resetPassword,
-    setAnonymiseUsers,
     updateCurrentUser
 } from "../../state/actions";
 import {
@@ -138,9 +137,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
 
-    // - Admin features
-    const [anonymiseUsersChecked, setAnonymiseUsersChecked] = useState<boolean>(useSelector(selectors.admin.anonymiseUsers))
-
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
 
     useEffect(() => {
@@ -186,8 +182,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                 return; // early exit
             }
         }
-
-        dispatch(setAnonymiseUsers(anonymiseUsersChecked));
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
@@ -252,17 +246,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                             </NavLink>
                         </NavItem>
                         }
-                        {!editingOtherUser && isStaff(user) &&
-                        <NavItem>
-                            <NavLink
-                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.adminfeatures})} tabIndex={0}
-                                onClick={() => setActiveTab(ACCOUNT_TAB.adminfeatures)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.adminfeatures))}
-                            >
-                                <span className="d-none d-lg-block">Admin features</span>
-                                <span className="d-block d-lg-none">Admin</span>
-                            </NavLink>
-                        </NavItem>
-                        }
                     </Nav>
 
                     <Form name="my-account" onSubmit={updateAccount}>
@@ -304,12 +287,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <UserEmailPreference
                                     emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                                     submissionAttempted={attemptedAccountUpdate}
-                                />
-                            </TabPane>}
-
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.adminfeatures}>
-                                <UserAdminPreferences
-                                    anonymiseUsersChecked={anonymiseUsersChecked} setAnonymiseUsersChecked={setAnonymiseUsersChecked}
                                 />
                             </TabPane>}
 
