@@ -32,6 +32,8 @@ import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreat
 import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
+import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
+import {isStaff} from "../../services/user";
 
 function selectGroups(state: AppState) {
     if (state != null) {
@@ -42,7 +44,7 @@ function selectGroups(state: AppState) {
             });
         }
 
-        const progress = state.progress;
+        const progress = selectors.assignments.progress(state);
         const assignments: { [id: number]: EnhancedAssignment[] } = {};
         if (state.assignmentsByMe) {
             state.assignmentsByMe.forEach(assignment => {
@@ -513,6 +515,7 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
 export function AssignmentProgress(props: AssignmentProgressPageProps) {
     const dispatch = useDispatch();
     const {groups} = useSelector(selectGroups);
+    const user = useSelector(selectors.user.orNull);
 
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
@@ -546,6 +549,7 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
                 help="Click on your groups to see the assignments you have set. View your students' progress by question."
             />
             <Row className="align-items-center d-none d-md-flex">
+                {isStaff(user) && <AnonymiseUsersCheckbox className={"ml-2"}/>}
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">

@@ -456,7 +456,7 @@ export enum ACTION_TYPE {
 
     LOG_EVENT = "LOG_EVENT",
 
-    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID",
+    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID"
 }
 
 export enum EXAM_BOARD {
@@ -764,6 +764,23 @@ for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
 _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
 export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
 
+export const anonymousNames = [
+    "Alice",
+    "Bob",
+    "Charlie",
+    "Dan",
+    "Eve",
+    "Frank",
+    "Grace"
+]
+
+export const anonymousSchoolNames = [
+    "North",
+    "South",
+    "East",
+    "West"
+]
+
 export const specificDoughnutColours: { [key: string]: string } = {
     [SITE.PHY]: {
         "Physics": "#944cbe",
@@ -793,3 +810,4 @@ export const doughnutColours = {
         "#dbdbdb"
     ]
 }[SITE_SUBJECT];
+

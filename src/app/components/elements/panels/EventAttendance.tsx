@@ -11,6 +11,7 @@ import {recordEventAttendance} from "../../../state/actions";
 import {ATTENDANCE, LoggedInUser} from "../../../../IsaacAppTypes";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 import {isEventLeader} from "../../../services/user";
+import {selectors} from "../../../state/selectors";
 
 function displayAttendanceAsSymbol(status?: string) {
     switch (status) {
@@ -24,7 +25,7 @@ export const EventAttendance = ({user, eventId}: {user: LoggedInUser; eventId: s
     const dispatch = useDispatch();
     const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
     const bookings = useSelector((state: AppState) => state && state.eventBookings || []);
-    const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup || {});
+    const userIdToSchoolMapping = useSelector(selectors.admin.userSchoolLookup) || {};
 
     const [sortPredicate, setSortPredicate] = useState("bookingDate");
     const [reverse, setReverse] = useState(true);

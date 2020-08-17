@@ -15,10 +15,11 @@ import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
 import {Link} from "react-router-dom";
+import {selectorEqualityFunctions, selectors} from "../../state/selectors";
 
 export const AdminUserManager = () => {
     const dispatch = useDispatch();
-    const searchResults = useSelector((state: AppState) => state?.adminUserSearch || null);
+    const searchResults = useSelector(selectors.admin.userSearch, selectorEqualityFunctions.admin.userSearch);
     const [userUpdating, setUserUpdating] = useState(false);
     const [searchRequested, setSearchRequested] = useState(false);
     const [searchQuery, setSearchQuery] = useState({
@@ -31,7 +32,7 @@ export const AdminUserManager = () => {
         postcodeRadius: "FIVE_MILES",
     });
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
-    const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
+    const userIdToSchoolMapping = useSelector(selectors.admin.userSchoolLookup);
     const currentUser = useSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
     let promotableRoles: Role[] = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
     const verificationStatuses: EmailVerificationStatus[] = ["NOT_VERIFIED", "DELIVERY_FAILED"];
