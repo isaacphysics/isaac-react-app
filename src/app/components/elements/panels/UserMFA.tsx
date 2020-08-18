@@ -57,7 +57,7 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
         }
     }
 
-    return <CardBody>
+    return <CardBody className="pt-0">
         <Row>
             <Col md={{size: 6, offset: 3}}>
                 <hr className="text-center" />

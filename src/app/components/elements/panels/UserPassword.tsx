@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import {ValidationUser, ZxcvbnResult} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../../services/validation";
-import {linkAccount, resetPassword, unlinkAccount} from "../../../state/actions";
+import {linkAccount, logOutUserElsewhere, resetPassword, unlinkAccount} from "../../../state/actions";
 import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../../services/passwordStrength";
 import {useDispatch} from "react-redux";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
@@ -38,7 +38,7 @@ export const UserPassword = (
         }
     };
 
-    return <CardBody>
+    return <CardBody className={"pb-0"}>
         <Row>
             <Col md={{size: 6, offset: 3}}>
                 <h4>Password</h4>
@@ -167,6 +167,27 @@ export const UserPassword = (
                                 <Label htmlFor="linked-accounts-no-passoword" className="ml-2 mb-0">
                                     {authenticationProvidersUsed("GOOGLE") ? " Remove linked Google account" : " Add linked Google account"}
                                 </Label>
+                            </div>
+                        </Col>
+                    </FormGroup>
+                </Col>
+            </Row>
+        </React.Fragment>
+        <React.Fragment>
+            <Row>
+                <Col md={{size: 6, offset: 3}}>
+                    <hr className="text-center" />
+                </Col>
+            </Row>
+            <Row>
+                <Col md={{size: 6, offset: 3}}>
+                    <FormGroup>
+                        <h4>Session Management</h4>
+                        <Col className="text-center">
+                            <div className="vertical-center ml-2">
+                                <Button onClick={() => dispatch(logOutUserElsewhere())}>
+                                    Logout Elsewhere
+                                </Button>
                             </div>
                         </Col>
                     </FormGroup>

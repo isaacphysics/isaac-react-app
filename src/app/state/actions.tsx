@@ -375,6 +375,17 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
+export const logOutUserElsewhere = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_LOG_OUT_ELSEWHERE_REQUEST});
+    try {
+        await api.authentication.logoutElsewhere();
+        dispatch({type: ACTION_TYPE.USER_LOG_OUT_ELSEWHERE_RESPONSE_SUCCESS});
+        dispatch(showToast({color: "success", title: "Logout elsewhere successful", body: "You have logged out of your other sessions.", timeout: 5000}) as any);
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Logout elsewhere failed", e));
+    }
+};
+
 export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
