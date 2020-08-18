@@ -113,10 +113,12 @@ module.exports = (isProd) => {
                 filename: isProd ? 'static/css/[name].[contenthash:8].css' : 'static/css/[name].css',
                 chunkFilename: isProd ? 'static/css/[name].[contenthash:8].chunk.css' : 'static/css/[name].chunk.css',
             }),
-            new CopyWebpackPlugin([{
-               from: resolve('public/assets'),
-               to: 'assets',
-            }]),
+            new CopyWebpackPlugin({
+                patterns: [{
+                    from: resolve('public/assets'),
+                    to: 'assets',
+                }
+            ]}),
             new webpack.DefinePlugin({
                 REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
             }),
