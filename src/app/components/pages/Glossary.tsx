@@ -14,7 +14,6 @@ import _startCase from 'lodash/startCase';
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 
 export const Glossary = withRouter(() => {
-    // const [glossaryTerms, setGlossaryTerms] = useState<{ [key: string]: GlossaryTermDTO[] }>();
     const [searchText, setSearchText] = useState("");
     const [topics, setTopics] = useState<string[]>([]);
     const [filterTopic, setFilterTopic] = useState("");
@@ -24,8 +23,8 @@ export const Glossary = withRouter(() => {
 
     const glossaryTerms = useMemo(() => {
         if (searchText === '') {
-            const sortedTerms = rawGlossaryTerms?.sort((a, b) => a?.value && b?.value && a.value.localeCompare(b.value) || 0);
-            let groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
+            const sortedTerms = rawGlossaryTerms?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
+            const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
             let _topics: string[] = [];
             if (sortedTerms) {
                 for (const term of sortedTerms) {
@@ -41,8 +40,8 @@ export const Glossary = withRouter(() => {
             return groupedTerms;
         } else {
             const regex = new RegExp(searchText.split(' ').join('|'), 'gi');
-            const sortedTerms = rawGlossaryTerms?.filter(e => e.value?.match(regex)).sort((a, b) => a?.value && b?.value && a.value.localeCompare(b.value) || 0);
-            let groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
+            const sortedTerms = rawGlossaryTerms?.filter(e => e.value?.match(regex)).sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
+            const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
             let _topics: string[] = [];
             if (sortedTerms) {
                 for (const term of sortedTerms) {
