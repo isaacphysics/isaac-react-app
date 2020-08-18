@@ -106,5 +106,27 @@
         }  
       }
     }
+
+    .glossary_term_name {
+      position: relative;
+
+      img {
+        position: absolute;
+        top: 0.2em;
+        left: 0;
+        height: 1.2em;
+        display: block;
+      }
+
+      strong {
+        text-decoration: underline;
+        position: absolute;
+        left: 1.2em;
+        display: block;
+        float: left;
+        top: 0;
+        left: 2em;
+      }
+    }
   }
   

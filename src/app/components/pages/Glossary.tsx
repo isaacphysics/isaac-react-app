@@ -133,21 +133,21 @@ export const Glossary = withRouter(() => {
             <Row>
                 <Col md={{size: 9}} className="py-4">
                     <Row>
-                        <Col md={{size: 3}}>
-                            <Label for='header-search' className='sr-only'>Search</Label>
+                        <Col md={{size: 4}}>
+                            <Label for='terms-search' className='sr-only'>Search by term</Label>
                             <Input
-                                id="header-search" type="search" name="query" placeholder="Search" aria-label="Search"
+                                id="terms-search" type="search" name="query" placeholder="Search by term" aria-label="Search by term"
                                 value={searchText} onChange={e => setSearchText(e.target.value)}
                             />
                         </Col>
                         <Col>
                             <Label for='topic-select' className='sr-only'>Topic</Label>
                             {topics?.length > 0 && <Dropdown isOpen={topicsDropdownOpen} toggle={() => setTopicsDropdownOpen(prevState => !prevState)}>
-                                <DropdownToggle caret>
-                                    { filterTopic === "" ? "Topics" : _startCase(filterTopic) }
+                                <DropdownToggle caret color="outline-primary">
+                                    { filterTopic === "" ? "Filter by topic" : _startCase(filterTopic) }
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem onClick={() => setFilterTopic("")}>&nbsp;</DropdownItem>
+                                    <DropdownItem onClick={() => setFilterTopic("")}>All topics</DropdownItem>
                                     {topics.map(e => <DropdownItem key={e} onClick={() => setFilterTopic(e)}>{_startCase(e.replace(/[^a-zA-Z0-9]/, ' '))}</DropdownItem>)}
                                 </DropdownMenu>
                             </Dropdown>}
@@ -173,7 +173,7 @@ export const Glossary = withRouter(() => {
                     {alphabetList}
                 </div>
                 {Object.entries(glossaryTerms).map(([key, terms]) => <Row key={key} className="pb-5">
-                    <Col md={{size: 1, offset: 1}} id={`key-${key}`}><h2 style={{position: 'sticky'}}>{key}</h2></Col>
+                    <Col md={{size: 1, offset: 1}} id={`key-${key}`}><h2 style={{position: 'sticky', top: '1em'}}>{key}</h2></Col>
                     <Col>
                         {terms.map(term => <Row key={term.id}>
                             <Col md={{size: 10}}>

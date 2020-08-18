@@ -35,9 +35,14 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermPr
     }, [hash, anchorId]);
 
     return <React.Fragment>
-        {(doc.examBoard == '' || examBoard === doc.examBoard) && <Row className="glossary_term">
-            <Col md={3}>
-                <p id={anchorId}><strong>{doc.value}</strong></p>
+        {(doc.examBoard === '' || examBoard === doc.examBoard) && <Row className="glossary_term">
+            <Col md={3} className="glossary_term_name">
+                <p id={anchorId}>
+                    <a href={location.origin + location.pathname + '#' + anchorId}>
+                        <img src="/assets/link-variant.png" className="pr-2" alt="direct link" />
+                        <strong>{doc.value}</strong>
+                    </a>
+                </p>
             </Col>
             <Col>
                 {doc.explanation && <IsaacContent doc={doc.explanation} />}
