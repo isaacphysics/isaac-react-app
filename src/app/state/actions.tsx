@@ -538,10 +538,10 @@ export const submitMessage = (params: {firstName: string; lastName: string; emai
 };
 
 // Teacher connections
-export const getActiveAuthorisations = (userId: number) => async (dispatch: Dispatch<Action>) => {
+export const getActiveAuthorisations = (userId?: number) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST});
-        const authorisationsResponse = await api.authorisations.get(userId);
+        const authorisationsResponse = await (userId ? api.authorisations.adminGet(userId) : api.authorisations.get());
         dispatch({
             type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS,
             authorisations: authorisationsResponse.data
@@ -592,13 +592,13 @@ export const authenticateWithTokenAfterPrompt = (userId: number, userSubmittedAu
         }
     }
 };
-export const authenticateWithToken = (userId: number, authToken: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+export const authenticateWithToken = (authToken: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_REQUEST});
         await api.authorisations.useToken(authToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS});
-        dispatch(getActiveAuthorisations(userId) as any);
-        dispatch(getGroupMemberships(userId) as any);
+        dispatch(getActiveAuthorisations() as any);
+        dispatch(getGroupMemberships() as any);
         dispatch(showToast({
             color: "success", title: "Granted access", timeout: 5000,
             body: "You have granted access to your data."
@@ -647,10 +647,10 @@ export const revokeAuthorisation = (userId: number, userToRevoke: UserSummaryWit
 };
 
 // Student/other Connections
-export const getStudentAuthorisations = (userId: number) => async (dispatch: Dispatch<Action>) => {
+export const getStudentAuthorisations = (userId?: number) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_REQUEST});
-        const otherUserAuthorisationsResponse = await api.authorisations.getOtherUsers(userId);
+        const otherUserAuthorisationsResponse = await (userId ? api.authorisations.adminGetOtherUsers(userId) : api.authorisations.getOtherUsers());
         dispatch({
             type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS,
             otherUserAuthorisations: otherUserAuthorisationsResponse.data
@@ -1370,10 +1370,10 @@ export const showGroupManagersModal = () => async (dispatch: Dispatch<Action>, g
     dispatch(openActiveModal(groupManagersModal(userIsOwner)) as any);
 };
 
-export const getGroupMemberships = (userId: number) => async (dispatch: Dispatch<Action>) => {
+export const getGroupMemberships = (userId?: number) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST});
-        const groupMembershipsResponse = await api.groups.getMemberships(userId);
+        const groupMembershipsResponse = await (userId ? api.groups.adminGetMemberships(userId) : api.groups.getMemberships());
         dispatch({
             type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS,
             groupMemberships: groupMembershipsResponse.data

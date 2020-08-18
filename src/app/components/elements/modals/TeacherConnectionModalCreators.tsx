@@ -52,7 +52,7 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
             <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
                 Cancel
             </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(authenticateWithToken(userId, authToken))}}>
+            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(authenticateWithToken(authToken))}}>
                 Confirm
             </RS.Button>,
         ]

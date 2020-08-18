@@ -33,9 +33,9 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
     useEffect(() => {
         if (user.loggedIn && user.id) {
-            dispatch(getActiveAuthorisations(editingOtherUser && userToEdit?.id ? userToEdit.id : user.id));
-            dispatch(getStudentAuthorisations(editingOtherUser && userToEdit?.id ? userToEdit.id : user.id));
-            dispatch(getGroupMemberships(editingOtherUser && userToEdit?.id ? userToEdit.id : user.id));
+            dispatch(getActiveAuthorisations((editingOtherUser && userToEdit?.id) || undefined));
+            dispatch(getStudentAuthorisations((editingOtherUser && userToEdit?.id) || undefined));
+            dispatch(getGroupMemberships((editingOtherUser && userToEdit?.id) || undefined));
         }
     }, [dispatch, editingOtherUser, userToEdit?.id]);
 
