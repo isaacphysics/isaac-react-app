@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
+import {FormGroup} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -7,7 +8,8 @@ import {
     adminModifyUserRoles,
     adminUserDelete,
     adminUserSearch,
-    getUserIdSchoolLookup
+    getUserIdSchoolLookup,
+    mergeUsers
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {EmailVerificationStatus, Role} from "../../../IsaacApiTypes";
@@ -15,6 +17,7 @@ import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
 import {Link} from "react-router-dom";
+import {isAdmin} from "../../services/user";
 
 export const AdminUserManager = () => {
     const dispatch = useDispatch();
@@ -31,6 +34,8 @@ export const AdminUserManager = () => {
         postcodeRadius: "FIVE_MILES",
     });
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+    const [mergeTargetId, setMergeTargetId] = useState<string>("");
+    const [mergeSourceId, setMergeSourceId] = useState<string>("");
     const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup);
     const currentUser = useSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
     let promotableRoles: Role[] = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
@@ -326,5 +331,38 @@ export const AdminUserManager = () => {
                 }
             </RS.CardBody>
         </RS.Card>
+        {isAdmin(currentUser) && <RS.Card className={"my-4"}>
+            <RS.CardBody>
+                <h3>Manage users</h3>
+                <div>
+                    <strong>Merge users</strong>
+                </div>
+                <FormGroup>
+                    <RS.InputGroup>
+                        <RS.Input
+                            type="text"
+                            placeholder="User ID to keep"
+                            value={mergeTargetId}
+                            onChange={(e => setMergeTargetId(e.target.value))}
+                        />
+                        <RS.Input
+                            type="text"
+                            placeholder="User ID to delete"
+                            value={mergeSourceId}
+                            onChange={(e => setMergeSourceId(e.target.value))}
+                        />
+                        <RS.InputGroupAddon addonType="append">
+                            <RS.Button
+                                type="button" className="p-0 border-dark"
+                                disabled={mergeTargetId === "" || Number.isNaN(Number(mergeTargetId)) || mergeSourceId === "" || Number.isNaN(Number(mergeSourceId))}
+                                onClick={() => dispatch(mergeUsers(Number(mergeTargetId), Number(mergeSourceId)))}
+                            >
+                                Merge
+                            </RS.Button>
+                        </RS.InputGroupAddon>
+                    </RS.InputGroup>
+                </FormGroup>
+            </RS.CardBody>
+        </RS.Card>}
     </RS.Container>;
 };

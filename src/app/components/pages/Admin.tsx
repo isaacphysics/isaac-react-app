@@ -3,13 +3,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {getContentVersion, mergeUsers, requestConstantsSegueVersion, setContentVersion} from "../../state/actions";
+import {getContentVersion, requestConstantsSegueVersion, setContentVersion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {selectors} from "../../state/selectors";
 import classnames from "classnames";
-import {FormGroup} from "reactstrap";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useDispatch();
@@ -21,8 +20,6 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     }, [dispatch]);
 
     const [newVersion, setNewVersion] = useState<string | null>(null);
-    const [mergeTargetId, setMergeTargetId] = useState<string>("");
-    const [mergeSourceId, setMergeSourceId] = useState<string>("");
 
     const displayVersion = newVersion || (contentVersion && contentVersion.liveVersion) || null;
 
@@ -34,10 +31,6 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
             dispatch(setContentVersion(newVersion));
         }
     };
-
-    const startMergeUsers = () => {
-        dispatch(mergeUsers(Number(mergeTargetId), Number(mergeSourceId)))
-    }
 
     const updateState = contentVersion && contentVersion.updateState || null;
 
@@ -128,36 +121,6 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                             </RS.Alert>
                         }
                     </React.Fragment>}
-
-                    <h3>Manage users</h3>
-                    <div>
-                        <strong>Merge users</strong>
-                    </div>
-                    <FormGroup>
-                        <RS.InputGroup>
-                            <RS.Input
-                                type="text"
-                                placeholder="Target User ID"
-                                value={mergeTargetId}
-                                onChange={(e => setMergeTargetId(e.target.value))}
-                            />
-                            <RS.Input
-                                type="text"
-                                placeholder="Source User ID"
-                                value={mergeSourceId}
-                                onChange={(e => setMergeSourceId(e.target.value))}
-                            />
-                            <RS.InputGroupAddon addonType="append">
-                                <RS.Button
-                                    type="button" className="p-0 border-dark"
-                                    disabled={mergeTargetId === "" || Number.isNaN(Number(mergeTargetId)) || mergeSourceId === "" || Number.isNaN(Number(mergeSourceId))}
-                                    onClick={startMergeUsers}
-                                >
-                                    Merge
-                                </RS.Button>
-                            </RS.InputGroupAddon>
-                        </RS.InputGroup>
-                    </FormGroup>
                 </RS.CardBody>
             </RS.Card>
 
