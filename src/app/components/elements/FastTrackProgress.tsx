@@ -460,7 +460,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
     function renderProgress(progress: Progress) {
         return <RS.Row className="mt-sm-3 mb-3 mb-sm-4">
-            <RS.Col cols={12} lg={4}>
+            <RS.Col cols={12} lg={3}>
                 <h4 className="mt-lg-1">{gameboard.title}</h4>
                 <div className="d-none d-lg-block">
                     <br className="d-none d-lg-block"/>
@@ -468,7 +468,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                     {currentlyWorkingOn.isConcept && <h4 className="mt-lg-1 mt-xl-3">{currentlyWorkingOn.title} Practice</h4>}
                 </div>
             </RS.Col>
-            <RS.Col cols={12} lg={8}>
+            <RS.Col cols={12} lg={9}>
                 <svg id="ft-progress" width="100%" height={progressBarHeight}>
                     <g id="progress-bar-padding" transform={`translate(${progressBarPadding}, ${progressBarPadding})`}>
                         <g id="concept-connections">

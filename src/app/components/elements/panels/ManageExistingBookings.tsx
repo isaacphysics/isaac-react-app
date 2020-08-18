@@ -20,12 +20,13 @@ import {DateString} from "../DateString";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 import {API_PATH, bookingStatusMap} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {selectors} from "../../../state/selectors";
 
 export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUser; eventBookingId: string}) => {
     const dispatch = useDispatch();
     useEffect(() => {dispatch(getEventBookings(eventBookingId))}, [eventBookingId]);
     const eventBookings = useSelector((state: AppState) => state && state.eventBookings || []);
-    const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup || {});
+    const userIdToSchoolMapping = useSelector(selectors.admin.userSchoolLookup) || {};
 
     const [sortPredicate, setSortPredicate] = useState("date");
     const [reverse, setReverse] = useState(true);

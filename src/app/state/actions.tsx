@@ -10,7 +10,8 @@ import {
     EventStatusFilter,
     EventTypeFilter,
     EXAM_BOARD,
-    MEMBERSHIP_STATUS, NO_CONTENT,
+    MEMBERSHIP_STATUS,
+    NO_CONTENT,
     NOT_FOUND,
     TAG_ID
 } from "../services/constants";
@@ -41,6 +42,7 @@ import {
     EmailVerificationStatus,
     GameboardDTO,
     GlossaryTermDTO,
+    GraphChoiceDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
     RegisteredUserDTO,
@@ -48,8 +50,7 @@ import {
     TestCaseDTO,
     UserGroupDTO,
     UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO,
-    GraphChoiceDTO
+    UserSummaryWithEmailAddressDTO
 } from "../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
