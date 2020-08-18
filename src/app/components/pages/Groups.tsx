@@ -47,6 +47,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
+import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 
 const stateFromProps = (state: AppState) => (state && {
     groups: selectors.groups.groups(state),
@@ -328,6 +329,7 @@ const MobileGroupCreatorComponent = ({createNewGroup, ...props}: GroupCreatorPro
 
 const GroupsPageComponent = (props: GroupsPageProps) => {
     const {group, groups, loadGroups, getGroupInfo, selectGroup, createGroup, deleteGroup, showGroupInvitationModal} = props;
+    const user = useSelector(selectors.user.orNull);
 
     const [showArchived, setShowArchived] = useState(false);
 
@@ -479,6 +481,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                     </ShowLoading>
                                 </TabPane>
                             </TabContent>
+                            {isStaff(user) && <AnonymiseUsersCheckbox/>}
                         </CardBody>
                     </Card>}
                 </ShowLoading>

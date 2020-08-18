@@ -5,6 +5,7 @@ export enum KEY {
     FIRST_LOGIN = "firstLogin",
     REQUIRED_MODAL_SHOWN_TIME = "requiredModalShownTime",
     LAST_NOTIFICATION_TIME = "lastNotificationTime",
+    ANONYMISE_USERS = "anonymiseUsers"
 }
 
 export const LOADING_FAILURE_VALUE = null;
