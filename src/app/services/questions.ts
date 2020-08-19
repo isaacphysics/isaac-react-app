@@ -40,6 +40,10 @@ export const HUMAN_QUESTION_TYPES = new Map([
     ["default", "Multiple choice"]
 ]);
 
+export const HUMAN_QUESTION_TAGS = new Map([
+    ["maths_book", "Maths book"],
+]);
+
 export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[]) => {
     if (!availableSymbols) return;
     let theseSymbols = availableSymbols.slice(0).map(s => s.trim());
