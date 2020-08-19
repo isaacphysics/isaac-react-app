@@ -502,15 +502,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private generateLogicFunctionsItems(syntax = 'logic'): MenuItem[] {
-<<<<<<< HEAD
         let labels: any = {
             logic: { and: "\\land", or: "\\lor", xor: '\\veebar', not: "\\lnot", equiv: "=", True: "\\mathsf{T}", False: "\\mathsf{F}" },
             binary: { and: "\\cdot", or: "+", xor: '\\oplus', not: "\\overline{x}", equiv: "=", True: "1", False: "0" }
-=======
-        const labels: any = {
-            logic: { and: "\\land", or: "\\lor", not: "\\lnot", equiv: "=", True: "\\mathsf{T}", False: "\\mathsf{F}" },
-            binary: { and: "\\cdot", or: "+", not: "\\overline{x}", equiv: "=", True: "1", False: "0" }
->>>>>>> master
         };
         return [
             new MenuItem("LogicBinaryOperation", { operation: "and" }, { label: labels[syntax]['and'], texLabel: true, className: 'and' }),
