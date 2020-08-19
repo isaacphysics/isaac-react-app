@@ -127,30 +127,15 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             menu: { label: '\\bar{\\nu}', texLabel: true },
             properties: { particle: 'ν̅', type: 'antineutrino' }
         },
-        p: {
-            type: 'Particle',
-            menu: { label: '\\text{p}', texLabel: true },
-            properties: { particle: 'p', type: 'proton' }
-        },
         proton: {
             type: 'Particle',
             menu: { label: '\\text{p}', texLabel: true },
             properties: { particle: 'p', type: 'proton' }
         },
-        n: {
-            type: 'Particle',
-            menu: { label: '\\text{n}', texLabel: true },
-            properties: { particle: 'n', type: 'neutron' }
-        },
         neutron: {
             type: 'Particle',
             menu: { label: '\\text{n}', texLabel: true },
             properties: { particle: 'n', type: 'neutron' }
-        },
-        e: {
-            type: 'Particle',
-            menu: { label: '\\text{e}', texLabel: true },
-            properties: { particle: 'e', type: 'electron' }
         },
         electron: {
             type: 'Particle',
