@@ -220,8 +220,9 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
                                             }>
                                                 Leave group
                                             </RS.Button>
-                                            <span id="leave-group-action" className="icon-help" />
-                                            <RS.UncontrolledTooltip placement="bottom" target="leave-group-action">
+                                            <span id={`leave-group-action-${membership.group.id}`} className="icon-help" />
+                                            <RS.UncontrolledTooltip placement="bottom" target={`leave-group-action-${membership.group.id}`}
+                                                                    modifiers={{preventOverflow: {boundariesElement: "viewport"}}}>
                                                 If you leave a group you will no longer receive notifications of new assignments.
                                             </RS.UncontrolledTooltip>
                                         </React.Fragment>}
@@ -232,8 +233,9 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
                                             }>
                                                 Rejoin group
                                             </RS.Button>
-                                            <span id="rejoin-group-action" className="icon-help" />
-                                            <RS.UncontrolledTooltip placement="bottom" target="rejoin-group-action">
+                                            <span id={`rejoin-group-action-${membership.group.id}`} className="icon-help" />
+                                            <RS.UncontrolledTooltip placement="bottom" target={`rejoin-group-action-${membership.group.id}`}
+                                                                    modifiers={{preventOverflow: {boundariesElement: "viewport"}}}>
                                                 If you rejoin a group you will see all the assignments set since the group was created.
                                             </RS.UncontrolledTooltip>
                                         </React.Fragment>}

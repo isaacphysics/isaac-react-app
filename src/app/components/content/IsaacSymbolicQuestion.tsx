@@ -15,6 +15,7 @@ import {parseExpression} from "inequality-grammar";
 import _flattenDeep from 'lodash/flatMapDeep';
 import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
+import uuid from "uuid";
 
 // Magic starts here
 interface ChildrenMap {
@@ -194,7 +195,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         }, 250);
     };
 
-    const helpTooltipId = `eqn-editor-help-${(doc.id || "").split('|').pop()}`;
+    const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid.v4()}`);
     const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(
         function (str) {return str.trim().replace(/;/g, ',')}).sort().join(", ");
     return (

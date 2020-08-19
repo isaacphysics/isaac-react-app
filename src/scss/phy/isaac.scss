@@ -29,6 +29,11 @@ $theme-colors: (
     "secondary": $secondary
 );
 
+// Grid Customisation
+$container-max-widths: (
+    md: 942px
+);
+
 //Greys
 $gray-103: #f8f8f8;
 $gray-107: #ececec;
@@ -79,7 +84,6 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "typography";
 @import "../common/headings";
 @import "../common/modals";
-@import "questions";
 @import "../common/forms";
 @import "../common/elements";
 @import "../common/breadcrumbs";
@@ -90,12 +94,13 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/list-groups";
 @import "../common/inequality-modal";
 @import "../common/graph-sketcher-modal";
-@import "inequality-modal";
 @import "../common/carousel";
 @import "../common/boards";
 @import "../common/focus";
 @import "../common/anvil";
 @import "../common/reservation-modal";
+@import "inequality-modal";
+@import "questions";
 @import "progress-bar";
 @import "icons";
 @import "hints";
@@ -160,7 +165,8 @@ p small {
 .katex.katex {
     font-size: 1.1em;
     white-space: nowrap !important;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 body {
