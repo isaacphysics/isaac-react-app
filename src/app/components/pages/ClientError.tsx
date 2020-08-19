@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Alert, Col, Container, Row} from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import ReactGA from "react-ga";
 import {WEBMASTER_EMAIL} from "../../services/siteConstants";
@@ -11,7 +11,7 @@ import {selectors} from "../../state/selectors";
 export const ClientError = ({resetErrorBoundary, error, componentStack}: FallbackProps) => {
     const user = useSelector(selectors.user.orNull);
     ReactGA.exception({
-        description: 'client_error',
+        description: `client_error: ${error?.message || 'unknown'}`,
         fatal: true
     });
 
