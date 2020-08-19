@@ -60,3 +60,11 @@
     border-bottom-right-radius: 0 !important;
   }
 }
+
+.concept-content-container, .generic-content-container {
+  .quick-question {
+    .question-content, .content-value, .btn {
+      font-size: 1rem !important;
+    }
+  }
+}
