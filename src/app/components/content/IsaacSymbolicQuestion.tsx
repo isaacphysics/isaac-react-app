@@ -89,7 +89,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
     function currentAttemptPythonExpression(): string {
-        return currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python || "";
+        return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
     }
 
     const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
@@ -121,10 +121,10 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         );
         sketch.log = { initialState: [], actions: [] };
         sketch.onNewEditorState = updateState;
-        sketch.onCloseMenus = () => {};
-        sketch.isUserPrivileged = () => { return true; };
-        sketch.onNotifySymbolDrag = () => {};
-        sketch.isTrashActive = () => { return false; };
+        sketch.onCloseMenus = () => undefined;
+        sketch.isUserPrivileged = () => true;
+        sketch.onNotifySymbolDrag = () => undefined;
+        sketch.isTrashActive = () => false
 
         sketchRef.current = sketch;
     }, [hiddenEditorRef.current]);
@@ -196,8 +196,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     };
 
     const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid.v4()}`);
-    const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(
-        function (str) {return str.trim().replace(/;/g, ',')}).sort().join(", ");
+    const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
     return (
         <div className="symbolic-question">
             <div className="question-content">
