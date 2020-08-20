@@ -198,6 +198,13 @@ export interface AnvilAppDTO extends ContentDTO {
     appAccessKey?: string;
 }
 
+export interface IsaacCardDTO extends ContentDTO {
+    image?: ImageDTO;
+    clickUrl?: string;
+    disabled?: boolean;
+    verticalContent?: boolean;
+}
+
 export interface ChemicalFormulaDTO extends ChoiceDTO {
     mhchemExpression?: string;
 }
