@@ -47,7 +47,7 @@ function isError(p: {error: string} | any[]): p is {error: string} {
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const pageQuestions = selectors.questions.getQuestions(state);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
-    let r: {currentAttempt?: LogicFormulaDTO | null} = {};
+    const r: {currentAttempt?: LogicFormulaDTO | null} = {};
     if (questionPart) {
         r.currentAttempt = questionPart.currentAttempt;
     }
@@ -129,7 +129,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
         sketchRef.current = sketch;
     }, [hiddenEditorRef.current]);
 
-    let [errors, setErrors] = useState<string[]>();
+    const [errors, setErrors] = useState<string[]>();
 
     const debounceTimer = useRef<number|null>(null);
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
@@ -143,16 +143,17 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
             debounceTimer.current = null;
         }
         debounceTimer.current = window.setTimeout(() => {
-            let parsedExpression = parseBooleanExpression(pycode);
+            const parsedExpression = parseBooleanExpression(pycode);
 
             if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
-                let openBracketsCount = pycode.split('(').length - 1;
-                let closeBracketsCount = pycode.split(')').length - 1;
-                let regexStr = "[^ A-Zandorxnt&∧.|∨v+^⊻!~¬01()]+"
-                let badCharacters = new RegExp(regexStr);
-                errors = [];
+                const openBracketsCount = pycode.split('(').length - 1;
+                const closeBracketsCount = pycode.split(')').length - 1;
+                const regexStr = "[^ A-Zandorxnt&∧.|∨v+^⊻!~¬01()]+"
+                const badCharacters = new RegExp(regexStr);
+                
+                const _errors = [];
                 if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
-                    errors.push('LaTeX syntax is not supported.');
+                    _errors.push('LaTeX syntax is not supported.');
                 }
                 if (badCharacters.test(pycode)) {
                     const usedBadChars: string[] = [];
@@ -164,12 +165,12 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                             }
                         }
                     }
-                    errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+                    _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
                 }
                 if (openBracketsCount !== closeBracketsCount) {
-                    errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
+                    _errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
                 }
-                setErrors(errors);
+                setErrors(_errors);
             } else {
                 setErrors(undefined);
                 if (pycode === '') {
@@ -182,7 +183,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                     sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
                 } else {
                     const sizes = parsedExpression.map(countChildren);
-                    let i = sizes.indexOf(Math.max.apply(null, sizes));
+                    const i = sizes.indexOf(Math.max.apply(null, sizes));
                     sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
                 }
             }
@@ -228,7 +229,10 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                         <UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
-                            A AND B OR NOT C<br />
+                            A AND (B XOR NOT C)<br />
+                            A &amp; (B ^ !C)<br />
+                            T &amp; ~(F + A)<br />
+                            1 . ~(0 + A)<br />
                             As you type, the box above will preview the result.
                         </UncontrolledTooltip>
                     </InputGroupAddon>

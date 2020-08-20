@@ -26,10 +26,10 @@ function countChildren(root: ChildrenMap) {
     let q = [root];
     let count = 1;
     while (q.length > 0) {
-        let e = q.shift();
+        const e = q.shift();
         if (!e) continue;
 
-        let c = Object.keys(e.children).length;
+        const c = Object.keys(e.children).length;
         if (c > 0) {
             count = count + c;
             q = q.concat(Object.values(e.children));
@@ -45,7 +45,7 @@ function isError(p: {error: string} | any[]): p is {error: string} {
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const pageQuestions = selectors.questions.getQuestions(state);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
-    let r: {currentAttempt?: FormulaDTO | null} = {};
+    const r: {currentAttempt?: FormulaDTO | null} = {};
     if (questionPart) {
         r.currentAttempt = questionPart.currentAttempt;
     }
@@ -129,7 +129,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         sketchRef.current = sketch;
     }, [hiddenEditorRef.current]);
 
-    let [errors, setErrors] = useState<string[]>();
+    const [errors, setErrors] = useState<string[]>();
 
     const debounceTimer = useRef<number|null>(null);
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
@@ -143,19 +143,19 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             debounceTimer.current = null;
         }
         debounceTimer.current = window.setTimeout(() => {
-            let parsedExpression = parseMathsExpression(pycode);
+            const parsedExpression = parseMathsExpression(pycode);
 
             if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
-                let openBracketsCount = pycode.split('(').length - 1;
-                let closeBracketsCount = pycode.split(')').length - 1;
-                let regexStr = "[^ (-)*-/0-9<->A-Z^-_a-z±²-³¼-¾×÷]+";
-                let badCharacters = new RegExp(regexStr);
-                errors = [];
+            const openBracketsCount = pycode.split('(').length - 1;
+            const closeBracketsCount = pycode.split(')').length - 1;
+            const regexStr = "[^ (-)*-/0-9<->A-Z^-_a-z±²-³¼-¾×÷]+";
+            const badCharacters = new RegExp(regexStr);
+                const _errors = [];
                 if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
-                    errors.push('LaTeX syntax is not supported.');
+                    _errors.push('LaTeX syntax is not supported.');
                 }
                 if (/\|.+?\|/.test(pycode)) {
-                    errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
+                    _errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
                 }
                 if (badCharacters.test(pycode)) {
                     const usedBadChars: string[] = [];
@@ -167,15 +167,15 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                             }
                         }
                     }
-                    errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+                    _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
                 }
                 if (openBracketsCount !== closeBracketsCount) {
-                    errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
+                    _errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
                 }
                 if (/\.[0-9]/.test(pycode)) {
-                    errors.push('Please convert decimal numbers to fractions.');
+                    _errors.push('Please convert decimal numbers to fractions.');
                 }
-                setErrors(errors);
+                setErrors(_errors);
             } else {
                 setErrors(undefined);
                 if (pycode === '') {
@@ -187,8 +187,8 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                     // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
                     sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
                 } else {
-                    let sizes = parsedExpression.map(countChildren);
-                    let i = sizes.indexOf(Math.max.apply(null, sizes));
+                    const sizes = parsedExpression.map(countChildren);
+                    const i = sizes.indexOf(Math.max.apply(null, sizes));
                     sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
                 }
             }
