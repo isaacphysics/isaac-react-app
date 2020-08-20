@@ -10,7 +10,7 @@ import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {selectors} from "../../state/selectors";
 import {Inequality, makeInequality} from "inequality";
-import {parseExpression} from "inequality-grammar";
+import {parseMathsExpression} from "inequality-grammar";
 
 import _flattenDeep from 'lodash/flatMapDeep';
 import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
@@ -143,7 +143,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             debounceTimer.current = null;
         }
         debounceTimer.current = window.setTimeout(() => {
-            let parsedExpression = parseExpression(pycode);
+            let parsedExpression = parseMathsExpression(pycode);
 
             if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
                 let openBracketsCount = pycode.split('(').length - 1;

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useLayoutEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {withRouter} from "react-router-dom";
 import {Button, Col, Container, Input, InputGroup, InputGroupAddon, Label, Row, UncontrolledTooltip} from "reactstrap";
 import queryString from "query-string";
@@ -9,9 +9,11 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RouteComponentProps} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import { Inequality, makeInequality } from 'inequality';
-import _flattenDeep from 'lodash/flattenDeep';
 import { sanitiseInequalityState } from '../../services/questions';
-import { parseExpression } from 'inequality-grammar';
+import { parseMathsExpression, parseBooleanExpression } from 'inequality-grammar';
+
+import { isDefined } from "isaac-graph-sketcher/dist/src/GraphUtils";
+import { update } from 'lodash';
 
 export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
     const queryParams = queryString.parse(location.search);
@@ -66,7 +68,11 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
     }
 
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        const pycode = e.target.value;
+        _updateEquation(e.target.value);
+    }
+
+    const _updateEquation = (pycode: string) => {
+        // const pycode = e.target.value;
         setTextInput(pycode);
         setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
 
@@ -76,14 +82,24 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
             debounceTimer.current = null;
         }
         debounceTimer.current = window.setTimeout(() => {
-            let parsedExpression = parseExpression(pycode);
-            let _errors = [];
+            let parsedExpression = undefined;
+            if (editorMode === 'maths') {
+                parsedExpression = parseMathsExpression(pycode);
+            } else if (editorMode === 'logic') {
+                parsedExpression = parseBooleanExpression(pycode);
+            }
+            const _errors = [];
 
-            if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
-                let openBracketsCount = pycode.split('(').length - 1;
-                let closeBracketsCount = pycode.split(')').length - 1;
-                let regexStr = "[^ (-)*-/0-9<->A-Z^-_a-z±²-³¼-¾×÷]+";
-                let badCharacters = new RegExp(regexStr);
+            if (isDefined(parsedExpression) && (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== ''))) {
+                const openBracketsCount = pycode.split('(').length - 1;
+                const closeBracketsCount = pycode.split(')').length - 1;
+                let regexStr = '';
+                if (editorMode === 'maths') {
+                    regexStr = "[^ (-)*-/0-9<->A-Z^-_a-z±²-³¼-¾×÷]+";
+                } else {
+                    regexStr = "[^ A-Zandorxnt&∧.|∨v+^⊻!~¬01()]+"
+                }
+                const badCharacters = new RegExp(regexStr);
                 setErrors([]);
                 
                 if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
@@ -117,18 +133,29 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                     const state = {result: {tex: "", python: "", mathml: ""}};
                     setCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
                     initialEditorSymbols.current = [];
-                } else if (parsedExpression.length === 1) {
+                } else if (isDefined(parsedExpression) && parsedExpression.length === 1) {
                     // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
                     // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
-                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
-                } else {
-                    let sizes = parsedExpression.map(countChildren);
-                    let i = sizes.indexOf(Math.max.apply(null, sizes));
-                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
+                    if (sketchRef.current) {
+                        sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
+                    }
+                } else if (isDefined(parsedExpression)) {
+                    if (sketchRef.current) {
+                        const sizes = parsedExpression.map(countChildren);
+                        const i = sizes.indexOf(Math.max.apply(null, sizes));
+                        sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
+                    }
                 }
             }
         }, 250);
     };
+
+    useEffect(() => {
+        if (sketchRef.current) {
+            sketchRef.current.logicSyntax = editorSyntax;
+        }
+    }, [editorSyntax]);
+
     useLayoutEffect(() => {
         const {sketch} = makeInequality(
             hiddenEditorRef.current,
@@ -143,16 +170,16 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
         );
         sketch.log = { initialState: [], actions: [] };
         sketch.onNewEditorState = updateState;
-        sketch.onCloseMenus = () => {};
+        sketch.onCloseMenus = () => { void 0 };
         sketch.isUserPrivileged = () => { return true; };
-        sketch.onNotifySymbolDrag = () => {};
+        sketch.onNotifySymbolDrag = () => { void 0 };
         sketch.isTrashActive = () => { return false; };
 
         sketchRef.current = sketch;
     }, [hiddenEditorRef.current]);
     /*** End of text based input stuff */
 
-    let availableSymbols = queryParams.symbols && (queryParams.symbols as string).split(',').map(s => s.trim());
+    const availableSymbols = queryParams.symbols && (queryParams.symbols as string).split(',').map(s => s.trim());
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -189,7 +216,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                     </div>
                     {(editorMode === 'logic') && <div className="mt-4">
                         <Label for="inequality-syntax-select">Boolean Logic Syntax</Label>
-                        <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditorSyntax(e.target.value)}>
+                        <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEditorSyntax(e.target.value); _updateEquation(textInput); } }>
                             <option value="logic">Boolean Logic</option>
                             <option value="binary">Digital Electronics</option>
                         </Input>
@@ -222,7 +249,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                             visible={modalVisible}
                         />}
                     </div>
-                    {editorMode === 'maths' && <div className="eqn-editor-input">
+                    {(editorMode === 'maths' || editorMode === 'logic') && <div className="eqn-editor-input">
                         <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                         <InputGroup className="my-2">
                             <Input type="text" onChange={updateEquation} value={textInput}
