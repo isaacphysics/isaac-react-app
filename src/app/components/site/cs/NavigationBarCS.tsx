@@ -28,7 +28,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/topics">All topics</LinkItem>
             <LinkItem to="/pages/specification_page_aqa">AQA specification view</LinkItem>
             <LinkItem to="/pages/specification_page_ocr">OCR specification view</LinkItem>
-            <LinkItem to="/glossary">Glossary</LinkItem>
+            {/* <LinkItem to="/glossary">Glossary</LinkItem> */}
         </NavigationSection>
 
         <NavigationSection title="Events">
