@@ -186,11 +186,12 @@ export const UserPassword = (
             <Row>
                 <Col md={{size: 6, offset: 3}}>
                     <FormGroup>
-                        <h4>Session Management</h4>
-                        <Col className="text-center">
+                        <h4>Log out</h4>
+                        Please note that this will log you out from all devices you are logged in on, including this one.
+                        <Col className="text-center mt-2">
                             <div className="vertical-center ml-2">
                                 <Button onClick={() => dispatch(logOutUserEverywhere())}>
-                                    Logout Everywhere
+                                    Log me out everywhere
                                 </Button>
                             </div>
                         </Col>
