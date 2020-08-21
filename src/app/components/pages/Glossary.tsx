@@ -139,7 +139,7 @@ export const Glossary = withRouter(() => {
                                 value={searchText} onChange={e => setSearchText(e.target.value)}
                             />
                         </Col>
-                        <Col>
+                        <Col className="mt-3 mt-md-0">
                             <Label for='topic-select' className='sr-only'>Topic</Label>
                             {topics?.length > 0 && <Dropdown isOpen={topicsDropdownOpen} toggle={() => setTopicsDropdownOpen(prevState => !prevState)}>
                                 <DropdownToggle caret color="outline-primary">
@@ -153,7 +153,7 @@ export const Glossary = withRouter(() => {
                         </Col>
                     </Row>
                 </Col>
-                <Col md={{size: 1}} className="py-4">
+                <Col md={{size: 3}} className="py-4">
                     <TempExamBoardPicker className="text-right" />
                 </Col>
             </Row>
