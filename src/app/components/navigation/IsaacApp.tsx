@@ -200,7 +200,7 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/support/:type?/:category?" component={Support} />
 
                         {/* Error pages */}
-                        <Route component={NotFound} />
+                        <TrackedRoute component={NotFound} />
                     </Switch>
                 </ErrorBoundary>
             </main>

@@ -157,13 +157,19 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             const matches = className.match(/indent-([0-3])/);
             const currentIndent: number = this.state.currentIndent || (matches && parseInt(matches[1])) || 0;
             let newIndent = currentIndent;
-            if (e.key === '[' || e.code === 'BracketLeft' || e.keyCode === 91) {
+            if (e.key === '[' || e.code === 'BracketLeft') {
                 newIndent = Math.max(currentIndent - 1, 0);
-            } else if (e.key === ']' || e.code === 'BracketRight' || e.keyCode === 93) {
+            } else if (e.key === ']' || e.code === 'BracketRight') {
                 newIndent = Math.min(currentIndent + 1, Math.min(this.state.currentMaxIndent, PARSONS_MAX_INDENT));
+            }
+            let newCurrentMaxIndent = 0;
+            const previousItem = this.props.currentAttempt?.items?.[(this.state.currentDestinationIndex || 0) - 1];
+            if (previousItem) {
+                newCurrentMaxIndent = (previousItem.indentation || 0) + 1;
             }
             this.setState((prevState: IsaacParsonsQuestionState) => ({
                 currentIndent: newIndent,
+                currentMaxIndent: newCurrentMaxIndent,
                 draggedElement: Object.assign(
                     {},
                     prevState.draggedElement,
