@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import {ValidationUser, ZxcvbnResult} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../../services/validation";
-import {linkAccount, logOutUserElsewhere, resetPassword, unlinkAccount} from "../../../state/actions";
+import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount} from "../../../state/actions";
 import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../../services/passwordStrength";
 import {useDispatch, useSelector} from "react-redux";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
@@ -189,8 +189,8 @@ export const UserPassword = (
                         <h4>Session Management</h4>
                         <Col className="text-center">
                             <div className="vertical-center ml-2">
-                                <Button onClick={() => dispatch(logOutUserElsewhere())}>
-                                    Logout Elsewhere
+                                <Button onClick={() => dispatch(logOutUserEverywhere())}>
+                                    Logout Everywhere
                                 </Button>
                             </div>
                         </Col>

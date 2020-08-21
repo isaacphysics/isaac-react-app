@@ -375,14 +375,13 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const logOutUserElsewhere = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_LOG_OUT_ELSEWHERE_REQUEST});
+export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST});
     try {
-        await api.authentication.logoutElsewhere();
-        dispatch({type: ACTION_TYPE.USER_LOG_OUT_ELSEWHERE_RESPONSE_SUCCESS});
-        dispatch(showToast({color: "success", title: "Logout elsewhere successful", body: "You have logged out of your other sessions.", timeout: 5000}) as any);
+        await api.authentication.logoutEverywhere();
+        dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Logout elsewhere failed", e));
+        dispatch(showErrorToastIfNeeded("Logout everywhere failed", e));
     }
 };
 

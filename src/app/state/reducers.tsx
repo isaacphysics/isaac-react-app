@@ -59,6 +59,7 @@ export const user = (user: UserState = null, action: Action): UserState => {
             return {loggedIn: true, ...action.user};
         case ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE:
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
+        case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
             return {loggedIn: false};
         default:
             return user;
@@ -1059,7 +1060,7 @@ export type AppState = undefined | {
 }
 
 export const rootReducer = (state: AppState, action: Action) => {
-    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
+    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         state = undefined;
     }
     return appReducer(state, action);
