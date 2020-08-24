@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import {bb} from "billboard.js";
 import {NUMERIC_DATE} from "../DateString";
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
-import {min} from "moment";
 
 export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDate: AnsweredQuestionsByDate}) => {
     const generateDateArray = (min: Date, max: Date) => {
