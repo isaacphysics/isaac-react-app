@@ -21,6 +21,9 @@ const openNotificationSocket = function(): void {
 
 
     notificationWebSocket.onopen = function(_event) {
+        if (webSocketCheckTimeout !== null) {
+            clearTimeout(webSocketCheckTimeout);
+        }
         webSocketCheckTimeout = window.setTimeout(checkForWebSocket, 10000);
         webSocketErrorCount = 0; // Reset error count on successful open.
     }
@@ -75,6 +78,9 @@ const openNotificationSocket = function(): void {
                     // So use the event 'reason' to indicate too many connections, try again in 1 min.
                     console.log("WebSocket endpoint overloaded. Trying again later!")
                     webSocketCheckTimeout = window.setTimeout(checkForWebSocket, 60000);
+                } else if (event.reason === "USER_LOGOUT") {
+                    // This was intentional and client generated. Do not attempt to reopen the WebSocket.
+                    break;
                 } else {
                     webSocketErrorCount += 1;
                     // If too many errors have occurred whilst re-trying, abort:
@@ -120,5 +126,16 @@ export const checkForWebSocket = function(): void {
         }
     } catch (e) {
         console.log("Error establishing WebSocket connection!", e)
+    }
+}
+
+export const closeWebSocket = function(): void {
+    if (notificationWebSocket !== null) {
+        notificationWebSocket.close(1000, "USER_LOGOUT");
+        notificationWebSocket = null;
+    }
+    if (webSocketCheckTimeout !== null) {
+        clearTimeout(webSocketCheckTimeout);
+        webSocketCheckTimeout = null;
     }
 }
