@@ -195,7 +195,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         }, 250);
     };
 
-    const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid.v4()}`);
+    const helpTooltipId = `eqn-editor-help-${uuid.v4()}`.replace(/[^a-zA-Z0-9-]/gi, '-');
     const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(
         function (str) {return str.trim().replace(/;/g, ',')}).sort().join(", ");
     return (
