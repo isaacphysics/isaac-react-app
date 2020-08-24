@@ -83,7 +83,9 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
-        window.scrollTo(0, previousYPosition);
+        if (previousYPosition) {
+            window.scrollTo(0, previousYPosition);
+        }
     };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
