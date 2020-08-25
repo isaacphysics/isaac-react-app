@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
 import {setCurrentAttempt} from "../../state/actions";
@@ -197,7 +197,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         }, 250);
     };
 
-    const helpTooltipId = `eqn-editor-help-${uuid.v4()}`.replace(/[^a-zA-Z0-9-]/gi, '-');
+    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid.v4()}`, []);
     const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(
         function (str) {return str.trim().replace(/;/g, ',')}).sort().join(", ");
     return (
