@@ -25,7 +25,7 @@ export const Alevel = () => {
                 <button className="menu-card" onClick={() => dispatch(openALevelBookChoiceModal())} >
                     <Card outline color="green">
                         <CardTitle className="px-3">
-                            Physics Skills Mastery
+                            Physics Skills Mastery Book
                         </CardTitle>
                         <CardBody className="px-3">
                             <Row>
@@ -34,7 +34,7 @@ export const Alevel = () => {
                                 </Col>
                                 <Col md="9">
                                     <aside className="ml-3">
-                                        Check your answers to our Mastering Essential Pre-University Physics book.
+                                        Interactive questions from our Mastering Essential Pre-University Physics book.
                                     </aside>
                                 </Col>
                             </Row>
@@ -57,7 +57,7 @@ export const Alevel = () => {
             <Col md="4">
                 <MenuCard link={"/books/pre_uni_maths"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
-                    title={"Maths for Sciences"} subtitle={"The collection of our Maths questions on the platform."} tripleWide={true}/>
+                    title={"Maths for Sciences Book"} subtitle={"Interactive questions from our pre-university Maths book."} tripleWide={true}/>
             </Col>
             <Col md="4">
                 <MenuCard link={"/pages/pre_made_gameboards"}
@@ -74,7 +74,7 @@ export const Alevel = () => {
             <Col md="4">
                 <MenuCard link={"/books/chemistry_16"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
-                    title={"Physical Chemistry Mastery"} subtitle={"Check your answers to our Mastering Essential Pre-University Physical Chemistry book."}
+                    title={"Physical Chemistry Mastery Book"} subtitle={"Interactive questions from our Mastering Essential Pre-University Physical Chemistry book."}
                     tripleWide={true}/>
             </Col>
             <Col md="4">
@@ -92,7 +92,7 @@ export const Alevel = () => {
             <Col md="4">
                 <MenuCard link={"/books/solve_physics_problems"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
-                    title={"Solving Physics Problems"} subtitle={"A practical guide to solving unfamiliar problems using pre-university Physics."} tripleWide={true}/>
+                    title={"Solving Physics Problems Book"} subtitle={"Our printed guide to solving unfamiliar problems using pre-university Physics."} tripleWide={true}/>
             </Col>
             <Col md="4">
                 <MenuCard link={"/pages/spc"}
@@ -102,7 +102,7 @@ export const Alevel = () => {
             <Col md="4">
                 <MenuCard link={"/books/quantum_mechanics_primer"}
                     imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
-                    title={"Quantum Mechanics Primer"} subtitle={"A first year university introduction to quantum mechanics."} tripleWide={true}/>
+                    title={"Quantum Mechanics Primer Book"} subtitle={"Interactive questions from a first year university introduction to quantum mechanics."} tripleWide={true}/>
             </Col>
         </Row>
     </Container>
