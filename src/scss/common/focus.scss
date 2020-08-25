@@ -143,4 +143,9 @@
   outline: 0.2rem solid $black;
 }
 
+// TODO: Review blanket suppression of focus indicator on keyboard-unfocusable elements.
+[tabindex="-1"]:focus {
+  outline: 0 !important;
+}
+
 /** End of focus styles **/
