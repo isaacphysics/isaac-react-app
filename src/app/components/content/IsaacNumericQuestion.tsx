@@ -153,7 +153,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: Isaa
                         </Label>
                     </div>
                     {doc.requireUnits && <div className="unit-selection w-100 w-sm-50 w-md-100 w-lg-25">
-                        <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-2">
+                        <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-5">
                             Units <br/>
                             <Dropdown isOpen={isOpen} toggle={() => {setIsOpen(!isOpen);}}>
                                 <DropdownToggle caret className="px-2 py-1" color={currentAttemptUnitsWrong ? "danger" : undefined}>
