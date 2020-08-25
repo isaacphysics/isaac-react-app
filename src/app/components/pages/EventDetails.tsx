@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
-import moment from "moment";
+import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
@@ -30,7 +30,7 @@ import {IsaacContent} from "../content/IsaacContent";
 import {formatEventDetailsDate, studentOnlyEventMessage} from "../../services/events";
 
 function formatDate(date: Date|number) {
-    return moment(date).format("YYYYMMDD[T]HHmmss");
+    return dayjs(date).format("YYYYMMDD[T]HHmmss");
 }
 
 interface EventDetailsProps {

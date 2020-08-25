@@ -55,7 +55,7 @@ const stateToProps = (state: AppState, props: any) => {
         userAuthSettings: state ? state.userAuthSettings : null,
         selectedUserAuthSettings: state ? state.selectedUserAuthSettings : null,
         userPreferences: state ? state.userPreferences : null,
-        firstLogin: history.location && history.location.state && history.location.state.firstLogin,
+        firstLogin: history.location && history.location.state && (history.location.state as any).firstLogin,
         hashAnchor: (hash && hash.slice(1)) || null,
         authToken: (searchParams && searchParams.authToken) ? (searchParams.authToken as string) : null,
         userOfInterest: (searchParams && searchParams.userId) ? (searchParams.userId as string) : null,
