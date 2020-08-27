@@ -119,16 +119,8 @@ export const selectors = {
     },
 
     admin: {
-        userSearch: (state: AppState) => state?.adminUserSearch?.map(user => {
-            if (load(KEY.ANONYMISE_USERS) === "YES") {
-                return anonymisationFunctions.userSummaryForAdminUsersDTO(user)
-            } else {
-                return user
-            }
-        }) || null,
-        userSchoolLookup: (state: AppState) => {
-            return state?.userSchoolLookup && (load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.userSchoolLookup(state.userSchoolLookup) : state.userSchoolLookup)
-        }
+        userSearch: (state: AppState) => state?.adminUserSearch || null,
+        userSchoolLookup: (state: AppState) => state?.userSchoolLookup,
     },
 
     assignments: {
