@@ -13,7 +13,6 @@ import { sanitiseInequalityState } from '../../services/questions';
 import { parseMathsExpression, parseBooleanExpression } from 'inequality-grammar';
 
 import { isDefined } from "isaac-graph-sketcher/dist/src/GraphUtils";
-import { update } from 'lodash';
 
 export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
     const queryParams = queryString.parse(location.search);
@@ -255,8 +254,8 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                             <Input type="text" onChange={updateEquation} value={textInput}
                                 placeholder="or type your formula here"/>
                             <InputGroupAddon addonType="append">
-                                <Button type="button" className="eqn-editor-help" id='inequality-help'>?</Button>
-                                <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
+                                <Button type="button" className="eqn-editor-help" id='inequality-help' size="sm">?</Button>
+                                {editorMode === 'maths' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
                                     Here are some examples of expressions you can type:<br />
                                     <br />
                                     a*x^2 + b x + c<br />
@@ -265,7 +264,16 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                                     log(x_a, 2) == log(x_a) / log(2)<br />
                                     <br />
                                     As you type, the box above will preview the result.
-                                </UncontrolledTooltip>
+                                </UncontrolledTooltip>}
+                                {editorMode === 'logic' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
+                                    Here are some examples of expressions you can type:<br />
+                                    <br />
+                                    A AND (B XOR NOT C)<br />
+                                    A &amp; (B ^ !C)<br />
+                                    T &amp; ~(F + A)<br />
+                                    1 . ~(0 + A)<br />
+                                    As you type, the box above will preview the result.
+                                </UncontrolledTooltip>}
                             </InputGroupAddon>
                         </InputGroup>
                         {errors && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>

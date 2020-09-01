@@ -142,6 +142,10 @@ button {
   }
 }
 
+#inequality-help {
+  min-width: 0;
+}
+
 @include media-breakpoint-up(md) {
   .parsons-layout {
     -webkit-animation: gutter-overflow 1s; /* Safari 4+ */
