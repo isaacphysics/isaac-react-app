@@ -138,7 +138,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                         </div>
 
                         {SITE_SUBJECT === SITE.PHY && <div className="mt-4">
-                            <h4>Questions correct by Tag</h4>
+                            <h4>Isaac Books</h4>
                             <RS.Row>
                                 {siteSpecific.questionTagsStatsList.map((qType: string) => {
                                     const correct = userProgress?.correctByTag?.[qType] || null;
