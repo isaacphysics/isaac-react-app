@@ -59,10 +59,13 @@ export const Glossary = withRouter(() => {
     }, [rawGlossaryTerms, filterTopic, searchText]);
 
     const scrollToKey = (k: string) => {
-        const element = document.getElementById(k);
+        const element = document.getElementById(`key-${k}`);
+        const link = document.getElementById(`alphascroller-key-${k}`);
+
         if (element) {
             scrollVerticallyIntoView(element, -70);
         }
+        link?.blur();
     }
 
     /* Horror lies ahead. Sorry. */
@@ -107,7 +110,7 @@ export const Glossary = withRouter(() => {
 
     const alphabetList = glossaryTerms && '#ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(k => {
         if (glossaryTerms.hasOwnProperty(k)) {
-            return <div className="key" key={k} role="button" tabIndex={0} onKeyUp={() => scrollToKey(`key-${k}`)} onClick={() => scrollToKey(`key-${k}`)}>
+            return <div id={`alphascroller-key-${k}`} className="key" key={k} role="button" tabIndex={0} onKeyUp={() => scrollToKey(k)} onClick={() => scrollToKey(k)}>
                 {k}
             </div>
         } else {
