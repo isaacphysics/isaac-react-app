@@ -12,6 +12,7 @@ import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {TempExamBoardPicker} from '../elements/inputs/TempExamBoardPicker';
 import _startCase from 'lodash/startCase';
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
+import { isDefined } from '../../services/miscUtils';
 
 export const Glossary = withRouter(() => {
     const [searchText, setSearchText] = useState("");
@@ -62,7 +63,7 @@ export const Glossary = withRouter(() => {
         const element = document.getElementById(`key-${k}`);
         const link = document.getElementById(`alphascroller-key-${k}`);
 
-        if (element) {
+        if (isDefined(element)) {
             scrollVerticallyIntoView(element, -70);
         }
         link?.blur();
