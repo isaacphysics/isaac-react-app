@@ -74,6 +74,7 @@ import {Glossary} from '../pages/Glossary';
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ClientError} from "../pages/ClientError";
+import {checkForWebSocket} from "../../services/websockets";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -95,6 +96,7 @@ export const IsaacApp = () => {
     useEffect(() => {
         if (isLoggedIn(user)) {
             dispatch(requestNotifications());
+            checkForWebSocket();
         }
     }, [dispatch, user]);
 
