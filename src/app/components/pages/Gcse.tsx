@@ -20,7 +20,7 @@ export const Gcse = () => {
         <Row className="teacher-feature-body">
             <Col md="6">
                 <MenuCard link={"/books/phys_book_gcse"} imageSrc={"/assets/phy/key_stage_sprite.svg#skills-book-cover"}
-                    title={"Physics Skills Mastery"} subtitle={"Check your answers to our Mastering Essential GCSE Physics book."}/>
+                    title={"Physics Skills Mastery Book"} subtitle={"Interactive questions from our Mastering Essential GCSE Physics book."}/>
             </Col>
             <Col md="6">
                 <MenuCard link={"/gameboards/new"}

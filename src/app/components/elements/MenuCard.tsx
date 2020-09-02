@@ -2,16 +2,17 @@ import React from "react";
 import classNames from "classnames";
 import {Card, CardBody, CardTitle, Col, Row} from "reactstrap";
 
-interface HexagonProps {
+interface MenuCardProps {
     link: string;
     imageSrc: string;
     title: string;
     subtitle?: string;
     disabled?: boolean;
     verticalContent?: boolean;
+    tripleWide?: boolean;
 }
 
-export const MenuCard = ({link, imageSrc, title, subtitle, disabled, verticalContent}: HexagonProps ) => {
+export const MenuCard = ({link, imageSrc, title, subtitle, disabled, verticalContent, tripleWide}: MenuCardProps ) => {
     let classes = classNames({"menu-card": true, "disabled": disabled, "teacher-feature": verticalContent});
     return <a href={link} className={classes} aria-disabled={disabled} >
         {verticalContent ?
@@ -45,12 +46,12 @@ export const MenuCard = ({link, imageSrc, title, subtitle, disabled, verticalCon
                     </Row>
                 </CardTitle>
                 <CardBody className="px-3">
-                    <Row>
-                        <Col md="3"  className="justify-content-md-center col-centered">
+                    <Row className="align-items-center">
+                        <Col md="3" className="justify-content-md-center col-centered">
                             <img className={classes} src={imageSrc} alt=""/>
                         </Col>
                         <Col md="9">
-                            <aside>
+                            <aside className={tripleWide ? "ml-3" : ""}>
                                 {subtitle}
                             </aside>
                         </Col>

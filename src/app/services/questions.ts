@@ -40,6 +40,14 @@ export const HUMAN_QUESTION_TYPES = new Map([
     ["default", "Multiple choice"]
 ]);
 
+export const HUMAN_QUESTION_TAGS = new Map([
+    ["maths_book", "Pre-University Mathematics for Sciences"],
+    ["physics_skills_14", "Mastering Essential Pre-University Physics (2nd Edition)"],
+    ["physics_skills_19", "Mastering Essential Pre-University Physics (3rd Edition)"],
+    ["phys_book_gcse", "Mastering Essential GCSE Physics"],
+    ["chemistry_16", "Mastering Essential Pre-University Physical Chemistry"],
+]);
+
 export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[]) => {
     if (!availableSymbols) return;
     let theseSymbols = availableSymbols.slice(0).map(s => s.trim());
