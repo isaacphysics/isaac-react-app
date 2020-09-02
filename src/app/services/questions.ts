@@ -41,7 +41,11 @@ export const HUMAN_QUESTION_TYPES = new Map([
 ]);
 
 export const HUMAN_QUESTION_TAGS = new Map([
-    ["maths_book", "Maths book"],
+    ["maths_book", "Pre-University Mathematics for Sciences"],
+    ["physics_skills_14", "Mastering Essential Pre-University Physics (2nd Edition)"],
+    ["physics_skills_19", "Mastering Essential Pre-University Physics (3rd Edition)"],
+    ["phys_book_gcse", "Mastering Essential GCSE Physics"],
+    ["chemistry_16", "Mastering Essential Pre-University Physical Chemistry"],
 ]);
 
 export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[]) => {

@@ -25,7 +25,7 @@ export const siteSpecific = {
             "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion"
         ],
         questionTagsStatsList: [
-            "maths_book"
+            "maths_book", "physics_skills_14", "physics_skills_19", "phys_book_gcse", "chemistry_16"
         ],
         typeColWidth: "col-lg-6",
         tagColWidth: "col-lg-12"
@@ -146,10 +146,10 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                                     const percentage = safePercentage(correct, attempts);
                                     return <RS.Col key={qType} className={`${siteSpecific.tagColWidth} mt-2 type-progress-bar`}>
                                         <div className={"px-2"}>
-                                            {HUMAN_QUESTION_TAGS.get(qType)} questions correct
+                                            {HUMAN_QUESTION_TAGS.get(qType)} questions completed correctly of those attempted
                                         </div>
                                         <div className={"px-2"}>
-                                            <ProgressBar percentage={percentage || 0}>
+                                            <ProgressBar percentage={percentage || 0} type={qType}>
                                                 {percentage == null ? "No data" : `${correct} of ${attempts}`}
                                             </ProgressBar>
                                         </div>
