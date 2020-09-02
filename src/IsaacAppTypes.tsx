@@ -210,12 +210,17 @@ export type Action =
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS; testCaseResponses: TestCaseDTO[]}
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST}
+    | {type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS, specResponse: {results: string[], totalResults: number}}
+    | {type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
+    | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_NO_CONTENT}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE; gameboardId: string | null}
 
     | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST}
@@ -407,6 +412,8 @@ export type Action =
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
 
     | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
+
+    | {type: ACTION_TYPE.SET_MAIN_CONTENT_ID; id: string}
 ;
 
 export type NOT_FOUND_TYPE = 404;

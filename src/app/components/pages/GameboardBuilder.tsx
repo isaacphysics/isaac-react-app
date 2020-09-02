@@ -60,6 +60,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
             setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
             setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
+            logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: baseGameboard.id});
         }
     }, [user, baseGameboard]);
 
@@ -122,7 +123,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                 { value: examBoardTagMap[EXAM_BOARD.OCR], label: 'OCR' },
                                 { value: 'ISAAC_BOARD', label: 'Created by Isaac' }]}
                             name="colors"
-                            className="basic-multi-select"
+                            className={SITE_SUBJECT === SITE.CS ? "basic-multi-select" : ""}
                             classNamePrefix="select"
                             placeholder="None"
                             onChange={multiSelectOnChange(setGameboardTags)}

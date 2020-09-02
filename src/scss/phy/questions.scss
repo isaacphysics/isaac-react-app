@@ -12,10 +12,14 @@
   padding: 0 0.25rem;
   font-weight: 100;
   font: $primary-font;
-  p {margin-bottom: 0;}
 }
 .question-panel .isaac-accordion {
   background: $gray-103;
+  .card-body > .content-value {
+    @extend .px-md-5;
+    font-size: 1.25rem;
+    line-height: 1.6;
+  }
   .question-component {
     background: none;
     box-shadow: none;
@@ -42,7 +46,7 @@
 
   form + form {
     .question-component {
-      margin-top: 3rem;
+      margin-top: 4rem;
     }
   }
 }
@@ -54,5 +58,13 @@
   .alert {
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
+  }
+}
+
+.concept-content-container, .generic-content-container {
+  .quick-question {
+    .question-content, .content-value, .btn {
+      font-size: 1rem !important;
+    }
   }
 }

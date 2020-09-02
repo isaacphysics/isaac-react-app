@@ -3,11 +3,12 @@
 $phy_green: #509e2e;
 $a11y_green: #448525;
 $phy_orangered: #ef3e36;
+$a11y_orangered: #e22e25;
 $phy_blue: #009acd;
 $a11y_blue: #007fa9;
 $phy_purple: #944cbe;
 $phy_burgundy: #991846;
-$phy_chemistry: $phy_orangered;
+$phy_chemistry: $a11y_orangered;
 $phy_maths: $a11y_blue;
 $phy_physics: $phy_purple;
 $phy_extra_force_yellow: #fea100;
@@ -26,6 +27,11 @@ $secondary: $a11y_green;
 $theme-colors: (
     "primary": $primary,
     "secondary": $secondary
+);
+
+// Grid Customisation
+$container-max-widths: (
+    md: 942px
 );
 
 //Greys
@@ -78,7 +84,6 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "typography";
 @import "../common/headings";
 @import "../common/modals";
-@import "questions";
 @import "../common/forms";
 @import "../common/elements";
 @import "../common/breadcrumbs";
@@ -88,11 +93,14 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/cards";
 @import "../common/list-groups";
 @import "../common/inequality-modal";
+@import "../common/graph-sketcher-modal";
 @import "../common/carousel";
 @import "../common/boards";
 @import "../common/focus";
 @import "../common/anvil";
 @import "../common/reservation-modal";
+@import "inequality-modal";
+@import "questions";
 @import "progress-bar";
 @import "icons";
 @import "hints";
@@ -153,8 +161,15 @@ p small {
     }
 }
 
-// Double class to give this more specifity
-.katex.katex { font-size: 1.1em; }
+// Double class to give this more specificity
+.katex.katex {
+    font-size: 1.1em;
+    white-space: nowrap !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+}
 
 body {
     color: $black;

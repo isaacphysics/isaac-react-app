@@ -10,7 +10,7 @@ import {
     toasts,
     user
 } from "../../app/state/reducers";
-import {Action, AppGameBoard, AppGroupMembership, AppQuestionDTO, LoggedInUser} from "../../IsaacAppTypes";
+import {Action, AppGameBoard, AppGroupMembership, AppQuestionDTO, LoggedInUser, AppGroup} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
 import {mapValues, union, without} from "lodash";
@@ -284,7 +284,9 @@ describe("groups reducer", () => {
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
             const newGroups = groupSelector.active(actualNextState);
-            expect(newGroups.length).toEqual(2);
+            expect(newGroups).toBeDefined();
+            expect(newGroups).toHaveProperty('length');
+            expect((newGroups as AppGroup[]).length).toEqual(2);
             expect(newGroups).toEqual([userGroupDTOs.one, updatedGroup]);
         });
     });
@@ -296,7 +298,9 @@ describe("groups reducer", () => {
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
             const newGroups = groupSelector.active(actualNextState);
-            expect(newGroups.length).toEqual(1);
+            expect(newGroups).toBeDefined();
+            expect(newGroups).toHaveProperty('length');
+            expect((newGroups as AppGroup[]).length).toEqual(1);
             expect(newGroups).toEqual([userGroupDTOs.one]);
         });
     });
@@ -452,14 +456,16 @@ describe("boards reducer", () => {
         const previousStates = [simpleState, assignedState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
-            expect(selector.boards(actualNextState).boards[1]).toEqual({...testBoards[1], assignedGroups: testGroups});
+            expect(selector.boards(actualNextState)).toBeDefined();
+            expect(selector.boards(actualNextState)?.boards[1]).toEqual({...testBoards[1], assignedGroups: testGroups});
         });
     });
 
     it ("can remove a board assignees", () => {
         const action: Action = {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, board: testBoards[0], group: testGroups[0]};
         const actualNextState = boards(assignedState, action);
-        expect(selector.boards(actualNextState).boards[0]).toEqual({...testBoards[0], assignedGroups: without(testGroups, testGroups[0])});
+        expect(selector.boards(actualNextState)).toBeDefined();
+        expect(selector.boards(actualNextState)?.boards[0]).toEqual({...testBoards[0], assignedGroups: without(testGroups, testGroups[0])});
     });
 
     it ("can add a board assignee", () => {
@@ -468,7 +474,7 @@ describe("boards reducer", () => {
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
             const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(gId => testGroupsMap[gId]) || [];
-            expect(selector.boards(actualNextState).boards[0]).toEqual({...testBoards[0], assignedGroups: union(assignedGroups, [testGroupsMap[1]])});
+            expect(selector.boards(actualNextState)?.boards[0]).toEqual({...testBoards[0], assignedGroups: union(assignedGroups, [testGroupsMap[1]])});
         });
     });
 

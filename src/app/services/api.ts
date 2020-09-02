@@ -251,6 +251,9 @@ export const api = {
         },
         testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
             return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
+        },
+        generateSpecification: (graphChoice: ApiTypes.GraphChoiceDTO) => {
+            return endpoint.post("/questions/generateSpecification", graphChoice);
         }
     },
     concepts: {
@@ -404,20 +407,16 @@ export const api = {
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
             showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
-            /* eslint-disable @typescript-eslint/camelcase */
             return endpoint.get(`/events`, {params: {
                 start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
                 show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
             }});
-            /* eslint-enable @typescript-eslint/camelcase */
         },
         getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
-            /* eslint-disable @typescript-eslint/camelcase */
             return endpoint.get(`/events`, {params: {
                 start_index: 0, limit: numberOfActiveEvents, show_active_only: active,
                 show_inactive_only: !active, show_booked_only: false, tags: null
             }});
-            /* eslint-enable @typescript-eslint/camelcase */
         },
         getEventOverviews: (eventOverviewFilter: EventOverviewFilter): AxiosPromise<{results: AppTypes.EventOverview[]; totalResults: number}> => {
             const params = {limit: -1, startIndex: 0};
@@ -430,12 +429,10 @@ export const api = {
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
             showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
         ): AxiosPromise<{results: AppTypes.EventMapData[]; totalResults: number}> => {
-            /* eslint-disable @typescript-eslint/camelcase */
             return endpoint.get(`/events/map_data`, {params: {
                 start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
                 show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
             }});
-            /* eslint-enable @typescript-eslint/camelcase */
         }
     },
     eventBookings: {
@@ -491,6 +488,18 @@ export const api = {
     fasttrack: {
         concepts: (gameboardId: string, concept: string, upperQuestionId: string): AxiosPromise<ApiTypes.GameboardItem[]> => {
             return endpoint.get(`/fasttrack/${gameboardId}/concepts`, {params: {concept, "upper_question_id": upperQuestionId}});
+        }
+    },
+    websockets: {
+        userAlerts: (): WebSocket => {
+            const userAlertsURI = "/user-alerts";
+            if (API_PATH.indexOf("http") > -1) {
+                // APP and API on separate domains, urlPrefix is full URL:
+                return new WebSocket(API_PATH.replace(/^http/, "ws") + userAlertsURI);
+            } else {
+                // APP and API on same domain, need window.location.origin for full URL:
+                return new WebSocket(window.location.origin.replace(/^http/, "ws") + API_PATH + userAlertsURI);
+            }
         }
     }
 };

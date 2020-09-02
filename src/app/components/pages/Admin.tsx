@@ -9,6 +9,7 @@ import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL} from "../../services/c
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {selectors} from "../../state/selectors";
 import classnames from "classnames";
+import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useDispatch();
@@ -121,6 +122,9 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                             </RS.Alert>
                         }
                     </React.Fragment>}
+
+                    <h3 className={"mt-2"}>Manage users</h3>
+                    <AnonymiseUsersCheckbox/>
                 </RS.CardBody>
             </RS.Card>
 

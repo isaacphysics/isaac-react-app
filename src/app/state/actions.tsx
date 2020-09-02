@@ -11,6 +11,7 @@ import {
     EventTypeFilter,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
+    NO_CONTENT,
     NOT_FOUND,
     TAG_ID
 } from "../services/constants";
@@ -41,6 +42,7 @@ import {
     EmailVerificationStatus,
     GameboardDTO,
     GlossaryTermDTO,
+    GraphChoiceDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
     RegisteredUserDTO,
@@ -70,6 +72,7 @@ import {EventOverviewFilter} from "../components/elements/panels/EventOverviews"
 import {atLeastOne} from "../services/validation";
 import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
+import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -965,6 +968,18 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
     }
 };
 
+// Generate answer spec for graph sketcher
+export const generateSpecification = (graphChoice: GraphChoiceDTO) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST});
+        const specResponse = await api.questions.generateSpecification(graphChoice);
+        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS, specResponse: specResponse.data });
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("There was a problem generating a graph specification", e));
+    }
+}
+
 // Current gameboard
 export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const state = getState();
@@ -1024,7 +1039,11 @@ export const generateTemporaryGameboard = (params: {[key: string]: string}) => a
     dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST});
     try {
         const gameboardResponse = await api.gameboards.generateTemporary(params);
-        dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS, gameboard: gameboardResponse.data});
+        if (gameboardResponse.status === NO_CONTENT) {
+            dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_NO_CONTENT});
+        } else {
+            dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS, gameboard: gameboardResponse.data});
+        }
     } catch (e) {
         dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Error creating temporary gameboard", e));
@@ -1334,6 +1353,10 @@ export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmai
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE, group, manager});
         dispatch(showErrorToastIfNeeded("Group manager removal failed", e));
     }
+};
+
+export const showGroupEmailModal = (users?: number[]) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(groupEmailModal(users)) as any);
 };
 
 export const showGroupInvitationModal = (firstTime: boolean) => async (dispatch: Dispatch<Action>) => {
@@ -1833,6 +1856,9 @@ export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upp
     } catch (e) {
         dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE});
     }};
+
+// Main anchor
+export const setMainContentId = (id: string) => ({type: ACTION_TYPE.SET_MAIN_CONTENT_ID, id});
 
 // SERVICE ACTIONS (w/o dispatch)
 export const changePage = (path: string) => {

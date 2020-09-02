@@ -368,6 +368,20 @@ export const questions = (qs: QuestionsState = null, action: Action) => {
     }
 };
 
+// TODO Move this into questions to make it consistent?
+type GraphSpecState = string[] | null;
+export const graphSketcherSpec = (p: GraphSpecState = null, action: Action) => {
+    switch(action.type) {
+        case ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST:
+            return null;
+        case ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS:
+            return { ...action.specResponse.results };
+        case ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE:
+        default:
+            return p;
+    }
+}
+
 type TestQuestionsState = TestCaseDTO[] | null;
 export const testQuestions = (testQuestions: TestQuestionsState = null, action: Action) => {
     switch (action.type) {
@@ -435,7 +449,7 @@ export const assignmentsByMe = (assignments: AssignmentsState = null, action: Ac
     }
 };
 
-type ProgressState = {[assignmentId: number]: AppAssignmentProgress[]} | null;
+export type ProgressState = {[assignmentId: number]: AppAssignmentProgress[]} | null;
 export const progress = (progress: ProgressState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS:
@@ -454,6 +468,7 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
             return action.gameboard;
         case ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS:
             return {id: action.gameboardId};
+        case ACTION_TYPE.GAMEBOARD_RESPONSE_NO_CONTENT:
         case ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE:
             return NOT_FOUND;
         case ACTION_TYPE.ROUTER_PAGE_CHANGE:
@@ -923,6 +938,17 @@ export const fasttrackConcepts = (state: FasttrackConceptsState = null, action: 
     }
 };
 
+type MainContentIdState = string | null;
+export const mainContentId = (state: MainContentIdState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.SET_MAIN_CONTENT_ID:
+            return action.id;
+        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
+            return null;
+        default:
+            return state;
+    }
+};
 
 const appReducer = combineReducers({
     adminUserGet,
@@ -972,7 +998,9 @@ const appReducer = combineReducers({
     testQuestions,
     printingSettings,
     concepts,
-    fasttrackConcepts
+    fasttrackConcepts,
+    graphSketcherSpec,
+    mainContentId
 });
 
 export type AppState = undefined | {
@@ -1025,6 +1053,8 @@ export type AppState = undefined | {
     testQuestions: TestQuestionsState;
     concepts: ConceptsState;
     fasttrackConcepts: FasttrackConceptsState;
+    graphSketcherSpec: GraphSpecState;
+    mainContentId: MainContentIdState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {

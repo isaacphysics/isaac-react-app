@@ -67,7 +67,7 @@ button {
   .question-content {
     font-family: $secondary-font;
     font-size: 1.25rem;
-    font-weight: 100;
+    font-weight: 400;
     line-height: 1.6;
   }
 
@@ -80,22 +80,28 @@ button {
   }
 }
 
-.numeric-question .unit-selection {
-  .dropdown-menu {
-    width: 100%;
-    min-width: unset;
+.numeric-question {
+  .numeric-help {
+    min-width: 4rem !important;
   }
-  button.btn {
-    padding: 0.25rem 1.5rem;
-    min-width: unset;
-    width: 100%;
-    &.selected {
-      border-radius: 0;
+
+  .unit-selection {
+    .dropdown-menu {
+      width: 100%;
+      min-width: unset;
     }
-    &.dropdown-toggle::after {
-      position: absolute;
-      right: 0.5rem;
-      top: 1rem;
+    button.btn {
+      padding: 0.25rem 1.5rem;
+      min-width: unset;
+      width: 100%;
+      &.selected {
+        border-radius: 0;
+      }
+      &.dropdown-toggle::after {
+        position: absolute;
+        right: 0.5rem;
+        top: 1rem;
+      }
     }
   }
 }
@@ -174,15 +180,59 @@ button {
     $parsons-step: 45;
 
     .parsons-item {
-      @for $i from 1 through $parsons-max-indent {
+      @for $i from 0 through $parsons-max-indent {
         &.indent-#{$i} {
           margin-left: #{$i * $parsons-step}px;
+        }
+      }
+
+      position: relative;
+
+      .controls {
+        display: none;
+      }
+
+      .show-controls {
+        .controls {
+          position: absolute;
+          right: 0.5rem;
+          top: 0.5rem;
+          display: block;
+
+          span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+
+            &.show:hover {
+              background-color: $primary !important;
+            }
+
+            &.hide {
+              opacity: 0.2;
+              cursor: default;
+            }
+
+            &.show {
+              opacity: 1.0;
+            }
+
+            &.reduce {
+              background: $gray-120 url('/assets/chevron_left.svg') no-repeat center;
+              margin-right: 4px;
+            }
+
+            &.increase {
+              background: $gray-120 url('/assets/chevron_right.svg') no-repeat center;
+            }
+          }
         }
       }
     }
 
     &#parsons-choice-area {
-      @for $i from 1 through $parsons-max-indent {
+      @for $i from 0 through $parsons-max-indent {
         &.ghost-indent-#{$i} {
           background: linear-gradient(to right,
             white #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 7}px, white #{$i * $parsons-step + 7}px
