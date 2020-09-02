@@ -88,6 +88,10 @@
   }
 }
 
+// FIXME: This is not nice at all, but does fix subject and email prefs!
+#account-page {
+  @include apply-subject-classes($a11y_green);
+}
 
 div.physics {
   @include apply-subject-classes($phy_physics);

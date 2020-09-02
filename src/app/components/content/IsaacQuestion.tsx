@@ -257,8 +257,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
                 </RS.Col>
             </RS.Row>}
 
-            {SITE_SUBJECT === SITE.PHY && !validationResponse?.correct &&
-                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />
+            {SITE_SUBJECT === SITE.PHY &&
+                <div className={validationResponse?.correct ? "mt-5" : ""}>
+                    <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints}/>
+                </div>
             }
         </div>
     </RS.Form>;

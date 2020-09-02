@@ -80,22 +80,28 @@ button {
   }
 }
 
-.numeric-question .unit-selection {
-  .dropdown-menu {
-    width: 100%;
-    min-width: unset;
+.numeric-question {
+  .numeric-help {
+    min-width: 4rem !important;
   }
-  button.btn {
-    padding: 0.25rem 1.5rem;
-    min-width: unset;
-    width: 100%;
-    &.selected {
-      border-radius: 0;
+
+  .unit-selection {
+    .dropdown-menu {
+      width: 100%;
+      min-width: unset;
     }
-    &.dropdown-toggle::after {
-      position: absolute;
-      right: 0.5rem;
-      top: 1rem;
+    button.btn {
+      padding: 0.25rem 1.5rem;
+      min-width: unset;
+      width: 100%;
+      &.selected {
+        border-radius: 0;
+      }
+      &.dropdown-toggle::after {
+        position: absolute;
+        right: 0.5rem;
+        top: 1rem;
+      }
     }
   }
 }
