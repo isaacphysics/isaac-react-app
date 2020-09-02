@@ -44,7 +44,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                     </div>
                 </div>
 
-                <Row>
+                <Row className="generic-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4">
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />

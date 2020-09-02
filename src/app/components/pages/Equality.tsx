@@ -251,14 +251,16 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                 <Col md={{size: 8, offset: 2}} className="py-4 inequality-results">
                     <h4>LaTeX</h4>
                     <pre>${currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex}$</pre>
-                    <h4>Python</h4>
-                    <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python}</pre>
+                    {editorMode === 'chemistry' && <h4>MhChem</h4>}
+                    {editorMode === 'chemistry' && <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.mhchem}</pre>}
+                    {editorMode !== 'chemistry' && <h4>Python</h4>}
+                    {editorMode !== 'chemistry' && <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python}</pre>}
                     <h4>Available symbols</h4>
                     <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.uniqueSymbols}</pre>
                     <h4>Inequality seed</h4>
                     <pre>{currentAttemptValue && currentAttemptValue.symbols && JSON.stringify(currentAttemptValue.symbols)}</pre>
-                    <h4>MathML</h4>
-                    <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.mathml}</pre>
+                    {editorMode !== 'chemistry' && <h4>MathML</h4>}
+                    {editorMode !== 'chemistry' && <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.mathml}</pre>}
                 </Col>
             </Row>}
         </Container>

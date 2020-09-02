@@ -31,7 +31,7 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                             )}
                         </div>
                     </Col>
-                    <Col xs={8} md={3} lg={4}>
+                    <Col xs={8} md={3} lg={4} className="pl-lg-5">
                         <Link to={`/gameboards#${assignment.gameboardId}`}>
                             <h4>{assignment.gameboard && assignment.gameboard.title}</h4>
                         </Link>

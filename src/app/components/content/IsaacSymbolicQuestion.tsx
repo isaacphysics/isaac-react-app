@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
 import {setCurrentAttempt} from "../../state/actions";
@@ -83,7 +83,9 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
-        window.scrollTo(0, previousYPosition);
+        if (previousYPosition) {
+            window.scrollTo(0, previousYPosition);
+        }
     };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
@@ -195,7 +197,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         }, 250);
     };
 
-    const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid.v4()}`);
+    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid.v4()}`, []);
     const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(
         function (str) {return str.trim().replace(/;/g, ',')}).sort().join(", ");
     return (
