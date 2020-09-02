@@ -29,34 +29,34 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     switch (item.type) {
         case (SEARCH_RESULT_TYPE.SHORTCUT):
             linkDestination = item.url;
-            icon = <img src="/assets/concept.svg" alt=""/>;
+            icon = <img src="/assets/concept.svg" alt="Shortcut"/>;
             iconLabel = "Shortcut icon";
             break;
         case (DOCUMENT_TYPE.QUESTION):
             itemClasses += item.correct ? "bg-success" : "text-info";
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
-            icon = item.correct ? <img src="/assets/tick-rp.svg" alt=""/> : <img src="/assets/question.svg" alt=""/>;
+            icon = item.correct ? <img src="/assets/tick-rp.svg" alt=""/> : <img src="/assets/question.svg" alt="Question page"/>;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
-            icon = <img src="/assets/concept.svg" alt=""/>;
+            icon = <img src="/assets/concept.svg" alt="Concept page"/>;
             iconLabel = "Concept page icon";
             break;
         case (DOCUMENT_TYPE.EVENT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
-            icon = <img src="/assets/event-md.svg" alt=""/>;
+            icon = <img src="/assets/event-md.svg" alt="Event"/>;
             iconLabel = "Event page icon";
             break;
         case (DOCUMENT_TYPE.TOPIC_SUMMARY):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
-            icon = <img src="/assets/work-md.svg" alt=""/>;
+            icon = <img src="/assets/work-md.svg" alt="Topic summary"/>;
             iconLabel = "Topic summary page icon";
             topicTitle = "Topic"
             break;
         case (DOCUMENT_TYPE.GENERIC):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
-            icon = <img src="/assets/info-md.svg" alt=""/>;
+            icon = <img src="/assets/info-md.svg" alt="Generic page"/>;
             iconLabel = "Topic summary page icon";
             break;
         default:
