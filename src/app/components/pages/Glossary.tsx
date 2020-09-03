@@ -69,6 +69,12 @@ export const Glossary = withRouter(() => {
         link?.blur();
     }
 
+    const onKeyUpScrollTo = (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            scrollToKey(event.currentTarget.getAttribute('key') || '');
+        }
+    }
+
     /* Horror lies ahead. Sorry. */
     const alphabetScrollerSentinel = useRef<HTMLDivElement | null>(null);
     const alphabetScrollerFlag = useRef(false);
@@ -111,7 +117,7 @@ export const Glossary = withRouter(() => {
 
     const alphabetList = glossaryTerms && '#ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(k => {
         if (glossaryTerms.hasOwnProperty(k)) {
-            return <div id={`alphascroller-key-${k}`} className="key" key={k} role="button" tabIndex={0} onKeyUp={() => scrollToKey(k)} onClick={() => scrollToKey(k)}>
+            return <div id={`alphascroller-key-${k}`} className="key" key={k} role="button" tabIndex={0} onKeyUp={onKeyUpScrollTo} onClick={() => scrollToKey(k)}>
                 {k}
             </div>
         } else {
