@@ -81,6 +81,7 @@ export const Glossary = withRouter(() => {
     const alphabetScrollerObserver = useRef<IntersectionObserver>();
 
     const alphabetScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+        console.log('thingu');
         for (const entry of entries) {
             if (entry.target.id === 'sentinel') {
                 if (entry.isIntersecting) {
@@ -99,7 +100,7 @@ export const Glossary = withRouter(() => {
     }
 
     useEffect(() => {
-        if (alphabetScrollerSentinel.current && !alphabetScrollerFlag.current) {
+        if (alphabetScrollerSentinel.current && !alphabetScrollerObserver.current && !alphabetScrollerFlag.current) {
             const options = {
                 root: null,
                 rootMargin: '0px',
@@ -110,7 +111,8 @@ export const Glossary = withRouter(() => {
             alphabetScrollerObserver.current.observe(alphabetScrollerSentinel.current);
             alphabetScrollerFlag.current = true;
 
-            return () => alphabetScrollerObserver?.current?.disconnect();
+            // Uncommenting this return, disconnects the observer. Not sure why.
+            // return () => alphabetScrollerObserver?.current?.disconnect();
         }
     });
     /* Horror stops here. Or not, depending who you ask. */
