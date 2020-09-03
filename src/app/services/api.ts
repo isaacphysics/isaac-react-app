@@ -192,10 +192,16 @@ export const api = {
     },
     authorisations: {
         get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get(`authorisations`);
+            return endpoint.get("authorisations");
+        },
+        adminGet: (userId: number): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
+            return endpoint.get(`authorisations/${userId}`);
         },
         getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
-            return endpoint.get(`/authorisations/other_users`);
+            return endpoint.get("/authorisations/other_users");
+        },
+        adminGetOtherUsers: (userId: number): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
+            return endpoint.get(`/authorisations/other_users/${userId}`);
         },
         getToken: (groupId: number): AxiosPromise<AppTypes.AppGroupTokenDTO> => {
             return endpoint.get(`/authorisations/token/${groupId}`);
@@ -354,8 +360,11 @@ export const api = {
         update: (updatedGroup: AppTypes.AppGroup): AxiosPromise => {
             return endpoint.post(`/groups/${updatedGroup.id}`, {...updatedGroup, members: undefined});
         },
-        getMyMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
-            return endpoint.get(`/groups/membership`);
+        getMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get("/groups/membership");
+        },
+        adminGetMemberships: (userId: number): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get(`/groups/membership/${userId}`);
         },
         changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => {
             return endpoint.post(`/groups/membership/${groupId}/${newStatus}`);

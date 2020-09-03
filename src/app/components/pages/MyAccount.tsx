@@ -214,7 +214,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <span className="d-block d-lg-none">Security</span>
                             </NavLink>
                         </NavItem>
-                        {!editingOtherUser &&
                         <NavItem>
                             <NavLink
                                 className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.teacherconnections})}
@@ -226,7 +225,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <span className="d-block d-md-none">Connections</span>
                             </NavLink>
                         </NavItem>
-                        }
                         {!editingOtherUser &&
                         <NavItem>
                             <NavLink
@@ -271,9 +269,10 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 }
                             </TabPane>
 
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
-                                {<TeacherConnections user={user} authToken={authToken}/>}
-                            </TabPane>}
+                            <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
+                                <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
+                                                    userToEdit={userToEdit}/>
+                            </TabPane>
 
                             {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                                 <UserEmailPreference
