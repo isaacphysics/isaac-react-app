@@ -14,7 +14,11 @@ import _startCase from 'lodash/startCase';
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import { isDefined } from '../../services/miscUtils';
 
-export const Glossary = withRouter(() => {
+interface GlossaryProps {
+    location: { hash: string },
+}
+
+export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const [searchText, setSearchText] = useState("");
     const [topics, setTopics] = useState<string[]>([]);
     const [filterTopic, setFilterTopic] = useState("");
@@ -73,7 +77,17 @@ export const Glossary = withRouter(() => {
         if (event.key === 'Enter') {
             scrollToKey(event.currentTarget.getAttribute('key') || '');
         }
-    }
+    }    
+
+    useEffect(() => {
+        if (hash.includes("#")) {
+            const hashAnchor = hash.slice(1);
+            const element = document.getElementById(hashAnchor);
+            if (element) { // exists on page
+                scrollVerticallyIntoView(element, -70);
+            }
+        }
+    }, [hash]);
 
     /* Horror lies ahead. Sorry. */
     const alphabetScrollerSentinel = useRef<HTMLDivElement | null>(null);
