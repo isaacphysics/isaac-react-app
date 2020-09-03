@@ -1013,11 +1013,14 @@ export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (
     }
 };
 
-export const createGameboard = (gameboard: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
+export const createGameboard = (gameboard: GameboardDTO, previousId?: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST});
     try {
         const response = await api.gameboards.create(gameboard);
         dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS, gameboardId: response.data.id});
+        if (previousId) {
+            dispatch(logAction({type: "CLONE_GAMEBOARD", gameboardId: previousId, newGameboardId: response.data.id})as any);
+        }
     } catch (e) {
         dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Error creating gameboard", e));

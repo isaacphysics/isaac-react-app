@@ -259,7 +259,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             wildCardPosition: 0,
                             gameFilter: {subjects: subjects},
                             tags: gameboardTags
-                        }));
+                        }, baseGameboardId));
 
                         dispatch(openActiveModal({
                             closeAction: () => {dispatch(closeActiveModal())},
