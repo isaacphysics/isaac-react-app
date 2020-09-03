@@ -157,7 +157,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     public constructor(props: InequalityModalProps) {
         super(props);
 
-        this._availableSymbols = Array.from(new Set(parsePseudoSymbolicAvailableSymbols(props.availableSymbols)));
+        this._availableSymbols = Array.from(new Set(parsePseudoSymbolicAvailableSymbols(props.availableSymbols))).filter(s => s.trim() !== '');
 
         this.state = {
             sketch: props.sketch as Inequality,
@@ -281,7 +281,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 ...defaultMenuItems
             }
         }));
-
+debugger;
         if (this._availableSymbols && this._availableSymbols.length > 0) {
             // ~~~ Assuming these are only letters... might become more complicated in the future.
             // THE FUTURE IS HERE! Sorry.
