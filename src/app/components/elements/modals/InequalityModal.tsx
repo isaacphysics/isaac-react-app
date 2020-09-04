@@ -281,7 +281,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 ...defaultMenuItems
             }
         }));
-debugger;
+
         if (this._availableSymbols && this._availableSymbols.length > 0) {
             // ~~~ Assuming these are only letters... might become more complicated in the future.
             // THE FUTURE IS HERE! Sorry.
