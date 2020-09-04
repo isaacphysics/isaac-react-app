@@ -45,6 +45,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {isStaff} from "../../services/user";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -54,7 +55,7 @@ const stateToProps = (state: AppState, props: any) => {
         userAuthSettings: state ? state.userAuthSettings : null,
         selectedUserAuthSettings: state ? state.selectedUserAuthSettings : null,
         userPreferences: state ? state.userPreferences : null,
-        firstLogin: history.location && history.location.state && history.location.state.firstLogin,
+        firstLogin: history.location && history.location.state && (history.location.state as any).firstLogin,
         hashAnchor: (hash && hash.slice(1)) || null,
         authToken: (searchParams && searchParams.authToken) ? (searchParams.authToken as string) : null,
         userOfInterest: (searchParams && searchParams.userId) ? (searchParams.userId as string) : null,
@@ -213,7 +214,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <span className="d-block d-lg-none">Security</span>
                             </NavLink>
                         </NavItem>
-                        {!editingOtherUser &&
                         <NavItem>
                             <NavLink
                                 className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.teacherconnections})}
@@ -225,7 +225,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <span className="d-block d-md-none">Connections</span>
                             </NavLink>
                         </NavItem>
-                        }
                         {!editingOtherUser &&
                         <NavItem>
                             <NavLink
@@ -260,8 +259,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
                                 />
-                                {user.role === 'ADMIN' && !editingOtherUser &&
-                                    // beta feature just for admins
+                                {isStaff(user) && !editingOtherUser &&
+                                    // beta feature just for staff
                                     <UserMFA
                                         userAuthSettings={userAuthSettings}
                                         userToUpdate={userToUpdate}
@@ -270,9 +269,10 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 }
                             </TabPane>
 
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
-                                {<TeacherConnections user={user} authToken={authToken}/>}
-                            </TabPane>}
+                            <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
+                                <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
+                                                    userToEdit={userToEdit}/>
+                            </TabPane>
 
                             {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                                 <UserEmailPreference

@@ -45,7 +45,8 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
     }
 
     return <CardBody className="pb-0">
-        <p>Get important information about the Isaac {SITE_SUBJECT_TITLE} programme delivered to your inbox.</p>
+        <p>Get important information about the Isaac {SITE_SUBJECT_TITLE} programme delivered to your inbox.
+            These settings can be changed at any time.</p>
         <FormGroup className="overflow-auto">
             <Table className="mb-0">
                 <thead>

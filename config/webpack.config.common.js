@@ -17,7 +17,7 @@ module.exports = (isProd) => {
 
         devServer: {
             headers: {
-                "Content-Security-Policy-Report-Only": "default-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org localhost:8080 https://www.google-analytics.com https://maps.googleapis.com; object-src 'none'; frame-src 'self' https://anvil.works https://*.anvil.app https://www.youtube-nocookie.com; img-src 'self' localhost:8080 data: https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://www.google-analytics.com https://i.ytimg.com https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://fonts.gstatic.com;",
+                "Content-Security-Policy-Report-Only": "default-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org localhost:8080 ws://localhost:8080 https://www.google-analytics.com https://maps.googleapis.com; object-src 'none'; frame-src 'self' https://anvil.works https://*.anvil.app https://www.youtube-nocookie.com; img-src 'self' localhost:8080 data: https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://www.google-analytics.com https://i.ytimg.com https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://fonts.gstatic.com;",
                 "Feature-Policy": "geolocation 'none'; camera 'none'; microphone 'none'; accelerometer 'none';",
                 "X-Clacks-Overhead": "GNU Terry Pratchett",
             },
@@ -113,10 +113,12 @@ module.exports = (isProd) => {
                 filename: isProd ? 'static/css/[name].[contenthash:8].css' : 'static/css/[name].css',
                 chunkFilename: isProd ? 'static/css/[name].[contenthash:8].chunk.css' : 'static/css/[name].chunk.css',
             }),
-            new CopyWebpackPlugin([{
-               from: resolve('public/assets'),
-               to: 'assets',
-            }]),
+            new CopyWebpackPlugin({
+                patterns: [{
+                    from: resolve('public/assets'),
+                    to: 'assets',
+                }
+            ]}),
             new webpack.DefinePlugin({
                 REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
             }),

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
 import {setCurrentAttempt} from "../../state/actions";
@@ -14,6 +14,8 @@ import {parseExpression} from "inequality-grammar";
 
 import _flattenDeep from 'lodash/flatMapDeep';
 import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
+import {jsonHelper} from "../../services/json";
+import uuid from "uuid";
 
 // Magic starts here
 interface ChildrenMap {
@@ -60,16 +62,12 @@ interface IsaacSymbolicQuestionProps {
 const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
     const [modalVisible, setModalVisible] = useState(false);
-    const [initialEditorSymbols, setInitialEditorSymbols] = useState(JSON.parse(doc.formulaSeed || '[]'));
+    const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
     const [textInput, setTextInput] = useState('');
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
-        try {
-            currentAttemptValue = JSON.parse(currentAttempt.value);
-        } catch(e) {
-            currentAttemptValue = { result: { tex: '\\textrm{PLACEHOLDER HERE}' } };
-        }
+        currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
 
     const updateState = (state: any) => {
@@ -79,13 +77,15 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
             setCurrentAttempt(questionId, {type: 'formula', value: JSON.stringify(newState), pythonExpression});
         }
-        setInitialEditorSymbols(state.symbols);
+        initialEditorSymbols.current = state.symbols;
     };
 
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
-        window.scrollTo(0, previousYPosition);
+        if (previousYPosition) {
+            window.scrollTo(0, previousYPosition);
+        }
     };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
@@ -183,7 +183,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 if (pycode === '') {
                     const state = {result: {tex: "", python: "", mathml: ""}};
                     setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
-                    setInitialEditorSymbols([]);
+                    initialEditorSymbols.current = [];
                 } else if (parsedExpression.length === 1) {
                     // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
                     // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
@@ -197,7 +197,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         }, 250);
     };
 
-    const helpTooltipId = `eqn-editor-help-${(doc.id || "").split('|').pop()}`;
+    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid.v4()}`, []);
     const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(
         function (str) {return str.trim().replace(/;/g, ',')}).sort().join(", ");
     return (
@@ -218,9 +218,10 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 close={closeModal(window.scrollY)}
                 onEditorStateChange={updateState}
                 availableSymbols={doc.availableSymbols}
-                initialEditorSymbols={initialEditorSymbols}
+                initialEditorSymbols={initialEditorSymbols.current}
                 visible={modalVisible}
                 editorMode='maths'
+                questionDoc={doc}
             />}
             <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />

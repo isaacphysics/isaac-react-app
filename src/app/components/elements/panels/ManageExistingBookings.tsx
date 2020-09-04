@@ -10,25 +10,29 @@ import {
     getEventBookingCSV,
     getEventBookings,
     promoteUserBooking,
-    resendUserConfirmationEmail
+    resendUserConfirmationEmail,
+    showGroupEmailModal
 } from "../../../state/actions";
 import {LoggedInUser} from "../../../../IsaacAppTypes";
 import {isAdmin, isEventLeader} from "../../../services/user";
-import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
+import {BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
-import {API_PATH} from "../../../services/constants";
-import {SITE_SUBJECT, SITE} from "../../../services/siteConstants";
-
+import {API_PATH, bookingStatusMap} from "../../../services/constants";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {selectors} from "../../../state/selectors";
 
 export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUser; eventBookingId: string}) => {
     const dispatch = useDispatch();
     useEffect(() => {dispatch(getEventBookings(eventBookingId))}, [eventBookingId]);
     const eventBookings = useSelector((state: AppState) => state && state.eventBookings || []);
-    const userIdToSchoolMapping = useSelector((state: AppState) => state && state.userSchoolLookup || {});
+    const userIdToSchoolMapping = useSelector(selectors.admin.userSchoolLookup) || {};
 
     const [sortPredicate, setSortPredicate] = useState("date");
     const [reverse, setReverse] = useState(true);
+    const [dropdownOpen, setOpen] = useState(false);
+
+    const toggle = () => setOpen(!dropdownOpen);
 
     const setSortPredicateAndDirection = (predicate: string) => () => {
         setSortPredicate(predicate);
@@ -42,6 +46,16 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
         }
         return booking
     });
+
+    function relevantUsers (bookingType: string) {
+        let idsToReturn: number[] = [];
+        augmentedEventBookings.map((booking: EventBookingDTO & {schoolName?: string}) => {
+            if (booking.userBooked?.id && booking.bookingStatus == bookingType) {
+                idsToReturn.push(booking.userBooked.id)
+            }
+        });
+        return idsToReturn;
+    }
 
     return <Accordion trustedTitle="Manage current bookings">
         {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
@@ -173,8 +187,23 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUs
             </div>
 
             <div className="mt-3 text-right">
+                <RS.ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+                    <RS.DropdownToggle caret color="primary" outline className="mr-3 mt-1">
+                        Email Users
+                    </RS.DropdownToggle>
+                    <RS.DropdownMenu>
+                        {Object.keys(bookingStatusMap).map((key, index)  => {
+                            let usersWithStatus = relevantUsers(key);
+                            if (atLeastOne(usersWithStatus.length)) {
+                                return <RS.DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(usersWithStatus))}>
+                                    Email {bookingStatusMap[key as BookingStatus]} users
+                                </RS.DropdownItem>;
+                            }
+                        })}
+                    </RS.DropdownMenu>
+                </RS.ButtonDropdown>
                 <RS.Button
-                    color="primary" outline className="btn-sm mt-1"
+                    color="primary" outline className="btn-md mt-1"
                     href={`${API_PATH}/events/${eventBookingId}/bookings/download`}
                     onClick={() => dispatch(getEventBookingCSV(eventBookingId))}
                 >

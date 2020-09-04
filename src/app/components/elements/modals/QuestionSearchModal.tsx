@@ -106,7 +106,10 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     className="basic-multi-select"
                     classNamePrefix="select"
                     placeholder="None"
-                    onChange={selectOnChange(setSearchBook)}
+                    onChange={(e) => {
+                        selectOnChange(setSearchBook)(e);
+                        sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
+                    }}
                     isClearable
                 />
             </div>}

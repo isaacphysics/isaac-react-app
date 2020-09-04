@@ -123,7 +123,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                 { value: examBoardTagMap[EXAM_BOARD.OCR], label: 'OCR' },
                                 { value: 'ISAAC_BOARD', label: 'Created by Isaac' }]}
                             name="colors"
-                            className="basic-multi-select"
+                            className={SITE_SUBJECT === SITE.CS ? "basic-multi-select" : ""}
                             classNamePrefix="select"
                             placeholder="None"
                             onChange={multiSelectOnChange(setGameboardTags)}
@@ -191,7 +191,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                                             until={!baseGameboardId || baseGameboard}
                                                         >
                                                             <input
-                                                                type="image" src="/assets/add_circle_outline.svg" className="centre img-fluid"
+                                                                type="image" src="/assets/add.svg" className="centre img-fluid"
                                                                 alt="Add questions" title="Add questions"
                                                                 onClick={() => {
                                                                     logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
@@ -259,7 +259,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             wildCardPosition: 0,
                             gameFilter: {subjects: subjects},
                             tags: gameboardTags
-                        }));
+                        }, baseGameboardId));
 
                         dispatch(openActiveModal({
                             closeAction: () => {dispatch(closeActiveModal())},

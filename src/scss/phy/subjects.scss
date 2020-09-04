@@ -1,3 +1,10 @@
+@function color-level($color, $level: 0) {
+  $color-base: if($level > 0, $black, $white);
+  $level: abs($level);
+
+  @return mix($color-base, $color, $level * $theme-color-interval);
+}
+
 @mixin apply-subject-classes($color) {
   /* background classes */
   @include bg-variant(".bg-secondary", $color);
@@ -71,8 +78,20 @@
       }
     }
   }
+
+  .alert-secondary {
+    @include alert-variant(
+      color-level($color, $alert-bg-level),
+      color-level($color, $alert-border-level),
+      color-level($color, $alert-color-level)
+    );
+  }
 }
 
+// FIXME: This is not nice at all, but does fix subject and email prefs!
+#account-page {
+  @include apply-subject-classes($a11y_green);
+}
 
 div.physics {
   @include apply-subject-classes($phy_physics);

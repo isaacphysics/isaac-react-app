@@ -188,13 +188,9 @@ export const LogIn = () => {
 
                                     <Row className="my-4">
                                         <Col className="text-center">
-                                            {/* TODO:ENABLE_GOOGLE */}
-                                            <Button block className="login-google" disabled={SITE_SUBJECT === SITE.PHY} color="link" onClick={logInWithGoogle}>
+                                            <Button block className="login-google" color="link" onClick={logInWithGoogle}>
                                                 Log in with Google
                                             </Button>
-                                            {SITE_SUBJECT === SITE.PHY && <p className="mt-3 mb-0">
-                                                Google authentication is <strong>temporarily disabled</strong><br />for the beta version of the site.
-                                            </p>}
                                         </Col>
                                     </Row>
                                 </React.Fragment>

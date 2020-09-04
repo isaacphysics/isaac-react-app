@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {
     Alert,
@@ -79,6 +79,11 @@ export const Contact = () => {
         setEmail(user && user.loggedIn && user.email || "");
     }, [user]);
 
+    const successRef = useRef<HTMLHeadingElement>(null);
+    useEffect(() => {
+        messageSent && successRef.current && successRef.current.focus();
+    }, [messageSent, successRef]);
+
     const isValidEmail = validateEmail(email);
 
     return <Container id="contact-page" className="pb-5">
@@ -112,7 +117,7 @@ export const Contact = () => {
                         {messageSent && !errorMessage ?
                             <Row>
                                 <Col className="text-center">
-                                    <h3>
+                                    <h3 ref={successRef} tabIndex={-1}>
                                         Thank you for your message.
                                     </h3>
                                 </Col>
@@ -121,7 +126,7 @@ export const Contact = () => {
                                 if (e) {e.preventDefault();}
                                 setMessageSendAttempt(true);
                                 dispatch(submitMessage({firstName, lastName, emailAddress: email, subject, message}));
-                                setMessageSent(true)
+                                setMessageSent(true);
                             }}>
                                 <CardBody>
                                     <h3>Send us a message</h3>

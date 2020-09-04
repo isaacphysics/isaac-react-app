@@ -38,6 +38,7 @@ export const GOOGLE_ANALYTICS_ACCOUNT_ID = {
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
 
 export const NOT_FOUND: NOT_FOUND_TYPE = 404;
+export const NO_CONTENT = 204;
 
 export const MARKDOWN_RENDERER = new Remarkable({
     linkify: true,
@@ -326,7 +327,7 @@ export enum ACTION_TYPE {
     TEST_QUESTION_REQUEST = "TEST_QUESTION_REQUEST",
     TEST_QUESTION_RESPONSE_SUCCESS = "TEST_QUESTION_RESPONSE_SUCCESS",
     TEST_QUESTION_RESPONSE_FAILURE = "TEST_QUESTION_RESPONSE_FAILURE",
-    
+
     GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST = "GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST",
     GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS = "GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS",
     GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE = "GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE",
@@ -337,6 +338,7 @@ export enum ACTION_TYPE {
 
     GAMEBOARD_REQUEST = "GAMEBOARD_REQUEST",
     GAMEBOARD_RESPONSE_SUCCESS = "GAMEBOARD_RESPONSE_SUCCESS",
+    GAMEBOARD_RESPONSE_NO_CONTENT = "GAMEBOARD_RESPONSE_NO_CONTENT",
     GAMEBOARD_RESPONSE_FAILURE = "GAMEBOARD_RESPONSE_FAILURE",
 
     GAMEBOARD_ADD_REQUEST = "GAMEBOARD_ADD_REQUEST",
@@ -452,7 +454,9 @@ export enum ACTION_TYPE {
     FASTTRACK_CONCEPTS_RESPONSE_SUCCESS = "FASTTRACK_CONCEPTS_RESPONSE_SUCCESS",
     FASTTRACK_CONCEPTS_RESPONSE_FAILURE = "FASTTRACK_CONCEPTS_RESPONSE_FAILURE",
 
-    LOG_EVENT = "LOG_EVENT"
+    LOG_EVENT = "LOG_EVENT",
+
+    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID"
 }
 
 export enum EXAM_BOARD {
@@ -468,6 +472,11 @@ export enum SUBJECTS {
     CHEMISTRY = 'chemistry',
     CS = 'computer_science'
 }
+
+export const fastTrackProgressEnabledBoards = [
+    'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
+    'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
+];
 
 export const examBoardTagMap: {[examBoard: string]: string} = {
     [EXAM_BOARD.AQA]: "examboard_aqa",
@@ -754,3 +763,51 @@ for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
 }
 _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
 export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
+
+export const anonymousNames = [
+    "Alice",
+    "Bob",
+    "Charlie",
+    "Dan",
+    "Eve",
+    "Frank",
+    "Grace"
+]
+
+export const anonymousSchoolNames = [
+    "North",
+    "South",
+    "East",
+    "West"
+]
+
+export const specificDoughnutColours: { [key: string]: string } = {
+    [SITE.PHY]: {
+        "Physics": "#944cbe",
+        "Maths": "#007fa9",
+        "Chemistry": "#e22e25"
+    },
+    [SITE.CS]: {}
+}[SITE_SUBJECT];
+
+export const doughnutColours = {
+    [SITE.PHY]: [
+        "#944cbe",
+        "#007fa9",
+        "#e22e25",
+        "#991846",
+        "#448525",
+        "#fea100"
+    ],
+    [SITE.CS]: [
+        "#feae42",
+        "#000000",
+        "#e51f6f",
+        "#ef67ac",
+        "#bf6707",
+        "#0f8294",
+        "#aaaaaa",
+        "#dbdbdb"
+    ]
+}[SITE_SUBJECT];
+

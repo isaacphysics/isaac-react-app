@@ -11,6 +11,7 @@ import {GameboardViewer} from './Gameboard';
 import {generateTemporaryGameboard, loadGameboard} from '../../state/actions';
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
+import {GameboardDTO} from "../../../IsaacApiTypes";
 
 interface Item<T> {
     value: T;
@@ -25,7 +26,7 @@ function toCSV<T>(items: Item<T>[]) {
 
 export const GameboardFilter = withRouter((props: {location: {hash?: string}}) => {
     const dispatch = useDispatch();
-
+    const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>([]);
@@ -109,7 +110,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
     }
 
     const pageHelp = <span>
-        You can build a gameboard by selecting the areas of interest and difficulty levels.
+        You can build a gameboard by selecting the areas of interest and levels.
         <br />
         You can select more than one entry in each area.
     </span>;
@@ -122,7 +123,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
         <RS.Row>
-            <RS.Col  lg={{size: 10, offset: 1}}>
+            <RS.Col lg={{size: 10, offset: 1}}>
                 <div className="pt-3"><strong>Select your questions filters</strong></div>
                 <RS.Row>
                     <RS.Col lg={6}>
@@ -169,12 +170,11 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
         </RS.Row>
 
         <div className="pb-4">
-            <ShowLoading until={gameboard}>
-                {gameboard ?
-                    <GameboardViewer gameboard={gameboard} /> :
-                    <RS.Alert color="warning">No questions found matching the criteria.</RS.Alert>
-                }
-            </ShowLoading>
+            <ShowLoading
+                until={gameboardOrNotFound}
+                thenRender={gameboard  => (<GameboardViewer gameboard={gameboard}/>)}
+                ifNotFound={<RS.Alert color="warning">No questions found matching the criteria.</RS.Alert>}
+            />
         </div>
     </RS.Container>;
 });

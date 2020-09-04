@@ -304,7 +304,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         <RS.Row className="mb-4">
             <RS.Col md={6} lg={4} className="pt-1">
                 {SITE_SUBJECT === SITE.PHY ?
-                    <RS.Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block>
+                    <RS.Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block className="px-3">
                         our GCSE &amp; A-Level books
                     </RS.Button> :
                     <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
