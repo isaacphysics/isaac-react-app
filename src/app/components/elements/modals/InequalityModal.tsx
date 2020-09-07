@@ -157,7 +157,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     public constructor(props: InequalityModalProps) {
         super(props);
 
-        this._availableSymbols = Array.from(new Set(parsePseudoSymbolicAvailableSymbols(props.availableSymbols)));
+        this._availableSymbols = Array.from(new Set(parsePseudoSymbolicAvailableSymbols(props.availableSymbols))).filter(s => s.trim() !== '');
 
         this.state = {
             sketch: props.sketch as Inequality,
