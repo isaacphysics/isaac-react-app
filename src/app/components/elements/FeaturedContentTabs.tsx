@@ -1,15 +1,24 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Tabs} from "./Tabs";
 import {Button, Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
+import {useDispatch, useSelector} from "react-redux";
+import {AppState} from "../../state/reducers";
+import {fetchFragment} from "../../state/actions";
+import {ShowLoading} from "../handlers/ShowLoading";
 
-export const FeaturedContentTabs = () => (
-    <div className="tabs-featured-question">
-        <Tabs tabTitleClass="mb-3 mb-md-4">
+const COMPUTER_SCIENTIST_FRAGMENT_ID = "computer-scientist-of-the-month";
+
+export function FeaturedContentTabs() {
+    const dispatch = useDispatch();
+    useEffect(() => {dispatch(fetchFragment(COMPUTER_SCIENTIST_FRAGMENT_ID));}, [dispatch]);
+    const computerScientist = useSelector((state: AppState) => state?.fragments && state.fragments[COMPUTER_SCIENTIST_FRAGMENT_ID]);
+
+    return <div className="tabs-featured-question">
+        <Tabs tabContentClass="mt-3 mt-md-5">
             {{
                 "Featured question": <Row className="feattab-row">
-
                     <Col md={6} className="feattab-info pl-md-4">
                         <h2 className="h-question-mark mb-md-3">
                             <span>?</span>
@@ -18,7 +27,7 @@ export const FeaturedContentTabs = () => (
                                     "type": "content",
                                     "encoding": "markdown",
                                     "value": "An internet host has the IP address <code class='bg-transparent shadow-none'>192.168.100.4/17</code> — the address is written in CIDR form."
-                                }} />
+                                }}/>
                             </div>
                         </h2>
                     </Col>
@@ -87,19 +96,32 @@ export const FeaturedContentTabs = () => (
                                         ]
                                     }
                                 ]
-                            }} />
+                            }}/>
                         </div>
                     </Col>
 
-                    <Col md={{size: 5, offset: 1}} className="feattab-image text-center" >
+                    <Col md={{size: 5, offset: 1}} className="feattab-image text-center">
                         <img src="/assets/ics_spot.svg" className="img-fluid" alt="Student illustration"/>
-                        <Button tag={Link} to="/topics" color="primary" outline className="mt-4 d-none d-md-inline-block">
+                        <Button tag={Link} to="/topics" color="primary" outline
+                                className="mt-4 d-none d-md-inline-block">
                             Explore by topic
                         </Button>
                     </Col>
-                </Row>
+                </Row>,
+
+                "Computer Scientist of the month": <ShowLoading
+                    until={computerScientist}
+                    thenRender={(cserOfTheMonth) => {
+                        return <div className="computer-scientist-of-the-month mt-4 mb-5">
+                            <IsaacContent doc={cserOfTheMonth} />
+                        </div>
+                    }}
+                    ifNotFound={<div className="computer-scientist-of-the-month mt-4 mb-5 text-center">
+                        Unfortunately, we don't currently have a Computer Scientist of the month.<br />
+                        Please check back later!
+                    </div>}
+                />
             }}
         </Tabs>
     </div>
-
-);
+}
