@@ -192,10 +192,16 @@ export const api = {
     },
     authorisations: {
         get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get(`authorisations`);
+            return endpoint.get("authorisations");
+        },
+        adminGet: (userId: number): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
+            return endpoint.get(`authorisations/${userId}`);
         },
         getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
-            return endpoint.get(`/authorisations/other_users`);
+            return endpoint.get("/authorisations/other_users");
+        },
+        adminGetOtherUsers: (userId: number): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
+            return endpoint.get(`/authorisations/other_users/${userId}`);
         },
         getToken: (groupId: number): AxiosPromise<AppTypes.AppGroupTokenDTO> => {
             return endpoint.get(`/authorisations/token/${groupId}`);
@@ -354,8 +360,11 @@ export const api = {
         update: (updatedGroup: AppTypes.AppGroup): AxiosPromise => {
             return endpoint.post(`/groups/${updatedGroup.id}`, {...updatedGroup, members: undefined});
         },
-        getMyMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
-            return endpoint.get(`/groups/membership`);
+        getMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get("/groups/membership");
+        },
+        adminGetMemberships: (userId: number): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get(`/groups/membership/${userId}`);
         },
         changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => {
             return endpoint.post(`/groups/membership/${groupId}/${newStatus}`);
@@ -488,6 +497,18 @@ export const api = {
     fasttrack: {
         concepts: (gameboardId: string, concept: string, upperQuestionId: string): AxiosPromise<ApiTypes.GameboardItem[]> => {
             return endpoint.get(`/fasttrack/${gameboardId}/concepts`, {params: {concept, "upper_question_id": upperQuestionId}});
+        }
+    },
+    websockets: {
+        userAlerts: (): WebSocket => {
+            const userAlertsURI = "/user-alerts";
+            if (API_PATH.indexOf("http") > -1) {
+                // APP and API on separate domains, urlPrefix is full URL:
+                return new WebSocket(API_PATH.replace(/^http/, "ws") + userAlertsURI);
+            } else {
+                // APP and API on same domain, need window.location.origin for full URL:
+                return new WebSocket(window.location.origin.replace(/^http/, "ws") + API_PATH + userAlertsURI);
+            }
         }
     }
 };
