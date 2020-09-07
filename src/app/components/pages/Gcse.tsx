@@ -17,7 +17,7 @@ export const Gcse = () => {
                 </p>
             </Col>
         </Row>
-        <Row className="card-deck teacher-feature-body mb-3">
+        <Row className="card-deck isaac-cards-body mb-3">
             <IsaacCard doc={{title: "Physics Skills Mastery", subtitle: "Check your answers to our Mastering Essential GCSE Physics book.",
                 clickUrl: "/books/phys_book_gcse", image: {src: "/assets/phy/key_stage_sprite.svg#skills-book-cover"}
             }}/>
@@ -25,7 +25,7 @@ export const Gcse = () => {
                 clickUrl: "/gameboards/new", image: {src: "/assets/phy/key_stage_sprite.svg#triple"}
             }}/>
         </Row>
-        <Row className="card-deck teacher-feature-body my-3">
+        <Row className="card-deck isaac-cards-body my-3">
             <IsaacCard doc={{title: "Mentoring Scheme", subtitle: "Weekly gameboards guided by an experienced teacher.",
                 clickUrl: "/pages/isaac_mentor", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
@@ -33,7 +33,7 @@ export const Gcse = () => {
                 clickUrl: "/pages/pre_made_gameboards#gcse_to_alevel", image: {src: "/assets/phy/key_stage_sprite.svg#question"}
             }}/>
         </Row>
-        <Row className="card-deck teacher-feature-body mb-5 mt-3">
+        <Row className="card-deck isaac-cards-body mb-5 mt-3">
             <IsaacCard doc={{title: "Quick Quizzes", subtitle: "Revise the equations needed at GCSE with our quick quizzes.",
                 clickUrl: "/pages/gcse_quizzes", image: {src: "/assets/phy/key_stage_sprite.svg#lightning"}
             }}/>

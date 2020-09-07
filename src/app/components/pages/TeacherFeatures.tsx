@@ -35,7 +35,7 @@ export const TeacherFeatures = () => {
                 </Button>
             </Col>}
         </Row>
-        <Row className="card-deck teacher-feature-body px-3">
+        <Row className="card-deck isaac-cards-body px-3">
             <IsaacCard doc={{ clickUrl: "/groups",
                 image: {src: "/assets/phy/teacher_features_sprite.svg#groups"},
                 title: "1. Create a Group",
@@ -60,7 +60,7 @@ export const TeacherFeatures = () => {
                 <h3 className="h-title text-center">Teacher Support</h3>
             </Col>
         </Row>
-        <Row className="card-deck teacher-feature-body mt-2 px-3">
+        <Row className="card-deck isaac-cards-body mt-2 px-3">
             <IsaacCard doc={{ clickUrl: "/support/teacher/general",
                 image: {src: "/assets/phy/teacher_features_sprite.svg#teacher-forum"},
                 title: "Teacher FAQ",
@@ -82,7 +82,7 @@ export const TeacherFeatures = () => {
                 <h3 className="h-title text-right">Teacher Resources</h3>
             </Col>
         </Row>
-        <Row className="card-deck teacher-feature-body mb-5 mt-2 px-3">
+        <Row className="card-deck isaac-cards-body mb-5 mt-2 px-3">
             <IsaacCard doc={{ clickUrl: "https://www.isaacbooks.org/",
                 image: {src: "/assets/phy/teacher_features_sprite.svg#skills-book-cover"},
                 title: "Isaac Physics Books",

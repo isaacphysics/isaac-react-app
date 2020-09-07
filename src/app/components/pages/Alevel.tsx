@@ -15,7 +15,7 @@ export const Alevel = () => {
                 <TitleAndBreadcrumb currentPageTitle={"A Level Resources"} />
             </Col>
         </Row>
-        <Row className="card-deck teacher-feature-body my-3">
+        <Row className="card-deck isaac-cards-body my-3">
             <IsaacCard doc={{title: "Question Finder", subtitle: "Practise your problem solving skills.",
                 clickUrl: "/gameboards/new", image: {src: "/assets/phy/key_stage_sprite.svg#question"}
             }}/>
@@ -40,7 +40,7 @@ export const Alevel = () => {
                 clickUrl: "/pages/isaac_mentor", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
         </Row>
-        <Row className="card-deck teacher-feature-body my-3">
+        <Row className="card-deck isaac-cards-body my-3">
             <IsaacCard doc={{title: "Master Mathematics", subtitle: "Revise your maths skills with easier and harder questions.",
                 clickUrl: "/pages/master_maths", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
@@ -56,7 +56,7 @@ export const Alevel = () => {
                 <h3 className="h-title text-center">Additional Resources</h3>
             </Col>
         </Row>
-        <Row className="card-deck teacher-feature-body my-3">
+        <Row className="card-deck isaac-cards-body my-3">
             <IsaacCard doc={{title: "Physical Chemistry Mastery", subtitle: "Check your answers to our Mastering Essential Pre-University Physical Chemistry book.",
                 clickUrl: "/books/chemistry_16", image: {src: "/assets/phy/key_stage_sprite.svg#skills-book-cover"}
             }}/>
@@ -67,7 +67,7 @@ export const Alevel = () => {
                 clickUrl: "/extraordinary_problems", image: {src: "/assets/phy/key_stage_sprite.svg#question"}
             }}/>
         </Row>
-        <Row className="card-deck teacher-feature-body mb-5 mt-3">
+        <Row className="card-deck isaac-cards-body mb-5 mt-3">
             <IsaacCard doc={{title: "Solving Physics Problems", subtitle: "A practical guide to solving unfamiliar problems using pre-university Physics.",
                 clickUrl: "/books/solve_physics_problems", image: {src: "/assets/phy/key_stage_sprite.svg#skills-book-cover"}
             }}/>

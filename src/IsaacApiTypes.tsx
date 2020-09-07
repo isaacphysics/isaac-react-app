@@ -205,6 +205,10 @@ export interface IsaacCardDTO extends ContentDTO {
     verticalContent?: boolean;
 }
 
+export interface IsaacCardDeckDTO extends ContentDTO {
+    cards?: IsaacCardDTO[];
+}
+
 export interface ChemicalFormulaDTO extends ChoiceDTO {
     mhchemExpression?: string;
 }

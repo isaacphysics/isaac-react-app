@@ -9,7 +9,7 @@ import {isAppLink} from "../../services/navigation";
 
 export const IsaacCard = ({doc}: {doc: ApiTypes.IsaacCardDTO}) => {
     const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
-    const classes = classNames({"menu-card": true, "disabled": disabled, "teacher-feature": verticalContent});
+    const classes = classNames({"menu-card": true, "disabled": disabled, "isaac-card-vertical": verticalContent});
     const imgSrc = image?.src && apiHelper.determineImageUrl(image.src);
 
     const link = (clickUrl && isAppLink(clickUrl)) ? <Link to={clickUrl} className={classes + " stretched-link"} aria-disabled={disabled}/> :
