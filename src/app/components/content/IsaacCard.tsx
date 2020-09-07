@@ -36,7 +36,7 @@ export const IsaacCard = ({doc}: {doc: ApiTypes.IsaacCardDTO}) => {
                     </Col>
                 </Row>
             </CardBody>
-            {link}
+            {clickUrl && link}
         </Card> :
         <Card>
             <CardTitle className="px-3">
@@ -58,6 +58,6 @@ export const IsaacCard = ({doc}: {doc: ApiTypes.IsaacCardDTO}) => {
                     </Col>
                 </Row>
             </CardBody>
-            {link}
+            {clickUrl && link}
         </Card>;
 };
