@@ -161,6 +161,8 @@
 
     &.isaac-card-vertical {
       float: none;
+      width: 100%;
+      height: unset;
       margin-right: auto !important;
       margin-left: auto !important;
       display: block;
