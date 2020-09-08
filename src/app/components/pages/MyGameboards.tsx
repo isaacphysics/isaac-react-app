@@ -72,7 +72,9 @@ const orderNames: {[key in BoardOrder]: string} = {
     "visited": "Date Visited Ascending",
     "-visited": "Date Visited Descending",
     "title": "Title Ascending",
-    "-title": "Title Descending"
+    "-title": "Title Descending",
+    "completion": "Completion Ascending",
+    "-completion": "Completion Descending"
 };
 
 type BoardTableProps = MyBoardsPageProps & {
@@ -368,7 +370,11 @@ export const MyGameboards = () => {
                                             <Table className="mb-0">
                                                 <thead>
                                                     <tr>
-                                                        <th className="align-middle">Completion</th>
+                                                        <th className="align-middle pointer-cursor">
+                                                            <button className="table-button" onClick={() => boardOrder == BoardOrder.completion ? setBoardOrder(BoardOrder["-completion"]) : setBoardOrder(BoardOrder.completion)}>
+                                                                Completion {boardOrder == BoardOrder.completion ? sortIcon.ascending : boardOrder == BoardOrder["-completion"] ? sortIcon.descending : sortIcon.sortable}
+                                                            </button>
+                                                        </th>
                                                         <th className="align-middle pointer-cursor">
                                                             <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
                                                                 Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
