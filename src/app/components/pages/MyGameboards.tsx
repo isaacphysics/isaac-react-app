@@ -189,6 +189,9 @@ export const MyGameboards = () => {
     const [boardCreator, setBoardCreator] = useState<boardCreators>(boardCreators.all);
     const [boardCompletion, setBoardCompletion] = useState<boardCompletions>(boardCompletions.any);
     const [levels, setLevels] = useState<string[]>([]);
+    const [completed, setCompleted] = useState(0);
+    const [inProgress, setInProgress] = useState(0);
+    const [notStarted, setNotStarted] = useState(0);
 
     let actualBoardLimit: ActualBoardLimit = toActual(boardLimit);
 
@@ -234,6 +237,9 @@ export const MyGameboards = () => {
     useEffect( () => {
         if (boards && boards.totalResults != 0) {
             const wasLoading = loading;
+            let boardsCompleted = 0;
+            let boardsNotStarted = 0;
+            let boardsInProgress = 0;
             setLoading(false);
             if (boards.boards) {
                 if (actualBoardLimit != boards.boards.length) {
@@ -244,6 +250,18 @@ export const MyGameboards = () => {
                     }
                 }
             }
+            boards.boards.map(board => {
+                if (board.percentageCompleted === 0) {
+                    boardsNotStarted += 1;
+                } else if (board.percentageCompleted === 100) {
+                    boardsCompleted += 1;
+                } else {
+                    boardsInProgress += 1;
+                }
+            });
+            setCompleted(boardsCompleted);
+            setInProgress(boardsInProgress);
+            setNotStarted(boardsNotStarted);
         }
     }, [boards]);
 
@@ -258,7 +276,8 @@ export const MyGameboards = () => {
             :
             <React.Fragment>
                 <div className="mt-4 mb-2">
-                    {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} saved...</h4>}
+                    {boards && boards.totalResults > 0 && <h4>You have completed <strong>{completed}</strong> of <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"},
+                        with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
                     {!boards && <h4>You have <Spinner size="sm" /> saved gameboards...</h4>}
                 </div>
                 <div>
