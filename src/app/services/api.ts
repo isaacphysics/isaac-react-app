@@ -260,6 +260,21 @@ export const api = {
         },
         generateSpecification: (graphChoice: ApiTypes.GraphChoiceDTO) => {
             return endpoint.post("/questions/generateSpecification", graphChoice);
+        },
+        getMostRecentAttempts: (userId: number, limit: number): AxiosPromise<ApiTypes.QuestionCompletionDTO[]> => {
+            return endpoint.get(`/questions/recent_questions/${userId}`, {
+                params: {
+                    limit,
+                }
+            });
+        },
+        getEasiestUnsolved: (userId: number, bookOnly: boolean, limit: number): AxiosPromise<ApiTypes.QuestionDTO[]> => {
+            return endpoint.get(`/questions/easiest_unsolved/${userId}`, {
+                params: {
+                    bookOnly,
+                    limit,
+                }
+            });
         }
     },
     concepts: {

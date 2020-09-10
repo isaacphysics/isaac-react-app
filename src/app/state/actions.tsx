@@ -911,6 +911,28 @@ export const getAnsweredQuestionsByDate = (userId: number | string, fromDate: nu
     }
 };
 
+export const getMostRecentAttemptedQuestionPages = (userId: number, limit: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_MOST_RECENT_REQUEST});
+    try {
+        const mostRecentAttempted = await api.questions.getMostRecentAttempts(userId, limit);
+        dispatch({type: ACTION_TYPE.QUESTION_MOST_RECENT_RESPONSE_SUCCESS, questionCompletions: mostRecentAttempted.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.QUESTION_MOST_RECENT_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get most recently attempted question pages", e));
+    }
+}
+
+export const getEasiestUnsolvedQuestions = (userId: number, bookOnly: boolean, limit: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_EASIEST_UNSOLVED_REQUEST});
+    try {
+        const easiestUnsolved = await api.questions.getMostRecentAttempts(userId, limit);
+        dispatch({type: ACTION_TYPE.QUESTION_EASIEST_UNSOLVED_RESPONSE_SUCCESS, questions: easiestUnsolved.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.QUESTION_EASIEST_UNSOLVED_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get most recently attempted question pages", e));
+    }
+}
+
 export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (dispatch: Dispatch<Action>) =>  {
     if (page.supersededBy) {
         dispatch(logAction({
