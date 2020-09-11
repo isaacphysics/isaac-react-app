@@ -409,14 +409,14 @@ export const answeredQuestionsByDate = (answeredQuestionsByDateState: AnsweredQu
     }
 };
 
-type MostRecentAttemptedQuestionsState = QuestionCompletionDTO[] | null;
+type MostRecentAttemptedQuestionsState = GameboardItem[] | null;
 export const mostRecentAttemptedQuestions = (mostRecentAttemptedQuestionsState: MostRecentAttemptedQuestionsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.QUESTION_MOST_RECENT_REQUEST: {
             return null;
         }
         case ACTION_TYPE.QUESTION_MOST_RECENT_RESPONSE_SUCCESS: {
-            return action.questionCompletions;
+            return action.questions;
         }
         default: {
             return mostRecentAttemptedQuestionsState;
@@ -424,7 +424,7 @@ export const mostRecentAttemptedQuestions = (mostRecentAttemptedQuestionsState: 
     }
 };
 
-type EasiestUnsolvedQuestionsState = QuestionDTO[] | null;
+type EasiestUnsolvedQuestionsState = GameboardItem[] | null;
 export const easiestUnsolvedQuestions = (easiestUnsolvedQuestionsState: EasiestUnsolvedQuestionsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.QUESTION_EASIEST_UNSOLVED_REQUEST: {

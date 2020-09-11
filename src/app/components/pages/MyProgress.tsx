@@ -2,7 +2,12 @@ import React, {useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {getAnsweredQuestionsByDate, getProgress} from "../../state/actions";
+import {
+    getAnsweredQuestionsByDate,
+    getEasiestUnsolvedQuestions,
+    getMostRecentAttemptedQuestionPages,
+    getProgress
+} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
 import {withRouter} from "react-router-dom";
@@ -18,6 +23,8 @@ import {ProgressBar} from "../elements/views/ProgressBar";
 import {safePercentage} from "../../services/validation";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {QuestionLinkRow} from "../elements/QuestionLinkRow";
+import {QuantityDTO, QuestionDTO} from "../../../IsaacApiTypes";
 
 export const siteSpecific = {
     [SITE.PHY]: {
@@ -53,14 +60,20 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
     const userProgress = useSelector((state: AppState) => state?.userProgress);
     const achievements = useSelector((state: AppState) => state?.userProgress?.userSnapshot?.achievementsRecord);
     const answeredQuestionsByDate = useSelector((state: AppState) => state?.answeredQuestionsByDate);
+    const mostRecentQuestions = useSelector((state: AppState) => state?.mostRecentAttemptedQuestions);
+    const easiestUnsolvedQuestions = useSelector((state: AppState) => state?.easiestUnsolvedQuestions);
 
     useEffect(() => {
         if (viewingOwnData && user.loggedIn) {
             dispatch(getProgress());
             dispatch(getAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
+            dispatch(getMostRecentAttemptedQuestionPages(user.id as number, 5));
+            dispatch(getEasiestUnsolvedQuestions(user.id as number, false, 5));
         } else if (isTeacher(user)) {
             dispatch(getProgress(userIdOfInterest));
             dispatch(getAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
+            dispatch(getMostRecentAttemptedQuestionPages(userIdOfInterest, 5));
+            dispatch(getEasiestUnsolvedQuestions(userIdOfInterest, false, 5));
         }
     }, [dispatch, userIdOfInterest, viewingOwnData, user]);
 
@@ -163,6 +176,22 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                             <div>
                                 <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />
                             </div>
+                        </div>}
+                        {mostRecentQuestions && <div className="mt-4">
+                            <h4>Most recently attempted questions</h4>
+                            <RS.ListGroup className="link-list list-group-links list-gameboard">
+                                {mostRecentQuestions.map((question,i) =>
+                                    <QuestionLinkRow key={i} question={question}/>
+                                )}
+                            </RS.ListGroup>
+                        </div>}
+                        {easiestUnsolvedQuestions && <div className="mt-4">
+                            <h4>Easiest unsolved questions</h4>
+                            <RS.ListGroup className="link-list list-group-links list-gameboard">
+                                {easiestUnsolvedQuestions.map((question,i) =>
+                                    <QuestionLinkRow key={i} question={question}/>
+                                )}
+                            </RS.ListGroup>
                         </div>}
                     </div>,
                     ...(viewingOwnData && isTeacher(user) && SITE_SUBJECT == SITE.PHY && {"Teacher Activity": <div>

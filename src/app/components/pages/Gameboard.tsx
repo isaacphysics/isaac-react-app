@@ -19,8 +19,8 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
     return <RS.Row className={className}>
         <RS.Col lg={{size: 10, offset: 1}}>
             <RS.ListGroup className="link-list list-group-links list-gameboard">
-                {gameboard && gameboard.questions && gameboard.questions.map(
-                    (question, i) => <QuestionLinkRow key={i} gameboardId={gameboard.id} question={question}/>
+                {gameboard && gameboard.questions && gameboard.questions.map((question, i) =>
+                    <QuestionLinkRow key={i} gameboardId={gameboard.id} question={question}/>
                 )}
             </RS.ListGroup>
         </RS.Col>

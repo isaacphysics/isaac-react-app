@@ -8,8 +8,7 @@ import {TAG_ID} from "../../services/constants";
 
 interface QuestionLinkRowProps {
     gameboardId?: string;
-    question: QuestionDTO | GameboardItem;
-    questionState?: GameboardItemState;
+    question: GameboardItem;
 }
 
 function getTags(docTags?: string[]) {
@@ -21,12 +20,12 @@ function getTags(docTags?: string[]) {
     return tags.getByIdsAsHeirarchy(docTags as TAG_ID[]);
 }
 
-export const QuestionLinkRow = ({question, gameboardId, questionState}: QuestionLinkRowProps) => {
+export const QuestionLinkRow = ({question, gameboardId}: QuestionLinkRowProps) => {
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
     let icon = <img src="/assets/question.svg" alt=""/>;
     let tryAgain = false;
 
-    switch (questionState) {
+    switch (question.state) {
         case "PERFECT":
             itemClasses += " bg-success";
             icon = <img src="/assets/tick-rp.svg" alt=""/>;
@@ -44,7 +43,7 @@ export const QuestionLinkRow = ({question, gameboardId, questionState}: Question
     const tags = getTags(question.tags);
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
-        <Link to={`/questions/${question.id}${gameboardId && `?board=${gameboardId}`}`}>
+        <Link to={`/questions/${question.id}${gameboardId ? `?board=${gameboardId}` : ""}`}>
             <span>{icon}</span>
             <div className="flex-grow-1">{question.title}
                 {tryAgain && <span className="try-again">try again!</span>}
