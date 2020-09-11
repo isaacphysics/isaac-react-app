@@ -3,6 +3,7 @@ import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
 import {SHORT_DAYS, SHORT_MONTHS} from "../../../services/constants";
 import {HeatMapGrid} from "react-grid-heatmap/dist";
 import {NUMERIC_DATE} from "../DateString";
+import {overflowModulus} from "../../../services/miscUtils";
 
 
 export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByDate: AnsweredQuestionsByDate}) => {
@@ -18,7 +19,7 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
         foundDates.forEach(dateString => {
             const date = new Date(dateString);
             const diffWeeks = Math.floor(Math.round(Math.abs(maxDate.getTime() - date.getTime()) / (24 * 3600 * 1000)) / 7);
-            heatmapData[date.getDay()][diffWeeks] = answeredQuestionsByDate[dateString] || 0;
+            heatmapData[overflowModulus(date.getDay() - 1, 7)][diffWeeks] = answeredQuestionsByDate[dateString] || 0;
         })
     }
 
@@ -30,7 +31,7 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
 
     const lookupDateFromPos = (x: number, y: number): Date => {
         const date = new Date();
-        date.setDate(date.getDate() - (date.getDay() - x) - (7 * y));
+        date.setDate(date.getDate() - (overflowModulus(date.getDay() - 1, 7) - x) - (7 * y));
         return date;
     }
 
