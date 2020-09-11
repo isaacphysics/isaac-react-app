@@ -67,12 +67,12 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
     useEffect(() => {
         if (viewingOwnData && user.loggedIn) {
             dispatch(getProgress());
-            dispatch(getAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
+            dispatch(getAnsweredQuestionsByDate(user.id as number, 0, Date.now(), true));
             dispatch(getMostRecentAttemptedQuestionPages(user.id as number, 5));
             dispatch(getEasiestUnsolvedQuestions(user.id as number, false, 5));
         } else if (isTeacher(user)) {
             dispatch(getProgress(userIdOfInterest));
-            dispatch(getAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
+            dispatch(getAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), true));
             dispatch(getMostRecentAttemptedQuestionPages(userIdOfInterest, 5));
             dispatch(getEasiestUnsolvedQuestions(userIdOfInterest, false, 5));
         }

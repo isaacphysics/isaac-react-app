@@ -1,30 +1,19 @@
 import React from 'react';
-import {NUMERIC_DATE} from "../DateString";
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
-import HeatMap from "react-heatmap-grid";
 import {SHORT_DAYS, SHORT_MONTHS} from "../../../services/constants";
+import {HeatMapGrid} from "react-grid-heatmap/dist";
+import {NUMERIC_DATE} from "../DateString";
 
 
 export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByDate: AnsweredQuestionsByDate}) => {
-    const generateDateArray = (min: Date, max: Date) => {
-        const current = new Date(min);
-        const dates = [];
-        while (current <= max) {
-            dates.push(new Date(current));
-            current.setDate(current.getDate() + 1);
-        }
-        return dates;
-    };
-
     const HEATMAP_COLUMNS = 25;
     const yLabels = SHORT_DAYS;
-
 
     const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
     const heatmapData: number[][] = Array(yLabels.length).fill(0).map(() => Array(HEATMAP_COLUMNS).fill(0).map(() => Math.floor(0)));
     if (foundDates?.length > 0) {
         const maxDate = new Date();
-        const minDate = new Date(maxDate);
+        const minDate = new Date();
         minDate.setDate(-HEATMAP_COLUMNS * 7);
         foundDates.forEach(dateString => {
             const date = new Date(dateString);
@@ -38,17 +27,30 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
         date.setDate(-i * 7);
         return date.getDate() < 7 ? SHORT_MONTHS[date.getMonth()] : "";
     });
-    return <HeatMap
-        yLabels={yLabels}
-        xLabels={xLabels}
-        xLabelsLocation={"bottom"}
-        data={heatmapData}
-        cellStyle={(background: string, value: number, min: number, max: number, data: number, x: number, y: number) => ({
-            background: value > 0 ? `rgba(66, 86, 244, ${1 - ((max - value) / (max - min) * 0.7)})` : "rgb(245, 245, 245)",
-            fontSize: "11px",
-        })}
-        squares
-        // cellRender={(value: string) => value && `${value}`}
-        title={(value: number) => `${value} questions answered`}
-    />
+
+    const lookupDateFromPos = (x: number, y: number): Date => {
+        const date = new Date();
+        date.setDate(date.getDate() - (date.getDay() - x) - (7 * y));
+        return date;
+    }
+
+    return <div
+        style={{
+            width: '100%'
+        }}>
+        <HeatMapGrid
+            yLabels={yLabels}
+            xLabels={xLabels}
+            xLabelsPos={"bottom"}
+            data={heatmapData}
+            cellHeight='2rem'
+            cellStyle={(x, y, ratio) => ({
+                background: ratio > 0 ? `rgba(66, 86, 244, ${(ratio * 0.9) + 0.1})` : "rgb(245, 245, 245)",
+                fontSize: "11px",
+            })}
+            cellRender={(x, y, value) => (
+                <div style={{height: "100%"}} key={`${x}-${y}`} title={`${value} questions answered on ${NUMERIC_DATE.format(lookupDateFromPos(x, y))}`}/>
+            )}
+        />
+    </div>
 };
