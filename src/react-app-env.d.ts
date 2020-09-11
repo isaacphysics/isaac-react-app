@@ -67,6 +67,7 @@ declare module '*.module.sass' {
 declare module "react-router-dom";
 declare module "bootstrap";
 declare module "math-random-seed";
+declare module 'react-heatmap-grid';
 
 declare var MathJax: any;
 declare var ISAAC_SITE: string;

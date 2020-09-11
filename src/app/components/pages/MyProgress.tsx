@@ -25,6 +25,7 @@ import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {QuestionLinkRow} from "../elements/QuestionLinkRow";
 import {QuantityDTO, QuestionDTO} from "../../../IsaacApiTypes";
+import {ProgressHeatmap} from "../elements/views/ProgressHeatmap";
 
 export const siteSpecific = {
     [SITE.PHY]: {
@@ -175,6 +176,9 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                             <h4>Question attempts over time</h4>
                             <div>
                                 <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />
+                            </div>
+                            <div>
+                                <ProgressHeatmap answeredQuestionsByDate={answeredQuestionsByDate} />
                             </div>
                         </div>}
                         {mostRecentQuestions && <div className="mt-4">
