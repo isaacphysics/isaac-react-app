@@ -175,9 +175,6 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                         {answeredQuestionsByDate && <div className="mt-4">
                             <h4>Question attempts over time</h4>
                             <div>
-                                <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />
-                            </div>
-                            <div>
                                 <ProgressHeatmap answeredQuestionsByDate={answeredQuestionsByDate} />
                             </div>
                         </div>}

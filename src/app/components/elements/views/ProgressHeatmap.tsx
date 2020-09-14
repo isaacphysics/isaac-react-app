@@ -1,13 +1,12 @@
 import React from 'react';
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
-import {SHORT_DAYS, SHORT_MONTHS} from "../../../services/constants";
+import {HEATMAP_COLUMNS, PRIMARY_COLOUR_RGB, SHORT_DAYS, SHORT_MONTHS} from "../../../services/constants";
 import {HeatMapGrid} from "react-grid-heatmap/dist";
 import {NUMERIC_DATE} from "../DateString";
 import {overflowModulus} from "../../../services/miscUtils";
-
+import * as RS from "reactstrap";
 
 export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByDate: AnsweredQuestionsByDate}) => {
-    const HEATMAP_COLUMNS = 25;
     const yLabels = SHORT_DAYS;
 
     const findDiffWeeks = (a: Date, b: Date): number => {
@@ -18,6 +17,13 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
         aBeginning.setDate(a.getDate() - overflowModulus(aBeginning.getDay() - 1, 7));
         bBeginning.setDate(b.getDate() - overflowModulus(bBeginning.getDay() - 1, 7));
         return Math.floor(Math.round((aBeginning.getTime() - bBeginning.getTime()) / (24 * 3600 * 1000)) / 7)
+    }
+
+    const isBeginningOfMonth = (weekOffset: number): number | null => {
+        // Determine if a specific number of weeks ago the week contained the first of the month
+        const date = new Date();
+        date.setDate(date.getDate() - (weekOffset * 7) - overflowModulus(date.getDay() - 1, 7) + 6);
+        return date.getDate() <= 7 ? date.getMonth() : null
     }
 
     const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
@@ -36,9 +42,8 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
     }
 
     const xLabels = new Array(HEATMAP_COLUMNS).fill(0).map((_, i) => {
-        const date = new Date();
-        date.setDate(date.getDate() - (i * 7) - overflowModulus(date.getDay() - 1, 7) + 6);
-        return date.getDate() <= 7 ? SHORT_MONTHS[date.getMonth()] : `${i}`;
+        const month = isBeginningOfMonth(i)
+        return month != null ? SHORT_MONTHS[month] : `${i}`;
     });
 
     const lookupDateFromPos = (x: number, y: number): Date => {
@@ -47,30 +52,43 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
         return date;
     }
 
-    return <div
-        style={{
-            width: '100%'
-        }}>
+    return <div>
         <HeatMapGrid
             yLabels={yLabels}
             xLabels={xLabels}
             xLabelsPos={"bottom"}
-            xLabelsStyle={(i) => {
-                const date = new Date();
-                date.setDate(date.getDate() - (i * 7) - overflowModulus(date.getDay() - 1, 7) + 6);
-                return {
-                    color: date.getDate() <= 7 ? "#000000" : "transparent"
-                }
-            }}
+            xLabelsStyle={(i) => ({
+                color: isBeginningOfMonth(i) ? "#000000" : "transparent"
+            })}
             data={heatmapData}
             cellHeight='2rem'
             cellStyle={(x, y, ratio) => ({
-                background: ratio > 0 ? `rgba(66, 86, 244, ${(ratio * 0.9) + 0.1})` : "rgb(245, 245, 245)",
+                background: ratio > 0 ? `rgba(${PRIMARY_COLOUR_RGB}, ${ratio * 0.8 + 0.2})` : "rgb(245, 245, 245)",
                 fontSize: "11px",
             })}
             cellRender={(x, y, value) => (
-                <div style={{height: "100%"}} key={`${x}-${y}`} title={`${value} questions answered on ${NUMERIC_DATE.format(lookupDateFromPos(x, y))}`}/>
+                <div className={"h-100"} key={`${x}-${y}`} title={`${value} questions answered on ${NUMERIC_DATE.format(lookupDateFromPos(x, y))}`}/>
             )}
+            square
         />
+        <RS.Row className={"ml-0"}>
+            <HeatMapGrid data={[[5, 4, 3, 2, 1, 0]]}
+                         cellHeight='2rem'
+                         cellStyle={(x, y, ratio) => ({
+                             background: ratio > 0 ? `rgba(${PRIMARY_COLOUR_RGB}, ${Math.floor(ratio * 0.8 * 5) / 5 + 0.2})` : "rgb(245, 245, 245)",
+                         })}
+                         cellRender={(x, y, value) => (
+                             <div className={"h-100"} key={`${x}-${y}`}/>
+                             )}
+                         yLabels={["More"]}
+                         xLabels={["1", "2", "3", "4", "5", "6", "7"]}
+                         xLabelsPos={"bottom"}
+                         xLabelsStyle={(i) => ({
+                             color: "transparent"
+                         })}
+                         square
+            />
+            <div className={"ml-1 mt-1"}>Fewer</div>
+        </RS.Row>
     </div>
 };
