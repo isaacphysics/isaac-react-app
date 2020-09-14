@@ -26,7 +26,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
     const emailTemplateSelector = useSelector((state: AppState) => state && state.adminEmailTemplate && state.adminEmailTemplate);
 
     const numberOfUsers = () => {
-            return csvIDs.length;
+        return csvIDs.length;
     };
     const canSubmit = emailTemplateSelector && emailType != "null" && numberOfUsers() > 0;
     const csvInputDebounce = debounce((value: string) => setCSVIDs(value.split(/[\s,]+/).map((e) => {return parseInt(e)}).filter((num) => !isNaN(num))), 250);
@@ -101,30 +101,33 @@ export const AdminEmails = (props: AdminEmailsProps) => {
             </RS.CardBody>
         </RS.Card>
 
-        <RS.Card className="p-3 my-3">
-            <RS.CardTitle tag="h2">Subject:</RS.CardTitle>
-            <RS.CardBody>
-                {emailTemplateSelector && emailTemplateSelector.subject}
-            </RS.CardBody>
-        </RS.Card>
+        {emailTemplateSelector && <>
+            <RS.Card className="p-3 my-3">
+                <RS.CardTitle tag="h2">Subject:</RS.CardTitle>
+                <RS.CardBody>
+                    {emailTemplateSelector.subject}
+                </RS.CardBody>
+            </RS.Card>
 
-        <RS.Card className="p-3 my-3">
-            <RS.CardTitle tag="h2">HTML preview</RS.CardTitle>
-            <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
-            <RS.CardBody>
-                {emailTemplateSelector && emailTemplateSelector.html &&
-                <iframe title="Email content preview" className="email-preview-frame" srcDoc={emailTemplateSelector.html} />
-                }
-            </RS.CardBody>
-        </RS.Card>
+            <RS.Card className="p-3 my-3">
+                <RS.CardTitle tag="h2">HTML preview</RS.CardTitle>
+                <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
+                <RS.CardBody>
+                    {emailTemplateSelector.html &&
+                        <iframe title="Email content preview" className="email-preview-frame" srcDoc={emailTemplateSelector.html}/>
+                    }
+                </RS.CardBody>
+            </RS.Card>
 
-        <RS.Card className="p-3 my-3">
-            <RS.CardTitle tag="h2">Plain text preview</RS.CardTitle>
-            <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
-            <RS.CardBody>
-                <pre>{emailTemplateSelector && emailTemplateSelector.plainText}</pre>
-            </RS.CardBody>
-        </RS.Card>
+            <RS.Card className="p-3 my-3">
+                <RS.CardTitle tag="h2">Plain text preview</RS.CardTitle>
+                <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
+                <RS.CardBody>
+                    <pre>{emailTemplateSelector.plainText}</pre>
+                </RS.CardBody>
+            </RS.Card>
+            </>
+        }
 
         <RS.Card className="mb-5">
             <RS.CardBody>
@@ -142,8 +145,8 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                                     const numUsers = numberOfUsers();
                                     if (window.confirm(`Are you sure you want to send a ${emailType} email (${contentObjectID}) to ${numUsers} user${numUsers > 1 ? "s" : ""}?`)) {
                                         setEmailSent(true);
-                                            dispatch(sendAdminEmailWithIds(contentObjectID, emailType, csvIDs));
-                                        }
+                                        dispatch(sendAdminEmailWithIds(contentObjectID, emailType, csvIDs));
+                                    }
                                 }}
                             />
                         </React.Fragment>
