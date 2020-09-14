@@ -108,7 +108,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "button";
 @import "logo";
 @import "cards";
-@import "featured-profile";
+@import "../common/featured-profile";
 
 // Navigation
 @import "../common/navigation-bar";
@@ -133,6 +133,8 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "books";
 @import "gameboard";
 @import "menu-page-phy";
+
+@import "../common/glossary";
 
 
 // Print

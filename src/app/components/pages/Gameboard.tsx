@@ -46,7 +46,7 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     const tags = getTags(question.tags);
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
-        <Link to={`/questions/${question.id}?board=${gameboard.id}`}>
+        <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
             <span>{icon}</span>
             <div className="flex-grow-1">{question.title}
                 {tryAgain && <span className="try-again">try again!</span>}
