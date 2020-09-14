@@ -52,13 +52,14 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
         return date;
     }
 
-    return <div>
+    return <div className="heatmap">
         <HeatMapGrid
             yLabels={yLabels}
             xLabels={xLabels}
             xLabelsPos={"bottom"}
             xLabelsStyle={(i) => ({
-                color: isBeginningOfMonth(i) ? "#000000" : "transparent"
+                color: isBeginningOfMonth(i) ? "#000000" : "transparent",
+                height: isBeginningOfMonth(i) ? "unset" : "0px"
             })}
             data={heatmapData}
             cellHeight='2rem'
@@ -77,14 +78,14 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
                          cellStyle={(x, y, ratio) => ({
                              background: ratio > 0 ? `rgba(${PRIMARY_COLOUR_RGB}, ${Math.floor(ratio * 0.8 * 5) / 5 + 0.2})` : "rgb(245, 245, 245)",
                          })}
-                         cellRender={(x, y, value) => (
+                         cellRender={(x, y) => (
                              <div className={"h-100"} key={`${x}-${y}`}/>
                              )}
                          yLabels={["More"]}
-                         xLabels={["1", "2", "3", "4", "5", "6", "7"]}
+                         xLabels={["1", "2", "3", "4", "5", "6"]}
                          xLabelsPos={"bottom"}
                          xLabelsStyle={(i) => ({
-                             color: "transparent"
+                             height: "0px"
                          })}
                          square
             />
