@@ -1,9 +1,9 @@
 import React from "react";
-import * as ApiTypes from "../../../IsaacApiTypes";
 import {IsaacCard} from "./IsaacCard";
+import {IsaacCardDeckDTO} from "../../../IsaacApiTypes";
 
 interface IsaacCardDeckProps {
-    doc: ApiTypes.IsaacCardDeckDTO,
+    doc: IsaacCardDeckDTO,
     className?: string
 }
 

@@ -1,13 +1,13 @@
 import React from "react";
 import {Card, CardBody, CardTitle, Col, Row} from "reactstrap";
-import * as ApiTypes from "../../../IsaacApiTypes";
 import classNames from "classnames";
 import {apiHelper} from "../../services/api";
 import {Link} from "react-router-dom";
 import {isAppLink} from "../../services/navigation";
+import {IsaacCardDTO} from "../../../IsaacApiTypes";
 
 
-export const IsaacCard = ({doc}: {doc: ApiTypes.IsaacCardDTO}) => {
+export const IsaacCard = ({doc}: {doc: IsaacCardDTO}) => {
     const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
     const classes = classNames({"menu-card": true, "disabled": disabled, "isaac-card-vertical": verticalContent});
     const imgSrc = image?.src && apiHelper.determineImageUrl(image.src);
