@@ -43,7 +43,7 @@ export const QuestionLinkRow = ({question, gameboardId}: QuestionLinkRowProps) =
     const tags = getTags(question.tags);
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
-        <Link to={`/questions/${question.id}${gameboardId ? `?board=${gameboardId}` : ""}`}>
+        <Link to={`/questions/${question.id}${gameboardId ? `?board=${gameboardId}` : ""}`} className="align-items-center">
             <span>{icon}</span>
             <div className="flex-grow-1">{question.title}
                 {tryAgain && <span className="try-again">try again!</span>}

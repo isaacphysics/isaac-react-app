@@ -5,13 +5,12 @@ import {loadGameboard, logAction} from "../../state/actions";
 import * as RS from "reactstrap"
 import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
-import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
+import {GameboardDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {NOT_FOUND, TAG_ID} from "../../services/constants";
+import {NOT_FOUND} from "../../services/constants";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
 import {QuestionLinkRow} from "../elements/QuestionLinkRow";
 
@@ -31,7 +30,7 @@ export const Gameboard = withRouter(({location: {hash}}: {location: {hash: strin
     const dispatch = useDispatch();
     const gameboard = useSelector(selectors.board.currentGameboardOrNotFound);
     const user = useSelector(selectors.user.orNull);
-    let gameboardId = hash ? hash.slice(1) : null;
+    const gameboardId = hash ? hash.slice(1) : null;
 
     useEffect(() => {dispatch(loadGameboard(gameboardId))}, [dispatch, gameboardId]);
 

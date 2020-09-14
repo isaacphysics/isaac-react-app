@@ -1,11 +1,13 @@
 @include media-breakpoint-up(md) {
   .featured-profile {
-    height: 400px;
     width: 33.33333%;
     float: left;
-    .caption p{
+    .caption p {
       font-size: 80%;
     }
+  }
+  .featured-profile-new-row {
+    clear: both;
   }
 }
 

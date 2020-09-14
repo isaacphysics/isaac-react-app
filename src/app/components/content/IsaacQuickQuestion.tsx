@@ -24,8 +24,8 @@ export const IsaacQuickQuestion = ({doc}: {doc: ApiTypes.IsaacQuickQuestionDTO})
 
     return <form onSubmit={e => e.preventDefault()}>
         <div className="question-component p-md-5">
-            <div className="quick-question clearfix">
-                <div className="question-content">
+            <div className="quick-question">
+                <div className="question-content clearfix">
                     <IsaacContentValueOrChildren {...doc} />
                 </div>
                 <Row>
