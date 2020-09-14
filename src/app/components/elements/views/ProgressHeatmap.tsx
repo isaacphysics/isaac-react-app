@@ -10,6 +10,16 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
     const HEATMAP_COLUMNS = 25;
     const yLabels = SHORT_DAYS;
 
+    const findDiffWeeks = (a: Date, b: Date): number => {
+        // Determine the difference between two dates in weeks by setting the date to the monday of that week
+        // then compare the time difference
+        const aBeginning = new Date(a);
+        const bBeginning = new Date(b);
+        aBeginning.setDate(a.getDate() - overflowModulus(aBeginning.getDay() - 1, 7));
+        bBeginning.setDate(b.getDate() - overflowModulus(bBeginning.getDay() - 1, 7));
+        return Math.floor(Math.round((aBeginning.getTime() - bBeginning.getTime()) / (24 * 3600 * 1000)) / 7)
+    }
+
     const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
     const heatmapData: number[][] = Array(yLabels.length).fill(0).map(() => Array(HEATMAP_COLUMNS).fill(0).map(() => Math.floor(0)));
     if (foundDates?.length > 0) {
@@ -18,15 +28,17 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
         minDate.setDate(-HEATMAP_COLUMNS * 7);
         foundDates.forEach(dateString => {
             const date = new Date(dateString);
-            const diffWeeks = Math.floor(Math.round(Math.abs(maxDate.getTime() - date.getTime()) / (24 * 3600 * 1000)) / 7);
-            heatmapData[overflowModulus(date.getDay() - 1, 7)][diffWeeks] = answeredQuestionsByDate[dateString] || 0;
+            const diffWeeks = findDiffWeeks(maxDate, date);
+            if (diffWeeks < HEATMAP_COLUMNS) {
+                heatmapData[overflowModulus(date.getDay() - 1, 7)][diffWeeks] = answeredQuestionsByDate[dateString] || 0;
+            }
         })
     }
 
     const xLabels = new Array(HEATMAP_COLUMNS).fill(0).map((_, i) => {
         const date = new Date();
-        date.setDate(-i * 7);
-        return date.getDate() < 7 ? SHORT_MONTHS[date.getMonth()] : "";
+        date.setDate(date.getDate() - (i * 7) - overflowModulus(date.getDay() - 1, 7) + 6);
+        return date.getDate() <= 7 ? SHORT_MONTHS[date.getMonth()] : `${i}`;
     });
 
     const lookupDateFromPos = (x: number, y: number): Date => {
@@ -43,6 +55,13 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
             yLabels={yLabels}
             xLabels={xLabels}
             xLabelsPos={"bottom"}
+            xLabelsStyle={(i) => {
+                const date = new Date();
+                date.setDate(date.getDate() - (i * 7) - overflowModulus(date.getDay() - 1, 7) + 6);
+                return {
+                    color: date.getDate() <= 7 ? "#000000" : "transparent"
+                }
+            }}
             data={heatmapData}
             cellHeight='2rem'
             cellStyle={(x, y, ratio) => ({
