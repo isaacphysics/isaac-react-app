@@ -1,4 +1,4 @@
-import {GameboardDTO, GameboardItem, GameboardItemState, QuestionDTO} from "../../../IsaacApiTypes";
+import {GameboardItem} from "../../../IsaacApiTypes";
 import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";

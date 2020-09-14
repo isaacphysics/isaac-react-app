@@ -314,11 +314,6 @@ export interface QuantityDTO extends ChoiceDTO {
     units?: string;
 }
 
-export interface QuestionCompletionDTO {
-    id?: string;
-    state?: QuestionPartState[];
-}
-
 export interface QuestionDTO extends ContentDTO {
     hints?: any[];
     bestAttempt?: QuestionValidationResponseDTO;

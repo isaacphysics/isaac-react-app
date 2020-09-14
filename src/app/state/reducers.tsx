@@ -44,7 +44,7 @@ import {
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
     UserSummaryWithGroupMembershipDTO,
-    TOTPSharedSecretDTO, QuestionCompletionDTO, QuestionDTO
+    TOTPSharedSecretDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
