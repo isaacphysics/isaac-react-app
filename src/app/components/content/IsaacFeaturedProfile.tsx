@@ -6,13 +6,14 @@ import {Col, Row} from "reactstrap";
 
 interface IsaacFeaturedProfileProps {
     doc: IsaacFeaturedProfileDTO;
+    contentIndex?: number;
 }
 
-export const IsaacFeaturedProfile = ({doc}: IsaacFeaturedProfileProps) => {
+export const IsaacFeaturedProfile = ({doc, contentIndex}: IsaacFeaturedProfileProps) => {
     const path = doc.image && doc.image.src && apiHelper.determineImageUrl(doc.image.src);
     const summary = doc.children && doc.children[0];
 
-    return <div className="text-center featured-profile">
+    return <div className={`text-center featured-profile ${contentIndex && contentIndex % 3 === 0 ? "featured-profile-new-row" : ""}`}>
         <div>
             <img className="profile-image" src={path} alt=""/>
         </div>
@@ -32,11 +33,9 @@ export const IsaacFeaturedProfile = ({doc}: IsaacFeaturedProfileProps) => {
         <div className="profile-description">
             <IsaacContent doc={summary} />
         </div>
-        {doc.emailAddress &&
-            <a href={"mailto:" + doc.emailAddress}>
-                <img src='/assets/phy/icon-mailto.png' alt=""/>
-                <span className="sr-only">{"Email " + doc.title}</span>
-            </a>
-        }
+        {doc.emailAddress && <a href={"mailto:" + doc.emailAddress} className="mb-4">
+            <img src='/assets/phy/icon-mailto.png' alt=""/>
+            <span className="sr-only">{"Email " + doc.title}</span>
+        </a>}
     </div>
 };
