@@ -1,4 +1,5 @@
 import {history} from "./history";
+import { isDefined } from './miscUtils';
 
 history.listen((location, action) => {
     if (["PUSH", "REPLACE"].includes(action)) {
@@ -12,9 +13,9 @@ history.listen((location, action) => {
     }
 });
 
-export function scrollVerticallyIntoView(element: Element) {
-    const yPosition = element.getBoundingClientRect().top + pageYOffset;
-    if (yPosition) {
+export function scrollVerticallyIntoView(element: Element, offset: number = 0): void {
+    const yPosition = element.getBoundingClientRect().top + pageYOffset + offset;
+    if (isDefined(yPosition)) {
         window.scrollTo(0, yPosition);
     }
 }

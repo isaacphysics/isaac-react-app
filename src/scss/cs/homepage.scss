@@ -37,9 +37,44 @@
         border-bottom: none;
       }
     }
-  }
 
-  //section#sign-up-card {
-  //  border: black 1px solid;
-  //}
+    .computer-scientist-of-the-month {
+      @include media-breakpoint-up(md) {
+        .profile-image {
+          margin-right: 1.5rem;
+          float: left;
+        }
+        .featured-profile {
+          height: auto;
+          width: auto;
+          float: none;
+        }
+      }
+      @include media-breakpoint-down(sm) {
+        .profile-image {
+          max-width: 100%;
+          height: auto;
+        }
+      }
+      .profile-image {
+        width: auto;
+      }
+      .profile-titles {
+        @extend .mt-4;
+      }
+      .profile-title {
+        @extend .h5;
+      }
+      .profile-subtitle {
+        @extend .font-weight-bold;
+      }
+      .profile-description {
+        font-size: inherit;
+        color: inherit;
+      }
+      .profile-title, .profile-subtitle, .profile-description {
+        @extend .text-left
+      }
+    }
+  }
 }

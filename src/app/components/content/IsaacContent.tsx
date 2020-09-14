@@ -24,7 +24,7 @@ const classBasedLayouts = {
     righthalf: "align-right-half"
 };
 
-export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: string}}) => {
+export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: string}, contentIndex?: number}) => {
     const {doc: {type, layout, encoding, value, children}, match} = props;
 
     let selectedComponent;
