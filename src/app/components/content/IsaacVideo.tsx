@@ -48,12 +48,11 @@ function onPlayerStateChange(event: any, wrappedLogAction: (eventDetails: object
 }
 
 export function pauseVideo() {
-    let iframes = document.getElementsByTagName("iframe");
-    for (let i = 0; i < iframes.length; i++) {
-        if (iframes[i].contentWindow) {
-            iframes[i].contentWindow?.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-        }
-    }
+    const iframes = document.querySelectorAll('iframe');
+    Array.prototype.forEach.call(iframes, iframe => {
+        iframe.contentWindow.postMessage(JSON.stringify({ event: 'command',
+            func: 'pauseVideo' }), '*');
+    });
 }
 
 
