@@ -328,7 +328,6 @@ const MobileGroupCreatorComponent = ({createNewGroup, ...props}: GroupCreatorPro
 
 const GroupsPageComponent = (props: GroupsPageProps) => {
     const {group, groups, loadGroups, getGroupInfo, selectGroup, createGroup, deleteGroup, showGroupInvitationModal} = props;
-    const user = useSelector(selectors.user.orNull);
 
     const [showArchived, setShowArchived] = useState(false);
 

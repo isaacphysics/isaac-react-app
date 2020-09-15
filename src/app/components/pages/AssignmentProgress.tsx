@@ -513,7 +513,6 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
 export function AssignmentProgress(props: AssignmentProgressPageProps) {
     const dispatch = useDispatch();
     const {groups} = useSelector(selectGroups);
-    const user = useSelector(selectors.user.orNull);
 
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);

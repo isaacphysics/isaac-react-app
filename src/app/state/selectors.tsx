@@ -1,4 +1,4 @@
-import {AdminUserSearchState, AppState, ProgressState} from "./reducers";
+import {AppState, ProgressState} from "./reducers";
 import {sortBy} from "lodash";
 import {NOT_FOUND} from "../services/constants";
 import {AppGroup} from "../../IsaacAppTypes";
