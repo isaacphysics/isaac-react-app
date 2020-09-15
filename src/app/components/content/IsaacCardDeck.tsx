@@ -8,7 +8,8 @@ interface IsaacCardDeckProps {
 }
 
 export const IsaacCardDeck = ({doc, className}: IsaacCardDeckProps) => {
-    return <div className={"card-deck isaac-cards-body " + className}>
+    const classNameString: string = className !== undefined ? className : "";
+    return <div className={"card-deck isaac-cards-body " + classNameString}>
         {doc?.cards?.map((props, i) => <IsaacCard key={i} doc={props}/>)}
     </div>
 };
