@@ -80,10 +80,8 @@ function isAxiosError(e: Error): e is AxiosError {
 }
 
 function extractMessage(e: Error) {
-    if (isAxiosError(e)) {
-        if (e.response) {
-            return e.response.data.errorMessage;
-        }
+    if (isAxiosError(e) && e.response && e.response.data && e.response.data.errorMessage) {
+        return e.response.data.errorMessage;
     }
     return API_REQUEST_FAILURE_MESSAGE;
 }
@@ -395,7 +393,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         history.push(afterAuthPath);
 
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? extractMessage(e) : API_REQUEST_FAILURE_MESSAGE})
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
     }
     dispatch(requestCurrentUser() as any)
 };
@@ -466,7 +464,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             history.push(nextPage);
         }
     } catch (error) {
-        history.push({pathname: "/auth_error", state: {errorMessage: isAxiosError(error) ? extractMessage(error) : API_REQUEST_FAILURE_MESSAGE}});
+        history.push({pathname: "/auth_error", state: {errorMessage: extractMessage(error)}});
         dispatch(showErrorToastIfNeeded("Login Failed", error));
     }
 };
@@ -1232,6 +1230,26 @@ export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids:
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Sending email with ids failed", e));
+    }
+};
+
+export const mergeUsers = (targetId: number, sourceId: number) => async (dispatch: Dispatch<Action>) => {
+    let confirmMerge = window.confirm(`Are you sure you want to merge user ${sourceId} into user ${targetId}? This will delete user ${sourceId}.`);
+    if (confirmMerge) {
+        dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_REQUEST});
+        try {
+            await api.admin.mergeUsers(targetId, sourceId);
+            dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_RESPONSE_SUCCESS});
+            dispatch(showToast({
+                color: "success",
+                title: "Users merged",
+                body: `User with id: ${sourceId} was merged into user with id: ${targetId}`,
+                timeout: 3000
+            }) as any);
+        } catch (e) {
+            dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_RESPONSE_FAILURE});
+            dispatch(showErrorToastIfNeeded("Merging users failed", e));
+        }
     }
 };
 
