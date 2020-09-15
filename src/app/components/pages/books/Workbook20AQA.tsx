@@ -13,7 +13,7 @@ export const Workbook20AQA = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-5" currentPageTitle="AQA Workbook" help={pageHelp} />
-                <img className="book-cover" src="/assets/books/workbook_20.png" alt="Cover of the book."/>
+                <img className="book-cover" src="/assets/books/workbook_20_aqa.png" alt="Cover of the book."/>
                 <PageFragment fragmentId="workbook_20_aqa_intro"/>
             </div>
         </Col>

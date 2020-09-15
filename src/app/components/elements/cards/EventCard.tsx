@@ -35,7 +35,7 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
                 </span>}
             </RS.CardText>
             <RS.CardText>
-                <Link className="focus-target" to={`events/${id}`}>
+                <Link className="focus-target" to={`/events/${id}`}>
                     View details
                     <span className='sr-only'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
                 </Link>

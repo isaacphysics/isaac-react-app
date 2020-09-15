@@ -157,7 +157,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     public constructor(props: InequalityModalProps) {
         super(props);
 
-        this._availableSymbols = Array.from(new Set(parsePseudoSymbolicAvailableSymbols(props.availableSymbols)));
+        this._availableSymbols = Array.from(new Set(parsePseudoSymbolicAvailableSymbols(props.availableSymbols))).filter(s => s.trim() !== '');
 
         this.state = {
             sketch: props.sketch as Inequality,
@@ -255,7 +255,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.body.addEventListener('mouseup', this.onCursorMoveEnd.bind(this), { passive: true } );
         document.body.addEventListener('touchend', this.onCursorMoveEnd.bind(this), { passive: true } );
 
-        let defaultMenuItems = {
+        const defaultMenuItems = {
             // ...this.state.menuItems,
             upperCaseLetters: [ ...(this.state.menuItems.upperCaseLetters || []) ],
             lowerCaseLetters: [ ...(this.state.menuItems.lowerCaseLetters || []) ],
@@ -285,7 +285,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         if (this._availableSymbols && this._availableSymbols.length > 0) {
             // ~~~ Assuming these are only letters... might become more complicated in the future.
             // THE FUTURE IS HERE! Sorry.
-            let customMenuItems = {
+            const customMenuItems = {
                 mathsDerivatives: this.state.menuItems.mathsDerivatives,
                 letters: new Array<MenuItem>(),
                 otherFunctions: new Array<MenuItem>(),
@@ -399,7 +399,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
     }
 
-    public componentWillUnmount() {
+    public componentWillUnmount(): void {
         window.removeEventListener('keyup', this.handleKeyPress.bind(this));
         const inequalityElement = document.getElementById('inequality-modal') as HTMLElement;
         inequalityElement.removeEventListener('mousedown', this.onMouseDown.bind(this));
@@ -438,7 +438,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private convertToLatexIfGreek(s: string): string {
-        if (s == "epsilon") {
+        if (s === "epsilon") {
             return "\\varepsilon";
         }
         if (this._lowerCaseGreekLetters.includes(s) || this._upperCaseGreekLetters.includes(s)) {
@@ -502,7 +502,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private generateLogicFunctionsItems(syntax = 'logic'): MenuItem[] {
-        let labels: any = {
+        const labels: any = {
             logic: { and: "\\land", or: "\\lor", not: "\\lnot", equiv: "=", True: "\\mathsf{T}", False: "\\mathsf{F}" },
             binary: { and: "\\cdot", or: "+", not: "\\overline{x}", equiv: "=", True: "1", False: "0" }
         };
@@ -558,7 +558,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             }
             fontSize = ['cosech'].includes(name) ? '1em' : '1.2em';
         }
-        let item = new MenuItem("Fn", {
+        const item = new MenuItem("Fn", {
             name: functionName,
             innerSuperscript: true,
             allowSubscript: false
@@ -603,7 +603,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         const differentialLetter = nameToLetterMap[differentialType] || "?";
         const differentialLatex = "\\mathrm{" + ( nameToLatexMap[differentialType] || "?" ) + "}";
 
-        let differentialSymbol = new MenuItem('Differential', { letter: differentialLetter }, { label: differentialLatex, texLabel: true, className: '' });
+        const differentialSymbol = new MenuItem('Differential', { letter: differentialLetter }, { label: differentialLatex, texLabel: true, className: '' });
 
         if (differentialOrder > 1) {
             differentialSymbol.children = {
@@ -646,7 +646,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
     private generateMathsDerivativeAndLetters(symbol: string): { derivative: MenuItem; letters: MenuItem[] } {
         const pieces = symbol.split(';').map(s => s.replace(/[()\s]/g, '')).slice(1); // FIXME Is this regex just a trim()?
-        let orders: { [piece: string]: number } = {};
+        const orders: { [piece: string]: number } = {};
         // Count how many times one should derive each variable
         for (const piece of pieces) {
             orders[piece] = orders[piece] + 1 || 1;
@@ -725,7 +725,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             return new MenuItem('ChemicalElement', { element: symbol }, { label: `\\text{${symbol}}`, texLabel: true, className: `chemical-element ${symbol}` });
         } else if (this._chemicalParticles.hasOwnProperty(symbol)) {
             return new MenuItem('Particle', this._chemicalParticles[symbol].properties, { ...this._chemicalParticles[symbol].menu, className: `chemical-particle ${symbol}` });
-        }
+        }/* else {
+            return this.makeLetterMenuItem(symbol);
+        }*/ // Is this necessary? Does chemistry allow regular letters?
     }
 
     private makeChemicalStatesMenuItems() {
@@ -919,7 +921,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         this.setState({ numberInputValue: void 0 });
     }
 
-    public render() {
+    public render(): JSX.Element {
         let lettersMenu: JSX.Element | null = null;
         if (!this.state.disableLetters) {
             if (this.state.defaultMenu) {
@@ -1027,9 +1029,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 functionsTabLabel = "\\cdot\\ \\overline{x}";
             }
         }
-        let mathsOtherFunctionsTabLabel = '\\sin\\ \\int';
+        const mathsOtherFunctionsTabLabel = '\\sin\\ \\int';
 
-        let menu: JSX.Element =
+        const menu: JSX.Element =
         <nav className="inequality-ui">
             <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
                 {this.state.activeMenu === 'numbers' && <div className="top-menu numbers">

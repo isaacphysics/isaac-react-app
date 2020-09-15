@@ -1,0 +1,136 @@
+.inline-glossary-term {
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+  }
+  
+.glossary_term .topics {
+  margin-top: -1em;
+}
+
+.glossary-page {
+  #sentinel {
+    max-height: 1px;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  #stickyalphabetlist {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    z-index: 255;
+    display: none;
+
+    &.active {
+      display: flex;
+      @include make-col(12);
+      box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+      padding-top: 0;
+      padding-bottom: 0 !important;
+
+      div.key {
+        display: block;
+        margin-bottom: 0;
+        line-height: 3em;
+        cursor: pointer;
+
+        &.unavailable {
+          cursor: default;
+        }
+      }
+
+      @include respond-below(sm) {
+        display: none;
+      }
+    }
+  }
+
+  .alphabetlist {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    
+    @include respond-below(sm) {
+      flex-direction: column;
+      position: fixed;
+      right: 0vw;
+      top: 10vh;
+      z-index: 255;
+      width: 2em;
+      height: 80vh;
+      padding: 0.3em 0 !important;
+      background: rgba(0,0,0,0.5);
+      border-radius: 0.6em 0 0 0.6em;
+      text-align: right;
+
+      div.key {
+        color: white;
+        font-size: 0.8rem;
+        font-weight: bold;
+        display: block;
+        line-height: 1em;
+        width: 1.2em;
+        text-align: center!important;
+        padding-left: 0.6em;
+        margin: 0 !important;
+
+        &:first-child {
+          padding-top: 0.5vh;
+          border-radius: 6px 6px 0 0;
+        }
+
+        &:last-child {
+          padding-bottom: 0.5vh;
+          border-radius: 0 0 6px 6px;
+        }
+
+        &.unavailable {
+          display: none;
+        }    
+      }
+    }
+  
+    div.key {
+      line-height: 1.2em;
+      width: 2em;
+      text-align: center;
+      vertical-align: bottom;
+      margin-bottom: 0.8em;
+      cursor: pointer;
+
+      &.unavailable {
+        color: $gray-120;
+        cursor: default;
+      }  
+    }
+  }
+
+  .glossary_term_name {
+    img {
+      left: 0;
+    }
+  }
+}
+
+.glossary_term_name {
+  position: relative;
+
+  img {
+    position: absolute;
+    top: 0.4em;
+    height: 1em;
+    display: block;
+  }
+
+  strong {
+    text-decoration: underline;
+    position: absolute;
+    left: 1.2em;
+    display: block;
+    float: left;
+    top: 0;
+    left: 2em;
+  }
+}

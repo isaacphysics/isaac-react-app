@@ -96,7 +96,7 @@ export const TeacherFeatures = () => {
         </Row>
         <Row className="teacher-feature-body mb-5 mt-2 px-3">
             <Col md="4">
-                <MenuCard link={"https://www.isaacbooks.org/"}
+                <MenuCard link={"/pages/isaac_books"}
                     imageSrc={"/assets/phy/teacher_features_sprite.svg#skills-book-cover"}
                     title={"Isaac Physics Books"}
                     verticalContent={true}
