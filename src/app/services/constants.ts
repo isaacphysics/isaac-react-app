@@ -36,6 +36,7 @@ export const GOOGLE_ANALYTICS_ACCOUNT_ID = {
 
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
+export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attempts at this question. Please try again later!";
 
 export const NOT_FOUND: NOT_FOUND_TYPE = 404;
 export const NO_CONTENT = 204;
