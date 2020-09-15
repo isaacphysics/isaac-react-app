@@ -112,7 +112,7 @@ export function FeaturedContentTabs() {
                 "Computer Scientist of the month": <ShowLoading
                     until={computerScientist}
                     thenRender={(cserOfTheMonth) => {
-                        return <div className="computer-scientist-of-the-month mt-4 mb-5">
+                        return <div className="computer-scientist-of-the-month mt-4 mb-md-5">
                             <IsaacContent doc={cserOfTheMonth} />
                         </div>
                     }}

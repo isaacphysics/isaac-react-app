@@ -1,5 +1,7 @@
 import React, {ReactNode, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
+import {TrustedMarkdown} from "./TrustedMarkdown";
+import {TrustedHtml} from "./TrustedHtml";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
 
@@ -47,7 +49,7 @@ export const Tabs = (props: TabsProps) => {
                         tag="button" type="button" name={tabTitle.replace(" ", "_")}
                         tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}
                     >
-                        {tabTitle}
+                        <TrustedHtml html={tabTitle} />
                     </NavLink>
                 </NavItem>;
             })}

@@ -54,7 +54,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">
                     <RS.Label>Filter by
-                        <RS.Input className="ml-2 mr-3" type="select" value={statusFilter} onChange={e => {
+                        <RS.Input id="event-status-filter" className="ml-2 mr-3" type="select" value={statusFilter} onChange={e => {
                             const selectedFilter = e.target.value as EventStatusFilter;
                             query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
                             query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
@@ -67,7 +67,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
                                 )
                             }
                         </RS.Input>
-                        <RS.Input className="ml-2" type="select" value={typeFilter} onChange={e => {
+                        <RS.Input id="event-type-filter" className="ml-2" type="select" value={typeFilter} onChange={e => {
                             const selectedType = e.target.value as EventTypeFilter;
                             query.types = selectedType !== EventTypeFilter["All events"] ? selectedType : undefined;
                             history.push({pathname: location.pathname, search: queryString.stringify(query as any)});

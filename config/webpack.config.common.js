@@ -5,6 +5,7 @@ const resolve = (p) => path.resolve(BASE_DIRECTORY, p);
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 
 // Read in the .env file and put into `process.env`:
@@ -103,6 +104,13 @@ module.exports = (isProd) => {
                 chunks: "all",
             },
             runtimeChunk: true,
+            minimizer: [
+                new TerserPlugin({
+                    terserOptions: {
+                        safari10: true,
+                    },
+                }),
+            ],
         },
 
         devtool : "source-map",

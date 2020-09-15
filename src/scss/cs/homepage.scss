@@ -42,13 +42,18 @@
       @include media-breakpoint-up(md) {
         .profile-image {
           margin-right: 1.5rem;
-          margin-bottom: 3rem;
           float: left;
         }
         .featured-profile {
           height: auto;
           width: auto;
           float: none;
+        }
+      }
+      @include media-breakpoint-down(sm) {
+        .profile-image {
+          max-width: 100%;
+          height: auto;
         }
       }
       .profile-image {
