@@ -80,10 +80,8 @@ function isAxiosError(e: Error): e is AxiosError {
 }
 
 function extractMessage(e: Error) {
-    if (isAxiosError(e)) {
-        if (e.response) {
-            return e.response.data.errorMessage;
-        }
+    if (isAxiosError(e) && e.response && e.response.data && e.response.data.errorMessage) {
+        return e.response.data.errorMessage;
     }
     return API_REQUEST_FAILURE_MESSAGE;
 }
@@ -395,7 +393,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         history.push(afterAuthPath);
 
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? extractMessage(e) : API_REQUEST_FAILURE_MESSAGE})
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
     }
     dispatch(requestCurrentUser() as any)
 };
@@ -466,7 +464,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             history.push(nextPage);
         }
     } catch (error) {
-        history.push({pathname: "/auth_error", state: {errorMessage: isAxiosError(error) ? extractMessage(error) : API_REQUEST_FAILURE_MESSAGE}});
+        history.push({pathname: "/auth_error", state: {errorMessage: extractMessage(error)}});
         dispatch(showErrorToastIfNeeded("Login Failed", error));
     }
 };
