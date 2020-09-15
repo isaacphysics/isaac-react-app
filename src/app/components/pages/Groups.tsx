@@ -47,7 +47,6 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
-import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 
 const stateFromProps = (state: AppState) => (state && {
     groups: selectors.groups.groups(state),
@@ -481,7 +480,6 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                     </ShowLoading>
                                 </TabPane>
                             </TabContent>
-                            {isStaff(user) && <AnonymiseUsersCheckbox/>}
                         </CardBody>
                     </Card>}
                 </ShowLoading>
