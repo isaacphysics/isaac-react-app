@@ -332,12 +332,11 @@ export const AdminUserManager = () => {
                 }
             </RS.CardBody>
         </RS.Card>
-        {isAdmin(currentUser) && <RS.Card className={"my-4"}>
+        {isAdmin(currentUser) && <>
+        <hr/>
+        <RS.Card className={"my-4"}>
             <RS.CardBody>
-                <h3>Manage users</h3>
-                <div>
-                    <strong>Merge users</strong>
-                </div>
+                <h3>Merge user accounts</h3>
                 <FormGroup>
                     <RS.InputGroup>
                         <RS.Input
@@ -364,6 +363,7 @@ export const AdminUserManager = () => {
                     </RS.InputGroup>
                 </FormGroup>
             </RS.CardBody>
-        </RS.Card>}
+        </RS.Card>
+        </>}
     </RS.Container>;
 };
