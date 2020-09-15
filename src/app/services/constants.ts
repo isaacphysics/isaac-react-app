@@ -822,4 +822,5 @@ export const doughnutColours = {
 export const SHORT_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 export const SHORT_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 export const HEATMAP_COLUMNS = 25;
+export const HEATMAP_LEGEND_COLOURS = 6;
 export const PRIMARY_COLOUR_RGB = SITE_SUBJECT === SITE.PHY ? "80, 158, 46" : "255, 181, 63"

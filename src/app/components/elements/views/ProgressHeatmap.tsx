@@ -1,6 +1,12 @@
 import React from 'react';
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
-import {HEATMAP_COLUMNS, PRIMARY_COLOUR_RGB, SHORT_DAYS, SHORT_MONTHS} from "../../../services/constants";
+import {
+    HEATMAP_COLUMNS,
+    HEATMAP_LEGEND_COLOURS,
+    PRIMARY_COLOUR_RGB,
+    SHORT_DAYS,
+    SHORT_MONTHS
+} from "../../../services/constants";
 import {HeatMapGrid} from "react-grid-heatmap/dist";
 import {NUMERIC_DATE} from "../DateString";
 import {overflowModulus} from "../../../services/miscUtils";
@@ -26,20 +32,18 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
         return date.getDate() <= 7 ? date.getMonth() : null
     }
 
-    const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
-    const heatmapData: number[][] = Array(yLabels.length).fill(0).map(() => Array(HEATMAP_COLUMNS).fill(0).map(() => Math.floor(0)));
-    if (foundDates?.length > 0) {
-        const maxDate = new Date();
-        const minDate = new Date();
-        minDate.setDate(-HEATMAP_COLUMNS * 7);
-        foundDates.forEach(dateString => {
-            const date = new Date(dateString);
-            const diffWeeks = findDiffWeeks(maxDate, date);
-            if (diffWeeks < HEATMAP_COLUMNS) {
-                heatmapData[overflowModulus(date.getDay() - 1, 7)][diffWeeks] = answeredQuestionsByDate[dateString] || 0;
-            }
-        })
-    }
+    const foundDates = Object.keys(answeredQuestionsByDate);
+    const heatmapData: number[][] = Array(yLabels.length).fill(0).map(() => Array(HEATMAP_COLUMNS).fill(0));
+    const maxDate = new Date();
+    const minDate = new Date();
+    minDate.setDate(-HEATMAP_COLUMNS * 7);
+    foundDates.forEach(dateString => {
+        const date = new Date(dateString);
+        const diffWeeks = findDiffWeeks(maxDate, date);
+        if (diffWeeks < HEATMAP_COLUMNS) {
+            heatmapData[overflowModulus(date.getDay() - 1, 7)][diffWeeks] = answeredQuestionsByDate[dateString] || 0;
+        }
+    })
 
     const xLabels = new Array(HEATMAP_COLUMNS).fill(0).map((_, i) => {
         const month = isBeginningOfMonth(i)
@@ -59,7 +63,7 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
             xLabelsPos={"bottom"}
             xLabelsStyle={(i) => ({
                 color: isBeginningOfMonth(i) ? "#000000" : "transparent",
-                height: isBeginningOfMonth(i) ? "unset" : "0px"
+                height: isBeginningOfMonth(i) ? "" : "0px"
             })}
             data={heatmapData}
             cellHeight='2rem'
@@ -72,21 +76,18 @@ export const ProgressHeatmap = ({answeredQuestionsByDate}: {answeredQuestionsByD
             )}
             square
         />
-        <RS.Row className={"ml-0"}>
-            <HeatMapGrid data={[[5, 4, 3, 2, 1, 0]]}
+        <RS.Row>
+            <HeatMapGrid data={[Array(HEATMAP_LEGEND_COLOURS).fill(0).map((_, i) => HEATMAP_LEGEND_COLOURS - i)]}
                          cellHeight='2rem'
                          cellStyle={(x, y, ratio) => ({
-                             background: ratio > 0 ? `rgba(${PRIMARY_COLOUR_RGB}, ${Math.floor(ratio * 0.8 * 5) / 5 + 0.2})` : "rgb(245, 245, 245)",
+                             background: ratio > 0 ?
+                                 `rgba(${PRIMARY_COLOUR_RGB}, ${Math.floor(ratio * 0.8 * (HEATMAP_LEGEND_COLOURS - 1)) / (HEATMAP_LEGEND_COLOURS - 1) + 0.2})` :
+                                 "rgb(245, 245, 245)",
                          })}
-                         cellRender={(x, y) => (
-                             <div className={"h-100"} key={`${x}-${y}`}/>
-                             )}
                          yLabels={["More"]}
-                         xLabels={["1", "2", "3", "4", "5", "6"]}
+                         xLabels={Array(HEATMAP_LEGEND_COLOURS).fill(0).map((_, i) => `${i}`)}
                          xLabelsPos={"bottom"}
-                         xLabelsStyle={(i) => ({
-                             height: "0px"
-                         })}
+                         xLabelsStyle={() => ({height: "0px"})}
                          square
             />
             <div className={"ml-1 mt-1"}>Fewer</div>
