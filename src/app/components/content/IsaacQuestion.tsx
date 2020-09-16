@@ -33,7 +33,7 @@ function retryPreviousQuestion(questionHistory: string[], board?: string) {
         value: "Retry previous question page",
         type: "button",
         onClick: function() {
-            goToUrl('/question/' + previousQuestionId, {questionHistory: commaSeparatedQuestionHistory, board});
+            goToUrl('/questions/' + previousQuestionId, {questionHistory: commaSeparatedQuestionHistory, board});
         }
     };
 }
