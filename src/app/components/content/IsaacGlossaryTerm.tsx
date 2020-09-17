@@ -6,6 +6,7 @@ import {IsaacContent} from "./IsaacContent";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {useCurrentExamBoard} from "../../services/examBoard";
 import _startCase from 'lodash/startCase';
+import { isDefined } from '../../services/miscUtils';
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
@@ -35,7 +36,7 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermPr
     }, [hash, anchorId]);
 
     return <React.Fragment>
-        {(doc.examBoard === '' || examBoard === doc.examBoard) && <Row className="glossary_term">
+        {(!isDefined(doc.examBoard) || doc.examBoard === '' || examBoard === doc.examBoard) && <Row className="glossary_term">
             <Col md={3} className="glossary_term_name">
                 <p id={anchorId}>
                     <a href={location.origin + location.pathname + '#' + anchorId}>
