@@ -1,6 +1,6 @@
 import React, {Dispatch} from "react";
 import {api} from "../services/api";
-import {AppState, userSnapshot} from "./reducers";
+import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {store} from "./store";
 import {
