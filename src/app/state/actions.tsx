@@ -258,6 +258,15 @@ export const disableTotpForAccount = (userId: number) => async (dispatch: Dispat
     }
 };
 
+export const handleSessionInvalidation = () => {
+    history.push("/logout");
+    setTimeout(() => store.dispatch(showToast({
+        title: "Logged out",
+        body: "You logged out of this session from another device.",
+        color: "warning",
+        timeout: 15000,
+    }) as any), 1000);
+}
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
     try {

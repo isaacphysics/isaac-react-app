@@ -17,7 +17,7 @@ import {
     UserPreferencesDTO,
     ValidationUser
 } from "../../IsaacAppTypes";
-import {handleApiGoneAway, handleServerError} from "../state/actions";
+import {handleApiGoneAway, handleServerError, handleSessionInvalidation} from "../state/actions";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
 
@@ -42,6 +42,9 @@ endpoint.interceptors.response.use((response) => {
         }
         // eslint-disable-next-line no-console
         console.warn("Error from API:", error);
+    } else if (error.response?.status === 412) {
+        // Session has been invalidated
+        handleSessionInvalidation()
     }
     return Promise.reject(error);
 });
