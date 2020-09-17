@@ -193,6 +193,15 @@ export interface UserGroupDTO {
     _id?: number;
 }
 
+export interface UserGameboardProgressSummaryDTO {
+    userSummary?: UserSummaryDTO;
+    questionPartsCorrect?: number;
+    questionPartsIncorrect?: number;
+    questionPartsNotAttempted?: number;
+    questionPartsTotal?: number;
+    passMark?: number;
+}
+
 export interface AnvilAppDTO extends ContentDTO {
     appId?: string;
     appAccessKey?: string;

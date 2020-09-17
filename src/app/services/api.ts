@@ -384,6 +384,9 @@ export const api = {
         },
         deleteManager: (group: AppTypes.AppGroup, manager: ApiTypes.UserSummaryWithEmailAddressDTO): AxiosPromise => {
             return endpoint.delete(`/groups/${group.id}/manager/${manager.id}`);
+        },
+        groupProgress: (group: ApiTypes.UserGroupDTO): AxiosPromise<ApiTypes.UserGameboardProgressSummaryDTO[]> => {
+            return endpoint.get(`/groups/${group.id}/progress`);
         }
     },
     boards: {
