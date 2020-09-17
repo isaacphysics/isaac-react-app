@@ -258,9 +258,11 @@ export const disableTotpForAccount = (userId: number) => async (dispatch: Dispat
     }
 };
 
+let handleSessionInvalidationTimeout: number | null = null;
 export const handleSessionInvalidation = () => {
     history.push("/logout");
-    setTimeout(() => store.dispatch(showToast({
+    handleSessionInvalidationTimeout && clearTimeout(handleSessionInvalidationTimeout);
+    handleSessionInvalidationTimeout = window.setTimeout(() => store.dispatch(showToast({
         title: "Logged out",
         body: "You logged out of this session from another device.",
         color: "warning",
