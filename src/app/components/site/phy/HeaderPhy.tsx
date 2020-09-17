@@ -1,18 +1,22 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
-import {Col, Container, Row} from "reactstrap";
+import {Col, Container, Row, UncontrolledTooltip} from "reactstrap";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarPhy} from "./NavigationBarPhy";
 import {selectors} from "../../../state/selectors";
+import {AppState} from "../../../state/reducers";
+import {HeaderDailyStreakGauge} from "../../elements/views/DailyStreakGauge";
 
 export const HeaderPhy = () => {
     const user = useSelector(selectors.user.orNull);
+    const streakRecord = useSelector((state: AppState) => state?.streakRecord ||
+        state?.userProgress?.userSnapshot?.dailyStreakRecord);
     const mainContentId = useSelector(selectors.mainContentId.orDefault);
     return <header className="light">
         <Container className="container-fluid px-0">
-            <Row>
-                <Col>
+            <Row className="align-items-center">
+                <Col md={user && user.loggedIn ? 11 : 12}>
                     <div className="header-bar mx-3 mx-md-0 d-md-flex">
                         <div className="header-logo">
                             <Link to="/">
@@ -42,7 +46,10 @@ export const HeaderPhy = () => {
                                     <React.Fragment>
                                         <div className="my-account mx-5 mx-sm-2">
                                             <Link to="/account">
-                                                <span>MY ACCOUNT</span>
+                                                {user.givenName && user.givenName.length <= 20 &&
+                                                    <strong className="d-none d-md-block">Hello {user.givenName}</strong>
+                                                }
+                                                <span>YOUR ACCOUNT</span>
                                             </Link>
                                         </div>
                                         <div className="logout m-0 mr-md-4 ml-md-3">
@@ -59,7 +66,22 @@ export const HeaderPhy = () => {
                             <MainSearch />
                         </div>
                     </div>
-
+                </Col>
+                {user && user.loggedIn &&
+                    <Col md={1} className="d-none d-md-block">
+                        <div id="header-progress">
+                            Streak:
+                            <HeaderDailyStreakGauge streakRecord={streakRecord}/>
+                        </div>
+                        <UncontrolledTooltip placement="bottom" autohide={false} target="header-progress">
+                            The daily streak indicates the number of consecutive days you have been active on Isaac.
+                            <br/><br/>Answer at least <b>three question parts</b> correctly per day to fill up your daily progress bar and increase your streak!
+                        </UncontrolledTooltip>
+                    </Col>
+                }
+            </Row>
+            <Row>
+                <Col>
                     <NavigationBarPhy />
                 </Col>
             </Row>

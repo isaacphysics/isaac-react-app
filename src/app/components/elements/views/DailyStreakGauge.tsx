@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {bb} from "billboard.js";
 import {StreakRecord} from "../../../../IsaacAppTypes";
+import {buildStyles, CircularProgressbarWithChildren} from "react-circular-progressbar";
 
 interface DailyStreakGaugeProps {
     streakRecord: StreakRecord | null | undefined;
@@ -30,3 +31,17 @@ export const DailyStreakGauge = (props: DailyStreakGaugeProps) => {
     }, [streakRecord]);
     return <div className={"auto-margin"} id="daily-streak-chart"/>
 };
+
+export const HeaderDailyStreakGauge = (props: DailyStreakGaugeProps) => {
+    const {streakRecord} = props;
+    return <CircularProgressbarWithChildren value={streakRecord?.currentActivity || 0}
+                                     maxValue={3}
+                                     styles={buildStyles({
+                                         pathColor: '#509E2E',
+                                         trailColor: '#c9cad1'
+                                     })}>
+        <div style={{fontSize: 24}}>
+            {streakRecord?.currentStreak || 0}
+        </div>
+    </CircularProgressbarWithChildren>
+}

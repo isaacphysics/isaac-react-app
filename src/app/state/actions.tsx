@@ -1,6 +1,6 @@
 import React, {Dispatch} from "react";
 import {api} from "../services/api";
-import {AppState} from "./reducers";
+import {AppState, userSnapshot} from "./reducers";
 import {history} from "../services/history";
 import {store} from "./store";
 import {
@@ -31,8 +31,10 @@ import {
     FreeTextRule,
     LoggedInUser,
     QuestionSearchQuery,
+    StreakRecord,
     Toast,
     UserPreferencesDTO,
+    UserSnapshot,
     ValidatedChoice,
     ValidationUser,
 } from "../../IsaacAppTypes";
@@ -282,6 +284,15 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE});
     }
+};
+
+
+export const updateUserSnapshot = (newUserSnapshot: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
+        dispatch({type: ACTION_TYPE.USER_SNAPSHOT_UPDATE, userSnapshot: newUserSnapshot});
+};
+
+export const updateStreakRecord = (newStreakRecord: StreakRecord) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.STREAK_RECORD_UPDATE, streakRecord: newStreakRecord});
 };
 
 // TODO scope for pulling out a separate registerUser method from this
