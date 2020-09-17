@@ -16,7 +16,7 @@ export function FeaturedContentTabs() {
     const computerScientist = useSelector((state: AppState) => state?.fragments && state.fragments[COMPUTER_SCIENTIST_FRAGMENT_ID]);
 
     return <div className="tabs-featured-question">
-        <Tabs tabContentClass="mt-3 mt-md-5">
+        <Tabs tabContentClass="mt-3 mt-md-5" activeTabOverride={1 + Math.floor(Math.random() * 2)}>
             {{
                 "Featured question": <Row className="feattab-row">
                     <Col md={8} className="feattab-info pl-md-4">
