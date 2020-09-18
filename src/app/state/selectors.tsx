@@ -36,6 +36,11 @@ export const selectors = {
                 active: selectors.groups.active(state),
                 archived: selectors.groups.archived(state)
             }
+        },
+        progress: (state: AppState) => {
+            if (!state) return null;
+            if (!state.groupProgress) return null;
+            return state.groupProgress;
         }
     },
 

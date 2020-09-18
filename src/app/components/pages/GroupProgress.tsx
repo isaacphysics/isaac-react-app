@@ -12,7 +12,7 @@ import {
     Spinner,
     UncontrolledButtonDropdown
 } from "reactstrap"
-import {loadAssignmentsOwnedByMe, loadBoard, loadGroups, loadProgress, openActiveModal} from "../../state/actions";
+import {getGroupProgress, loadAssignmentsOwnedByMe, loadBoard, loadGroups, loadProgress, openActiveModal} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {orderBy, sortBy} from "lodash";
@@ -103,12 +103,12 @@ interface GroupProgressLegendProps {
     pageSettings: PageSettings;
 }
 
-type GroupDetailsProps = GroupProgressPageProps & {
+type GroupSummaryProps = GroupProgressPageProps & {
     group: AppGroupWithAssignments;
     pageSettings: PageSettings;
 };
 
-type AssignmentDetailsProps = GroupDetailsProps & {
+type AssignmentDetailsProps = GroupSummaryProps & {
     assignment: EnhancedAssignment; // We only show this when we have the gameboard loaded.
 };
 
@@ -460,33 +460,41 @@ export const GroupProgressLegend = (props: GroupProgressLegendProps): JSX.Elemen
     </div></div>
 };
 
-const GroupDetails = (props: GroupDetailsProps) => {
+const GroupSummary = (props: GroupSummaryProps) => {
     const dispatch = useDispatch();
     const {group, pageSettings} = props;
+    const progress = useSelector(selectors.groups.progress);
+    useEffect(() => {
+        dispatch(getGroupProgress(group));
+    }, [dispatch]);
 
-    const gameboardIs = group.assignments.map(assignment => assignment.gameboardId as string);
-    const joinedGameboardIds = gameboardIs.join(",");
-    useEffect( () => {
-        gameboardIs.forEach(gameboardId => dispatch(loadBoard(gameboardId)));
-    }, [joinedGameboardIds]);
+    return <div className={"group-progress-summary"}>
+        {JSON.stringify(progress)}
+    </div>
 
-    const gameboardsLoaded = group.assignments.every(assignment => assignment.gameboard != null);
+    // const gameboardIs = group.assignments.map(assignment => assignment.gameboardId as string);
+    // const joinedGameboardIds = gameboardIs.join(",");
+    // useEffect( () => {
+    //     gameboardIs.forEach(gameboardId => dispatch(loadBoard(gameboardId)));
+    // }, [joinedGameboardIds]);
 
-    return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
-        <GroupProgressLegend pageSettings={pageSettings}/>
-        {gameboardsLoaded ? group.assignments.map(assignment => hasGameboard(assignment) && <AssignmentDetails key={assignment.gameboardId} {...props} assignment={assignment}/>)
-            : <div className="p-4 text-center"><Spinner color="primary" size="lg" /></div>}
-    </div>;
+    // const gameboardsLoaded = group.assignments.every(assignment => assignment.gameboard != null);
+
+    // return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
+    //     <GroupProgressLegend pageSettings={pageSettings}/>
+    //     {gameboardsLoaded ? group.assignments.map(assignment => hasGameboard(assignment) && <AssignmentDetails key={assignment.gameboardId} {...props} assignment={assignment}/>)
+    //         : <div className="p-4 text-center"><Spinner color="primary" size="lg" /></div>}
+    // </div>;
 };
 
 function getGroupProgressCSVDownloadLink(groupId: number) {
     return API_PATH + "/assignments/assign/group/" + groupId + "/progress/download";
 }
 
-const GroupAssignmentProgress = (props: GroupDetailsProps) => {
+const GroupAssignmentProgress = (props: GroupSummaryProps) => {
     const dispatch = useDispatch();
     const {group} = props;
-    const [isExpanded, setExpanded] = useState(false);
+    const [isExpanded, setExpanded] = useState(true);
 
     const assignmentCount = group.assignments.length;
 
@@ -508,7 +516,7 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
             </Button>
         </div>
-        {isExpanded && <GroupDetails {...props} />}
+        {isExpanded && <GroupSummary {...props} />}
     </React.Fragment>;
 };
 
@@ -524,14 +532,14 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
-    let data = groups;
-    if (data) {
+    let sortedGroups = groups;
+    if (sortedGroups) {
         switch(sortOrder) {
             case SortOrder.Alphabetical:
-                data = sortBy(data, g => g.groupName && g.groupName.toLowerCase());
+                sortedGroups = sortBy(sortedGroups, g => g.groupName && g.groupName.toLowerCase());
                 break;
             case SortOrder["Date Created"]:
-                data = sortBy(data, g => g.created).reverse();
+                sortedGroups = sortBy(sortedGroups, g => g.created).reverse();
                 break;
         }
     }
@@ -566,9 +574,9 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
             </Row>
         </Container>
         <div className="assignment-progress-container mb-5">
-            <ShowLoading until={data}>
-                {data && data.map(group => <GroupAssignmentProgress key={group.id} {...props} group={group} pageSettings={pageSettings} />)}
-                {data && data.length == 0 && <Container className="py-5">
+            <ShowLoading until={sortedGroups}>
+                {sortedGroups && sortedGroups.map(group => <GroupAssignmentProgress key={group.id} {...props} group={group} pageSettings={pageSettings} />)}
+                {sortedGroups && sortedGroups.length === 0 && <Container className="py-5">
                     <h3 className="text-center">
                         You&apos;ll need to create a group using <Link to="/groups">Manage groups</Link> to set an assignment.
                     </h3>

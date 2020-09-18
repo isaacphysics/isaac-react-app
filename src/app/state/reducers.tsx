@@ -44,7 +44,8 @@ import {
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
     UserSummaryWithGroupMembershipDTO,
-    TOTPSharedSecretDTO
+    TOTPSharedSecretDTO,
+    UserGameboardProgressSummaryDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
@@ -245,6 +246,16 @@ export const groupMemberships = (groupMemberships: GroupMembershipsState = null,
             return groupMemberships;
     }
 };
+
+export type GroupProgressState = { progress: UserGameboardProgressSummaryDTO[] } | null ;
+export const groupProgress = (groupProgress: GroupProgressState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS:
+            return { progress: action.progress }
+        default:
+            return groupProgress;
+    }
+}
 
 type ConstantsState = {units?: string[]; segueVersion?: string; segueEnvironment?: string} | null;
 export const constants = (constants: ConstantsState = null, action: Action) => {
@@ -1000,7 +1011,8 @@ const appReducer = combineReducers({
     concepts,
     fasttrackConcepts,
     graphSketcherSpec,
-    mainContentId
+    mainContentId,
+    groupProgress
 });
 
 export type AppState = undefined | {
@@ -1055,6 +1067,7 @@ export type AppState = undefined | {
     fasttrackConcepts: FasttrackConceptsState;
     graphSketcherSpec: GraphSpecState;
     mainContentId: MainContentIdState;
+    groupProgress: GroupProgressState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {
