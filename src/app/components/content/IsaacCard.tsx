@@ -6,8 +6,12 @@ import {Link} from "react-router-dom";
 import {isAppLink} from "../../services/navigation";
 import {IsaacCardDTO} from "../../../IsaacApiTypes";
 
+interface IsaacCardProps {
+    doc: IsaacCardDTO,
+    imageClassName?: string
+}
 
-export const IsaacCard = ({doc}: {doc: IsaacCardDTO}) => {
+export const IsaacCard = ({doc, imageClassName}: IsaacCardProps) => {
     const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
     const classes = classNames({"menu-card": true, "disabled": disabled, "isaac-card-vertical": verticalContent});
     const imgSrc = image?.src && apiHelper.determineImageUrl(image.src);
@@ -19,7 +23,7 @@ export const IsaacCard = ({doc}: {doc: IsaacCardDTO}) => {
         <Card className={classes}>
             {image && <Row>
                 <Col className="justify-content-md-center">
-                    <img className={classes} src={imgSrc} alt=""/>
+                    <img className={[classes, imageClassName].join(" ")} src={imgSrc} alt={image.altText}/>
                 </Col>
             </Row>}
             <CardTitle className="px-3">
