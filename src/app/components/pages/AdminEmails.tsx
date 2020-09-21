@@ -8,6 +8,7 @@ import {EmailUserRoles} from "../../../IsaacAppTypes";
 import {UserRole} from "../../services/constants";
 import classnames from "classnames";
 import {debounce} from 'lodash';
+import {isEventManager} from "../../services/user";
 
 interface AdminEmailsProps {
     location: {
@@ -35,6 +36,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
     const [emailType, setEmailType] = useState("null");
     const [contentObjectID, setContentObjectID] = useState("");
     const [emailSent, setEmailSent] = useState(false);
+    const user = useSelector((state: AppState) => state?.user);
     const userRolesSelector = useSelector((state: AppState) => state && state.adminStats && state.adminStats.userRoles);
     const emailTemplateSelector = useSelector((state: AppState) => state && state.adminEmailTemplate && state.adminEmailTemplate);
 
@@ -61,6 +63,10 @@ export const AdminEmails = (props: AdminEmailsProps) => {
             dispatch(getAdminSiteStats());
         }
     }, []);
+
+    useEffect(() => {
+        isEventManager(user) && setEmailType("EVENTS");
+    }, [user]);
 
     return <RS.Container id="admin-emails-page">
         <TitleAndBreadcrumb currentPageTitle="Admin emails" />
@@ -127,7 +133,8 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                 <p>Users who have opted out of this type of email will
                     not receive anything. Administrative emails cannot be opted out of and should be avoided.</p>
                 <RS.Input
-                    id="email-type-input" type="select" defaultValue={emailType}
+                    id="email-type-input" type="select" value={emailType}
+                    disabled={isEventManager(user)}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setEmailType(e.target.value);
                     }}
