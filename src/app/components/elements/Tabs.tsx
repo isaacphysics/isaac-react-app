@@ -1,7 +1,8 @@
 import React, {ReactNode, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
-import {TrustedMarkdown} from "./TrustedMarkdown";
 import {TrustedHtml} from "./TrustedHtml";
+import {pauseAllVideos} from "../content/IsaacVideo";
+
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
 
@@ -25,6 +26,7 @@ export const Tabs = (props: TabsProps) => {
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 
     function changeTab(tabIndex: number) {
+        pauseAllVideos();
         let nextTabIndex = tabIndex;
         if (deselectable && activeTab === tabIndex) {
             nextTabIndex = -1;
