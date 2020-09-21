@@ -41,7 +41,7 @@ import {Toasts} from "./Toasts";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../services/user";
+import {isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {ActiveModals} from "../elements/modals/ActiveModals";
 import {Groups} from "../pages/Groups";
 import {Equality} from '../pages/Equality';
