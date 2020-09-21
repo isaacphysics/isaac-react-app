@@ -13,6 +13,7 @@ import {
     MEMBERSHIP_STATUS,
     NO_CONTENT,
     NOT_FOUND,
+    QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     TAG_ID
 } from "../services/constants";
 import {
@@ -850,13 +851,14 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
             }) as any);
         }
     } catch (e) {
-        if (e.response && e.response.status == 429) {
+        if (e.response && e.response.status === 429) {
+            const errorMessage = e.response?.data?.errorMessage || QUESTION_ATTEMPT_THROTTLED_MESSAGE;
             const lock = new Date((new Date()).getTime() + timePeriod);
 
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock});
             dispatch(showToast({
                 color: "danger", title: "Too many attempts", timeout: 10000,
-                body: "You have made too many attempts at this question. Please try again later!"
+                body: errorMessage
             }) as any);
             setTimeout( () => {
                 dispatch({type: ACTION_TYPE.QUESTION_UNLOCK, questionId});
