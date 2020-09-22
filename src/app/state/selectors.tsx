@@ -136,7 +136,7 @@ export const anonymisationFunctions = {
                 return {
                     ...member,
                     familyName: "",
-                    givenName: `Test Student ${i}`,
+                    givenName: `Test Student ${i + 1}`,
                 }
             }),
         }
@@ -151,7 +151,7 @@ export const anonymisationFunctions = {
                     user: {
                         ...userProgress.user,
                         familyName: "",
-                        givenName: `Test Student ${i}`,
+                        givenName: `Test Student ${i + 1}`,
                     }
                 }
             })
