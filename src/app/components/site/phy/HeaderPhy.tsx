@@ -16,7 +16,7 @@ export const HeaderPhy = () => {
     return <header className="light">
         <Container className="container-fluid px-0">
             <Row className="align-items-center">
-                <Col md={user && user.loggedIn ? 11 : 12}>
+                <Col md={user?.loggedIn ? 11 : 12}>
                     <div className="header-bar mx-3 mx-md-0 d-md-flex">
                         <div className="header-logo">
                             <Link to="/">
