@@ -67,7 +67,7 @@ export const HeaderPhy = () => {
                         </div>
                     </div>
                 </Col>
-                {user && user.loggedIn &&
+                {user?.loggedIn &&
                     <Col md={1} className="d-none d-md-block">
                         <div id="header-progress">
                             Streak:
