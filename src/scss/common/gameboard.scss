@@ -22,10 +22,16 @@
       border-color: #ddd;
     }
   }
-  .try-again {
+
+  .gameboard-item-icon {
+    max-width: 2rem;
+    max-height: 2rem;
+  }
+
+  .gameboard-item-message {
     font-size: 0.875rem;
     font-weight: normal;
-    color: $gray-160;
+    color: $secondary;
     align-self: center;
     padding-left: 1.5rem;
   }

@@ -7,7 +7,7 @@ import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {NOT_FOUND, TAG_ID} from "../../services/constants";
+import {NOT_FOUND, TAG_ID, TAG_LEVEL} from "../../services/constants";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
@@ -25,33 +25,43 @@ function getTags(docTags?: string[]) {
 
 const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
-    let icon = <img src="/assets/question.svg" alt=""/>;
-    let tryAgain = false;
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
+    const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
+    const hexOrEmpty = SITE_SUBJECT === SITE.PHY ? "-hex" : "";
+    let iconHref = `/assets/question${hexOrEmpty}.svg#icon`;
+    let message = "";
 
     switch (question.state) {
         case "PERFECT":
             itemClasses += " bg-success";
-            icon = <img src="/assets/tick-rp.svg" alt=""/>;
+            message = "perfect!"
+            iconHref = `/assets/tick-rp${hexOrEmpty}.svg#icon`;
             break;
         case "PASSED":
         case "IN_PROGRESS":
-            icon = <img src="/assets/incomplete.svg" alt=""/>;
+            message = "in progress"
+            iconHref = `/assets/incomplete${hexOrEmpty}.svg#icon`;
             break;
         case "FAILED":
-            tryAgain = true;
-            icon = <img src="/assets/cross-rp.svg" alt=""/>;
+            message = "try again!"
+            iconHref = `/assets/cross-rp${hexOrEmpty}.svg#icon`;
             break;
     }
 
-    const tags = getTags(question.tags);
+    const questionTags = getTags(question.tags);
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
-            <span>{icon}</span>
-            <div className="flex-grow-1">{question.title}
-                {tryAgain && <span className="try-again">try again!</span>}
-                {tags && <div className="gameboard-tags">
-                    {tags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
+            <span>
+                <svg className={iconClasses}>
+                    <use href={iconHref} xlinkHref={iconHref}/>
+                </svg>
+            </span>
+            <div className={"flex-grow-1 " + itemSubject?.id || ""}>
+                <span className="text-secondary">{question.title}</span>
+                {message && <span className="gameboard-item-message">{message}</span>}
+                {questionTags && <div className="gameboard-tags">
+                    {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
                 </div>}
             </div>
             {/*TODO CS Level*/}
