@@ -1427,9 +1427,9 @@ export const getGroupProgress = (group: UserGroupDTO) => async (dispatch: Dispat
     dispatch({type: ACTION_TYPE.GROUP_PROGRESS_REQUEST});
     try {
         const result = await api.groups.groupProgress(group);
-        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS, group: group, progress: result.data});
+        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS, groupId: group.id || 0, progress: result.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_FAILURE});
+        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_FAILURE, groupId: group.id || 0});
         dispatch(showErrorToastIfNeeded("Loading group members failed", e));
     }
 };
