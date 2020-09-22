@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {AppState} from "../../state/reducers";
@@ -6,6 +6,7 @@ import {getEmailTemplate, sendAdminEmailWithIds} from "../../state/actions";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {debounce} from 'lodash';
+import {isEventManager} from "../../services/user";
 
 interface AdminEmailsProps {
     location: {
@@ -23,11 +24,16 @@ export const AdminEmails = (props: AdminEmailsProps) => {
     const [emailType, setEmailType] = useState("null");
     const [contentObjectID, setContentObjectID] = useState("");
     const [emailSent, setEmailSent] = useState(false);
+    const user = useSelector((state: AppState) => state?.user);
     const emailTemplateSelector = useSelector((state: AppState) => state && state.adminEmailTemplate && state.adminEmailTemplate);
 
     const numberOfUsers = csvIDs.length;
     const canSubmit = emailTemplateSelector && emailType != "null" && numberOfUsers > 0;
     const csvInputDebounce = debounce((value: string) => setCSVIDs(value.split(/[\s,]+/).map((e) => {return parseInt(e)}).filter((num) => !isNaN(num))), 250);
+
+    useEffect(() => {
+        isEventManager(user) && setEmailType("EVENTS");
+    }, [user]);
 
     return <RS.Container id="admin-emails-page">
         <TitleAndBreadcrumb currentPageTitle="Admin emails" />
@@ -54,7 +60,8 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                 <p>Users who have opted out of this type of email will
                     not receive anything. Administrative emails cannot be opted out of and should be avoided.</p>
                 <RS.Input
-                    id="email-type-input" type="select" defaultValue={emailType}
+                    id="email-type-input" type="select" value={emailType}
+                    disabled={isEventManager(user)}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setEmailType(e.target.value);
                     }}
