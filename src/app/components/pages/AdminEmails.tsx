@@ -19,23 +19,15 @@ const RECIPIENT_NUMBER_WARNING_VALUE = 2000;
 
 export const AdminEmails = (props: AdminEmailsProps) => {
     const dispatch = useDispatch();
-    const [csvIDs, setCSVIDs] = useState([] as number[]);
+    const [csvIDs, setCSVIDs] = useState(props.location.state?.csvIDs || [] as number[]);
     const [emailType, setEmailType] = useState("null");
     const [contentObjectID, setContentObjectID] = useState("");
     const [emailSent, setEmailSent] = useState(false);
     const emailTemplateSelector = useSelector((state: AppState) => state && state.adminEmailTemplate && state.adminEmailTemplate);
 
-    const numberOfUsers = () => {
-        return csvIDs.length;
-    };
-    const canSubmit = emailTemplateSelector && emailType != "null" && numberOfUsers() > 0;
+    const numberOfUsers = csvIDs.length;
+    const canSubmit = emailTemplateSelector && emailType != "null" && numberOfUsers > 0;
     const csvInputDebounce = debounce((value: string) => setCSVIDs(value.split(/[\s,]+/).map((e) => {return parseInt(e)}).filter((num) => !isNaN(num))), 250);
-
-    useEffect(() => {
-        if (props.location.state && props.location.state.csvIDs) {
-            setCSVIDs(props.location.state.csvIDs);
-        }
-    }, []);
 
     return <RS.Container id="admin-emails-page">
         <TitleAndBreadcrumb currentPageTitle="Admin emails" />
@@ -134,16 +126,15 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                 <div className="text-center">
                     {!emailSent ?
                         <React.Fragment>
-                            {numberOfUsers() >= RECIPIENT_NUMBER_WARNING_VALUE && <div className="alert alert-warning">
-                                <strong>Warning:</strong> There are currently <strong>{numberOfUsers()}</strong> selected recipients.
+                            {numberOfUsers >= RECIPIENT_NUMBER_WARNING_VALUE && <div className="alert alert-warning">
+                                <strong>Warning:</strong> There are currently <strong>{numberOfUsers}</strong> selected recipients.
                             </div>}
                             <RS.Input
                                 type="button" value="Send emails"
                                 className={"btn btn-xl btn-secondary border-0 " + classnames({disabled: !canSubmit})}
                                 disabled={!canSubmit}
                                 onClick={() => {
-                                    const numUsers = numberOfUsers();
-                                    if (window.confirm(`Are you sure you want to send a ${emailType} email (${contentObjectID}) to ${numUsers} user${numUsers > 1 ? "s" : ""}?`)) {
+                                    if (window.confirm(`Are you sure you want to send a ${emailType} email (${contentObjectID}) to ${numberOfUsers} user${numberOfUsers > 1 ? "s" : ""}?`)) {
                                         setEmailSent(true);
                                         dispatch(sendAdminEmailWithIds(contentObjectID, emailType, csvIDs));
                                     }
