@@ -177,24 +177,43 @@ const GroupSummary = (props: GroupSummaryProps) => {
     return <div className={"group-progress-summary"}>
         <GroupProgressLegend pageSettings={pageSettings}/>
         {/* {JSON.stringify(groupProgress)} */}
-        <div className="group-progress-summary">
-            <table>
+        <div className="group-progress-summary mx-4 overflow-auto mw-100">
+            <table className="table table-striped table-bordered table-sm mx-auto bg-white">
                 <thead>
                     <tr className="user-progress-summary-header">
-                        <th className="user"></th>
-                        {(groupProgress?.[0]?.progress ?? []).map(gameboard => <th className="progress-cell progress-header-cell" key={gameboard.gameboardId}>
+                        <th className="student-name"></th>
+                        {(groupProgress?.[0]?.progress ?? []).map(gameboard => <th className="progress-cell text-center" key={gameboard.gameboardId}>
                             {gameboard.gameboardTitle}
                         </th>)}
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="">
                     {groupProgress?.map(userProgress => {
                         const {user, progress} = userProgress;
                         return <tr className="user-progress-summary-row" key={userProgress.user?.id}>
-                            {user && <td className="user">{`${user?.givenName} ${user?.familyName}`}</td>}
-                            {(progress ?? []).map(gameboard => <td className="progress-cell" key={gameboard.gameboardId}>
-                                {gameboard.questionPartsCorrect} / {gameboard.questionPartsTotal}
-                            </td>)}
+                            {user && <th className="student-name">{`${user?.givenName} ${user?.familyName}`}</th>}
+                            {(progress ?? []).map(gameboard => {
+                                const correctRate = (gameboard.questionPartsCorrect ?? 0) / (gameboard.questionPartsTotal ?? 1);
+                                const incorrectRate = (gameboard.questionPartsIncorrect ?? 0) / (gameboard.questionPartsTotal ?? 1);
+                                const notAttemptedRate = (gameboard.questionPartsNotAttempted ?? 0) / (gameboard.questionPartsTotal ?? 1);
+                                let rateClass = '';
+                                if (!user?.authorisedFullAccess) {
+                                    rateClass = 'revoked';
+                                } else if (incorrectRate >= 0.25) {
+                                    rateClass = 'failed';
+                                } else if (correctRate >= 1.0) {
+                                    rateClass = 'completed';
+                                } else if (correctRate >= 0.75) {
+                                    rateClass = 'passed';
+                                } else if (notAttemptedRate < 1.0 && correctRate < 0.75 && incorrectRate < 0.25) {
+                                    rateClass = 'in-progress';
+                                } else if (notAttemptedRate >= 0.0) {
+                                    rateClass = 'not-attemptetd';
+                                }
+                                return <td className={`${rateClass} progress-cell text-center`} key={gameboard.gameboardId}>
+                                    {gameboard.questionPartsCorrect} / {gameboard.questionPartsTotal}
+                                </td>
+                            })}
                         </tr>
                     })}
                 </tbody>
