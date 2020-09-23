@@ -657,7 +657,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         let texBottom = '';
         for (const p of Object.entries(orders)) {
             const letter = p[0];
-            letters.push(this.makeSingleLetterMenuItem(letter));
+            letters.push(this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter));
             const order = p[1];
             const o = {
                 type: 'Differential',
@@ -665,12 +665,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 children: {
                     argument: {
                         type: 'Symbol',
-                        properties: { letter: letter }
+                        properties: { letter: this._greekLetterMap[letter] || letter }
                     },
                     order: null as any | null
                 }
             };
-            texBottom += `\\mathrm{d}${letter}`;
+            texBottom += `\\mathrm{d}${this._greekLetterMap[letter] ? '\\' + letter : letter}`;
             if (order > 1) {
                 o.children = { ...o.children, order: {
                     type: 'Num',
@@ -715,7 +715,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         } else {
             return {
                 differential: this.makeMathsDifferentialItem(parsedDifferential as string[]),
-                letters: differentialArgument ? [this.makeSingleLetterMenuItem(differentialArgument)] : null
+                letters: differentialArgument ? [this.makeSingleLetterMenuItem(this._greekLetterMap[differentialArgument] || differentialArgument, this._greekLetterMap[differentialArgument] ? '\\' + differentialArgument : differentialArgument)] : null
             }
         }
     }
