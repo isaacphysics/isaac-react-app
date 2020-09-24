@@ -144,7 +144,7 @@ const Board = (props: BoardProps) => {
     const boardSubjects = determineGameboardSubjects(board);
     const boardLevels = determineGameboardLevels(board);
 
-    return <Card className="board-card">
+    return <Card className="board-card h-100">
         <CardBody className="pb-4 pt-4">
             <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
             <button onClick={() => setShowAssignments(!showAssignments)} id={hexagonId} className="board-subject-hexagon-container">
@@ -343,8 +343,10 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                 </Row>
                 <ShowLoading until={boards}>
                     {boards && boards.boards && <div>
-                        <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
-                            {boards.boards && boards.boards.map(board => <div key={board.id}><Board {...props} board={board} /></div>)}
+                        <div className="assignments-grid my-2">
+                            {boards.boards && boards.boards.map(board =>
+                                <RS.Col xs={12} md={6} lg={4} key={board.id} className="my-2"><Board {...props} board={board} /></RS.Col>
+                            )}
                         </div>
                         <div className="text-center mt-2 mb-4" style={{clear: "both"}}>
                             <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>

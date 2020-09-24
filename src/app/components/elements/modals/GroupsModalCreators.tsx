@@ -59,7 +59,7 @@ export const groupInvitationModal = (firstTime: boolean) => {
         body: <CurrentGroupInviteModal firstTime={firstTime} />,
         buttons: [
             <RS.Row key={0}>
-                <RS.Col>
+                <RS.Col className="my-2">
                     <RS.Button block key={2} color="secondary" onClick={() => {
                         store.dispatch(closeActiveModal());
                         store.dispatch(showGroupManagersModal());
@@ -67,7 +67,7 @@ export const groupInvitationModal = (firstTime: boolean) => {
                         {firstTime ? "Add group managers" : "Edit group managers"}
                     </RS.Button>
                 </RS.Col>
-                <RS.Col>
+                <RS.Col className="my-2">
                     <RS.Button block key={0} color="secondary" onClick={() => {
                         store.dispatch(closeActiveModal());
                         history.push("/set_assignments");
@@ -75,7 +75,7 @@ export const groupInvitationModal = (firstTime: boolean) => {
                         Set an assignment
                     </RS.Button>
                 </RS.Col>
-                <RS.Col>
+                <RS.Col className="my-2">
                     <RS.Button block key={1} color="secondary" onClick={() => {
                         store.dispatch(closeActiveModal());
                         store.dispatch(selectGroup(null));
