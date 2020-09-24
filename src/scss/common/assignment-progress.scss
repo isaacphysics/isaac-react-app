@@ -128,7 +128,7 @@ $failed-cb-bg-img:
 $failed-bg-size: 25%;
 
 
-.assignment-progress-details {
+.assignment-progress-details, .group-progress-summary {
   td, .key-cell, tr {
     .completed {
       background-image: $completed-bg-img;
@@ -211,7 +211,8 @@ $failed-bg-size: 25%;
   }
 }
 
-.assignment-progress-details.colour-blind {
+.assignment-progress-details.colour-blind,
+.group-progress-summary.colour-blind {
   td, .key-cell, tr {
     .completed {
       background-image: $completed-cb-bg-img;
