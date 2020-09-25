@@ -19,6 +19,10 @@ export const validateEmail = (email?: string) => {
     return email && email.length > 0 && email.includes("@");
 };
 
+export const validateUrl = (url?: string) => {
+    return !url || !url.includes("http");
+};
+
 export const isDobOverThirteen = (dateOfBirth?: Date) => {
     if (dateOfBirth) {
         const today = new Date();
