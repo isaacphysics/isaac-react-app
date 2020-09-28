@@ -70,7 +70,7 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
                     }
                 </React.Fragment>;
             } else {
-                return <div className="clearfix" key={chunkIndex}>
+                return <div className="clearfix content-chunk" key={chunkIndex}>
                     {contentChunk.map((content, contentIndex) =>
                         <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex} />)}
                 </div>
