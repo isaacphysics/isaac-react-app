@@ -124,7 +124,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
 
         <RS.Row>
             <RS.Col lg={{size: 10, offset: 1}}>
-                <div className="pt-3"><strong>Select your questions filters</strong></div>
+                <div className="pt-3"><strong>Select your question filters</strong></div>
                 <RS.Row>
                     <RS.Col lg={6}>
                         {levels.map((level, i) => (
