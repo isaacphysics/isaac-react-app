@@ -1,6 +1,5 @@
 // ISAAC
-.question-panel > .content-value,
-.question-panel .isaac-accordion .accordion-section > .content-value {
+.question-panel > .content-chunk > .content-value {
   background-color: white;
   box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
   margin: auto auto 2rem auto;
@@ -285,10 +284,6 @@ button {
   p {
     margin-bottom: 0;
   }
-}
-
-.multichoice-option > .content-value {
-  width: calc(100% - 1rem);
 }
 
 // NOMENSA question.scss
