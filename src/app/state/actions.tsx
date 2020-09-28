@@ -507,6 +507,13 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
         await api.email.verify(params);
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
         dispatch(requestCurrentUser() as any);
+        dispatch(showToast({
+            title: "Email address verified",
+            body: "The email address has been verified",
+            color: "success",
+            timeout: 5000,
+            closable: false,
+        }) as any);
     } catch(e) {
         dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
