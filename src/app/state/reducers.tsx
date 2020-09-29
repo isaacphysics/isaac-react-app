@@ -247,7 +247,7 @@ export const groupMemberships = (groupMemberships: GroupMembershipsState = null,
     }
 };
 
-type GroupProgressState = {[id: number]: UserGameboardProgressSummaryDTO[] | null} | null ;
+export type GroupProgressState = {[id: number]: UserGameboardProgressSummaryDTO[] | null} | null ;
 export const groupProgress = (groupProgress: GroupProgressState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS:

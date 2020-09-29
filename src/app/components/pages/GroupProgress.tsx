@@ -191,7 +191,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
                     {groupProgress?.map(userProgress => {
                         const {user, progress} = userProgress;
                         const fullAccess = user?.authorisedFullAccess;
-                        return <tr className="user-progress-summary-row" key={userProgress.user?.id}>
+                        return <tr className={`user-progress-summary-row ${fullAccess ? '' : 'revoked'}`} key={userProgress.user?.id}>
                             {user && <td className="student-name">
                                 <Link to={`/progress/${user.id}`} target="_blank">
                                     {`${user.givenName} ${user.familyName}`}
