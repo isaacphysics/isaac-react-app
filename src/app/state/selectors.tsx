@@ -180,7 +180,7 @@ export const anonymisationFunctions = {
                 }
             })
         });
-        return groupProgress;
+        return anonymousGroupProgress;
     }
 }
 
