@@ -168,7 +168,6 @@ export const anonymisationFunctions = {
         if (!groupProgress) return null;
         const anonymousGroupProgress: GroupProgressState = {};
         Object.keys(groupProgress).forEach(groupId => {
-            console.log(groupId)
             anonymousGroupProgress[Number(groupId)] = (groupProgress[Number(groupId)] || []).map((userProgressSummary, i) => {
                 return {
                     ...userProgressSummary,
