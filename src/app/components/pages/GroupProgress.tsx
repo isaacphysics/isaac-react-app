@@ -174,6 +174,22 @@ const GroupSummary = (props: GroupSummaryProps) => {
 
     if (!isDefined(groupProgress) || groupProgress.length === 0) return null;
 
+    function markClasses(fullAccess: boolean, correctParts: number, incorrectParts: number, totalParts: number, _passMark: number) {
+        if (!fullAccess) {
+            return "revoked";
+        } else if (correctParts === totalParts) {
+            return "completed";
+        } else if ((correctParts / totalParts) >= _passMark) {
+            return "passed";
+        } else if ((incorrectParts / totalParts) > (1 - _passMark)) {
+            return "failed";
+        } else if (correctParts > 0 || incorrectParts > 0) {
+            return "in-progress";
+        } else {
+            return "not-attempted";
+        }
+    }
+
     return <div className={"group-progress-summary" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <GroupProgressLegend pageSettings={pageSettings}/>
         {/* {JSON.stringify(groupProgress)} */}
@@ -190,7 +206,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
                 <tbody className="">
                     {groupProgress?.map(userProgress => {
                         const {user, progress} = userProgress;
-                        const fullAccess = user?.authorisedFullAccess;
+                        const fullAccess = user?.authorisedFullAccess || false;
                         return <tr className={`user-progress-summary-row ${fullAccess ? '' : 'revoked'}`} key={userProgress.user?.id}>
                             {user && <td className="student-name">
                                 <Link to={`/progress/${user.id}`} target="_blank">
@@ -198,23 +214,12 @@ const GroupSummary = (props: GroupSummaryProps) => {
                                 </Link>
                             </td>}
                             {(progress ?? []).map(gameboard => {
-                                const correctRate = (gameboard.questionPartsCorrect ?? 0) / (gameboard.questionPartsTotal ?? 1);
-                                const incorrectRate = (gameboard.questionPartsIncorrect ?? 0) / (gameboard.questionPartsTotal ?? 1);
-                                const notAttemptedRate = (gameboard.questionPartsNotAttempted ?? 0) / (gameboard.questionPartsTotal ?? 1);
-                                let rateClass = '';
-                                if (user?.authorisedFullAccess) {
-                                    rateClass = 'revoked';
-                                } else if (incorrectRate >= 0.25) {
-                                    rateClass = 'failed';
-                                } else if (correctRate >= 1.0) {
-                                    rateClass = 'completed';
-                                } else if (correctRate >= 0.75) {
-                                    rateClass = 'passed';
-                                } else if (notAttemptedRate < 1.0 && correctRate < 0.75 && incorrectRate < 0.25) {
-                                    rateClass = 'in-progress';
-                                } else if (notAttemptedRate >= 0.0) {
-                                    rateClass = 'not-attemptetd';
-                                }
+                                const rateClass = markClasses(fullAccess,
+                                                            gameboard.questionPartsCorrect ?? 0,
+                                                            gameboard.questionPartsIncorrect ?? 0,
+                                                            gameboard.questionPartsTotal ?? 1,
+                                                            gameboard.passMark ?? passMark
+                                                           );
                                 return <td className={`${rateClass} progress-cell text-center`} key={gameboard.gameboardId}>
                                     {fullAccess && formatMark(gameboard.questionPartsCorrect ?? 0, gameboard.questionPartsTotal ?? 1, pageSettings.formatAsPercentage)}
                                 </td>
