@@ -17,7 +17,7 @@ import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful
 import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
-import {resourceFound, validateUrl} from "../../services/validation";
+import {resourceFound, isValidGameboardId} from "../../services/validation";
 import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
@@ -64,7 +64,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
         }
     }, [user, baseGameboard]);
 
-    const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "" && validateUrl(gameboardURL);
+    const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "" && isValidGameboardId(gameboardURL);
 
     const reorder = (result: DropResult) => {
         if (result.destination) {
@@ -138,7 +138,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setGameboardURL(e.target.value);
                             }}
-                            invalid={!validateUrl(gameboardURL)}
+                            invalid={!isValidGameboardId(gameboardURL)}
                         />
                     </RS.Col>
                     <RS.Col>
@@ -277,7 +277,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                     id="gameboard-help" color="light"
                     className={`text-center mb-0 pt-3 pb-0 ${selectedQuestions.size <= 10 ? "text-muted" : "text-danger"}`}
                 >
-                    Gameboards require both a title and between 1 and 10 questions. {!validateUrl(gameboardURL) && "The " +
+                    Gameboards require both a title and between 1 and 10 questions. {!isValidGameboardId(gameboardURL) && "The " +
                 "gameboard ID should contain numbers, lowercase letters, underscores and hyphens only. It should not be the full URL."}
                 </div>}
 

@@ -19,8 +19,8 @@ export const validateEmail = (email?: string) => {
     return email && email.length > 0 && email.includes("@");
 };
 
-export const validateUrl = (url?: string) => {
-    return !url || /^[a-z0-9_-]+$/.test(url);
+export const isValidGameboardId = (gameboardId?: string) => {
+    return !gameboardId || /^[a-z0-9_-]+$/.test(gameboardId);
 };
 
 export const isDobOverThirteen = (dateOfBirth?: Date) => {
