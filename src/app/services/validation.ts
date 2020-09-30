@@ -20,7 +20,7 @@ export const validateEmail = (email?: string) => {
 };
 
 export const validateUrl = (url?: string) => {
-    return !url || !url.includes("http");
+    return !url || /^[a-z0-9_-]+$/.test(url);
 };
 
 export const isDobOverThirteen = (dateOfBirth?: Date) => {

@@ -277,7 +277,8 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                     id="gameboard-help" color="light"
                     className={`text-center mb-0 pt-3 pb-0 ${selectedQuestions.size <= 10 ? "text-muted" : "text-danger"}`}
                 >
-                    Gameboards require both a title and between 1 and 10 questions. {!validateUrl(gameboardURL) && "The gameboard ID should not be the full URL."}
+                    Gameboards require both a title and between 1 and 10 questions. {!validateUrl(gameboardURL) && "The " +
+                "gameboard ID should contain numbers, lowercase letters, underscores and hyphens only. It should not be the full URL."}
                 </div>}
 
             </RS.CardBody>
