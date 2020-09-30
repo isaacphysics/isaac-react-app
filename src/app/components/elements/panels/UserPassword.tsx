@@ -5,10 +5,7 @@ import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../..
 import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../../services/validation";
 import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount} from "../../../state/actions";
 import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../../services/passwordStrength";
-import {useDispatch, useSelector} from "react-redux";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {isStaff} from "../../../services/user";
-import {selectors} from "../../../state/selectors";
+import {useDispatch} from "react-redux";
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -29,8 +26,6 @@ export const UserPassword = (
 
     const dispatch = useDispatch();
     const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
-
-    const user = useSelector(selectors.user.orNull);
 
     const [passwordResetRequested, setPasswordResetRequested] = useState(false);
     const [passwordFeedback, setPasswordFeedback] = useState<ZxcvbnResult | null>(null);
@@ -177,7 +172,7 @@ export const UserPassword = (
                 </Col>
             </Row>
         </React.Fragment>
-        {isStaff(user) && <React.Fragment>
+        <React.Fragment>
             <Row>
                 <Col md={{size: 6, offset: 3}}>
                     <hr className="text-center"/>
@@ -201,6 +196,6 @@ export const UserPassword = (
                     </FormGroup>
                 </Col>
             </Row>
-        </React.Fragment>}
+        </React.Fragment>
     </CardBody>
 };
