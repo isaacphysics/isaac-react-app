@@ -8,6 +8,7 @@ import * as RS from "reactstrap";
 import {selectors} from "../../state/selectors";
 import {Link} from "react-router-dom";
 import {useDeviceSize} from "../../services/device";
+import {TrustedHtml} from "./TrustedHtml";
 
 type QuestionLevel = "topTen" | "upper" | "lower";
 
@@ -59,11 +60,11 @@ function line(x: number, y: number) {
     return 'L' + x + ' ' + y;
 }
 
-function calculateDashArray<T>(elements: T[] | undefined, evaluator: (t: T) => boolean, perimiterLength: number) {
+function calculateDashArray<T>(elements: T[] | undefined, evaluator: (t: T) => boolean, perimeterLength: number) {
     if (elements === undefined) {
         return null;
     }
-    let sectionLength = perimiterLength / elements.length;
+    let sectionLength = perimeterLength / elements.length;
     let recordingDash = true;
     let lengthCollector = 0;
     let dashArray = [];
@@ -101,7 +102,8 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     const questionHistory = qhs ? qhs.split(",") : [];
     const dispatch = useDispatch();
     const gameboardMaybeNull = useSelector(selectors.board.currentGameboard);
-    const fasttrackConcepts = useSelector((appState: AppState) => appState && appState.fasttrackConcepts);
+    const pageQuestionParts = useSelector(selectors.questions.getQuestions);
+    const fastTrackConcepts = useSelector((appState: AppState) => appState && appState.fasttrackConcepts);
 
     const deviceSize = useDeviceSize();
     const hexagonUnitLength = {xl: 28, lg: 26, md: 22, sm: 22, xs: 12.5}[deviceSize];
@@ -111,8 +113,8 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     const progressBarPadding = ["xs"].includes(deviceSize) ? 1 : 5;
 
     const conceptQuestions =
-        gameboardMaybeNull && fasttrackConcepts && fasttrackConcepts.gameboardId === gameboardMaybeNull.id && fasttrackConcepts.concept === doc.title ?
-            fasttrackConcepts.items
+        gameboardMaybeNull && fastTrackConcepts && fastTrackConcepts.gameboardId === gameboardMaybeNull.id && fastTrackConcepts.concept === doc.title ?
+            fastTrackConcepts.items
             : null;
 
     useEffect(() => {
@@ -222,14 +224,14 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
     function getMostRecentQuestion(questionHistory: string[], conceptLevel: LevelTag) {
         const reversedQuestionHistory = questionHistory.slice().reverse();
-        const questionLevelMatcheFunctions = {
-            "ft_top_ten": (questionId: string) => questionId.indexOf('fasttrack') != -1,
-            "ft_upper": (questionId: string) => questionId.indexOf('upper') != -1,
+        const questionLevelMatchFunctions = {
+            "ft_top_ten": (questionId: string) => !questionId.includes('upper') && !questionId.includes('lower'),
+            "ft_upper": (questionId: string) => questionId.includes('upper'),
             "ft_lower": () => false,
         };
         let result = null;
         for (let questionId of reversedQuestionHistory) {
-            if (questionLevelMatcheFunctions[conceptLevel](questionId)) {
+            if (questionLevelMatchFunctions[conceptLevel](questionId)) {
                 result = questionId;
             }
         }
@@ -271,33 +273,51 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         const conceptQuestions = orderConceptQuestionsById(unorderedConceptQuestions);
 
         // Evaluate top ten progress
-        for (let i = 0; i < gameboard.questions.length; i++) {
-            const question = gameboard.questions[i];
-            progress.questions.topTen.push(augmentQuestion(question, gameboard.id, questionHistory, i));
-        }
+        gameboard.questions.forEach((question: GameboardItem, index) => {
+            if (question.id === currentlyWorkingOn.id) {
+                const correctQuestionParts = pageQuestionParts?.filter(q => q.bestAttempt?.correct) || [];
+                progress.questions.topTen.push(augmentQuestion({
+                    ...question,
+                    state: correctQuestionParts.length === pageQuestionParts?.length ? "PERFECT" : question.state,
+                    questionPartsCorrect: correctQuestionParts.length || 0,
+                    questionPartStates: pageQuestionParts?.map(qp => qp.bestAttempt ? qp.bestAttempt.correct ? "CORRECT" : "INCORRECT" : "NOT_ATTEMPTED") || []
+                }, gameboard.id, questionHistory, index));
+            } else {
+                progress.questions.topTen.push(augmentQuestion(question, gameboard.id, questionHistory, index));
+            }
+        });
 
-        // Evalueate concept question progress
+        // Evaluate concept question progress
         if (currentlyWorkingOn.isConcept) {
-            let upperAndLowerConceptQuestions: Map<QuestionLevel, GameboardItem[]> = new Map([['upper', conceptQuestions.upperLevelQuestions], ['lower', conceptQuestions.lowerLevelQuestions]]);
+            const upperAndLowerConceptQuestions: Map<QuestionLevel, GameboardItem[]> = new Map([['upper', conceptQuestions.upperLevelQuestions], ['lower', conceptQuestions.lowerLevelQuestions]]);
             upperAndLowerConceptQuestions.forEach((conceptQuestionsOfType, conceptQuestionType) => {
-                for (let i = 0; i < conceptQuestionsOfType.length; i++) {
-                    let question = conceptQuestionsOfType[i];
-                    progress.questions[conceptQuestionType].push(augmentQuestion(question, gameboard.id, questionHistory, i))
-                }
+                conceptQuestionsOfType.forEach((question, index) => {
+                    if (question.id === currentlyWorkingOn.id) {
+                        const correctQuestionParts = pageQuestionParts?.filter(q => q.bestAttempt?.correct) || [];
+                        progress.questions[conceptQuestionType].push(augmentQuestion({
+                            ...question,
+                            state: correctQuestionParts.length === pageQuestionParts?.length ? "PERFECT" : question.state,
+                            questionPartsCorrect: correctQuestionParts.length || 0,
+                            questionPartStates: pageQuestionParts?.map(qp => qp.bestAttempt ? qp.bestAttempt.correct ? "CORRECT" : "INCORRECT" : "NOT_ATTEMPTED") || []
+                        }, gameboard.id, questionHistory, index));
+                    } else {
+                        progress.questions[conceptQuestionType].push(augmentQuestion(question, gameboard.id, questionHistory, index));
+                    }
+                });
             });
         }
 
         // Evaluate concept connections
         if (currentlyWorkingOn.isConcept) {
             let mostRecentTopTenQuestionId = getMostRecentQuestion(questionHistory, 'ft_top_ten') || undefined;
-            let mostRecenetTopTenIndex = gameboard.questions.map((question: GameboardItem) => question.id).indexOf(mostRecentTopTenQuestionId);
+            let mostRecentTopTenIndex = gameboard.questions.map((question: GameboardItem) => question.id).indexOf(mostRecentTopTenQuestionId);
 
             let upperQuestionId = currentlyWorkingOn.fastTrackLevel === 'ft_upper' ? currentlyWorkingOn.id : getMostRecentQuestion(questionHistory, 'ft_upper');
             let upperIndex = conceptQuestions.upperLevelQuestions.map(question => question.id).indexOf(upperQuestionId as string);
 
             // Top Ten to Upper connection
             progress.connections.topTenToUpper.push({
-                sourceIndex: mostRecenetTopTenIndex,
+                sourceIndex: mostRecentTopTenIndex,
                 targetIndex: upperIndex,
                 isMostRecent: true,
                 message: "Practise the concept before returning to complete the board"
@@ -310,7 +330,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                     sourceIndex: upperIndex,
                     targetIndex: lowerIndex,
                     isMostRecent: true,
-                    message: "Practise the concept with easier quesitons before returning to complete the board"
+                    message: "Practise the concept with easier questions before returning to complete the board"
                 });
             }
         }
@@ -324,8 +344,8 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             strokeWidth: properties.stroke.width,
             fill: fillColour,
         };
-        const perimiter = 6 * 2 * (hexagon.quarterHeight);
-        const dashArray = calculateDashArray(states, selector, perimiter);
+        const perimeter = 6 * 2 * (hexagon.quarterHeight);
+        const dashArray = calculateDashArray(states, selector, perimeter);
         if (dashArray) {
             polygonAttributes.strokeDasharray = dashArray;
         }
@@ -425,6 +445,9 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     }
 
     function createConnection(sourceIndex: number, targetIndex: number) {
+        if ([sourceIndex, targetIndex].includes(-1)) {
+            return <React.Fragment />;
+        }
         return <path
             d={calculateConnectionLine(sourceIndex, targetIndex)}
             fill={conceptConnection.fill}
@@ -460,15 +483,16 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
     function renderProgress(progress: Progress) {
         return <RS.Row className="mt-sm-3 mb-3 mb-sm-4">
-            <RS.Col cols={12} lg={4}>
+            <RS.Col cols={12} lg={3}>
                 <h4 className="mt-lg-1">{gameboard.title}</h4>
                 <div className="d-none d-lg-block">
                     <br className="d-none d-lg-block"/>
-                    <br className="d-none d-xl-block"/>
-                    {currentlyWorkingOn.isConcept && <h4 className="mt-lg-1 mt-xl-3">{currentlyWorkingOn.title} Practice</h4>}
+                    {currentlyWorkingOn.isConcept && <h4 className="mt-lg-1 mt-xl-3">
+                        <TrustedHtml span html={`${currentlyWorkingOn.title} Practice`} />
+                    </h4>}
                 </div>
             </RS.Col>
-            <RS.Col cols={12} lg={8}>
+            <RS.Col cols={12} lg={9}>
                 <svg id="ft-progress" width="100%" height={progressBarHeight}>
                     <g id="progress-bar-padding" transform={`translate(${progressBarPadding}, ${progressBarPadding})`}>
                         <g id="concept-connections">
@@ -489,7 +513,9 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             </RS.Col>
             <RS.Col cols={12} className="d-block d-lg-none">
                 <div>
-                    {currentlyWorkingOn.isConcept && <h4 className="mt-2">{currentlyWorkingOn.title} Practice</h4>}
+                    {currentlyWorkingOn.isConcept && <h4 className="mt-2">
+                        <TrustedHtml span html={`${currentlyWorkingOn.title} Practice`} />
+                    </h4>}
                 </div>
             </RS.Col>
         </RS.Row>;

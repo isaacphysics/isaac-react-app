@@ -110,7 +110,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
     }
 
     const pageHelp = <span>
-        You can build a gameboard by selecting the areas of interest and difficulty levels.
+        You can build a gameboard by selecting the areas of interest and levels.
         <br />
         You can select more than one entry in each area.
     </span>;
@@ -124,7 +124,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
 
         <RS.Row>
             <RS.Col lg={{size: 10, offset: 1}}>
-                <div className="pt-3"><strong>Select your questions filters</strong></div>
+                <div className="pt-3"><strong>Select your question filters</strong></div>
                 <RS.Row>
                     <RS.Col lg={6}>
                         {levels.map((level, i) => (

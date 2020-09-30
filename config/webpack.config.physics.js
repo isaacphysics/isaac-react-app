@@ -28,16 +28,18 @@ module.exports = env => {
             new webpack.DefinePlugin({
                ISAAC_SITE: '"physics"',
             }),
-            new CopyWebpackPlugin([{
-                from: resolve('public/manifest-phy.json'),
-                to: 'manifest-phy.json',
-            }, {
-                from: resolve('public/unsupported_browsers/unsupported-phy.html'),
-                to: 'unsupported_browser.html',
-            }, {
-                from: resolve('public/unsupported_browsers/unsupported-phy.js'),
-                to: 'unsupported_browser.js',
-            }]),
+            new CopyWebpackPlugin({
+                patterns: [{
+                    from: resolve('public/manifest-phy.json'),
+                    to: 'manifest-phy.json',
+                }, {
+                    from: resolve('public/unsupported_browsers/unsupported-phy.html'),
+                    to: 'unsupported_browser.html',
+                }, {
+                    from: resolve('public/unsupported_browsers/unsupported-phy.js'),
+                    to: 'unsupported_browser.js',
+                }
+            ]}),
         ],
     };
 

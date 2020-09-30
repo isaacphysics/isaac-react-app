@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {connect} from "react-redux";
 import * as RS from "reactstrap";
 import {setCurrentAttempt} from "../../state/actions";
@@ -15,6 +15,8 @@ import {parseExpression} from "inequality-grammar";
 import _flattenDeep from 'lodash/flatMapDeep';
 import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
+import uuid from "uuid";
+import { isDefined } from '../../services/miscUtils';
 
 // Magic starts here
 interface ChildrenMap {
@@ -82,7 +84,9 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
-        window.scrollTo(0, previousYPosition);
+        if (isDefined(previousYPosition)) {
+            window.scrollTo(0, previousYPosition);
+        }
     };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
@@ -194,7 +198,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         }, 250);
     };
 
-    const helpTooltipId = `eqn-editor-help-${(doc.id || "").split('|').pop()}`;
+    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid.v4()}`, []);
     const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(
         function (str) {return str.trim().replace(/;/g, ',')}).sort().join(", ");
     return (

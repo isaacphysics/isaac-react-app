@@ -3,7 +3,8 @@ import {UncontrolledTooltip} from "reactstrap";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {TrustedHtml} from "./TrustedHtml";
 import {setMainContentId} from "../../state/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {AppState} from "../../state/reducers";
 
 export interface PageTitleProps {
     currentPageTitle: string;
@@ -15,19 +16,20 @@ export interface PageTitleProps {
 
 export const PageTitle = ({currentPageTitle, subTitle, help, className, level}: PageTitleProps) => {
     const dispatch = useDispatch();
+    const openModal = useSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {dispatch(setMainContentId("main-heading"));}, []);
     useEffect(() => {
         document.title = currentPageTitle + " — Isaac " + SITE_SUBJECT_TITLE;
         const element = headerRef.current;
-        if (element && (window as any).followedAtLeastOneSoftLink) {
+        if (element && (window as any).followedAtLeastOneSoftLink && !openModal) {
             element.focus();
         }
     }, [currentPageTitle]);
 
-    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`${SITE_SUBJECT === SITE.PHY && "title-case"} h-title h-secondary${className ? ` ${className}` : ""}`}>
-        <TrustedHtml span html={currentPageTitle}/>
+    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
+        <TrustedHtml span html={currentPageTitle} />
         {SITE_SUBJECT === SITE.PHY && level !== undefined && level !== 0 &&
             <span className="float-right h-subtitle">Level {level}</span>}
         {help && <span id="title-help">Help</span>}

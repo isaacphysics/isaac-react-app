@@ -1,6 +1,8 @@
-import {AppState} from "./reducers";
+import {AppState, ProgressState} from "./reducers";
 import {sortBy} from "lodash";
 import {NOT_FOUND} from "../services/constants";
+import {AppGroup} from "../../IsaacAppTypes";
+import {KEY, load} from "../services/localStorage";
 
 export const selectors = {
     groups: {
@@ -10,7 +12,7 @@ export const selectors = {
             if (!state.groups.cache) return null;
             const activeId = state.groups.selectedGroupId;
             if (!activeId) return null;
-            return state.groups.cache[activeId] || null;
+            return load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.appGroup(state.groups.cache[activeId]) : state.groups.cache[activeId];
         },
         active: (state: AppState) => {
             if (!state) return null;
@@ -18,7 +20,7 @@ export const selectors = {
             if (!state.groups.cache) return null;
             if (!state.groups.active) return null;
             // @ts-ignore - typescript can't pass the non-null inside the map function here
-            return state.groups.active.map(groupId => state.groups.cache[groupId]);
+            return state.groups.active.map(groupId => state.groups.cache[groupId]).map(group => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.appGroup(group): group);
         },
         archived: (state: AppState) => {
             if (!state) return null;
@@ -26,7 +28,7 @@ export const selectors = {
             if (!state.groups.cache) return null;
             if (!state.groups.archived) return null;
             // @ts-ignore - typescript can't pass the non-null inside the map function here
-            return state.groups.archived.map(groupId => state.groups.cache[groupId]);
+            return state.groups.archived.map(groupId => state.groups.cache[groupId]).map(group => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.appGroup(group) : group);
         },
         groups: (state: AppState) => {
             return {
@@ -113,8 +115,50 @@ export const selectors = {
 
     mainContentId: {
         orDefault: (state: AppState) => state?.mainContentId || "main",
+    },
+
+    admin: {
+        userSearch: (state: AppState) => state?.adminUserSearch || null,
+        userSchoolLookup: (state: AppState) => state?.userSchoolLookup,
+    },
+
+    assignments: {
+        progress: (state: AppState) => state?.progress && load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.progressState(state?.progress) : state?.progress
     }
 };
+
+export const anonymisationFunctions = {
+    appGroup: (appGroup: AppGroup): AppGroup => {
+        return {
+            ...appGroup,
+            groupName: `Demo Group ${appGroup.id}`,
+            members: appGroup.members?.map((member, i) => {
+                return {
+                    ...member,
+                    familyName: "",
+                    givenName: `Test Student ${i + 1}`,
+                }
+            }),
+        }
+    },
+    progressState: (progress: ProgressState): ProgressState => {
+        if (!progress) return null;
+        const anonymousProgress: ProgressState = {};
+        Object.keys(progress).forEach(id  => {
+            anonymousProgress[Number(id)] = progress[Number(id)].map((userProgress, i) => {
+                return {
+                    ...userProgress,
+                    user: {
+                        ...userProgress.user,
+                        familyName: "",
+                        givenName: `Test Student ${i + 1}`,
+                    }
+                }
+            })
+        });
+        return anonymousProgress;
+    }
+}
 
 // Important type checking to avoid an awkward bug
 interface SelectorsWithNoPropArgs {

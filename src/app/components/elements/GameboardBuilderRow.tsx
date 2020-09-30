@@ -72,8 +72,8 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
                 {question.title}
             </a>
             <input
-                type="image" src="/assets/library_books.svg" alt="Preview question" title="Preview question in modal"
-                className="pointer-cursor align-middle" onClick={() => {question.id && openQuestionModal(question.id)}}
+                type="image" src="/assets/new-tab.svg" alt="Preview question" title="Preview question in modal"
+                className="pointer-cursor align-middle new-tab" onClick={() => {question.id && openQuestionModal(question.id)}}
             />
         </td>
         <td className="w-25">

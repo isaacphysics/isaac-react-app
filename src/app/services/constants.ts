@@ -36,6 +36,7 @@ export const GOOGLE_ANALYTICS_ACCOUNT_ID = {
 
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
+export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attempts at this question. Please try again later!";
 
 export const NOT_FOUND: NOT_FOUND_TYPE = 404;
 export const NO_CONTENT = 204;
@@ -170,6 +171,9 @@ export enum ACTION_TYPE {
     ADMIN_SEND_EMAIL_WITH_IDS_REQUEST = "ADMIN_SEND_EMAIL_WITH_IDS_REQUEST",
     ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS = "ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS",
     ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE = "ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE",
+    ADMIN_MERGE_USERS_REQUEST = "ADMIN_MERGE_USERS_REQUEST",
+    ADMIN_MERGE_USERS_RESPONSE_SUCCESS = "ADMIN_MERGE_USERS_RESPONSE_SUCCESS",
+    ADMIN_MERGE_USERS_RESPONSE_FAILURE = "ADMIN_MERGE_USERS_RESPONSE_FAILURE",
 
     AUTHORISATIONS_ACTIVE_REQUEST = "AUTHORISATIONS_ACTIVE_REQUEST",
     AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS = "AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS",
@@ -458,7 +462,7 @@ export enum ACTION_TYPE {
 
     LOG_EVENT = "LOG_EVENT",
 
-    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID",
+    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID"
 }
 
 export enum EXAM_BOARD {
@@ -765,3 +769,34 @@ for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
 }
 _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
 export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
+
+export const specificDoughnutColours: { [key: string]: string } = {
+    [SITE.PHY]: {
+        "Physics": "#944cbe",
+        "Maths": "#007fa9",
+        "Chemistry": "#e22e25"
+    },
+    [SITE.CS]: {}
+}[SITE_SUBJECT];
+
+export const doughnutColours = {
+    [SITE.PHY]: [
+        "#944cbe",
+        "#007fa9",
+        "#e22e25",
+        "#991846",
+        "#448525",
+        "#fea100"
+    ],
+    [SITE.CS]: [
+        "#feae42",
+        "#000000",
+        "#e51f6f",
+        "#ef67ac",
+        "#bf6707",
+        "#0f8294",
+        "#aaaaaa",
+        "#dbdbdb"
+    ]
+}[SITE_SUBJECT];
+

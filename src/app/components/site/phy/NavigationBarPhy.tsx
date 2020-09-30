@@ -28,12 +28,14 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/alevel">A Level Resources</LinkItem>
             <LinkItem to="/gameboards/new">Question Finder</LinkItem>
             <LinkItem to="/concepts">Concept Reference</LinkItem>
+            {/* <LinkItem to="/glossary">Glossary</LinkItem> */}
         </NavigationSection>
 
         <NavigationSection title="Events">
             {isLoggedIn(user) && <LinkItem to="/events?show_booked_only=true">My Booked Events</LinkItem>}
             <LinkItem to="/events">All Events</LinkItem>
-            <LinkItem to="/pages/isaac_mentor">Mentoring Schemes</LinkItem>
+            <LinkItem to="/pages/isaac_mentor">Student Mentoring</LinkItem>
+            <LinkItem to="/pages/teacher_mentoring">Teacher Mentoring</LinkItem>
         </NavigationSection>
 
         <NavigationSection title="Help">
