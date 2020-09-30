@@ -25,7 +25,7 @@ import {
 } from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
+import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState, UserGameboardProgressSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
@@ -168,6 +168,12 @@ const GroupSummary = (props: GroupSummaryProps) => {
     const groupId = group.id || 0;
     const groupProgress = useSelector(selectors.groups.progress)?.[groupId];
 
+    type SortOrder = number | "student-name";
+    const [sortOrder, setSortOrder] = useState<SortOrder>("student-name");
+    const [reverseOrder, setReverseOrder] = useState(false);
+
+    const [selectedGameboardNumber, setSelectedGameboardNumber] = useState(0);
+
     useEffect(() => {
         dispatch(getGroupProgress(group));
     }, [dispatch]);
@@ -190,21 +196,60 @@ const GroupSummary = (props: GroupSummaryProps) => {
         }
     }
 
+    const sortedProgress = orderBy(groupProgress, (item: UserGameboardProgressSummaryDTO) => {
+        if (sortOrder === 'student-name') {
+            return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
+        } else if (typeof sortOrder === 'number') {
+            return (item?.progress?.[sortOrder]?.questionPartsCorrect || 0)
+        }
+    }, [reverseOrder ? "desc" : "asc"]);
+
+    function sortClasses(q: SortOrder) {
+        if (q === sortOrder) {
+            return "sorted" + (reverseOrder ? " reverse" : " forward");
+        } else {
+            return "";
+        }
+    }
+
+    function toggleSort(itemOrder: SortOrder) {
+        setSortOrder(itemOrder);
+        if (sortOrder === itemOrder) {
+            setReverseOrder(!reverseOrder);
+        } else {
+            setReverseOrder(false);
+        }
+    }
+
+    function sortItem(props: ComponentProps<"th"> & {itemOrder: SortOrder}) {
+        const {itemOrder, ...rest} = props;
+        const className = (props.className || "") + " " + sortClasses(itemOrder);
+        const clickToSelect = typeof itemOrder === "number" ? (() => setSelectedGameboardNumber(itemOrder)) : undefined;
+        const sortArrows = (typeof itemOrder !== "number" || itemOrder === selectedGameboardNumber) ?
+            <button className="sort" onClick={() => {toggleSort(itemOrder);}}>
+                <span className="up" >▲</span>
+                <span className="down">▼</span>
+            </button>
+            : undefined;
+        return <th key={props.key} {...rest} className={className} onClick={clickToSelect}>{props.children}{sortArrows}</th>;
+    }
+
+    const tableHeaderFooter = <tr className="progress-table-header-footer">
+        {sortItem({key: "student-name", itemOrder: "student-name"})}
+
+        {(groupProgress?.[0]?.progress ?? []).map((gameboard, index) =>
+            sortItem({key: gameboard.gameboardId, itemOrder: index, className: index === selectedGameboardNumber ? 'selected' : '', children: `${gameboard.gameboardTitle}`})
+        )}
+    </tr>;
+
     return <div className={"group-progress-summary" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <GroupProgressLegend pageSettings={pageSettings}/>
         {/* {JSON.stringify(groupProgress)} */}
         <div className="progress-table group-progress-summary mx-4 overflow-auto mw-100">
             <table className="table table-striped table-bordered table-sm mx-auto bg-white">
-                <thead>
-                    <tr className="user-progress-summary-header">
-                        <th className="student-name"></th>
-                        {(groupProgress?.[0]?.progress ?? []).map(gameboard => <th className="progress-cell text-center" key={gameboard.gameboardId}>
-                            {gameboard.gameboardTitle}
-                        </th>)}
-                    </tr>
-                </thead>
+                <thead>{tableHeaderFooter}</thead>
                 <tbody className="">
-                    {groupProgress?.map(userProgress => {
+                    {(sortedProgress || []).map(userProgress => {
                         const {user, progress} = userProgress;
                         const fullAccess = user?.authorisedFullAccess || false;
                         return <tr className={`user-progress-summary-row ${fullAccess ? '' : 'revoked'}`} key={userProgress.user?.id}>
@@ -213,20 +258,21 @@ const GroupSummary = (props: GroupSummaryProps) => {
                                     {`${user.givenName} ${user.familyName}`}
                                 </Link>
                             </td>}
-                            {(progress ?? []).map(gameboard => {
+                            {(progress ?? []).map((gameboard, index) => {
                                 const rateClass = markClasses(fullAccess,
                                                             gameboard.questionPartsCorrect ?? 0,
                                                             gameboard.questionPartsIncorrect ?? 0,
                                                             gameboard.questionPartsTotal ?? 1,
                                                             gameboard.passMark ?? passMark
                                                            );
-                                return <td className={`${rateClass} progress-cell text-center`} key={gameboard.gameboardId}>
+                                return <td className={`${rateClass} ${index === selectedGameboardNumber ? 'selected' : ''} progress-cell text-center`} key={gameboard.gameboardId}>
                                     {fullAccess && formatMark(gameboard.questionPartsCorrect ?? 0, gameboard.questionPartsTotal ?? 1, pageSettings.formatAsPercentage)}
                                 </td>
                             })}
                         </tr>
                     })}
                 </tbody>
+                <tfoot>{tableHeaderFooter}</tfoot>
             </table>
         </div>
     </div>
