@@ -491,7 +491,6 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
     function openGroupDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
-        //showDownloadModal(event.currentTarget.href);
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 

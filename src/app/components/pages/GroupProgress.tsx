@@ -223,7 +223,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
 
     function sortItem(props: ComponentProps<"th"> & {itemOrder: SortOrder}) {
         const {itemOrder, ...rest} = props;
-        const className = (props.className || "") + " " + sortClasses(itemOrder);
+        const className = (props.className || "") + " py-2 " + sortClasses(itemOrder);
         const clickToSelect = typeof itemOrder === "number" ? (() => setSelectedGameboardNumber(itemOrder)) : undefined;
         const sortArrows = (typeof itemOrder !== "number" || itemOrder === selectedGameboardNumber) ?
             <button className="sort" onClick={() => {toggleSort(itemOrder);}}>
@@ -244,7 +244,6 @@ const GroupSummary = (props: GroupSummaryProps) => {
 
     return <div className={"group-progress-summary" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <GroupProgressLegend pageSettings={pageSettings}/>
-        {/* {JSON.stringify(groupProgress)} */}
         <div className="progress-table group-progress-summary mx-4 overflow-auto mw-100">
             <table className="table table-striped table-bordered table-sm mx-auto bg-white">
                 <thead>{tableHeaderFooter}</thead>
@@ -253,11 +252,11 @@ const GroupSummary = (props: GroupSummaryProps) => {
                         const {user, progress} = userProgress;
                         const fullAccess = user?.authorisedFullAccess || false;
                         return <tr className={`user-progress-summary-row ${fullAccess ? '' : 'revoked'}`} key={userProgress.user?.id}>
-                            {user && <td className="student-name">
+                            {user && <th className="student-name py-2">
                                 <Link to={`/progress/${user.id}`} target="_blank">
                                     {`${user.givenName} ${user.familyName}`}
                                 </Link>
-                            </td>}
+                            </th>}
                             {(progress ?? []).map((gameboard, index) => {
                                 const rateClass = markClasses(fullAccess,
                                                             gameboard.questionPartsCorrect ?? 0,
@@ -265,7 +264,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
                                                             gameboard.questionPartsTotal ?? 1,
                                                             gameboard.passMark ?? passMark
                                                            );
-                                return <td className={`${rateClass} ${index === selectedGameboardNumber ? 'selected' : ''} progress-cell text-center`} key={gameboard.gameboardId}>
+                                return <td className={`py-2 ${rateClass} ${index === selectedGameboardNumber ? 'selected' : ''} progress-cell text-center`} key={gameboard.gameboardId}>
                                     {fullAccess && formatMark(gameboard.questionPartsCorrect ?? 0, gameboard.questionPartsTotal ?? 1, pageSettings.formatAsPercentage)}
                                 </td>
                             })}
@@ -293,7 +292,6 @@ const GroupAssignmentProgress = (props: GroupSummaryProps) => {
     function openGroupDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
-        //showDownloadModal(event.currentTarget.href);
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
@@ -302,7 +300,7 @@ const GroupAssignmentProgress = (props: GroupSummaryProps) => {
             <div className="group-name"><span className="icon-group"/><span>{group.groupName}</span></div>
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> Assignment{assignmentCount !== 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
-            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openGroupDownloadLink}>(Download Group CSV)</a></div>
+            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openGroupDownloadLink}>(Download Detailed Group CSV)</a></div>
             <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
                 <img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" />
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
