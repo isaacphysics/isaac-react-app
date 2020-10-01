@@ -237,9 +237,10 @@ const GroupSummary = (props: GroupSummaryProps) => {
     const tableHeaderFooter = <tr className="progress-table-header-footer">
         {sortItem({key: "student-name", itemOrder: "student-name"})}
 
-        {(groupProgress?.[0]?.progress ?? []).map((gameboard, index) =>
-            sortItem({key: gameboard.gameboardId, itemOrder: index, className: index === selectedGameboardNumber ? 'selected' : '', children: `${gameboard.gameboardTitle}`})
-        )}
+        {(groupProgress?.[0]?.progress ?? []).map((gameboard, index) => {
+            const link = <Link to={`/assignment_progress/${gameboard.assignmentId || 0}`}>{gameboard.gameboardTitle}</Link>
+            return sortItem({key: gameboard.assignmentId, itemOrder: index, className: index === selectedGameboardNumber ? 'selected' : '', children: link})
+        })}
     </tr>;
 
     return <div className={"group-progress-summary" + (pageSettings.colourBlind ? " colour-blind" : "")}>
@@ -264,7 +265,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
                                                             gameboard.questionPartsTotal ?? 1,
                                                             gameboard.passMark ?? passMark
                                                            );
-                                return <td className={`py-2 ${rateClass} ${index === selectedGameboardNumber ? 'selected' : ''} progress-cell text-center`} key={gameboard.gameboardId}>
+                                return <td className={`py-2 ${rateClass} ${index === selectedGameboardNumber ? 'selected' : ''} progress-cell text-center`} key={gameboard.assignmentId}>
                                     {fullAccess && formatMark(gameboard.questionPartsCorrect ?? 0, gameboard.questionPartsTotal ?? 1, pageSettings.formatAsPercentage)}
                                 </td>
                             })}
