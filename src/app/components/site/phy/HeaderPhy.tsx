@@ -16,7 +16,7 @@ export const HeaderPhy = () => {
     return <header className="light">
         <Container className="container-fluid px-0">
             <Row className="align-items-center">
-                <Col md={user?.loggedIn ? 11 : 12}>
+                <Col>
                     <div className="header-bar mx-3 mx-md-0 d-md-flex">
                         <div className="header-logo">
                             <Link to="/">
@@ -26,6 +26,20 @@ export const HeaderPhy = () => {
                         </div>
 
                         <a href={`#${mainContentId}`} className="skip-main">Skip to main content</a>
+
+                        <div className="m-md-0 d-none d-md-block d-flex align-items-center d-print-none pt-3">
+                            {user?.loggedIn &&
+                                <React.Fragment>
+                                    <div id="header-progress">
+                                        Streak:
+                                        <HeaderDailyStreakGauge streakRecord={streakRecord}/>
+                                    </div>
+                                    <UncontrolledTooltip placement="bottom" autohide={false} target="header-progress">
+                                        The daily streak indicates the number of consecutive days you have been active on Isaac.
+                                        <br/><br/>Answer at least <b>three question parts</b> correctly per day to fill up your daily progress bar and increase your streak!
+                                    </UncontrolledTooltip>
+                                </React.Fragment>}
+                        </div>
 
                         <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none pt-3">
                             {user &&
@@ -67,18 +81,6 @@ export const HeaderPhy = () => {
                         </div>
                     </div>
                 </Col>
-                {user?.loggedIn &&
-                    <Col md={1} className="d-none d-md-block">
-                        <div id="header-progress">
-                            Streak:
-                            <HeaderDailyStreakGauge streakRecord={streakRecord}/>
-                        </div>
-                        <UncontrolledTooltip placement="bottom" autohide={false} target="header-progress">
-                            The daily streak indicates the number of consecutive days you have been active on Isaac.
-                            <br/><br/>Answer at least <b>three question parts</b> correctly per day to fill up your daily progress bar and increase your streak!
-                        </UncontrolledTooltip>
-                    </Col>
-                }
             </Row>
             <Row>
                 <Col>

@@ -35,11 +35,11 @@ export const DailyStreakGauge = (props: DailyStreakGaugeProps) => {
 export const HeaderDailyStreakGauge = (props: DailyStreakGaugeProps) => {
     const {streakRecord} = props;
     return <CircularProgressbarWithChildren value={streakRecord?.currentActivity || 0}
-                                     maxValue={3}
-                                     styles={buildStyles({
-                                         pathColor: '#509E2E',
-                                         trailColor: '#c9cad1'
-                                     })}>
+            maxValue={3}
+            styles={buildStyles({
+                pathColor: '#509E2E',
+                trailColor: '#c9cad1'
+        })}>
         <div style={{fontSize: 24}}>
             {streakRecord?.currentStreak || 0}
         </div>
