@@ -1,13 +1,12 @@
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {IsaacHintModal} from "./IsaacHintModal";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
 import {useDispatch, useSelector} from "react-redux";
 import {Tabs} from "../elements/Tabs";
 import {logAction} from "../../state/actions";
-import {isDefined} from "../../services/miscUtils";
 
 const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
     const printHints = useSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
