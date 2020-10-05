@@ -1,11 +1,13 @@
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {IsaacHintModal} from "./IsaacHintModal";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Tabs} from "../elements/Tabs";
+import {logAction} from "../../state/actions";
+import {isDefined} from "../../services/miscUtils";
 
 const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
     const printHints = useSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
@@ -34,9 +36,19 @@ export const IsaacLinkHints = ({hints, questionPartId}: HintsProps) => {
     </div>;
 };
 
-export const IsaacTabbedHints = ({hints}: HintsProps) => {
+export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
+    const dispatch = useDispatch();
+    const [viewedHint, setViewedHint] = useState();
+
+    useEffect(() => {
+        if (isDefined(viewedHint)) {
+            const eventDetails = {type: "VIEW_HINT", questionId: questionPartId, hintIndex: viewedHint};
+            dispatch(logAction(eventDetails));
+        }
+    }, [viewedHint]);
+
     return <div className="tabbed-hints">
-        {hints && <Tabs className="no-print" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
+        {hints && <Tabs setViewedHint={setViewedHint} className="no-print" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
             {Object.assign({}, ...hints.map((hint, index) => ({
                 [`Hint\u00A0${index + 1}`]: <div className="mt-3 mt-lg-4 pt-2">
                     <IsaacContent doc={hint} />
