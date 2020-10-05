@@ -16,6 +16,7 @@ import { isDefined } from '../../services/miscUtils';
 import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
 import tags from "../../services/tags";
 import { TAG_ID } from '../../services/constants';
+import { Tag } from '../../../IsaacAppTypes';
 
 interface GlossaryProps {
     location: { hash: string },
@@ -23,8 +24,8 @@ interface GlossaryProps {
 
 export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const [searchText, setSearchText] = useState("");
-    const [topics, setTopics] = useState<string[]>([]);
-    const [filterTopic, setFilterTopic] = useState("");
+    const topics = tags.allTags
+    const [filterTopic, setFilterTopic] = useState<Tag>();
     const [topicsDropdownOpen, setTopicsDropdownOpen] = useState(false);
 
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
@@ -33,35 +34,25 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
         if (searchText === '') {
             const sortedTerms = rawGlossaryTerms?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
             const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
-            let _topics: string[] = [];
             if (sortedTerms) {
                 for (const term of sortedTerms) {
-                    if (filterTopic !== "" && !term.tags?.includes(filterTopic)) continue;
+                    if (isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
                     const k = term?.value?.[0] || '#';
                     groupedTerms[k] = [...(groupedTerms[k] || []), term];
-                    _topics = [..._topics, ...(term.tags || [])];
                 }
             }
-            setTopics([...new Set(
-                _topics.sort((a, b) => a.localeCompare(b))
-            )]);
             return groupedTerms;
         } else {
             const regex = new RegExp(searchText.split(' ').join('|'), 'gi');
             const sortedTerms = rawGlossaryTerms?.filter(e => e.value?.match(regex)).sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
             const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
-            let _topics: string[] = [];
             if (sortedTerms) {
                 for (const term of sortedTerms) {
-                    if (filterTopic !== "" && !term.tags?.includes(filterTopic)) continue;
+                    if (isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
                     const k = term?.value?.[0] || '#';
                     groupedTerms[k] = [...(groupedTerms[k] || []), term];
-                    _topics = [..._topics, ...(term.tags || [])];
                 }
             }
-            setTopics([...new Set(
-                _topics.sort((a, b) => a.localeCompare(b))
-            )]);
             return groupedTerms;
         }
     }, [rawGlossaryTerms, filterTopic, searchText]);
@@ -181,11 +172,11 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                             <Label for='topic-select' className='sr-only'>Topic</Label>
                             {topics?.length > 0 && <Dropdown isOpen={topicsDropdownOpen} toggle={() => setTopicsDropdownOpen(prevState => !prevState)}>
                                 <DropdownToggle caret color="outline-primary">
-                                    { filterTopic === "" ? "Filter by topic" : _startCase(filterTopic) }
+                                    { !isDefined(filterTopic) ? "Filter by topic" : filterTopic.title }
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem onClick={() => setFilterTopic("")}>All topics</DropdownItem>
-                                    {topics.map(e => <DropdownItem key={e} onClick={() => setFilterTopic(e)}>{_startCase(e.replace(/[^a-zA-Z0-9]/, ' '))}</DropdownItem>)}
+                                    <DropdownItem onClick={() => setFilterTopic(undefined)}>All topics</DropdownItem>
+                                    {topics.map(e => <DropdownItem key={e.id} onClick={() => setFilterTopic(e)}>{e.title}</DropdownItem>)}
                                 </DropdownMenu>
                             </Dropdown>}
                         </Col>
