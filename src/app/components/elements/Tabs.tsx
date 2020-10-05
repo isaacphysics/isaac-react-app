@@ -32,7 +32,7 @@ export const Tabs = (props: TabsProps) => {
             nextTabIndex = -1;
         }
         setActiveTab(nextTabIndex);
-        if (onActiveTabChange) {
+        if (onActiveTabChange && activeTab !== nextTabIndex) {
             onActiveTabChange(nextTabIndex);
         }
     }
