@@ -77,6 +77,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/accordions";
 @import "../common/cards";
 @import "../common/list-groups";
+@import "../common/featured-profile";
 @import "inequality-modal";
 @import "../common/carousel";
 @import "../common/icons";
@@ -96,7 +97,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 
 // Pages
 @import "../common/pages";
-@import "../common/homepage";
+@import "homepage";
 @import "../common/login";
 @import "../common/registration";
 @import "../common/my-account";
@@ -108,6 +109,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/books";
 @import "../common/groups";
 @import "../common/events";
+@import "../common/glossary";
 
 // Print
 @import "../common/print";

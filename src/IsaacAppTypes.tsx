@@ -71,6 +71,8 @@ export type Action =
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST}
+    | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.USER_PROGRESS_REQUEST}
     | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS; progress: UserProgress}
     | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE}
@@ -127,6 +129,10 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST}
     | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.ADMIN_MERGE_USERS_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_MERGE_USERS_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.ADMIN_MERGE_USERS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST}
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS; authorisations: ApiTypes.UserSummaryWithEmailAddressDTO[]}
@@ -645,12 +651,13 @@ export interface AdditionalInformation {
     experienceLevel?: string;
 }
 
-export interface Credentials {
+export interface CredentialsAuthDTO {
     email: string;
     password: string;
+    rememberMe: boolean;
 }
 
-export interface PaddedCredentials extends Credentials {
+export interface PaddedCredentialsAuthDTO extends CredentialsAuthDTO {
     _randomPadding: string;
 }
 

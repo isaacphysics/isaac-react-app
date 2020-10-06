@@ -134,6 +134,8 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "gameboard";
 @import "menu-page-phy";
 
+@import "../common/glossary";
+
 
 // Print
 @import "../common/print";
@@ -167,6 +169,8 @@ p small {
     white-space: nowrap !important;
     overflow-x: auto;
     overflow-y: hidden;
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
 }
 
 body {

@@ -16,6 +16,10 @@ export function isAdmin(user?: LoggedInUser | null) {
     return user ? user.loggedIn && user.role == "ADMIN" : false;
 }
 
+export function isEventManager(user?: LoggedInUser | null) {
+    return user ? user.loggedIn && (user.role == "EVENT_MANAGER") : false;
+}
+
 export function isStaff(user?: LoggedInUser | null) {
     return user ? user.loggedIn && (user.role == "ADMIN" || user.role == "EVENT_MANAGER" || user.role == "CONTENT_EDITOR") : false;
 }

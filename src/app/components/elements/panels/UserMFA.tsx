@@ -57,7 +57,7 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
         }
     }
 
-    return <CardBody>
+    return <CardBody className="pt-0">
         <Row>
             <Col md={{size: 6, offset: 3}}>
                 <hr className="text-center" />
@@ -98,7 +98,7 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
                                     <FormGroup>
                                         <Button
                                             className="btn-secondary"
-                                            disabled={SITE_SUBJECT === SITE.PHY || !mfaVerificationCode}
+                                            disabled={!mfaVerificationCode}
                                             onClick={setupMFA}
                                         >
                                             {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
@@ -112,7 +112,7 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
                             <Col md={{size: 6, offset: 3}}>
                                 <FormGroup>
                                     <Button
-                                        className="btn-secondary" disabled={SITE_SUBJECT === SITE.PHY}
+                                        className="btn-secondary"
                                         onClick={() => {setUpdateMFARequest(true); dispatch(getNewTotpSecret())}}
                                     >
                                         {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}

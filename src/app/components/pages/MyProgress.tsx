@@ -12,7 +12,7 @@ import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats"
 import {DailyStreakPanel} from "../elements/panels/DailyStreakPanel";
 import {Tabs} from "../elements/Tabs";
 import {FlushableRef, QuestionProgressCharts} from "../elements/views/QuestionProgressCharts";
-import {HUMAN_QUESTION_TYPES} from "../../services/questions";
+import {HUMAN_QUESTION_TAGS, HUMAN_QUESTION_TYPES} from "../../services/questions";
 import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
 import {safePercentage} from "../../services/validation";
@@ -24,14 +24,20 @@ export const siteSpecific = {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion"
         ],
-        colWidth: "col-lg-6"
+        questionTagsStatsList: [
+            "maths_book", "physics_skills_14", "physics_skills_19", "phys_book_gcse", "chemistry_16"
+        ],
+        typeColWidth: "col-lg-6",
+        tagColWidth: "col-lg-12"
     },
     [SITE.CS]: {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
             "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacSymbolicLogicQuestion"
         ],
-        colWidth: "col-lg-4"
+        questionTagsStatsList: [] as string[],
+        typeColWidth: "col-lg-4",
+        tagColWidth: "col-lg-12"
     }
 }[SITE_SUBJECT];
 
@@ -81,7 +87,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
 
                         <RS.Card className="mt-4">
                             <RS.CardBody>
-                                <Tabs tabContentClass="mt-4" activeTabChanged={(tabIndex) => {
+                                <Tabs tabContentClass="mt-4" onActiveTabChange={(tabIndex) => {
                                     const flush = tabRefs[tabIndex - 1].current;
                                     if (flush) {
                                         // Don't call the flush in an event handler that causes the render, that's too early.
@@ -117,7 +123,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                                     const correct = userProgress?.correctByType?.[qType] || null;
                                     const attempts = userProgress?.attemptsByType?.[qType] || null;
                                     const percentage = safePercentage(correct, attempts);
-                                    return <RS.Col key={qType} className={`${siteSpecific.colWidth} mt-2 type-progress-bar`}>
+                                    return <RS.Col key={qType} className={`${siteSpecific.typeColWidth} mt-2 type-progress-bar`}>
                                         <div className={"px-2"}>
                                             {HUMAN_QUESTION_TYPES.get(qType)} questions correct
                                         </div>
@@ -130,6 +136,27 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                                 })}
                             </RS.Row>
                         </div>
+
+                        {SITE_SUBJECT === SITE.PHY && <div className="mt-4">
+                            <h4>Isaac Books</h4>
+                            <RS.Row>
+                                {siteSpecific.questionTagsStatsList.map((qType: string) => {
+                                    const correct = userProgress?.correctByTag?.[qType] || null;
+                                    const attempts = userProgress?.attemptsByTag?.[qType] || null;
+                                    const percentage = safePercentage(correct, attempts);
+                                    return <RS.Col key={qType} className={`${siteSpecific.tagColWidth} mt-2 type-progress-bar`}>
+                                        <div className={"px-2"}>
+                                            {HUMAN_QUESTION_TAGS.get(qType)} questions completed correctly of those attempted
+                                        </div>
+                                        <div className={"px-2"}>
+                                            <ProgressBar percentage={percentage || 0} type={qType}>
+                                                {percentage == null ? "No data" : `${correct} of ${attempts}`}
+                                            </ProgressBar>
+                                        </div>
+                                    </RS.Col>;
+                                })}
+                            </RS.Row>
+                        </div>}
 
                         {answeredQuestionsByDate && <div className="mt-4">
                             <h4>Question attempts over time</h4>

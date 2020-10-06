@@ -10,7 +10,7 @@ import {
     BoardOrder,
     Choice,
     Concepts,
-    Credentials,
+    CredentialsAuthDTO,
     EmailUserRoles,
     QuestionSearchQuery,
     QuestionSearchResponse,
@@ -107,11 +107,14 @@ export const api = {
         logout: (): AxiosPromise => {
             return endpoint.post(`/auth/logout`);
         },
-        login: (provider: ApiTypes.AuthenticationProvider, credentials: Credentials): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        logoutEverywhere: (): AxiosPromise => {
+            return endpoint.post(`/auth/logout/everywhere`);
+        },
+        login: (provider: ApiTypes.AuthenticationProvider, credentials: CredentialsAuthDTO): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/auth/${provider}/authenticate`, securePadCredentials(credentials));
         },
-        mfaCompleteLogin: (mfaVerificationCode : string): AxiosPromise => {
-            return endpoint.post(`/auth/mfa/challenge`, {mfaVerificationCode: mfaVerificationCode});
+        mfaCompleteLogin: (mfaVerificationCode : string, rememberMe: boolean): AxiosPromise => {
+            return endpoint.post(`/auth/mfa/challenge`, {mfaVerificationCode: mfaVerificationCode, rememberMe});
         },
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings`)
@@ -188,14 +191,23 @@ export const api = {
         },
         getSiteStats: (): AxiosPromise<AppTypes.AdminStatsResponse> => {
             return endpoint.get(`/admin/stats`)
+        },
+        mergeUsers: (targetId: number, sourceId: number) => {
+            return endpoint.post(`/admin/users/merge`, {targetId, sourceId})
         }
     },
     authorisations: {
         get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get(`authorisations`);
+            return endpoint.get("authorisations");
+        },
+        adminGet: (userId: number): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
+            return endpoint.get(`authorisations/${userId}`);
         },
         getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
-            return endpoint.get(`/authorisations/other_users`);
+            return endpoint.get("/authorisations/other_users");
+        },
+        adminGetOtherUsers: (userId: number): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
+            return endpoint.get(`/authorisations/other_users/${userId}`);
         },
         getToken: (groupId: number): AxiosPromise<AppTypes.AppGroupTokenDTO> => {
             return endpoint.get(`/authorisations/token/${groupId}`);
@@ -354,8 +366,11 @@ export const api = {
         update: (updatedGroup: AppTypes.AppGroup): AxiosPromise => {
             return endpoint.post(`/groups/${updatedGroup.id}`, {...updatedGroup, members: undefined});
         },
-        getMyMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
-            return endpoint.get(`/groups/membership`);
+        getMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get("/groups/membership");
+        },
+        adminGetMemberships: (userId: number): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get(`/groups/membership/${userId}`);
         },
         changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => {
             return endpoint.post(`/groups/membership/${groupId}/${newStatus}`);
@@ -488,6 +503,18 @@ export const api = {
     fasttrack: {
         concepts: (gameboardId: string, concept: string, upperQuestionId: string): AxiosPromise<ApiTypes.GameboardItem[]> => {
             return endpoint.get(`/fasttrack/${gameboardId}/concepts`, {params: {concept, "upper_question_id": upperQuestionId}});
+        }
+    },
+    websockets: {
+        userAlerts: (): WebSocket => {
+            const userAlertsURI = "/user-alerts";
+            if (API_PATH.indexOf("http") > -1) {
+                // APP and API on separate domains, urlPrefix is full URL:
+                return new WebSocket(API_PATH.replace(/^http/, "ws") + userAlertsURI);
+            } else {
+                // APP and API on same domain, need window.location.origin for full URL:
+                return new WebSocket(window.location.origin.replace(/^http/, "ws") + API_PATH + userAlertsURI);
+            }
         }
     }
 };

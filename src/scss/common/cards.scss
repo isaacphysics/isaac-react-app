@@ -186,3 +186,7 @@
   font-weight: bold;
   padding: 0;
 }
+
+.card-deck + .card-deck {
+  margin-top: 1.5rem;
+}
