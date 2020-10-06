@@ -36,6 +36,15 @@
         color: black;
         border-bottom: none;
       }
+      @include  media-breakpoint-up(md) {
+        img {
+          max-width: 50%;
+          padding: 0;
+        }
+      }
+      .figure-caption {
+        display: none; // TODO FEATURED_QUESTION_UPDATE this might not be appropriate for other questions
+      }
     }
 
     .computer-scientist-of-the-month {

@@ -8,6 +8,7 @@ import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState} from "../.
 import {GREEK_LETTERS_MAP} from '../../../services/constants';
 import { IsaacContentValueOrChildren } from '../../content/IsaacContentValueOrChildren';
 import { ContentDTO } from '../../../../IsaacApiTypes';
+import { isDefined } from '../../../services/miscUtils';
 
 class MenuItem {
     public type: string;
@@ -645,7 +646,14 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private generateMathsDerivativeAndLetters(symbol: string): { derivative: MenuItem; letters: MenuItem[] } {
-        const pieces = symbol.split(';').map(s => s.replace(/[()\s]/g, '')).slice(1); // FIXME Is this regex just a trim()?
+        const parts = symbol.replace(/^Derivative/, '').split(';').map(s => s.replace(/[()\s]/g, ''));
+        const letters = new Array<MenuItem>();
+        const top = parts[0];
+        if (isDefined(this._greekLetterMap[top]) || /^[a-zA-Z]$/.test(top)) {
+            // Do this only if we have a single greek letter or a single latin letter.
+            letters.push(this.makeSingleLetterMenuItem(this._greekLetterMap[top] || top, this._greekLetterMap[top] ? '\\' + top : top))
+        }
+        const pieces = parts.slice(1); 
         const orders: { [piece: string]: number } = {};
         // Count how many times one should derive each variable
         for (const piece of pieces) {
@@ -653,11 +661,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
         const derivativeOrder = Object.values(orders).reduce((a, c) => a + c, 0);
         const denominatorObjects: any[] = [];
-        const letters = new Array<MenuItem>();
         let texBottom = '';
         for (const p of Object.entries(orders)) {
             const letter = p[0];
-            letters.push(this.makeSingleLetterMenuItem(letter));
+            letters.push(this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter));
             const order = p[1];
             const o = {
                 type: 'Differential',
@@ -665,12 +672,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 children: {
                     argument: {
                         type: 'Symbol',
-                        properties: { letter: letter }
+                        properties: { letter: this._greekLetterMap[letter] || letter }
                     },
                     order: null as any | null
                 }
             };
-            texBottom += `\\mathrm{d}${letter}`;
+            texBottom += `\\mathrm{d}${this._greekLetterMap[letter] ? '\\' + letter : letter}`;
             if (order > 1) {
                 o.children = { ...o.children, order: {
                     type: 'Num',
@@ -715,7 +722,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         } else {
             return {
                 differential: this.makeMathsDifferentialItem(parsedDifferential as string[]),
-                letters: differentialArgument ? [this.makeSingleLetterMenuItem(differentialArgument)] : null
+                letters: differentialArgument ? [this.makeSingleLetterMenuItem(this._greekLetterMap[differentialArgument] || differentialArgument, this._greekLetterMap[differentialArgument] ? '\\' + differentialArgument : differentialArgument)] : null
             }
         }
     }

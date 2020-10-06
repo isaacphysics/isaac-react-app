@@ -13,6 +13,7 @@ import {
     MEMBERSHIP_STATUS,
     NO_CONTENT,
     NOT_FOUND,
+    QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     TAG_ID
 } from "../services/constants";
 import {
@@ -25,7 +26,7 @@ import {
     AppGroupMembership,
     ATTENDANCE,
     BoardOrder,
-    Credentials,
+    CredentialsAuthDTO,
     EmailUserRoles,
     FreeTextRule,
     LoggedInUser,
@@ -224,11 +225,11 @@ export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: strin
     }
 };
 
-export const submitTotpChallengeResponse = (mfaVerificationCode: string) => async (dispatch: Dispatch<Action>) => {
+export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
     try {
         const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode);
+        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
 
         await dispatch(requestCurrentUser() as any); // Request user preferences
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
@@ -374,7 +375,17 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const logInUser = (provider: AuthenticationProvider, credentials: Credentials) => async (dispatch: Dispatch<Action>) => {
+export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST});
+    try {
+        await api.authentication.logoutEverywhere();
+        dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Logout everywhere failed", e));
+    }
+};
+
+export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
 
@@ -506,6 +517,13 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
         await api.email.verify(params);
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
         dispatch(requestCurrentUser() as any);
+        dispatch(showToast({
+            title: "Email address verified",
+            body: "The email address has been verified",
+            color: "success",
+            timeout: 5000,
+            closable: false,
+        }) as any);
     } catch(e) {
         dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
@@ -850,13 +868,14 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
             }) as any);
         }
     } catch (e) {
-        if (e.response && e.response.status == 429) {
+        if (e.response && e.response.status === 429) {
+            const errorMessage = e.response?.data?.errorMessage || QUESTION_ATTEMPT_THROTTLED_MESSAGE;
             const lock = new Date((new Date()).getTime() + timePeriod);
 
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock});
             dispatch(showToast({
                 color: "danger", title: "Too many attempts", timeout: 10000,
-                body: "You have made too many attempts at this question. Please try again later!"
+                body: errorMessage
             }) as any);
             setTimeout( () => {
                 dispatch({type: ACTION_TYPE.QUESTION_UNLOCK, questionId});

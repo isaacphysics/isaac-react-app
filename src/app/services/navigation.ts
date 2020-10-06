@@ -95,3 +95,8 @@ export const ifKeyIsEnter = (action: () => void) => (event: React.KeyboardEvent)
         action();
     }
 };
+
+export const isAppLink = (path: string): boolean => {
+    // Paths within the app begin with a "/"
+    return path.indexOf("/") === 0;
+}

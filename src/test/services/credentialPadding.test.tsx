@@ -1,4 +1,5 @@
 import {securePadCredentials, securePadPasswordReset, utf8ByteLength} from '../../app/services/credentialPadding';
+import {CredentialsAuthDTO} from "../../IsaacAppTypes";
 
 describe("Unicode string lengths in Bytes",  () => {
     it("length of ASCII string", async () => {
@@ -16,7 +17,7 @@ describe("Unicode string lengths in Bytes",  () => {
 });
 
 describe("Credentials are securely padded",  () => {
-    const credentials = {email: "test@test.com", password: "test"};
+    const credentials = {email: "test@test.com", password: "test", rememberMe: false} as CredentialsAuthDTO;
     const paddedCredentials = securePadCredentials(credentials);
 
     it("credential padding added", async () => {
@@ -33,7 +34,7 @@ describe("Credentials are securely padded",  () => {
     });
 
     it("long credential padding 2^N", () => {
-        let longCredentials = {email: "test@test.com", password: "a".repeat(300)};
+        let longCredentials = {email: "test@test.com", password: "a".repeat(300), rememberMe: false} as CredentialsAuthDTO;
         let paddedLongCredentials = securePadCredentials(longCredentials);
         let paddedLength = utf8ByteLength(JSON.stringify(paddedLongCredentials));
         let log2OfLength = Math.log2(paddedLength);
