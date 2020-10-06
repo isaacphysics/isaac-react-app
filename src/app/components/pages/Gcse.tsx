@@ -18,7 +18,7 @@ export const Gcse = () => {
             </Col>
         </Row>
         <Row className="card-deck isaac-cards-body mb-3">
-            <IsaacCard doc={{title: "Physics Skills Mastery", subtitle: "Check your answers to our Mastering Essential GCSE Physics book.",
+            <IsaacCard doc={{title: "Physics Skills Mastery Book", subtitle: "Interactive questions from our Mastering Essential GCSE Physics book.",
                 clickUrl: "/books/phys_book_gcse", image: {src: "/assets/phy/key_stage_sprite.svg#skills-book-cover"}
             }}/>
             <IsaacCard doc={{title: "Question Finder", subtitle: "Practise your problem solving skills with our level 1 questions.",
