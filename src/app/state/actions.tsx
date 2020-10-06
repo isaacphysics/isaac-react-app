@@ -13,6 +13,7 @@ import {
     MEMBERSHIP_STATUS,
     NO_CONTENT,
     NOT_FOUND,
+    QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     TAG_ID
 } from "../services/constants";
 import {
@@ -25,7 +26,7 @@ import {
     AppGroupMembership,
     ATTENDANCE,
     BoardOrder,
-    Credentials,
+    CredentialsAuthDTO,
     EmailUserRoles,
     FreeTextRule,
     LoggedInUser,
@@ -80,10 +81,8 @@ function isAxiosError(e: Error): e is AxiosError {
 }
 
 function extractMessage(e: Error) {
-    if (isAxiosError(e)) {
-        if (e.response) {
-            return e.response.data.errorMessage;
-        }
+    if (isAxiosError(e) && e.response && e.response.data && e.response.data.errorMessage) {
+        return e.response.data.errorMessage;
     }
     return API_REQUEST_FAILURE_MESSAGE;
 }
@@ -226,11 +225,11 @@ export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: strin
     }
 };
 
-export const submitTotpChallengeResponse = (mfaVerificationCode: string) => async (dispatch: Dispatch<Action>) => {
+export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
     try {
         const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode);
+        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
 
         await dispatch(requestCurrentUser() as any); // Request user preferences
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
@@ -376,7 +375,17 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const logInUser = (provider: AuthenticationProvider, credentials: Credentials) => async (dispatch: Dispatch<Action>) => {
+export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST});
+    try {
+        await api.authentication.logoutEverywhere();
+        dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Logout everywhere failed", e));
+    }
+};
+
+export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
 
@@ -395,7 +404,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         history.push(afterAuthPath);
 
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: (e.response) ? extractMessage(e) : API_REQUEST_FAILURE_MESSAGE})
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
     }
     dispatch(requestCurrentUser() as any)
 };
@@ -466,7 +475,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
             history.push(nextPage);
         }
     } catch (error) {
-        history.push({pathname: "/auth_error", state: {errorMessage: isAxiosError(error) ? extractMessage(error) : API_REQUEST_FAILURE_MESSAGE}});
+        history.push({pathname: "/auth_error", state: {errorMessage: extractMessage(error)}});
         dispatch(showErrorToastIfNeeded("Login Failed", error));
     }
 };
@@ -508,6 +517,13 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
         await api.email.verify(params);
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
         dispatch(requestCurrentUser() as any);
+        dispatch(showToast({
+            title: "Email address verified",
+            body: "The email address has been verified",
+            color: "success",
+            timeout: 5000,
+            closable: false,
+        }) as any);
     } catch(e) {
         dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
@@ -852,13 +868,14 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
             }) as any);
         }
     } catch (e) {
-        if (e.response && e.response.status == 429) {
+        if (e.response && e.response.status === 429) {
+            const errorMessage = e.response?.data?.errorMessage || QUESTION_ATTEMPT_THROTTLED_MESSAGE;
             const lock = new Date((new Date()).getTime() + timePeriod);
 
             dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock});
             dispatch(showToast({
                 color: "danger", title: "Too many attempts", timeout: 10000,
-                body: "You have made too many attempts at this question. Please try again later!"
+                body: errorMessage
             }) as any);
             setTimeout( () => {
                 dispatch({type: ACTION_TYPE.QUESTION_UNLOCK, questionId});
@@ -1232,6 +1249,26 @@ export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids:
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Sending email with ids failed", e));
+    }
+};
+
+export const mergeUsers = (targetId: number, sourceId: number) => async (dispatch: Dispatch<Action>) => {
+    let confirmMerge = window.confirm(`Are you sure you want to merge user ${sourceId} into user ${targetId}? This will delete user ${sourceId}.`);
+    if (confirmMerge) {
+        dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_REQUEST});
+        try {
+            await api.admin.mergeUsers(targetId, sourceId);
+            dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_RESPONSE_SUCCESS});
+            dispatch(showToast({
+                color: "success",
+                title: "Users merged",
+                body: `User with id: ${sourceId} was merged into user with id: ${targetId}`,
+                timeout: 3000
+            }) as any);
+        } catch (e) {
+            dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_RESPONSE_FAILURE});
+            dispatch(showErrorToastIfNeeded("Merging users failed", e));
+        }
     }
 };
 

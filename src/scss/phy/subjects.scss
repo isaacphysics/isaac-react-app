@@ -89,7 +89,7 @@
 }
 
 // FIXME: This is not nice at all, but does fix subject and email prefs!
-#account-page {
+#account-page, #registration-page, #login-page {
   @include apply-subject-classes($a11y_green);
 }
 

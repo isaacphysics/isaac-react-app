@@ -16,6 +16,7 @@ import _flattenDeep from 'lodash/flatMapDeep';
 import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
 import uuid from "uuid";
+import { isDefined } from '../../services/miscUtils';
 
 // Magic starts here
 interface ChildrenMap {
@@ -83,7 +84,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
-        if (previousYPosition) {
+        if (isDefined(previousYPosition)) {
             window.scrollTo(0, previousYPosition);
         }
     };

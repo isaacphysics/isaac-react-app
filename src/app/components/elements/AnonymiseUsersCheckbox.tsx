@@ -15,6 +15,6 @@ export const AnonymiseUsersCheckbox = ({className}: AnonymiseUsersCheckboxProps)
             save(KEY.ANONYMISE_USERS, e.target.checked ? "YES": "NO");
             window.location.reload();
         }}
-        label="Anonymise users"
+        label="Disguise user and group names in teacher tools"
     />
 };

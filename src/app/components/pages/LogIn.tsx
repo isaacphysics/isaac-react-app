@@ -7,6 +7,7 @@ import {history} from "../../services/history";
 import {Redirect} from "react-router";
 import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import * as RS from "reactstrap";
 
 export const LogIn = () => {
     const headingRef = useRef<HTMLHeadingElement>(null);
@@ -35,6 +36,7 @@ export const LogIn = () => {
     const errorMessage = useSelector(selectors.error.general);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [rememberMe, setRememberMe] = useState<boolean>(false);
     const [logInAttempted, setLoginAttempted] = useState(false);
 
     const isValidEmail = email.length > 0 && email.includes("@");
@@ -48,7 +50,7 @@ export const LogIn = () => {
     const validateAndLogIn = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if ((isValidPassword && isValidEmail)) {
-            dispatch(logInUser("SEGUE", {email: email, password: password}));
+            dispatch(logInUser("SEGUE", {email: email, password: password, rememberMe: rememberMe}));
         }
     };
 
@@ -114,7 +116,7 @@ export const LogIn = () => {
                                             onClick={(event) => {
                                                 event.preventDefault();
                                                 if (mfaVerificationCode)
-                                                    dispatch(submitTotpChallengeResponse(mfaVerificationCode))
+                                                    dispatch(submitTotpChallengeResponse(mfaVerificationCode, rememberMe))
                                             }}
                                         />
                                     </FormGroup>
@@ -149,22 +151,32 @@ export const LogIn = () => {
                                         </FormFeedback>
                                     </FormGroup>
 
-                                    <Row className="mb-4 text-right">
-                                        <Col>
-                                            <h4 role="alert" className="text-danger text-right mb-0">
-                                                {errorMessage}
-                                            </h4>
-                                            {!passwordResetRequest ?
-                                                <Button color="link" onClick={attemptPasswordReset}>
-                                                    Forgotten your password?
-                                                </Button> :
-                                                <p>
-                                                    <strong id="password-reset-processing" className="d-block">
-                                                        Your password reset request is being processed.
-                                                    </strong>
-                                                    <strong className="d-block">Please check your inbox.</strong>
-                                                </p>
-                                            }
+                                    <Row className="mb-4">
+                                        <Col className={"col-5 mt-1"}>
+                                            <RS.CustomInput
+                                                id="login-remember-me"
+                                                type="checkbox"
+                                                label="Remember me"
+                                                onChange={e => setRememberMe(e.target.checked)}
+                                            />
+                                        </Col>
+                                        <Col className="text-right">
+                                            <div>
+                                                <h4 role="alert" className="text-danger text-right mb-0">
+                                                    {errorMessage}
+                                                </h4>
+                                                {!passwordResetRequest ?
+                                                    <Button color="link" onClick={attemptPasswordReset}>
+                                                        Forgotten your password?
+                                                    </Button> :
+                                                    <p>
+                                                        <strong id="password-reset-processing" className="d-block">
+                                                            Your password reset request is being processed.
+                                                        </strong>
+                                                        <strong className="d-block">Please check your inbox.</strong>
+                                                    </p>
+                                                }
+                                            </div>
                                         </Col>
                                     </Row>
 

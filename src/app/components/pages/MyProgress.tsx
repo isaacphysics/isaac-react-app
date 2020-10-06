@@ -87,7 +87,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
 
                         <RS.Card className="mt-4">
                             <RS.CardBody>
-                                <Tabs tabContentClass="mt-4" activeTabChanged={(tabIndex) => {
+                                <Tabs tabContentClass="mt-4" onActiveTabChange={(tabIndex) => {
                                     const flush = tabRefs[tabIndex - 1].current;
                                     if (flush) {
                                         // Don't call the flush in an event handler that causes the render, that's too early.
