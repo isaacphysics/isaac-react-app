@@ -16,6 +16,7 @@ import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
 import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
 import {Concepts} from "../../pages/Concepts";
 import {AssignmentProgress} from "../../pages/AssignmentProgress";
+import {GroupProgress} from "../../pages/GroupProgress";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {GraphSketcherPage} from "../../pages/GraphSketcher";
 
@@ -24,6 +25,7 @@ export const RoutesPhy = [
     // Assignments
     <TrackedRoute key={key++} exact path="/assignment_progress" ifUser={isTeacher} component={AssignmentProgress} />,
     <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTeacher} component={SingleAssignmentProgress} />,
+    <TrackedRoute key={key++} exact path="/group_progress" ifUser={isTeacher} component={GroupProgress} />,
 
     // Gameboard filter
     <TrackedRoute key={key++} exact path="/gameboards/new" component={GameboardFilter} />,
