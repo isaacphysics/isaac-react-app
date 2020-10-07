@@ -163,7 +163,7 @@ export const UserPassword = (
                                     className="linked-account-button google-button"
                                     onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}
                                 />
-                                <Label htmlFor="linked-accounts-no-passoword" className="ml-2 mb-0">
+                                <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
                                     {authenticationProvidersUsed("GOOGLE") ? " Remove linked Google account" : " Add linked Google account"}
                                 </Label>
                             </div>
