@@ -85,7 +85,9 @@ export async function checkPwnedPasswords(password: string, callback: (feedback:
         const pwnedPasswordResponse = await pwnedPasswordsAPI.get(`/range/${sha1Prefix}`);
         const useCount = breachedPasswordUseCount(pwnedPasswordResponse.data, sha1Suffix);
         let feedback: PasswordFeedback | null = null;
-        if (useCount >= 100) {
+        if (useCount > 10000) {
+            feedback = {feedbackText: "Useless", pwnedPasswordCount: useCount};
+        } else if (useCount >= 100) {
             feedback = {feedbackText: passwordStrengthText[0], pwnedPasswordCount: useCount};
         } else if (useCount > 0) {
             feedback = {feedbackText: passwordStrengthText[1], pwnedPasswordCount: useCount};
