@@ -6,7 +6,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {ACCEPTED_QUIZ_IDS, DOCUMENT_TYPE, NOT_FOUND, TAG_ID} from "../../services/constants";
+import {
+    ACCEPTED_QUIZ_IDS,
+    DOCUMENT_TYPE,
+    fastTrackProgressEnabledBoards,
+    NOT_FOUND,
+    TAG_ID
+} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
@@ -24,6 +30,7 @@ import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
+import queryString from "query-string";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -52,6 +59,8 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
     const doc = ACCEPTED_QUIZ_IDS.includes(questionId) ? NOT_FOUND : docWhichCouldBeQuestion;
     const user = useSelector(selectors.user.orNull);
     const navigation = useNavigation(doc);
+    const query = queryString.parse(location.search);
+    const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -84,7 +93,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                     collectionType={navigation.collectionType}
                     level={doc.level}
                 >
-                    {isFastTrack && <FastTrackProgress doc={doc} search={location.search} />}
+                    {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                 </TitleAndBreadcrumb>
                 <div className="no-print d-flex align-items-center">
                     <EditContentButton doc={doc} />
@@ -96,7 +105,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                     </div>
                 </div>
                 <Row className="question-content-container">
-                    <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
+                    <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
                         <TempExamBoardPicker className="no-print text-right"/>
 
                         {doc.supersededBy && !isStudent(user) && <div className="alert alert-warning">

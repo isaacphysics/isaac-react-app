@@ -8,10 +8,11 @@ import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {DateString} from "../DateString";
 import {NOT_FOUND} from "../../../services/constants";
 import {userBookingModal} from "../modals/UserBookingModal";
+import {selectors} from "../../../state/selectors";
 
 export const AddUsersToBooking = () => {
     const dispatch = useDispatch();
-    const userResults = useSelector((state: AppState) => state && state.adminUserSearch || []);
+    const userResults = useSelector(selectors.admin.userSearch) || [];
     const selectedEvent = useSelector((state: AppState) => state && state.currentEvent || null);
     const userBookings = useSelector((state: AppState) =>
         state && state.eventBookings && state.eventBookings.map(b => b.userBooked && b.userBooked.id) as number[] || []

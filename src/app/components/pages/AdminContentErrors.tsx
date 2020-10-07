@@ -12,7 +12,7 @@ const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number
     return <li key={index}>{errorDetailsListItem}</li>
 };
 
-const contentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
+const ContentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
     return <tr key={index}>
         <td>
             {/* eslint-disable-next-line react/jsx-no-target-blank */}
@@ -57,7 +57,7 @@ export const AdminContentErrors = () => {
                 </Row>
                 <Row>
                     <Col>
-                        <Table>
+                        <Table responsive bordered>
                             <tbody>
                                 <tr>
                                     <th>Title / Filename</th>
@@ -65,7 +65,7 @@ export const AdminContentErrors = () => {
                                     <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
                                     <th>List of Error Messages</th>
                                 </tr>
-                                {errors.errorsList.map(contentErrorRow)}
+                                {errors.errorsList.map(ContentErrorRow)}
                             </tbody>
                         </Table>
                     </Col>

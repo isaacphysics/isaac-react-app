@@ -11,8 +11,8 @@ services:
       - "~/.docker/config.json:/root/.docker/config.json:ro"
       - "./build.sh:/build.sh:ro"
     network_mode: bridge
-#    environment:
-#      UPDATE_API_DEPS: 1
+    environment:
+      UPDATE_API_DEPS: ${UPDATE_API_DEPS}
 networks:
   default:
     external:

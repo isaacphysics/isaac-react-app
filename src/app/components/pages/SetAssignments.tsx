@@ -100,7 +100,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
         </Label>
-        <Button className="mt-3 mb-2" block color="primary" onClick={assign} disabled={groupId === null}>Assign to group</Button>
+        <Button className="mt-3 mb-2" block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]} onClick={assign} disabled={groupId === null}>Assign to group</Button>
     </Container>;
 };
 
@@ -167,7 +167,9 @@ const Board = (props: BoardProps) => {
             </aside>
 
             <div className="mt-1 mb-3">
-                <div className="card-share-link"><ShareLink linkUrl={assignmentLink} reducedWidthLink /></div>
+                <div className="card-share-link">
+                    <ShareLink linkUrl={assignmentLink} gameboardId={board.id} reducedWidthLink />
+                </div>
                 <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
                 <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
             </div>
@@ -302,7 +304,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         <RS.Row className="mb-4">
             <RS.Col md={6} lg={4} className="pt-1">
                 {SITE_SUBJECT === SITE.PHY ?
-                    <RS.Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block>
+                    <RS.Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block className="px-3">
                         our GCSE &amp; A-Level books
                     </RS.Button> :
                     <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>

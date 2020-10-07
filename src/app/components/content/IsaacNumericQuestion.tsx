@@ -1,14 +1,15 @@
-import React, {FormEvent, useEffect, useState} from "react";
+import React, {FormEvent, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import seed from "math-random-seed";
 import {requestConstantsUnits, setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
-import {Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Row} from "reactstrap";
+import {Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, InputGroup, InputGroupAddon, Label, Row, UncontrolledTooltip} from "reactstrap";
 import {TrustedHtml} from "../elements/TrustedHtml";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
+import uuid from 'uuid';
 
 interface IsaacNumericQuestionProps {
     doc: IsaacNumericQuestionDTO;
@@ -84,9 +85,9 @@ function wrapUnitForSelect(unit?: string): string {
     }
 }
 
-export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: IsaacNumericQuestionProps) => {
+export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: IsaacNumericQuestionProps): JSX.Element => {
     const dispatch = useDispatch();
-    const userId = useSelector((state: AppState) => state?.user?.loggedIn && state.user.id || undefined);
+    const userId = useSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
     const units = useSelector((state: AppState) => state?.constants?.units || undefined);
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
@@ -120,6 +121,8 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: Isaa
 
     const [isOpen, setIsOpen] = useState(false);
 
+    const helpTooltipId = useMemo(() => `numeric-input-help-${uuid.v4()}`, []);
+
     return (
         <div className="numeric-question">
             <div className="question-content">
@@ -132,13 +135,25 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: Isaa
                     <div className="numeric-value w-100 w-sm-50 w-md-100 w-lg-50">
                         <Label className="w-100">
                             Value <br />
-                            <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong || undefined}
-                                onChange={updateValue}
-                            />
+                            <InputGroup>
+                                <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong || undefined}
+                                    onChange={updateValue}
+                                />
+                                <InputGroupAddon addonType="append">
+                                    <Button type="button" className="numeric-help" size="sm" id={helpTooltipId}>?</Button>
+                                    <UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
+                                        Here are some examples of numbers you can write:<br /><br />
+                                        3.7<br />
+                                        3x10^14<br />
+                                        2.8e12<br /><br />
+                                        Do not use commas or spaces.
+                                    </UncontrolledTooltip>
+                                </InputGroupAddon>
+                            </InputGroup>
                         </Label>
                     </div>
                     {doc.requireUnits && <div className="unit-selection w-100 w-sm-50 w-md-100 w-lg-25">
-                        <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-2">
+                        <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-5">
                             Units <br/>
                             <Dropdown isOpen={isOpen} toggle={() => {setIsOpen(!isOpen);}}>
                                 <DropdownToggle caret className="px-2 py-1" color={currentAttemptUnitsWrong ? "danger" : undefined}>
@@ -148,7 +163,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: Isaa
                                     {selectedUnits.map((unit) =>
                                         <DropdownItem key={wrapUnitForSelect(unit)}
                                             data-unit={unit || 'None'}
-                                            className={unit == currentAttemptUnits ? "btn btn-primary bg-grey selected" : ""}
+                                            className={unit === currentAttemptUnits ? "btn bg-grey selected" : ""}
                                             onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
                                             <TrustedHtml span html={wrapUnitForSelect(unit)}/>
                                         </DropdownItem>

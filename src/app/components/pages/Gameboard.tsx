@@ -25,25 +25,28 @@ function getTags(docTags?: string[]) {
 
 const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
-    let icon = "Q";
+    let icon = <img src="/assets/question.svg" alt=""/>;
     let tryAgain = false;
 
     switch (question.state) {
         case "PERFECT":
             itemClasses += " bg-success";
-            icon = "✓";
+            icon = <img src="/assets/tick-rp.svg" alt=""/>;
             break;
         case "PASSED":
         case "IN_PROGRESS":
+            icon = <img src="/assets/incomplete.svg" alt=""/>;
+            break;
         case "FAILED":
             tryAgain = true;
+            icon = <img src="/assets/cross-rp.svg" alt=""/>;
             break;
     }
 
     const tags = getTags(question.tags);
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
-        <Link to={`/questions/${question.id}?board=${gameboard.id}`}>
+        <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
             <span>{icon}</span>
             <div className="flex-grow-1">{question.title}
                 {tryAgain && <span className="try-again">try again!</span>}
@@ -115,7 +118,7 @@ export const Gameboard = withRouter(({location: {hash}}: {location: {hash: strin
             </small>
             {SITE.PHY === SITE_SUBJECT && <div className="mt-4 text-center">
                 <RS.Button tag={Link} to={`/gameboards/new`} color="primary" outline className="btn-lg">
-                    Generate a new gamebaord
+                    Generate a new gameboard
                 </RS.Button>
             </div>}
         </h3>

@@ -41,7 +41,7 @@ import {Toasts} from "./Toasts";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../services/user";
+import {isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {ActiveModals} from "../elements/modals/ActiveModals";
 import {Groups} from "../pages/Groups";
 import {Equality} from '../pages/Equality';
@@ -61,7 +61,6 @@ import {Quiz} from "../pages/Quiz";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MyProgress} from "../pages/MyProgress";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
-import {LoadScript} from "@react-google-maps/api";
 import SiteSpecific from "../site/siteSpecific";
 import StaticPageRoute from "./StaticPageRoute";
 import {Redirect} from "react-router";
@@ -70,6 +69,11 @@ import {notificationModal} from "../elements/modals/NotificationModal";
 import {showNotification} from "../../services/notificationChecker";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
+import {Glossary} from '../pages/Glossary';
+import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
+import {ErrorBoundary} from "react-error-boundary";
+import {ClientError} from "../pages/ClientError";
+import {checkForWebSocket} from "../../services/websockets";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -91,6 +95,7 @@ export const IsaacApp = () => {
     useEffect(() => {
         if (isLoggedIn(user)) {
             dispatch(requestNotifications());
+            checkForWebSocket();
         }
     }, [dispatch, user]);
 
@@ -104,14 +109,15 @@ export const IsaacApp = () => {
 
     // Render
     return <Router history={history}>
-        <LoadScript googleMapsApiKey="AIzaSyBcVr1HZ_JUR92xfQZSnODvvlSpNHYbi4Y" id="script-loader">
-            <SiteSpecific.Header />
-            <Toasts />
-            <ActiveModals />
-            <CookieBanner />
-            <UnsupportedBrowserBanner />
-            <EmailVerificationBanner />
-            <main id="main" role="main" className="flex-fill content-body">
+        <SiteSpecific.Header />
+        <Toasts />
+        <ActiveModals />
+        <CookieBanner />
+        <UnsupportedBrowserBanner />
+        <DowntimeWarningBanner />
+        <EmailVerificationBanner />
+        <main id="main" role="main" className="flex-fill content-body">
+            <ErrorBoundary FallbackComponent={ClientError}>
                 <Switch>
                     {/* Errors; these paths work but aren't really used */}
                     <Route exact path={serverError ? undefined : "/error"} component={ServerError} />
@@ -160,7 +166,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/admin/events" ifUser={user => isAdminOrEventManager(user) || isEventLeader(user)} component={EventManager} />
                     <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
                     <TrackedRoute exact path="/admin/content_errors" ifUser={user => segueEnvironment === "DEV" || isStaff(user)} component={AdminContentErrors} />
-                    <TrackedRoute exact path="/admin/emails" ifUser={isAdmin} component={AdminEmails} />
+                    <TrackedRoute exact path="/admin/emails" ifUser={isAdminOrEventManager} component={AdminEmails} />
 
                     {/* Authentication */}
                     <TrackedRoute exact path="/login" component={LogIn} />
@@ -179,6 +185,8 @@ export const IsaacApp = () => {
                     <StaticPageRoute exact path="/accessibility" pageId="accessibility_statement" />
                     <StaticPageRoute exact path="/cyberessentials" />
 
+                    <TrackedRoute exact path="/glossary" component={Glossary} />
+
                     {/*
                     // TODO: schools and other admin stats
                     */}
@@ -192,11 +200,11 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/support/:type?/:category?" component={Support} />
 
                     {/* Error pages */}
-                    <Route component={NotFound} />
+                    <TrackedRoute component={NotFound} />
                 </Switch>
-            </main>
-            <Footer />
-            <ConsistencyErrorModal consistencyError={consistencyError} />
-        </LoadScript>
+            </ErrorBoundary>
+        </main>
+        <Footer />
+        <ConsistencyErrorModal consistencyError={consistencyError} />
     </Router>;
 };

@@ -9,7 +9,8 @@ import {
     GameboardDTO,
     GameboardItem,
     ResultsWrapper,
-    TestCaseDTO
+    TestCaseDTO,
+    TOTPSharedSecretDTO
 } from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
 import {FasttrackConceptsState} from "./app/state/reducers";
@@ -40,6 +41,19 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS; provider: AuthenticationProvider}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS; totpSharedSecretDTO: TOTPSharedSecretDTO}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_REQUEST}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_SUCCESS}
+    | {type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
@@ -57,6 +71,8 @@ export type Action =
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST}
+    | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.USER_PROGRESS_REQUEST}
     | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS; progress: UserProgress}
     | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE}
@@ -113,6 +129,10 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST}
     | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.ADMIN_MERGE_USERS_REQUEST}
+    | {type: ACTION_TYPE.ADMIN_MERGE_USERS_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.ADMIN_MERGE_USERS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST}
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS; authorisations: ApiTypes.UserSummaryWithEmailAddressDTO[]}
@@ -196,12 +216,17 @@ export type Action =
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS; testCaseResponses: TestCaseDTO[]}
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST}
+    | {type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS, specResponse: {results: string[], totalResults: number}}
+    | {type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
+    | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_NO_CONTENT}
     | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE; gameboardId: string | null}
 
     | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST}
@@ -230,7 +255,7 @@ export type Action =
     | {type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS; newVersion: string}
     | {type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string}
+    | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string | undefined}
     | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
 
     | {type: ACTION_TYPE.TOASTS_SHOW; toast: Toast}
@@ -393,6 +418,8 @@ export type Action =
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
 
     | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
+
+    | {type: ACTION_TYPE.SET_MAIN_CONTENT_ID; id: string}
 ;
 
 export type NOT_FOUND_TYPE = 404;
@@ -413,7 +440,7 @@ export interface AppGroupMembership extends ApiTypes.UserSummaryWithGroupMembers
     groupMembershipInformation: ApiTypes.GroupMembershipDTO;
 }
 
-export interface ShortcutResponses {
+export interface ShortcutResponse {
     id: string;
     title: string;
     terms: string[];
@@ -624,12 +651,13 @@ export interface AdditionalInformation {
     experienceLevel?: string;
 }
 
-export interface Credentials {
+export interface CredentialsAuthDTO {
     email: string;
     password: string;
+    rememberMe: boolean;
 }
 
-export interface PaddedCredentials extends Credentials {
+export interface PaddedCredentialsAuthDTO extends CredentialsAuthDTO {
     _randomPadding: string;
 }
 

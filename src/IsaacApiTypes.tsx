@@ -198,6 +198,17 @@ export interface AnvilAppDTO extends ContentDTO {
     appAccessKey?: string;
 }
 
+export interface IsaacCardDTO extends ContentDTO {
+    image?: ImageDTO;
+    clickUrl?: string;
+    disabled?: boolean;
+    verticalContent?: boolean;
+}
+
+export interface IsaacCardDeckDTO extends ContentDTO {
+    cards?: IsaacCardDTO[];
+}
+
 export interface ChemicalFormulaDTO extends ChoiceDTO {
     mhchemExpression?: string;
 }
@@ -371,6 +382,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
 }
 
 export interface UserAuthenticationSettingsDTO extends AbstractSegueUserDTO {
+    mfaStatus?: boolean;
     linkedAccounts?: AuthenticationProvider[];
     hasSegueAccount?: boolean;
     id?: number;
@@ -382,8 +394,8 @@ export interface UserSummaryDTO extends AbstractSegueUserDTO {
     role?: Role;
     authorisedFullAccess?: boolean;
     emailVerificationStatus?: EmailVerificationStatus;
-    examBoard?: string;
     id?: number;
+    examBoard?: EXAM_BOARD; // This is odd, it shouldn't be here.
 }
 
 export interface UserSummaryForAdminUsersDTO extends UserSummaryWithEmailAddressDTO {
@@ -487,6 +499,12 @@ export interface Address {
 
 export interface AnsweredQuestionsByDate {
     [date: string]: number;
+}
+
+export interface TOTPSharedSecretDTO {
+    userId: number;
+    sharedSecret: string;
+    created: Date;
 }
 
 export type GameboardCreationMethod = "FILTER" | "BUILDER";

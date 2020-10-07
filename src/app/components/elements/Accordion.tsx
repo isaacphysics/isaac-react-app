@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {withRouter} from "react-router-dom";
-import {ALPHABET, NOT_FOUND} from "../../services/constants";
+import {ALPHABET, DOCUMENT_TYPE, NOT_FOUND} from "../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
 import {AppState} from "../../state/reducers";
@@ -10,6 +10,7 @@ import {TrustedHtml} from "./TrustedHtml";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {pauseAllVideos} from "../content/IsaacVideo";
 
 interface AccordionsProps {
     id?: string;
@@ -23,11 +24,12 @@ let nextClientId = 0;
 
 export const Accordion = withRouter(({id, trustedTitle, index, children, location: {hash}}: AccordionsProps) => {
     const dispatch = useDispatch();
+    const page = useSelector((state: AppState) => (state && state.doc) || null);
 
     // Toggle
     const isFirst = index === 0;
-    const [open, setOpen] = useState(isFirst);
-    const page = useSelector((state: AppState) => (state && state.doc) || null);
+    const openFirst = SITE_SUBJECT === SITE.CS || Boolean(page && page !== NOT_FOUND && page.type === DOCUMENT_TYPE.QUESTION);
+    const [open, setOpen] = useState(openFirst && isFirst);
 
     // Hash anchoring
     let anchorId: string | null = null;
@@ -127,6 +129,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, locatio
                 id={anchorId || ""} block color="link"
                 className={open ? 'active' : ''}
                 onClick={(event: any) => {
+                    pauseAllVideos();
                     const nextState = !open;
                     setOpen(nextState);
                     if (nextState) {

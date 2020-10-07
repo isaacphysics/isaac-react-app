@@ -91,6 +91,7 @@ a, div.isaac-nav-link {
     background-image: url('/assets/chevron_left.svg');
     background-repeat: no-repeat;
     background-position: center left;
+    clear: left;
     text-decoration: none;
   }
 }
@@ -145,11 +146,6 @@ hr {
 
 .user-select-all {
   user-select: all;
-}
-
-.inline-glossary-term {
-  text-decoration-line: underline;
-  text-decoration-style: dotted;
 }
 
 .text-decoration-skip-none {

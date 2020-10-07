@@ -1,5 +1,11 @@
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, SEARCH_RESULT_TYPE, TAG_ID, TAG_LEVEL} from "../../../services/constants";
+import {
+    DOCUMENT_TYPE,
+    documentTypePathPrefix,
+    SEARCH_RESULT_TYPE,
+    TAG_ID,
+    TAG_LEVEL
+} from "../../../services/constants";
 import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
 import React from "react";
@@ -18,25 +24,45 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     }
 
     const itemTopic = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[]);
-    const topicTitle = itemTopic ? itemTopic.title : null;
+    let topicTitle = itemTopic ? itemTopic.title : null;
 
     switch (item.type) {
         case (SEARCH_RESULT_TYPE.SHORTCUT):
             linkDestination = item.url;
-            icon = "▶"; //"🎯";
+            icon = <img src="/assets/concept.svg" alt="Shortcut"/>;
             iconLabel = "Shortcut icon";
             break;
         case (DOCUMENT_TYPE.QUESTION):
             itemClasses += item.correct ? "bg-success" : "text-info";
-            linkDestination = `/questions/${item.id}`;
-            icon = item.correct ? "✓" : "Q ";
+            linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
+            icon = item.correct ? <img src="/assets/tick-rp.svg" alt=""/> : <img src="/assets/question.svg" alt="Question page"/>;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
             break;
         case (DOCUMENT_TYPE.CONCEPT):
-        default:
-            linkDestination = `/concepts/${item.id}`;
-            icon = "📝";
+            linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
+            icon = <img src="/assets/concept.svg" alt="Concept page"/>;
             iconLabel = "Concept page icon";
+            break;
+        case (DOCUMENT_TYPE.EVENT):
+            linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
+            icon = <img src="/assets/event-md.svg" alt="Event"/>;
+            iconLabel = "Event page icon";
+            break;
+        case (DOCUMENT_TYPE.TOPIC_SUMMARY):
+            linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
+            icon = <img src="/assets/work-md.svg" alt="Topic summary"/>;
+            iconLabel = "Topic summary page icon";
+            topicTitle = "Topic"
+            break;
+        case (DOCUMENT_TYPE.GENERIC):
+            linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
+            icon = <img src="/assets/info-md.svg" alt="Generic page"/>;
+            iconLabel = "Topic summary page icon";
+            break;
+        default:
+            // Do not render this item if there is no matching DOCUMENT_TYPE
+            console.error("Not able to display item as a ContentSummaryListGroupItem: ", item);
+            return null;
     }
     return <RS.ListGroupItem className={itemClasses} key={linkDestination}>
         <Link className="p-3 pr-4" to={{pathname: linkDestination, search: search}}>

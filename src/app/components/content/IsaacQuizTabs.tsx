@@ -13,12 +13,13 @@ export const IsaacQuizTabs = ({doc}: {doc: ApiTypes.IsaacQuestionBaseDTO}) => {
         return () => dispatch(deregisterQuestion(doc.id as string));
     }, [dispatch, doc.id]);
 
-    const QuestionComponent = QUESTION_TYPES.get(doc.type) || QUESTION_TYPES.get("default");
+    const QuestionComponent = QUESTION_TYPES.get(doc.type || "default");
 
     return <React.Fragment>
         <div className={
             classnames({"question-component p-md-5": true, "parsons-layout": doc.type === 'isaacParsonsQuestion'})
         }>
+            {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
             <QuestionComponent questionId={doc.id as string} doc={doc} />
         </div>
     </React.Fragment>;

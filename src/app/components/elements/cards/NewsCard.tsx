@@ -41,9 +41,15 @@ export const NewsCard = ({newsItem, showTitle}: NewsCardProps) => {
                 </span>
             </RS.CardText>
             <RS.CardText>
-                <Link className="focus-target" to={`${url}`}>
-                    Read more
-                </Link>
+                {!url?.startsWith("http") ?
+                    <Link className="focus-target" to={`${url}`}>
+                        Read more
+                    </Link> :
+                    // eslint-disable-next-line react/jsx-no-target-blank
+                    <a href={url} target="_blank" rel="noopener">
+                        Find out more
+                    </a>
+                }
             </RS.CardText>
         </RS.CardBody>
     </RS.Card>

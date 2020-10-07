@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
 import {selectors} from "../../state/selectors";
 import {NOT_FOUND} from "../../services/constants";
+import ReactGA, {exception} from "react-ga";
 
 interface IsaacVideoProps {
     doc: VideoDTO;
@@ -46,6 +47,15 @@ function onPlayerStateChange(event: any, wrappedLogAction: (eventDetails: object
     wrappedLogAction(logEventDetails);
 }
 
+export function pauseAllVideos() {
+    const iframes = document.querySelectorAll('iframe');
+    iframes.forEach(iframe => {
+        iframe?.contentWindow?.postMessage(JSON.stringify({ event: 'command',
+            func: 'pauseVideo' }), '*');
+    });
+}
+
+
 export function IsaacVideo(props: IsaacVideoProps) {
     const dispatch = useDispatch();
     const {doc: {src, altText}} = props;
@@ -55,11 +65,22 @@ export function IsaacVideo(props: IsaacVideoProps) {
     const videoRef = useCallback( node => {
         const $window: any = window;
         if (node !== null && $window.YT) {
-            $window.YT.ready(function() {
-                const stateChangeCallback = (event: any) =>
-                    onPlayerStateChange(event, eventDetails => dispatch(logAction(eventDetails)), pageId);
-                new $window.YT.Player(node, {events: {'onStateChange': stateChangeCallback}});
-            });
+            try {
+                $window.YT.ready(function() {
+                    new $window.YT.Player(node, {
+                        events: {
+                            'onStateChange': (event: any) => {
+                                onPlayerStateChange(event, eventDetails => dispatch(logAction(eventDetails)), pageId);
+                            }
+                        }
+                    });
+                });
+            } catch (error) {
+                ReactGA.exception({
+                    description: `youtube_error: ${error?.message || 'problem with YT library'}`,
+                    fatal: false
+                });
+            }
         }
     }, [dispatch, pageId]);
 

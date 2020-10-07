@@ -14,7 +14,7 @@ import {TAG_ID} from "../../services/constants";
 import {pushConceptsToHistory, searchResultIsPublic} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
-import {ShortcutResponses} from "../../../IsaacAppTypes";
+import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 
 
@@ -22,7 +22,7 @@ export const Concepts = withRouter((props: {history: History; location: Location
     const {location, history} = props;
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
-    const concepts = useSelector((state: AppState) => state && state.concepts && state.concepts.results || null);
+    const concepts = useSelector((state: AppState) => state?.concepts?.results || null);
 
     useEffect(() => {dispatch(fetchConcepts());}, [dispatch]);
 
@@ -40,7 +40,7 @@ export const Concepts = withRouter((props: {history: History; location: Location
     let [searchText, setSearchText] = useState(query);
     let [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
     let [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
-    let [shortcutResponse, setShortcutResponse] = useState<(ShortcutResponses | ContentSummaryDTO)[]>();
+    let [shortcutResponse, setShortcutResponse] = useState<(ShortcutResponse | ContentSummaryDTO)[]>();
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {
@@ -64,16 +64,17 @@ export const Concepts = withRouter((props: {history: History; location: Location
         };
     }, [searchText]);
 
-    useEffect(() => {
-        doSearch();
-    }, [conceptFilterPhysics, conceptFilterMaths]);
+    useEffect(() => {doSearch();}, [conceptFilterPhysics, conceptFilterMaths]);
 
-    const searchResults = concepts && concepts.filter(c => c.summary && c.summary.includes(searchText)
-        || c.title && c.title.includes(searchText));
+    const searchResults = concepts
+        ?.filter(c =>
+            c?.title?.toLowerCase().includes(searchText.toLowerCase()) ||
+            c?.summary?.toLowerCase().includes(searchText.toLowerCase())
+        );
 
-    const filteredSearchResults = searchResults &&
-        searchResults.filter((result) => result.tags && result.tags.some(t => filters.includes(t)))
-            .filter((result) => searchResultIsPublic(result, user));
+    const filteredSearchResults = searchResults
+        ?.filter((result) => result?.tags?.some(t => filters.includes(t)))
+        .filter((result) => searchResultIsPublic(result, user));
 
     const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
 
@@ -96,7 +97,7 @@ export const Concepts = withRouter((props: {history: History; location: Location
                     </Form>
                 </Col>
             </Row>
-            <Row>
+            <Row className="mb-4">
                 <Col className="py-4">
                     <RS.Card>
                         <RS.CardHeader className="search-header">

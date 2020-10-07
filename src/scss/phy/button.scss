@@ -12,3 +12,7 @@
     color: black;
   }
 }
+
+.btn-green {
+  @include button-variant($a11y_green, $a11y_green);
+}

@@ -30,28 +30,28 @@ export class CsTagService extends AbstractBaseTagService {
         // Data structures and algorithms topics
         {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms},
         {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms},
-        {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
+        {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms},
         {id: TAG_ID.theoryOfComputation, title: "Theory of computation (AQA)", parent: TAG_ID.dataStructuresAndAlgorithms},
         // Computer networks topics
         {id: TAG_ID.networking, title: "Networking", parent: TAG_ID.computerNetworks},
         {id: TAG_ID.networkHardware, title: "Network hardware", parent: TAG_ID.computerNetworks},
         {id: TAG_ID.theInternet, title: "The internet", parent: TAG_ID.computerNetworks},
-        {id: TAG_ID.security, title: "Security", parent: TAG_ID.computerNetworks, new: true},
-        {id: TAG_ID.communication, title: "Communication (AQA)", parent: TAG_ID.computerNetworks, new: true},
+        {id: TAG_ID.security, title: "Security", parent: TAG_ID.computerNetworks},
+        {id: TAG_ID.communication, title: "Communication (AQA)", parent: TAG_ID.computerNetworks},
         // Computer systems topics
         {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems},
-        {id: TAG_ID.architecture, title: "Architecture", parent: TAG_ID.computerSystems, new: true},
+        {id: TAG_ID.architecture, title: "Architecture", parent: TAG_ID.computerSystems},
         {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems},
         {id: TAG_ID.operatingSystemsAndSoftware, title: "Operating systems and software", parent: TAG_ID.computerSystems},
         {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems},
-        {id: TAG_ID.programmingLanguages, title: "Programming languages", parent: TAG_ID.computerSystems},
+        {id: TAG_ID.programmingLanguages, title: "Types of programming languages", parent: TAG_ID.computerSystems},
         // Data and information topics
         {id: TAG_ID.numberSystems, title: "Number systems (AQA)", parent: TAG_ID.dataAndInformation},
         {id: TAG_ID.numberBases, title: "Number bases", parent: TAG_ID.dataAndInformation},
         {id: TAG_ID.representation, title: "Representation", parent: TAG_ID.dataAndInformation},
-        {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.dataAndInformation, new: true},
+        {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.dataAndInformation},
         {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation},
-        {id: TAG_ID.databases, title: "Databases", parent: TAG_ID.dataAndInformation, new: true},
+        {id: TAG_ID.databases, title: "Databases", parent: TAG_ID.dataAndInformation},
         {id: TAG_ID.bigData, title: "Big Data (AQA)", parent: TAG_ID.dataAndInformation},
 
         // Procedural programming topics
@@ -60,11 +60,11 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.subroutines, title: "Subroutines", parent: TAG_ID.programmingFundamentals},
         {id: TAG_ID.files, title: "Files", parent: TAG_ID.programmingFundamentals},
         {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.programmingFundamentals},
-        {id: TAG_ID.guis, title: "GUIs (OCR)", parent: TAG_ID.programmingFundamentals},
-        {id: TAG_ID.computationalThinking, title: "Computational thinking", parent: TAG_ID.dataStructuresAndAlgorithms, new: true},
-        {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.programmingFundamentals, new: true},
+        {id: TAG_ID.guis, title: "Web technologies and GUIs (OCR)", parent: TAG_ID.programmingFundamentals},
+        {id: TAG_ID.computationalThinking, title: "Computational thinking", parent: TAG_ID.dataStructuresAndAlgorithms},
+        {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.programmingFundamentals},
         // Programming paradigms topics:
-        {id: TAG_ID.proceduralAndStructuredProgramming, title: "Procedural and structured programming", parent: TAG_ID.programmingParadigms, new: true},
+        {id: TAG_ID.proceduralAndStructuredProgramming, title: "Procedural and structured programming", parent: TAG_ID.programmingParadigms},
         {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programmingParadigms},
         {id: TAG_ID.functionalProgramming, title: "Functional programming (AQA)", parent: TAG_ID.programmingParadigms},
         // Software project topics

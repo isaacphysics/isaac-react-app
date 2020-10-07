@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
-import {Carousel, CarouselControl, CarouselItem, CarouselIndicators} from 'reactstrap';
+import React, {useEffect, useRef, useState} from 'react';
+import {Carousel, CarouselControl, CarouselIndicators, CarouselItem} from 'reactstrap';
+import {ifKeyIsEnter} from "../../services/navigation";
 
 const ControlledCarouselInstance = ({children, collectionTag}: any) => {
     const items = children;
@@ -38,23 +39,55 @@ const ControlledCarouselInstance = ({children, collectionTag}: any) => {
 
     const CollectionTag = collectionTag;
 
+    // Manually set up event listeners until ReactStrap becomes more extensible
+    const carouselContainer = useRef<HTMLDivElement>(null)
+    useEffect(() => {
+        const classToCallback = {
+            "carousel-control-prev": ifKeyIsEnter(previous),
+            "carousel-control-next": ifKeyIsEnter(next)
+        }
+        if (carouselContainer.current) {
+            for (let [cssClass, callback] of Object.entries(classToCallback)) {
+                const elements = carouselContainer.current.getElementsByClassName(cssClass);
+                if (elements.length) {
+                    elements[0].addEventListener("keypress", callback as any);
+                }
+            }
+        }
+        return function cleanUp() {
+            if (carouselContainer.current) {
+                for (let [cssClass, callback] of Object.entries(classToCallback)) {
+                    const elements = carouselContainer.current.getElementsByClassName(cssClass);
+                    if (elements.length) {
+                        elements[0].removeEventListener("keypress", callback as any);
+                    }
+                }
+            }
+        }
+    }, [next, previous]);
+
     return (
-        <Carousel activeIndex={activeIndex} ride="carousel" className="pb-5" next={next} previous={previous} interval={false}>
-            <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
-            {children.map ((child: any, index: number) => (
-                <CarouselItem key={index} onEntered={onEntered as any} onExiting={onExiting} onExited={onExited}>
-                    <CollectionTag>
-                        {child}
-                    </CollectionTag>
-                </CarouselItem>
-            ))}
-            <CarouselIndicators
-                items={items.map((item: any, index: number) => ({key: index}))}
-                activeIndex={activeIndex}
-                onClickHandler={gotoIndex}
-            />
-            <CarouselControl direction="next" directionText="Next" onClickHandler={next} />
-        </Carousel>
+        <div ref={carouselContainer}>
+            <Carousel
+                activeIndex={activeIndex} className="pb-5" interval={false} keyboard={false}
+                previous={previous} previousLabel="Previous" next={next} nextLabel="Next"
+            >
+                <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
+                {children.map((child: any, index: number) => (
+                    <CarouselItem key={index} onEntered={onEntered as any} onExiting={onExiting} onExited={onExited}>
+                        <CollectionTag>
+                            {child}
+                        </CollectionTag>
+                    </CarouselItem>
+                ))}
+                <CarouselControl direction="next" directionText="Next" onClickHandler={next} onKeyPress={next} />
+                <CarouselIndicators
+                    items={items.map((item: any, index: number) => ({key: index}))}
+                    activeIndex={activeIndex}
+                    onClickHandler={gotoIndex}
+                />
+            </Carousel>
+        </div>
     );
 };
 

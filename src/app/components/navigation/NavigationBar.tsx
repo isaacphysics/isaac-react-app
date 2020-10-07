@@ -18,6 +18,7 @@ import {
 import {loadMyAssignments} from "../../state/actions";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 import {selectors} from "../../state/selectors";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 
 const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
@@ -80,12 +81,12 @@ export const NavigationBar = ({children}: {children: React.ReactNode}) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return <MenuOpenContext.Provider value={{menuOpen, setMenuOpen}}>
-        <Navbar className="main-nav p-0" expand="md">
+        <Navbar className="main-nav p-0" color="light" light expand="md">
             <NavbarToggler onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close menu' : 'Open menu'}>
                 Menu
             </NavbarToggler>
 
-            <Collapse isOpen={menuOpen} navbar className="px-0 mx-0 px-xl-5 mx-xl-5">
+            <Collapse isOpen={menuOpen} navbar className={`px-0 mx-0 mx-xl-5 ${SITE_SUBJECT === SITE.CS ? "px-xl-5" : ""}`}>
                 <Nav navbar className="justify-content-between" id="main-menu">
                     {children}
                 </Nav>

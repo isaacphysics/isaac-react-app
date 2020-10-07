@@ -1,13 +1,17 @@
 // NOMENSA variables.scss
 // Physics colours
 $phy_green: #509e2e;
+$a11y_green: #448525;
 $phy_orangered: #ef3e36;
+$a11y_orangered: #e22e25;
 $phy_blue: #009acd;
+$a11y_blue: #007fa9;
 $phy_purple: #944cbe;
 $phy_burgundy: #991846;
-$phy_chemistry: $phy_orangered;
-$phy_maths: $phy_blue;
+$phy_chemistry: $a11y_orangered;
+$phy_maths: $a11y_blue;
 $phy_physics: $phy_purple;
+$phy_extra_force_yellow: #fea100;
 
 // Colour Overrides
 $purple: #9148bc;
@@ -15,15 +19,19 @@ $cyan: #0f8294;
 $green: #208838;
 
 //Custom Colours
-$reddish: #d7335f; // Used as an active colour on secondary buttons
 $focus-blue: #3E59A3; // Used as focus indicator colour on inputs
 
 //Colours
-$primary: $phy_green;
-$secondary: $phy_purple;
+$primary: $phy_extra_force_yellow;
+$secondary: $a11y_green;
 $theme-colors: (
     "primary": $primary,
     "secondary": $secondary
+);
+
+// Grid Customisation
+$container-max-widths: (
+    md: 942px
 );
 
 //Greys
@@ -76,7 +84,6 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "typography";
 @import "../common/headings";
 @import "../common/modals";
-@import "questions";
 @import "../common/forms";
 @import "../common/elements";
 @import "../common/breadcrumbs";
@@ -86,13 +93,16 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/cards";
 @import "../common/list-groups";
 @import "../common/inequality-modal";
+@import "../common/graph-sketcher-modal";
 @import "../common/carousel";
-@import "../common/icons";
 @import "../common/boards";
 @import "../common/focus";
-@import "../common/progress-bar";
 @import "../common/anvil";
 @import "../common/reservation-modal";
+@import "inequality-modal";
+@import "questions";
+@import "progress-bar";
+@import "icons";
 @import "hints";
 @import "related-content";
 @import "button";
@@ -101,7 +111,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "featured-profile";
 
 // Navigation
-@import "navigation-bar";
+@import "../common/navigation-bar";
 @import "footer";
 @import "header";
 
@@ -116,13 +126,15 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/search";
 @import "../common/my-progress";
 @import "../common/gameboard";
-@import "../common/assignment-progress";
 @import "../common/groups";
 @import "../common/events";
 @import "../common/fasttrack";
+@import "assignment-progress";
 @import "books";
 @import "gameboard";
 @import "menu-page-phy";
+
+@import "../common/glossary";
 
 
 // Print
@@ -151,8 +163,15 @@ p small {
     }
 }
 
-// Double class to give this more specifity
-.katex.katex { font-size: 1.1em; }
+// Double class to give this more specificity
+.katex.katex {
+    font-size: 1.1em;
+    white-space: nowrap !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+}
 
 body {
     color: $black;

@@ -16,7 +16,7 @@ import {
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
-import {EXAM_BOARD, examBoardTagMap, IS_CS_PLATFORM, SortOrder} from "../../../services/constants";
+import {EXAM_BOARD, examBoardTagMap, SortOrder} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {useCurrentExamBoard} from "../../../services/examBoard";
 import {searchResultIsPublic} from "../../../services/search";
@@ -92,7 +92,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     return <div>
         <div className="row">
-            {!IS_CS_PLATFORM && <div className="text-wrap col-lg-3 my-2">
+            {SITE_SUBJECT === SITE.PHY && <div className="text-wrap col-lg-3 my-2">
                 <RS.Label htmlFor="question-search-book">Book</RS.Label>
                 <Select inputId="question-search-book"
                     options={[
@@ -106,7 +106,10 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     className="basic-multi-select"
                     classNamePrefix="select"
                     placeholder="None"
-                    onChange={selectOnChange(setSearchBook)}
+                    onChange={(e) => {
+                        selectOnChange(setSearchBook)(e);
+                        sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
+                    }}
                     isClearable
                 />
             </div>}
@@ -122,7 +125,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     onChange={multiSelectOnChange(setSearchTopics)}
                 />
             </div>}
-            {IS_CS_PLATFORM && <div className="text-wrap my-2 col-lg-6">
+            {SITE_SUBJECT === SITE.CS && <div className="text-wrap my-2 col-lg-6">
                 <RS.Label htmlFor="question-search-exam-board">Exam board</RS.Label>
                 <Select inputId="question-search-exam-board"
                     isMulti
@@ -137,7 +140,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     onChange={multiSelectOnChange(setSearchExamBoards)}
                 />
             </div>}
-            {!IS_CS_PLATFORM && <div className={`text-wrap col-lg-3 my-2 ${isBookSearch ? "d-none" : ""}`}>
+            {SITE_SUBJECT === SITE.PHY && <div className={`text-wrap col-lg-3 my-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-level">Level</RS.Label>
                 <Select inputId="question-search-level"
                     options={[
@@ -153,7 +156,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
             </div>}
         </div>
         <div className="row">
-            {!IS_CS_PLATFORM && isStaff(user) && <div className="text-wrap col">
+            {SITE_SUBJECT === SITE.PHY && isStaff(user) && <div className="text-wrap col">
                 <RS.Form>
                     <RS.Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</RS.Label>
                 </RS.Form>
@@ -194,12 +197,12 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                             enabled={!isBookSearch}
                         />
                         <th className="w-25">Topic</th>
-                        {!IS_CS_PLATFORM && <SortableTableHeader
+                        {SITE_SUBJECT === SITE.PHY && <SortableTableHeader
                             className="w-15" title="Level"
                             updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "level")}
                             enabled={!isBookSearch}
                         />}
-                        {IS_CS_PLATFORM && <th className="w-15">Exam boards</th>}
+                        {SITE_SUBJECT === SITE.CS && <th className="w-15">Exam boards</th>}
                     </tr>
                 </thead>
                 <tbody>

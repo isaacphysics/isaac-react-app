@@ -27,6 +27,7 @@ import {
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
+import {UserMFA} from "../elements/panels/UserMFA";
 import {UserEmailPreference} from "../elements/panels/UserEmailPreferences";
 import {
     allRequiredInformationIsPresent,
@@ -43,6 +44,8 @@ import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {isStaff} from "../../services/user";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -52,7 +55,7 @@ const stateToProps = (state: AppState, props: any) => {
         userAuthSettings: state ? state.userAuthSettings : null,
         selectedUserAuthSettings: state ? state.selectedUserAuthSettings : null,
         userPreferences: state ? state.userPreferences : null,
-        firstLogin: history.location && history.location.state && history.location.state.firstLogin,
+        firstLogin: history.location && history.location.state && (history.location.state as any).firstLogin,
         hashAnchor: (hash && hash.slice(1)) || null,
         authToken: (searchParams && searchParams.authToken) ? (searchParams.authToken as string) : null,
         userOfInterest: (searchParams && searchParams.userId) ? (searchParams.userId as string) : null,
@@ -185,7 +188,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         <TitleAndBreadcrumb currentPageTitle={pageTitle} className="mb-4" />
         <h3 className="d-md-none text-center text-muted m-3">
             <small>
-                Update your Isaac Computer Science account, or <Link to="/logout" className="text-secondary">Log out</Link>
+                {`Update your Isaac ${SITE_SUBJECT_TITLE} account, or `}
+                <Link to="/logout" className="text-secondary">Log out</Link>
             </small>
         </h3>
 
@@ -206,11 +210,10 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.passwordreset})} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                             >
-                                <span className="d-none d-lg-block">Change password</span>
-                                <span className="d-block d-lg-none">Password</span>
+                                <span className="d-none d-lg-block">Account security</span>
+                                <span className="d-block d-lg-none">Security</span>
                             </NavLink>
                         </NavItem>
-                        {!editingOtherUser &&
                         <NavItem>
                             <NavLink
                                 className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.teacherconnections})}
@@ -222,7 +225,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <span className="d-block d-md-none">Connections</span>
                             </NavLink>
                         </NavItem>
-                        }
                         {!editingOtherUser &&
                         <NavItem>
                             <NavLink
@@ -257,11 +259,20 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
                                 />
+                                {isStaff(user) && !editingOtherUser &&
+                                    // beta feature just for staff
+                                    <UserMFA
+                                        userAuthSettings={userAuthSettings}
+                                        userToUpdate={userToUpdate}
+                                        editingOtherUser={editingOtherUser}
+                                    />
+                                }
                             </TabPane>
 
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
-                                {<TeacherConnections user={user} authToken={authToken}/>}
-                            </TabPane>}
+                            <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
+                                <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
+                                                    userToEdit={userToEdit}/>
+                            </TabPane>
 
                             {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                                 <UserEmailPreference

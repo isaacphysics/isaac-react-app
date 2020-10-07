@@ -16,13 +16,23 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
 
     useEffect(() => {
         const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
-        let selectedDates = [] as string[];
+        let selectedDates: string[] = [];
+        let minTime;
+        let maxTime;
         if (foundDates && foundDates.length > 0) {
             const nonZeroDates = foundDates.filter((date) => answeredQuestionsByDate && answeredQuestionsByDate[date] > 0);
             if (nonZeroDates.length > 0) {
-                const minNonZeroDate = nonZeroDates.reduce((min, date) => date < min ? date : min);
-                const maxDate = foundDates.reduce((max, date) => date > max ? date : max);
-                selectedDates = generateDateArray(new Date(minNonZeroDate), new Date(maxDate))
+                const minNonZeroDate = new Date(nonZeroDates.reduce((min, date) => date < min ? date : min));
+                const maxDate = new Date(foundDates.reduce((max, date) => date > max ? date : max));
+                let tempMinTime = new Date(minNonZeroDate.getTime());
+                let tempMaxTime = new Date(maxDate.getTime());
+                if (minNonZeroDate.getFullYear() == maxDate.getFullYear() && minNonZeroDate.getMonth() == maxDate.getMonth()) {
+                    tempMinTime.setMonth(minNonZeroDate.getMonth() - 1);
+                    tempMaxTime.setMonth(maxDate.getMonth() + 1);
+                }
+                minTime = Date.parse(tempMinTime.toString());
+                maxTime = Date.parse(tempMaxTime.toString());
+                selectedDates = generateDateArray(minNonZeroDate, maxDate)
                     .map((date) => NUMERIC_DATE.format(date).split("/").reverse().join("-"));
             }
         }
@@ -37,7 +47,7 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
                 colors: {activity: "#ffb53f"},
                 xFormat: "%Y-%m-%d"
             },
-            axis: {x: {type: "timeseries", tick: {fit: false, count: 8}}},
+            axis: {x: {type: "timeseries", tick: {fit: false, count: 8}, min: minTime, max: maxTime}},
             zoom: {enabled: true},
             legend: {show: false},
             spline: {interpolation: {type: "monotone-x"}},

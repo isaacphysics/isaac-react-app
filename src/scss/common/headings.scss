@@ -133,4 +133,14 @@ h4 {
       margin: auto;
     }
   }
+
+  &.text-right {
+    &::before {
+      margin-left: auto;
+    }
+  }
+}
+
+.title-case {
+  text-transform: capitalize;
 }

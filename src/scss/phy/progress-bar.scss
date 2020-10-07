@@ -1,0 +1,19 @@
+@import "../common/progress-bar";
+
+.progress-bar-outer {
+  .progress-bar-inner {
+    background: $secondary;
+  }
+  .bar-alevel {
+    background: $phy_physics !important;
+  }
+  .bar-gcse {
+    background: $a11y_green !important;
+  }
+  .bar-maths {
+    background: $phy_maths !important;
+  }
+  .bar-chemistry {
+    background: $phy_chemistry !important;
+  }
+}

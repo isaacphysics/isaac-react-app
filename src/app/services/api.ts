@@ -10,7 +10,7 @@ import {
     BoardOrder,
     Choice,
     Concepts,
-    Credentials,
+    CredentialsAuthDTO,
     EmailUserRoles,
     QuestionSearchQuery,
     QuestionSearchResponse,
@@ -60,7 +60,7 @@ export const apiHelper = {
 
 export const api = {
     search: {
-        get: (query: string, types: string): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+        get: (query: string, types: string | undefined): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
             return endpoint.get(`/search/` + encodeURIComponent(query), {params: {types}});
         }
     },
@@ -107,8 +107,14 @@ export const api = {
         logout: (): AxiosPromise => {
             return endpoint.post(`/auth/logout`);
         },
-        login: (provider: ApiTypes.AuthenticationProvider, credentials: Credentials): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        logoutEverywhere: (): AxiosPromise => {
+            return endpoint.post(`/auth/logout/everywhere`);
+        },
+        login: (provider: ApiTypes.AuthenticationProvider, credentials: CredentialsAuthDTO): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/auth/${provider}/authenticate`, securePadCredentials(credentials));
+        },
+        mfaCompleteLogin: (mfaVerificationCode : string, rememberMe: boolean): AxiosPromise => {
+            return endpoint.post(`/auth/mfa/challenge`, {mfaVerificationCode: mfaVerificationCode, rememberMe});
         },
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings`)
@@ -121,7 +127,16 @@ export const api = {
         },
         unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
             return endpoint.delete(`/auth/${provider}/link`);
-        }
+        },
+        getNewMFASecret: (): AxiosPromise => {
+            return endpoint.get(`/users/current_user/mfa/new_secret`)
+        },
+        setupMFAOnAccount: (sharedSecret: string, mfaVerificationCode: string): AxiosPromise => {
+            return endpoint.post(`/users/current_user/mfa`, {sharedSecret: sharedSecret, mfaVerificationCode: mfaVerificationCode})
+        },
+        disableMFAOnAccount: (userId: number): AxiosPromise => {
+            return endpoint.delete(`/users/${userId}/mfa`)
+        },
     },
     email: {
         verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
@@ -176,14 +191,23 @@ export const api = {
         },
         getSiteStats: (): AxiosPromise<AppTypes.AdminStatsResponse> => {
             return endpoint.get(`/admin/stats`)
+        },
+        mergeUsers: (targetId: number, sourceId: number) => {
+            return endpoint.post(`/admin/users/merge`, {targetId, sourceId})
         }
     },
     authorisations: {
         get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get(`authorisations`);
+            return endpoint.get("authorisations");
+        },
+        adminGet: (userId: number): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
+            return endpoint.get(`authorisations/${userId}`);
         },
         getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
-            return endpoint.get(`/authorisations/other_users`);
+            return endpoint.get("/authorisations/other_users");
+        },
+        adminGetOtherUsers: (userId: number): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
+            return endpoint.get(`/authorisations/other_users/${userId}`);
         },
         getToken: (groupId: number): AxiosPromise<AppTypes.AppGroupTokenDTO> => {
             return endpoint.get(`/authorisations/token/${groupId}`);
@@ -239,6 +263,9 @@ export const api = {
         },
         testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
             return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
+        },
+        generateSpecification: (graphChoice: ApiTypes.GraphChoiceDTO) => {
+            return endpoint.post("/questions/generateSpecification", graphChoice);
         }
     },
     concepts: {
@@ -339,8 +366,11 @@ export const api = {
         update: (updatedGroup: AppTypes.AppGroup): AxiosPromise => {
             return endpoint.post(`/groups/${updatedGroup.id}`, {...updatedGroup, members: undefined});
         },
-        getMyMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
-            return endpoint.get(`/groups/membership`);
+        getMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get("/groups/membership");
+        },
+        adminGetMemberships: (userId: number): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
+            return endpoint.get(`/groups/membership/${userId}`);
         },
         changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => {
             return endpoint.post(`/groups/membership/${groupId}/${newStatus}`);
@@ -392,20 +422,16 @@ export const api = {
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
             showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
-            /* eslint-disable @typescript-eslint/camelcase */
             return endpoint.get(`/events`, {params: {
                 start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
                 show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
             }});
-            /* eslint-enable @typescript-eslint/camelcase */
         },
         getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
-            /* eslint-disable @typescript-eslint/camelcase */
             return endpoint.get(`/events`, {params: {
                 start_index: 0, limit: numberOfActiveEvents, show_active_only: active,
                 show_inactive_only: !active, show_booked_only: false, tags: null
             }});
-            /* eslint-enable @typescript-eslint/camelcase */
         },
         getEventOverviews: (eventOverviewFilter: EventOverviewFilter): AxiosPromise<{results: AppTypes.EventOverview[]; totalResults: number}> => {
             const params = {limit: -1, startIndex: 0};
@@ -418,12 +444,10 @@ export const api = {
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
             showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
         ): AxiosPromise<{results: AppTypes.EventMapData[]; totalResults: number}> => {
-            /* eslint-disable @typescript-eslint/camelcase */
             return endpoint.get(`/events/map_data`, {params: {
                 start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
                 show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
             }});
-            /* eslint-enable @typescript-eslint/camelcase */
         }
     },
     eventBookings: {
@@ -479,6 +503,18 @@ export const api = {
     fasttrack: {
         concepts: (gameboardId: string, concept: string, upperQuestionId: string): AxiosPromise<ApiTypes.GameboardItem[]> => {
             return endpoint.get(`/fasttrack/${gameboardId}/concepts`, {params: {concept, "upper_question_id": upperQuestionId}});
+        }
+    },
+    websockets: {
+        userAlerts: (): WebSocket => {
+            const userAlertsURI = "/user-alerts";
+            if (API_PATH.indexOf("http") > -1) {
+                // APP and API on separate domains, urlPrefix is full URL:
+                return new WebSocket(API_PATH.replace(/^http/, "ws") + userAlertsURI);
+            } else {
+                // APP and API on same domain, need window.location.origin for full URL:
+                return new WebSocket(window.location.origin.replace(/^http/, "ws") + API_PATH + userAlertsURI);
+            }
         }
     }
 };

@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import * as RS from "reactstrap";
-import {examBoardTagMap, IS_CS_PLATFORM, TAG_ID, TAG_LEVEL, tagExamBoardMap} from "../../services/constants";
+import {examBoardTagMap, TAG_ID, TAG_LEVEL, tagExamBoardMap} from "../../services/constants";
 import React from "react";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
@@ -8,6 +8,7 @@ import {useDispatch} from "react-redux";
 import {DraggableProvided} from "react-beautiful-dnd";
 import tags from "../../services/tags";
 import {Question} from "../pages/Question";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -71,17 +72,17 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
                 {question.title}
             </a>
             <input
-                type="image" src="/assets/library_books.svg" alt="Preview question" title="Preview question in modal"
-                className="pointer-cursor align-middle" onClick={() => {question.id && openQuestionModal(question.id)}}
+                type="image" src="/assets/new-tab.svg" alt="Preview question" title="Preview question in modal"
+                className="pointer-cursor align-middle new-tab" onClick={() => {question.id && openQuestionModal(question.id)}}
             />
         </td>
         <td className="w-25">
             {topicTag()}
         </td>
-        {!IS_CS_PLATFORM && <td className="w-15">
+        {SITE_SUBJECT === SITE.PHY && <td className="w-15">
             {question.level}
         </td>}
-        {IS_CS_PLATFORM && <td className="w-15">
+        {SITE_SUBJECT === SITE.CS && <td className="w-15">
             {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagIcon(tagExamBoardMap[tag]))}
         </td>}
     </tr>

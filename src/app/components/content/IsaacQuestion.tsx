@@ -6,7 +6,7 @@ import * as ApiTypes from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import * as RS from "reactstrap";
 import {QUESTION_TYPES, selectQuestionPart} from "../../services/questions";
-import {DateString, NUMERIC_DATE_AND_TIME} from "../elements/DateString";
+import {DateString, TIME_ONLY} from "../elements/DateString";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {NOT_FOUND} from "../../services/constants";
 import {RouteComponentProps, withRouter} from "react-router";
@@ -33,7 +33,7 @@ function retryPreviousQuestion(questionHistory: string[], board?: string) {
         value: "Retry previous question page",
         type: "button",
         onClick: function() {
-            goToUrl('/question/' + previousQuestionId, {questionHistory: commaSeparatedQuestionHistory, board});
+            goToUrl('/questions/' + previousQuestionId, {questionHistory: commaSeparatedQuestionHistory, board});
         }
     };
 }
@@ -141,7 +141,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
         }
     }
 
-    const QuestionComponent = QUESTION_TYPES.get(doc.type) || QUESTION_TYPES.get("default");
+    const QuestionComponent = QUESTION_TYPES.get(doc.type || "default");
 
     const sigFigsError = validationResponse && validationResponse.explanation &&
         (validationResponse.explanation.tags || []).includes("sig_figs");
@@ -215,6 +215,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
         {/* Difficulty bar */}
 
         <div className={`question-component p-md-5 ${doc.type} ${doc.type === 'isaacParsonsQuestion' ? "parsons-layout" : ""}`}>
+            {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
             <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
             {SITE_SUBJECT === SITE.CS &&
                 <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />
@@ -230,21 +231,21 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
             </div>}
 
             {locked && <RS.Alert color="danger">
-                This question is locked until at least {<DateString formatter={NUMERIC_DATE_AND_TIME}>{locked}</DateString>} to prevent repeated guessing.
+                This question is locked until at least {<DateString formatter={TIME_ONLY}>{locked}</DateString>} to prevent repeated guessing.
             </RS.Alert>}
 
-            {(!validationResponse || !validationResponse.correct || canSubmit) && !locked &&
-                <div className="d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row">
-                    {secondaryAction && <div
-                        className={`m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ${primaryAction ? "pr-sm-2 pr-md-0 pr-lg-3" : ""}`}
-                    >
-                        <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block" />
-                    </div>}
-                    {primaryAction && <div
-                        className={`m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ${secondaryAction ? "pl-sm-2 pl-md-0 pl-lg-3" : ""}`}
-                    >
-                        <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />
-                    </div>}
+            {(!(validationResponse?.correct) || canSubmit || (isFastTrack && (primaryAction || secondaryAction))) && !locked &&
+                <div className={`d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row ${validationResponse?.correct ? "mt-5 mb-n3" : ""}`}>
+                    {secondaryAction &&
+                        <div className={`m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ${primaryAction ? "pr-sm-2 pr-md-0 pr-lg-3" : ""}`}>
+                            <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block" />
+                        </div>
+                    }
+                    {primaryAction &&
+                        <div className={`m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ${secondaryAction ? "pl-sm-2 pl-md-0 pl-lg-3" : ""}`}>
+                            <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />
+                        </div>
+                    }
                 </div>
             }
 
@@ -256,8 +257,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
                 </RS.Col>
             </RS.Row>}
 
-            {SITE_SUBJECT === SITE.PHY && !validationResponse?.correct &&
-                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />
+            {SITE_SUBJECT === SITE.PHY &&
+                <div className={validationResponse?.correct ? "mt-5" : ""}>
+                    <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints}/>
+                </div>
             }
         </div>
     </RS.Form>;

@@ -42,7 +42,7 @@ function selectGroups(state: AppState) {
             });
         }
 
-        const progress = state.progress;
+        const progress = selectors.assignments.progress(state);
         const assignments: { [id: number]: EnhancedAssignment[] } = {};
         if (state.assignmentsByMe) {
             state.assignmentsByMe.forEach(assignment => {

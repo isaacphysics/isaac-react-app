@@ -7,6 +7,11 @@
   }
 }
 
+.new-tab {
+  height: 24px;
+  width: 24px;
+}
+
 .content-summary-link a {
   text-decoration: none;
 }
@@ -236,6 +241,9 @@ button.btn.btn-link.login-b,
     -ms-user-select: all;
     width: 100%;
     padding-left: 2px;
+  }
+  &.double-height {
+    height: 118px;
   }
 }
 
