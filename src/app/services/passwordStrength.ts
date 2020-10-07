@@ -19,9 +19,9 @@ const zxcvbnSrc = {
 export function loadZxcvbnIfNotPresent() {
     // Since zxcvbn.js is ~1MB we only want to load it when it is genuinely required.
     // We also don't want to load it if we already have:
-    let zxcvbnScriptId = "zxcvbn-script";
+    const zxcvbnScriptId = "zxcvbn-script";
     if (!('zxcvbn' in window) && !document.getElementById(zxcvbnScriptId)) {
-        let zxcvbnScript = document.createElement('script');
+        const zxcvbnScript = document.createElement('script');
         zxcvbnScript.id = zxcvbnScriptId;
         zxcvbnScript.src = zxcvbnSrc;
         zxcvbnScript.type = 'text/javascript';
@@ -37,7 +37,7 @@ function calculatePasswordStrength(password: string, additionalTerms?: string[])
         // Fail fast on empty input or if library not loaded!
         return null;
     }
-    let isaacTerms = ["Isaac Computer Science", "Isaac", "IsaacComputerScience", "isaaccomputerscience.org",
+    const isaacTerms = ["Isaac Computer Science", "Isaac", "IsaacComputerScience", "isaaccomputerscience.org",
         "Isaac Computer", "Isaac CS", "IsaacCS", "ICS",
         "ComputerScience", "Computer Science", "Computer", "Science", "CompSci", "Computing",
         "Isaac Physics", "Isaac Chemistry", "Isaac Maths", "IsaacPhysics", "IsaacChemistry", "IsaacMaths",
@@ -50,9 +50,9 @@ function calculatePasswordStrength(password: string, additionalTerms?: string[])
     if (additionalTerms) {
         isaacTerms.push(...additionalTerms);
     }
-    let passwordToCheck = password.substring(0, maxPasswordCheckChars).replace(/\s/g, "");
-    let zxcvbnResult: ZxcvbnResult = (window as any)['zxcvbn'](passwordToCheck, isaacTerms);
-    let feedback: PasswordFeedback = {zxcvbn: zxcvbnResult, feedbackText: passwordStrengthText[zxcvbnResult.score]};
+    const passwordToCheck = password.substring(0, maxPasswordCheckChars).replace(/\s/g, "");
+    const zxcvbnResult: ZxcvbnResult = (window as any)['zxcvbn'](passwordToCheck, isaacTerms);
+    const feedback: PasswordFeedback = {zxcvbn: zxcvbnResult, feedbackText: passwordStrengthText[zxcvbnResult.score]};
     return feedback;
 }
 
@@ -64,12 +64,12 @@ export const pwnedPasswordsAPI = axios.create({
 });
 
 async function getSHA1Hash(value: string) {
-    let bytes = await window.crypto.subtle.digest({name: "SHA-1"}, new TextEncoder().encode(value));
+    const bytes = await window.crypto.subtle.digest({name: "SHA-1"}, new TextEncoder().encode(value));
     return Array.from(new Uint8Array(bytes)).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
 }
 function breachedPasswordUseCount(responseData: string, sha1Suffix: string) {
-    let lines = responseData.split('\n');
-    for (let line of lines) {
+    const lines = responseData.split('\n');
+    for (const line of lines) {
         if (line.indexOf(sha1Suffix) === 0) {
             return parseInt(line.split(":")[1]);
         }
@@ -79,11 +79,11 @@ function breachedPasswordUseCount(responseData: string, sha1Suffix: string) {
 
 export async function checkPwnedPasswords(password: string, callback: (feedback: PasswordFeedback|null) => void) {
     try {
-        let sha1Hex = await getSHA1Hash(password)
-        let sha1Prefix = sha1Hex.substr(0, 5);
-        let sha1Suffix = sha1Hex.substring(5);
-        let pwnedPasswordResponse = await pwnedPasswordsAPI.get(`/range/${sha1Prefix}`);
-        let useCount = breachedPasswordUseCount(pwnedPasswordResponse.data, sha1Suffix);
+        const sha1Hex = await getSHA1Hash(password)
+        const sha1Prefix = sha1Hex.substr(0, 5);
+        const sha1Suffix = sha1Hex.substring(5);
+        const pwnedPasswordResponse = await pwnedPasswordsAPI.get(`/range/${sha1Prefix}`);
+        const useCount = breachedPasswordUseCount(pwnedPasswordResponse.data, sha1Suffix);
         let feedback: PasswordFeedback | null = null;
         if (useCount >= 100) {
             feedback = {feedbackText: passwordStrengthText[0], pwnedPasswordCount: useCount};
