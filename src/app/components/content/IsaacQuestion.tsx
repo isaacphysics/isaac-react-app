@@ -8,32 +8,26 @@ import * as RS from "reactstrap";
 import {QUESTION_TYPES, selectQuestionPart} from "../../services/questions";
 import {DateString, TIME_ONLY} from "../elements/DateString";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
-import {DOCUMENT_TYPE, NOT_FOUND} from "../../services/constants";
 import {RouteComponentProps, withRouter} from "react-router";
-import {useCurrentExamBoard} from "../../services/examBoard";
-import {determineFastTrackPrimaryAction, determineFastTrackSecondaryAction} from "../../services/fastTrack";
-import queryString from "query-string";
+import {
+    determineFastTrackPrimaryAction,
+    determineFastTrackSecondaryAction,
+    useFastTrackInformation
+} from "../../services/fastTrack";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
-import {AppState} from "../../state/reducers";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQuestionBaseDTO} & RouteComponentProps) => {
-    const {board, questionHistory: questionHistoryUrl}: {board?: string; questionHistory?: string} = queryString.parse(location.search);
-    const questionHistory = questionHistoryUrl?.split(",") || [];
-
     const dispatch = useDispatch();
-    const page = useSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
-    const pageCompleted = useSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : false);
+    const accordion = useContext(AccordionSectionContext);
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, doc.id);
     const validationResponse = questionPart?.validationResponse;
-    const currentAttempt = questionPart?.currentAttempt;
     const correct = validationResponse?.correct || false;
     const locked = questionPart?.locked;
     const canSubmit = questionPart?.canSubmit && !locked || false;
-    const accordion = useContext(AccordionSectionContext);
-    const examBoard = useCurrentExamBoard();
     const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs");
+    const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
 
     // Register Question Part in Redux
     useEffect((): (() => void) => {
@@ -41,29 +35,24 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
         return () => dispatch(deregisterQuestion(doc.id as string));
     }, [dispatch, doc.id]);
 
-    function submitCurrentAttempt(event: React.FormEvent) {
-        if (event) {event.preventDefault();}
-        if (currentAttempt) {
-            dispatch(attemptQuestion(doc.id as string, currentAttempt));
-        }
-    }
-
     // Select QuestionComponent from the question part's document type (or default)
     const QuestionComponent = QUESTION_TYPES.get(doc.type || "default");
 
-    // FastTrack
-    const isFastTrack = page?.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION || false;
-    const fastTrackInfo = {doc, correct, page, pageCompleted, questionHistory, board, examBoard, canSubmit}
-
     // Determine Action Buttons
-    const primaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) : {
-        disabled: !canSubmit,
-        value: "Check my answer",
-        type: "submit"
-    };
-    const secondaryAction = isFastTrack ? determineFastTrackSecondaryAction(fastTrackInfo) : null;
+    const primaryAction = fastTrackInfo.isFastTrackPage ?
+        determineFastTrackPrimaryAction(fastTrackInfo) :
+        {disabled: !canSubmit, value: "Check my answer", type: "submit"};
 
-    return <RS.Form onSubmit={submitCurrentAttempt}>
+    const secondaryAction = fastTrackInfo.isFastTrackPage ?
+        determineFastTrackSecondaryAction(fastTrackInfo) :
+        null;
+
+    return <RS.Form onSubmit={function submitCurrentAttempt(event) {
+        if (event) {event.preventDefault();}
+        if (questionPart?.currentAttempt) {
+            dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt));
+        }
+    }}>
         <div className={`question-component p-md-5 ${doc.type} ${doc.type === 'isaacParsonsQuestion' ? "parsons-layout" : ""}`}>
             {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
             <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
@@ -89,7 +78,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
             </RS.Alert>}
 
             {/* Action Buttons */}
-            {(!correct || canSubmit || (isFastTrack && (primaryAction || secondaryAction))) && !locked &&
+            {(!correct || canSubmit || (fastTrackInfo.isFastTrackPage && (primaryAction || secondaryAction))) && !locked &&
                 <div className={`d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row ${correct ? "mt-5 mb-n3" : ""}`}>
                     {secondaryAction &&
                         <div className={`m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ${primaryAction ? "pr-sm-2 pr-md-0 pr-lg-3" : ""}`}>

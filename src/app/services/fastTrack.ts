@@ -2,7 +2,12 @@ import {getRelatedConcepts} from "./topics";
 import {history} from "./history";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {ContentDTO, IsaacQuestionBaseDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, EXAM_BOARD} from "./constants";
+import {DOCUMENT_TYPE, EXAM_BOARD, NOT_FOUND} from "./constants";
+import {useCurrentExamBoard} from "./examBoard";
+import {useSelector} from "react-redux";
+import {AppState} from "../state/reducers";
+import queryString from "query-string";
+import {Location} from "history";
 
 export function makeUrl(url: string, queryParams?: { [p: string]: string | undefined }) {
     function valueIsNotUndefined(v: [string, string | undefined]): v is [string, string] {
@@ -108,6 +113,7 @@ function getRelatedUnansweredSupportingQuestions(doc: ApiTypes.IsaacQuestionBase
 }
 
 interface FastTrackPageProperties {
+    isFastTrackPage: boolean;
     doc: IsaacQuestionBaseDTO;
     correct: boolean;
     page: ContentDTO | undefined;
@@ -116,6 +122,21 @@ interface FastTrackPageProperties {
     board: string | undefined;
     examBoard: EXAM_BOARD;
     canSubmit: boolean;
+}
+
+export function useFastTrackInformation(
+    doc: IsaacQuestionBaseDTO, location: Location<{} | null | undefined>,
+    canSubmit: boolean = true, correct: boolean = false
+): FastTrackPageProperties {
+    const {board, questionHistory: questionHistoryUrl}: {board?: string; questionHistory?: string} = queryString.parse(location.search);
+    const questionHistory = questionHistoryUrl?.split(",") || [];
+
+    const page = useSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
+    const isFastTrackPage = page?.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
+    const pageCompleted = useSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : false);
+    const examBoard = useCurrentExamBoard();
+
+    return {isFastTrackPage, doc, correct, page, pageCompleted, questionHistory, board, examBoard, canSubmit}
 }
 
 export function determineFastTrackPrimaryAction(questionPart: FastTrackPageProperties) {

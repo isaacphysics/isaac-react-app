@@ -3,27 +3,17 @@ import {Alert, Button, Col, Row} from "reactstrap";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {logAction} from "../../state/actions";
-import {AppState} from "../../state/reducers";
-import {DOCUMENT_TYPE, NOT_FOUND} from "../../services/constants";
-import {resourceFound} from "../../services/validation";
-import {determineFastTrackPrimaryAction, determineFastTrackSecondaryAction} from "../../services/fastTrack";
+import {determineFastTrackSecondaryAction, useFastTrackInformation} from "../../services/fastTrack";
 import {RouteComponentProps, withRouter} from "react-router";
-import queryString from "query-string";
-import {useCurrentExamBoard} from "../../services/examBoard";
 
 export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQuickQuestionDTO} & RouteComponentProps) => {
-    const {board, questionHistory: questionHistoryUrl}: {board?: string; questionHistory?: string} = queryString.parse(location.search);
-    const questionHistory = questionHistoryUrl?.split(",") || [];
-
     const dispatch = useDispatch();
-    const page = useSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
-    const pageCompleted = useSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : false);
-    const examBoard = useCurrentExamBoard();
-    const isFastTrackPage = page?.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
-
+    const fastTrackInfo = useFastTrackInformation(doc, location);
     const [isVisible, setVisible] = useState(false);
+    const answer: ContentDTO = doc.answer as ContentDTO;
+    const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
 
     const toggle = () => {
         const isNowVisible = !isVisible;
@@ -34,18 +24,13 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
         }
     };
 
-    const answer: ContentDTO = doc.answer as ContentDTO;
-    const fastTrackInfo = {doc, correct: false, page, pageCompleted, questionHistory, board, examBoard, canSubmit: true}
-
-    const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
-
     return <form onSubmit={e => e.preventDefault()}>
         <div className="question-component p-md-5">
-            <div className={!isFastTrackPage ? "quick-question" : ""}>
+            <div className={!fastTrackInfo.isFastTrackPage ? "quick-question" : ""}>
                 <div className="question-content clearfix">
                     <IsaacContentValueOrChildren {...doc} />
                 </div>
-                {!isFastTrackPage ?
+                {!fastTrackInfo.isFastTrackPage ?
                     <Row>
                         <Col sm="12" md={{size: 10, offset: 1}}>
                             <Button color="secondary" block className={isVisible ? "active" : ""} onClick={toggle}>
@@ -67,7 +52,7 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
                     </div>
                 }
                 {isVisible && <Row>
-                    <Col sm="12" md={!isFastTrackPage ? {size: 10, offset: 1} : {}}>
+                    <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
                         <Alert color="secondary" className="overflow-auto">
                             <IsaacContentValueOrChildren {...answer} />
                         </Alert>
