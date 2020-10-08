@@ -8,7 +8,7 @@ import {Students} from "../../pages/Students";
 import {TeacherTools} from "../../pages/TeacherTools";
 import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {Redirect} from "react-router";
-import {isTeacher} from "../../../services/user";
+import {isEventLeaderOrStaff, isTeacher} from "../../../services/user";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
 import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
@@ -36,6 +36,8 @@ export const RoutesCS = [
     <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
     <StaticPageRoute key={key++} exact path="/teaching_order" pageId="teaching_order" />,
     <StaticPageRoute key={key++} exact path="/student_rewards" pageId="student_rewards_programme" />,
+
+    <StaticPageRoute key={key++} exact ifUser={isEventLeaderOrStaff} path="/events_toolkit" pageId="fragments/event_leader_event_toolkit_fragment" />,
 
     <TrackedRoute key={key++} exact path="/coming_soon" component={ComingSoon} />,
 ];

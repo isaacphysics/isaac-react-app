@@ -28,6 +28,10 @@ export function isEventLeader(user?: LoggedInUser | null): boolean {
     return user ? user.loggedIn && user.role === "EVENT_LEADER" : false;
 }
 
+export function isEventLeaderOrStaff(user?: LoggedInUser | null): boolean {
+    return isEventLeader(user) || isStaff(user);
+}
+
 export function isAdminOrEventManager(user?: LoggedInUser | null): boolean {
     return isAdmin(user) || isEventManager(user);
 }
