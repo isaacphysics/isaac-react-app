@@ -6,35 +6,42 @@ import {
     authenticateWithTokenAfterPrompt,
     changeMyMembershipStatus,
     getActiveAuthorisations,
-    getMyGroupMemberships,
+    getGroupMemberships,
     getStudentAuthorisations,
     releaseAllAuthorisationsAfterPrompt,
     releaseAuthorisationAfterPrompt,
     revokeAuthorisationAfterPrompt
 } from "../../../state/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../../state/reducers";
+import {AdminUserGetState, AppState} from "../../../state/reducers";
 import classnames from "classnames";
 import {MEMBERSHIP_STATUS} from "../../../services/constants";
 import {extractTeacherName} from "../../../services/user";
 
 
-interface TeacherConnectionsProps {user: LoggedInUser; authToken: string | null}
-export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) => {
+interface TeacherConnectionsProps {
+    user: LoggedInUser;
+    authToken: string | null;
+    editingOtherUser: boolean;
+    userToEdit: AdminUserGetState;
+}
+export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdit}: TeacherConnectionsProps) => {
     const dispatch = useDispatch();
     const activeAuthorisations = useSelector((state: AppState) => state?.activeAuthorisations || null);
     const studentAuthorisations = useSelector((state: AppState) => state?.otherUserAuthorisations || null);
     const groupMemberships = useSelector((state: AppState) => state?.groupMemberships || null);
 
     useEffect(() => {
-        dispatch(getActiveAuthorisations());
-        dispatch(getMyGroupMemberships());
-        dispatch(getStudentAuthorisations());
-    }, [dispatch]);
+        if (user.loggedIn && user.id) {
+            dispatch(getActiveAuthorisations((editingOtherUser && userToEdit?.id) || undefined));
+            dispatch(getStudentAuthorisations((editingOtherUser && userToEdit?.id) || undefined));
+            dispatch(getGroupMemberships((editingOtherUser && userToEdit?.id) || undefined));
+        }
+    }, [dispatch, editingOtherUser, userToEdit?.id]);
 
     useEffect(() => {
-        if (authToken) {
-            dispatch(authenticateWithTokenAfterPrompt(authToken));
+        if (authToken && user.loggedIn && user.id) {
+            dispatch(authenticateWithTokenAfterPrompt(user.id, authToken));
         }
     }, [dispatch, authToken]);
 
@@ -42,12 +49,13 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
 
     function processToken(event: React.FormEvent<HTMLFormElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
-        dispatch(authenticateWithTokenAfterPrompt(authenticationToken));
+        if (user.loggedIn && user.id) {
+            dispatch(authenticateWithTokenAfterPrompt(user.id, authenticationToken));
+        }
     }
 
-    const editingSelf = true;
     return <RS.CardBody>
-        {editingSelf && <RS.Container>
+        <RS.Container>
             <h3>
                 <span>Teacher connections<span id="teacher-connections-title" className="icon-help" /></span>
                 <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">
@@ -66,7 +74,7 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                             />
                             <RS.InputGroupAddon addonType="append">
-                                <RS.Button onClick={processToken} className="p-0 border-dark" color="secondary">
+                                <RS.Button onClick={processToken} className="p-0 border-dark" color="secondary" disabled={editingOtherUser}>
                                     Connect
                                 </RS.Button>
                             </RS.InputGroupAddon>
@@ -94,7 +102,8 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
                                             </RS.UncontrolledTooltip>
                                             <RS.Button
                                                 color="link" className="revoke-teacher"
-                                                onClick={() => dispatch(revokeAuthorisationAfterPrompt(teacherAuthorisation))}
+                                                disabled={editingOtherUser}
+                                                onClick={() => user.loggedIn && user.id && dispatch(revokeAuthorisationAfterPrompt(user.id, teacherAuthorisation))}
                                             >
                                                 Revoke
                                             </RS.Button>
@@ -145,8 +154,8 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
                                                 To remove this access, click &apos;Remove&apos;.
                                             </RS.UncontrolledTooltip>
                                             <RS.Button
-                                                color="link" className="revoke-teacher"
-                                                onClick={() => dispatch(releaseAuthorisationAfterPrompt(student))}
+                                                color="link" className="revoke-teacher" disabled={editingOtherUser}
+                                                onClick={() => user.loggedIn && user.id && dispatch(releaseAuthorisationAfterPrompt(user.id, student))}
                                             >
                                                 Remove
                                             </RS.Button>
@@ -159,7 +168,7 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
                                 </p>}
                             </div>
                             {studentAuthorisations && studentAuthorisations.length > 0 && <p className="remove-link">
-                                <RS.Button color="link" onClick={() => dispatch(releaseAllAuthorisationsAfterPrompt())}>
+                                <RS.Button color="link" onClick={() => user.loggedIn && user.id && dispatch(releaseAllAuthorisationsAfterPrompt(user.id))} disabled={editingOtherUser}>
                                     Remove all
                                 </RS.Button>
                             </p>}
@@ -167,7 +176,6 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
                     </RS.Col>
                 </RS.Row>
             </React.Fragment>}
-
             <hr className="my-5" />
 
             <RS.Row>
@@ -215,7 +223,7 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
                                     </td>
                                     <td>
                                         {membership.membershipStatus == MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
-                                            <RS.Button color="link" onClick={() =>
+                                            <RS.Button color="link" disabled={editingOtherUser} onClick={() =>
                                                 dispatch(changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.INACTIVE))
                                             }>
                                                 Leave group
@@ -228,7 +236,7 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
                                         </React.Fragment>}
 
                                         {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE && <React.Fragment>
-                                            <RS.Button color="link" onClick={() =>
+                                            <RS.Button color="link" disabled={editingOtherUser} onClick={() =>
                                                 dispatch(changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.ACTIVE))
                                             }>
                                                 Rejoin group
@@ -249,6 +257,6 @@ export const TeacherConnections = ({user, authToken}: TeacherConnectionsProps) =
                     </p>}
                 </RS.Col>
             </RS.Row>
-        </RS.Container>}
+        </RS.Container>
     </RS.CardBody>
 };

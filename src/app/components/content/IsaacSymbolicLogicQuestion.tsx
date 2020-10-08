@@ -18,6 +18,7 @@ import { Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip } from 
 import uuid from "uuid";
 import { Inequality, makeInequality } from 'inequality';
 import { parseBooleanExpression } from 'inequality-grammar';
+import { isDefined } from '../../services/miscUtils';
 
 // Magic starts here
 interface ChildrenMap {
@@ -99,7 +100,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
-        if (previousYPosition) {
+        if (isDefined(previousYPosition)) {
             window.scrollTo(0, previousYPosition);
         }
     };

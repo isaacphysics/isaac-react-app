@@ -1,18 +1,19 @@
 // ISAAC
-.question-panel > .content-value,
-.question-panel .isaac-accordion .accordion-section > .content-value {
-  background-color: white;
-  box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
-  margin: auto auto 2rem auto;
-  padding: 3rem;
-  @include media-breakpoint-down(sm) {
-    padding: 1rem;
-  }
+.question-panel, .question-panel > .examboard-special-tabs {
+  > .content-chunk > .content-value {
+    background-color: white;
+    box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
+    margin: auto auto 2rem auto;
+    padding: 3rem;
+    @include media-breakpoint-down(sm) {
+      padding: 1rem;
+    }
 
-  font-family: $secondary-font;
-  font-size: 1.25rem;
-  line-height: 1.6;
-  font-weight: 600;
+    font-family: $secondary-font;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    font-weight: 600;
+  }
 }
 
 .unit-dropdown button {
@@ -289,10 +290,6 @@ button {
   p {
     margin-bottom: 0;
   }
-}
-
-.multichoice-option > .content-value {
-  width: calc(100% - 1rem);
 }
 
 // NOMENSA question.scss

@@ -1,8 +1,7 @@
-import {AdminUserSearchState, AppState, ProgressState} from "./reducers";
+import {AppState, ProgressState} from "./reducers";
 import {sortBy} from "lodash";
-import {anonymousNames, anonymousSchoolNames, NOT_FOUND} from "../services/constants";
-import {AppGroup, UserSchoolLookup} from "../../IsaacAppTypes";
-import {UserSummaryForAdminUsersDTO} from "../../IsaacApiTypes";
+import {NOT_FOUND} from "../services/constants";
+import {AppGroup} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
 
 export const selectors = {
@@ -132,12 +131,12 @@ export const anonymisationFunctions = {
     appGroup: (appGroup: AppGroup): AppGroup => {
         return {
             ...appGroup,
-            members: appGroup.members?.map(member => {
-                const newName = anonymousNames[Math.floor((member.givenName?.charCodeAt(0) || 0) % anonymousNames.length)];
+            groupName: `Demo Group ${appGroup.id}`,
+            members: appGroup.members?.map((member, i) => {
                 return {
                     ...member,
-                    familyName: "Test",
-                    givenName: newName,
+                    familyName: "",
+                    givenName: `Test Student ${i + 1}`,
                 }
             }),
         }
@@ -146,49 +145,18 @@ export const anonymisationFunctions = {
         if (!progress) return null;
         const anonymousProgress: ProgressState = {};
         Object.keys(progress).forEach(id  => {
-            anonymousProgress[Number(id)] = progress[Number(id)].map(userProgress => {
-                const newName = anonymousNames[Math.floor((userProgress.user.givenName?.charCodeAt(0) || 0) % anonymousNames.length)];
+            anonymousProgress[Number(id)] = progress[Number(id)].map((userProgress, i) => {
                 return {
                     ...userProgress,
                     user: {
                         ...userProgress.user,
-                        familyName: "Test",
-                        givenName: newName
+                        familyName: "",
+                        givenName: `Test Student ${i + 1}`,
                     }
                 }
             })
         });
         return anonymousProgress;
-    },
-    userSummaryForAdminUsersDTO: (user: UserSummaryForAdminUsersDTO): UserSummaryForAdminUsersDTO => {
-        const newName = anonymousNames[Math.floor((user.givenName?.charCodeAt(0) || 0) % anonymousNames.length)];
-        return {
-            ...user,
-            familyName: "Test",
-            givenName: newName,
-            email: newName + ".XYZ@email.com"
-        }
-    },
-    userSchoolLookup: (userSchoolLookup: UserSchoolLookup): UserSchoolLookup => {
-        const anonymousSchoolLookup = {} as UserSchoolLookup;
-        Object.keys(userSchoolLookup).forEach(id  => anonymousSchoolLookup[Number(id)] = {
-            urn: "",
-            name: anonymousSchoolNames[Math.floor(((userSchoolLookup[Number(id)].name.charCodeAt(0)) || 0) % anonymousSchoolNames.length)] + "'s School",
-            postcode: "",
-            closed: false,
-            dataSource: ""
-        });
-        return anonymousSchoolLookup
-    }
-}
-
-export const selectorEqualityFunctions = {
-    admin: {
-        userSearch: (left: AdminUserSearchState, right: AdminUserSearchState) => {
-            return (left == null && left === right) ||
-                (right != null && left?.map((userL, i) => JSON.stringify(userL) === JSON.stringify(right[i]))
-                    .filter(same => !same).length === 0);
-        }
     }
 }
 

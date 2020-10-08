@@ -8,6 +8,7 @@ import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState} from "../.
 import {GREEK_LETTERS_MAP} from '../../../services/constants';
 import { IsaacContentValueOrChildren } from '../../content/IsaacContentValueOrChildren';
 import { ContentDTO } from '../../../../IsaacApiTypes';
+import { isDefined } from '../../../services/miscUtils';
 
 class MenuItem {
     public type: string;
@@ -101,7 +102,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private _logFunctionNames = ["ln", "log"];
 
     private _chemicalElements = ["H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"];
-    private _chemicalParticles: {[key: string]: { type: string; menu: { label: string; texLabel: boolean; className?: string; fontSize?: string }; properties: object } } = {
+    private _chemicalParticles: {[key: string]: { type: string; menu: { label: string; texLabel: boolean; className?: string; fontSize?: string }; properties: Record<string, unknown> } } = {
         alpha: {
             type: 'Particle',
             menu: { label: '\\alpha', texLabel: true },
@@ -150,14 +151,14 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     // Call this to close the editor
     public close: () => void;
 
-    public isUserPrivileged() {
+    public isUserPrivileged(): boolean {
         return true;
     }
 
     public constructor(props: InequalityModalProps) {
         super(props);
 
-        this._availableSymbols = Array.from(new Set(parsePseudoSymbolicAvailableSymbols(props.availableSymbols)));
+        this._availableSymbols = Array.from(new Set(parsePseudoSymbolicAvailableSymbols(props.availableSymbols))).filter(s => s.trim() !== '');
 
         this.state = {
             sketch: props.sketch as Inequality,
@@ -200,7 +201,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
     }
 
-    public componentDidMount() {
+    public componentDidMount(): void {
         window.addEventListener('keyup', this.handleKeyPress.bind(this));
         const inequalityElement = document.getElementById('inequality-modal') as HTMLElement;
         const { sketch, p } = makeInequality(
@@ -231,9 +232,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 this.props.onEditorStateChange(newState);
             }
         };
-        sketch.onCloseMenus = () => { /*this.setState({ menuOpen: false })*/ }; // TODO Maybe nice to have
+        sketch.onCloseMenus = () => undefined; // { this.setState({ menuOpen: false }) };
         sketch.isUserPrivileged = () => this.isUserPrivileged();
-        sketch.onNotifySymbolDrag = () => { }; // This is probably irrelevant now
+        sketch.onNotifySymbolDrag = () => undefined; // This is probably irrelevant now
         sketch.isTrashActive = () => this.state.trashActive;
 
         this.setState({ sketch });
@@ -292,7 +293,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 chemicalElements: new Array<MenuItem>(),
             };
 
-            for (let l of this._availableSymbols) {
+            for (const l of this._availableSymbols) {
                 const availableSymbol = l.trim();
                 if (availableSymbol.endsWith('()')) {
                     // Functions
@@ -437,16 +438,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.body.style.touchAction = 'auto';
     }
 
-    private convertToLatexIfGreek(s: string): string {
-        if (s === "epsilon") {
-            return "\\varepsilon";
-        }
-        if (this._lowerCaseGreekLetters.includes(s) || this._upperCaseGreekLetters.includes(s)) {
-            return `\\${s}`;
-        }
-        return s;
-    }
-
     private makeSingleLetterMenuItem(letter: string, label?: string) {
         return new MenuItem("Symbol", { letter: letter }, { label: label || letter, texLabel: true, className: `symbol-${letter}` });
     }
@@ -503,12 +494,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
     private generateLogicFunctionsItems(syntax = 'logic'): MenuItem[] {
         const labels: any = {
-            logic: { and: "\\land", or: "\\lor", not: "\\lnot", equiv: "=", True: "\\mathsf{T}", False: "\\mathsf{F}" },
-            binary: { and: "\\cdot", or: "+", not: "\\overline{x}", equiv: "=", True: "1", False: "0" }
+            logic: { and: "\\land", or: "\\lor", xor: '\\veebar', not: "\\lnot", equiv: "=", True: "\\mathsf{T}", False: "\\mathsf{F}" },
+            binary: { and: "\\cdot", or: "+", xor: '\\oplus', not: "\\overline{x}", equiv: "=", True: "1", False: "0" }
         };
         return [
             new MenuItem("LogicBinaryOperation", { operation: "and" }, { label: labels[syntax]['and'], texLabel: true, className: 'and' }),
             new MenuItem("LogicBinaryOperation", { operation: "or" }, { label: labels[syntax]['or'], texLabel: true, className: 'or' }),
+            new MenuItem("LogicBinaryOperation", { operation: "xor" }, { label: labels[syntax]['xor'], texLabel: true, className: 'xor' }),
             new MenuItem("LogicNot", {}, { label: labels[syntax]['not'], texLabel: true, className: 'not' }),
             new MenuItem("Relation", { relation: "equiv" }, { label: labels[syntax]['equiv'], texLabel: true, className: 'equiv' }),
             new MenuItem("LogicLiteral", { value: true }, { label: labels[syntax]['True'], texLabel: true, className: 'true' }),
@@ -645,7 +637,14 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private generateMathsDerivativeAndLetters(symbol: string): { derivative: MenuItem; letters: MenuItem[] } {
-        const pieces = symbol.split(';').map(s => s.replace(/[()\s]/g, '')).slice(1); // FIXME Is this regex just a trim()?
+        const parts = symbol.replace(/^Derivative/, '').split(';').map(s => s.replace(/[()\s]/g, ''));
+        const letters = new Array<MenuItem>();
+        const top = parts[0];
+        if (isDefined(this._greekLetterMap[top]) || /^[a-zA-Z]$/.test(top)) {
+            // Do this only if we have a single greek letter or a single latin letter.
+            letters.push(this.makeSingleLetterMenuItem(this._greekLetterMap[top] || top, this._greekLetterMap[top] ? '\\' + top : top))
+        }
+        const pieces = parts.slice(1); 
         const orders: { [piece: string]: number } = {};
         // Count how many times one should derive each variable
         for (const piece of pieces) {
@@ -653,11 +652,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
         const derivativeOrder = Object.values(orders).reduce((a, c) => a + c, 0);
         const denominatorObjects: any[] = [];
-        const letters = new Array<MenuItem>();
         let texBottom = '';
         for (const p of Object.entries(orders)) {
             const letter = p[0];
-            letters.push(this.makeSingleLetterMenuItem(letter));
+            letters.push(this.makeSingleLetterMenuItem(this._greekLetterMap[letter] || letter, this._greekLetterMap[letter] ? '\\' + letter : letter));
             const order = p[1];
             const o = {
                 type: 'Differential',
@@ -665,12 +663,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 children: {
                     argument: {
                         type: 'Symbol',
-                        properties: { letter: letter }
+                        properties: { letter: this._greekLetterMap[letter] || letter }
                     },
                     order: null as any | null
                 }
             };
-            texBottom += `\\mathrm{d}${letter}`;
+            texBottom += `\\mathrm{d}${this._greekLetterMap[letter] ? '\\' + letter : letter}`;
             if (order > 1) {
                 o.children = { ...o.children, order: {
                     type: 'Num',
@@ -686,7 +684,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         // This sure would look a lot better as a reduce but I can't figure it out.
         let denominator = denominatorObjects.pop();
         while (denominatorObjects.length > 0) {
-            let acc = denominatorObjects.pop();
+            const acc = denominatorObjects.pop();
             acc.children.right = denominator;
             denominator = acc;
         }
@@ -715,7 +713,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         } else {
             return {
                 differential: this.makeMathsDifferentialItem(parsedDifferential as string[]),
-                letters: differentialArgument ? [this.makeSingleLetterMenuItem(differentialArgument)] : null
+                letters: differentialArgument ? [this.makeSingleLetterMenuItem(this._greekLetterMap[differentialArgument] || differentialArgument, this._greekLetterMap[differentialArgument] ? '\\' + differentialArgument : differentialArgument)] : null
             }
         }
     }
@@ -898,7 +896,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onMenuTabClick(menuName: string) {
-        if (this.state.activeMenu == menuName) {
+        if (this.state.activeMenu === menuName) {
             this.setState({ menuOpen: !this.state.menuOpen });
         } else {
             this.setState({ menuOpen: true, activeMenu: menuName});

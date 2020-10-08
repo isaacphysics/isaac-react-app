@@ -4,8 +4,8 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useSelector} from "react-redux";
 import {isLoggedIn, isStudent} from "../../services/user";
 import {selectors} from "../../state/selectors";
-import {MenuCard} from "../elements/MenuCard";
 import {Link} from "react-router-dom";
+import {IsaacCard} from "../content/IsaacCard";
 
 export const TeacherFeatures = () => {
 
@@ -35,87 +35,87 @@ export const TeacherFeatures = () => {
                 </Button>
             </Col>}
         </Row>
-        <Row className="teacher-feature-body px-3">
-            <Col md="4">
-                <MenuCard link={"/groups"}
-                    imageSrc={"/assets/phy/teacher_features_sprite.svg#groups"}
-                    title={"1. Create a Group"}
-                    disabled={isDisabled}
-                    verticalContent={true}
-                    subtitle={"Create and manage class groups, and share them with colleagues."}/>
-            </Col>
-            <Col md="4">
-                <MenuCard link={"/set_assignments"}
-                    imageSrc={"/assets/phy/teacher_features_sprite.svg#set-assignments"}
-                    title={"2. Set Assignments"}
-                    disabled={isDisabled}
-                    verticalContent={true}
-                    subtitle={"Set assignments from our skills books, pre-made boards or create your own."}/>
-            </Col>
-            <Col md="4">
-                <MenuCard link={"/assignment_progress"}
-                    imageSrc={"/assets/phy/teacher_features_sprite.svg#track-progress"}
-                    title={"3. Assignment Progress"}
-                    disabled={isDisabled}
-                    verticalContent={true}
-                    subtitle={"View your students’ progress through their assignments."}/>
-            </Col>
+        <Row className="card-deck isaac-cards-body px-3">
+            <IsaacCard doc={{ clickUrl: "/groups",
+                image: {src: "/assets/phy/teacher_features_sprite.svg#groups"},
+                title: "1. Create a Group",
+                disabled: isDisabled,
+                verticalContent: true,
+                subtitle: "Create and manage class groups, and share them with colleagues."}}
+                       imageClassName="teacher-features"
+            />
+            <IsaacCard doc={{ clickUrl: "/set_assignments",
+                image: {src: "/assets/phy/teacher_features_sprite.svg#set-assignments"},
+                title: "2. Set Assignments",
+                disabled: isDisabled,
+                verticalContent: true,
+                subtitle: "Set assignments from our skills books, pre-made boards or create your own."}}
+                       imageClassName="teacher-features"
+            />
+            <IsaacCard doc={{ clickUrl: "/assignment_progress",
+                image: {src: "/assets/phy/teacher_features_sprite.svg#track-progress"},
+                title: "3. Assignment Progress",
+                disabled: isDisabled,
+                verticalContent: true,
+                subtitle: "View your students’ progress through their assignments."}}
+                       imageClassName="teacher-features"
+            />
         </Row>
         <Row className="my-4">
             <Col>
                 <h3 className="h-title text-center">Teacher Support</h3>
             </Col>
         </Row>
-        <Row className="teacher-feature-body mt-2 px-3">
-            <Col md="4">
-                <MenuCard link={"/support/teacher/general"}
-                    imageSrc={"/assets/phy/teacher_features_sprite.svg#teacher-forum"}
-                    title={"Teacher FAQ"}
-                    verticalContent={true}
-                    subtitle={"Answers to your questions and how-to guides."}/>
-            </Col>
-            <Col md="4">
-                <MenuCard link={"/pages/teacher_mentoring"}
-                    imageSrc={"/assets/phy/teacher_features_sprite.svg#use-with-class"}
-                    title={"Teacher Mentoring"}
-                    verticalContent={true}
-                    subtitle={isLoggedIn(user) ? "Fortnightly support for Physics teachers." : "Fortnightly support for teachers of Physics."}/>
-            </Col>
-            <Col md="4">
-                <MenuCard link={"/pages/isaac_embedded_schools"}
-                    imageSrc={"/assets/phy/teacher_features_sprite.svg#groups"}
-                    title={"Teacher Ambassadors"}
-                    verticalContent={true}
-                    subtitle={isLoggedIn(user) ? "Learn from real teachers how they have embedded Isaac Physics. " : "Learn from practising teachers how they have embedded Isaac Physics."}/>
-            </Col>
+        <Row className="card-deck isaac-cards-body mt-2 px-3">
+            <IsaacCard doc={{ clickUrl: "/support/teacher/general",
+                image: {src: "/assets/phy/teacher_features_sprite.svg#teacher-forum"},
+                title: "Teacher FAQ",
+                verticalContent: true,
+                subtitle: "Answers to your questions and how-to guides."}}
+                       imageClassName="teacher-features"
+            />
+            <IsaacCard doc={{ clickUrl: "/pages/teacher_mentoring",
+                image: {src: "/assets/phy/teacher_features_sprite.svg#use-with-class"},
+                title: "Teacher Mentoring",
+                verticalContent: true,
+                subtitle: isLoggedIn(user) ? "Fortnightly support for Physics teachers." : "Fortnightly support for teachers of Physics."}}
+                       imageClassName="teacher-features"
+            />
+            <IsaacCard doc={{ clickUrl: "/pages/isaac_embedded_schools",
+                image: {src: "/assets/phy/teacher_features_sprite.svg#groups"},
+                title: "Teacher Ambassadors",
+                verticalContent: true,
+                subtitle: isLoggedIn(user) ? "Learn from real teachers how they have embedded Isaac Physics. " : "Learn from practising teachers how they have embedded Isaac Physics."}}
+                       imageClassName="teacher-features"
+            />
         </Row>
         <Row className="my-4">
             <Col>
                 <h3 className="h-title text-right">Teacher Resources</h3>
             </Col>
         </Row>
-        <Row className="teacher-feature-body mb-5 mt-2 px-3">
-            <Col md="4">
-                <MenuCard link={"https://www.isaacbooks.org/"}
-                    imageSrc={"/assets/phy/teacher_features_sprite.svg#skills-book-cover"}
-                    title={"Isaac Physics Books"}
-                    verticalContent={true}
-                    subtitle={"Buy one of our Skills Mastery books at cost."}/>
-            </Col>
-            <Col md="4">
-                <MenuCard link={"/pages/pre_made_gameboards"}
-                    imageSrc={"/assets/phy/key_stage_sprite.svg#triple"}
-                    title={"Boards for Lessons"}
-                    verticalContent={true}
-                    subtitle={isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}/>
-            </Col>
-            <Col md="4">
-                <MenuCard link={"/events?types=teacher"}
-                    imageSrc={"/assets/phy/teacher_features_sprite.svg#calendar"}
-                    title={"Events"}
-                    verticalContent={true}
-                    subtitle={"Attend FREE face-to-face or virtual CPDs."}/>
-            </Col>
+        <Row className="card-deck isaac-cards-body mb-5 mt-2 px-3">
+            <IsaacCard doc={{ clickUrl: "/pages/isaac_books",
+                image: {src: "/assets/phy/teacher_features_sprite.svg#skills-book-cover"},
+                title: "Isaac Physics Books",
+                verticalContent: true,
+                subtitle: "Buy one of our Skills Mastery books at cost."}}
+                       imageClassName="teacher-features"
+            />
+            <IsaacCard doc={{ clickUrl: "/pages/pre_made_gameboards",
+                image: {src: "/assets/phy/key_stage_sprite.svg#triple"},
+                title: "Boards for Lessons",
+                verticalContent: true,
+                subtitle: isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}}
+                       imageClassName="teacher-features"
+            />
+            <IsaacCard doc={{ clickUrl: "/events?types=teacher",
+                image: {src: "/assets/phy/teacher_features_sprite.svg#calendar"},
+                title: "Events",
+                verticalContent: true,
+                subtitle: "Attend FREE face-to-face or virtual CPDs."}}
+                       imageClassName="teacher-features"
+            />
         </Row>
     </Container>
 };

@@ -16,6 +16,7 @@ import _flattenDeep from 'lodash/flatMapDeep';
 import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
 import uuid from "uuid";
+import { isDefined } from '../../services/miscUtils';
 
 // Magic starts here
 interface ChildrenMap {
@@ -83,7 +84,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
-        if (previousYPosition) {
+        if (isDefined(previousYPosition)) {
             window.scrollTo(0, previousYPosition);
         }
     };
@@ -179,7 +180,12 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 }
                 setErrors(_errors);
             } else {
-                setErrors(undefined);
+                if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(pycode)) {
+                    // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
+                    setErrors(["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"])
+                } else {
+                    setErrors(undefined);
+                }
                 if (pycode === '') {
                     const state = {result: {tex: "", python: "", mathml: ""}};
                     setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
