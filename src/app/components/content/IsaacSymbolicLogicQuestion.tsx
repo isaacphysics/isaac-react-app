@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {connect} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
@@ -19,6 +19,7 @@ import uuid from "uuid";
 import { Inequality, makeInequality } from 'inequality';
 import { parseBooleanExpression } from 'inequality-grammar';
 import { isDefined } from '../../services/miscUtils';
+import { isStaff } from '../../services/user';
 
 // Magic starts here
 interface ChildrenMap {
@@ -69,6 +70,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
     const examBoard = useCurrentExamBoard();
     const [textInput, setTextInput] = useState('');
+    const user = useSelector(selectors.user.orNull);
     
     function currentAttemptPythonExpression(): string {
         return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
@@ -222,7 +224,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 logicSyntax={examBoard === EXAM_BOARD.OCR ? 'logic' : 'binary'}
                 questionDoc={doc}
             />}
-            <div className="eqn-editor-input">
+            {isStaff(user) && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2">
                     <Input type="text" onChange={updateEquation} value={textInput}
@@ -246,7 +248,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 {symbolList && <div className="eqn-editor-symbols">
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}
-            </div>
+            </div>}
         </div>
     );
 };

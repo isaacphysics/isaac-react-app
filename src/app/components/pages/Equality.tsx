@@ -13,6 +13,9 @@ import { sanitiseInequalityState } from '../../services/questions';
 import { parseMathsExpression, parseBooleanExpression } from 'inequality-grammar';
 
 import { isDefined } from "isaac-graph-sketcher/dist/src/GraphUtils";
+import { useSelector } from 'react-redux';
+import { selectors } from '../../state/selectors';
+import { isStaff } from '../../services/user';
 
 export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
     const queryParams = queryString.parse(location.search);
@@ -23,6 +26,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
     const [editorSyntax, setEditorSyntax] = useState('logic');
     const [textInput, setTextInput] = useState('');
     const [errors, setErrors] = useState<string[]>();
+    const user = useSelector(selectors.user.orNull);
     // Does this really need to be a state variable if it is immutable?
     const [editorMode, setEditorMode] = useState(queryParams.mode || { [SITE.PHY]: 'maths', [SITE.CS]: 'logic' }[SITE_SUBJECT]);
 
@@ -248,7 +252,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                             visible={modalVisible}
                         />}
                     </div>
-                    {(editorMode === 'maths' || editorMode === 'logic') && <div className="eqn-editor-input">
+                    {(editorMode === 'maths' || (isStaff(user) && editorMode === 'logic')) && <div className="eqn-editor-input">
                         <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                         <InputGroup className="my-2">
                             <Input type="text" onChange={updateEquation} value={textInput}
