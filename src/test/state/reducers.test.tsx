@@ -10,7 +10,7 @@ import {
     toasts,
     user
 } from "../../app/state/reducers";
-import {Action, AppGameBoard, AppGroupMembership, AppQuestionDTO, LoggedInUser, AppGroup} from "../../IsaacAppTypes";
+import {Action, AppGameBoard, AppGroupMembership, AppQuestionDTO, PotentialUser, AppGroup} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
 import {mapValues, union, without} from "lodash";
@@ -51,7 +51,7 @@ describe("root reducer", () => {
 describe("user reducer", () => {
     const {profWheeler, dameShirley} = registeredUserDTOs;
 
-    const previousStates: (LoggedInUser | null)[] = [null, {loggedIn: false}, {...dameShirley, loggedIn: true}, {...profWheeler, loggedIn: true}];
+    const previousStates: (PotentialUser | null)[] = [null, {loggedIn: false}, {...dameShirley, loggedIn: true}, {...profWheeler, loggedIn: true}];
 
     it("returns null as an initial value", () => {
         const actualState = user(undefined, ignoredTestAction);

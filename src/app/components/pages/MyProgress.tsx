@@ -6,7 +6,7 @@ import {getAnsweredQuestionsByDate, getProgress} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
 import {withRouter} from "react-router-dom";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {PotentialUser} from "../../../IsaacAppTypes";
 import {Unauthorised} from "./Unauthorised";
 import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats";
 import {DailyStreakPanel} from "../elements/panels/DailyStreakPanel";
@@ -43,7 +43,7 @@ export const siteSpecific = {
 
 
 interface MyProgressProps {
-    user: LoggedInUser;
+    user: PotentialUser;
     match: {params: {userIdOfInterest: string}};
 }
 export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}}: MyProgressProps) => {

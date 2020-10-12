@@ -19,7 +19,7 @@ import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AdminUserGetState, AppState, ErrorState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
-    LoggedInUser,
+    PotentialUser,
     SubjectInterests,
     UserEmailPreferences,
     UserPreferencesDTO,
@@ -71,7 +71,7 @@ const dispatchToProps = {
 };
 
 interface AccountPageProps {
-    user: LoggedInUser;
+    user: PotentialUser;
     errorMessage: ErrorState;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     selectedUserAuthSettings: UserAuthenticationSettingsDTO | null;
@@ -81,7 +81,7 @@ interface AccountPageProps {
         updatedUser: ValidationUser,
         updatedUserPreferences: UserPreferencesDTO,
         passwordCurrent: string | null,
-        currentUser: LoggedInUser
+        currentUser: PotentialUser
     ) => void;
     firstLogin: boolean;
     hashAnchor: string | null;
