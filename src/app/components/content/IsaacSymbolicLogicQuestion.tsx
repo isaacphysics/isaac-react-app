@@ -88,7 +88,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
         const pythonExpression = newState?.result?.python || "";
         const previousPythonExpression = currentAttemptValue?.result?.python || "";
         if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
-            setCurrentAttempt(questionId, {type: 'formula', value: JSON.stringify(newState), pythonExpression});
+            setCurrentAttempt(questionId, {type: 'logicFormula', value: JSON.stringify(newState), pythonExpression});
         }
         initialEditorSymbols.current = state.symbols;
     };
@@ -180,7 +180,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 setErrors(undefined);
                 if (pycode === '') {
                     const state = {result: {tex: "", python: "", mathml: ""}};
-                    setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
+                    setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
                     initialEditorSymbols.current = [];
                 } else if (parsedExpression.length === 1) {
                     // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
