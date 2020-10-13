@@ -100,7 +100,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                 if (editorMode === 'maths') {
                     regexStr = "[^ (-)*-/0-9<->A-Z^-_a-z±²-³¼-¾×÷]+";
                 } else {
-                    regexStr = "[^ A-Zandorxnt&∧.|∨v+^⊻!~¬01()]+"
+                    regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.]+"
                 }
                 const badCharacters = new RegExp(regexStr);
                 setErrors([]);
