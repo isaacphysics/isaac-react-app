@@ -17,7 +17,7 @@ import {jsonHelper} from "../../services/json";
 import { Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip } from 'reactstrap';
 import uuid from "uuid";
 import { Inequality, makeInequality } from 'inequality';
-import { parseBooleanExpression } from 'inequality-grammar';
+import { parseBooleanExpression, ParsingError } from 'inequality-grammar';
 import { isDefined } from '../../services/miscUtils';
 import { isStaff } from '../../services/user';
 
@@ -42,7 +42,7 @@ function countChildren(root: ChildrenMap) {
     return count;
 }
 
-function isError(p: {error: string} | any[]): p is {error: string} {
+function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
@@ -153,7 +153,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
             if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
                 const openBracketsCount = pycode.split('(').length - 1;
                 const closeBracketsCount = pycode.split(')').length - 1;
-                const regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.]+"
+                const regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!]+"
                 const badCharacters = new RegExp(regexStr);
                 
                 const _errors = [];
@@ -242,7 +242,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                         </UncontrolledTooltip>
                     </InputGroupAddon>
                 </InputGroup>
-                {errors && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
+                {errors && errors.length > 0 && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
                     {errors.map(e => (<li key={e}>{e}</li>))}
                 </ul></div>}
                 {symbolList && <div className="eqn-editor-symbols">

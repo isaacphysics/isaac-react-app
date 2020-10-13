@@ -10,7 +10,7 @@ import {RouteComponentProps} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import { Inequality, makeInequality } from 'inequality';
 import { sanitiseInequalityState } from '../../services/questions';
-import { parseMathsExpression, parseBooleanExpression } from 'inequality-grammar';
+import { parseMathsExpression, parseBooleanExpression, ParsingError } from 'inequality-grammar';
 
 import { isDefined } from "isaac-graph-sketcher/dist/src/GraphUtils";
 import { useSelector } from 'react-redux';
@@ -36,7 +36,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
     const debounceTimer = useRef<number|null>(null);
     const [inputState, setInputState] = useState(() => ({pythonExpression: '', userInput: '', valid: true}));
 
-    function isError(p: {error: string} | any[]): p is {error: string} {
+    function isError(p: ParsingError | any[]): p is ParsingError {
         return p.hasOwnProperty("error");
     }
 
@@ -85,7 +85,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
             debounceTimer.current = null;
         }
         debounceTimer.current = window.setTimeout(() => {
-            let parsedExpression = undefined;
+            let parsedExpression: any[] | ParsingError | undefined;
             if (editorMode === 'maths') {
                 parsedExpression = parseMathsExpression(pycode);
             } else if (editorMode === 'logic') {
@@ -100,11 +100,14 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                 if (editorMode === 'maths') {
                     regexStr = "[^ (-)*-/0-9<->A-Z^-_a-z±²-³¼-¾×÷]+";
                 } else {
-                    regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.]+"
+                    regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!]+"
                 }
                 const badCharacters = new RegExp(regexStr);
                 setErrors([]);
                 
+                if (isError(parsedExpression) && parsedExpression.error) {
+                    _errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`)
+                }
                 if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
                     _errors.push('LaTeX syntax is not supported.');
                 }
@@ -280,7 +283,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                                 </UncontrolledTooltip>}
                             </InputGroupAddon>
                         </InputGroup>
-                        {errors && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
+                        {errors && errors.length > 0 && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
                             {errors.map(e => (<li key={e}>{e}</li>))}
                         </ul></div>}
                     </div>}

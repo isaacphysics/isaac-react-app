@@ -10,7 +10,7 @@ import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {selectors} from "../../state/selectors";
 import {Inequality, makeInequality} from "inequality";
-import {parseMathsExpression} from "inequality-grammar";
+import {parseMathsExpression, ParsingError} from "inequality-grammar";
 
 import _flattenDeep from 'lodash/flatMapDeep';
 import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
@@ -39,7 +39,7 @@ function countChildren(root: ChildrenMap) {
     return count;
 }
 
-function isError(p: {error: string} | any[]): p is {error: string} {
+function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
