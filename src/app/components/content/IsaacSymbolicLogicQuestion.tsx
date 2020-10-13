@@ -228,7 +228,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2">
                     <Input type="text" onChange={updateEquation} value={textInput}
-                        placeholder="or type your formula here"/>
+                        placeholder="or type your expression here"/>
                     <InputGroupAddon addonType="append">
                         <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>
                         <UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
