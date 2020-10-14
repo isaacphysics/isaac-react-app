@@ -201,6 +201,8 @@ export interface GameboardProgressSummaryDTO {
     questionPartsNotAttempted?: number;
     questionPartsTotal?: number;
     passMark?: number;
+    questionPagesPerfect?: number;
+    questionPagesTotal?: number;
 }
 
 export interface UserGameboardProgressSummaryDTO {

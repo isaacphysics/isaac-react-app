@@ -25,7 +25,7 @@ import {
 } from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState, UserGameboardProgressSummaryDTO} from "../../../IsaacApiTypes";
+import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState, GameboardProgressSummaryDTO, UserGameboardProgressSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
@@ -121,6 +121,26 @@ function formatMark(numerator: number, denominator: number, formatAsPercentage: 
     return result;
 }
 
+function formatPartsCorrect(progress: GameboardProgressSummaryDTO[], formatAsPercentage: boolean) {
+    const totalPartsCorrect = progress.map(gameboard => gameboard.questionPartsCorrect).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
+    const totalParts = progress.map(gameboard => gameboard.questionPartsTotal).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
+    if (formatAsPercentage) {
+        return totalParts !== 0 ? Math.round(100 * totalPartsCorrect / totalParts) + "%" : "100%";
+    } else {
+        return totalPartsCorrect + "/" + totalParts;
+    }
+}
+
+function formatPagesCorrect(progress: GameboardProgressSummaryDTO[], formatAsPercentage: boolean) {
+    const totalPagesCorrect = progress.map(gameboard => gameboard.questionPagesPerfect).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
+    const totalPages = progress.map(gameboard => gameboard.questionPagesTotal).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
+    if (formatAsPercentage) {
+        return totalPages !== 0 ? Math.round(100 * totalPagesCorrect / totalPages) + "%" : "100%";
+    } else {
+        return totalPagesCorrect + "/" + totalPages;
+    }
+}
+
 export const GroupProgressLegend = (props: GroupProgressLegendProps): JSX.Element => {
     const {pageSettings} = props;
     return <div className="p-4"><div className="assignment-progress-legend">
@@ -168,7 +188,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
     const groupId = group.id || 0;
     const groupProgress = useSelector(selectors.groups.progress)?.[groupId];
 
-    type SortOrder = number | "student-name";
+    type SortOrder = number | "student-name" | "total-parts" | "total-questions";
     const [sortOrder, setSortOrder] = useState<SortOrder>("student-name");
     const [reverseOrder, setReverseOrder] = useState(false);
 
@@ -241,6 +261,8 @@ const GroupSummary = (props: GroupSummaryProps) => {
             const link = <Link to={`/assignment_progress/${gameboard.assignmentId || 0}`}>{gameboard.gameboardTitle}</Link>
             return sortItem({key: gameboard.assignmentId, itemOrder: index, className: index === selectedGameboardNumber ? 'selected' : '', children: link})
         })}
+        {sortItem({key: "total-parts", itemOrder: "total-parts", children: "Total Parts"})}
+        {sortItem({key: "total-questions", itemOrder: "total-questions", children: "Total Qs"})}
     </tr>;
 
     return <div className={"group-progress-summary" + (pageSettings.colourBlind ? " colour-blind" : "")}>
@@ -259,6 +281,8 @@ const GroupSummary = (props: GroupSummaryProps) => {
                                 </Link>
                             </th>}
                             {(progress ?? []).map((gameboard, index) => {
+                                /* Do we still base this on question parts or should we move to question pages?
+                                   Do we want to give users the option to switch between the two? (hint: NO) */
                                 const rateClass = markClasses(fullAccess,
                                                             gameboard.questionPartsCorrect ?? 0,
                                                             gameboard.questionPartsIncorrect ?? 0,
@@ -266,9 +290,12 @@ const GroupSummary = (props: GroupSummaryProps) => {
                                                             gameboard.passMark ?? passMark
                                                            );
                                 return <td className={`py-2 ${rateClass} ${index === selectedGameboardNumber ? 'selected' : ''} progress-cell text-center`} key={gameboard.assignmentId}>
-                                    {fullAccess && formatMark(gameboard.questionPartsCorrect ?? 0, gameboard.questionPartsTotal ?? 1, pageSettings.formatAsPercentage)}
+                                    {/* {fullAccess && formatMark(gameboard.questionPartsCorrect ?? 0, gameboard.questionPartsTotal ?? 1, pageSettings.formatAsPercentage)} */}
+                                    {fullAccess && formatMark(gameboard.questionPagesPerfect ?? 0, gameboard.questionPagesTotal ?? 0, pageSettings.formatAsPercentage)}
                                 </td>
                             })}
+                            <td>{fullAccess && formatPartsCorrect(progress || [], pageSettings.formatAsPercentage)}</td>
+                            <td>{fullAccess && formatPagesCorrect(progress || [], pageSettings.formatAsPercentage)}</td>
                         </tr>
                     })}
                 </tbody>
@@ -286,7 +313,8 @@ const GroupAssignmentProgress = (props: GroupSummaryProps) => {
     const dispatch = useDispatch();
     const {group} = props;
 
-    const [isExpanded, setExpanded] = useState(false);
+    // TODO FIXME IMPORTANT TURN THIS TO FALSE
+    const [isExpanded, setExpanded] = useState(true);
 
     const assignmentCount = group.assignments.length;
 
