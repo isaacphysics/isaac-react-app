@@ -3,8 +3,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {handlePasswordReset, verifyPasswordReset} from "../../state/actions";
 import {Button, Card, CardBody, CardFooter, Container, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
 import {AppState} from "../../state/reducers";
-import {ZxcvbnResult} from "../../../IsaacAppTypes";
-import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../services/passwordStrength";
+import {PasswordFeedback} from "../../../IsaacAppTypes";
+import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../services/passwordStrength";
 import {RouteComponentProps} from "react-router";
 
 
@@ -15,7 +15,7 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
 
     const [isValidPassword, setValidPassword] = useState(true);
     const [currentPassword, setCurrentPassword] = useState("");
-    const [passwordFeedback, setPasswordFeedback] = useState<ZxcvbnResult | null>(null);
+    const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
 
     loadZxcvbnIfNotPresent();
 
@@ -49,7 +49,7 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
                             <span className='float-right small mt-1'>
                                 <strong>Password strength: </strong>
                                 <span id="password-strength-feedback">
-                                    {passwordStrengthText[(passwordFeedback as ZxcvbnResult).score]}
+                                    {passwordFeedback.feedbackText}
                                 </span>
                             </span>
                             }

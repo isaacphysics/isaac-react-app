@@ -86,6 +86,14 @@
       color-level($color, $alert-color-level)
     );
   }
+
+  .hint-tab-title {
+    color: $color !important;
+    &.active {
+      color: white !important;
+      background-color: $color !important;
+    }
+  }
 }
 
 // FIXME: This is not nice at all, but does fix subject and email prefs!

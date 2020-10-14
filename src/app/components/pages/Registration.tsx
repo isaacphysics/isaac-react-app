@@ -16,14 +16,14 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {ZxcvbnResult} from "../../../IsaacAppTypes";
+import {PasswordFeedback} from "../../../IsaacAppTypes";
 import {updateCurrentUser} from "../../state/actions";
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistence from "../../services/localStorage"
 import {KEY} from "../../services/localStorage"
 import {DateInput} from "../elements/inputs/DateInput";
-import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../services/passwordStrength"
+import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../services/passwordStrength"
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {Redirect, RouteComponentProps, withRouter} from "react-router";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
@@ -50,7 +50,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword);
     const [dobCheckboxChecked, setDobCheckboxChecked] = useState(false);
     const [attemptedSignUp, setAttemptedSignUp] = useState(false);
-    const [passwordFeedback, setPasswordFeedback] = useState<ZxcvbnResult | null>(null);
+    const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
 
 
     // Values derived from inputs (props and state)
@@ -162,7 +162,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                     <span className='float-right small mt-1'>
                                         <strong>Password strength: </strong>
                                         <span id="password-strength-feedback">
-                                            {passwordStrengthText[(passwordFeedback as ZxcvbnResult).score]}
+                                            {passwordFeedback.feedbackText}
                                         </span>
                                     </span>
                                 }

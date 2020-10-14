@@ -38,7 +38,7 @@ export const IsaacLinkHints = ({hints, questionPartId}: HintsProps) => {
 export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
     const dispatch = useDispatch();
 
-    function onHintView(viewedHintIndex: number) {
+    function logHintView(viewedHintIndex: number) {
         if (viewedHintIndex > -1) {
             const eventDetails = {type: "VIEW_HINT", questionId: questionPartId, hintIndex: viewedHintIndex};
             dispatch(logAction(eventDetails));
@@ -46,7 +46,7 @@ export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
     }
 
     return <div className="tabbed-hints">
-        {hints && <Tabs onActiveTabChange={onHintView} className="no-print" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
+        {hints && <Tabs onActiveTabChange={logHintView} className="no-print" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
             {Object.assign({}, ...hints.map((hint, index) => ({
                 [`Hint\u00A0${index + 1}`]: <div className="mt-3 mt-lg-4 pt-2">
                     <IsaacContent doc={hint} />
