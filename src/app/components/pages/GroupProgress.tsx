@@ -286,7 +286,7 @@ const GroupAssignmentProgress = (props: GroupSummaryProps) => {
     const dispatch = useDispatch();
     const {group} = props;
 
-    const [isExpanded, setExpanded] = useState(true);
+    const [isExpanded, setExpanded] = useState(false);
 
     const assignmentCount = group.assignments.length;
 
@@ -323,7 +323,7 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
-    let sortedGroups = groups;//?.filter(group => group.assignments.length > 0);
+    let sortedGroups = groups;
     if (sortedGroups) {
         switch(sortOrder) {
             case SortOrder.Alphabetical:
@@ -365,7 +365,6 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
             </Row>
         </Container>
         <div className="assignment-progress-container mb-5">
-            {/* {JSON.stringify(sortedGroups)} */}
             <ShowLoading until={sortedGroups}>
                 {sortedGroups && sortedGroups.map(group => <GroupAssignmentProgress key={group.id} {...props} group={group} pageSettings={pageSettings} />)}
                 {sortedGroups && sortedGroups.length === 0 && <Container className="py-5">
