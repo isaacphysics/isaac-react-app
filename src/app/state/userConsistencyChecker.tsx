@@ -62,6 +62,7 @@ const clearCurrentUser = () => {
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
+        case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
             clearCurrentUser();
             break;
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:

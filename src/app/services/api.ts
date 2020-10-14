@@ -10,7 +10,7 @@ import {
     BoardOrder,
     Choice,
     Concepts,
-    Credentials,
+    CredentialsAuthDTO,
     EmailUserRoles,
     QuestionSearchQuery,
     QuestionSearchResponse,
@@ -107,11 +107,14 @@ export const api = {
         logout: (): AxiosPromise => {
             return endpoint.post(`/auth/logout`);
         },
-        login: (provider: ApiTypes.AuthenticationProvider, credentials: Credentials): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+        logoutEverywhere: (): AxiosPromise => {
+            return endpoint.post(`/auth/logout/everywhere`);
+        },
+        login: (provider: ApiTypes.AuthenticationProvider, credentials: CredentialsAuthDTO): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/auth/${provider}/authenticate`, securePadCredentials(credentials));
         },
-        mfaCompleteLogin: (mfaVerificationCode : string): AxiosPromise => {
-            return endpoint.post(`/auth/mfa/challenge`, {mfaVerificationCode: mfaVerificationCode});
+        mfaCompleteLogin: (mfaVerificationCode : string, rememberMe: boolean): AxiosPromise => {
+            return endpoint.post(`/auth/mfa/challenge`, {mfaVerificationCode: mfaVerificationCode, rememberMe});
         },
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings`)

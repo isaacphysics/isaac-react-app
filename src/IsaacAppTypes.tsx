@@ -71,6 +71,8 @@ export type Action =
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST}
+    | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.USER_PROGRESS_REQUEST}
     | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS; progress: UserProgress}
     | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE}
@@ -652,12 +654,13 @@ export interface AdditionalInformation {
     experienceLevel?: string;
 }
 
-export interface Credentials {
+export interface CredentialsAuthDTO {
     email: string;
     password: string;
+    rememberMe: boolean;
 }
 
-export interface PaddedCredentials extends Credentials {
+export interface PaddedCredentialsAuthDTO extends CredentialsAuthDTO {
     _randomPadding: string;
 }
 
@@ -671,6 +674,12 @@ export interface ZxcvbnResult {
     password: string;
     score: number;
     sequence: any;
+}
+
+export interface PasswordFeedback {
+    zxcvbn?: ZxcvbnResult;
+    pwnedPasswordCount?: number;
+    feedbackText: string;
 }
 
 export interface EmailUserRoles {

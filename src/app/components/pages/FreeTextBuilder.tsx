@@ -105,11 +105,11 @@ function notEqualToDefaultTestCase(testCase: TestCaseDTO) {
 function convertTestCasesToCsv(testCases: TestCaseDTO[]) {
     return testCases.map(tc => `${tc.expected},${tc.answer?.value?.split("\n").join("\\n")}`).join("\n");
 }
-function convertCsvToTestCases(testCasesCsv: string) {
+function convertCsvToTestCases(testCasesCsv: string): (TestCaseDTO & {testCaseNumber: number})[] {
     return testCasesCsv.split("\n").map((testCaseString, index) => {
         const [expected, ...value] = testCaseString.split(",");
-        return {testCaseNumber: index, expected: expected === "true", choice: {type: "stringChoice", value: value.join(",")}};
-    })
+        return {testCaseNumber: index, expected: expected === "true", answer: {type: "stringChoice", value: value.join(",")}};
+    });
 }
 
 function isEditableExplanation(explanation?: any) {

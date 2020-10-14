@@ -19,6 +19,10 @@ export const validateEmail = (email?: string) => {
     return email && email.length > 0 && email.includes("@");
 };
 
+export const isValidGameboardId = (gameboardId?: string) => {
+    return !gameboardId || /^[a-z0-9_-]+$/.test(gameboardId);
+};
+
 export const isDobOverThirteen = (dateOfBirth?: Date) => {
     if (dateOfBirth) {
         const today = new Date();

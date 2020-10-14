@@ -7,11 +7,13 @@
     @include respond-below(xs) {padding-left: 0 !important; padding-right: 0 !important;}
   }
 
+  // Note: Colours are practically always overridden by subjects.scss.
+  // The following rule sets the default to be physics purple.
   .hint-tab-title {
-    color: $purple !important;
+    color: $phy_physics !important;
     &.active {
       color: white !important;
-      background-color: $purple !important;
+      background-color: $phy_physics !important;
     }
   }
 }

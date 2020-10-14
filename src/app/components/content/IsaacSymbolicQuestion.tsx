@@ -180,7 +180,12 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 }
                 setErrors(errors);
             } else {
-                setErrors(undefined);
+                if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(pycode)) {
+                    // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
+                    setErrors(["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"])
+                } else {
+                    setErrors(undefined);
+                }
                 if (pycode === '') {
                     const state = {result: {tex: "", python: "", mathml: ""}};
                     setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
