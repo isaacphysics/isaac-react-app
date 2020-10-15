@@ -8,7 +8,7 @@ import {atLeastOne} from "../../../services/validation";
 import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
 import {recordEventAttendance} from "../../../state/actions";
-import {ATTENDANCE, LoggedInUser} from "../../../../IsaacAppTypes";
+import {ATTENDANCE, PotentialUser} from "../../../../IsaacAppTypes";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 import {isEventLeader} from "../../../services/user";
 import {selectors} from "../../../state/selectors";
@@ -21,7 +21,7 @@ function displayAttendanceAsSymbol(status?: string) {
     }
 }
 
-export const EventAttendance = ({user, eventId}: {user: LoggedInUser; eventId: string}) => {
+export const EventAttendance = ({user, eventId}: {user: PotentialUser; eventId: string}) => {
     const dispatch = useDispatch();
     const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
     const bookings = useSelector((state: AppState) => state && state.eventBookings || []);

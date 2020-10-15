@@ -1,12 +1,12 @@
 import {TrackedRoute} from "./TrackedRoute";
 import {Generic} from "../pages/Generic";
 import React from "react";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {PotentialUser} from "../../../IsaacAppTypes";
 import {RouteProps} from "react-router";
 
 export interface StaticPageRouteProps {
     pageId?: string;
-    ifUser?: (user: LoggedInUser) => boolean;
+    ifUser?: (user: PotentialUser) => boolean;
 }
 
 /**

@@ -9,7 +9,7 @@ import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
 import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
-import {LoggedInUser} from "../../../../IsaacAppTypes";
+import {PotentialUser} from "../../../../IsaacAppTypes";
 import {isEventLeader} from "../../../services/user";
 
 export enum EventOverviewFilter {
@@ -18,7 +18,7 @@ export enum EventOverviewFilter {
     "Recent events" = "RECENT",
     "Past events" = "PAST",
 }
-export const EventOverviews = ({setSelectedEventId, user}: {user: LoggedInUser; setSelectedEventId: (eventId: string | null) => void}) => {
+export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser; setSelectedEventId: (eventId: string | null) => void}) => {
     const dispatch = useDispatch();
     const eventOverviews = useSelector((state: AppState) => state && state.eventOverviews);
 
