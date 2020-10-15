@@ -121,9 +121,22 @@ function formatMark(numerator: number, denominator: number, formatAsPercentage: 
     return result;
 }
 
-function formatPartsCorrect(progress: GameboardProgressSummaryDTO[], formatAsPercentage: boolean) {
+function computePartsCorrect(progress: GameboardProgressSummaryDTO[]) {
     const totalPartsCorrect = progress.map(gameboard => gameboard.questionPartsCorrect).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
     const totalParts = progress.map(gameboard => gameboard.questionPartsTotal).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
+
+    return { totalPartsCorrect, totalParts }
+}
+
+function computePagesCorrect(progress: GameboardProgressSummaryDTO[]) {
+    const totalPagesCorrect = progress.map(gameboard => gameboard.questionPagesPerfect).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
+    const totalPages = progress.map(gameboard => gameboard.questionPagesTotal).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
+
+    return { totalPagesCorrect, totalPages }
+}
+
+function formatPartsCorrect(progress: GameboardProgressSummaryDTO[], formatAsPercentage: boolean) {
+    const { totalPartsCorrect, totalParts } = computePartsCorrect(progress);
     if (formatAsPercentage) {
         return totalParts !== 0 ? Math.round(100 * totalPartsCorrect / totalParts) + "%" : "100%";
     } else {
@@ -132,8 +145,7 @@ function formatPartsCorrect(progress: GameboardProgressSummaryDTO[], formatAsPer
 }
 
 function formatPagesCorrect(progress: GameboardProgressSummaryDTO[], formatAsPercentage: boolean) {
-    const totalPagesCorrect = progress.map(gameboard => gameboard.questionPagesPerfect).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
-    const totalPages = progress.map(gameboard => gameboard.questionPagesTotal).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
+    const { totalPagesCorrect, totalPages } = computePagesCorrect(progress);
     if (formatAsPercentage) {
         return totalPages !== 0 ? Math.round(100 * totalPagesCorrect / totalPages) + "%" : "100%";
     } else {
@@ -219,6 +231,12 @@ const GroupSummary = (props: GroupSummaryProps) => {
     const sortedProgress = orderBy(groupProgress, (item: UserGameboardProgressSummaryDTO) => {
         if (sortOrder === 'student-name') {
             return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
+        } else if (sortOrder === 'total-parts') {
+            const { totalPartsCorrect, totalParts } = computePartsCorrect(item.progress || []);
+            return totalPartsCorrect / totalParts;
+        } else if (sortOrder === 'total-questions') {
+            const { totalPagesCorrect, totalPages } = computePagesCorrect(item.progress || []);
+            return totalPagesCorrect / totalPages;
         } else if (typeof sortOrder === 'number') {
             return (item?.progress?.[sortOrder]?.questionPartsCorrect || 0)
         }
