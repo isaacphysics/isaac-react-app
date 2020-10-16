@@ -30,11 +30,15 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     const hexOrEmpty = SITE_SUBJECT === SITE.PHY ? "-hex" : "";
     let iconHref = `/assets/question${hexOrEmpty}.svg#icon`;
     let message = "";
+    let messageClasses = "";
 
     switch (question.state) {
         case "PERFECT":
             itemClasses += " bg-success";
             message = "perfect!"
+            if (SITE_SUBJECT === SITE.PHY) {
+                messageClasses += "message-perfect"
+            }
             iconHref = `/assets/tick-rp${hexOrEmpty}.svg#icon`;
             break;
         case "PASSED":
@@ -57,9 +61,9 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
                     <use href={iconHref} xlinkHref={iconHref}/>
                 </svg>
             </span>
-            <div className={"flex-grow-1 " + itemSubject?.id || ""}>
-                <span className="text-secondary">{question.title}</span>
-                {message && <span className="gameboard-item-message">{message}</span>}
+            <div className={"flex-grow-1 " + itemSubject?.id || (SITE_SUBJECT === SITE.PHY ? "physics" : "")}>
+                <span className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""}>{question.title}</span>
+                {message && <span className={"gameboard-item-message" + (SITE_SUBJECT === SITE.PHY ? "-phy " : " ") + messageClasses}>{message}</span>}
                 {questionTags && <div className="gameboard-tags">
                     {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
                 </div>}
