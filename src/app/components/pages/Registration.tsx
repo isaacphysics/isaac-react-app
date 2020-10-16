@@ -259,8 +259,14 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                         </Col>
                     </Row>
 
+                    <Row>
+                        <Col>
+                            By clicking Register now, you accept our <Link to="/terms">Terms of Use</Link>. Find out about our <Link to="/privacy">Privacy Policy</Link>.
+                        </Col>
+                    </Row>
+
                     {/* Submit */}
-                    <Row className="mt-1 mb-2">
+                    <Row className="mt-2 mb-2">
                         <Col md={{size: 6, offset: 3}}>
                             <Input type="submit" value="Register now" className="btn btn-block btn-secondary border-0"/>
                         </Col>
