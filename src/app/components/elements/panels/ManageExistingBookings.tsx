@@ -13,7 +13,7 @@ import {
     resendUserConfirmationEmail,
     showGroupEmailModal
 } from "../../../state/actions";
-import {LoggedInUser} from "../../../../IsaacAppTypes";
+import {PotentialUser} from "../../../../IsaacAppTypes";
 import {isAdmin, isEventLeader} from "../../../services/user";
 import {BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
@@ -22,7 +22,7 @@ import {API_PATH, bookingStatusMap} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 
-export const ManageExistingBookings = ({user, eventBookingId}: {user: LoggedInUser; eventBookingId: string}) => {
+export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialUser; eventBookingId: string}) => {
     const dispatch = useDispatch();
     useEffect(() => {dispatch(getEventBookings(eventBookingId))}, [eventBookingId]);
     const eventBookings = useSelector((state: AppState) => state && state.eventBookings || []);

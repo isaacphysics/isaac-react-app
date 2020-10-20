@@ -196,7 +196,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             }
                                         </td>
                                     </tr>}
-                                    {SITE_SUBJECT === SITE.PHY && event.bookingDeadline && <tr>
+                                    {event.bookingDeadline && <tr>
                                         <td>Booking Deadline:</td>
                                         <td>
                                             <DateString>{event.bookingDeadline}</DateString>

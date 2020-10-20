@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
-import {LoggedInUser} from "../../../../IsaacAppTypes";
+import {PotentialUser} from "../../../../IsaacAppTypes";
 import {
     authenticateWithTokenAfterPrompt,
     changeMyMembershipStatus,
@@ -20,7 +20,7 @@ import {extractTeacherName} from "../../../services/user";
 
 
 interface TeacherConnectionsProps {
-    user: LoggedInUser;
+    user: PotentialUser;
     authToken: string | null;
     editingOtherUser: boolean;
     userToEdit: AdminUserGetState;

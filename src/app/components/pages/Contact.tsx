@@ -16,7 +16,7 @@ import {
 } from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {submitMessage} from "../../state/actions";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {PotentialUser} from "../../../IsaacAppTypes";
 import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -24,7 +24,7 @@ import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../ser
 import {PageFragment} from "../elements/PageFragment";
 import {selectors} from "../../state/selectors";
 
-const determineUrlQueryPresets = (user?: LoggedInUser | null) => {
+const determineUrlQueryPresets = (user?: PotentialUser | null) => {
     const urlQuery = queryString.parse(location.search);
     let presetSubject = "";
     let presetMessage = "";

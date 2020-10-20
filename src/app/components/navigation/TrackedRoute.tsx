@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
 import ReactGA, {FieldsObject} from "react-ga";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {useSelector} from "react-redux";
 import * as persistence from "../../services/localStorage";
@@ -20,7 +20,7 @@ const trackPage = (page: string, options?: FieldsObject) => {
 };
 
 interface UserFilterProps {
-    ifUser?: (user: LoggedInUser) => boolean;
+    ifUser?: (user: PotentialUser) => boolean;
 }
 
 type TrackedRouteProps = RouteProps & {trackingOptions?: FieldsObject; componentProps?: FieldsObject} & UserFilterProps;
