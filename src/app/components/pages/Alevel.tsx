@@ -36,8 +36,8 @@ export const Alevel = () => {
                     </Row>
                 </CardBody>
             </Card>
-            <IsaacCard doc={{title: "Mentoring Schemes", subtitle: "Weekly gameboards guided by an experienced teacher.",
-                clickUrl: "/pages/isaac_mentor", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
+            <IsaacCard doc={{title: "COVID-19 Lessons", subtitle: "Virtual lessons following the Mastering Essential Pre-University Physics book.",
+                clickUrl: "/pages/covid19_alevel", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
         </Row>
         <Row className="card-deck isaac-cards-body my-3">
@@ -47,8 +47,8 @@ export const Alevel = () => {
             <IsaacCard doc={{title: "Maths for Sciences Book", subtitle: "Interactive questions from our pre-university Maths book.",
                 clickUrl: "/books/pre_uni_maths", image: {src: "/assets/phy/key_stage_sprite.svg#skills-book-cover"}
             }}/>
-            <IsaacCard doc={{title: "Questions by Lessons", subtitle: "A selection of our questions organised by lesson topic.",
-                clickUrl: "/pages/pre_made_gameboards", image: {src: "/assets/phy/key_stage_sprite.svg#triple"}
+            <IsaacCard doc={{title: "Mentoring Schemes", subtitle: "Weekly gameboards guided by an experienced teacher.",
+                clickUrl: "/pages/isaac_mentor", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
         </Row>
         <Row className="my-4">
