@@ -45,6 +45,7 @@ export const Gcse = () => {
             <IsaacCard doc={{title: "Events", subtitle: "Find one of our face-to-face or virtual workshops.",
                 clickUrl: "/events?types=student", image: {src: "/assets/phy/teacher_features_sprite.svg#calendar"}
             }}/>
+            {/* FIXME: Empty Col below stops single card filling full row, makes it half width to match */}
             <Col md={6}/>
         </Row>
     </Container>
