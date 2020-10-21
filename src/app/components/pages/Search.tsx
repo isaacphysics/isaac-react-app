@@ -135,6 +135,7 @@ export const Search = withRouter((props: {history: History; location: Location})
                                         placeholder="No filter"
                                         defaultValue={filtersState}
                                         options={Object.values(DOCUMENT_TYPE)
+                                            .filter(documentType => documentType !== DOCUMENT_TYPE.FAST_TRACK_QUESTION)
                                             .filter(documentType =>
                                                 !(documentType == DOCUMENT_TYPE.TOPIC_SUMMARY
                                                     && SITE_SUBJECT == SITE.PHY))
