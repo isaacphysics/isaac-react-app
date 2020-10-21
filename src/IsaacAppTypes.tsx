@@ -547,7 +547,9 @@ export enum BoardOrder {
     "visited" = "visited",
     "-visited" = "-visited",
     "title" = "title",
-    "-title" = "-title"
+    "-title" = "-title",
+    "completion" = "completion",
+    "-completion" = "-completion"
 }
 
 export type ActualBoardLimit = number | "ALL";
