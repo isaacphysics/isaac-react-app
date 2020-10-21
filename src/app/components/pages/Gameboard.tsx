@@ -27,8 +27,7 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
-    const hexOrEmpty = SITE_SUBJECT === SITE.PHY ? "-hex" : "";
-    let iconHref = `/assets/question${hexOrEmpty}.svg#icon`;
+    let iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/question-hex.svg#icon` : "/assets/question.svg";
     let message = "";
     let messageClasses = "";
 
@@ -39,16 +38,16 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
             if (SITE_SUBJECT === SITE.PHY) {
                 messageClasses += "message-perfect"
             }
-            iconHref = `/assets/tick-rp${hexOrEmpty}.svg#icon`;
+            iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/tick-rp-hex.svg#icon` : "/assets/tick-rp.svg";
             break;
         case "PASSED":
         case "IN_PROGRESS":
             message = "in progress"
-            iconHref = `/assets/incomplete${hexOrEmpty}.svg#icon`;
+            iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/incomplete-hex.svg#icon` : "/assets/incomplete.svg";
             break;
         case "FAILED":
             message = "try again!"
-            iconHref = `/assets/cross-rp${hexOrEmpty}.svg#icon`;
+            iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/cross-rp-hex.svg#icon` : "/assets/cross-rp.svg";
             break;
     }
 
@@ -57,9 +56,13 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
             <span>
-                <svg className={iconClasses}>
-                    <use href={iconHref} xlinkHref={iconHref}/>
-                </svg>
+                {/* TODO bh412 come up with a nicer way of differentiating site icons and also above */}
+                {SITE_SUBJECT === SITE.PHY ?
+                    <svg className={iconClasses}>
+                        <use href={iconHref} xlinkHref={iconHref}/>
+                    </svg> :
+                    <img src={iconHref} alt=""/>
+                }
             </span>
             <div className={"flex-grow-1 " + itemSubject?.id || (SITE_SUBJECT === SITE.PHY ? "physics" : "")}>
                 <span className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""}>{question.title}</span>
