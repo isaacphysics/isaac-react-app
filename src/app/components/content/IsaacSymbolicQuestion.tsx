@@ -66,6 +66,12 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
     const [textInput, setTextInput] = useState('');
 
+    function currentAttemptPythonExpression(): string {
+        return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
+    }
+
+    const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
+
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
@@ -81,21 +87,6 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         initialEditorSymbols.current = state.symbols;
     };
 
-    const closeModal = (previousYPosition: number) => () => {
-        document.body.style.overflow = "initial";
-        setModalVisible(false);
-        if (isDefined(previousYPosition)) {
-            window.scrollTo(0, previousYPosition);
-        }
-    };
-
-    const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
-
-    function currentAttemptPythonExpression(): string {
-        return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
-    }
-
-    const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
     useEffect(() => {
         // Only update the text-entry box if the graphical editor is visible OR if this is the first load
         const pythonExpression = currentAttemptPythonExpression();
@@ -106,6 +97,16 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             setInputState({...inputState, userInput: textInput, pythonExpression});
         }
     }, [currentAttempt]);
+
+    const closeModal = (previousYPosition: number) => () => {
+        document.body.style.overflow = "initial";
+        setModalVisible(false);
+        if (isDefined(previousYPosition)) {
+            window.scrollTo(0, previousYPosition);
+        }
+    };
+
+    const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality>();

@@ -99,6 +99,17 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
         initialEditorSymbols.current = _flattenDeep(currentAttemptValue.symbols);
     }, [currentAttempt, currentAttemptValue]);
 
+    useEffect(() => {
+        // Only update the text-entry box if the graphical editor is visible OR if this is the first load
+        const pythonExpression = currentAttemptPythonExpression();
+        if (modalVisible || textInput === '') {
+            setTextInput(pythonExpression);
+        }
+        if (inputState.pythonExpression !== pythonExpression) {
+            setInputState({...inputState, userInput: textInput, pythonExpression});
+        }
+    }, [currentAttempt]);
+
     const closeModal = (previousYPosition: number) => () => {
         document.body.style.overflow = "initial";
         setModalVisible(false);
