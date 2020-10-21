@@ -152,7 +152,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
             const openBracketsCount = pycode.split('(').length - 1;
             const closeBracketsCount = pycode.split(')').length - 1;
-            const regexStr = "[^ (-)*-/0-9<->A-Z^-_a-z±²-³¼-¾×÷]+";
+            const regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
             const badCharacters = new RegExp(regexStr);
                 const _errors = [];
                 if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
