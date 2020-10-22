@@ -1,4 +1,4 @@
-import {GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import {GameboardDTO, IsaacWildcard, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {CurrentGameboardState} from "../state/reducers";
 import {NOT_FOUND} from "./constants";
 import React from "react";
@@ -84,6 +84,30 @@ export const generateGameboardSubjectHexagons = (boardSubjects: string[]) => {
         <div key={subject} className={`board-subject-hexagon subject-${subject} z${i}`} />
     );
 };
+
+export const showWildcard = (board: GameboardDTO) => {
+    const re = new RegExp('(phys_book_gcse_ch.*|pre_uni_maths.*)');
+    return board?.id && re.test(board.id)
+};
+
+export const detetmineWildcardSubject = (wildcard: IsaacWildcard) => {
+    if (SITE_SUBJECT === SITE.CS) {
+        return ["compsci"];
+    }
+    const subjects = ["physics", "maths", "chemistry"];
+    let allSubjects: string[] = [];
+    let tags = intersection(subjects, wildcard.tags || []);
+    tags.forEach(tag => allSubjects.push(tag));
+    // If none of the questions have a subject tag, default to physics
+    if (allSubjects.length === 0) {
+        allSubjects.push("physics");
+    }
+    let enumeratedSubjects = countBy(allSubjects);
+    return Object.keys(enumeratedSubjects).sort(function (a, b) {return subjects.indexOf(a) - subjects.indexOf(b)})
+        .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a]});
+};
+
+
 
 export const determineGameboardSubjects = (board: GameboardDTO) => {
     if (SITE_SUBJECT === SITE.CS) {
