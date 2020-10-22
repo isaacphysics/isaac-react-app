@@ -80,8 +80,7 @@ export const Wildcard = (wildcard: IsaacWildcard) => {
     const itemClasses = "p-3 content-summary-link text-info bg-transparent";
     const icon = <img src="/assets/wildcard.svg" alt=""/>;
     const wildcardSubjects = detetmineWildcardSubject(wildcard);
-    const wildcardSubject = wildcardSubjects ? wildcardSubjects[0] : "physics";
-    console.log(wildcardSubject);
+    const wildcardSubject = wildcardSubjects && wildcardSubjects[0];
     return <RS.ListGroupItem key={wildcard.id} className={itemClasses}>
         <a href={wildcard.url} className="align-items-center">
             <span className="gameboard-item-icon">{icon}</span>
