@@ -1,4 +1,4 @@
-import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {ComponentProps, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     Button,
@@ -9,32 +9,28 @@ import {
     DropdownToggle,
     Label,
     Row,
-    Spinner,
     UncontrolledButtonDropdown
 } from "reactstrap"
-import {getGroupProgress, loadAssignmentsOwnedByMe, loadBoard, loadGroups, loadProgress, openActiveModal} from "../../state/actions";
+import {getGroupProgress, loadAssignmentsOwnedByMe, loadGroups, openActiveModal} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {orderBy, sortBy} from "lodash";
-import {
-    AppAssignmentProgress,
-    AppGroup,
-    EnhancedGameboard,
-    PageSettings,
-    SingleProgressDetailsProps
-} from "../../../IsaacAppTypes";
+import {AppAssignmentProgress, AppGroup, EnhancedGameboard, PageSettings} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState, GameboardProgressSummaryDTO, UserGameboardProgressSummaryDTO} from "../../../IsaacApiTypes";
+import {
+    AssignmentDTO,
+    GameboardDTO,
+    GameboardProgressSummaryDTO,
+    UserGameboardProgressSummaryDTO
+} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
-import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
 import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 import {isStaff} from "../../services/user";
-import { isDefined } from '../../services/miscUtils';
+import {isDefined} from '../../services/miscUtils';
 
 function selectGroups(state: AppState) {
     if (state != null) {
