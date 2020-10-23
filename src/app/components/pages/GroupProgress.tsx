@@ -8,7 +8,7 @@ import {
     DropdownMenu,
     DropdownToggle,
     Label,
-    Row,
+    Row, Spinner,
     UncontrolledButtonDropdown
 } from "reactstrap"
 import {getGroupProgress, loadAssignmentsOwnedByMe, loadGroups, openActiveModal} from "../../state/actions";
@@ -206,7 +206,9 @@ const GroupSummary = (props: GroupSummaryProps) => {
         dispatch(getGroupProgress(group));
     }, [dispatch]);
 
-    if (!isDefined(groupProgress) || groupProgress.length === 0) return null;
+    if (isDefined(groupProgress) && groupProgress.length === 0) {
+        return null;
+    }
 
     function markClasses(fullAccess: boolean, correctParts: number, incorrectParts: number, totalParts: number, _passMark: number) {
         if (!fullAccess) {
@@ -279,7 +281,8 @@ const GroupSummary = (props: GroupSummaryProps) => {
         {sortItem({key: "total-questions", itemOrder: "total-questions", children: "Total Qs"})}
     </tr>;
 
-    return <div className={"group-progress-summary" + (pageSettings.colourBlind ? " colour-blind" : "")}>
+    return <ShowLoading until={groupProgress} placeholder={<div className="w-100 text-center"><Spinner color="secondary" /></div>}>
+        <div className={"group-progress-summary" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <GroupProgressLegend pageSettings={pageSettings}/>
         <div className="progress-table group-progress-summary mx-4 overflow-auto mw-100">
             <table className="table table-striped table-bordered table-sm mx-auto bg-white">
@@ -317,6 +320,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
             </table>
         </div>
     </div>
+    </ShowLoading>
 };
 
 function getGroupProgressCSVDownloadLink(groupId: number) {
