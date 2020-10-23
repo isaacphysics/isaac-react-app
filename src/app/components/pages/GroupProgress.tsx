@@ -331,8 +331,7 @@ const GroupAssignmentProgress = (props: GroupSummaryProps) => {
     const dispatch = useDispatch();
     const {group} = props;
 
-    // TODO FIXME IMPORTANT TURN THIS TO FALSE
-    const [isExpanded, setExpanded] = useState(true);
+    const [isExpanded, setExpanded] = useState(false);
 
     const assignmentCount = group.assignments.length;
 
