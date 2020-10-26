@@ -14,6 +14,7 @@ import uuid from "uuid";
 import {history} from "../../services/history";
 import {useCurrentExamBoard} from "../../services/examBoard";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import { filter } from 'lodash';
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
     let href = escapeHtml(tokens[idx].href || "");
@@ -68,7 +69,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         // Markdown can't cope with React components, so we pre-render our component to static HTML, which Markdown will then ignore.
         // This requires a bunch of stuff to be passed down along with the component.
         markdown = markdown.replace(glossaryBlockRegexp, (_match, id) => {
-            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string).startsWith(id)));
+            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string) === id));
             if (term === null) {
                 console.error('No valid term for "' + id + '" found among the filtered terms: ', filteredTerms);
                 return "";
@@ -87,7 +88,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         // The tooltip components can be rendered as regular react objects, so we just add them to an array,
         // and return them inside the JSX.Element that is returned as TrustedMarkdown.
         markdown = markdown.replace(glossaryInlineRegexp, (_match, id, text, offset) => {
-            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string).startsWith(id)));
+            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string) === id));
             if (term === null) {
                 console.error('No valid term for "' + id + '" found among the filtered terms: ', filteredTerms);
                 return "";
