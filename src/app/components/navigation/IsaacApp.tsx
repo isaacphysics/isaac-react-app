@@ -74,7 +74,7 @@ import {Glossary} from '../pages/Glossary';
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ClientError} from "../pages/ClientError";
-import {checkForWebSocket} from "../../services/websockets";
+import {checkForWebSocket, closeWebSocket} from "../../services/websockets";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -100,6 +100,9 @@ export const IsaacApp = () => {
             checkForWebSocket(user, userSnapshot);
             dispatch(getProgress());
         }
+        return () => {
+            closeWebSocket();
+        };
     }, [dispatch, user]);
 
     useEffect(() => {
