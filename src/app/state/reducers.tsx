@@ -146,6 +146,19 @@ export const userProgress = (userProgress: UserProgressState = null, action: Act
     }
 };
 
+export type UserSnapshotState = UserSnapshot | null;
+export const userSnapshot = (userSnapshot: UserSnapshotState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_SNAPSHOT_UPDATE:
+            return {
+                ...userProgress,
+                userSnapshot: action.userSnapshot
+            };
+        default:
+            return userProgress;
+    }
+};
+
 export type AdminUserSearchState = UserSummaryForAdminUsersDTO[] | null;
 export const adminUserSearch = (adminUserSearch: AdminUserSearchState = null, action: Action) => {
     switch (action.type) {
@@ -478,16 +491,6 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
             return null;
         default:
             return currentGameboard;
-    }
-};
-
-export type UserSnapshotState = UserSnapshot | null;
-export const userSnapshot = (userSnapshot: UserSnapshotState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.USER_SNAPSHOT_UPDATE:
-            return action.userSnapshot;
-        default:
-            return userSnapshot;
     }
 };
 
@@ -996,7 +999,6 @@ const appReducer = combineReducers({
     answeredQuestionsByDate,
     currentTopic,
     currentGameboard,
-    userSnapshot,
     streakRecord,
     tempExamBoard,
     wildcards,
@@ -1050,7 +1052,6 @@ export type AppState = undefined | {
     answeredQuestionsByDate: AnsweredQuestionsByDateState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
-    userSnapshot: UserSnapshotState;
     streakRecord: StreakRecordState;
     tempExamBoard: TempExamBoardState;
     wildcards: WildcardsState;
