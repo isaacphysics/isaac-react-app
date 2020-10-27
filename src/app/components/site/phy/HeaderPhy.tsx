@@ -7,6 +7,7 @@ import {NavigationBarPhy} from "./NavigationBarPhy";
 import {selectors} from "../../../state/selectors";
 import {AppState} from "../../../state/reducers";
 import {HeaderDailyStreakGauge} from "../../elements/views/DailyStreakGauge";
+import {isMobile} from "../../../services/device";
 
 export const HeaderPhy = () => {
     const user = useSelector(selectors.user.orNull);
@@ -27,8 +28,8 @@ export const HeaderPhy = () => {
 
                         <a href={`#${mainContentId}`} className="skip-main">Skip to main content</a>
 
-                        <div className="m-md-0 d-none d-md-block d-flex align-items-center d-print-none pt-3">
-                            {user?.loggedIn &&
+                        <div className="m-md-0 d-none d-md-block d-flex align-items-center d-print-none pt-4 pl-4">
+                            {user?.loggedIn && !isMobile() &&
                                 <React.Fragment>
                                     <div id="header-progress">
                                         Streak:
@@ -41,7 +42,7 @@ export const HeaderPhy = () => {
                                 </React.Fragment>}
                         </div>
 
-                        <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none pt-3">
+                        <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none pt-md-3">
                             {user &&
                                 (!user.loggedIn ?
                                     <React.Fragment>
@@ -60,8 +61,8 @@ export const HeaderPhy = () => {
                                     <React.Fragment>
                                         <div className="my-account mx-5 mx-sm-2">
                                             <Link to="/account">
-                                                {user.givenName && user.givenName.length <= 20 &&
-                                                    <strong className="d-none d-md-block">Hello {user.givenName}</strong>
+                                                {user.givenName && user.givenName.length <= 20 && !isMobile() &&
+                                                    <strong className="d-block">Hello {user.givenName}</strong>
                                                 }
                                                 <span>YOUR ACCOUNT</span>
                                             </Link>
@@ -80,11 +81,7 @@ export const HeaderPhy = () => {
                             <MainSearch />
                         </div>
                     </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <NavigationBarPhy />
+                    <NavigationBarPhy/>
                 </Col>
             </Row>
         </Container>
