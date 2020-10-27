@@ -5,11 +5,13 @@ import {UserProgress} from "../../../../IsaacAppTypes";
 
 export const DailyStreakPanel = ({userProgress}: {userProgress?: UserProgress | null}) => {
     const largestStreak = userProgress?.userSnapshot?.dailyStreakRecord?.largestStreak || 0;
-    return <React.Fragment>
+    return <div className={"align-items-center"}>
         <div className={"text-center-width"}>
             Daily streak
         </div>
-        <DailyStreakGauge streakRecord={userProgress?.userSnapshot?.dailyStreakRecord}/>
+        <div className={"progress-gauge text-center-width ml-4 mr-4"}>
+            <DailyStreakGauge streakRecord={userProgress?.userSnapshot?.dailyStreakRecord}/>
+        </div>
         <div id="streak-help" className={"text-center-width"}>
             Longest streak: {largestStreak}&nbsp;day{largestStreak != 1 && "s"}
         </div>
@@ -19,5 +21,5 @@ export const DailyStreakPanel = ({userProgress}: {userProgress?: UserProgress | 
                 Answer at least <b>three question parts</b> correctly per day to fill up your daily progress bar and increase your streak!
             </div>
         </RS.UncontrolledTooltip>
-    </React.Fragment>
+    </div>
 };
