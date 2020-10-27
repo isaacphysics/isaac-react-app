@@ -31,30 +31,31 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>([]);
 
-    function setSelection(level: number) {
+    function setSelection(tierIndex: number) {
         return ((values: Item<TAG_ID>[]) => {
-            const newSelections = selections.slice(0, level);
+            const newSelections = selections.slice(0, tierIndex);
             newSelections.push(values);
             setSelections(newSelections);
         }) as React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
     }
 
     const choices = [tags.allSubjectTags.map(tagToSelectOption)];
-    for (var i = 0; i < selections.length && i < 2; i++) {
+    let i;
+    for (i = 0; i < selections.length && i < 2; i++) {
         const selection = selections[i];
         if (selection.length !== 1) break;
         choices.push(tags.getChildren(selection[0].value).map(tagToSelectOption));
     }
 
-    const levels = [
+    const tiers = [
         {id: "subjects", name: "Subject"},
         {id: "fields", name: "Field"},
         {id: "topics", name: "Topic"},
-    ].map(level => ({...level, for: "for_" + level.id})).slice(0, i + 1);
+    ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
 
-    const [difficulty, setDifficulty] = useState<Item<number>[]>([]);
+    const [levels, setLevels] = useState<Item<number>[]>([]);
 
-    const difficulties = Array.from(Array(6).keys()).map(i => ({label: "" + (i + 1), value: i + 1}));
+    const levelOptions = Array.from(Array(6).keys()).map(i => ({label: "" + (i + 1), value: i + 1}));
 
     let boardName = "Physics & Maths";
     let selectionIndex = selections.length;
@@ -64,8 +65,8 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
             break;
         }
     }
-    if (difficulty.length === 1) {
-        boardName += ", Level " + difficulty[0].label;
+    if (levels.length === 1) {
+        boardName += ", Level " + levels[0].label;
     }
 
     const [boardStack, setBoardStack] = useState<string[]>([]);
@@ -74,16 +75,16 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
         // Load a gameboard
         const params: { [key: string]: string } = {
             title: boardName,
-            levels: toCSV(difficulty.length === 0 ? difficulties : difficulty)
+            levels: toCSV(levels.length === 0 ? levelOptions : levels)
         };
-        levels.forEach((level, i) => {
+        tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
-                    params[level.id] = "physics,maths";
+                    params[tier.id] = "physics,maths";
                 }
                 return;
             }
-            params[level.id] = toCSV(selections[i]);
+            params[tier.id] = toCSV(selections[i]);
         });
         dispatch(generateTemporaryGameboard(params));
     }
@@ -91,7 +92,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
     useEffect(() => {
         setBoardStack([]);
         loadNewBoard();
-    }, [selections, difficulty]);
+    }, [selections, levels]);
 
     function refresh() {
         if (gameboard) {
@@ -127,19 +128,19 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
                 <div className="pt-3"><strong>Select your question filters</strong></div>
                 <RS.Row>
                     <RS.Col lg={6}>
-                        {levels.map((level, i) => (
-                            <React.Fragment key={level.for}>
-                                <RS.Label for={level.for} className="pt-2 pb-0">{level.name}: </RS.Label>
-                                <Select name={level.for} onChange={unwrapValue(setSelection(i))} isMulti={true} options={choices[i]} value={selections[i]} />
+                        {tiers.map((tier, i) => (
+                            <React.Fragment key={tier.for}>
+                                <RS.Label for={tier.for} className="pt-2 pb-0">{tier.name}: </RS.Label>
+                                <Select name={tier.for} onChange={unwrapValue(setSelection(i))} isMulti={true} options={choices[i]} value={selections[i]} />
                             </React.Fragment>
                         ))}
                     </RS.Col>
                     <RS.Col lg={6}>
                         <div className="d-flex justify-content-between mt-0 mt-sm-4 mt-lg-0">
                             <RS.Label className="pt-2 pb-0" for="level-selector">Levels: </RS.Label>
-                            <img width={270} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/difficulty-guide.png" />
+                            <img width={270} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
                         </div>
-                        <Select name="level-selector" onChange={unwrapValue(setDifficulty)} isMulti={true} value={difficulty} options={difficulties} />
+                        <Select name="level-selector" onChange={unwrapValue(setLevels)} isMulti={true} value={levels} options={levelOptions} />
                     </RS.Col>
                 </RS.Row>
 
