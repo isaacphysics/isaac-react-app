@@ -1887,8 +1887,6 @@ export const fetchConcepts = () => async (dispatch: Dispatch<Action>) => {
 
 // Fasttrack concepts
 export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upperQuestionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const state = getState();
-    if (state && state.fasttrackConcepts && state.fasttrackConcepts.gameboardId === gameboardId && state.fasttrackConcepts.concept === concept) return;
     dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST});
     try {
         const concepts = await api.fasttrack.concepts(gameboardId, concept, upperQuestionId);
