@@ -1,6 +1,7 @@
 import React from 'react';
 import {StreakRecord} from "../../../../IsaacAppTypes";
 import {buildStyles, CircularProgressbarWithChildren} from "react-circular-progressbar";
+import {GRAY_120, ISAAC_GREEN} from "../../../services/constants";
 
 interface DailyStreakGaugeProps {
     streakRecord: StreakRecord | null | undefined;
@@ -12,8 +13,8 @@ export const DailyStreakGauge = (props: DailyStreakGaugeProps) => {
         maxValue={3}
         strokeWidth={15}
         styles={buildStyles({
-            pathColor: '#509E2E',
-            trailColor: '#c9cad1'
+            pathColor: ISAAC_GREEN,
+            trailColor: GRAY_120
 
         })}>
         <div style={{fontSize: 24}}>
@@ -27,8 +28,8 @@ export const HeaderDailyStreakGauge = (props: DailyStreakGaugeProps) => {
     return <CircularProgressbarWithChildren value={streakRecord?.currentActivity || 0}
         maxValue={3}
         styles={buildStyles({
-            pathColor: '#509E2E',
-            trailColor: '#c9cad1'
+            pathColor: ISAAC_GREEN,
+            trailColor: GRAY_120
         })}>
         <div style={{fontSize: 24}}>
             {streakRecord?.currentStreak || 0}

@@ -819,3 +819,6 @@ export const doughnutColours = {
     ]
 }[SITE_SUBJECT];
 
+export const ISAAC_GREEN = '#509E2E';
+
+export const GRAY_120 = '#c9cad1';
