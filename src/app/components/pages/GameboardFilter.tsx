@@ -11,21 +11,45 @@ import {GameboardViewer} from './Gameboard';
 import {generateTemporaryGameboard, loadGameboard} from '../../state/actions';
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
-import {GameboardDTO} from "../../../IsaacApiTypes";
+import queryString from "query-string";
+import {history} from "../../services/history";
 
 interface Item<T> {
     value: T;
     label: string;
 }
 
-const tagToSelectOption = (tag: Tag) => ({value: tag.id, label: tag.title});
+function tagToSelectOption(tag: Tag) {
+    return {value: tag.id, label: tag.title}
+}
+
+function itemiseLevels(possibleLevels: string[]) {
+    return possibleLevels
+        .filter(possibleLevels => !isNaN(parseInt(possibleLevels)))
+        .map(level => ({label: level, value: parseInt(level)}));
+}
 
 function toCSV<T>(items: Item<T>[]) {
     return items.map(item => item.value).join(",");
 }
 
-export const GameboardFilter = withRouter((props: {location: {hash?: string}}) => {
+function processQuery(query: queryString.ParsedQuery): {queryLevels: Item<number>[]} {
+    const {levels} = query;
+    let levelItems: Item<number>[] = [];
+    if (levels) {
+        levelItems = itemiseLevels(levels instanceof Array ? levels : levels.split(","));
+    }
+    return {
+        queryLevels: levelItems,
+        //subjects
+        //fields
+        //topics
+    }
+}
+
+export const GameboardFilter = withRouter((props: {location: Location}) => {
     const dispatch = useDispatch();
+    const {queryLevels} = processQuery(queryString.parse(location.search));
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
 
@@ -53,7 +77,7 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
         {id: "topics", name: "Topic"},
     ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
 
-    const [levels, setLevels] = useState<Item<number>[]>([]);
+    const [levels, setLevels] = useState<Item<number>[]>(queryLevels);
 
     const levelOptions = Array.from(Array(6).keys()).map(i => ({label: "" + (i + 1), value: i + 1}));
 
@@ -87,6 +111,10 @@ export const GameboardFilter = withRouter((props: {location: {hash?: string}}) =
             params[tier.id] = toCSV(selections[i]);
         });
         dispatch(generateTemporaryGameboard(params));
+        history.push({search: queryString.stringify(
+            {levels: params.levels},
+            {encode: false}
+        )});
     }
 
     useEffect(() => {
