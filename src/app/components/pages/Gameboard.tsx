@@ -20,7 +20,7 @@ function getTags(docTags?: string[]) {
     }
     if (!docTags) return [];
 
-    return tags.getByIdsAsHeirarchy(docTags as TAG_ID[]);
+    return tags.getByIdsAsHierarchy(docTags as TAG_ID[]);
 }
 
 const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {

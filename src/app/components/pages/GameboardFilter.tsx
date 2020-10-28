@@ -19,6 +19,49 @@ interface Item<T> {
     label: string;
 }
 
+const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
+
+function unwrapValue<T>(f: React.Dispatch<React.SetStateAction<Item<T>[]>>) {
+    return (value: ValueType<Item<T>>) => f(Array.isArray(value) ? value : !value ? [] : [value]);
+}
+function itemiseTag(tag: Tag) {
+    return {value: tag.id, label: tag.title}
+}
+function itemiseLevels(possibleLevels: string[]) {
+    return possibleLevels
+        .filter(possibleLevels => !isNaN(parseInt(possibleLevels)))
+        .map(level => ({label: level, value: parseInt(level)}));
+}
+function toCSV<T>(items: Item<T>[]) {
+    return items.map(item => item.value).join(",");
+}
+
+function processQueryString(query: string): {queryLevels: Item<number>[], querySelections: Item<TAG_ID>[][]} {
+    const {levels, subjects, fields, topics} = queryString.parse(query);
+    const tagHierarchy = tags.getTagHierarchy();
+
+    let levelItems: Item<number>[] = [];
+    if (levels) {
+        const levelArray = levels instanceof Array ? levels : levels.split(",");
+        // Start with an empty list if all levels are selected
+        levelItems = !levelArray.every((l, i) => l === levelOptions[i]?.label) ? itemiseLevels(levelArray) : [];
+    }
+
+    const selectionItems: Item<TAG_ID>[][] = [];
+    let plausibleParentHierarchy = true;
+    [subjects, fields, topics].forEach((tier, index) => {
+        if (tier && plausibleParentHierarchy) {
+            const validTierTags = tags
+                .getSpecifiedTags(tagHierarchy[index], (tier instanceof Array ? tier : tier.split(",")) as TAG_ID[]);
+            // Only allow another layer of specificity if only one parent is selected
+            plausibleParentHierarchy = validTierTags.length === 1;
+            selectionItems.push(validTierTags.map(itemiseTag));
+        }
+    })
+
+    return {queryLevels: levelItems, querySelections: selectionItems}
+}
+
 function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[]) {
     let boardName = "Physics & Maths";
     let selectionIndex = selections.length;
@@ -34,41 +77,13 @@ function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[])
     return boardName;
 }
 
-function tagToSelectOption(tag: Tag) {
-    return {value: tag.id, label: tag.title}
-}
-
-function itemiseLevels(possibleLevels: string[]) {
-    return possibleLevels
-        .filter(possibleLevels => !isNaN(parseInt(possibleLevels)))
-        .map(level => ({label: level, value: parseInt(level)}));
-}
-
-function toCSV<T>(items: Item<T>[]) {
-    return items.map(item => item.value).join(",");
-}
-
-function processQuery(query: queryString.ParsedQuery): {queryLevels: Item<number>[]} {
-    const {levels} = query;
-    let levelItems: Item<number>[] = [];
-    if (levels) {
-        levelItems = itemiseLevels(levels instanceof Array ? levels : levels.split(","));
-    }
-    return {
-        queryLevels: levelItems,
-        //subjects
-        //fields
-        //topics
-    }
-}
-
 export const GameboardFilter = withRouter((props: {location: Location}) => {
     const dispatch = useDispatch();
-    const {queryLevels} = processQuery(queryString.parse(location.search));
+    const {queryLevels, querySelections} = processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
 
-    const [selections, setSelections] = useState<Item<TAG_ID>[][]>([]);
+    const [selections, setSelections] = useState<Item<TAG_ID>[][]>(querySelections);
 
     function setSelection(tierIndex: number) {
         return ((values: Item<TAG_ID>[]) => {
@@ -78,12 +93,12 @@ export const GameboardFilter = withRouter((props: {location: Location}) => {
         }) as React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
     }
 
-    const choices = [tags.allSubjectTags.map(tagToSelectOption)];
+    const choices = [tags.allSubjectTags.map(itemiseTag)];
     let i;
     for (i = 0; i < selections.length && i < 2; i++) {
         const selection = selections[i];
         if (selection.length !== 1) break;
-        choices.push(tags.getChildren(selection[0].value).map(tagToSelectOption));
+        choices.push(tags.getChildren(selection[0].value).map(itemiseTag));
     }
 
     const tiers = [
@@ -94,8 +109,6 @@ export const GameboardFilter = withRouter((props: {location: Location}) => {
 
     const [levels, setLevels] = useState<Item<number>[]>(queryLevels);
 
-    const levelOptions = Array.from(Array(6).keys()).map(i => ({label: "" + (i + 1), value: i + 1}));
-
     const boardName = generateBoardName(selections, levels);
 
     const [boardStack, setBoardStack] = useState<string[]>([]);
@@ -103,7 +116,6 @@ export const GameboardFilter = withRouter((props: {location: Location}) => {
     function loadNewBoard() {
         // Load a gameboard
         const params: { [key: string]: string } = {
-            title: boardName,
             levels: toCSV(levels.length === 0 ? levelOptions : levels)
         };
         tiers.forEach((tier, i) => {
@@ -115,11 +127,8 @@ export const GameboardFilter = withRouter((props: {location: Location}) => {
             }
             params[tier.id] = toCSV(selections[i]);
         });
-        dispatch(generateTemporaryGameboard(params));
-        history.push({search: queryString.stringify(
-            {levels: params.levels},
-            {encode: false}
-        )});
+        dispatch(generateTemporaryGameboard({...params, title: boardName}));
+        history.push({search: queryString.stringify(params, {encode: false})});
     }
 
     useEffect(() => {
@@ -148,10 +157,6 @@ export const GameboardFilter = withRouter((props: {location: Location}) => {
         <br />
         You can select more than one entry in each area.
     </span>;
-
-    function unwrapValue<T>(f: React.Dispatch<React.SetStateAction<Item<T>[]>>) {
-        return (value: ValueType<Item<T>>) => f(Array.isArray(value) ? value : !value ? [] : [value]);
-    }
 
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>

@@ -111,7 +111,7 @@ export abstract class AbstractBaseTagService {
         return deepestTag;
     }
 
-    public getByIdsAsHeirarchy(tagArray: TAG_ID[]) {
+    public getByIdsAsHierarchy(tagArray: TAG_ID[]) {
         const tags = this.getByIds(tagArray);
         const deepestTag = this.getDeepestTag(tags);
         if (!deepestTag) return [];
