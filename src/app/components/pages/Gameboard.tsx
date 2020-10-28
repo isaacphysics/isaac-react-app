@@ -13,6 +13,17 @@ import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
+import queryString from "query-string";
+
+function extractFilterQueryString(gameboard: GameboardDTO): string {
+    const csvQuery: {[key: string]: string} = {}
+    if (gameboard.gameFilter) {
+        Object.entries(gameboard.gameFilter).forEach(([key, values]) => {
+            csvQuery[key] = values.join(",");
+        });
+    }
+    return queryString.stringify(csvQuery, {encode: false});
+}
 
 function getTags(docTags?: string[]) {
     if (SITE_SUBJECT !== SITE.PHY) {
@@ -90,11 +101,19 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
     </RS.Row>;
 };
 
-export const Gameboard = withRouter(({location: {hash}}: {location: {hash: string}}) => {
+export const Gameboard = withRouter(({location}: {location: Location}) => {
     const dispatch = useDispatch();
     const gameboard = useSelector(selectors.board.currentGameboardOrNotFound);
     const user = useSelector(selectors.user.orNull);
-    let gameboardId = hash ? hash.slice(1) : null;
+    const gameboardId = location.hash ? location.hash.slice(1) : null;
+
+    // Show filter
+    const {filter} = queryString.parse(location.search);
+    let showFilter = false;
+    if (filter) {
+        const filterValue = filter instanceof Array ? filter[0] : filter;
+        showFilter = filterValue.toLowerCase() === "true";
+    }
 
     useEffect(() => {dispatch(loadGameboard(gameboardId))}, [dispatch, gameboardId]);
 
@@ -145,11 +164,16 @@ export const Gameboard = withRouter(({location: {hash}}: {location: {hash: strin
         <RS.Container className="mb-5">
             <ShowLoading
                 until={gameboard}
-                thenRender={gameboard => <React.Fragment>
-                    <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
-                    <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
-                    {userButtons}
-                </React.Fragment>}
+                thenRender={gameboard => {
+                    if (showFilter) {
+                        return <Redirect to={`/gameboards/new?${extractFilterQueryString(gameboard)}`} />
+                    }
+                    return <React.Fragment>
+                        <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
+                        <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
+                        {userButtons}
+                    </React.Fragment>
+                }}
                 ifNotFound={notFoundComponent}
             />
         </RS.Container>

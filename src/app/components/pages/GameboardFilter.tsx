@@ -77,7 +77,7 @@ function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[])
     return boardName;
 }
 
-export const GameboardFilter = withRouter((props: {location: Location}) => {
+export const GameboardFilter = withRouter(({location}: {location: Location}) => {
     const dispatch = useDispatch();
     const {queryLevels, querySelections} = processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
