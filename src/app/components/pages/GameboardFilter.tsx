@@ -19,6 +19,21 @@ interface Item<T> {
     label: string;
 }
 
+function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[]) {
+    let boardName = "Physics & Maths";
+    let selectionIndex = selections.length;
+    while(selectionIndex-- > 0) {
+        if (selections[selectionIndex].length === 1) {
+            boardName = selections[selectionIndex][0].label;
+            break;
+        }
+    }
+    if (levels.length === 1) {
+        boardName += ", Level " + levels[0].label;
+    }
+    return boardName;
+}
+
 function tagToSelectOption(tag: Tag) {
     return {value: tag.id, label: tag.title}
 }
@@ -81,17 +96,7 @@ export const GameboardFilter = withRouter((props: {location: Location}) => {
 
     const levelOptions = Array.from(Array(6).keys()).map(i => ({label: "" + (i + 1), value: i + 1}));
 
-    let boardName = "Physics & Maths";
-    let selectionIndex = selections.length;
-    while(selectionIndex-- > 0) {
-        if (selections[selectionIndex].length === 1) {
-            boardName = selections[selectionIndex][0].label;
-            break;
-        }
-    }
-    if (levels.length === 1) {
-        boardName += ", Level " + levels[0].label;
-    }
+    const boardName = generateBoardName(selections, levels);
 
     const [boardStack, setBoardStack] = useState<string[]>([]);
 
