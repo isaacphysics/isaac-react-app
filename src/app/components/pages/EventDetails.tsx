@@ -155,10 +155,6 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                             {/* Key event info */}
                             <RS.Table borderless className="event-key-info mb-4">
                                 <tbody>
-                                    {event.field && <tr>
-                                        <td>Field:</td>
-                                        <td>event.field</td>
-                                    </tr>}
                                     <tr>
                                         <td>When:</td>
                                         <td>
