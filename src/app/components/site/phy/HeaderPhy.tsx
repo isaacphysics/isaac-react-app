@@ -29,9 +29,9 @@ export const HeaderPhy = () => {
                         <a href={`#${mainContentId}`} className="skip-main">Skip to main content</a>
 
                         <div className="m-md-0 d-none d-md-block d-flex align-items-center d-print-none pt-4 pl-4">
-                            {user?.loggedIn && !isMobile() &&
+                            {user?.loggedIn &&
                                 <React.Fragment>
-                                    <div id="header-progress">
+                                    <div id="header-progress" className="d-none d-md-block">
                                         Streak:
                                         <HeaderDailyStreakGauge streakRecord={streakRecord}/>
                                     </div>
@@ -61,8 +61,8 @@ export const HeaderPhy = () => {
                                     <React.Fragment>
                                         <div className="my-account mx-5 mx-sm-2">
                                             <Link to="/account">
-                                                {user.givenName && user.givenName.length <= 20 && !isMobile() &&
-                                                    <strong className="d-block">Hello {user.givenName}</strong>
+                                                {user.givenName && user.givenName.length <= 20 &&
+                                                    <strong className="d-md-block d-none">Hello {user.givenName}</strong>
                                                 }
                                                 <span>YOUR ACCOUNT</span>
                                             </Link>
