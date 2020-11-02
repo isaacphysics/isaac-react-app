@@ -85,7 +85,6 @@ export const IsaacApp = () => {
     const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
     const notifications = useSelector((state: AppState) => state && state.notifications && state.notifications.notifications || []);
     const user = useSelector((state: AppState) => state && state.user || null);
-    const userSnapshot = useSelector((state: AppState) => state?.userProgress?.userSnapshot);
 
     // Run once on component mount
     useEffect(() => {
@@ -97,7 +96,7 @@ export const IsaacApp = () => {
     useEffect(() => {
         if (isLoggedIn(user)) {
             dispatch(requestNotifications());
-            checkForWebSocket(user, userSnapshot);
+            checkForWebSocket(user);
             dispatch(getProgress());
         }
         return () => {

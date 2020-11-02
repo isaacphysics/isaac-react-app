@@ -109,7 +109,7 @@ const openNotificationSocket = function(user: UserSummaryDTO | null): void {
     }
 }
 
-export const checkForWebSocket = function(user: UserSummaryDTO | null , userSnapshot: UserSnapshot | undefined): void {
+export const checkForWebSocket = function(user: UserSummaryDTO | null , userSnapshot?: UserSnapshot): void {
     try {
         if (notificationWebSocket !== null) {
             if (!userSnapshot) {
