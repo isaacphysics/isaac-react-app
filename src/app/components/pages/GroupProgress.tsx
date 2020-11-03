@@ -157,19 +157,19 @@ export const GroupProgressLegend = (props: GroupProgressLegendProps): JSX.Elemen
                 <div className="key-cell">
                     <span className="completed"></span>
                 </div>
-                <div className="key-description">100% correct</div>
+                <div className="key-description">100% completed</div>
             </li>
             <li className="d-flex flex-wrap">
                 <div className="key-cell"><span className="passed">&nbsp;</span>
                 </div>
-                <div className="key-description">&ge;{passMark * 100}% correct
+                <div className="key-description">&ge;{passMark * 100}% completed
                     {/*<span className="d-none d-xl-inline"> (or Mastery)</span>*/}
                 </div>
             </li>
             <li className="d-flex flex-wrap">
                 <div className="key-cell"><span className="in-progress">&nbsp;</span>
                 </div>
-                <div className="key-description">&lt;{passMark * 100}% correct</div>
+                <div className="key-description">&lt;{passMark * 100}% completed</div>
             </li>
             <li className="d-flex flex-wrap">
                 <div className="key-cell"><span>&nbsp;</span>
