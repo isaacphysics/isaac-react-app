@@ -389,7 +389,7 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
         <Container>
             <TitleAndBreadcrumb
                 currentPageTitle={{[SITE.PHY]: "Group Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
-                subTitle="Track your class performance"
+                subTitle="Track your class performance per assignment"
                 help="Click on your groups to see the assignments you have set. View your students' progress by question."
             />
             <Row className="align-items-center d-none d-md-flex">
