@@ -274,7 +274,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
         {sortItem({key: "student-name", itemOrder: "student-name"})}
 
         {(groupProgress?.[0]?.progress ?? []).map((gameboard, index) => {
-            const link = <Link to={`/assignment_progress/${gameboard.assignmentId || 0}`}>{gameboard.gameboardTitle}</Link>
+            const link = <Link to={`/assignment_progress/${gameboard.assignmentId || 0}`} target="_blank">{gameboard.gameboardTitle}</Link>
             return sortItem({key: gameboard.assignmentId, itemOrder: index, className: index === selectedGameboardNumber ? 'selected' : '', children: link})
         })}
         {sortItem({key: "total-parts", itemOrder: "total-parts", children: "Total Parts"})}
