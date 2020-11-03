@@ -117,27 +117,18 @@ function formatMark(numerator: number, denominator: number, formatAsPercentage: 
     return result;
 }
 
-function computePartsCorrect(progress: GameboardProgressSummaryDTO[]) {
-    const totalPartsCorrect = progress.map(gameboard => gameboard.questionPartsCorrect).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
-    const totalParts = progress.map(gameboard => gameboard.questionPartsTotal).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
-
-    return { totalPartsCorrect, totalParts }
-}
-
 function computePagesCorrect(progress: GameboardProgressSummaryDTO[]) {
     const totalPagesCorrect = progress.map(gameboard => gameboard.questionPagesPerfect).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
     const totalPages = progress.map(gameboard => gameboard.questionPagesTotal).reduce((a, e) => (a ?? 0) + (e ?? 0)) as number;
 
-    return { totalPagesCorrect, totalPages }
+    return { totalPagesCorrect, totalPages };
 }
 
-function formatPartsCorrect(progress: GameboardProgressSummaryDTO[], formatAsPercentage: boolean) {
-    const { totalPartsCorrect, totalParts } = computePartsCorrect(progress);
-    if (formatAsPercentage) {
-        return totalParts !== 0 ? Math.round(100 * totalPartsCorrect / totalParts) + "%" : "100%";
-    } else {
-        return totalPartsCorrect + "/" + totalParts;
-    }
+function computeAssignmentsCompleted(progress: GameboardProgressSummaryDTO[]) {
+    const totalAssignments = progress.length;
+    const assignmentsCompleted = progress.reduce((a,i) => i.questionPagesPerfect === i.questionPagesTotal ? a += 1 : a, 0);
+
+    return { assignmentsCompleted, totalAssignments };
 }
 
 function formatPagesCorrect(progress: GameboardProgressSummaryDTO[], formatAsPercentage: boolean) {
@@ -146,6 +137,15 @@ function formatPagesCorrect(progress: GameboardProgressSummaryDTO[], formatAsPer
         return totalPages !== 0 ? Math.round(100 * totalPagesCorrect / totalPages) + "%" : "100%";
     } else {
         return totalPagesCorrect + "/" + totalPages;
+    }
+}
+
+function formatAssignmentsCompleted(progress: GameboardProgressSummaryDTO[], formatAsPercentage: boolean) {
+    const { assignmentsCompleted, totalAssignments } = computeAssignmentsCompleted(progress);
+    if (formatAsPercentage) {
+        return totalAssignments !== 0 ? Math.round(100 * assignmentsCompleted / totalAssignments) + "%" : "100%";
+    } else {
+        return assignmentsCompleted + "/" + totalAssignments;
     }
 }
 
@@ -196,7 +196,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
     const groupId = group.id || 0;
     const groupProgress = useSelector(selectors.groups.progress)?.[groupId];
 
-    type SortOrder = number | "student-name" | "total-parts" | "total-questions";
+    type SortOrder = number | "student-name" | "total-questions" | "assignments-completed";
     const [sortOrder, setSortOrder] = useState<SortOrder>("student-name");
     const [reverseOrder, setReverseOrder] = useState(false);
 
@@ -229,12 +229,12 @@ const GroupSummary = (props: GroupSummaryProps) => {
     const sortedProgress = orderBy(groupProgress, (item: UserGameboardProgressSummaryDTO) => {
         if (sortOrder === 'student-name') {
             return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
-        } else if (sortOrder === 'total-parts') {
-            const { totalPartsCorrect, totalParts } = computePartsCorrect(item.progress || []);
-            return totalPartsCorrect / totalParts;
         } else if (sortOrder === 'total-questions') {
             const { totalPagesCorrect, totalPages } = computePagesCorrect(item.progress || []);
             return totalPagesCorrect / totalPages;
+        } else if (sortOrder === 'assignments-completed') {
+            const { assignmentsCompleted, totalAssignments } = computeAssignmentsCompleted(item.progress || []);
+            return assignmentsCompleted / totalAssignments;
         } else if (typeof sortOrder === 'number') {
             return (item?.progress?.[sortOrder]?.questionPartsCorrect || 0)
         }
@@ -277,8 +277,8 @@ const GroupSummary = (props: GroupSummaryProps) => {
             const link = <Link to={`/assignment_progress/${gameboard.assignmentId || 0}`} target="_blank">{gameboard.gameboardTitle}</Link>
             return sortItem({key: gameboard.assignmentId, itemOrder: index, className: index === selectedGameboardNumber ? 'selected' : '', children: link})
         })}
-        {sortItem({key: "total-parts", itemOrder: "total-parts", children: "Total Parts"})}
         {sortItem({key: "total-questions", itemOrder: "total-questions", children: "Total Qs"})}
+        {sortItem({key: "assignments-completed", itemOrder: "assignments-completed", children: "Assignments completed"})}
     </tr>;
 
     return <ShowLoading until={groupProgress} placeholder={<div className="w-100 text-center"><Spinner color="secondary" /></div>}>
@@ -311,8 +311,8 @@ const GroupSummary = (props: GroupSummaryProps) => {
                                     {fullAccess && formatMark(gameboard.questionPagesPerfect ?? 0, gameboard.questionPagesTotal ?? 0, pageSettings.formatAsPercentage)}
                                 </td>
                             })}
-                            <td>{fullAccess && formatPartsCorrect(progress || [], pageSettings.formatAsPercentage)}</td>
                             <td>{fullAccess && formatPagesCorrect(progress || [], pageSettings.formatAsPercentage)}</td>
+                            <td>{fullAccess && formatAssignmentsCompleted(progress || [], pageSettings.formatAsPercentage)}</td>
                         </tr>
                     })}
                 </tbody>
