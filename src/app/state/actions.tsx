@@ -29,7 +29,7 @@ import {
     CredentialsAuthDTO,
     EmailUserRoles,
     FreeTextRule,
-    LoggedInUser,
+    PotentialUser,
     QuestionSearchQuery,
     Toast,
     UserPreferencesDTO,
@@ -289,7 +289,7 @@ export const updateCurrentUser = (
     updatedUser: ValidationUser,
     updatedUserPreferences: UserPreferencesDTO,
     passwordCurrent: string | null,
-    currentUser: LoggedInUser
+    currentUser: PotentialUser
 ) => async (dispatch: Dispatch<Action>) => {
     // Confirm email change
     if (currentUser.loggedIn && currentUser.id == updatedUser.id) {
@@ -1014,7 +1014,7 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
     }
 };
 
-export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
+export const addGameboard = (gameboardId: string, user: PotentialUser) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST});
         await api.gameboards.save(gameboardId);
@@ -1898,8 +1898,6 @@ export const fetchConcepts = () => async (dispatch: Dispatch<Action>) => {
 
 // Fasttrack concepts
 export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upperQuestionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const state = getState();
-    if (state && state.fasttrackConcepts && state.fasttrackConcepts.gameboardId === gameboardId && state.fasttrackConcepts.concept === concept) return;
     dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST});
     try {
         const concepts = await api.fasttrack.concepts(gameboardId, concept, upperQuestionId);

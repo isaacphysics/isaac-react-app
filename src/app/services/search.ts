@@ -2,7 +2,7 @@ import {History} from "history";
 import {DOCUMENT_TYPE, TAG_ID} from "./constants";
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
 import {isStaff} from "./user";
-import {LoggedInUser} from "../../IsaacAppTypes";
+import {PotentialUser} from "../../IsaacAppTypes";
 
 export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: DOCUMENT_TYPE[]) {
     history.push({
@@ -28,7 +28,7 @@ export const pushConceptsToHistory = function(history: History, searchText: stri
     });
 };
 
-export const searchResultIsPublic = function(content: ContentSummaryDTO, user?: LoggedInUser | null) {
+export const searchResultIsPublic = function(content: ContentSummaryDTO, user?: PotentialUser | null) {
     const isPublic = (content.id != "_regression_test_" && (!content.tags || content.tags.indexOf("nofilter") < 0 && !content.supersededBy));
     return isPublic || isStaff(user);
 };

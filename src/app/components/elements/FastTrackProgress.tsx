@@ -118,12 +118,12 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             : null;
 
     useEffect(() => {
-        if (conceptQuestions === null && gameboardMaybeNull) {
+        if (gameboardMaybeNull) {
             const uppers = questionHistory.filter(e => /upper/i.test(e));
             const upper = uppers.pop() || "";
             dispatch(fetchFasttrackConcepts(gameboardMaybeNull.id as string, doc.title as string, upper));
         }
-    }, [dispatch, gameboardMaybeNull, doc, conceptQuestions]);
+    }, [dispatch, gameboardMaybeNull, doc]);
 
     if (gameboardMaybeNull === null && conceptQuestions === null) return null;
 

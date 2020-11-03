@@ -5,7 +5,7 @@
 <style type="text/css">
 	.st0{fill:#FFFFFF;}
 </style>
-<circle cx="384" cy="384" r="384"/>
-<rect x="335" y="136.2" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 384 927.058)" class="st0" width="98" height="495.5"/>
-<rect x="335" y="136.2" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -159.058 384)" class="st0" width="98" height="495.5"/>
+	<circle cx="384" cy="384" r="384"/>
+	<rect x="335" y="136.2" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 384 927.058)" class="st0" width="98" height="495.5"/>
+	<rect x="335" y="136.2" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -159.058 384)" class="st0" width="98" height="495.5"/>
 </svg>

@@ -7,7 +7,7 @@ import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {NOT_FOUND, TAG_ID} from "../../services/constants";
+import {NOT_FOUND, TAG_ID, TAG_LEVEL} from "../../services/constants";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
@@ -25,33 +25,50 @@ function getTags(docTags?: string[]) {
 
 const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
-    let icon = <img src="/assets/question.svg" alt=""/>;
-    let tryAgain = false;
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
+    const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
+    let iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/question-hex.svg#icon` : "/assets/question.svg";
+    let message = "";
+    let messageClasses = "";
 
     switch (question.state) {
         case "PERFECT":
             itemClasses += " bg-success";
-            icon = <img src="/assets/tick-rp.svg" alt=""/>;
+            message = "perfect!"
+            if (SITE_SUBJECT === SITE.PHY) {
+                messageClasses += "message-perfect"
+            }
+            iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/tick-rp-hex.svg#icon` : "/assets/tick-rp.svg";
             break;
         case "PASSED":
         case "IN_PROGRESS":
-            icon = <img src="/assets/incomplete.svg" alt=""/>;
+            message = "in progress"
+            iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/incomplete-hex.svg#icon` : "/assets/incomplete.svg";
             break;
         case "FAILED":
-            tryAgain = true;
-            icon = <img src="/assets/cross-rp.svg" alt=""/>;
+            message = "try again!"
+            iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/cross-rp-hex.svg#icon` : "/assets/cross-rp.svg";
             break;
     }
 
-    const tags = getTags(question.tags);
+    const questionTags = getTags(question.tags);
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
-            <span>{icon}</span>
-            <div className="flex-grow-1">{question.title}
-                {tryAgain && <span className="try-again">try again!</span>}
-                {tags && <div className="gameboard-tags">
-                    {tags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
+            <span>
+                {/* TODO bh412 come up with a nicer way of differentiating site icons and also above */}
+                {SITE_SUBJECT === SITE.PHY ?
+                    <svg className={iconClasses}>
+                        <use href={iconHref} xlinkHref={iconHref}/>
+                    </svg> :
+                    <img src={iconHref} alt=""/>
+                }
+            </span>
+            <div className={"flex-grow-1 " + itemSubject?.id || (SITE_SUBJECT === SITE.PHY ? "physics" : "")}>
+                <span className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""}>{question.title}</span>
+                {message && <span className={"gameboard-item-message" + (SITE_SUBJECT === SITE.PHY ? "-phy " : " ") + messageClasses}>{message}</span>}
+                {questionTags && <div className="gameboard-tags">
+                    {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
                 </div>}
             </div>
             {/*TODO CS Level*/}
