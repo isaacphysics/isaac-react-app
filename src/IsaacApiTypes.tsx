@@ -195,7 +195,9 @@ export interface UserGroupDTO {
 
 export interface GameboardProgressSummaryDTO {
     assignmentId?: number;
+    gameboardId?: string;
     gameboardTitle?: string;
+    dueDate?: Date;
     questionPartsCorrect?: number;
     questionPartsIncorrect?: number;
     questionPartsNotAttempted?: number;

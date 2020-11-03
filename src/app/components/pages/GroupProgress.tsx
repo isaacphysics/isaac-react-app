@@ -14,7 +14,7 @@ import {
 import {getGroupProgress, loadAssignmentsOwnedByMe, loadGroups, openActiveModal} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {orderBy, sortBy} from "lodash";
+import {assign, orderBy, sortBy} from "lodash";
 import {AppAssignmentProgress, AppGroup, EnhancedGameboard, PageSettings} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -31,6 +31,7 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 import {isStaff} from "../../services/user";
 import {isDefined} from '../../services/miscUtils';
+import { formatDate } from "../elements/DateString";
 
 function selectGroups(state: AppState) {
     if (state != null) {
@@ -201,6 +202,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
     const [reverseOrder, setReverseOrder] = useState(false);
 
     const [selectedGameboardNumber, setSelectedGameboardNumber] = useState(0);
+    const [selectedGameboardTitle, setSelectedGameboardTitle] = useState("");
 
     useEffect(() => {
         dispatch(getGroupProgress(group));
@@ -260,7 +262,10 @@ const GroupSummary = (props: GroupSummaryProps) => {
     function sortItem(props: ComponentProps<"th"> & {itemOrder: SortOrder}) {
         const {itemOrder, ...rest} = props;
         const className = (props.className || "") + " py-2 " + sortClasses(itemOrder);
-        const clickToSelect = typeof itemOrder === "number" ? (() => setSelectedGameboardNumber(itemOrder)) : undefined;
+        const clickToSelect = typeof itemOrder === "number" ? (() => {
+            setSelectedGameboardNumber(itemOrder);
+            setSelectedGameboardTitle(groupProgress?.[0]?.progress?.[itemOrder].gameboardTitle || "");
+        }) : undefined;
         const sortArrows = (typeof itemOrder !== "number" || itemOrder === selectedGameboardNumber) ?
             <button className="sort" onClick={() => {toggleSort(itemOrder);}}>
                 <span className="up" >▲</span>
@@ -270,20 +275,51 @@ const GroupSummary = (props: GroupSummaryProps) => {
         return <th key={props.key} {...rest} className={className} onClick={clickToSelect}>{props.children}{sortArrows}</th>;
     }
 
+    const totalAssignments = (groupProgress?.[0]?.progress || []).length;
+    const assignmentsProgress = [];
+    for (let i = 0; i < totalAssignments; ++i) {
+        assignmentsProgress.push((groupProgress || []).map(summary => summary?.progress?.[i] ));
+    }
+    const assignmentsCompletion = assignmentsProgress.map(p => {
+        return p.reduce((a, e) => ({
+            questionPagesPerfect: (a?.questionPagesPerfect || 0) + (e?.questionPagesPerfect || 0),
+            questionPagesTotal: (a?.questionPagesTotal || 0) + (e?.questionPagesTotal || 0)
+        }));
+    })
+
     const tableHeaderFooter = <tr className="progress-table-header-footer">
         {sortItem({key: "student-name", itemOrder: "student-name"})}
 
         {(groupProgress?.[0]?.progress ?? []).map((gameboard, index) => {
-            const link = <Link to={`/assignment_progress/${gameboard.assignmentId || 0}`} target="_blank">{gameboard.gameboardTitle}</Link>
-            return sortItem({key: gameboard.assignmentId, itemOrder: index, className: index === selectedGameboardNumber ? 'selected' : '', children: link})
+            const currentAssignmentCompletion = assignmentsCompletion[index];
+            const completionPercentage = formatMark(currentAssignmentCompletion?.questionPagesPerfect || 0, currentAssignmentCompletion?.questionPagesTotal || 1, true)
+            return sortItem({key: gameboard.assignmentId, itemOrder: index, className: index === selectedGameboardNumber ? 'selected' : '', children: completionPercentage})
         })}
         {sortItem({key: "total-questions", itemOrder: "total-questions", children: "Total Qs"})}
         {sortItem({key: "assignments-completed", itemOrder: "assignments-completed", children: "Assignments completed"})}
     </tr>;
 
+    const selectedGameboard = groupProgress?.[0]?.progress?.[selectedGameboardNumber];
+
     return <ShowLoading until={groupProgress} placeholder={<div className="w-100 text-center"><Spinner color="secondary" /></div>}>
         <div className={"group-progress-summary" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <GroupProgressLegend pageSettings={pageSettings}/>
+
+        <div className="progress-questions mx-4">
+            <Button color="tertiary" disabled={selectedGameboardNumber === 0}
+                onClick={() => setSelectedGameboardNumber(selectedGameboardNumber - 1)}>◄</Button>
+            <div><Link
+                to={`/assignment_progress/${selectedGameboard?.assignmentId || -1}?board=${selectedGameboard?.gameboardId}`}><strong>A<span className="d-none d-md-inline">ssignment</span>: </strong>{selectedGameboard?.gameboardTitle}
+            </Link>
+            <span className="ml-3"></span>
+            {selectedGameboard?.dueDate && <small className="font-weight-bold text-muted">(Due date: {formatDate(selectedGameboard?.dueDate)})</small>}
+            {/* WARNING: I'm not sure we can do this.
+                The single assignment progress page doesn't have this and I can't find a way of editing the due date. */}
+            {/* {!selectedGameboard?.dueDate && <small>(Set due date)</small>} */}
+            </div>
+            <Button color="tertiary" disabled={selectedGameboardNumber === (groupProgress?.[0]?.progress || []).length - 1}
+                onClick={() => setSelectedGameboardNumber(selectedGameboardNumber + 1)}>►</Button>
+        </div>
         <div className="progress-table group-progress-summary mx-4 overflow-auto mw-100">
             <table className="table table-striped table-bordered table-sm mx-auto bg-white">
                 <thead>{tableHeaderFooter}</thead>
