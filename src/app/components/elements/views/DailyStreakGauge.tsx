@@ -31,7 +31,7 @@ export const HeaderDailyStreakGauge = (props: DailyStreakGaugeProps) => {
             pathColor: ISAAC_GREEN,
             trailColor: GRAY_120
         })}>
-        <div style={{fontSize: 24}}>
+        <div style={{fontSize: 18}}>
             {streakRecord?.currentStreak || 0}
         </div>
     </CircularProgressbarWithChildren>
