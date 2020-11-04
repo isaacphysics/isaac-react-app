@@ -134,9 +134,13 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
                 <span className="icon-group-table-person mt-2" />
             </div>
             <div>
-                <Link to={`/progress/${member.groupMembershipInformation.userId}`} className="align-text-top d-flex align-items-stretch">
-                    <span className="pl-1">{member.givenName} {member.familyName}</span>
-                </Link>
+                {member.authorisedFullAccess ?
+                    <Link to={`/progress/${member.groupMembershipInformation.userId}`}
+                          className={"align-text-top d-flex align-items-stretch"}>
+                        <span className="pl-1">{member.givenName} {member.familyName}</span>
+                    </Link> :
+                    <span className="not-authorised"><span className="pl-1 struck-out">{member.givenName} {member.familyName}</span> (Not Sharing)</span>
+                }
             </div>
             <div>
                 {member.emailVerificationStatus == "DELIVERY_FAILED" &&
