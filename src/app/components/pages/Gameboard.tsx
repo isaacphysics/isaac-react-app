@@ -13,7 +13,7 @@ import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
-import {detetmineWildcardSubject, showWildcard} from "../../services/gameboards";
+import {showWildcard} from "../../services/gameboards";
 
 function getTags(docTags?: string[]) {
     if (SITE_SUBJECT !== SITE.PHY) {
@@ -78,14 +78,12 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
 
 export const Wildcard = (wildcard: IsaacWildcard) => {
     const itemClasses = "p-3 content-summary-link text-info bg-transparent";
-    const icon = <img src="/assets/wildcard.svg" alt=""/>;
-    const wildcardSubjects = detetmineWildcardSubject(wildcard);
-    const wildcardSubject = wildcardSubjects && wildcardSubjects[0];
+    const icon = <img src="/assets/wildcard.svg" alt="Optional extra information icon"/>;
     return <RS.ListGroupItem key={wildcard.id} className={itemClasses}>
         <a href={wildcard.url} className="align-items-center">
             <span className="gameboard-item-icon">{icon}</span>
-            <div className={"flex-grow-1 " + wildcardSubject || ""}>
-                <span className="text-secondary">{wildcard.title}</span>
+            <div className={"flex-grow-1"}>
+                <span>{wildcard.title}</span>
                 {wildcard.description && <div className="gameboard-tags">
                     <span className="gameboard-tag">{wildcard.description}</span>
                 </div>}
