@@ -5,7 +5,7 @@ import {loadGameboard, logAction} from "../../state/actions";
 import * as RS from "reactstrap"
 import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
-import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
+import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {NOT_FOUND, TAG_ID, TAG_LEVEL} from "../../services/constants";
 import {isTeacher} from "../../services/user";
@@ -13,6 +13,7 @@ import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
+import {showWildcard} from "../../services/gameboards";
 
 function getTags(docTags?: string[]) {
     if (SITE_SUBJECT !== SITE.PHY) {
@@ -35,9 +36,6 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
         case "PERFECT":
             itemClasses += " bg-success";
             message = "perfect!"
-            if (SITE_SUBJECT === SITE.PHY) {
-                messageClasses += "message-perfect"
-            }
             iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/tick-rp-hex.svg#icon` : "/assets/tick-rp.svg";
             break;
         case "PASSED":
@@ -78,11 +76,31 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     </RS.ListGroupItem>;
 };
 
+export const Wildcard = (wildcard: IsaacWildcard) => {
+    const itemClasses = "p-3 content-summary-link text-info bg-transparent";
+    const icon = <img src="/assets/wildcard.svg" alt="Optional extra information icon"/>;
+    return <RS.ListGroupItem key={wildcard.id} className={itemClasses}>
+        <a href={wildcard.url} className="align-items-center">
+            <span className="gameboard-item-icon">{icon}</span>
+            <div className={"flex-grow-1"}>
+                <span>{wildcard.title}</span>
+                {wildcard.description && <div className="gameboard-tags">
+                    <span className="gameboard-tag">{wildcard.description}</span>
+                </div>}
+            </div>
+        </a>
+    </RS.ListGroupItem>
+}
+
 export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => {
+
     return <RS.Row className={className}>
         <RS.Col lg={{size: 10, offset: 1}}>
             <RS.ListGroup className="link-list list-group-links list-gameboard">
-                {gameboard && gameboard.questions && gameboard.questions.map(
+                {gameboard?.wildCard && showWildcard(gameboard) &&
+                    Wildcard(gameboard.wildCard)
+                }
+                {gameboard?.questions && gameboard.questions.map(
                     gameboardItem.bind(null, gameboard)
                 )}
             </RS.ListGroup>
