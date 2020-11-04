@@ -44,7 +44,9 @@ function processQueryString(query: string): {queryLevels: Item<number>[], queryS
     if (levels) {
         const levelArray = levels instanceof Array ? levels : levels.split(",");
         // Start with an empty list if all levels are selected
-        levelItems = !levelArray.every((l, i) => l === levelOptions[i]?.label) ? itemiseLevels(levelArray) : [];
+        levelItems = levelArray.length === levelOptions.length && levelArray.every((l, i) => l === levelOptions[i]?.label) ?
+            [] :
+            itemiseLevels(levelArray);
     }
 
     const selectionItems: Item<TAG_ID>[][] = [];
