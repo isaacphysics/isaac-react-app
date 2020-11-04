@@ -1,4 +1,4 @@
-import {GameboardDTO, IsaacWildcard, RegisteredUserDTO} from "../../IsaacApiTypes";
+import {GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
 import {CurrentGameboardState} from "../state/reducers";
 import {NOT_FOUND} from "./constants";
 import React from "react";
