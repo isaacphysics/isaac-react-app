@@ -139,7 +139,7 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
                           className={"align-text-top d-flex align-items-stretch"}>
                         <span className="pl-1">{member.givenName} {member.familyName}</span>
                     </Link> :
-                    <span className="not-authorised"><span className="pl-1 struck-out">{member.givenName} {member.familyName}</span> (not sharing)</span>
+                    <span className="not-authorised"><span className="pl-1 struck-out">{member.givenName} {member.familyName}</span> (Not Sharing)</span>
                 }
             </div>
             <div>
