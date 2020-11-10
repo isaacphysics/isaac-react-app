@@ -71,7 +71,7 @@
     "html-webpack-plugin": "4.0.0-alpha.2",
     "identity-obj-proxy": "3.0.0",
     "inequality": "^0.9.29",
-    "inequality-grammar": "^0.9.11",
+    "inequality-grammar": "^0.10.3",
     "isaac-graph-sketcher": "^0.9.3",
     "jest": "^26.2.2",
     "jest-pnp-resolver": "^1.2.2",
