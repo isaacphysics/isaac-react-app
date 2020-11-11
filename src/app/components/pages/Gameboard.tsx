@@ -166,7 +166,7 @@ export const Gameboard = withRouter(({location}: {location: Location}) => {
                 until={gameboard}
                 thenRender={gameboard => {
                     if (showFilter) {
-                        return <Redirect to={`/gameboards/new?${extractFilterQueryString(gameboard)}`} />
+                        return <Redirect to={`/gameboards/new?${extractFilterQueryString(gameboard)}#${gameboardId}`} />
                     }
                     return <React.Fragment>
                         <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>

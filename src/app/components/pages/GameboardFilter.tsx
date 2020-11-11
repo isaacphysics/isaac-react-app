@@ -43,7 +43,7 @@ function processQueryString(query: string): {queryLevels: Item<number>[], queryS
     let levelItems: Item<number>[] = [];
     if (levels) {
         const levelArray = levels instanceof Array ? levels : levels.split(",");
-        // Start with an empty list if all levels are selected
+        // Start with an empty list if all levels are selected - nicer for most common usage of specifying 1 or 2 levels
         levelItems = levelArray.length === levelOptions.length && levelArray.every((l, i) => l === levelOptions[i]?.label) ?
             [] :
             itemiseLevels(levelArray);
@@ -84,6 +84,10 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     const {queryLevels, querySelections} = processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
+    const gameboardIdAnchor = location.hash ? location.hash.slice(1) : null;
+    if (gameboard && gameboard.id !== gameboardIdAnchor) {
+        history.push({search: location.search, hash: gameboard.id});
+    }
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>(querySelections);
 
@@ -115,7 +119,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     const [boardStack, setBoardStack] = useState<string[]>([]);
 
-    function loadNewBoard() {
+    function loadNewGameboard() {
         // Load a gameboard
         const params: { [key: string]: string } = {
             levels: toCSV(levels.length === 0 ? levelOptions : levels)
@@ -134,15 +138,19 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     }
 
     useEffect(() => {
-        setBoardStack([]);
-        loadNewBoard();
+        if (gameboardIdAnchor && gameboardIdAnchor !== gameboard?.id) {
+            dispatch(loadGameboard(gameboardIdAnchor));
+        } else {
+            setBoardStack([]);
+            loadNewGameboard();
+        }
     }, [selections, levels]);
 
     function refresh() {
         if (gameboard) {
             boardStack.push(gameboard.id as string);
             setBoardStack(boardStack);
-            loadNewBoard();
+            loadNewGameboard();
         }
     }
 
