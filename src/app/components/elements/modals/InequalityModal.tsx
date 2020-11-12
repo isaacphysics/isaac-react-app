@@ -4,6 +4,7 @@ import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import katex from "katex";
 import _uniqWith from 'lodash/uniqWith';
 import _isEqual from 'lodash/isEqual';
+import _cloneDeep from 'lodash/cloneDeep';
 import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState} from "../../../services/questions";
 import {GREEK_LETTERS_MAP} from '../../../services/constants';
 import { IsaacContentValueOrChildren } from '../../content/IsaacContentValueOrChildren';
@@ -312,8 +313,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 } else if (availableSymbol.startsWith('Derivative')) {
                     const items = this.generateMathsDerivativeAndLetters(availableSymbol);
                     if (items.derivative) {
-                        customMenuItems.mathsDerivatives.push(items.derivative);
-                        customMenuItems.letters.push(items.derivative);
+                        customMenuItems.mathsDerivatives.push(...items.derivative);
+                        customMenuItems.letters.push(...items.derivative);
                     }
                     if (items.letters) {
                         customMenuItems.letters.push(...items.letters);
@@ -636,7 +637,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         return [];
     }
 
-    private generateMathsDerivativeAndLetters(symbol: string): { derivative: MenuItem; letters: MenuItem[] } {
+    private generateMathsDerivativeAndLetters(symbol: string): { derivative: MenuItem[]; letters: MenuItem[] } {
         const parts = symbol.replace(/^Derivative/, '').split(';').map(s => s.replace(/[()\s]/g, ''));
         const letters = new Array<MenuItem>();
         const top = parts[0];
@@ -697,8 +698,26 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             children: derivativeOrder > 1 ? { order: { type: 'Num', properties: { significand: `${derivativeOrder}` } } } : { }
         };
         derivativeObject.children = { numerator, denominator };
+        
+        let derivative = [derivativeObject]
 
-        return { derivative: derivativeObject, letters: letters };
+        if (isDefined(this._greekLetterMap[top]) || /^[a-zA-Z]$/.test(top)) {
+            // Do this only if we have a single greek letter or a single latin letter.
+            const argument = {
+                type: 'Symbol',
+                properties: { letter: this._greekLetterMap[top] || top }
+            }
+            const compoundNumerator = {
+                type: 'Differential',
+                properties: { letter: 'd' },
+                children: derivativeOrder > 1 ? { argument, order: { type: 'Num', properties: { significand: `${derivativeOrder}` } } } : { }
+            };
+            const compoundTexLabel = '\\frac{\\mathrm{d}' + (derivativeOrder > 1 ? `^{${derivativeOrder}}` : '') + `${this._greekLetterMap[top] || top}}{${texBottom}}`;
+            const compoundDerivativeObject = new MenuItem('Derivative', { }, { label: compoundTexLabel, texLabel: true, fontSize: '1.5em', className: 'derivative' });
+            compoundDerivativeObject.children = { numerator: compoundNumerator, denominator };
+            derivative.push(compoundDerivativeObject);
+        }
+        return { derivative, letters };
     }
 
     private generateMathsDifferentialAndLetters(symbol: string): { differential?: MenuItem|null; letters?: MenuItem[]|null } {
