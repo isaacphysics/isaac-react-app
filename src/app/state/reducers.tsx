@@ -14,7 +14,7 @@ import {
     EventOverview,
     GroupMembershipDetailDTO,
     isValidatedChoice,
-    LoggedInUser,
+    PotentialUser,
     NOT_FOUND_TYPE,
     PrintingSettings,
     TemplateEmail,
@@ -50,7 +50,7 @@ import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
 import tags from "../services/tags";
 
-type UserState = LoggedInUser | null;
+type UserState = PotentialUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:

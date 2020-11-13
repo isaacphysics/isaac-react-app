@@ -628,6 +628,7 @@ export enum TAG_LEVEL {
 export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
+    FAST_TRACK_QUESTION = "isaacFastTrackQuestionPage",
     EVENT = "isaacEventPage",
     TOPIC_SUMMARY = "isaacTopicSummaryPage",
     GENERIC = "page",
@@ -637,6 +638,7 @@ export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.CONCEPT]: "Concepts",
     [DOCUMENT_TYPE.QUESTION]: "Questions",
+    [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "Questions",
     [DOCUMENT_TYPE.EVENT]: "Events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
     [DOCUMENT_TYPE.GENERIC]: "Other pages"
@@ -646,6 +648,7 @@ export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} =
     [DOCUMENT_TYPE.GENERIC]: "pages",
     [DOCUMENT_TYPE.CONCEPT]: "concepts",
     [DOCUMENT_TYPE.QUESTION]: "questions",
+    [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "questions",
     [DOCUMENT_TYPE.EVENT]: "events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics"
 };

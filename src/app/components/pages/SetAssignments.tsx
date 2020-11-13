@@ -212,7 +212,9 @@ const orderNames: {[key in BoardOrder]: string} = {
     "visited": "Date Visited Ascending",
     "-visited": "Date Visited Descending",
     "title": "Title Ascending",
-    "-title": "Title Descending"
+    "-title": "Title Descending",
+    "completion": "Completion Ascending",
+    "-completion": "Completion Descending"
 };
 function orderName(order: BoardOrder) {
     return orderNames[order];

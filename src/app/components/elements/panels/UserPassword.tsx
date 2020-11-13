@@ -1,10 +1,10 @@
 import {Button, CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import React, {useState} from "react";
-import {ValidationUser, ZxcvbnResult} from "../../../../IsaacAppTypes";
+import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../../services/validation";
 import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount} from "../../../state/actions";
-import {loadZxcvbnIfNotPresent, passwordDebounce, passwordStrengthText} from "../../../services/passwordStrength";
+import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../../services/passwordStrength";
 import {useDispatch} from "react-redux";
 
 interface UserPasswordProps {
@@ -28,7 +28,7 @@ export const UserPassword = (
     const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
 
     const [passwordResetRequested, setPasswordResetRequested] = useState(false);
-    const [passwordFeedback, setPasswordFeedback] = useState<ZxcvbnResult | null>(null);
+    const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
 
     const resetPasswordIfValidEmail = () => {
         if (currentUserEmail && validateEmail(currentUserEmail)) {
@@ -83,7 +83,7 @@ export const UserPassword = (
                                 <span className='float-right small mt-1'>
                                     <strong>Password strength: </strong>
                                     <span id="password-strength-feedback">
-                                        {passwordStrengthText[(passwordFeedback as ZxcvbnResult).score]}
+                                        {passwordFeedback.feedbackText}
                                     </span>
                                 </span>
                                 }
@@ -163,7 +163,7 @@ export const UserPassword = (
                                     className="linked-account-button google-button"
                                     onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}
                                 />
-                                <Label htmlFor="linked-accounts-no-passoword" className="ml-2 mb-0">
+                                <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
                                     {authenticationProvidersUsed("GOOGLE") ? " Remove linked Google account" : " Add linked Google account"}
                                 </Label>
                             </div>

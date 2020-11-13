@@ -12,7 +12,7 @@ interface TabsProps {
     tabContentClass?: string;
     children: {};
     activeTabOverride?: number;
-    activeTabChanged?: (tabIndex: number) => void;
+    onActiveTabChange?: (tabIndex: number) => void;
     deselectable?: boolean;
 }
 
@@ -22,7 +22,7 @@ function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string
 }
 
 export const Tabs = (props: TabsProps) => {
-    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, activeTabChanged, deselectable=false} = props;
+    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, onActiveTabChange, deselectable=false} = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 
     function changeTab(tabIndex: number) {
@@ -32,8 +32,8 @@ export const Tabs = (props: TabsProps) => {
             nextTabIndex = -1;
         }
         setActiveTab(nextTabIndex);
-        if (activeTabChanged) {
-            activeTabChanged(nextTabIndex);
+        if (onActiveTabChange && activeTab !== nextTabIndex) {
+            onActiveTabChange(nextTabIndex);
         }
     }
 
