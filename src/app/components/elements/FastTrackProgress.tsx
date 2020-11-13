@@ -9,6 +9,7 @@ import {selectors} from "../../state/selectors";
 import {Link} from "react-router-dom";
 import {useDeviceSize} from "../../services/device";
 import {TrustedHtml} from "./TrustedHtml";
+import {Hexagon} from "./svg/Hexagon";
 
 type QuestionLevel = "topTen" | "upper" | "lower";
 
@@ -60,42 +61,10 @@ function line(x: number, y: number) {
     return 'L' + x + ' ' + y;
 }
 
-function calculateDashArray<T>(elements: T[] | undefined, evaluator: (t: T) => boolean, perimeterLength: number) {
-    if (elements === undefined) {
-        return null;
-    }
-    let sectionLength = perimeterLength / elements.length;
-    let recordingDash = true;
-    let lengthCollector = 0;
-    let dashArray = [];
-    for (let element of elements) {
-        let shouldRecordDash = evaluator(element);
-        if (shouldRecordDash === recordingDash) {
-            lengthCollector += sectionLength;
-        } else {
-            dashArray.push(lengthCollector);
-            recordingDash = !recordingDash;
-            lengthCollector = sectionLength;
-        }
-    }
-    dashArray.push(lengthCollector);
-    return dashArray.join(',');
-}
-
 function calculateProgressBarHeight(questionLevel: LevelTag, hexagonQuarterHeight: number, hexagonPadding: number, progressBarPadding: number) {
     let numberOfHexagonRows = {"ft_top_ten": 1, "ft_upper": 2, "ft_lower": 3}[questionLevel];
     return 2 * progressBarPadding + 4 * hexagonQuarterHeight + (numberOfHexagonRows - 1) * (6 * hexagonQuarterHeight + 2 * hexagonPadding);
 }
-
-function generateHexagonPoints(halfWidth: number, quarterHeight: number) {
-    return '' + 1 * halfWidth + ' ' + 0 * quarterHeight +
-        ', ' + 2 * halfWidth + ' ' + 1 * quarterHeight +
-        ', ' + 2 * halfWidth + ' ' + 3 * quarterHeight +
-        ', ' + 1 * halfWidth + ' ' + 4 * quarterHeight +
-        ', ' + 0 * halfWidth + ' ' + 3 * quarterHeight +
-        ', ' + 0 * halfWidth + ' ' + 1 * quarterHeight;
-}
-
 
 export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; search: string}) {
     const {questionHistory: qhs}: {questionHistory?: string} = queryString.parse(search);
@@ -337,24 +306,6 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         return progress;
     }
 
-    function generateHexagon<T>(states: T[] | undefined, selector: (t: T) => boolean, properties: { stroke: { colour: string; width: number } }, fillColour: string, clickable: boolean) {
-        let polygonAttributes: { strokeWidth: number; fill: string; stroke: string; points: string; strokeDasharray?: string; pointerEvents?: string } = {
-            points: generateHexagonPoints(hexagon.halfWidth, hexagon.quarterHeight),
-            stroke: properties.stroke.colour,
-            strokeWidth: properties.stroke.width,
-            fill: fillColour,
-        };
-        const perimeter = 6 * 2 * (hexagon.quarterHeight);
-        const dashArray = calculateDashArray(states, selector, perimeter);
-        if (dashArray) {
-            polygonAttributes.strokeDasharray = dashArray;
-        }
-        if (clickable) {
-            polygonAttributes.pointerEvents = 'visible';
-        }
-        return <polygon {...polygonAttributes} />;
-    }
-
     function generateHexagonTitle(title: string, isCurrentQuestion: boolean) {
         let isTwoCharLength = ("" + title).length > 1;
         let xSingleCharPosition = hexagon.halfWidth - {xl: 8, lg: 8, md: 6, sm: 6, xs: 5}[deviceSize];
@@ -424,20 +375,11 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
         return <Link to={question.href}>
             <title>{question.title + (question.isCurrentQuestion ? ' (Current)' : '')}</title>
-            {generateHexagon(
-                [true],
-                allVisible => allVisible,
-                hexagon.base,
-                fillColour,
-                true)}
-
-            {generateHexagon(
-                question.questionPartStates,
-                state => state === 'CORRECT',
-                hexagon.questionPartProgress,
-                'none',
-                false)}
-
+            <Hexagon {...hexagon} properties={{...hexagon.base, fill: {colour: fillColour}, clickable: true}} />
+            <Hexagon
+                {...hexagon} properties={hexagon.questionPartProgress}
+                states={question.questionPartStates} selector={state => state === "CORRECT"}
+             />
             {question.isCompleted ?
                 generateCompletionTick(question.isCurrentQuestion) :
                 generateHexagonTitle(question.hexagonTitle, question.isCurrentQuestion)}
