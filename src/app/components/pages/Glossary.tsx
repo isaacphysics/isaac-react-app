@@ -17,17 +17,21 @@ import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
 import tags from "../../services/tags";
 import { TAG_ID } from '../../services/constants';
 import { Tag } from '../../../IsaacAppTypes';
+import Select, { ValueType } from "react-select";
 
 interface GlossaryProps {
     location: { hash: string },
 }
 
+interface Item<T> {
+    value: T;
+    label: string;
+}
+
 export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const [searchText, setSearchText] = useState("");
-    const topics = tags.allTags
+    const topics = tags.allTags.sort((a,b) => a.id === b.id ? 0 : (a.id > b.id ? 1 : -1));
     const [filterTopic, setFilterTopic] = useState<Tag>();
-    const [topicsDropdownOpen, setTopicsDropdownOpen] = useState(false);
-
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
 
     const glossaryTerms = useMemo(() => {
@@ -170,15 +174,14 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                         </Col>
                         <Col className="mt-3 mt-md-0">
                             <Label for='topic-select' className='sr-only'>Topic</Label>
-                            {topics?.length > 0 && <Dropdown isOpen={topicsDropdownOpen} toggle={() => setTopicsDropdownOpen(prevState => !prevState)}>
-                                <DropdownToggle caret color="outline-primary">
-                                    { !isDefined(filterTopic) ? "Filter by topic" : filterTopic.title }
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem onClick={() => setFilterTopic(undefined)}>All topics</DropdownItem>
-                                    {topics.map(e => <DropdownItem key={e.id} onClick={() => setFilterTopic(e)}>{e.title}</DropdownItem>)}
-                                </DropdownMenu>
-                            </Dropdown>}
+                            <Select inputId="topic-select"
+                                options={ topics.map(e => ({ value: e.id, label: e.title})) }
+                                name="topic-select"
+                                classNamePrefix="select"
+                                placeholder="All topics"
+                                onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
+                                isClearable
+                            />
                         </Col>
                     </Row>
                 </Col>
