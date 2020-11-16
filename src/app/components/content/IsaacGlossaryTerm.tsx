@@ -5,18 +5,17 @@ import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {useCurrentExamBoard} from "../../services/examBoard";
-import _startCase from 'lodash/startCase';
+import tags from "../../services/tags";
 import { isDefined } from '../../services/miscUtils';
-import { Tag } from '../../../IsaacAppTypes';
+import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
+import { TAG_ID } from '../../services/constants';
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
     location: {hash: string};
-    tags: Tag[];
 }
 
-// TODO add figure counting and linking
-const IsaacGlossaryTermComponent = ({doc, location: {hash}, tags}: IsaacGlossaryTermProps) => {
+const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermProps) => {
     let anchorId = '';
     const idRegexp = new RegExp('([a-z0-9-_]+)\\|?(?:(aqa|ocr)\\|?)?([a-z0-9-_~]+)?');
     const parsedAnchorId = doc.id && idRegexp.exec(doc.id.split('|').slice(1).join('|'));
@@ -37,6 +36,16 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}, tags}: IsaacGlossary
         }
     }, [hash, anchorId]);
 
+    const getTags = (docTags?: string[]) => {
+        if (SITE_SUBJECT !== SITE.CS) {
+            return [];
+        }
+        if (!docTags) return [];
+
+        return (docTags as TAG_ID[]).map(id => tags.getById(id));
+    }
+    const _tags = getTags(doc.tags);
+
     return <React.Fragment>
         {(!isDefined(doc.examBoard) || doc.examBoard === '' || examBoard === doc.examBoard) && <Row className="glossary_term">
             <Col md={3} className="glossary_term_name">
@@ -49,7 +58,7 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}, tags}: IsaacGlossary
             </Col>
             <Col>
                 {doc.explanation && <IsaacContent doc={doc.explanation} />}
-                {tags && tags.length > 0 && <p className="topics">Used in: {tags.map(tag => tag.title).join(', ')}</p>}
+                {_tags && _tags.length > 0 && <p className="topics">Used in: {_tags.map(tag => tag.title).join(', ')}</p>}
             </Col>
         </Row>}
     </React.Fragment>;

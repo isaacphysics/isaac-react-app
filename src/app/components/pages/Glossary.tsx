@@ -12,7 +12,6 @@ import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {TempExamBoardPicker} from '../elements/inputs/TempExamBoardPicker';
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import { isDefined } from '../../services/miscUtils';
-import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
 import tags from "../../services/tags";
 import { TAG_ID } from '../../services/constants';
 import { Tag } from '../../../IsaacAppTypes';
@@ -140,15 +139,6 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
         }
     })
 
-    const getTags = (docTags?: string[]) => {
-        if (SITE_SUBJECT !== SITE.CS) {
-            return [];
-        }
-        if (!docTags) return [];
-
-        return (docTags as TAG_ID[]).map(id => tags.getById(id));
-    }
-
     const thenRender = <div className="glossary-page">
         <Container>
             <TitleAndBreadcrumb currentPageTitle="Glossary" />
@@ -207,7 +197,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                     <Col>
                         {terms.map(term => <Row key={term.id}>
                             <Col md={{size: 10}}>
-                                <IsaacGlossaryTerm doc={term} tags={getTags(term.tags)} />
+                                <IsaacGlossaryTerm doc={term} />
                             </Col>
                         </Row>)}
                     </Col>
