@@ -10,6 +10,7 @@ import {Link} from "react-router-dom";
 import {useDeviceSize} from "../../services/device";
 import {TrustedHtml} from "./TrustedHtml";
 import {Hexagon} from "./svg/Hexagon";
+import {HexagonConnection} from "./svg/HexagonConnection";
 
 type QuestionLevel = "topTen" | "upper" | "lower";
 
@@ -51,14 +52,6 @@ interface AugmentedQuestion {
     href: string;
     hexagonTitle: string;
     questionPartStates?: string[];
-}
-
-function moveTo(x: number, y: number) {
-    return 'M' + x + ' ' + y;
-}
-
-function line(x: number, y: number) {
-    return 'L' + x + ' ' + y;
 }
 
 function calculateProgressBarHeight(questionLevel: LevelTag, hexagonQuarterHeight: number, hexagonPadding: number, progressBarPadding: number) {
@@ -120,16 +113,6 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         padding: hexagonPadding,
         halfWidth: hexagonHalfWidth,
         quarterHeight: hexagonQuarterHeight,
-        x: {
-            left: (Math.sqrt(3) * hexagonQuarterHeight) / 2,
-            center: hexagonHalfWidth,
-            right: (hexagonHalfWidth * 2) - (Math.sqrt(3) * hexagonQuarterHeight) / 2,
-        },
-        y: {
-            top: hexagonQuarterHeight / 2,
-            center: 2 * hexagonQuarterHeight,
-            bottom: 7 * hexagonQuarterHeight / 2,
-        },
         base: {
             stroke: {
                 width: {xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
@@ -151,13 +134,11 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         },
     };
 
-    const conceptConnection = {
+    const conceptConnectionProperties = {
         fill: 'none',
-        stroke: {
-            colour: '#fea100',
-            width: {xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
-            dashArray: 4
-        },
+        stroke: '#fea100',
+        strokeWidth: {xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
+        strokeDasharray: 4
     };
 
     function augmentQuestion(question: GameboardItem, gameboardId: string, questionHistory: string[], index: number): AugmentedQuestion {
@@ -337,37 +318,6 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         />;
     }
 
-    function calculateConnectionLine(sourceIndex: number, targetIndex: number) {
-        let result = '';
-
-        let hexagonWidth = 2 * (hexagon.halfWidth + hexagon.padding);
-
-        let sourceHexagonX = (sourceIndex <= targetIndex ? sourceIndex * hexagonWidth : Math.max(sourceIndex - 1, 0) * hexagonWidth);
-        let targetHexagonX = (targetIndex <= sourceIndex ? targetIndex * hexagonWidth : Math.max(targetIndex - 1, 0) * hexagonWidth);
-
-        // First stroke
-        if (sourceIndex <= targetIndex) {
-            result += moveTo(sourceHexagonX + hexagon.x.left, hexagon.y.top);
-        } else {
-            result += moveTo(sourceHexagonX + hexagon.x.right, hexagon.y.top);
-        }
-        result += line(sourceHexagonX + hexagon.x.center, hexagon.y.center);
-
-        // Horizontal connection
-        if (Math.abs(sourceIndex - targetIndex) > 1) {
-            result += line(targetHexagonX + hexagon.x.center, hexagon.y.center);
-        }
-
-        // Last stroke
-        if (targetIndex <= sourceIndex) {
-            result += line(targetHexagonX + hexagon.x.left, hexagon.y.bottom);
-        } else {
-            result += line(targetHexagonX + hexagon.x.right, hexagon.y.bottom);
-        }
-
-        return result;
-    }
-
     function createQuestionHexagon(question: AugmentedQuestion) {
         const fillColour = (question.isCompleted) ?
             question.isCurrentQuestion ? hexagon.base.fill.completedColour : hexagon.base.fill.deselectedCompletedColour :
@@ -384,19 +334,6 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                 generateCompletionTick(question.isCurrentQuestion) :
                 generateHexagonTitle(question.hexagonTitle, question.isCurrentQuestion)}
         </Link>;
-    }
-
-    function createConnection(sourceIndex: number, targetIndex: number) {
-        if ([sourceIndex, targetIndex].includes(-1)) {
-            return <React.Fragment />;
-        }
-        return <path
-            d={calculateConnectionLine(sourceIndex, targetIndex)}
-            fill={conceptConnection.fill}
-            stroke={conceptConnection.stroke.colour}
-            strokeWidth={conceptConnection.stroke.width}
-            strokeDasharray={conceptConnection.stroke.dashArray}
-        />;
     }
 
     function createQuestionRow(questions: AugmentedQuestion[], fastTrackLevel: string, conceptRowIndex: number) {
@@ -418,7 +355,11 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                   (3 * hexagon.quarterHeight + hexagon.padding + connectionRowIndex * (6 * hexagon.quarterHeight + 2 * hexagon.padding)) + ')'}>
             {conceptConnections.map(conceptConnection => (<React.Fragment key={JSON.stringify(conceptConnection)}>
                 <title>{conceptConnection.message}</title>
-                {createConnection(conceptConnection.sourceIndex, conceptConnection.targetIndex)}
+                <HexagonConnection
+                    {...conceptConnection}
+                    hexagonProportions={hexagon}
+                    connectionProperties={conceptConnectionProperties}
+                />
             </React.Fragment>))}
         </g>;
     }
