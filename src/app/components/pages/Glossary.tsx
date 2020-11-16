@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
-import {Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Row} from "reactstrap";
+import {Col, Container, Input, Label, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {useSelector} from "react-redux";
@@ -10,14 +10,13 @@ import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../../components/content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {TempExamBoardPicker} from '../elements/inputs/TempExamBoardPicker';
-import _startCase from 'lodash/startCase';
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import { isDefined } from '../../services/miscUtils';
 import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
 import tags from "../../services/tags";
 import { TAG_ID } from '../../services/constants';
 import { Tag } from '../../../IsaacAppTypes';
-import Select, { ValueType } from "react-select";
+import Select from "react-select";
 
 interface GlossaryProps {
     location: { hash: string },
@@ -147,7 +146,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
         }
         if (!docTags) return [];
 
-        return (docTags as TAG_ID[]).map(id => tags.getById(id)); //tagHierarchy.map(tag => ({title: tag.title}));
+        return (docTags as TAG_ID[]).map(id => tags.getById(id));
     }
 
     const thenRender = <div className="glossary-page">
