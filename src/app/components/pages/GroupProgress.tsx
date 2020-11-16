@@ -14,7 +14,7 @@ import {
 import {getGroupProgress, loadAssignmentsOwnedByMe, loadGroups, openActiveModal} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {assign, orderBy, sortBy} from "lodash";
+import {orderBy, sortBy} from "lodash";
 import {AppAssignmentProgress, AppGroup, EnhancedGameboard, PageSettings} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -202,7 +202,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
     const [reverseOrder, setReverseOrder] = useState(false);
 
     const [selectedGameboardNumber, setSelectedGameboardNumber] = useState(0);
-    const [selectedGameboardTitle, setSelectedGameboardTitle] = useState("");
+    const [_selectedGameboardTitle, setSelectedGameboardTitle] = useState("");
 
     useEffect(() => {
         dispatch(getGroupProgress(group));
@@ -313,9 +313,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
             </Link>
             <span className="ml-3"></span>
             {selectedGameboard?.dueDate && <small className="font-weight-bold text-muted">(Due date: {formatDate(selectedGameboard?.dueDate)})</small>}
-            {/* WARNING: I'm not sure we can do this.
-                The single assignment progress page doesn't have this and I can't find a way of editing the due date. */}
-            {/* {!selectedGameboard?.dueDate && <small>(Set due date)</small>} */}
+            {!selectedGameboard?.creationDate && <small>(Date Created: {formatDate(selectedGameboard?.creationDate)})</small>}
             </div>
             <Button color="tertiary" disabled={selectedGameboardNumber === (groupProgress?.[0]?.progress || []).length - 1}
                 onClick={() => setSelectedGameboardNumber(selectedGameboardNumber + 1)}>►</Button>

@@ -198,6 +198,7 @@ export interface GameboardProgressSummaryDTO {
     gameboardId?: string;
     gameboardTitle?: string;
     dueDate?: Date;
+    creationDate?: Date;
     questionPartsCorrect?: number;
     questionPartsIncorrect?: number;
     questionPartsNotAttempted?: number;
