@@ -33,8 +33,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
 
     const glossaryTerms = useMemo(() => {
-        if (searchText === '') {
-            const sortedTerms = rawGlossaryTerms?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
+        function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } {
             const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
             if (sortedTerms) {
                 for (const term of sortedTerms) {
@@ -44,18 +43,15 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                 }
             }
             return groupedTerms;
+        }
+
+        if (searchText === '') {
+            const sortedTerms = rawGlossaryTerms?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
+            return groupTerms(sortedTerms);
         } else {
             const regex = new RegExp(searchText.split(' ').join('|'), 'gi');
             const sortedTerms = rawGlossaryTerms?.filter(e => e.value?.match(regex)).sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
-            const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
-            if (sortedTerms) {
-                for (const term of sortedTerms) {
-                    if (isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
-                    const k = term?.value?.[0] || '#';
-                    groupedTerms[k] = [...(groupedTerms[k] || []), term];
-                }
-            }
-            return groupedTerms;
+            return groupTerms(sortedTerms);
         }
     }, [rawGlossaryTerms, filterTopic, searchText]);
 
