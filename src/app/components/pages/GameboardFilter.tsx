@@ -13,6 +13,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
 import {history} from "../../services/history";
+import {HierarchyFilter, Tier} from "../elements/svg/HierarchyFilter";
 
 interface Item<T> {
     value: T;
@@ -94,7 +95,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>(querySelections);
 
-    function setSelection(tierIndex: number) {
+    function setTierSelection(tierIndex: number) {
         return ((values: Item<TAG_ID>[]) => {
             const newSelections = selections.slice(0, tierIndex);
             newSelections.push(values);
@@ -110,7 +111,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         choices.push(tags.getChildren(selection[0].value).map(itemiseTag));
     }
 
-    const tiers = [
+    const tiers: Tier[] = [
         {id: "subjects", name: "Subject"},
         {id: "fields", name: "Field"},
         {id: "topics", name: "Topic"},
@@ -175,16 +176,11 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
         <RS.Row>
-            <RS.Col lg={{size: 10, offset: 1}}>
+            <RS.Col>
                 <div className="pt-3"><strong>Select your question filters</strong></div>
                 <RS.Row>
                     <RS.Col lg={6}>
-                        {tiers.map((tier, i) => (
-                            <React.Fragment key={tier.for}>
-                                <RS.Label for={tier.for} className="pt-2 pb-0">{tier.name}: </RS.Label>
-                                <Select name={tier.for} onChange={unwrapValue(setSelection(i))} isMulti={true} options={choices[i]} value={selections[i]} />
-                            </React.Fragment>
-                        ))}
+                        <HierarchyFilter tiers={tiers} choices={choices} selections={selections} setTierSelection={setTierSelection} />
                     </RS.Col>
                     <RS.Col lg={6}>
                         <div className="d-flex justify-content-between mt-0 mt-sm-4 mt-lg-0">
