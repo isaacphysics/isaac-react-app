@@ -151,7 +151,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
 
             <Row>
                 <Col md={{size: 9}} className="py-4">
-                    <Row>
+                    <Row className="no-print">
                         <Col md={{size: 4}}>
                             <Label for='terms-search' className='sr-only'>Search by term</Label>
                             <Input
@@ -169,6 +169,13 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                                 onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
                                 isClearable
                             />
+                        </Col>
+                    </Row>
+                    <Row className="only-print">
+                        <Col>
+                            {searchText !== "" && <span className="pr-4">Search: <strong>{searchText}</strong></span>}
+                            {isDefined(filterTopic) && <span className="pr-4">Topic: <strong>{filterTopic.title}</strong></span>}
+                            {examBoard !== "" && <span className="pr-4">Exam board: <strong>{examBoard}</strong></span>}
                         </Col>
                     </Row>
                 </Col>
