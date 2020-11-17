@@ -9,6 +9,7 @@ import tags from "../../services/tags";
 import { isDefined } from '../../services/miscUtils';
 import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
 import { TAG_ID } from '../../services/constants';
+import { Tag } from '../../../IsaacAppTypes';
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
