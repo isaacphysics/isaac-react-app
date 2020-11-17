@@ -29,7 +29,7 @@ interface Item<T> {
 
 export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const [searchText, setSearchText] = useState("");
-    const topics = tags.allTags.sort((a,b) => a.id === b.id ? 0 : (a.id > b.id ? 1 : -1));
+    const topics = tags.allTags.sort((a,b) => a.title.localeCompare(b.title));
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const examBoard = useCurrentExamBoard();
