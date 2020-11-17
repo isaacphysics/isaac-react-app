@@ -36,15 +36,10 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermPr
         }
     }, [hash, anchorId]);
 
-    const getTags = (docTags?: string[]) => {
-        if (SITE_SUBJECT !== SITE.CS) {
-            return [];
-        }
-        if (!docTags) return [];
-
-        return (docTags as TAG_ID[]).map(id => tags.getById(id));
+    let _tags: Tag[] = [];
+    if (SITE_SUBJECT === SITE.CS && doc.tags) {
+        _tags = doc.tags.map(id => tags.getById(id as TAG_ID));
     }
-    const _tags = getTags(doc.tags);
 
     return <React.Fragment>
         {(!isDefined(doc.examBoard) || doc.examBoard === '' || examBoard === doc.examBoard) && <Row className="glossary_term">
