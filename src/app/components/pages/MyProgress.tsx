@@ -70,8 +70,11 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
         return <Unauthorised />
     }
 
+    const userName = `${userProgress?.userDetails?.givenName || ""}${userProgress?.userDetails?.givenName ? " " : ""}${userProgress?.userDetails?.familyName || ""}`;
+    const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
+
     return <RS.Container id="my-progress" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle="My progress" />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} />
         <RS.Card className="mt-4">
             <RS.CardBody>
                 <Tabs>{{

@@ -48,16 +48,16 @@
     align-self: center;
     padding-left: 1.5rem;
   }
+
   .gameboard-item-message-phy {
     font-size: 0.875rem;
     font-weight: normal;
-    color: #448525;
+    color: #000000;
     align-self: center;
     padding-left: 1.5rem;
+    text-transform: uppercase;
   }
-  .message-perfect {
-    color: $gray-160 !important;
-  }
+
   .gameboard-tags {
     font-size: 0.875rem;
     color: $gray-160;

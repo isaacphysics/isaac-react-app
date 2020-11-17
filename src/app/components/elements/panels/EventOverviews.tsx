@@ -11,6 +11,7 @@ import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {isEventLeader} from "../../../services/user";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 export enum EventOverviewFilter {
     "All events" = "ALL",
@@ -35,14 +36,20 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
         {isEventLeader(user) && <div className="bg-grey p-2 mb-4 text-center">
             As an event leader, you are only able to see the details of events which you manage.
         </div>}
-        <div className="d-flex justify-content-end mb-4">
-            <RS.Label>
-                <RS.Input type="select" value={overviewFilter} onChange={e => {setOverviewFilter(e.target.value as EventOverviewFilter)}}>
-                    {Object.entries(EventOverviewFilter).map(([filterLabel, filterValue]) =>
-                        <option key={filterValue} value={filterValue}>{filterLabel}</option>
-                    )}
-                </RS.Input>
-            </RS.Label>
+        <div className="clearfix">
+            {SITE_SUBJECT === SITE.CS && <div className="mb-3 float-left">
+                <RS.Button color="primary" size="sm" tag={Link} to="/events_toolkit">Events toolkit</RS.Button>
+            </div>}
+            <div className="float-right mb-4">
+                <RS.Label>
+                    <RS.Input type="select" value={overviewFilter} onChange={e => {setOverviewFilter(e.target.value as EventOverviewFilter)}}>
+                        {Object.entries(EventOverviewFilter).map(([filterLabel, filterValue]) =>
+                            <option key={filterValue} value={filterValue}>{filterLabel}</option>
+                        )}
+                    </RS.Input>
+                </RS.Label>
+            </div>
+
         </div>
 
         <ShowLoading until={eventOverviews} thenRender={eventOverviews => <React.Fragment>

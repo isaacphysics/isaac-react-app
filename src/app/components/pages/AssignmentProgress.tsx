@@ -331,12 +331,16 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
                     <tbody>
                         {sortedProgress.map((studentProgress) => {
                             const fullAccess = studentProgress.user.authorisedFullAccess;
-                            return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " revoked"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
+                            return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
                                 <th className="student-name">
-                                    <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
-                                        {studentProgress.user.givenName}
-                                        <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
-                                    </Link>
+                                    {fullAccess ?
+                                        <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
+                                            {studentProgress.user.givenName}
+                                            <span
+                                                className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                        </Link> :
+                                        <span>{studentProgress.user.givenName} {studentProgress.user.familyName}</span>
+                                    }
                                 </th>
                                 {questions.map((q, index) =>
                                     <td key={q.id} className={markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestion(index)}>
