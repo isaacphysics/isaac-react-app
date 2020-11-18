@@ -5,15 +5,17 @@ import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {useCurrentExamBoard} from "../../services/examBoard";
-import _startCase from 'lodash/startCase';
+import tags from "../../services/tags";
 import { isDefined } from '../../services/miscUtils';
+import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
+import { TAG_ID } from '../../services/constants';
+import { Tag } from '../../../IsaacAppTypes';
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
     location: {hash: string};
 }
 
-// TODO add figure counting and linking
 const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermProps) => {
     let anchorId = '';
     const idRegexp = new RegExp('([a-z0-9-_]+)\\|?(?:(aqa|ocr)\\|?)?([a-z0-9-_~]+)?');
@@ -35,6 +37,11 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermPr
         }
     }, [hash, anchorId]);
 
+    let _tags: Tag[] = [];
+    if (SITE_SUBJECT === SITE.CS && doc.tags) {
+        _tags = doc.tags.map(id => tags.getById(id as TAG_ID));
+    }
+
     return <React.Fragment>
         {(!isDefined(doc.examBoard) || doc.examBoard === '' || examBoard === doc.examBoard) && <Row className="glossary_term">
             <Col md={3} className="glossary_term_name">
@@ -47,7 +54,7 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermPr
             </Col>
             <Col>
                 {doc.explanation && <IsaacContent doc={doc.explanation} />}
-                {doc.tags && doc.tags.length > 0 && <p className="topics">(Used in: {doc.tags.map(tag => _startCase(tag.replace(/[^a-zA-Z0-9]/, ' '))).join(', ')})</p>}
+                {_tags && _tags.length > 0 && <p className="topics">Used in: {_tags.map(tag => tag.title).join(', ')}</p>}
             </Col>
         </Row>}
     </React.Fragment>;

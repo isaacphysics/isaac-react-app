@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
-import {Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Label, Row} from "reactstrap";
+import {Col, Container, Input, Label, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {useSelector} from "react-redux";
@@ -10,58 +10,52 @@ import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../../components/content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {TempExamBoardPicker} from '../elements/inputs/TempExamBoardPicker';
-import _startCase from 'lodash/startCase';
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import { isDefined } from '../../services/miscUtils';
+import tags from "../../services/tags";
+import { TAG_ID } from '../../services/constants';
+import { Tag } from '../../../IsaacAppTypes';
+import Select from "react-select";
+import { useCurrentExamBoard } from "../../services/examBoard";
 
 interface GlossaryProps {
     location: { hash: string },
 }
 
+interface Item<T> {
+    value: T;
+    label: string;
+}
+
 export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const [searchText, setSearchText] = useState("");
-    const [topics, setTopics] = useState<string[]>([]);
-    const [filterTopic, setFilterTopic] = useState("");
-    const [topicsDropdownOpen, setTopicsDropdownOpen] = useState(false);
-
+    const topics = tags.allTags.sort((a,b) => a.title.localeCompare(b.title));
+    const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
-
+    const examBoard = useCurrentExamBoard();
+    
     const glossaryTerms = useMemo(() => {
-        if (searchText === '') {
-            const sortedTerms = rawGlossaryTerms?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
+        function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } {
             const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
-            let _topics: string[] = [];
             if (sortedTerms) {
                 for (const term of sortedTerms) {
-                    if (filterTopic !== "" && !term.tags?.includes(filterTopic)) continue;
+                    if (isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
                     const k = term?.value?.[0] || '#';
                     groupedTerms[k] = [...(groupedTerms[k] || []), term];
-                    _topics = [..._topics, ...(term.tags || [])];
                 }
             }
-            setTopics([...new Set(
-                _topics.sort((a, b) => a.localeCompare(b))
-            )]);
             return groupedTerms;
+        }
+
+        if (searchText === '') {
+            const sortedTerms = rawGlossaryTerms?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
+            return groupTerms(sortedTerms?.filter(t => t.examBoard === "" || t.examBoard === examBoard));
         } else {
             const regex = new RegExp(searchText.split(' ').join('|'), 'gi');
             const sortedTerms = rawGlossaryTerms?.filter(e => e.value?.match(regex)).sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
-            const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
-            let _topics: string[] = [];
-            if (sortedTerms) {
-                for (const term of sortedTerms) {
-                    if (filterTopic !== "" && !term.tags?.includes(filterTopic)) continue;
-                    const k = term?.value?.[0] || '#';
-                    groupedTerms[k] = [...(groupedTerms[k] || []), term];
-                    _topics = [..._topics, ...(term.tags || [])];
-                }
-            }
-            setTopics([...new Set(
-                _topics.sort((a, b) => a.localeCompare(b))
-            )]);
-            return groupedTerms;
+            return groupTerms(sortedTerms?.filter(t => t.examBoard === "" || t.examBoard === examBoard));
         }
-    }, [rawGlossaryTerms, filterTopic, searchText]);
+    }, [rawGlossaryTerms, filterTopic, searchText, examBoard]);
 
     const scrollToKey = (k: string) => {
         const element = document.getElementById(`key-${k}`);
@@ -157,7 +151,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
 
             <Row>
                 <Col md={{size: 9}} className="py-4">
-                    <Row>
+                    <Row className="no-print">
                         <Col md={{size: 4}}>
                             <Label for='terms-search' className='sr-only'>Search by term</Label>
                             <Input
@@ -167,15 +161,21 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                         </Col>
                         <Col className="mt-3 mt-md-0">
                             <Label for='topic-select' className='sr-only'>Topic</Label>
-                            {topics?.length > 0 && <Dropdown isOpen={topicsDropdownOpen} toggle={() => setTopicsDropdownOpen(prevState => !prevState)}>
-                                <DropdownToggle caret color="outline-primary">
-                                    { filterTopic === "" ? "Filter by topic" : _startCase(filterTopic) }
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem onClick={() => setFilterTopic("")}>All topics</DropdownItem>
-                                    {topics.map(e => <DropdownItem key={e} onClick={() => setFilterTopic(e)}>{_startCase(e.replace(/[^a-zA-Z0-9]/, ' '))}</DropdownItem>)}
-                                </DropdownMenu>
-                            </Dropdown>}
+                            <Select inputId="topic-select"
+                                options={ topics.map(e => ({ value: e.id, label: e.title})) }
+                                name="topic-select"
+                                classNamePrefix="select"
+                                placeholder="All topics"
+                                onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
+                                isClearable
+                            />
+                        </Col>
+                    </Row>
+                    <Row className="only-print">
+                        <Col>
+                            {searchText !== "" && <span className="pr-4">Search: <strong>{searchText}</strong></span>}
+                            {isDefined(filterTopic) && <span className="pr-4">Topic: <strong>{filterTopic.title}</strong></span>}
+                            {examBoard !== "" && <span className="pr-4">Exam board: <strong>{examBoard}</strong></span>}
                         </Col>
                     </Row>
                 </Col>
@@ -190,12 +190,14 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                 </Col>
             </Row>}
             {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className="pt-2 pb-4">
-                <div id="sentinel" ref={alphabetScrollerSentinel}>&nbsp;</div>
-                <div id="stickyalphabetlist" className="alphabetlist pb-4">
-                    {alphabetList}
-                </div>
-                <div className="alphabetlist pb-4">
-                    {alphabetList}
+                <div className="no-print">
+                    <div id="sentinel" ref={alphabetScrollerSentinel}>&nbsp;</div>
+                    <div id="stickyalphabetlist" className="alphabetlist pb-4">
+                        {alphabetList}
+                    </div>
+                    <div className="alphabetlist pb-4">
+                        {alphabetList}
+                    </div>
                 </div>
                 {Object.entries(glossaryTerms).map(([key, terms]) => <Row key={key} className="pb-5">
                     <Col md={{size: 1, offset: 1}} id={`key-${key}`}><h2 style={{position: 'sticky', top: '1em'}}>{key}</h2></Col>
