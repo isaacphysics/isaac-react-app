@@ -929,8 +929,15 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private updateNumberInputValue(n: number) {
         if (n === -1) {
             this.setState((prevState: InequalityModalState) => ({ numberInputValue: -(prevState.numberInputValue || 0) }));
+        } else if (isDefined(this.state.numberInputValue)) {
+            // I'm sure there's a more concise way...
+            if (this.state.numberInputValue < 0) {
+                this.setState((prevState: InequalityModalState) => ({ numberInputValue: (prevState.numberInputValue || 0)*10 - n }));
+            } else {
+                this.setState((prevState: InequalityModalState) => ({ numberInputValue: (prevState.numberInputValue || 0)*10 + n }));
+            }
         } else {
-            this.setState((prevState: InequalityModalState) => ({ numberInputValue: (prevState.numberInputValue || 0)*10 + n }));
+            this.setState({ numberInputValue: n });
         }
     }
 
@@ -1078,11 +1085,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                         </div>
                     </div>
                     <div className="input-box">
-                        <div className={`menu-item ${this.state.numberInputValue ? 'active' : 'inactive'}`}
-                            data-item={this.state.numberInputValue ? JSON.stringify({ type: 'Num', properties: { significand: `${this.state.numberInputValue}`} }) : null}
-                            dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(`${this.state.numberInputValue || ''}`)}}
+                        <div className={`menu-item ${isDefined(this.state.numberInputValue) ? 'active' : 'inactive'}`}
+                            data-item={isDefined(this.state.numberInputValue) ? JSON.stringify({ type: 'Num', properties: { significand: `${this.state.numberInputValue}`} }) : null}
+                            dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(`${isDefined(this.state.numberInputValue) ? this.state.numberInputValue : ''}`)}}
                         />
-                        {this.state.numberInputValue && <div className="clear-number" role="button" tabIndex={0}
+                        {isDefined(this.state.numberInputValue) && <div className="clear-number" role="button" tabIndex={0}
                             onClick={() => this.clearNumberInputValue()}
                             onKeyUp={() => this.clearNumberInputValue()}
                         />}
