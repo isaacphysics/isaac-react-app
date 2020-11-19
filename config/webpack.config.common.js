@@ -32,7 +32,11 @@ module.exports = (isProd) => {
         },
 
         resolve: {
+            modules: [path.resolve(__dirname), 'node_modules'],
             extensions: ['.ts', '.tsx', '.js', '.jsx'],
+            alias: {
+                'p5': 'p5/lib/p5.min.js'
+            }
         },
 
         module: {
