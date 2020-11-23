@@ -30,7 +30,7 @@ const BaseMacros: {[key: string]: MathJaxMacro} = {
     "e": ["\\textrm{e}", 0],
     "units": ["\\rm{#1}", 1],
     // Chemistry:
-    "standardstate": ["\\mathbin{\u29B5}", 0],
+    "standardstate": ["\u29B5", 0], // Below we unescape HTML encoding using 'he', otherwise would need "\\mathbin{\u29B5}".
     // Set theory:
     "N": "\\mathbb{N}",
     "Z": "\\mathbb{Z}",
