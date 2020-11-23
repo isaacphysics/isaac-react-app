@@ -1,4 +1,4 @@
-import React, {ComponentProps, useEffect, useState} from "react";
+import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     Button,
@@ -204,6 +204,37 @@ const GroupSummary = (props: GroupSummaryProps) => {
     const [selectedGameboardNumber, setSelectedGameboardNumber] = useState(0);
     const [_selectedGameboardTitle, setSelectedGameboardTitle] = useState("");
 
+    const tableRef = useRef<HTMLTableElement>(null);
+
+    useLayoutEffect(() => {
+        const table = tableRef.current;
+        if (table) {
+            const parentElement = table.parentElement as HTMLElement;
+            const firstRow = (table.firstChild as HTMLTableSectionElement).firstChild as HTMLTableRowElement;
+            const questionTH = firstRow.children[selectedGameboardNumber + 1] as HTMLTableHeaderCellElement;
+
+            const offsetLeft = questionTH.offsetLeft;
+            const parentScrollLeft = parentElement.scrollLeft;
+            const parentLeft = parentScrollLeft + parentElement.offsetLeft + 130;
+            const width = questionTH.offsetWidth;
+
+            let newScrollLeft;
+
+            if (offsetLeft < parentLeft) {
+                newScrollLeft = parentScrollLeft + offsetLeft - parentLeft - width / 2;
+            } else {
+                const offsetRight = offsetLeft + width;
+                const parentRight = parentLeft + parentElement.offsetWidth - 260;
+                if (offsetRight > parentRight) {
+                    newScrollLeft = parentScrollLeft + offsetRight - parentRight + width / 2;
+                }
+            }
+            if (isDefined(newScrollLeft)) {
+                parentElement.scrollLeft = newScrollLeft;
+            }
+        }
+    }, [selectedGameboardNumber]);
+
     useEffect(() => {
         dispatch(getGroupProgress(group));
     }, [dispatch]);
@@ -272,7 +303,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
                 <span className="down">▼</span>
             </button>
             : undefined;
-        return <th key={props.key} {...rest} className={className} onClick={clickToSelect}>{props.children}{sortArrows}</th>;
+        return <th scope="col" key={props.key} {...rest} className={className} onClick={clickToSelect}>{props.children}{sortArrows}</th>;
     }
 
     const totalAssignments = (groupProgress?.[0]?.progress || []).length;
@@ -293,10 +324,10 @@ const GroupSummary = (props: GroupSummaryProps) => {
         {(groupProgress?.[0]?.progress ?? []).map((gameboard, index) => {
             const currentAssignmentCompletion = assignmentsCompletion[index];
             const completionPercentage = formatMark(currentAssignmentCompletion?.questionPagesPerfect || 0, currentAssignmentCompletion?.questionPagesTotal || 1, true)
-            return sortItem({key: gameboard.assignmentId, itemOrder: index, className: index === selectedGameboardNumber ? 'selected' : '', children: completionPercentage})
+            return sortItem({key: gameboard.assignmentId, itemOrder: index, className: `mw-25 ${index === selectedGameboardNumber ? 'selected' : ''}`, children: completionPercentage})
         })}
-        {sortItem({key: "total-questions", itemOrder: "total-questions", children: "Total Qs"})}
-        {sortItem({key: "assignments-completed", itemOrder: "assignments-completed", children: "Assignments completed"})}
+        {sortItem({key: "total-questions", itemOrder: "total-questions", className: "total-column left", children: "Total Qs"})}
+        {sortItem({key: "assignments-completed", itemOrder: "assignments-completed", className: "total-column right", children: "Assignments completed"})}
     </tr>;
 
     const selectedGameboard = groupProgress?.[0]?.progress?.[selectedGameboardNumber];
@@ -318,8 +349,8 @@ const GroupSummary = (props: GroupSummaryProps) => {
             <Button color="tertiary" disabled={selectedGameboardNumber === (groupProgress?.[0]?.progress || []).length - 1}
                 onClick={() => setSelectedGameboardNumber(selectedGameboardNumber + 1)}>►</Button>
         </div>
-        <div className="progress-table group-progress-summary mx-4 overflow-auto mw-100">
-            <table className="table table-striped table-bordered table-sm mx-auto bg-white">
+        <div className="progress-table mx-4">
+            <table ref={tableRef}>
                 <thead>{tableHeaderFooter}</thead>
                 <tbody className="">
                     {(sortedProgress || []).map(userProgress => {
@@ -341,12 +372,15 @@ const GroupSummary = (props: GroupSummaryProps) => {
                                                             gameboard.passMark ?? passMark
                                                            );
                                 return <td className={`py-2 ${rateClass} ${index === selectedGameboardNumber ? 'selected' : ''} progress-cell text-center`} key={gameboard.assignmentId}>
-                                    {/* {fullAccess && formatMark(gameboard.questionPartsCorrect ?? 0, gameboard.questionPartsTotal ?? 1, pageSettings.formatAsPercentage)} */}
                                     {fullAccess && formatMark(gameboard.questionPagesPerfect ?? 0, gameboard.questionPagesTotal ?? 0, pageSettings.formatAsPercentage)}
                                 </td>
                             })}
-                            <td>{fullAccess && formatPagesCorrect(progress || [], pageSettings.formatAsPercentage)}</td>
-                            <td>{fullAccess && formatAssignmentsCompleted(progress || [], pageSettings.formatAsPercentage)}</td>
+                            <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
+                                {fullAccess && formatPagesCorrect(progress || [], pageSettings.formatAsPercentage)}
+                            </th>
+                            <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
+                                {fullAccess && formatAssignmentsCompleted(progress || [], pageSettings.formatAsPercentage)}
+                            </th>
                         </tr>
                     })}
                 </tbody>

@@ -295,10 +295,16 @@ $failed-bg-size: 25%;
   margin-right: 0.3rem;
 }
 
-.assignment-progress-progress {
+.assignment-progress-progress,
+.group-progress-summary {
   background: $gray-103;
   border: 1px solid $gray-118;
   border-top: none;
+}
+
+.group-progress-summary table {
+  border-left: 1px solid $gray-118;
+  border-right: 1px solid $gray-118;
 }
 
 .progress-header {
