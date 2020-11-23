@@ -19,10 +19,10 @@ interface IsaacNumericQuestionProps {
 
 function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
     const seedValue = userId + "|" + questionId;
-    const random = new Rand(seedValue).next;
+    const random = new Rand(seedValue);
 
     function randInt(size: number): number {
-        return Math.floor(random() * size);
+        return Math.floor(random.next() * size);
     }
 
     function pick<T>(arr: T[]): T {
