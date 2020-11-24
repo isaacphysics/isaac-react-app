@@ -19,9 +19,9 @@ import {
     ResponderProvided
 } from "react-beautiful-dnd";
 import _differenceBy from "lodash/differenceBy";
-import _isUndefined from "lodash/isUndefined";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
+import { isDefined } from "../../services/miscUtils";
 
 interface IsaacParsonsQuestionProps {
     doc: IsaacParsonsQuestionDTO;
@@ -124,7 +124,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             } else if (e instanceof TouchEvent && e.touches[0]) {
                 cursorX = e.touches[0].clientX;
             }
-            if (this.state.initialX && x) {
+            if ((!isDefined(this.props.doc.disableIndentation) || !this.props.doc.disableIndentation) && this.state.initialX && x) {
                 const d = Math.max(0, x - this.state.initialX);
                 const i = Math.min(Math.floor(d/PARSONS_INDENT_STEP), Math.min(this.state.currentMaxIndent, PARSONS_MAX_INDENT));
                 if (cursorX >= this.state.initialX) {
@@ -157,10 +157,12 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             const matches = className.match(/indent-([0-3])/);
             const currentIndent: number = this.state.currentIndent || (matches && parseInt(matches[1])) || 0;
             let newIndent = currentIndent;
-            if (e.key === '[' || e.code === 'BracketLeft') {
-                newIndent = Math.max(currentIndent - 1, 0);
-            } else if (e.key === ']' || e.code === 'BracketRight') {
-                newIndent = Math.min(currentIndent + 1, Math.min(this.state.currentMaxIndent, PARSONS_MAX_INDENT));
+            if (!isDefined(this.props.doc.disableIndentation) || !this.props.doc.disableIndentation) {
+                if (e.key === '[' || e.code === 'BracketLeft') {
+                    newIndent = Math.max(currentIndent - 1, 0);
+                } else if (e.key === ']' || e.code === 'BracketRight') {
+                    newIndent = Math.min(currentIndent + 1, Math.min(this.state.currentMaxIndent, PARSONS_MAX_INDENT));
+                }
             }
             let newCurrentMaxIndent = 0;
             const previousItem = this.props.currentAttempt?.items?.[(this.state.currentDestinationIndex || 0) - 1];
@@ -190,24 +192,24 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
         if (!result.source || !result.destination) {
             return;
         }
-        if (result.source.droppableId == result.destination.droppableId && result.destination.droppableId == 'answerItems' && this.props.currentAttempt) {
+        if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'answerItems' && this.props.currentAttempt) {
             // Reorder currentAttempt
             const items = [...(this.props.currentAttempt.items || [])];
             this.moveItem(items, result.source.index, items, result.destination.index, this.state.currentIndent || 0);
             this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items }});
-        } else if (result.source.droppableId == result.destination.droppableId && result.destination.droppableId == 'availableItems') {
+        } else if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'availableItems') {
             // Reorder availableItems
             const items = [...this.state.availableItems];
             this.moveItem(items, result.source.index, items, result.destination.index, 0);
             this.setState({ availableItems: items });
-        } else if (result.source.droppableId == 'availableItems' && result.destination.droppableId == 'answerItems' && this.props.currentAttempt) {
+        } else if (result.source.droppableId === 'availableItems' && result.destination.droppableId === 'answerItems' && this.props.currentAttempt) {
             // Move from availableItems to currentAttempt
             const srcItems = [...this.state.availableItems];
             const dstItems = [...(this.props.currentAttempt.items || [])];
             this.moveItem(srcItems, result.source.index, dstItems, result.destination.index, this.state.currentIndent || 0);
             this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items: dstItems }});
             this.setState({ availableItems: srcItems });
-        } else if (result.source.droppableId == 'answerItems' && result.destination.droppableId == 'availableItems' && this.props.currentAttempt) {
+        } else if (result.source.droppableId === 'answerItems' && result.destination.droppableId === 'availableItems' && this.props.currentAttempt) {
             // Move from currentAttempt to availableItems
             const srcItems = [...(this.props.currentAttempt.items || [])];
             const dstItems = [...this.state.availableItems];
@@ -252,21 +254,21 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
     }
 
     private reduceIndentation = (index: number) => {
-        if (!this.props.currentAttempt?.items) return;
+        if (!this.props.currentAttempt?.items || this.props.doc.disableIndentation) return;
 
         const items = [...(this.props.currentAttempt.items || [])];
-        if (!_isUndefined(items[index].indentation)) {
+        if (isDefined(items[index].indentation)) {
             items[index].indentation = Math.max((items[index].indentation || 0) - 1, 0);
         }
         this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items }});
     }
 
     private increaseIndentation = (index: number) => {
-        if (index === 0 || !this.props.currentAttempt?.items) return;
+        if (index === 0 || !this.props.currentAttempt?.items || this.props.doc.disableIndentation) return;
 
         const items = [...(this.props.currentAttempt.items || [])];
         // This condition is insane but of course 0, undefined, and null are all false-y.
-        if (!_isUndefined(items[index].indentation)) {
+        if (isDefined(items[index].indentation)) {
             items[index].indentation = Math.min((items[index].indentation || 0) + 1, Math.min((items[Math.max(index-1, 0)].indentation || 0) + 1, PARSONS_MAX_INDENT));
         }
         this.props.setCurrentAttempt(this.props.questionId, {...this.props.currentAttempt, ...{ items }});
@@ -305,7 +307,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                             }}
                                         </Draggable>
                                     })}
-                                    {(!this.state.availableItems || this.state.availableItems.length == 0) && <div>&nbsp;</div>}
+                                    {(!this.state.availableItems || this.state.availableItems.length === 0) && <div>&nbsp;</div>}
                                     {provided.placeholder}
                                 </div>
                             }}
@@ -315,10 +317,10 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                         <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
                         <Droppable droppableId="answerItems">
                             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
-                                return <div id="parsons-choice-area" ref={provided.innerRef} className={`parsons-items ${this.state.currentIndent == null ? '' : `ghost-indent-${this.state.currentIndent}`} ${this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length > 0 ? "" : "empty"}`}>
+                                return <div id="parsons-choice-area" ref={provided.innerRef} className={`parsons-items ${this.state.currentIndent === null ? '' : `ghost-indent-${this.state.currentIndent}`} ${this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length > 0 ? "" : "empty"}`}>
                                     {this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.map((item, index) => {
-                                        const canDecreaseIndentation = !_isUndefined(item?.indentation) && item.indentation > 0;
-                                        const canIncreaseIndentation = !_isUndefined(item?.indentation) && index !== 0 && item.indentation <= this.getPreviousItemIndentation(index) && item.indentation < PARSONS_MAX_INDENT;
+                                        const canDecreaseIndentation = (!isDefined(this.props.doc.disableIndentation) || !this.props.doc.disableIndentation) && isDefined(item?.indentation) && item.indentation > 0;
+                                        const canIncreaseIndentation = (!isDefined(this.props.doc.disableIndentation) || !this.props.doc.disableIndentation) && isDefined(item?.indentation) && index !== 0 && item.indentation <= this.getPreviousItemIndentation(index) && item.indentation < PARSONS_MAX_INDENT;
                                         return <Draggable
                                             key={item.id}
                                             draggableId={`${item.id || index}|parsons-item-choice`}
@@ -338,7 +340,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                                 >
                                                     <pre>
                                                         {item.value}
-                                                        <div className="controls">
+                                                        {(!isDefined(this.props.doc.disableIndentation) || !this.props.doc.disableIndentation) && <div className="controls">
                                                             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
                                                             <span
                                                                 className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' }`}
@@ -355,13 +357,13 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                                             >
                                                                 &nbsp;
                                                             </span>
-                                                        </div>
+                                                        </div>}
                                                     </pre>
                                                 </div>
                                             }}
                                         </Draggable>
                                     })}
-                                    {(!(this.props.currentAttempt && this.props.currentAttempt.items) || (this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length == 0)) && <div className="text-muted text-center">Drag items across to build your answer</div>}
+                                    {(!(this.props.currentAttempt && this.props.currentAttempt.items) || (this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length === 0)) && <div className="text-muted text-center">Drag items across to build your answer</div>}
                                     {provided.placeholder}
                                 </div>
                             }}
