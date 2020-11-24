@@ -124,7 +124,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             } else if (e instanceof TouchEvent && e.touches[0]) {
                 cursorX = e.touches[0].clientX;
             }
-            if (isDefined(this.props.doc.disableIndentation) && !this.props.doc.disableIndentation && this.state.initialX && x) {
+            if ((!isDefined(this.props.doc.disableIndentation) || !this.props.doc.disableIndentation) && this.state.initialX && x) {
                 const d = Math.max(0, x - this.state.initialX);
                 const i = Math.min(Math.floor(d/PARSONS_INDENT_STEP), Math.min(this.state.currentMaxIndent, PARSONS_MAX_INDENT));
                 if (cursorX >= this.state.initialX) {
@@ -157,7 +157,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
             const matches = className.match(/indent-([0-3])/);
             const currentIndent: number = this.state.currentIndent || (matches && parseInt(matches[1])) || 0;
             let newIndent = currentIndent;
-            if (isDefined(this.props.doc.disableIndentation) && !this.props.doc.disableIndentation) {
+            if (!isDefined(this.props.doc.disableIndentation) || !this.props.doc.disableIndentation) {
                 if (e.key === '[' || e.code === 'BracketLeft') {
                     newIndent = Math.max(currentIndent - 1, 0);
                 } else if (e.key === ']' || e.code === 'BracketRight') {
@@ -319,8 +319,8 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                             {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => {
                                 return <div id="parsons-choice-area" ref={provided.innerRef} className={`parsons-items ${this.state.currentIndent === null ? '' : `ghost-indent-${this.state.currentIndent}`} ${this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.length > 0 ? "" : "empty"}`}>
                                     {this.props.currentAttempt && this.props.currentAttempt.items && this.props.currentAttempt.items.map((item, index) => {
-                                        const canDecreaseIndentation = isDefined(this.props.doc.disableIndentation) && !this.props.doc.disableIndentation && isDefined(item?.indentation) && item.indentation > 0;
-                                        const canIncreaseIndentation = isDefined(this.props.doc.disableIndentation) && !this.props.doc.disableIndentation && isDefined(item?.indentation) && index !== 0 && item.indentation <= this.getPreviousItemIndentation(index) && item.indentation < PARSONS_MAX_INDENT;
+                                        const canDecreaseIndentation = (!isDefined(this.props.doc.disableIndentation) || !this.props.doc.disableIndentation) && isDefined(item?.indentation) && item.indentation > 0;
+                                        const canIncreaseIndentation = (!isDefined(this.props.doc.disableIndentation) || !this.props.doc.disableIndentation) && isDefined(item?.indentation) && index !== 0 && item.indentation <= this.getPreviousItemIndentation(index) && item.indentation < PARSONS_MAX_INDENT;
                                         return <Draggable
                                             key={item.id}
                                             draggableId={`${item.id || index}|parsons-item-choice`}
@@ -340,7 +340,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                                 >
                                                     <pre>
                                                         {item.value}
-                                                        {isDefined(this.props.doc.disableIndentation) && !this.props.doc.disableIndentation && <div className="controls">
+                                                        {(!isDefined(this.props.doc.disableIndentation) || !this.props.doc.disableIndentation) && <div className="controls">
                                                             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
                                                             <span
                                                                 className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' }`}
