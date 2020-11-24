@@ -98,7 +98,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private _lowerCaseGreekLetters = ["alpha", "beta", "gamma", "delta", "varepsilon", "zeta", "eta", "theta", "iota", "kappa", "lambda", "mu", "nu", "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "chi", "psi", "omega"];
     private _upperCaseGreekLetters = ["Gamma", "Delta", "Theta", "Lambda", "Xi", "Pi", "Sigma", "Upsilon", "Phi", "Psi", "Omega"];
 
-    private _trigFunctionNames = ["sin", "cos", "tan", "arcsin", "arccos", "arctan", "sinh", "cosh", "tanh", "cosec", "sec", "cot", "arccosec", "arcsec", "arccot"];
+    private _trigFunctionNames = ["sin", "cos", "tan", "cosec", "sec", "cot", "arcsin", "arccos", "arctan", "arccosec", "arcsec", "arccot"];
     private _hypFunctionsNames = ["sinh", "cosh", "tanh", "cosech", "sech", "coth", "arccosech", "arcsech", "arccoth", "arcsinh", "arccosh", "arctanh"];
     private _logFunctionNames = ["ln", "log"];
 
