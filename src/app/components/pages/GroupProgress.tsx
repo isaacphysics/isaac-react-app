@@ -8,7 +8,8 @@ import {
     DropdownMenu,
     DropdownToggle,
     Label,
-    Row, Spinner,
+    Row,
+    Spinner,
     UncontrolledButtonDropdown
 } from "reactstrap"
 import {getGroupProgress, loadAssignmentsOwnedByMe, loadGroups, openActiveModal} from "../../state/actions";
@@ -28,10 +29,8 @@ import {Link} from "react-router-dom";
 import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
-import {isStaff} from "../../services/user";
 import {isDefined} from '../../services/miscUtils';
-import { formatDate } from "../elements/DateString";
+import {formatDate} from "../elements/DateString";
 
 function selectGroups(state: AppState) {
     if (state != null) {
@@ -427,7 +426,6 @@ const GroupAssignmentProgress = (props: GroupSummaryProps) => {
 export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
     const dispatch = useDispatch();
     const {groups} = useSelector(selectGroups);
-    const user = useSelector(selectors.user.orNull);
 
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
@@ -457,11 +455,10 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
         <Container>
             <TitleAndBreadcrumb
                 currentPageTitle={{[SITE.PHY]: "Group Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
-                subTitle="Track your class performance per assignment"
+                subTitle="Track your group performance by assignment"
                 help="Click on your groups to see the assignments you have set. View your students' progress by question."
             />
             <Row className="align-items-center d-none d-md-flex">
-                {isStaff(user) && <AnonymiseUsersCheckbox className={"ml-2"}/>}
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">

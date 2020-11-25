@@ -415,7 +415,7 @@ $failed-bg-size: 25%;
     }
     &:not(.selected):after {
       @include after-border;
-      border-top: 2px solid $gray-118;
+      border-top: 2px solid $gray-160;
     }
   }
 
@@ -470,11 +470,11 @@ $failed-bg-size: 25%;
   }
 
   .selected:not(:nth-child(2)) {
-    border-left: 2px solid $gray-118;
+    border-left: 2px solid $gray-160;
   }
 
   .selected:not(:nth-last-child(3)) {
-    border-right: 2px solid $gray-118;
+    border-right: 2px solid $gray-160;
   }
 
   th {
