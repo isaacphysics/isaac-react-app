@@ -196,7 +196,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                         <td>Booking Deadline:</td>
                                         <td>
                                             <DateString>{event.bookingDeadline}</DateString>
-                                            {!event.isWithinBookingDeadline && <div className="alert-danger text-center">
+                                            {!event.isWithinBookingDeadline && !event.hasExpired && <div className="alert-danger text-center">
                                                 The booking deadline for this event has passed.
                                             </div>}
                                         </td>
