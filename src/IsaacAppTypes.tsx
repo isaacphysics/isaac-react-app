@@ -20,7 +20,7 @@ export type Action =
 
     | {type: ACTION_TYPE.USER_SNAPSHOT_UPDATE; userSnapshot: UserSnapshot}
 
-    | {type: ACTION_TYPE.STREAK_RECORD_UPDATE; streakRecord: StreakRecord}
+    | {type: ACTION_TYPE.STREAK_RECORD_UPDATE; streakRecord: UserSnapshot}
 
     | {type: ACTION_TYPE.ROUTER_PAGE_CHANGE; path: string}
 

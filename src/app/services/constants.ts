@@ -819,6 +819,9 @@ export const doughnutColours = {
     ]
 }[SITE_SUBJECT];
 
-export const ISAAC_GREEN = '#509E2E';
+export const progressColours = {
+    [SITE.PHY]: '#509E2E',
+    [SITE.CS]: '#000000'
+}[SITE_SUBJECT];
 
 export const GRAY_120 = '#c9cad1';

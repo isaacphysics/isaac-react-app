@@ -6,13 +6,12 @@ import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarPhy} from "./NavigationBarPhy";
 import {selectors} from "../../../state/selectors";
 import {AppState} from "../../../state/reducers";
-import {HeaderDailyStreakGauge} from "../../elements/views/DailyStreakGauge";
-import {isMobile} from "../../../services/device";
+import {HeaderStreakGauge} from "../../elements/views/StreakGauge";
 
 export const HeaderPhy = () => {
     const user = useSelector(selectors.user.orNull);
     const streakRecord = useSelector((state: AppState) => state?.streakRecord ||
-        state?.userProgress?.userSnapshot?.dailyStreakRecord);
+        state?.userProgress?.userSnapshot);
     const mainContentId = useSelector(selectors.mainContentId.orDefault);
     return <header className="light">
         <Container className="container-fluid px-0">
@@ -33,7 +32,7 @@ export const HeaderPhy = () => {
                                 <React.Fragment>
                                     <div id="header-progress" className="d-none d-md-block">
                                         Streak:
-                                        <HeaderDailyStreakGauge streakRecord={streakRecord}/>
+                                        <HeaderStreakGauge streakRecord={streakRecord}/>
                                     </div>
                                     <UncontrolledTooltip placement="bottom" autohide={false} target="header-progress">
                                         The daily streak indicates the number of consecutive days you have been active on Isaac.

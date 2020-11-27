@@ -31,7 +31,6 @@ import {
     FreeTextRule,
     LoggedInUser,
     QuestionSearchQuery,
-    StreakRecord,
     Toast,
     UserPreferencesDTO,
     UserSnapshot,
@@ -291,7 +290,7 @@ export const updateUserSnapshot = (newUserSnapshot: UserSnapshot) => async (disp
         dispatch({type: ACTION_TYPE.USER_SNAPSHOT_UPDATE, userSnapshot: newUserSnapshot});
 };
 
-export const updateStreakRecord = (newStreakRecord: StreakRecord) => async (dispatch: Dispatch<Action>) => {
+export const updateStreakRecord = (newStreakRecord: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.STREAK_RECORD_UPDATE, streakRecord: newStreakRecord});
 };
 

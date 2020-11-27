@@ -494,7 +494,7 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
     }
 };
 
-export type StreakRecordState = StreakRecord | null;
+export type StreakRecordState = UserSnapshot | null;
 export const streakRecord = (streakRecord: StreakRecordState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.STREAK_RECORD_UPDATE:

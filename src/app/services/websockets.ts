@@ -51,8 +51,8 @@ const openNotificationSocket = function(user: UserSummaryDTO | null): void {
             websocketMessage.notifications.forEach(function(entry: any) {
                 const notificationMessage = JSON.parse(entry.message);
                 // specific user streak update
-                if (notificationMessage.streakRecord) {
-                    store.dispatch(updateStreakRecord(notificationMessage.streakRecord));
+                if (notificationMessage.dailyStreakRecord && notificationMessage.weeklyStreakRecord) {
+                    store.dispatch(updateStreakRecord({dailyStreakRecord: notificationMessage.dailyStreakRecord, weeklyStreakRecord: notificationMessage.weeklyStreakRecord}));
                 }
             });
         }
