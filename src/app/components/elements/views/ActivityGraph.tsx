@@ -24,6 +24,7 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
             if (nonZeroDates.length > 0) {
                 const minNonZeroDate = new Date(nonZeroDates.reduce((min, date) => date < min ? date : min));
                 const maxDate = new Date(foundDates.reduce((max, date) => date > max ? date : max));
+                maxDate.setMonth(maxDate.getMonth() + 1);
                 let tempMinTime = new Date(minNonZeroDate.getTime());
                 let tempMaxTime = new Date(maxDate.getTime());
                 if (minNonZeroDate.getFullYear() == maxDate.getFullYear() && minNonZeroDate.getMonth() == maxDate.getMonth()) {
