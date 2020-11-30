@@ -5,7 +5,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import Select, {ValueType} from "react-select";
 import {Link, withRouter} from "react-router-dom";
 import tags from '../../services/tags';
-import {TAG_ID} from '../../services/constants';
+import {NOT_FOUND, TAG_ID} from '../../services/constants';
 import {Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
 import {generateTemporaryGameboard, loadGameboard} from '../../state/actions';
@@ -87,6 +87,9 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     const gameboardIdAnchor = location.hash ? location.hash.slice(1) : null;
     if (gameboard && gameboard.id !== gameboardIdAnchor) {
         history.push({search: location.search, hash: gameboard.id});
+    } else if (gameboardIdAnchor && gameboardOrNotFound === NOT_FOUND) {
+        // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
+        history.push({search: location.search});
     }
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>(querySelections);
