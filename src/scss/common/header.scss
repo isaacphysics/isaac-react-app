@@ -139,6 +139,9 @@ header {
     @include respond-above(xs){
       padding-right: 28% !important;
     }
+    @include respond-below(md) {
+      margin-top: 1.7rem !important;
+    }
     @include respond-above(sm) {
       margin-top: 0.2rem;
       padding-right: 0 !important;
