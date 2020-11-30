@@ -15,6 +15,9 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
     }
 
     useEffect(() => {
+        if (selectedDates.length === 0) {
+            return;
+        }
         bb.generate({
             data: {
                 x: "x",
@@ -34,5 +37,5 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
         });
     }, [answeredQuestionsByDate, selectedDates]);
 
-    return <div id="activityGraph"/>
+    return selectedDates.length > 0 ? <div id="activityGraph"/> : <div className="text-center-width"><strong>No data</strong></div>;
 };
