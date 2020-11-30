@@ -23,16 +23,17 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
             const nonZeroDates = foundDates.filter((date) => answeredQuestionsByDate && answeredQuestionsByDate[date] > 0);
             if (nonZeroDates.length > 0) {
                 const minNonZeroDate = new Date(nonZeroDates.reduce((min, date) => date < min ? date : min));
-                const maxDate = new Date(foundDates.reduce((max, date) => date > max ? date : max));
-                maxDate.setMonth(maxDate.getMonth() + 1);
+                const tempMaxDate = new Date(foundDates.reduce((max, date) => date > max ? date : max));
+                // Add an hour to the maxDate to cope with UTC vs local time
+                const maxDate = new Date(Date.UTC(tempMaxDate.getFullYear(), tempMaxDate.getMonth(), tempMaxDate.getDate(), 1, 0, 0));
                 let tempMinTime = new Date(minNonZeroDate.getTime());
                 let tempMaxTime = new Date(maxDate.getTime());
                 if (minNonZeroDate.getFullYear() == maxDate.getFullYear() && minNonZeroDate.getMonth() == maxDate.getMonth()) {
                     tempMinTime.setMonth(minNonZeroDate.getMonth() - 1);
                     tempMaxTime.setMonth(maxDate.getMonth() + 1);
                 }
-                minTime = Date.parse(tempMinTime.toString());
-                maxTime = Date.parse(tempMaxTime.toString());
+                minTime = Date.UTC(tempMinTime.getFullYear(), tempMinTime.getMonth(), tempMinTime.getDate(), 0, 0, 0);
+                maxTime = Date.UTC(tempMaxTime.getFullYear(), tempMaxTime.getMonth(), tempMaxTime.getDate(), 0, 0, 0);
                 selectedDates = generateDateArray(minNonZeroDate, maxDate)
                     .map((date) => NUMERIC_DATE.format(date).split("/").reverse().join("-"));
             }
