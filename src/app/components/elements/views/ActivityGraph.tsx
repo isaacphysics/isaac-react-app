@@ -26,7 +26,7 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
                 colors: {activity: "#ffb53f"},
                 xFormat: "%Y-%m-%d"
             },
-            axis: {x: {type: "timeseries", tick: {fit: false, count: 8}}},
+            axis: {x: {type: "timeseries", tick: {fit: false, format: '%b %Y', count: Math.min(8, selectedDates.length)}}},
             zoom: {enabled: true},
             legend: {show: false},
             spline: {interpolation: {type: "monotone-x"}},
