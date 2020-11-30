@@ -612,6 +612,7 @@ export enum TAG_ID {
     quadratics = "quadratics",
     manipulation = "manipulation",
     series = "series",
+    complex_numbers = "complex_numbers",
     // Functions topics
     generalFunctions = "general_functions",
     graphSketching = "graph_sketching",

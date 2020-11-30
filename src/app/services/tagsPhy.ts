@@ -60,6 +60,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.quadratics, title: "Quadratics", parent: TAG_ID.algebra},
         {id: TAG_ID.manipulation, title: "Manipulation", parent: TAG_ID.algebra},
         {id: TAG_ID.series, title: "Series", parent: TAG_ID.algebra},
+        {id: TAG_ID.complex_numbers, title: "Complex Numbers", parent: TAG_ID.algebra},
         // Functions topics
         {id: TAG_ID.generalFunctions, title: "General Functions", parent: TAG_ID.functions},
         {id: TAG_ID.graphSketching, title: "Graph Sketching", parent: TAG_ID.functions},
