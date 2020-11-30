@@ -19,7 +19,7 @@
 
 .assignment-progress-group {
   border: 1px solid $gray-118;
-  margin: 1rem 0;
+  margin-top: 1rem !important;
   user-select: none;
   cursor: pointer;
   display: flex;
@@ -59,7 +59,6 @@
 
 .assignment-progress-details {
   background: $gray-107;
-  margin-top: -1rem;
 }
 
 .single-assignment {
@@ -469,11 +468,8 @@ $failed-bg-size: 25%;
     text-decoration: line-through;
   }
 
-  .selected:not(:nth-child(2)) {
+  .selected {
     border-left: 2px solid $gray-160;
-  }
-
-  .selected:not(:nth-last-child(3)) {
     border-right: 2px solid $gray-160;
   }
 
