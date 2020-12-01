@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {bb} from "billboard.js";
-import {NUMERIC_DATE} from "../DateString";
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
+import {formatISODateOnly} from "../DateString";
 
 export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDate: AnsweredQuestionsByDate}) => {
 
@@ -10,13 +10,22 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
     if (foundDates && foundDates.length > 0) {
         const nonZeroDates = foundDates.filter((date) => answeredQuestionsByDate && answeredQuestionsByDate[date] > 0);
         if (nonZeroDates.length > 0) {
-            selectedDates = foundDates.sort().map((date) => NUMERIC_DATE.format(new Date(date)).split("/").reverse().join("-"));
+            selectedDates = foundDates.sort();
         }
     }
 
     useEffect(() => {
         if (selectedDates.length === 0) {
             return;
+        }
+        let minDate, maxDate;
+        let nTicks = selectedDates.length;
+        if (selectedDates.length === 1) {
+            // If only one datapoint, Billboard shows a decade of time on the x-axis. Truncate to one month each side:
+            const firstDate = new Date(selectedDates[0]);
+            minDate = formatISODateOnly(new Date(firstDate.getFullYear(), firstDate.getMonth()-1, 1));
+            maxDate = formatISODateOnly(new Date(firstDate.getFullYear(), firstDate.getMonth()+1, 1));
+            nTicks = 3;  // For one month, we need 3 labels for symmetry else label ends up in wrong place.
         }
         bb.generate({
             data: {
@@ -29,7 +38,14 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
                 colors: {activity: "#ffb53f"},
                 xFormat: "%Y-%m-%d"
             },
-            axis: {x: {type: "timeseries", tick: {fit: false, format: '%b %Y', count: Math.min(8, selectedDates.length)}}},
+            axis: {
+                x: {
+                    type: "timeseries",
+                    tick: {fit: false, format: '%b %Y', count: Math.min(8, nTicks)},
+                    min: minDate,  // If these are undefined, then the values from the data will be used.
+                    max: maxDate
+                }
+            },
             zoom: {enabled: true},
             legend: {show: false},
             spline: {interpolation: {type: "monotone-x"}},
