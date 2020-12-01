@@ -1,40 +1,31 @@
 import React, {useEffect} from 'react';
 import {bb} from "billboard.js";
-import {NUMERIC_DATE} from "../DateString";
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
+import {formatISODateOnly} from "../DateString";
 
 export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDate: AnsweredQuestionsByDate}) => {
-    const generateDateArray = (min: Date, max: Date) => {
-        const current = new Date(min);
-        const dates = [];
-        while (current <= max) {
-            dates.push(new Date(current));
-            current.setMonth(current.getMonth() + 1);
+
+    let selectedDates: string[] = [];
+    const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
+    if (foundDates && foundDates.length > 0) {
+        const nonZeroDates = foundDates.filter((date) => answeredQuestionsByDate && answeredQuestionsByDate[date] > 0);
+        if (nonZeroDates.length > 0) {
+            selectedDates = foundDates.sort();
         }
-        return dates;
-    };
+    }
 
     useEffect(() => {
-        const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
-        let selectedDates: string[] = [];
-        let minTime;
-        let maxTime;
-        if (foundDates && foundDates.length > 0) {
-            const nonZeroDates = foundDates.filter((date) => answeredQuestionsByDate && answeredQuestionsByDate[date] > 0);
-            if (nonZeroDates.length > 0) {
-                const minNonZeroDate = new Date(nonZeroDates.reduce((min, date) => date < min ? date : min));
-                const maxDate = new Date(foundDates.reduce((max, date) => date > max ? date : max));
-                let tempMinTime = new Date(minNonZeroDate.getTime());
-                let tempMaxTime = new Date(maxDate.getTime());
-                if (minNonZeroDate.getFullYear() == maxDate.getFullYear() && minNonZeroDate.getMonth() == maxDate.getMonth()) {
-                    tempMinTime.setMonth(minNonZeroDate.getMonth() - 1);
-                    tempMaxTime.setMonth(maxDate.getMonth() + 1);
-                }
-                minTime = Date.parse(tempMinTime.toString());
-                maxTime = Date.parse(tempMaxTime.toString());
-                selectedDates = generateDateArray(minNonZeroDate, maxDate)
-                    .map((date) => NUMERIC_DATE.format(date).split("/").reverse().join("-"));
-            }
+        if (selectedDates.length === 0) {
+            return;
+        }
+        let minDate, maxDate;
+        let nTicks = selectedDates.length;
+        if (selectedDates.length === 1) {
+            // If only one datapoint, Billboard shows a decade of time on the x-axis. Truncate to one month each side:
+            const firstDate = new Date(selectedDates[0]);
+            minDate = formatISODateOnly(new Date(firstDate.getFullYear(), firstDate.getMonth()-1, 1));
+            maxDate = formatISODateOnly(new Date(firstDate.getFullYear(), firstDate.getMonth()+1, 1));
+            nTicks = 3;  // For one month, we need 3 labels for symmetry else label ends up in wrong place.
         }
         bb.generate({
             data: {
@@ -47,13 +38,21 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
                 colors: {activity: "#ffb53f"},
                 xFormat: "%Y-%m-%d"
             },
-            axis: {x: {type: "timeseries", tick: {fit: false, count: 8}, min: minTime, max: maxTime}},
+            axis: {
+                x: {
+                    type: "timeseries",
+                    tick: {fit: false, format: '%b %Y', count: Math.min(8, nTicks)},
+                    min: minDate,  // If these are undefined, then the values from the data will be used.
+                    max: maxDate
+                }
+            },
             zoom: {enabled: true},
             legend: {show: false},
             spline: {interpolation: {type: "monotone-x"}},
-            bindto: "#activityGraph"
+            bindto: "#activityGraph",
+            padding: {top: 0, right: 20, bottom: 0, left: 20}  // Pad sides to avoid tick labels being truncated!
         });
-    }, [answeredQuestionsByDate]);
+    }, [answeredQuestionsByDate, selectedDates]);
 
-    return <div id="activityGraph"/>
+    return selectedDates.length > 0 ? <div id="activityGraph"/> : <div className="text-center-width"><strong>No data</strong></div>;
 };
