@@ -49,7 +49,8 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
             zoom: {enabled: true},
             legend: {show: false},
             spline: {interpolation: {type: "monotone-x"}},
-            bindto: "#activityGraph"
+            bindto: "#activityGraph",
+            padding: {top: 0, right: 20, bottom: 0, left: 20}  // Pad sides to avoid tick labels being truncated!
         });
     }, [answeredQuestionsByDate, selectedDates]);
 
