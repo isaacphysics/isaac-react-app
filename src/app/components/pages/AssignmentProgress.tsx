@@ -545,11 +545,11 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
                 help="Click on your groups to see the assignments you have set. View your students' progress by question."
             />
             <Row className="align-items-center d-none d-md-flex">
-                <Col>
-                    <a href="/group_progress">
-                        View group progress summary
-                    </a>
-                </Col>
+                {/*<Col>*/}
+                {/*    <a href="/group_progress">*/}
+                {/*        View group progress summary*/}
+                {/*    </a>*/}
+                {/*</Col>*/}
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">

@@ -339,7 +339,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
             <Button color="tertiary" disabled={selectedGameboardNumber === 0}
                 onClick={() => setSelectedGameboardNumber(selectedGameboardNumber - 1)}>◄</Button>
             <div><Link
-                to={`/assignment_progress/${selectedGameboard?.assignmentId || -1}?board=${selectedGameboard?.gameboardId}`}><strong>A<span className="d-none d-md-inline">ssignment</span>: </strong>{selectedGameboard?.gameboardTitle}
+                to={`/assignment_progress/${selectedGameboard?.assignmentId || -1}?board=${selectedGameboard?.gameboardId}`} target="_blank"><strong>A<span className="d-none d-md-inline">ssignment</span>: </strong>{selectedGameboard?.gameboardTitle}
             </Link>
             <span className="ml-3"></span>
             {selectedGameboard?.dueDate && <small className="font-weight-bold text-muted">(Due date: {formatDate(selectedGameboard?.dueDate)})</small>}
