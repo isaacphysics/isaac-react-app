@@ -38,9 +38,6 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.optics, title: "Optics", parent: TAG_ID.waves},
         {id: TAG_ID.superposition, title: "Superposition", parent: TAG_ID.waves},
         {id: TAG_ID.waveMotion, title: "Wave Motion", parent: TAG_ID.waves},
-        // Physical Chemistry topics:
-        {id: TAG_ID.thermodynamics, title: "Thermodynamics", parent: TAG_ID.chemPhysics},
-        {id: TAG_ID.kinetics, title: "Reaction Kinetics", parent: TAG_ID.chemPhysics},
 
         // Maths fields
         {id: TAG_ID.geometry, title: "Geometry", parent: TAG_ID.maths},
@@ -64,6 +61,12 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Functions topics
         {id: TAG_ID.generalFunctions, title: "General Functions", parent: TAG_ID.functions},
         {id: TAG_ID.graphSketching, title: "Graph Sketching", parent: TAG_ID.functions},
+
+        // Chemistry fields
+        {id: TAG_ID.chemPhysics, title: "Physical Chemistry", parent: TAG_ID.chemistry},
+        // Physical Chemistry topics:
+        {id: TAG_ID.thermodynamics, title: "Thermodynamics", parent: TAG_ID.chemPhysics},
+        {id: TAG_ID.kinetics, title: "Reaction Kinetics", parent: TAG_ID.chemPhysics},
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}
