@@ -37,6 +37,10 @@ export const RoutesCS = [
     // Books:
     <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
     <TrackedRoute key={key++} exact path="/books/workbook_20_ocr" component={Workbook20OCR}/>,
+
+    // Glossary:
+    <TrackedRoute key={key++} exact path="/glossary" component={Glossary} />,
+
     // Static pages:
     <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
     <StaticPageRoute key={key++} exact path="/teaching_order" pageId="teaching_order" />,
