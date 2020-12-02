@@ -69,7 +69,6 @@ import {notificationModal} from "../elements/modals/NotificationModal";
 import {showNotification} from "../../services/notificationChecker";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
-import {Glossary} from '../pages/Glossary';
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ClientError} from "../pages/ClientError";
@@ -184,8 +183,6 @@ export const IsaacApp = () => {
                     <StaticPageRoute exact path="/cookies" pageId="cookie_policy" />
                     <StaticPageRoute exact path="/accessibility" pageId="accessibility_statement" />
                     <StaticPageRoute exact path="/cyberessentials" />
-
-                    <TrackedRoute exact path="/glossary" component={Glossary} />
 
                     {/*
                     // TODO: schools and other admin stats
