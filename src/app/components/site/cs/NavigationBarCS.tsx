@@ -29,6 +29,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/pages/specification_page_ocr">OCR view</LinkItem>
             <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
             <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
+            <LinkItem to="/glossary">Glossary</LinkItem>
         </NavigationSection>
 
         <NavigationSection title="Events">
