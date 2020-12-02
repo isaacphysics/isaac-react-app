@@ -495,7 +495,6 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
     function openGroupDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
-        //showDownloadModal(event.currentTarget.href);
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
@@ -546,10 +545,15 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
         <Container>
             <TitleAndBreadcrumb
                 currentPageTitle={{[SITE.PHY]: "Assignment Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
-                subTitle="Track your class performance"
+                subTitle="Track your group performance by question"
                 help="Click on your groups to see the assignments you have set. View your students' progress by question."
             />
             <Row className="align-items-center d-none d-md-flex">
+                {/*<Col>*/}
+                {/*    <a href="/group_progress">*/}
+                {/*        View group progress summary*/}
+                {/*    </a>*/}
+                {/*</Col>*/}
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">
