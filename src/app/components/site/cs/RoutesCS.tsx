@@ -13,6 +13,7 @@ import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
 import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
 import {GroupProgress} from "../../pages/GroupProgress";
+import { Glossary } from "../../pages/Glossary";
 
 let key = 0;
 export const RoutesCS = [
@@ -31,6 +32,7 @@ export const RoutesCS = [
     // Topics
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
+    <TrackedRoute key={key++} exact path="/glossary" component={Glossary} />,
 
     // Books:
     <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
@@ -39,7 +41,6 @@ export const RoutesCS = [
     <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
     <StaticPageRoute key={key++} exact path="/teaching_order" pageId="teaching_order" />,
     <StaticPageRoute key={key++} exact path="/student_rewards" pageId="student_rewards_programme" />,
-    <StaticPageRoute key={key++} exact path="/glossary" />,
 
     <StaticPageRoute key={key++} exact ifUser={isEventLeaderOrStaff} path="/events_toolkit" pageId="fragments/event_leader_event_toolkit_fragment" />,
 

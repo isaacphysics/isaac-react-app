@@ -39,7 +39,7 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermPr
 
     let _tags: Tag[] = [];
     if (SITE_SUBJECT === SITE.CS && doc.tags) {
-        _tags = doc.tags.map(id => tags.getById(id as TAG_ID));
+        _tags = doc.tags.map(id => tags.getById(id as TAG_ID)).filter(tag => isDefined(tag));
     }
 
     return <React.Fragment>
