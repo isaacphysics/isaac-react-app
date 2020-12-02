@@ -1,9 +1,8 @@
-import {AppState, ProgressState, GroupProgressState} from "./reducers";
+import {AppState, GroupProgressState, ProgressState} from "./reducers";
 import {sortBy} from "lodash";
 import {NOT_FOUND} from "../services/constants";
 import {AppGroup} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
-import { group } from 'console';
 
 export const selectors = {
     groups: {
