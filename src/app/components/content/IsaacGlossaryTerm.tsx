@@ -14,9 +14,10 @@ import { Tag } from '../../../IsaacAppTypes';
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
     location: {hash: string};
+    linkToGlossary: boolean;
 }
 
-const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermProps) => {
+const IsaacGlossaryTermComponent = ({doc, location: {hash}, linkToGlossary}: IsaacGlossaryTermProps) => {
     let anchorId = '';
     const idRegexp = new RegExp('([a-z0-9-_]+)\\|?(?:(aqa|ocr)\\|?)?([a-z0-9-_~]+)?');
     const parsedAnchorId = doc.id && idRegexp.exec(doc.id.split('|').slice(1).join('|'));
@@ -46,10 +47,11 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermPr
         {(!isDefined(doc.examBoard) || doc.examBoard === '' || examBoard === doc.examBoard) && <Row className="glossary_term">
             <Col md={3} className="glossary_term_name">
                 <p id={anchorId}>
-                    <a href={location.origin + location.pathname + '#' + anchorId}>
+                    {linkToGlossary && <a href={location.origin + location.pathname + '#' + anchorId}>
                         <img src="/assets/link-variant.png" className="pr-2" alt="direct link" />
                         <strong>{doc.value}</strong>
-                    </a>
+                    </a>}
+                    {!linkToGlossary && <strong>{doc.value}</strong>}
                 </p>
             </Col>
             <Col>

@@ -204,7 +204,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                     <Col>
                         {terms.map(term => <Row key={term.id}>
                             <Col md={{size: 10}}>
-                                <IsaacGlossaryTerm doc={term} />
+                                <IsaacGlossaryTerm doc={term} linkToGlossary={true} />
                             </Col>
                         </Row>)}
                     </Col>
