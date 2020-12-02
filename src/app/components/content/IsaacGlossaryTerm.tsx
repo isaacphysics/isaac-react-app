@@ -17,7 +17,7 @@ interface IsaacGlossaryTermProps {
     linkToGlossary: boolean;
 }
 
-const IsaacGlossaryTermComponent = ({doc, location: {hash}, linkToGlossary}: IsaacGlossaryTermProps) => {
+const IsaacGlossaryTermComponent = ({doc, location: {hash}, linkToGlossary = false}: IsaacGlossaryTermProps) => {
     let anchorId = '';
     const idRegexp = new RegExp('([a-z0-9-_]+)\\|?(?:(aqa|ocr)\\|?)?([a-z0-9-_~]+)?');
     const parsedAnchorId = doc.id && idRegexp.exec(doc.id.split('|').slice(1).join('|'));
