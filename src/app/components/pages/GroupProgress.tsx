@@ -325,8 +325,8 @@ const GroupSummary = (props: GroupSummaryProps) => {
             const completionPercentage = formatMark(currentAssignmentCompletion?.questionPagesPerfect || 0, currentAssignmentCompletion?.questionPagesTotal || 1, true)
             return sortItem({key: gameboard.assignmentId, itemOrder: index, className: `mw-25 ${index === selectedGameboardNumber ? 'selected' : ''}`, children: completionPercentage})
         })}
-        {sortItem({key: "total-questions", itemOrder: "total-questions", className: "total-column left", children: "Total Qs"})}
-        {sortItem({key: "assignments-completed", itemOrder: "assignments-completed", className: "total-column right", children: "Assignments completed"})}
+        {sortItem({key: "total-questions", itemOrder: "total-questions", className: "total-column left pr-4 pl-4", children: "Total Qs"})}
+        {sortItem({key: "assignments-completed", itemOrder: "assignments-completed", className: "total-column right pr-4 pl-4", children: "Assignments completed"})}
     </tr>;
 
     const selectedGameboard = groupProgress?.[0]?.progress?.[selectedGameboardNumber];
