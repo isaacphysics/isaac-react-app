@@ -1,4 +1,4 @@
-import {AppState, ProgressState} from "./reducers";
+import {AppState, GroupProgressState, ProgressState} from "./reducers";
 import {sortBy} from "lodash";
 import {NOT_FOUND} from "../services/constants";
 import {AppGroup} from "../../IsaacAppTypes";
@@ -35,6 +35,11 @@ export const selectors = {
                 active: selectors.groups.active(state),
                 archived: selectors.groups.archived(state)
             }
+        },
+        progress: (state: AppState) => {
+            if (!state) return null;
+            if (!state.groupProgress) return null;
+            return load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.groupProgress(state.groupProgress) : state.groupProgress;
         }
     },
 
@@ -157,6 +162,23 @@ export const anonymisationFunctions = {
             })
         });
         return anonymousProgress;
+    },
+    groupProgress: (groupProgress: GroupProgressState): GroupProgressState => {
+        if (!groupProgress) return null;
+        const anonymousGroupProgress: GroupProgressState = {};
+        Object.keys(groupProgress).forEach(groupId => {
+            anonymousGroupProgress[Number(groupId)] = (groupProgress[Number(groupId)] || []).map((userProgressSummary, i) => {
+                return {
+                    ...userProgressSummary,
+                    user : {
+                        ...userProgressSummary.user,
+                        familyName: "",
+                        givenName: `Test Student ${i + 1}`,
+                    }
+                }
+            })
+        });
+        return anonymousGroupProgress;
     }
 }
 

@@ -1440,6 +1440,17 @@ export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_
     }
 };
 
+export const getGroupProgress = (group: UserGroupDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUP_PROGRESS_REQUEST});
+    try {
+        const result = await api.groups.groupProgress(group);
+        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS, groupId: group.id || 0, progress: result.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_FAILURE, groupId: group.id || 0});
+        dispatch(showErrorToastIfNeeded("Loading group members failed", e));
+    }
+};
+
 // Gameboards
 export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => async (dispatch: Dispatch<Action>) => {
     const accumulate = startIndex != 0;
