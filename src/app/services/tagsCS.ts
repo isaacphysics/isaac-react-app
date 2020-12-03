@@ -22,11 +22,11 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.computingPracticalProject, title: "Computing practical project", parent: TAG_ID.programming},
 
         // GCSE to A level transition topics
-        {id: TAG_ID.gcseProgrammingConcepts, title: "Programming concepts", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseDataRepresentation, title: "Data representation", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseBooleanLogic, title: "Boolean logic", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseSystems, title: "Systems", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseNetworking, title: "Networking", parent: TAG_ID.gcseToALevel},
+        {id: TAG_ID.gcseProgrammingConcepts, title: "GCSE Programming concepts", parent: TAG_ID.gcseToALevel},
+        {id: TAG_ID.gcseDataRepresentation, title: "GCSE Data representation", parent: TAG_ID.gcseToALevel},
+        {id: TAG_ID.gcseBooleanLogic, title: "GCSE Boolean logic", parent: TAG_ID.gcseToALevel},
+        {id: TAG_ID.gcseSystems, title: "GCSE Systems", parent: TAG_ID.gcseToALevel},
+        {id: TAG_ID.gcseNetworking, title: "GCSE Networking", parent: TAG_ID.gcseToALevel},
         // Data structures and algorithms topics
         {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms},
         {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms},
