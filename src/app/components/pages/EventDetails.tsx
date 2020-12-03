@@ -176,7 +176,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                 <strong className="text-danger">FULL</strong>
                                                 {event.isAStudentEvent && isTeacher(user) && <span> - for student bookings</span>}
                                             </div>}
-                                            {event.userBookingStatus == "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
+                                            {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
                                             {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
                                                 You have been reserved a place on this event!
                                                 <RS.Button color="link text-success" onClick={openAndScrollToBookingForm}>
@@ -184,7 +184,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                 </RS.Button>
                                             </span></span>}
                                             {canBeAddedToWaitingList && <span> - Waiting list booking is available!</span>}
-                                            {event.userBookingStatus == "WAITING_LIST" && <span> - You are on the waiting list for this event.</span>}
+                                            {event.userBookingStatus === "WAITING_LIST" && <span> - You are on the waiting list for this event.</span>}
                                             {event.isStudentOnly && !studentOnlyRestrictionSatisfied &&
                                                 <div className="text-muted font-weight-normal">
                                                     {studentOnlyEventMessage(eventId)}
@@ -210,7 +210,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                             </div>
 
                             {/* Booking form */}
-                            {bookingFormOpen && user?.loggedIn && <span>
+                            {bookingFormOpen && user?.loggedIn && !['CONFIRMED', 'RESERVED'].includes(event.userBookingStatus || '') && <span>
                                 <RS.Card className="mb-4">
                                     <RS.CardBody>
                                         <h3>Event booking form</h3>
@@ -257,9 +257,9 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
                                 {/* Options for logged-in users */}
                                 {isLoggedIn(user) && !event.hasExpired && <React.Fragment>
-                                    {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen &&
+                                    {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED', 'RESERVED'].includes(event.userBookingStatus || '') &&
                                         <RS.Button onClick={() => {setBookingFormOpen(true)}}>
-                                            Book a place
+                                            {event.userBookingStatus === 'RESERVED' ? 'Confirm your booking' : 'Book a place'}
                                         </RS.Button>
                                     }
                                     {canReserveSpaces &&
