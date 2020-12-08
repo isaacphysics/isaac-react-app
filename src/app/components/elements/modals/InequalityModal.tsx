@@ -699,7 +699,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         };
         derivativeObject.children = { numerator, denominator };
         
-        let derivative = [derivativeObject]
+        const derivative = [derivativeObject]
 
         if (isDefined(this._greekLetterMap[top]) || /^[a-zA-Z]$/.test(top)) {
             // Do this only if we have a single greek letter or a single latin letter.
@@ -710,7 +710,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             const compoundNumerator = {
                 type: 'Differential',
                 properties: { letter: 'd' },
-                children: derivativeOrder > 1 ? { argument, order: { type: 'Num', properties: { significand: `${derivativeOrder}` } } } : { }
+                children: derivativeOrder > 1 ? { argument, order: { type: 'Num', properties: { significand: `${derivativeOrder}` } } } : { argument }
             };
             const compoundTexLabel = '\\frac{\\mathrm{d}' + (derivativeOrder > 1 ? `^{${derivativeOrder}}` : '') + `${this._greekLetterMap[top] || top}}{${texBottom}}`;
             const compoundDerivativeObject = new MenuItem('Derivative', { }, { label: compoundTexLabel, texLabel: true, fontSize: '1.5em', className: 'derivative' });
