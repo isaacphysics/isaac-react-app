@@ -210,7 +210,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                             </div>
 
                             {/* Booking form */}
-                            {bookingFormOpen && user?.loggedIn && !['CONFIRMED', 'RESERVED'].includes(event.userBookingStatus || '') && <span>
+                            {bookingFormOpen && user?.loggedIn && 'CONFIRMED' !== event.userBookingStatus && <span>
                                 <RS.Card className="mb-4">
                                     <RS.CardBody>
                                         <h3>Event booking form</h3>
