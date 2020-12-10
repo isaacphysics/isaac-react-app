@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React from "react";
+import React, { createRef } from "react";
 import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import katex from "katex";
 import _uniqWith from 'lodash/uniqWith';
@@ -149,6 +149,8 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     private _differentialRegex = /^(Delta|delta|d)\s*(?:\^([0-9]+))?\s*([a-zA-Z]+(?:(?:_|\^).+)?)/;
     private _availableSymbols?: string[];
 
+    private _inequalityModal = createRef<HTMLDivElement>();
+
     // Call this to close the editor
     public close: () => void;
 
@@ -194,6 +196,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         this.close = () => {
             props.close();
         }
+
+        this._handleKeyPress = this.handleKeyPress.bind(this);
+        this._onMouseDown = this.onMouseDown.bind(this);
+        this._onTouchStart = this.onTouchStart.bind(this);
+        this._onMouseMove = this.onMouseMove.bind(this);
+        this._onTouchMove = this.onTouchMove.bind(this);
+        this._onCursorMoveEnd = this.onCursorMoveEnd.bind(this);
     }
 
     private handleKeyPress(ev: KeyboardEvent) {
@@ -202,9 +211,16 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         }
     }
 
+    private _handleKeyPress: (this: Window, e: KeyboardEvent) => void;
+    private _onMouseDown: (this: HTMLElement, e: MouseEvent) => void;
+    private _onTouchStart: (this: HTMLElement, e: TouchEvent) => void;
+    private _onMouseMove: (this: HTMLElement, e: MouseEvent) => void;
+    private _onTouchMove: (this: HTMLElement, e: TouchEvent) => void;
+    private _onCursorMoveEnd: (this: HTMLElement, e: MouseEvent | TouchEvent) => void;
+
     public componentDidMount(): void {
-        window.addEventListener('keyup', this.handleKeyPress.bind(this));
-        const inequalityElement = document.getElementById('inequality-modal') as HTMLElement;
+        window.addEventListener('keyup', this._handleKeyPress);
+        const inequalityElement = this._inequalityModal.current as HTMLDivElement; // document.getElementById('inequality-modal') as HTMLElement;
         const { sketch, p } = makeInequality(
             inequalityElement,
             window.innerWidth,
@@ -226,7 +242,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             }]
         };
         sketch.onNewEditorState = (state: any) => {
-            const modal = document.getElementById('inequality-modal');
+            const modal = this._inequalityModal.current as HTMLDivElement; // document.getElementById('inequality-modal');
             if (modal) {
                 const newState = sanitiseInequalityState(state);
                 this.setState((prevState: InequalityModalState) => ({ editorState: { ...prevState.editorState, ...newState } }));
@@ -249,13 +265,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         document.body.style.height = '100vh';
         document.body.style.touchAction = 'none';
 
-        inequalityElement.addEventListener('mousedown', this.onMouseDown.bind(this), { passive: false } );
-        inequalityElement.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: false } );
-        inequalityElement.addEventListener('mousemove', this.onMouseMove.bind(this), { passive: false } );
-        inequalityElement.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: false } );
+        inequalityElement.addEventListener('mousedown', this._onMouseDown);
+        inequalityElement.addEventListener('touchstart', this._onTouchStart);
+        inequalityElement.addEventListener('mousemove', this._onMouseMove);
+        inequalityElement.addEventListener('touchmove', this._onTouchMove);
         // MouseUp and TouchEnd on body because they are not intercepted by inequalityElement (I blame dark magic)
-        document.body.addEventListener('mouseup', this.onCursorMoveEnd.bind(this), { passive: true } );
-        document.body.addEventListener('touchend', this.onCursorMoveEnd.bind(this), { passive: true } );
+        document.body.addEventListener('mouseup', this._onCursorMoveEnd);
+        document.body.addEventListener('touchend', this._onCursorMoveEnd);
 
         const defaultMenuItems = {
             // ...this.state.menuItems,
@@ -402,15 +418,15 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     public componentWillUnmount(): void {
-        window.removeEventListener('keyup', this.handleKeyPress.bind(this));
-        const inequalityElement = document.getElementById('inequality-modal') as HTMLElement;
-        inequalityElement.removeEventListener('mousedown', this.onMouseDown.bind(this));
-        inequalityElement.removeEventListener('touchstart', this.onTouchStart.bind(this));
-        inequalityElement.removeEventListener('mousemove', this.onMouseMove.bind(this));
-        inequalityElement.removeEventListener('touchmove', this.onTouchMove.bind(this));
+        window.removeEventListener('keyup', this._handleKeyPress);
+        const inequalityElement = this._inequalityModal.current as HTMLDivElement; // document.getElementById('inequality-modal') as HTMLElement;
+        inequalityElement.removeEventListener('mousedown', this._onMouseDown);
+        inequalityElement.removeEventListener('touchstart', this._onTouchStart);
+        inequalityElement.removeEventListener('mousemove', this._onMouseMove);
+        inequalityElement.removeEventListener('touchmove', this._onTouchMove);
         // MouseUp and TouchEnd on body because they are not intercepted by inequalityElement (I blame dark magic)
-        document.body.removeEventListener('mouseup', this.onCursorMoveEnd.bind(this));
-        document.body.removeEventListener('touchend', this.onCursorMoveEnd.bind(this));
+        document.body.removeEventListener('mouseup', this._onCursorMoveEnd);
+        document.body.removeEventListener('touchend', this._onCursorMoveEnd);
 
         if (this.state.sketch) {
             this.setState((prevState: InequalityModalState) => ({
@@ -1173,7 +1189,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
 
         const previewTexString = (this.state.editorState.result || { tex: ""}).tex;
 
-        return <div id="inequality-modal">
+        return <div id="inequality-modal" ref={this._inequalityModal}>
             <div
                 className="inequality-ui confirm button"
                 role="button" tabIndex={-1}
