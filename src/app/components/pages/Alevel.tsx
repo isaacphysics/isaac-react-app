@@ -37,7 +37,7 @@ export const Alevel = () => {
                 </CardBody>
             </Card>
             <IsaacCard doc={{title: "COVID-19 Lessons", subtitle: "Virtual lessons following the Mastering Essential Pre-University Physics book.",
-                clickUrl: "/pages/covid19_alevel", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
+                clickUrl: "/pages/covid19_alevel_archive", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
         </Row>
         <Row className="card-deck isaac-cards-body my-3">
