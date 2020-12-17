@@ -24,19 +24,14 @@ export const WarningBanner = () => {
 
     const inDateRange = new Date(1608076800000) <= new Date() && new Date() <= new Date(1609718400000);
 
-    return inDateRange && noCookie ? <div className="banner d-print-none" id="downtime-banner">
+    return inDateRange ? <div className="banner d-print-none" id="downtime-banner">
         <Alert color="warning" className="mb-0">
             <RS.Container>
-                <RS.Row style={{alignItems: "center"}}>
-                    <RS.Col xs={12} md={9}>
-                        <span>Please note Isaac {SITE_SUBJECT_TITLE} will have minimal support over the festive break (19th Dec - 3rd Jan).
-                            <a href={twitterLink} target="_blank" rel="noopener noreferrer">Check our Twitter feed for more information.</a>
+                <RS.Row style={{alignItems: "center", textAlign: "center"}}>
+                    <RS.Col xs={12} md={12}>
+                        <span>{"From 21st Dec to 3rd Jan the Isaac team will taking a festive break; you can too! "}
+                            <a href={"/pages/isaac_festive_update"}>Find out more about <span className="sr-only">streak freezes and support over the festive period </span>here.</a>
                         </span>
-                    </RS.Col>
-                    <RS.Col xs={12} md={3} className="text-center">
-                        <RS.Button color="primary" outline className="mt-3 mb-2 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
-                            Dismiss<span className="sr-only"> warning notification</span>
-                        </RS.Button>
                     </RS.Col>
                 </RS.Row>
             </RS.Container>
