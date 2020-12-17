@@ -146,12 +146,12 @@ export const Gameboard = withRouter(({location}: {location: Location}) => {
         <RS.Row className="col-8 offset-2">
             <RS.Col className="mt-4">
                 <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                    Set as assignment
+                    {{[SITE.PHY]: "Set as Assignment", [SITE.CS]: "Set as assignment"}[SITE_SUBJECT]}
                 </RS.Button>
             </RS.Col>
             <RS.Col className="mt-4">
                 <RS.Button tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}} color="primary" block outline>
-                    Duplicate and edit
+                    {{[SITE.PHY]: "Duplicate and Edit", [SITE.CS]: "Duplicate and edit"}[SITE_SUBJECT]}
                 </RS.Button>
             </RS.Col>
         </RS.Row>
@@ -159,7 +159,7 @@ export const Gameboard = withRouter(({location}: {location: Location}) => {
         <RS.Row className="col-4 offset-2 offset-md-4">
             <RS.Col className="mt-4">
                 <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                    Save to My gameboards
+                    {{[SITE.PHY]: "Save to My Gameboards", [SITE.CS]: "Save to My gameboards"}[SITE_SUBJECT]}
                 </RS.Button>
             </RS.Col>
         </RS.Row>;
