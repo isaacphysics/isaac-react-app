@@ -29,7 +29,7 @@ export const WarningBanner = () => {
             <RS.Container>
                 <RS.Row style={{alignItems: "center", textAlign: "center"}}>
                     <RS.Col xs={12} md={12}>
-                        <span>{"From 21st Dec to 3rd Jan the Isaac team will taking a festive break; you can too! "}
+                        <span>{"From 21st Dec to 3rd Jan the Isaac team will be taking a festive break; you can too! "}
                             <a href={"/pages/isaac_festive_update"}>Find out more <span className="sr-only">about streak freezes and support over the festive period </span>here</a>.
                         </span>
                     </RS.Col>
