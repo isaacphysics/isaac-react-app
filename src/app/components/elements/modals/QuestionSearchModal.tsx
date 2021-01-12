@@ -111,6 +111,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
                     }}
                     isClearable
+                    menuPortalTarget={document.body}
+                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
                 />
             </div>}
             {!isBookSearch && <div className="text-wrap col-lg-6 mt-2">
@@ -123,6 +125,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     classNamePrefix="select"
                     placeholder="Any"
                     onChange={multiSelectOnChange(setSearchTopics)}
+                    menuPortalTarget={document.body}
+                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
                 />
             </div>}
             {SITE_SUBJECT === SITE.CS && <div className="text-wrap my-2 col-lg-6">
@@ -138,6 +142,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     placeholder="Any"
                     value={searchExamBoards.map(convertExamBoardToOption)}
                     onChange={multiSelectOnChange(setSearchExamBoards)}
+                    menuPortalTarget={document.body}
+                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
                 />
             </div>}
             {SITE_SUBJECT === SITE.PHY && <div className={`text-wrap col-lg-3 my-2 ${isBookSearch ? "d-none" : ""}`}>
@@ -152,6 +158,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     placeholder="Any"
                     onChange={selectOnChange(setSearchLevels)}
                     isClearable
+                    menuPortalTarget={document.body}
+                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
                 />
             </div>}
         </div>
