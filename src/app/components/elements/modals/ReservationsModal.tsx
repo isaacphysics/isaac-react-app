@@ -281,7 +281,7 @@ const ReservationsModal = () => {
                                                     type="checkbox"
                                                     name={`unbooked_student-${user.id}`}
                                                     checked={userCheckboxes[user.id] || false}
-                                                    disabled={!user.authorisedFullAccess && user.emailVerificationStatus !== 'VERIFIED'}
+                                                    disabled={!user.authorisedFullAccess || user.emailVerificationStatus !== 'VERIFIED'}
                                                     onChange={() => toggleCheckboxForUser(user.id)}
                                                 />
                                             </td>
