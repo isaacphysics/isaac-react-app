@@ -1,4 +1,4 @@
-import {LoggedInUser, PotentialUser} from "../../IsaacAppTypes";
+import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
 
 export function isLoggedIn(user?: PotentialUser | null): user is LoggedInUser {
     return user ? user.loggedIn : false;
@@ -41,4 +41,12 @@ export function extractTeacherName(teacher: {givenName?: string; familyName?: st
         return null;
     }
     return (teacher.givenName ? teacher.givenName.charAt(0) + ". " : "") + teacher.familyName;
+}
+
+export function schoolNameWithPostcode(schoolResult: School): string | undefined {
+    let schoolName = schoolResult.name;
+    if (schoolResult.postcode) {
+        schoolName += ", " + schoolResult.postcode
+    }
+    return schoolName;
 }

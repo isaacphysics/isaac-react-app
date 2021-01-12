@@ -39,6 +39,7 @@ export const NavigationBarPhy = () => {
         </NavigationSection>
 
         <NavigationSection title="Help">
+            <LinkItem to="/pages/how_to_videos">How-to Videos</LinkItem>
             <LinkItem to="/solving_problems">Problem Solving Guide</LinkItem>
             <LinkItem to="/support/student">Student FAQ</LinkItem>
             <LinkItem to="/support/teacher">Teacher FAQ</LinkItem>
