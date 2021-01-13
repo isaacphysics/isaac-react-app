@@ -31,22 +31,23 @@ function calculateDashArray<T>(elements: T[] | undefined, evaluator: (t: T) => b
     return dashArray.join(',');
 }
 
-interface HexagonProps<T> {
-    states?: T[],
-    selector?: (t: T) => boolean,
-    halfWidth: number,
-    quarterHeight: number,
+interface HexagonProps<T> extends React.SVGProps<SVGPolygonElement> {
+    states?: T[];
+    selector?: (t: T) => boolean;
+    halfWidth: number;
+    quarterHeight: number;
     properties: {
-        fill: {colour: string},
-        stroke: { colour: string; width: number },
-        clickable?: boolean
-    },
+        fill: {colour: string};
+        stroke?: { colour: string; width: number };
+        clickable?: boolean;
+    };
 }
-export function Hexagon<T>({halfWidth, quarterHeight, properties, states, selector = () => true}: HexagonProps<T>) {
-    let polygonAttributes: {strokeWidth: number; fill: string; stroke: string; points: string; strokeDasharray?: string; pointerEvents?: string} = {
+export function Hexagon<T>(props: HexagonProps<T>) {
+    const {halfWidth, quarterHeight, properties, states, selector=()=>true, ...rest} = props;
+    let polygonAttributes: {fill: string; stroke?: string; strokeWidth?: number; points: string; strokeDasharray?: string; pointerEvents?: string} = {
         points: generateHexagonPoints(halfWidth, quarterHeight),
-        stroke: properties.stroke.colour,
-        strokeWidth: properties.stroke.width,
+        stroke: properties.stroke?.colour,
+        strokeWidth: properties.stroke?.width,
         fill: properties.fill.colour,
     };
     const perimeter = 6 * 2 * (quarterHeight);
@@ -57,5 +58,5 @@ export function Hexagon<T>({halfWidth, quarterHeight, properties, states, select
     if (properties.clickable) {
         polygonAttributes.pointerEvents = 'visible';
     }
-    return <polygon {...polygonAttributes} />;
+    return <polygon {...polygonAttributes} {...rest} />;
 }

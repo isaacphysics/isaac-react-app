@@ -13,7 +13,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
 import {history} from "../../services/history";
-import {HierarchyFilter, Tier} from "../elements/svg/HierarchyFilter";
+import {HierarchyFilterHexagonal, HierarchyFilterSelects, Tier} from "../elements/svg/HierarchyFilter";
 
 interface Item<T> {
     value: T;
@@ -175,47 +175,45 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
-        <RS.Row>
-            <RS.Col>
-                <div className="pt-3"><strong>Select your question filters</strong></div>
-                <RS.Row>
-                    <RS.Col lg={6}>
-                        <HierarchyFilter tiers={tiers} choices={choices} selections={selections} setTierSelection={setTierSelection} />
-                    </RS.Col>
-                    <RS.Col lg={6}>
-                        <div className="d-flex justify-content-between mt-0 mt-sm-4 mt-lg-0">
-                            <RS.Label className="pt-2 pb-0" for="level-selector">Levels: </RS.Label>
-                            <img width={270} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
-                        </div>
-                        <Select name="level-selector" onChange={unwrapValue(setLevels)} isMulti={true} value={levels} options={levelOptions} />
-                    </RS.Col>
-                </RS.Row>
+        <div>
+            <div className="pt-3"><strong>Select your question filters</strong></div>
+            <RS.Row>
+                <RS.Col lg={6}>
+                    <HierarchyFilterHexagonal tiers={tiers} choices={choices} selections={selections} setTierSelection={setTierSelection} />
+                </RS.Col>
+                <RS.Col lg={6}>
+                    <div className="d-flex justify-content-between mt-0 mt-sm-4 mt-lg-0">
+                        <RS.Label className="pt-2 pb-0" for="level-selector">Levels: </RS.Label>
+                        <img width={270} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
+                    </div>
+                    <Select name="level-selector" onChange={unwrapValue(setLevels)} isMulti={true} value={levels} options={levelOptions} />
+                </RS.Col>
+            </RS.Row>
 
-                <RS.Row className="mt-4">
-                    <RS.Col>
-                        {boardStack.length > 0 && <RS.Button size="sm" color="primary" outline onClick={previousBoard}>
-                            <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
-                        </RS.Button>}
-                    </RS.Col>
-                    <RS.Col className="text-right">
-                        <RS.Button size="sm" color="primary" outline onClick={refresh}>
-                            <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
-                        </RS.Button>
-                    </RS.Col>
-                </RS.Row>
+            <RS.Row className="mt-4">
+                <RS.Col>
+                    {boardStack.length > 0 && <RS.Button size="sm" color="primary" outline onClick={previousBoard}>
+                        <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
+                    </RS.Button>}
+                </RS.Col>
+                <RS.Col className="text-right">
+                    <RS.Button size="sm" color="primary" outline onClick={refresh}>
+                        <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
+                    </RS.Button>
+                </RS.Col>
+            </RS.Row>
 
-                <RS.Row className="mt-4 mt-md-5 mb-3">
-                    <RS.Col>
-                        <h3>{boardName}</h3>
-                    </RS.Col>
-                    <RS.Col className="text-right">
-                        {gameboard && <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}`}>
-                            Save to My&nbsp;Gameboards
-                        </RS.Button>}
-                    </RS.Col>
-                </RS.Row>
-            </RS.Col>
-        </RS.Row>
+            <RS.Row className="mt-4 mt-md-5 mb-3">
+                <RS.Col>
+                    <h3>{boardName}</h3>
+                </RS.Col>
+                <RS.Col className="text-right">
+                    {gameboard && <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}`}>
+                        Save to My&nbsp;Gameboards
+                    </RS.Button>}
+                </RS.Col>
+            </RS.Row>
+        </div>
 
         <div className="pb-4">
             <ShowLoading

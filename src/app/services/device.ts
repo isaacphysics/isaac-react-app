@@ -7,8 +7,9 @@ export const isMobile = () => {
 };
 export const isNotMobile = !isMobile();
 
+export type DeviceSize = "xl" | "lg" | "md" | "sm" | "xs";
 export const useDeviceSize = () => {
-    const getSize = (): "xl" | "lg" | "md" | "sm" | "xs" => {
+    const getSize = (): DeviceSize => {
         const width = window.innerWidth;
         if (width >= 1200) return "xl";
         else if (width >= 992) return "lg";
