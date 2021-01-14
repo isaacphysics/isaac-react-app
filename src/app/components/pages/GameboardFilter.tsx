@@ -14,17 +14,11 @@ import {selectors} from "../../state/selectors";
 import queryString from "query-string";
 import {history} from "../../services/history";
 import {HierarchyFilterHexagonal, HierarchyFilterSelects, Tier} from "../elements/svg/HierarchyFilter";
-
-interface Item<T> {
-    value: T;
-    label: string;
-}
+import {Item, unwrapValue} from "../../services/select";
+import {LevelsFilterSelect} from "../elements/svg/LevelsFilter";
 
 const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
 
-function unwrapValue<T>(f: React.Dispatch<React.SetStateAction<Item<T>[]>>) {
-    return (value: ValueType<Item<T>>) => f(Array.isArray(value) ? value : !value ? [] : [value]);
-}
 function itemiseTag(tag: Tag) {
     return {value: tag.id, label: tag.title}
 }
@@ -179,14 +173,14 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             <div className="pt-3"><strong>Select your question filters</strong></div>
             <RS.Row>
                 <RS.Col lg={6}>
-                    <HierarchyFilterHexagonal tiers={tiers} choices={choices} selections={selections} setTierSelection={setTierSelection} />
+                    <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
                 </RS.Col>
                 <RS.Col lg={6}>
                     <div className="d-flex justify-content-between mt-0 mt-sm-4 mt-lg-0">
                         <RS.Label className="pt-2 pb-0" for="level-selector">Levels: </RS.Label>
                         <img width={270} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
                     </div>
-                    <Select name="level-selector" onChange={unwrapValue(setLevels)} isMulti={true} value={levels} options={levelOptions} />
+                    <LevelsFilterSelect id="level-selector" {...{levels, levelOptions, setLevels}} />
                 </RS.Col>
             </RS.Row>
 

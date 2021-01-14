@@ -5,12 +5,9 @@ import {TAG_ID} from "../../../services/constants";
 import {Hexagon} from "./Hexagon";
 import {DeviceSize, useDeviceSize} from "../../../services/device";
 import {HexagonConnection} from "./HexagonConnection";
+import {Item, unwrapValue} from "../../../services/select";
 
-interface Item<T> {value: T; label: string;}
 export interface Tier {id: string; name: string; for: string}
-function unwrapValue<T>(f: React.Dispatch<React.SetStateAction<Item<T>[]>>) {
-    return (value: ValueType<Item<T>>) => f(Array.isArray(value) ? value : !value ? [] : [value]);
-}
 
 const hexagonProperties = {
     unselected: {
