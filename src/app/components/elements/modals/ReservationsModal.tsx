@@ -39,8 +39,13 @@ const ReservationsModal = () => {
     const [cancelReservationCheckboxes, setCancelReservationCheckboxes] = useState<{[key: number]: boolean}>({});
     const [checkAllCancelReservationsCheckbox, setCheckAllCancelReservationsCheckbox] = useState<boolean>();
     const [groupDropdownOpen, setGroupDropdownOpen] = useState(false);
-    const unbookedUsersById: {[id: number]: AppGroupMembership} = {};
-    unbookedUsers.forEach(unbookedUser => unbookedUsersById[unbookedUser.id || 0] = unbookedUser);
+    const [unbookedUsersById, setUnbookedUsersById] = useState<{[id: number]: AppGroupMembership}>({});
+    
+    useEffect(() => {
+        const _unbookedUsersById: {[id: number]: AppGroupMembership} = {};
+        unbookedUsers.forEach(unbookedUser => _unbookedUsersById[unbookedUser.id || 0] = unbookedUser);
+        setUnbookedUsersById(_unbookedUsersById);
+    }, [unbookedUsers]);
 
     useEffect(() => {
         dispatch(loadGroups(false));
@@ -100,7 +105,9 @@ const ReservationsModal = () => {
         setCheckAllCheckbox(!checkAllCheckbox);
         let checkboxes = { ...userCheckboxes };
         for (const id in userCheckboxes) {
-            checkboxes[id] = !checkAllCheckbox;
+            if (unbookedUsersById[id].emailVerificationStatus === "VERIFIED") {
+                checkboxes[id] = !checkAllCheckbox;
+            }
         }
         setUserCheckboxes(checkboxes);
     };
@@ -263,7 +270,7 @@ const ReservationsModal = () => {
                                                 label="All"
                                                 checked={checkAllCheckbox || false}
                                                 onChange={() => toggleAllUnbooked()}
-                                                disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0 || unbookedUsers.filter(user => user.emailVerificationStatus !== 'VERIFIED').length !== 0}
+                                                disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
                                             />
                                         </th>
                                         <th className="w-100 align-middle student-name">
