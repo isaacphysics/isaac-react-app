@@ -263,7 +263,7 @@ const ReservationsModal = () => {
                                                 label="All"
                                                 checked={checkAllCheckbox || false}
                                                 onChange={() => toggleAllUnbooked()}
-                                                disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
+                                                disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0 || unbookedUsers.filter(user => user.emailVerificationStatus !== 'VERIFIED').length !== 0}
                                             />
                                         </th>
                                         <th className="w-100 align-middle student-name">
