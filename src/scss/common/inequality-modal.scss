@@ -387,6 +387,11 @@
     height: 48px;
     text-align: center;
     font-size: 1.8em;
+    overflow: visible;
+
+    * {
+        overflow: visible;
+    }
 
     .katex {
         display: block;
