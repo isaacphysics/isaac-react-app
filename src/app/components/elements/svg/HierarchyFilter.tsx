@@ -2,7 +2,7 @@ import React from "react";
 import * as RS from "reactstrap";
 import Select, {ValueType} from "react-select";
 import {TAG_ID} from "../../../services/constants";
-import {Hexagon} from "./Hexagon";
+import {calculateHexagonProportions, Hexagon} from "./Hexagon";
 import {DeviceSize, useDeviceSize} from "../../../services/device";
 import {HexagonConnection} from "./HexagonConnection";
 import {Item, unwrapValue} from "../../../services/select";
@@ -16,26 +16,12 @@ const hexagonProperties = {
         clickable: true,
     },
     selected: {
-        fill: {colour: "purple"},
+        fill: {colour: "#944cbe"},
         clickable: true,
     },
 }
 
 const connectionProperties = {fill: 'none', stroke: '#fea100', optionStrokeColour: "#d9d9d9", strokeWidth: 4, strokeDasharray: 4};
-
-function calculateHexagonProportions(unitLength: number, padding: number) {
-    return {
-        halfWidth: unitLength,
-        quarterHeight: unitLength / Math.sqrt(3),
-        padding: padding,
-    }
-}
-
-function generateHexagonTitle(title: string, isSelected: boolean) {
-    return <text x={10} y={46} fontFamily="Exo 2" fontSize="0.8rem" fontWeight={600} fill={isSelected ? '#fff' : '#333'}>
-        {title}
-    </text>;
-}
 
 interface HierarchyFilterProps {
     tiers: Tier[];
@@ -77,11 +63,13 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                                     {...hexagon}
                                     properties={isSelected ? hexagonProperties.selected : hexagonProperties.unselected}
                                     onClick={() => setTierSelection(i)(isSelected ?
-                                        selections[i].filter(s => s.value !== choices[i][j].value) : // remove
-                                        [...(selections[i] || []), choices[i][j]] // add
+                                        selections[i].filter(s => s.value !== choice.value) : // remove
+                                        [...(selections[i] || []), choice] // add
                                     )}
                                 />
-                                {generateHexagonTitle(choices[i][j].label, isSelected)}
+                                <text x={10} y={46} fontFamily="Exo 2" fontSize="0.8rem" fontWeight={600} fill={isSelected ? '#fff' : '#333'}>
+                                    {choice.label}
+                                </text>
                             </g>
                         })}
                     </g>

@@ -1,5 +1,14 @@
 import React from "react"
 
+export function calculateHexagonProportions(unitLength: number, padding: number) {
+    return {
+        halfWidth: unitLength,
+        quarterHeight: unitLength / Math.sqrt(3),
+        padding: padding,
+    }
+}
+
+
 function generateHexagonPoints(halfWidth: number, quarterHeight: number) {
     return '' + 1 * halfWidth + ' ' + 0 * quarterHeight +
         ', ' + 2 * halfWidth + ' ' + 1 * quarterHeight +

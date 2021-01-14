@@ -15,7 +15,7 @@ import queryString from "query-string";
 import {history} from "../../services/history";
 import {HierarchyFilterHexagonal, HierarchyFilterSelects, Tier} from "../elements/svg/HierarchyFilter";
 import {Item, unwrapValue} from "../../services/select";
-import {LevelsFilterSelect} from "../elements/svg/LevelsFilter";
+import {LevelsFilterHexagonal, LevelsFilterSelect} from "../elements/svg/LevelsFilter";
 
 const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
 
@@ -180,7 +180,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                         <RS.Label className="pt-2 pb-0" for="level-selector">Levels: </RS.Label>
                         <img width={270} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
                     </div>
-                    <LevelsFilterSelect id="level-selector" {...{levels, levelOptions, setLevels}} />
+                    <LevelsFilterHexagonal id="level-selector" {...{levelOptions, levels, setLevels}} />
                 </RS.Col>
             </RS.Row>
 
