@@ -198,7 +198,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
     interface Connection {
         sourceIndex: number;
-        targetIndex: number;
+        targetIndices: number[];
         isMostRecent: boolean;
         message: string;
     }
@@ -268,7 +268,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             // Top Ten to Upper connection
             progress.connections.topTenToUpper.push({
                 sourceIndex: mostRecentTopTenIndex,
-                targetIndex: upperIndex,
+                targetIndices: [upperIndex],
                 isMostRecent: true,
                 message: "Practise the concept before returning to complete the board"
             });
@@ -278,7 +278,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                 let lowerIndex = conceptQuestions.lowerLevelQuestions.map(question => question.id).indexOf(currentlyWorkingOn.id);
                 progress.connections.upperToLower.push({
                     sourceIndex: upperIndex,
-                    targetIndex: lowerIndex,
+                    targetIndices: [lowerIndex],
                     isMostRecent: true,
                     message: "Practise the concept with easier questions before returning to complete the board"
                 });

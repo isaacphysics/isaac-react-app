@@ -38,25 +38,28 @@ export function calculateConnectionLine(
 
 interface HexagonConnectionProps {
     sourceIndex: number;
-    targetIndex: number;
+    optionIndices?: number[];
+    targetIndices: number[];
     hexagonProportions: {
         halfWidth: number;
         quarterHeight: number;
         padding: number;
-    }
-    connectionProperties: {
-        fill: string;
-        stroke: string;
-        strokeWidth: number;
-        strokeDasharray: number;
-    }
+    };
+    connectionProperties: React.SVGProps<SVGPathElement> & {
+        optionStrokeColour?: string;
+    };
 }
-export function HexagonConnection({sourceIndex, targetIndex, hexagonProportions, connectionProperties}: HexagonConnectionProps) {
-    if ([sourceIndex, targetIndex].includes(-1)) {
-        return <React.Fragment />;
-    }
-    return <path
-        d={calculateConnectionLine(hexagonProportions, sourceIndex, targetIndex)}
-        {...connectionProperties}
-    />;
+export function HexagonConnection({sourceIndex, targetIndices, hexagonProportions, connectionProperties, optionIndices=[]}: HexagonConnectionProps) {
+    const filteredTargetIndices = targetIndices.filter(i => ![sourceIndex, i].includes(-1)); // Filter "not found" selections
+    const {optionStrokeColour, ...pathProperties} = connectionProperties;
+    return <g>
+        {optionIndices.filter(o => !targetIndices.includes(o)).map(optionIndex => <path
+            d={calculateConnectionLine(hexagonProportions, sourceIndex, optionIndex)}
+            {...{...pathProperties, stroke: optionStrokeColour}} key={`${sourceIndex}->${optionIndex}`}
+        />)}
+        {filteredTargetIndices.map(targetIndex => <path
+            d={calculateConnectionLine(hexagonProportions, sourceIndex, targetIndex)}
+            {...pathProperties} key={`${sourceIndex}->${targetIndex}`}
+        />)}
+    </g>;
 }
