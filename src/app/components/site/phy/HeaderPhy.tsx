@@ -10,8 +10,7 @@ import {HeaderStreakGauge} from "../../elements/views/StreakGauge";
 
 export const HeaderPhy = () => {
     const user = useSelector(selectors.user.orNull);
-    const streakRecord = useSelector((state: AppState) => state?.streakRecord ||
-        state?.userProgress?.userSnapshot);
+    const streakRecord = useSelector((state: AppState) => state?.userProgress?.userSnapshot);
     const mainContentId = useSelector(selectors.mainContentId.orDefault);
     return <header className="light">
         <Container className="container-fluid px-0">

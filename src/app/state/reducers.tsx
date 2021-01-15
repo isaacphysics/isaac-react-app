@@ -17,13 +17,11 @@ import {
     LoggedInUser,
     NOT_FOUND_TYPE,
     PrintingSettings,
-    StreakRecord,
     TemplateEmail,
     Toast,
     UserPreferencesDTO,
     UserProgress,
-    UserSchoolLookup,
-    UserSnapshot
+    UserSchoolLookup
 } from "../../IsaacAppTypes";
 import {
     AnsweredQuestionsByDate,
@@ -139,21 +137,14 @@ export const userProgress = (userProgress: UserProgressState = null, action: Act
     switch (action.type) {
         case ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS:
             return action.progress;
+        case ACTION_TYPE.USER_SNAPSHOT_UPDATE:
+        case ACTION_TYPE.STREAK_RECORD_UPDATE:
+            return {  // update only the snapshot and then potentially only partially
+                ...(userProgress || {}),
+                userSnapshot: {...(userProgress?.userSnapshot || {}), ...action.userSnapshot}
+            };
         case ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE:
             return null;
-        default:
-            return userProgress;
-    }
-};
-
-export type UserSnapshotState = UserSnapshot | null;
-export const userSnapshot = (userSnapshot: UserSnapshotState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.USER_SNAPSHOT_UPDATE:
-            return {
-                ...userProgress,
-                userSnapshot: action.userSnapshot
-            };
         default:
             return userProgress;
     }
@@ -491,16 +482,6 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
             return null;
         default:
             return currentGameboard;
-    }
-};
-
-export type StreakRecordState = UserSnapshot | null;
-export const streakRecord = (streakRecord: StreakRecordState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.STREAK_RECORD_UPDATE:
-            return action.streakRecord;
-        default:
-            return streakRecord;
     }
 };
 
@@ -999,7 +980,6 @@ const appReducer = combineReducers({
     answeredQuestionsByDate,
     currentTopic,
     currentGameboard,
-    streakRecord,
     tempExamBoard,
     wildcards,
     gameboardEditorQuestions,
@@ -1052,7 +1032,6 @@ export type AppState = undefined | {
     answeredQuestionsByDate: AnsweredQuestionsByDateState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
-    streakRecord: StreakRecordState;
     tempExamBoard: TempExamBoardState;
     wildcards: WildcardsState;
     gameboardEditorQuestions: GameboardEditorQuestionsState;

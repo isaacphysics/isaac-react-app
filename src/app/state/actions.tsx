@@ -291,7 +291,7 @@ export const updateUserSnapshot = (newUserSnapshot: UserSnapshot) => async (disp
 };
 
 export const updateStreakRecord = (newStreakRecord: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.STREAK_RECORD_UPDATE, streakRecord: newStreakRecord});
+    dispatch({type: ACTION_TYPE.STREAK_RECORD_UPDATE, userSnapshot: newStreakRecord});
 };
 
 // TODO scope for pulling out a separate registerUser method from this
