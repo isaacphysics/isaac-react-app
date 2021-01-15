@@ -1,7 +1,7 @@
 import {api} from "./api";
 import {UserSnapshot} from "../../IsaacAppTypes";
 import {UserSummaryDTO} from "../../IsaacApiTypes";
-import {updateStreakRecord, updateUserSnapshot} from "../state/actions";
+import {partiallyUpdateUserSnapshot} from "../state/actions";
 import {store} from "../state/store";
 
 let notificationWebSocket: WebSocket | null  = null;
@@ -46,13 +46,13 @@ const openNotificationSocket = function(user: UserSummaryDTO | null): void {
         }
 
         if (websocketMessage.userSnapshot) {
-            store.dispatch(updateUserSnapshot(websocketMessage.userSnapshot));
+            store.dispatch(partiallyUpdateUserSnapshot(websocketMessage.userSnapshot));
         } else if (websocketMessage.notifications) {
             websocketMessage.notifications.forEach(function(entry: any) {
                 const notificationMessage = JSON.parse(entry.message);
                 // specific user streak update
                 if (notificationMessage.dailyStreakRecord && notificationMessage.weeklyStreakRecord) {
-                    store.dispatch(updateStreakRecord({dailyStreakRecord: notificationMessage.dailyStreakRecord, weeklyStreakRecord: notificationMessage.weeklyStreakRecord}));
+                    store.dispatch(partiallyUpdateUserSnapshot({dailyStreakRecord: notificationMessage.dailyStreakRecord, weeklyStreakRecord: notificationMessage.weeklyStreakRecord}));
                 }
             });
         }

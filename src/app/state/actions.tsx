@@ -286,12 +286,8 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
 };
 
 
-export const updateUserSnapshot = (newUserSnapshot: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
-        dispatch({type: ACTION_TYPE.USER_SNAPSHOT_UPDATE, userSnapshot: newUserSnapshot});
-};
-
-export const updateStreakRecord = (newStreakRecord: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.STREAK_RECORD_UPDATE, userSnapshot: newStreakRecord});
+export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE, userSnapshot: newUserSnapshot});
 };
 
 // TODO scope for pulling out a separate registerUser method from this

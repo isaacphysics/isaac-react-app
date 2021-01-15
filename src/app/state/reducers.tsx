@@ -137,8 +137,7 @@ export const userProgress = (userProgress: UserProgressState = null, action: Act
     switch (action.type) {
         case ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS:
             return action.progress;
-        case ACTION_TYPE.USER_SNAPSHOT_UPDATE:
-        case ACTION_TYPE.STREAK_RECORD_UPDATE:
+        case ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE:
             return {  // update only the snapshot and then potentially only partially
                 ...(userProgress || {}),
                 userSnapshot: {...(userProgress?.userSnapshot || {}), ...action.userSnapshot}
