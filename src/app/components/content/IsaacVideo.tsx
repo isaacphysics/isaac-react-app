@@ -4,18 +4,21 @@ import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
 import {selectors} from "../../state/selectors";
 import {NOT_FOUND} from "../../services/constants";
-import ReactGA, {exception} from "react-ga";
+import ReactGA from "react-ga";
 
 interface IsaacVideoProps {
     doc: VideoDTO;
 }
 
 function rewrite(src: string) {
-    return src
-        .replace('youtu.be/', 'www.youtube.com/watch?v=')
-        .replace('watch?v=', 'embed/')
-        .replace("youtube.com", "youtube-nocookie.com")
-    + "?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=" + window.location.origin
+    const possibleVideoId = /(?<=v=)([^?]{11})/.exec(src) || /(?<=\/embed\/)([^?]{11})/.exec(src);
+    const possibleStartTime = /(?<=[?&])t=([0-9]+)/.exec(src);
+    if (possibleVideoId) {
+        const videoId = possibleVideoId[1];
+        const optionalStart = possibleStartTime ? `&start=${possibleStartTime[1]}` : "";
+        return `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&rel=0&fs=1&modestbranding=1` +
+               `${optionalStart}&origin=${window.location.origin}`
+    }
 }
 
 function onPlayerStateChange(event: any, wrappedLogAction: (eventDetails: object) => void, pageId?: string) {
@@ -61,6 +64,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
     const {doc: {src, altText}} = props;
     const page = useSelector(selectors.doc.get);
     const pageId = page && page !== NOT_FOUND && page.id || undefined;
+    const embedSrc = src && rewrite(src);
 
     const videoRef = useCallback( node => {
         const $window: any = window;
@@ -86,8 +90,8 @@ export function IsaacVideo(props: IsaacVideoProps) {
 
     return <div>
         <div className="no-print content-value text-center">
-            { src ?
-                <iframe ref={videoRef} className="mw-100" title={altText} width="614" height="390" src={rewrite(src)} frameBorder="0" allowFullScreen/>
+            { embedSrc ?
+                <iframe ref={videoRef} className="mw-100" title={altText} width="614" height="390" src={embedSrc} frameBorder="0" allowFullScreen/>
                 : altText
             }
         </div>
