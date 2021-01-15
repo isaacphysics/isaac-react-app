@@ -19,7 +19,6 @@ import {Gameboard} from "../pages/Gameboard";
 import {NotFound} from "../pages/NotFound";
 import {
     fetchGlossaryTerms,
-    getProgress,
     openActiveModal,
     requestConstantsSegueEnvironment,
     requestCurrentUser,
@@ -97,7 +96,6 @@ export const IsaacApp = () => {
         if (isLoggedIn(user)) {
             dispatch(requestNotifications());
             checkForWebSocket(user);
-            dispatch(getProgress());
         }
         return () => {
             closeWebSocket();
