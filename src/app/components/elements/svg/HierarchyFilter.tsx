@@ -12,13 +12,15 @@ export interface Tier {id: string; name: string; for: string}
 const hexagonProperties = {
     unselected: {
         fill: {colour: "none"},
-        stroke: {colour: "grey", width: 1},
-        clickable: true,
+        stroke: {colour: "grey", width: 1}
     },
     selected: {
-        fill: {colour: "#944cbe"},
-        clickable: true,
+        fill: {colour: "#944cbe"}
     },
+    clickable: {
+        fill: {colour: "none"},
+        clickable: true,
+    }
 }
 
 const connectionProperties = {fill: 'none', stroke: '#fea100', optionStrokeColour: "#d9d9d9", strokeWidth: 4, strokeDasharray: 4};
@@ -37,45 +39,47 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
 
     return <svg width="100%" height="400px">
         <g id="hexagonal-filter"  transform={`translate(${hexagon.padding}, ${hexagon.padding})`}>
-            <g id="connections-group">
-                {tiers.slice(1).map((tier, i) => {
-                    return <g
-                        key={tier.for}
-                        transform={'translate(' + (hexagon.halfWidth + hexagon.padding) + ',' +
-                        (3 * hexagon.quarterHeight + hexagon.padding + i * (6 * hexagon.quarterHeight + 2 * hexagon.padding)) + ')'}
-                    >
-                        <HexagonConnection
-                            sourceIndex={choices[i].map(c => c.value).indexOf(selections[i][0]?.value)}
-                            optionIndices={[...choices[i+1].keys()]} // range from 0 to choices[i+1].length
-                            targetIndices={selections[i+1]?.map(s => choices[i+1].map(c => c.value).indexOf(s.value)) || [-1]}
-                            hexagonProportions={hexagon} connectionProperties={connectionProperties}
-                        />
-                    </g>
-                })}
-            </g>
-            <g id="hexagons-group">
-                {tiers.map((tier, i) => (
-                    <g key={tier.for} transform={`translate(0,${i * (6 * hexagon.quarterHeight + 2 * hexagon.padding)})`}>
-                        {choices[i].map((choice, j) => {
-                            const isSelected = !!selections[i]?.map(s => s.value).includes(choice.value);
-                            return <g transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`}>
-                                <Hexagon
-                                    {...hexagon}
-                                    properties={isSelected ? hexagonProperties.selected : hexagonProperties.unselected}
-                                    onClick={() => setTierSelection(i)(isSelected ?
-                                        selections[i].filter(s => s.value !== choice.value) : // remove
-                                        [...(selections[i] || []), choice] // add
-                                    )}
-                                />
-                                <text x={10} y={46} fontFamily="Exo 2" fontSize="0.8rem" fontWeight={600} fill={isSelected ? '#fff' : '#333'}>
-                                    {choice.label}
-                                </text>
-                            </g>
-                        })}
-                    </g>
-                ))}
-            </g>
+            {/* Connections */}
+            {tiers.slice(1).map((tier, i) => {
+                return <g
+                    key={tier.for}
+                    transform={'translate(' + (hexagon.halfWidth + hexagon.padding) + ',' +
+                    (3 * hexagon.quarterHeight + hexagon.padding + i * (6 * hexagon.quarterHeight + 2 * hexagon.padding)) + ')'}
+                >
+                    <HexagonConnection
+                        sourceIndex={choices[i].map(c => c.value).indexOf(selections[i][0]?.value)}
+                        optionIndices={[...choices[i+1].keys()]} // range from 0 to choices[i+1].length
+                        targetIndices={selections[i+1]?.map(s => choices[i+1].map(c => c.value).indexOf(s.value)) || [-1]}
+                        hexagonProportions={hexagon} connectionProperties={connectionProperties}
+                    />
+                </g>
+            })}
 
+            {/* Hexagons */}
+            {tiers.map((tier, i) => (
+                <g key={tier.for} transform={`translate(0,${i * (6 * hexagon.quarterHeight + 2 * hexagon.padding)})`}>
+                    {choices[i].map((choice, j) => {
+                        const isSelected = !!selections[i]?.map(s => s.value).includes(choice.value);
+                        return <g key={choice.value} transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`}>
+                            <Hexagon
+                                {...hexagon} properties={isSelected ? hexagonProperties.selected : hexagonProperties.unselected}
+                            />
+                            <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
+                                <div className={`hexagon-tier-title ${isSelected ? "active" : ""} ${choice.label.split(/\s/).some(word => word.length > 10) ? "small" : ""}`}>
+                                    {choice.label}
+                                </div>
+                            </foreignObject>
+                            <Hexagon
+                                {...hexagon} properties={hexagonProperties.clickable}
+                                onClick={() => setTierSelection(i)(isSelected ?
+                                    selections[i].filter(s => s.value !== choice.value) : // remove
+                                    [...(selections[i] || []), choice] // add
+                                )}
+                            />
+                        </g>
+                    })}
+                </g>
+            ))}
         </g>
     </svg>;
 }

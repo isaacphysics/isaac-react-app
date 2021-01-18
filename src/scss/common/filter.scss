@@ -1,0 +1,21 @@
+.hexagon-tier-title, .hexagon-level-title {
+  pointer-events: none;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: $secondary-font-semi-bold;
+}
+.hexagon-level-title {
+  font-weight: 600;
+  font-size: 1rem;
+  &.active {color: white;}
+}
+.hexagon-tier-title {
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #333;
+  &.active {color: white;}
+  &.small {font-size: 0.6rem;}
+}
