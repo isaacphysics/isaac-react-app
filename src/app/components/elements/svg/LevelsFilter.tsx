@@ -1,8 +1,8 @@
 import React from "react";
 import Select from "react-select";
-import * as RS from "reactstrap";
 import {Item, unwrapValue} from "../../../services/select";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
+import {useDeviceSize} from "../../../services/device";
 
 interface LevelsFilterProps {
     id: string;
@@ -26,19 +26,24 @@ const hexagonProperties = {
     }
 }
 
-export function LevelsFilterHexagonal({levelOptions, levels, setLevels, id}: LevelsFilterProps) {
-    const hexagonUnitLength = 34;
-    const hexagonPadding = 2;
-    const hexagon = calculateHexagonProportions(hexagonUnitLength, hexagonPadding);
+export function LevelsFilterHexagonal(props: LevelsFilterProps) {
+    const {levelOptions, levels, setLevels, id} = props;
+    const deviceSize = useDeviceSize();
+    const hexagon = calculateHexagonProportions(34, 2);
 
     const halfWayBreakPoint = Math.floor(levelOptions.length / 2);
     const levelOptionsFirstRow = levelOptions.slice(0, halfWayBreakPoint);
     const levelOptionsSecondRow = levelOptions.slice(halfWayBreakPoint, levelOptions.length);
 
+    // Use select for small devices
+    if (deviceSize === "xs") {
+        return <LevelsFilterSelect {...props} />;
+    }
+
     return <svg width="100%" height="160px">
         <g transform={`translate(${hexagon.padding}, ${hexagon.padding})`}>
             {[levelOptionsFirstRow, levelOptionsSecondRow].map((levelOptionsRow, i) => {
-                return <g transform={`translate(${i * (hexagon.halfWidth + hexagonPadding)}, ${i * ((3*hexagon.quarterHeight) + (2*hexagon.padding))})`}>
+                return <g transform={`translate(${i * (hexagon.halfWidth + hexagon.padding)}, ${i * ((3*hexagon.quarterHeight) + (2*hexagon.padding))})`}>
                     {levelOptionsRow.map((levelOption, j) => {
                         const isSelected = levels.map(l => l.value).includes(levelOption.value);
                         return <g transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`}>

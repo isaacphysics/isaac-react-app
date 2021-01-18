@@ -1,9 +1,9 @@
 import React from "react";
 import * as RS from "reactstrap";
-import Select, {ValueType} from "react-select";
+import Select from "react-select";
 import {TAG_ID} from "../../../services/constants";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
-import {DeviceSize, useDeviceSize} from "../../../services/device";
+import {useDeviceSize} from "../../../services/device";
 import {HexagonConnection} from "./HexagonConnection";
 import {Item, unwrapValue} from "../../../services/select";
 
@@ -31,12 +31,15 @@ interface HierarchyFilterProps {
     selections: Item<TAG_ID>[][];
     setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>
 }
-export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSelection}: HierarchyFilterProps) {
+export function HierarchyFilterHexagonal(props: HierarchyFilterProps) {
+    const {tiers, choices, selections, setTierSelection} = props;
     const deviceSize = useDeviceSize();
-    const hexagonUnitLength = 36;
-    const hexagonPadding = 10;
-    const hexagon = calculateHexagonProportions(hexagonUnitLength, hexagonPadding);
+    const hexagon = calculateHexagonProportions(36, 10);
 
+    // Use multiple selects for small devices
+    if (deviceSize === "xs") {
+        return <HierarchyFilterSelects {...props} />;
+    }
     return <svg width="100%" height="400px">
         <g id="hexagonal-filter"  transform={`translate(${hexagon.padding}, ${hexagon.padding})`}>
             {/* Connections */}
