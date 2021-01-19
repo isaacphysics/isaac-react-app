@@ -96,11 +96,11 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-book">Book</RS.Label>
                 <Select inputId="question-search-book"
                     options={[
-                        {value: "physics_skills_14", label: "A Level Physics (Pre 3rd Edition)"},
                         {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
                         {value: "phys_book_gcse", label: "GCSE Physics"},
                         {value: "maths_book", label: "Pre-Uni Maths"},
                         {value: "chemistry_16", label: "A-Level Physical Chemistry"},
+                        {value: "physics_skills_14", label: "A Level Physics (2nd Edition - Old)"},
                     ]}
                     name="books"
                     className="basic-multi-select"

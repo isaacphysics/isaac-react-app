@@ -1,14 +1,10 @@
 import {store} from "../../../state/store";
-import {closeActiveModal, openALevelBookChoiceModal} from "../../../state/actions";
+import {closeActiveModal} from "../../../state/actions";
 import React from "react";
 import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {useDispatch} from "react-redux";
 
-function openBookChoice() {
-    store.dispatch(closeActiveModal());
-    store.dispatch(openALevelBookChoiceModal());
-}
 
 export const BookModalBody = () => {
     const dispatch = useDispatch();
@@ -25,10 +21,9 @@ export const BookModalBody = () => {
                     </Link>
                 </Col>
                 <Col className="text-center" md={4}>
-                    <button className="book-link" onClick={openBookChoice}>
-                        <img className="book-cover" src="assets/phy/books/physics_skills_14.jpg" alt="" />
+                    <Link onClick={() => dispatch(closeActiveModal())} to="/books/physics_skills_19"><img className="book-cover" src="assets/phy/books/physics_skills_19.jpg" alt="" />
                         <span className="sr-only">Mastering Essential </span><span>Pre-University Physics</span>
-                    </button>
+                    </Link>
                 </Col>
                 <Col className="text-center" md={4}>
                     <Link onClick={() => dispatch(closeActiveModal())} to="/books/chemistry_16"><img className="book-cover" src="assets/phy/books/chemistry_16.jpg" alt="" />
