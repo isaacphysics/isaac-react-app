@@ -11,21 +11,6 @@ interface LevelsFilterProps {
     setLevels: React.Dispatch<React.SetStateAction<Item<number>[]>>
 }
 
-
-const hexagonProperties = {
-    unselected: {
-        fill: {colour: "none"},
-        stroke: {colour: "grey", width: 1},
-    },
-    selected: {
-        fill: {colour: "#509e2e"},
-    },
-    clear: {
-        fill: {colour: "none"},
-        clickable: true
-    }
-}
-
 export function LevelsFilterHexagonal(props: LevelsFilterProps) {
     const {levelOptions, levels, setLevels, id} = props;
     const deviceSize = useDeviceSize();
@@ -47,16 +32,14 @@ export function LevelsFilterHexagonal(props: LevelsFilterProps) {
                     {levelOptionsRow.map((levelOption, j) => {
                         const isSelected = levels.map(l => l.value).includes(levelOption.value);
                         return <g transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`}>
-                            <Hexagon
-                                {...hexagon} properties={isSelected ? hexagonProperties.selected : hexagonProperties.unselected}
-                            />
+                            <Hexagon {...hexagon} className={`hex level ${isSelected ? "active" : ""}`} />
                             <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
                                 <div className={`hexagon-level-title ${isSelected ? "active" : ""} hex-level-${levelOption.value}`}>
                                     {levelOption.label}
                                 </div>
                             </foreignObject>
                             <Hexagon
-                                {...hexagon} properties={hexagonProperties.clear}
+                                {...hexagon} className="hex none clickable" properties={{clickable: true}}
                                 onClick={() => setLevels(isSelected ?
                                     levels.filter(l => l.value !== levelOption.value) : // remove
                                     [...levels, levelOption] // add

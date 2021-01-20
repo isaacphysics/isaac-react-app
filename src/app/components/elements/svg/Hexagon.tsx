@@ -45,26 +45,26 @@ interface HexagonProps<T> extends React.SVGProps<SVGPolygonElement> {
     selector?: (t: T) => boolean;
     halfWidth: number;
     quarterHeight: number;
-    properties: {
-        fill: {colour: string};
+    properties?: {
+        fill?: {colour: string};
         stroke?: { colour: string; width: number };
         clickable?: boolean;
     };
 }
 export function Hexagon<T>(props: HexagonProps<T>) {
     const {halfWidth, quarterHeight, properties, states, selector=()=>true, ...rest} = props;
-    let polygonAttributes: {fill: string; stroke?: string; strokeWidth?: number; points: string; strokeDasharray?: string; pointerEvents?: string} = {
+    let polygonAttributes: {fill?: string; stroke?: string; strokeWidth?: number; points: string; strokeDasharray?: string; pointerEvents?: string} = {
         points: generateHexagonPoints(halfWidth, quarterHeight),
-        stroke: properties.stroke?.colour,
-        strokeWidth: properties.stroke?.width,
-        fill: properties.fill.colour,
+        stroke: properties?.stroke?.colour,
+        strokeWidth: properties?.stroke?.width,
+        fill: properties?.fill?.colour,
     };
     const perimeter = 6 * 2 * (quarterHeight);
     const dashArray = calculateDashArray(states, selector, perimeter);
     if (dashArray) {
         polygonAttributes.strokeDasharray = dashArray;
     }
-    if (properties.clickable) {
+    if (properties?.clickable) {
         polygonAttributes.pointerEvents = 'visible';
     }
     return <polygon {...polygonAttributes} {...rest} />;
