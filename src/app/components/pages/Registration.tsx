@@ -17,7 +17,7 @@ import {
     Row
 } from "reactstrap";
 import {PasswordFeedback} from "../../../IsaacAppTypes";
-import {updateCurrentUser} from "../../state/actions";
+import {logAction, updateCurrentUser} from "../../state/actions";
 import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistence from "../../services/localStorage"
@@ -59,6 +59,32 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
         (registrationUser.password == unverifiedPassword) && validatePassword(registrationUser.password || "");
     const confirmedOverThirteen = dobCheckboxChecked || isDobOverThirteen(registrationUser.dateOfBirth);
 
+    // Add a log event on registration button for suspicious activity:
+    let buttonDownTime = 0;
+    let buttonUpTime = 0;
+    let alreadyLogged = false;
+    const SUSPICIOUS_CLICK_TIME = 20;
+    const checkDuration = () => {
+        try {
+            const buttonDuration = Math.floor(buttonUpTime - buttonDownTime);
+            if (!alreadyLogged && buttonDownTime && buttonDuration && buttonDuration > 0 && buttonDuration < SUSPICIOUS_CLICK_TIME) {
+                alreadyLogged = true;
+                dispatch(logAction({
+                    type: "REGISTRATION_ATTEMPT",
+                    userAgent: window.navigator.userAgent,
+                    referrer: document.referrer !== "",
+                    reason: buttonDuration
+                }));
+            }
+        } catch (e) {/* Prevent errors bubbling up! */}
+    }
+    const onButtonDown = (event: React.MouseEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement>) => {
+        buttonDownTime = event.timeStamp;
+    }
+    const onButtonUp = (event: React.MouseEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement>) => {
+        buttonUpTime = event.timeStamp;
+        setTimeout(checkDuration, 0);
+    }
 
     // Form's submission method
     const register = (event: React.FormEvent<HTMLFormElement>) => {
@@ -269,7 +295,10 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     {/* Submit */}
                     <Row className="mt-4 mb-2">
                         <Col md={{size: 6, offset: 3}}>
-                            <Input type="submit" value="Register now" className="btn btn-block btn-secondary border-0"/>
+                            <Input type="submit" value="Register now" className="btn btn-block btn-secondary border-0"
+                                   onMouseDown={onButtonDown} onKeyDown={onButtonDown}
+                                   onKeyUp={onButtonUp} onMouseUp={onButtonUp}
+                            />
                         </Col>
                     </Row>
 
