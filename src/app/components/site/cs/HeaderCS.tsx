@@ -25,20 +25,6 @@ export const HeaderCS = () => {
 
                         <a href={`#${mainContentId}`} className="skip-main">Skip to main content</a>
 
-                        <div className="header-progress m-md-0 d-none d-md-block d-flex align-self-center d-print-none">
-                            {user?.loggedIn &&
-                            <React.Fragment>
-                                <div id="header-progress" className="d-none d-md-block">
-                                    Streak:
-                                    <HeaderStreakGauge streakRecord={streakRecord}/>
-                                </div>
-                                <UncontrolledTooltip placement="bottom" autohide={false} target="header-progress">
-                                    The weekly streak indicates the number of consecutive weeks you have been active on Isaac.
-                                    <br/><br/>Answer at least <b>10 question parts</b> correctly per week to fill up your daily progress bar and increase your streak!
-                                </UncontrolledTooltip>
-                            </React.Fragment>}
-                        </div>
-
                         <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none">
                             {user &&
                                 (!user.loggedIn ?

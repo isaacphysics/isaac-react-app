@@ -71,7 +71,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
     }
 
     return <RS.Container id="my-progress" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle="My progress" />
+        <TitleAndBreadcrumb currentPageTitle="My Progress" />
         <RS.Card className="mt-4">
             <RS.CardBody>
                 <Tabs>{{

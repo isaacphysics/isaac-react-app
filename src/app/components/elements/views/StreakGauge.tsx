@@ -1,7 +1,7 @@
 import React from 'react';
 import {UserSnapshot} from "../../../../IsaacAppTypes";
 import {buildStyles, CircularProgressbarWithChildren} from "react-circular-progressbar";
-import {GRAY_120, progressColours} from "../../../services/constants";
+import {GRAY_120, progressColour} from "../../../services/constants";
 
 interface StreakGaugeProps {
     streakRecord: UserSnapshot | null | undefined;
@@ -16,7 +16,7 @@ export const StreakGauge = (props: StreakGaugeProps) => {
         maxValue={maxParts}
         strokeWidth={15}
         styles={buildStyles({
-            pathColor: progressColours,
+            pathColor: progressColour,
             trailColor: GRAY_120
 
         })}>
@@ -34,7 +34,7 @@ export const HeaderStreakGauge = (props: StreakGaugeProps) => {
     return <CircularProgressbarWithChildren value={streakActivity}
         maxValue={maxParts}
         styles={buildStyles({
-            pathColor: progressColours,
+            pathColor: progressColour,
             trailColor: GRAY_120
         })}>
         <div style={{fontSize: 18}}>

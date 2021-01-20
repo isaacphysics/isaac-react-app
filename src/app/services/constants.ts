@@ -817,7 +817,7 @@ export const doughnutColours = {
     ]
 }[SITE_SUBJECT];
 
-export const progressColours = {
+export const progressColour = {
     [SITE.PHY]: '#509E2E',
     [SITE.CS]: '#000000'
 }[SITE_SUBJECT];
