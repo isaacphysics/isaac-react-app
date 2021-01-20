@@ -51,7 +51,7 @@ export function LevelsFilterHexagonal(props: LevelsFilterProps) {
                                 {...hexagon} properties={isSelected ? hexagonProperties.selected : hexagonProperties.unselected}
                             />
                             <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
-                                <div className={`hexagon-level-title ${isSelected ? "active" : ""}`}>
+                                <div className={`hexagon-level-title ${isSelected ? "active" : ""} hex-level-${levelOption.value}`}>
                                     {levelOption.label}
                                 </div>
                             </foreignObject>
