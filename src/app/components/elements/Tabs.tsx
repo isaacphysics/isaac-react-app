@@ -1,7 +1,8 @@
 import React, {ReactNode, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
-import {TrustedMarkdown} from "./TrustedMarkdown";
 import {TrustedHtml} from "./TrustedHtml";
+import {pauseAllVideos} from "../content/IsaacVideo";
+
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
 
@@ -11,7 +12,7 @@ interface TabsProps {
     tabContentClass?: string;
     children: {};
     activeTabOverride?: number;
-    activeTabChanged?: (tabIndex: number) => void;
+    onActiveTabChange?: (tabIndex: number) => void;
     deselectable?: boolean;
 }
 
@@ -21,17 +22,18 @@ function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string
 }
 
 export const Tabs = (props: TabsProps) => {
-    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, activeTabChanged, deselectable=false} = props;
+    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, onActiveTabChange, deselectable=false} = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 
     function changeTab(tabIndex: number) {
+        pauseAllVideos();
         let nextTabIndex = tabIndex;
         if (deselectable && activeTab === tabIndex) {
             nextTabIndex = -1;
         }
         setActiveTab(nextTabIndex);
-        if (activeTabChanged) {
-            activeTabChanged(nextTabIndex);
+        if (onActiveTabChange && activeTab !== nextTabIndex) {
+            onActiveTabChange(nextTabIndex);
         }
     }
 

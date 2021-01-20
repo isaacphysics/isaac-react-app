@@ -10,7 +10,7 @@ import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {selectors} from "../../state/selectors";
 import {Inequality, makeInequality} from "inequality";
-import {parseExpression} from "inequality-grammar";
+import {parseMathsExpression, ParsingError} from "inequality-grammar";
 
 import _flattenDeep from 'lodash/flatMapDeep';
 import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
@@ -27,10 +27,10 @@ function countChildren(root: ChildrenMap) {
     let q = [root];
     let count = 1;
     while (q.length > 0) {
-        let e = q.shift();
+        const e = q.shift();
         if (!e) continue;
 
-        let c = Object.keys(e.children).length;
+        const c = Object.keys(e.children).length;
         if (c > 0) {
             count = count + c;
             q = q.concat(Object.values(e.children));
@@ -39,14 +39,14 @@ function countChildren(root: ChildrenMap) {
     return count;
 }
 
-function isError(p: {error: string} | any[]): p is {error: string} {
+function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const pageQuestions = selectors.questions.getQuestions(state);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
-    let r: {currentAttempt?: FormulaDTO | null} = {};
+    const r: {currentAttempt?: FormulaDTO | null} = {};
     if (questionPart) {
         r.currentAttempt = questionPart.currentAttempt;
     }
@@ -66,6 +66,12 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
     const [textInput, setTextInput] = useState('');
 
+    function currentAttemptPythonExpression(): string {
+        return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
+    }
+
+    const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
+
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
@@ -81,21 +87,6 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         initialEditorSymbols.current = state.symbols;
     };
 
-    const closeModal = (previousYPosition: number) => () => {
-        document.body.style.overflow = "initial";
-        setModalVisible(false);
-        if (isDefined(previousYPosition)) {
-            window.scrollTo(0, previousYPosition);
-        }
-    };
-
-    const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
-
-    function currentAttemptPythonExpression(): string {
-        return currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python || "";
-    }
-
-    const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
     useEffect(() => {
         // Only update the text-entry box if the graphical editor is visible OR if this is the first load
         const pythonExpression = currentAttemptPythonExpression();
@@ -106,6 +97,16 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             setInputState({...inputState, userInput: textInput, pythonExpression});
         }
     }, [currentAttempt]);
+
+    const closeModal = (previousYPosition: number) => () => {
+        document.body.style.overflow = "initial";
+        setModalVisible(false);
+        if (isDefined(previousYPosition)) {
+            window.scrollTo(0, previousYPosition);
+        }
+    };
+
+    const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality>();
@@ -124,15 +125,15 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         );
         sketch.log = { initialState: [], actions: [] };
         sketch.onNewEditorState = updateState;
-        sketch.onCloseMenus = () => {};
-        sketch.isUserPrivileged = () => { return true; };
-        sketch.onNotifySymbolDrag = () => {};
-        sketch.isTrashActive = () => { return false; };
+        sketch.onCloseMenus = () => undefined;
+        sketch.isUserPrivileged = () => true;
+        sketch.onNotifySymbolDrag = () => undefined;
+        sketch.isTrashActive = () => false
 
         sketchRef.current = sketch;
     }, [hiddenEditorRef.current]);
 
-    let [errors, setErrors] = useState<string[]>();
+    const [errors, setErrors] = useState<string[]>();
 
     const debounceTimer = useRef<number|null>(null);
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
@@ -146,19 +147,19 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             debounceTimer.current = null;
         }
         debounceTimer.current = window.setTimeout(() => {
-            let parsedExpression = parseExpression(pycode);
+            const parsedExpression = parseMathsExpression(pycode);
 
             if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
-                let openBracketsCount = pycode.split('(').length - 1;
-                let closeBracketsCount = pycode.split(')').length - 1;
-                let regexStr = "[^ (-)*-/0-9<->A-Z^-_a-z±²-³¼-¾×÷]+";
-                let badCharacters = new RegExp(regexStr);
-                errors = [];
+            const openBracketsCount = pycode.split('(').length - 1;
+            const closeBracketsCount = pycode.split(')').length - 1;
+            const regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
+            const badCharacters = new RegExp(regexStr);
+                const _errors = [];
                 if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
-                    errors.push('LaTeX syntax is not supported.');
+                    _errors.push('LaTeX syntax is not supported.');
                 }
                 if (/\|.+?\|/.test(pycode)) {
-                    errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
+                    _errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
                 }
                 if (badCharacters.test(pycode)) {
                     const usedBadChars: string[] = [];
@@ -170,17 +171,22 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                             }
                         }
                     }
-                    errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+                    _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
                 }
                 if (openBracketsCount !== closeBracketsCount) {
-                    errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
+                    _errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
                 }
                 if (/\.[0-9]/.test(pycode)) {
-                    errors.push('Please convert decimal numbers to fractions.');
+                    _errors.push('Please convert decimal numbers to fractions.');
                 }
-                setErrors(errors);
+                setErrors(_errors);
             } else {
-                setErrors(undefined);
+                if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(pycode)) {
+                    // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
+                    setErrors(["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"])
+                } else {
+                    setErrors(undefined);
+                }
                 if (pycode === '') {
                     const state = {result: {tex: "", python: "", mathml: ""}};
                     setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
@@ -190,8 +196,8 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                     // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
                     sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
                 } else {
-                    let sizes = parsedExpression.map(countChildren);
-                    let i = sizes.indexOf(Math.max.apply(null, sizes));
+                    const sizes = parsedExpression.map(countChildren);
+                    const i = sizes.indexOf(Math.max.apply(null, sizes));
                     sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
                 }
             }
@@ -199,8 +205,8 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
     };
 
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid.v4()}`, []);
-    const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(
-        function (str) {return str.trim().replace(/;/g, ',')}).sort().join(", ");
+    const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
+
     return (
         <div className="symbolic-question">
             <div className="question-content">

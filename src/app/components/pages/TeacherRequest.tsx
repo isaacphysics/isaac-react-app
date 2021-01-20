@@ -20,9 +20,9 @@ import {validateEmail} from "../../services/validation";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {api} from "../../services/api";
 import {Link} from "react-router-dom";
-import {isTeacher} from "../../services/user";
+import {schoolNameWithPostcode, isTeacher} from "../../services/user";
 import {IsaacContent} from "../content/IsaacContent";
-import {SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 
 const warningFragmentId = "teacher_registration_warning_message";
@@ -60,7 +60,7 @@ export const TeacherRequest = () => {
     function fetchSchool(urn: string) {
         if (urn != "") {
             api.schools.getByUrn(urn).then(({data}) => {
-                setSchool(data[0].name + ", " + data[0].postcode);
+                setSchool(schoolNameWithPostcode(data[0]));
             });
         } else if (user && user.loggedIn && user.schoolOther) {
             setSchool(user.schoolOther);
@@ -81,6 +81,12 @@ export const TeacherRequest = () => {
         fetchSchool(urn);
         isEmailDomainAllowed(emailAddress);
     }, [user]);
+
+    const noSchool = <p>
+        {"If you don't have an associated school please fill out our "}
+        <Link to="/contact?preset=teacherRequest">Contact us</Link>
+        {" form."}
+    </p>;
 
 
     return <Container id="contact-page" className="pb-5">
@@ -130,6 +136,7 @@ export const TeacherRequest = () => {
                                         {"name of your school should be shown in the 'School' field. If any of the "}
                                         {"information is incorrect or missing, you can amend it on your "}
                                         <Link to="/account">My account</Link>{" page."}
+                                        {SITE_SUBJECT === SITE.PHY && noSchool}
                                     </p>
                                     <Row>
                                         <Col size={12} md={6}>

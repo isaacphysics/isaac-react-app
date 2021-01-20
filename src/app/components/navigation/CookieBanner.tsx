@@ -26,7 +26,7 @@ export const CookieBanner = () => {
             <RS.Row style={{alignItems: "center"}}>
                 <RS.Col xs={12} sm={2} md={1}>
                     <h3 className="text-center">
-                        <span role="presentation" aria-labelledby="cookies-heading">ℹ</span>️
+                        <span role="presentation" aria-labelledby="cookies-heading">ℹ</span>
                         <span id="cookies-heading" className="d-inline-block d-sm-none">&nbsp;Cookies</span>
                     </h3>
                 </RS.Col>

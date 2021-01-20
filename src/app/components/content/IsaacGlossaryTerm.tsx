@@ -5,15 +5,19 @@ import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {useCurrentExamBoard} from "../../services/examBoard";
-import _startCase from 'lodash/startCase';
+import tags from "../../services/tags";
+import { isDefined } from '../../services/miscUtils';
+import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
+import { TAG_ID } from '../../services/constants';
+import { Tag } from '../../../IsaacAppTypes';
 
 interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
     location: {hash: string};
+    linkToGlossary: boolean;
 }
 
-// TODO add figure counting and linking
-const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermProps) => {
+const IsaacGlossaryTermComponent = ({doc, location: {hash}, linkToGlossary = false}: IsaacGlossaryTermProps) => {
     let anchorId = '';
     const idRegexp = new RegExp('([a-z0-9-_]+)\\|?(?:(aqa|ocr)\\|?)?([a-z0-9-_~]+)?');
     const parsedAnchorId = doc.id && idRegexp.exec(doc.id.split('|').slice(1).join('|'));
@@ -34,19 +38,25 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}}: IsaacGlossaryTermPr
         }
     }, [hash, anchorId]);
 
+    let _tags: Tag[] = [];
+    if (SITE_SUBJECT === SITE.CS && doc.tags) {
+        _tags = doc.tags.map(id => tags.getById(id as TAG_ID)).filter(tag => isDefined(tag));
+    }
+
     return <React.Fragment>
-        {(doc.examBoard === '' || examBoard === doc.examBoard) && <Row className="glossary_term">
+        {(!isDefined(doc.examBoard) || doc.examBoard === '' || examBoard === doc.examBoard) && <Row className="glossary_term">
             <Col md={3} className="glossary_term_name">
                 <p id={anchorId}>
-                    <a href={location.origin + location.pathname + '#' + anchorId}>
+                    {linkToGlossary && <a href={location.origin + location.pathname + '#' + anchorId}>
                         <img src="/assets/link-variant.png" className="pr-2" alt="direct link" />
                         <strong>{doc.value}</strong>
-                    </a>
+                    </a>}
+                    {!linkToGlossary && <strong>{doc.value}</strong>}
                 </p>
             </Col>
             <Col>
                 {doc.explanation && <IsaacContent doc={doc.explanation} />}
-                {doc.tags && doc.tags.length > 0 && <p className="topics">(Used in: {doc.tags.map(tag => _startCase(tag.replace(/[^a-zA-Z0-9]/, ' '))).join(', ')})</p>}
+                {_tags && _tags.length > 0 && <p className="topics">Used in: {_tags.map(tag => tag.title).join(', ')}</p>}
             </Col>
         </Row>}
     </React.Fragment>;

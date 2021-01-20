@@ -1,10 +1,4 @@
-import {
-    GameboardDTO,
-    GameboardItem,
-    GameboardItemState,
-    IsaacFastTrackQuestionPageDTO,
-    QuestionPartState
-} from "../../../IsaacApiTypes";
+import {GameboardDTO, GameboardItem, IsaacFastTrackQuestionPageDTO} from "../../../IsaacApiTypes";
 import queryString from "query-string";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
@@ -66,11 +60,11 @@ function line(x: number, y: number) {
     return 'L' + x + ' ' + y;
 }
 
-function calculateDashArray<T>(elements: T[] | undefined, evaluator: (t: T) => boolean, perimiterLength: number) {
+function calculateDashArray<T>(elements: T[] | undefined, evaluator: (t: T) => boolean, perimeterLength: number) {
     if (elements === undefined) {
         return null;
     }
-    let sectionLength = perimiterLength / elements.length;
+    let sectionLength = perimeterLength / elements.length;
     let recordingDash = true;
     let lengthCollector = 0;
     let dashArray = [];
@@ -124,12 +118,12 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             : null;
 
     useEffect(() => {
-        if (conceptQuestions === null && gameboardMaybeNull) {
+        if (gameboardMaybeNull) {
             const uppers = questionHistory.filter(e => /upper/i.test(e));
             const upper = uppers.pop() || "";
             dispatch(fetchFasttrackConcepts(gameboardMaybeNull.id as string, doc.title as string, upper));
         }
-    }, [dispatch, gameboardMaybeNull, doc, conceptQuestions]);
+    }, [dispatch, gameboardMaybeNull, doc]);
 
     if (gameboardMaybeNull === null && conceptQuestions === null) return null;
 
@@ -230,14 +224,14 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
     function getMostRecentQuestion(questionHistory: string[], conceptLevel: LevelTag) {
         const reversedQuestionHistory = questionHistory.slice().reverse();
-        const questionLevelMatcheFunctions = {
-            "ft_top_ten": (questionId: string) => questionId.indexOf('fasttrack') != -1,
-            "ft_upper": (questionId: string) => questionId.indexOf('upper') != -1,
+        const questionLevelMatchFunctions = {
+            "ft_top_ten": (questionId: string) => !questionId.includes('upper') && !questionId.includes('lower'),
+            "ft_upper": (questionId: string) => questionId.includes('upper'),
             "ft_lower": () => false,
         };
         let result = null;
         for (let questionId of reversedQuestionHistory) {
-            if (questionLevelMatcheFunctions[conceptLevel](questionId)) {
+            if (questionLevelMatchFunctions[conceptLevel](questionId)) {
                 result = questionId;
             }
         }
@@ -336,7 +330,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                     sourceIndex: upperIndex,
                     targetIndex: lowerIndex,
                     isMostRecent: true,
-                    message: "Practise the concept with easier quesitons before returning to complete the board"
+                    message: "Practise the concept with easier questions before returning to complete the board"
                 });
             }
         }
@@ -350,8 +344,8 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             strokeWidth: properties.stroke.width,
             fill: fillColour,
         };
-        const perimiter = 6 * 2 * (hexagon.quarterHeight);
-        const dashArray = calculateDashArray(states, selector, perimiter);
+        const perimeter = 6 * 2 * (hexagon.quarterHeight);
+        const dashArray = calculateDashArray(states, selector, perimeter);
         if (dashArray) {
             polygonAttributes.strokeDasharray = dashArray;
         }

@@ -49,7 +49,7 @@ function getTags(docTags?: string[]) {
     }
     if (!docTags) return [];
 
-    return tags.getByIdsAsHeirarchy(docTags as TAG_ID[])
+    return tags.getByIdsAsHierarchy(docTags as TAG_ID[])
         .map(tag => ({title: tag.title}));
 }
 
@@ -82,7 +82,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
             }
         }
 
-        const isFastTrack = doc && doc.type === "isaacFastTrackQuestionPage";
+        const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 
         return <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <Container>

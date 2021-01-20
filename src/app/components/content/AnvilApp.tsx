@@ -13,7 +13,7 @@ interface AnvilAppProps {
 const sessionIdentifier = Math.random();
 
 export const AnvilApp = ({doc}: AnvilAppProps) => {
-    const baseURL = `https://anvil.works/apps/${doc.appId}/${doc.appAccessKey}/app?s=new${sessionIdentifier}`;
+    const baseURL = `https://${doc.appId}.anvil.app/${doc.appAccessKey}?s=new${sessionIdentifier}`;
     const title = doc.value || "Anvil app";
     const page = useSelector((state: AppState) => (state && state.doc) || null);
     const user = useSelector(selectors.user.orNull);

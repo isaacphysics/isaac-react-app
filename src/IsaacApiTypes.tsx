@@ -193,9 +193,40 @@ export interface UserGroupDTO {
     _id?: number;
 }
 
+export interface GameboardProgressSummaryDTO {
+    assignmentId?: number;
+    gameboardId?: string;
+    gameboardTitle?: string;
+    dueDate?: Date;
+    creationDate?: Date;
+    questionPartsCorrect?: number;
+    questionPartsIncorrect?: number;
+    questionPartsNotAttempted?: number;
+    questionPartsTotal?: number;
+    passMark?: number;
+    questionPagesPerfect?: number;
+    questionPagesTotal?: number;
+}
+
+export interface UserGameboardProgressSummaryDTO {
+    user?: UserSummaryDTO;
+    progress?: GameboardProgressSummaryDTO[];
+}
+
 export interface AnvilAppDTO extends ContentDTO {
     appId?: string;
     appAccessKey?: string;
+}
+
+export interface IsaacCardDTO extends ContentDTO {
+    image?: ImageDTO;
+    clickUrl?: string;
+    disabled?: boolean;
+    verticalContent?: boolean;
+}
+
+export interface IsaacCardDeckDTO extends ContentDTO {
+    cards?: IsaacCardDTO[];
 }
 
 export interface ChemicalFormulaDTO extends ChoiceDTO {

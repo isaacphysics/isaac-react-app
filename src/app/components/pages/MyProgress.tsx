@@ -6,7 +6,7 @@ import {getAnsweredQuestionsByDate, getProgress} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
 import {withRouter} from "react-router-dom";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {PotentialUser} from "../../../IsaacAppTypes";
 import {Unauthorised} from "./Unauthorised";
 import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats";
 import {StreakPanel} from "../elements/panels/StreakPanel";
@@ -43,7 +43,7 @@ export const siteSpecific = {
 
 
 interface MyProgressProps {
-    user: LoggedInUser;
+    user: PotentialUser;
     match: {params: {userIdOfInterest: string}};
 }
 export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}}: MyProgressProps) => {
@@ -70,8 +70,11 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
         return <Unauthorised />
     }
 
+    const userName = `${userProgress?.userDetails?.givenName || ""}${userProgress?.userDetails?.givenName ? " " : ""}${userProgress?.userDetails?.familyName || ""}`;
+    const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
+
     return <RS.Container id="my-progress" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle="My Progress" />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} />
         <RS.Card className="mt-4">
             <RS.CardBody>
                 <Tabs>{{
@@ -87,7 +90,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
 
                         <RS.Card className="mt-4">
                             <RS.CardBody>
-                                <Tabs tabContentClass="mt-4" activeTabChanged={(tabIndex) => {
+                                <Tabs tabContentClass="mt-4" onActiveTabChange={(tabIndex) => {
                                     const flush = tabRefs[tabIndex - 1].current;
                                     if (flush) {
                                         // Don't call the flush in an event handler that causes the render, that's too early.

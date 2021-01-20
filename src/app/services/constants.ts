@@ -118,6 +118,8 @@ export enum ACTION_TYPE {
 
     USER_LOG_OUT_REQUEST = "USER_LOG_OUT_REQUEST",
     USER_LOG_OUT_RESPONSE_SUCCESS = "USER_LOG_OUT_RESPONSE_SUCCESS",
+    USER_LOG_OUT_EVERYWHERE_REQUEST = "USER_LOG_OUT_EVERYWHERE_REQUEST",
+    USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS = "USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS",
 
     USER_PROGRESS_REQUEST = "USER_PROGRESS_REQUEST",
     USER_PROGRESS_RESPONSE_SUCCESS = "USER_PROGRESS_RESPONSE_SUCCESS",
@@ -203,6 +205,9 @@ export enum ACTION_TYPE {
     GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST = "GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST",
     GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS = "GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS",
     GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE = "GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE",
+    GROUP_PROGRESS_REQUEST = "GROUP_PROGRESS_REQUEST",
+    GROUP_PROGRESS_RESPONSE_SUCCESS = "GROUP_PROGRESS_RESPONSE_SUCCESS",
+    GROUP_PROGRESS_RESPONSE_FAILURE = "GROUP_PROGRESS_RESPONSE_FAILURE",
 
     CONSTANTS_UNITS_REQUEST = "CONSTANTS_UNITS_REQUEST",
     CONSTANTS_UNITS_RESPONSE_SUCCESS = "CONSTANTS_UNITS_SUCCESS",
@@ -612,6 +617,7 @@ export enum TAG_ID {
     quadratics = "quadratics",
     manipulation = "manipulation",
     series = "series",
+    complex_numbers = "complex_numbers",
     // Functions topics
     generalFunctions = "general_functions",
     graphSketching = "graph_sketching",
@@ -628,6 +634,7 @@ export enum TAG_LEVEL {
 export enum DOCUMENT_TYPE {
     CONCEPT = "isaacConceptPage",
     QUESTION = "isaacQuestionPage",
+    FAST_TRACK_QUESTION = "isaacFastTrackQuestionPage",
     EVENT = "isaacEventPage",
     TOPIC_SUMMARY = "isaacTopicSummaryPage",
     GENERIC = "page",
@@ -637,6 +644,7 @@ export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.CONCEPT]: "Concepts",
     [DOCUMENT_TYPE.QUESTION]: "Questions",
+    [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "Questions",
     [DOCUMENT_TYPE.EVENT]: "Events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
     [DOCUMENT_TYPE.GENERIC]: "Other pages"
@@ -646,6 +654,7 @@ export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} =
     [DOCUMENT_TYPE.GENERIC]: "pages",
     [DOCUMENT_TYPE.CONCEPT]: "concepts",
     [DOCUMENT_TYPE.QUESTION]: "questions",
+    [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "questions",
     [DOCUMENT_TYPE.EVENT]: "events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics"
 };
@@ -769,23 +778,6 @@ for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
 }
 _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
 export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
-
-export const anonymousNames = [
-    "Alice",
-    "Bob",
-    "Charlie",
-    "Dan",
-    "Eve",
-    "Frank",
-    "Grace"
-]
-
-export const anonymousSchoolNames = [
-    "North",
-    "South",
-    "East",
-    "West"
-]
 
 export const specificDoughnutColours: { [key: string]: string } = {
     [SITE.PHY]: {

@@ -15,6 +15,8 @@ import {withRouter} from "react-router-dom";
 import {IsaacQuizTabs} from "./IsaacQuizTabs";
 import {QuestionContext} from "../../../IsaacAppTypes";
 import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
+import {IsaacCard} from "./IsaacCard";
+import {IsaacCardDeck} from "./IsaacCardDeck";
 
 const classBasedLayouts = {
     left: "align-left",
@@ -35,6 +37,8 @@ export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: s
         case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break;
         case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break;
         case "anvilApp": selectedComponent = <AnvilApp {...props} />; break;
+        case "isaacCard": selectedComponent = <IsaacCard {...props} />; break;
+        case "isaacCardDeck": selectedComponent = <IsaacCardDeck {...props} />; break;
         case "isaacMultiChoiceQuestion":
         case "isaacNumericQuestion":
         case "isaacSymbolicQuestion":

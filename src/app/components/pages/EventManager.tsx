@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {PotentialUser} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
@@ -11,7 +11,7 @@ import {AddUsersToBooking} from "../elements/panels/AddUsersToBooking";
 import {EventAttendance} from "../elements/panels/EventAttendance";
 import {isEventLeader} from "../../services/user";
 
-export const EventManager = ({user}: {user: LoggedInUser}) => {
+export const EventManager = ({user}: {user: PotentialUser}) => {
     const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
     const selectedEventRef = useRef<HTMLDivElement>(null);
 

@@ -17,7 +17,6 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.waves, title: "Waves", parent: TAG_ID.physics},
         {id: TAG_ID.fields, title: "Fields", parent: TAG_ID.physics},
         {id: TAG_ID.circuits, title: "Circuits", parent: TAG_ID.physics},
-        {id: TAG_ID.chemPhysics, title: "Physical Chemistry", parent: TAG_ID.physics},
         // Mechanics topics
         {id: TAG_ID.statics, title: "Statics", parent: TAG_ID.mechanics},
         {id: TAG_ID.dynamics, title: "Dynamics", parent: TAG_ID.mechanics},
@@ -38,9 +37,6 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.optics, title: "Optics", parent: TAG_ID.waves},
         {id: TAG_ID.superposition, title: "Superposition", parent: TAG_ID.waves},
         {id: TAG_ID.waveMotion, title: "Wave Motion", parent: TAG_ID.waves},
-        // Physical Chemistry topics:
-        {id: TAG_ID.thermodynamics, title: "Thermodynamics", parent: TAG_ID.chemPhysics},
-        {id: TAG_ID.kinetics, title: "Reaction Kinetics", parent: TAG_ID.chemPhysics},
 
         // Maths fields
         {id: TAG_ID.geometry, title: "Geometry", parent: TAG_ID.maths},
@@ -60,9 +56,16 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.quadratics, title: "Quadratics", parent: TAG_ID.algebra},
         {id: TAG_ID.manipulation, title: "Manipulation", parent: TAG_ID.algebra},
         {id: TAG_ID.series, title: "Series", parent: TAG_ID.algebra},
+        {id: TAG_ID.complex_numbers, title: "Complex Numbers", parent: TAG_ID.algebra},
         // Functions topics
         {id: TAG_ID.generalFunctions, title: "General Functions", parent: TAG_ID.functions},
         {id: TAG_ID.graphSketching, title: "Graph Sketching", parent: TAG_ID.functions},
+
+        // Chemistry fields
+        {id: TAG_ID.chemPhysics, title: "Physical Chemistry", parent: TAG_ID.chemistry},
+        // Physical Chemistry topics:
+        {id: TAG_ID.thermodynamics, title: "Thermodynamics", parent: TAG_ID.chemPhysics},
+        {id: TAG_ID.kinetics, title: "Reaction Kinetics", parent: TAG_ID.chemPhysics},
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}

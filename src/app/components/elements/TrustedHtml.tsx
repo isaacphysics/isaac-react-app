@@ -3,7 +3,7 @@ import katex from "katex";
 import 'katex/dist/contrib/mhchem.js';
 import renderA11yString from '../../services/katex-a11y';
 import he from "he";
-import {FigureNumberingContext, FigureNumbersById, LoggedInUser} from "../../../IsaacAppTypes";
+import {FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
 import {EXAM_BOARD} from "../../services/constants";
@@ -30,7 +30,7 @@ const BaseMacros: {[key: string]: MathJaxMacro} = {
     "e": ["\\textrm{e}", 0],
     "units": ["\\rm{#1}", 1],
     // Chemistry:
-    "standardstate": ["\\mathbin{\u29B5}", 0],
+    "standardstate": ["\u29B5", 0], // Below we unescape HTML encoding using 'he', otherwise would need "\\mathbin{\u29B5}".
     // Set theory:
     "N": "\\mathbb{N}",
     "Z": "\\mathbb{Z}",
@@ -225,7 +225,7 @@ const ENDREF = "==ENDREF==";
 const REF_REGEXP = new RegExp(REF + "(.*?)" + ENDREF, "g");
 const SR_REF_REGEXP = new RegExp("start text, " + REF_REGEXP.source + ", end text,", "g");
 
-export function katexify(html: string, user: LoggedInUser | null, examBoard: EXAM_BOARD | null, screenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
+export function katexify(html: string, user: PotentialUser | null, examBoard: EXAM_BOARD | null, screenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";

@@ -47,7 +47,6 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
-import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 
 const stateFromProps = (state: AppState) => (state && {
     groups: selectors.groups.groups(state),
@@ -135,9 +134,13 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
                 <span className="icon-group-table-person mt-2" />
             </div>
             <div>
-                <Link to={`/progress/${member.groupMembershipInformation.userId}`} className="align-text-top d-flex align-items-stretch">
-                    <span className="pl-1">{member.givenName} {member.familyName}</span>
-                </Link>
+                {member.authorisedFullAccess ?
+                    <Link to={`/progress/${member.groupMembershipInformation.userId}`}
+                          className={"align-text-top d-flex align-items-stretch"}>
+                        <span className="pl-1">{member.givenName} {member.familyName}</span>
+                    </Link> :
+                    <span className="not-authorised"><span className="pl-1 struck-out">{member.givenName} {member.familyName}</span> (Not Sharing)</span>
+                }
             </div>
             <div>
                 {member.emailVerificationStatus == "DELIVERY_FAILED" &&
@@ -329,7 +332,6 @@ const MobileGroupCreatorComponent = ({createNewGroup, ...props}: GroupCreatorPro
 
 const GroupsPageComponent = (props: GroupsPageProps) => {
     const {group, groups, loadGroups, getGroupInfo, selectGroup, createGroup, deleteGroup, showGroupInvitationModal} = props;
-    const user = useSelector(selectors.user.orNull);
 
     const [showArchived, setShowArchived] = useState(false);
 
@@ -481,7 +483,6 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                     </ShowLoading>
                                 </TabPane>
                             </TabContent>
-                            {isStaff(user) && <AnonymiseUsersCheckbox/>}
                         </CardBody>
                     </Card>}
                 </ShowLoading>

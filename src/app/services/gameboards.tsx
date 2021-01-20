@@ -85,6 +85,11 @@ export const generateGameboardSubjectHexagons = (boardSubjects: string[]) => {
     );
 };
 
+export const showWildcard = (board: GameboardDTO) => {
+    const re = new RegExp('(phys_book_gcse_ch.*|pre_uni_maths.*)');
+    return board?.id && re.test(board.id)
+};
+
 export const determineGameboardSubjects = (board: GameboardDTO) => {
     if (SITE_SUBJECT === SITE.CS) {
         return ["compsci"];

@@ -111,6 +111,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
                     }}
                     isClearable
+                    menuPortalTarget={document.body}
+                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
                 />
             </div>}
             {!isBookSearch && <div className="text-wrap col-lg-6 mt-2">
@@ -123,6 +125,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     classNamePrefix="select"
                     placeholder="Any"
                     onChange={multiSelectOnChange(setSearchTopics)}
+                    menuPortalTarget={document.body}
+                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
                 />
             </div>}
             {SITE_SUBJECT === SITE.CS && <div className="text-wrap my-2 col-lg-6">
@@ -138,6 +142,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     placeholder="Any"
                     value={searchExamBoards.map(convertExamBoardToOption)}
                     onChange={multiSelectOnChange(setSearchExamBoards)}
+                    menuPortalTarget={document.body}
+                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
                 />
             </div>}
             {SITE_SUBJECT === SITE.PHY && <div className={`text-wrap col-lg-3 my-2 ${isBookSearch ? "d-none" : ""}`}>
@@ -152,6 +158,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     placeholder="Any"
                     onChange={selectOnChange(setSearchLevels)}
                     isClearable
+                    menuPortalTarget={document.body}
+                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
                 />
             </div>}
         </div>
@@ -174,57 +182,66 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 />
             </div>
         </div>
-        <div className={"mt-4"}>
-            <RS.Input
-                type="button" value={`Add ${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""}`}
-                disabled={selectedQuestions.size === 0}
-                className={"btn btn-block btn-secondary border-0"}
-                onClick={() => {
-                    setOriginalSelectedQuestions(selectedQuestions);
-                    setOriginalQuestionOrder(questionOrder);
-                    dispatch(closeActiveModal());
-                }}
-            />
+        <div className="d-sm-flex align-items-baseline mt-4">
+            <div className="flex-grow-1 mb-1">
+                <strong className={selectedQuestions.size > 10 ? "text-danger" : ""}>
+                    {{
+                        [SITE.PHY]: `${selectedQuestions.size} Question${selectedQuestions.size !== 1 ? "s" : ""} Selected`,
+                        [SITE.CS]: `${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`
+                    }[SITE_SUBJECT]}
+                </strong>
+            </div>
+            <div>
+                <RS.Input
+                    type="button"
+                    value={{[SITE.PHY]: "Return to Board", [SITE.CS]: "Return to board"}[SITE_SUBJECT]}
+                    disabled={selectedQuestions.size === 0}
+                    className={"btn btn-block btn-secondary border-0"}
+                    onClick={() => {
+                        setOriginalSelectedQuestions(selectedQuestions);
+                        setOriginalQuestionOrder(questionOrder);
+                        dispatch(closeActiveModal());
+                    }}
+                />
+            </div>
         </div>
-        <div className="responsive mt-4">
-            <RS.Table bordered>
-                <thead>
-                    <tr>
-                        <th className="w-5"> </th>
-                        <SortableTableHeader
-                            className="w-40" title="Question title"
-                            updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
-                            enabled={!isBookSearch}
-                        />
-                        <th className="w-25">Topic</th>
-                        {SITE_SUBJECT === SITE.PHY && <SortableTableHeader
-                            className="w-15" title="Level"
-                            updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "level")}
-                            enabled={!isBookSearch}
-                        />}
-                        {SITE_SUBJECT === SITE.CS && <th className="w-15">Exam boards</th>}
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        questions && sortQuestions(searchBook.length === 0 ? questionsSort : {title: SortOrder.ASC})(questions.filter((question) => {
-                            let qIsPublic = searchResultIsPublic(question, user);
-                            if (isBookSearch) return qIsPublic;
-                            let qLevelsMatch = (searchLevels.length == 0 || (question.level && searchLevels.includes(question.level.toString())));
-                            let qExamboardsMatch = (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0));
-                            let qTopicsMatch = (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0));
+        <RS.Table bordered responsive className="mt-4">
+            <thead>
+                <tr>
+                    <th className="w-5"> </th>
+                    <SortableTableHeader
+                        className="w-40" title="Question title"
+                        updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
+                        enabled={!isBookSearch}
+                    />
+                    <th className="w-25">Topic</th>
+                    {SITE_SUBJECT === SITE.PHY && <SortableTableHeader
+                        className="w-15" title="Level"
+                        updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "level")}
+                        enabled={!isBookSearch}
+                    />}
+                    {SITE_SUBJECT === SITE.CS && <th className="w-15">Exam boards</th>}
+                </tr>
+            </thead>
+            <tbody>
+                {
+                    questions && sortQuestions(searchBook.length === 0 ? questionsSort : {title: SortOrder.ASC})(questions.filter((question) => {
+                        let qIsPublic = searchResultIsPublic(question, user);
+                        if (isBookSearch) return qIsPublic;
+                        let qLevelsMatch = (searchLevels.length == 0 || (question.level && searchLevels.includes(question.level.toString())));
+                        let qExamboardsMatch = (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0));
+                        let qTopicsMatch = (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0));
 
-                            return qIsPublic && qLevelsMatch && qExamboardsMatch && qTopicsMatch;
-                        })).map((question) =>
-                            <GameboardBuilderRow
-                                key={`question-search-modal-row-${question.id}`} question={question}
-                                selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}
-                                questionOrder={questionOrder} setQuestionOrder={setQuestionOrder}
-                            />
-                        )
-                    }
-                </tbody>
-            </RS.Table>
-        </div>
+                        return qIsPublic && qLevelsMatch && qExamboardsMatch && qTopicsMatch;
+                    })).map((question) =>
+                        <GameboardBuilderRow
+                            key={`question-search-modal-row-${question.id}`} question={question}
+                            selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}
+                            questionOrder={questionOrder} setQuestionOrder={setQuestionOrder}
+                        />
+                    )
+                }
+            </tbody>
+        </RS.Table>
     </div>;
 };

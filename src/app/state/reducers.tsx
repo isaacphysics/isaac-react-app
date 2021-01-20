@@ -14,7 +14,7 @@ import {
     EventOverview,
     GroupMembershipDetailDTO,
     isValidatedChoice,
-    LoggedInUser,
+    PotentialUser,
     NOT_FOUND_TYPE,
     PrintingSettings,
     TemplateEmail,
@@ -39,19 +39,20 @@ import {
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
-    TOTPSharedSecretDTO,
     UserAuthenticationSettingsDTO,
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO
+    UserSummaryWithGroupMembershipDTO,
+    TOTPSharedSecretDTO,
+    UserGameboardProgressSummaryDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
 import tags from "../services/tags";
 
-type UserState = LoggedInUser | null;
+type UserState = PotentialUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
@@ -60,6 +61,7 @@ export const user = (user: UserState = null, action: Action): UserState => {
             return {loggedIn: true, ...action.user};
         case ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE:
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
+        case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
             return {loggedIn: false};
         default:
             return user;
@@ -251,6 +253,18 @@ export const groupMemberships = (groupMemberships: GroupMembershipsState = null,
             return groupMemberships;
     }
 };
+
+export type GroupProgressState = {[id: number]: UserGameboardProgressSummaryDTO[] | null} | null ;
+export const groupProgress = (groupProgress: GroupProgressState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS:
+            return {...groupProgress, [action.groupId]: action.progress };
+        case ACTION_TYPE.GROUP_PROGRESS_RESPONSE_FAILURE:
+            return {...groupProgress, [action.groupId]: []}
+        default:
+            return groupProgress;
+    }
+}
 
 type ConstantsState = {units?: string[]; segueVersion?: string; segueEnvironment?: string} | null;
 export const constants = (constants: ConstantsState = null, action: Action) => {
@@ -1006,7 +1020,8 @@ const appReducer = combineReducers({
     concepts,
     fasttrackConcepts,
     graphSketcherSpec,
-    mainContentId
+    mainContentId,
+    groupProgress
 });
 
 export type AppState = undefined | {
@@ -1061,10 +1076,11 @@ export type AppState = undefined | {
     fasttrackConcepts: FasttrackConceptsState;
     graphSketcherSpec: GraphSpecState;
     mainContentId: MainContentIdState;
+    groupProgress: GroupProgressState;
 }
 
 export const rootReducer = (state: AppState, action: Action) => {
-    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
+    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         state = undefined;
     }
     return appReducer(state, action);

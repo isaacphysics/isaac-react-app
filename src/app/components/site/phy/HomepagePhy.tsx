@@ -5,14 +5,14 @@ import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
-import {PhysicsSiteRedesignBanner} from "../../navigation/PhysicsSiteRedesignBanner";
+import {WarningBanner} from "../../navigation/WarningBanner";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
     const user = useSelector(selectors.user.orNull);
 
     return <div id="homepage" className="pb-5">
-        <PhysicsSiteRedesignBanner />
+        <WarningBanner/>
         <section id="call-to-action" className="homepageHero">
             <Container className="pt-4">
                 <Row className="mt-3">

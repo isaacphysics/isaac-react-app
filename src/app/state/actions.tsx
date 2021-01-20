@@ -26,10 +26,10 @@ import {
     AppGroupMembership,
     ATTENDANCE,
     BoardOrder,
-    Credentials,
+    CredentialsAuthDTO,
     EmailUserRoles,
     FreeTextRule,
-    LoggedInUser,
+    PotentialUser,
     QuestionSearchQuery,
     Toast,
     UserPreferencesDTO,
@@ -226,11 +226,11 @@ export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: strin
     }
 };
 
-export const submitTotpChallengeResponse = (mfaVerificationCode: string) => async (dispatch: Dispatch<Action>) => {
+export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
     try {
         const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode);
+        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
 
         await dispatch(requestCurrentUser() as any); // Request user preferences
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
@@ -295,7 +295,7 @@ export const updateCurrentUser = (
     updatedUser: ValidationUser,
     updatedUserPreferences: UserPreferencesDTO,
     passwordCurrent: string | null,
-    currentUser: LoggedInUser
+    currentUser: PotentialUser
 ) => async (dispatch: Dispatch<Action>) => {
     // Confirm email change
     if (currentUser.loggedIn && currentUser.id == updatedUser.id) {
@@ -381,7 +381,17 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const logInUser = (provider: AuthenticationProvider, credentials: Credentials) => async (dispatch: Dispatch<Action>) => {
+export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST});
+    try {
+        await api.authentication.logoutEverywhere();
+        dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Logout everywhere failed", e));
+    }
+};
+
+export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
 
@@ -513,6 +523,13 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
         await api.email.verify(params);
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
         dispatch(requestCurrentUser() as any);
+        dispatch(showToast({
+            title: "Email address verified",
+            body: "The email address has been verified",
+            color: "success",
+            timeout: 5000,
+            closable: false,
+        }) as any);
     } catch(e) {
         dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
@@ -1003,7 +1020,7 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
     }
 };
 
-export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
+export const addGameboard = (gameboardId: string, user: PotentialUser) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST});
         await api.gameboards.save(gameboardId);
@@ -1426,6 +1443,17 @@ export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Membership status update failed", e));
+    }
+};
+
+export const getGroupProgress = (group: UserGroupDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUP_PROGRESS_REQUEST});
+    try {
+        const result = await api.groups.groupProgress(group);
+        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS, groupId: group.id || 0, progress: result.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_FAILURE, groupId: group.id || 0});
+        dispatch(showErrorToastIfNeeded("Loading group members failed", e));
     }
 };
 
@@ -1876,8 +1904,6 @@ export const fetchConcepts = () => async (dispatch: Dispatch<Action>) => {
 
 // Fasttrack concepts
 export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upperQuestionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const state = getState();
-    if (state && state.fasttrackConcepts && state.fasttrackConcepts.gameboardId === gameboardId && state.fasttrackConcepts.concept === concept) return;
     dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST});
     try {
         const concepts = await api.fasttrack.concepts(gameboardId, concept, upperQuestionId);

@@ -5,8 +5,8 @@
 <style type="text/css">
 	.st0{fill:#FFFFFF;}
 </style>
-<circle cx="384" cy="384" r="384"/>
-<circle class="st0" cx="166.5" cy="384.5" r="60.5"/>
-<circle class="st0" cx="384.5" cy="384.5" r="60.5"/>
-<circle class="st0" cx="601.5" cy="384.5" r="60.5"/>
+	<circle cx="384" cy="384" r="384"/>
+	<circle class="st0" cx="166.5" cy="384.5" r="60.5"/>
+	<circle class="st0" cx="384.5" cy="384.5" r="60.5"/>
+	<circle class="st0" cx="601.5" cy="384.5" r="60.5"/>
 </svg>

@@ -73,6 +73,8 @@ export type Action =
     | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST}
+    | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.USER_PROGRESS_REQUEST}
     | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS; progress: UserProgress}
     | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE}
@@ -163,6 +165,9 @@ export type Action =
     | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST}
     | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS; groupId: number; newStatus: MEMBERSHIP_STATUS}
     | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.GROUP_PROGRESS_REQUEST}
+    | {type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS; groupId: number; progress: ApiTypes.UserGameboardProgressSummaryDTO[]}
+    | {type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_FAILURE; groupId: number}
 
     | {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST}
     | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
@@ -493,7 +498,8 @@ export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<Api
     return choice.hasOwnProperty("frontEndValidation");
 }
 
-export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO | {loggedIn: false; examBoard?: EXAM_BOARD};
+export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO;
+export type PotentialUser = LoggedInUser | {loggedIn: false; examBoard?: EXAM_BOARD};
 
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;
@@ -546,7 +552,9 @@ export enum BoardOrder {
     "visited" = "visited",
     "-visited" = "-visited",
     "title" = "title",
-    "-title" = "-title"
+    "-title" = "-title",
+    "completion" = "completion",
+    "-completion" = "-completion"
 }
 
 export type ActualBoardLimit = number | "ALL";
@@ -651,12 +659,13 @@ export interface AdditionalInformation {
     experienceLevel?: string;
 }
 
-export interface Credentials {
+export interface CredentialsAuthDTO {
     email: string;
     password: string;
+    rememberMe: boolean;
 }
 
-export interface PaddedCredentials extends Credentials {
+export interface PaddedCredentialsAuthDTO extends CredentialsAuthDTO {
     _randomPadding: string;
 }
 
@@ -670,6 +679,12 @@ export interface ZxcvbnResult {
     password: string;
     score: number;
     sequence: any;
+}
+
+export interface PasswordFeedback {
+    zxcvbn?: ZxcvbnResult;
+    pwnedPasswordCount?: number;
+    feedbackText: string;
 }
 
 export interface EmailUserRoles {

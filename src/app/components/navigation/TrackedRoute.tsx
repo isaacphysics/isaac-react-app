@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
 import ReactGA, {FieldsObject} from "react-ga";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {useSelector} from "react-redux";
 import * as persistence from "../../services/localStorage";
@@ -20,7 +20,7 @@ const trackPage = (page: string, options?: FieldsObject) => {
 };
 
 interface UserFilterProps {
-    ifUser?: (user: LoggedInUser) => boolean;
+    ifUser?: (user: PotentialUser) => boolean;
 }
 
 type TrackedRouteProps = RouteProps & {trackingOptions?: FieldsObject; componentProps?: FieldsObject} & UserFilterProps;
@@ -50,12 +50,12 @@ export const TrackedRoute = function({component, trackingOptions, componentProps
                             persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                             :
                             user && !isTeacher(user) && rest.ifUser && rest.ifUser.name === isTeacher.name ? // TODO we should try to find a more robust way than this
-                                <Redirect to="/pages/teacher_accounts"/>
+                                <Redirect to="/pages/contact_us_teacher"/>
                                 :
                                 user && user.loggedIn && !ifUser(user) ?
                                     <Unauthorised/>
                                     :
-                                    persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
+                                    persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search + props.location.hash) && <Redirect to="/login"/>
                     }
                 </ShowLoading>;
             }}/>;

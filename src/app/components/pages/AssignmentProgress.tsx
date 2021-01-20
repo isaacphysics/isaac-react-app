@@ -32,8 +32,6 @@ import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreat
 import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
-import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
-import {isStaff} from "../../services/user";
 
 function selectGroups(state: AppState) {
     if (state != null) {
@@ -333,12 +331,16 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
                     <tbody>
                         {sortedProgress.map((studentProgress) => {
                             const fullAccess = studentProgress.user.authorisedFullAccess;
-                            return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " revoked"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
+                            return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
                                 <th className="student-name">
-                                    <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
-                                        {studentProgress.user.givenName}
-                                        <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
-                                    </Link>
+                                    {fullAccess ?
+                                        <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
+                                            {studentProgress.user.givenName}
+                                            <span
+                                                className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                        </Link> :
+                                        <span>{studentProgress.user.givenName} {studentProgress.user.familyName}</span>
+                                    }
                                 </th>
                                 {questions.map((q, index) =>
                                     <td key={q.id} className={markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestion(index)}>
@@ -493,7 +495,6 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
     function openGroupDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
-        //showDownloadModal(event.currentTarget.href);
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
@@ -515,7 +516,6 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
 export function AssignmentProgress(props: AssignmentProgressPageProps) {
     const dispatch = useDispatch();
     const {groups} = useSelector(selectGroups);
-    const user = useSelector(selectors.user.orNull);
 
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
@@ -545,11 +545,15 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
         <Container>
             <TitleAndBreadcrumb
                 currentPageTitle={{[SITE.PHY]: "Assignment Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
-                subTitle="Track your class performance"
+                subTitle="Track your group performance by question"
                 help="Click on your groups to see the assignments you have set. View your students' progress by question."
             />
             <Row className="align-items-center d-none d-md-flex">
-                {isStaff(user) && <AnonymiseUsersCheckbox className={"ml-2"}/>}
+                {/*<Col>*/}
+                {/*    <a href="/group_progress">*/}
+                {/*        View group progress summary*/}
+                {/*    </a>*/}
+                {/*</Col>*/}
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">
