@@ -26,8 +26,8 @@ export function HierarchyFilterHexagonal(props: HierarchyFilterProps) {
     if (deviceSize === "xs") {
         return <HierarchyFilterSelects {...props} />;
     }
-    return <svg width="100%" height="400px">
-        <g id="hexagonal-filter"  transform={`translate(${hexagon.padding}, ${hexagon.padding})`}>
+    return <svg width="100%" height={`${105 + (tiers.length - 1) * 145}px`}>
+        <g id="hexagonal-filter" transform={`translate(${hexagon.padding}, ${hexagon.padding})`}>
             {/* Connections */}
             {tiers.slice(1).map((tier, i) => {
                 return <g

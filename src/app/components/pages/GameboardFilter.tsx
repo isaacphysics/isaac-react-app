@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import Select, {ValueType} from "react-select";
 import {Link, withRouter} from "react-router-dom";
 import tags from '../../services/tags';
 import {NOT_FOUND, TAG_ID} from '../../services/constants';
@@ -13,9 +12,10 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
 import {history} from "../../services/history";
-import {HierarchyFilterHexagonal, HierarchyFilterSelects, Tier} from "../elements/svg/HierarchyFilter";
-import {Item, unwrapValue} from "../../services/select";
-import {LevelsFilterHexagonal, LevelsFilterSelect} from "../elements/svg/LevelsFilter";
+import {HierarchyFilterHexagonal, Tier} from "../elements/svg/HierarchyFilter";
+import {Item} from "../../services/select";
+import {LevelsFilterHexagonal} from "../elements/svg/LevelsFilter";
+import {useDeviceSize} from "../../services/device";
 
 const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
 
@@ -76,6 +76,7 @@ function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[])
 
 export const GameboardFilter = withRouter(({location}: {location: Location}) => {
     const dispatch = useDispatch();
+    const deviceSize = useDeviceSize();
     const {queryLevels, querySelections} = processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
@@ -169,18 +170,20 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
-        <div>
-            <div className="pt-3"><strong>Select your question filters</strong></div>
+        <RS.Card className="mt-4 px-3"><RS.CardBody>
             <RS.Row>
-                <RS.Col lg={6}>
+                <RS.Col lg={8}>
+                    <div><strong>Select your question filters...</strong></div>
                     <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
                 </RS.Col>
-                <RS.Col lg={6}>
-                    <div className="d-flex justify-content-between mt-0 mt-sm-4 mt-lg-0">
-                        <RS.Label className="pt-2 pb-0" for="level-selector">Levels: </RS.Label>
-                        <img width={270} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
-                    </div>
+                <RS.Col lg={4}>
+                    <RS.Label className={`mt-4 mt-lg-0 ${deviceSize == "xs" ? "" : "font-weight-bolder"}`} for="level-selector">
+                        Levels:
+                    </RS.Label>
                     <LevelsFilterHexagonal id="level-selector" {...{levelOptions, levels, setLevels}} />
+                    <div className="mt-4">
+                        <img width={256} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
+                    </div>
                 </RS.Col>
             </RS.Row>
 
@@ -196,18 +199,18 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                     </RS.Button>
                 </RS.Col>
             </RS.Row>
+        </RS.CardBody></RS.Card>
 
-            <RS.Row className="mt-4 mt-md-5 mb-3">
-                <RS.Col>
-                    <h3>{boardName}</h3>
-                </RS.Col>
-                <RS.Col className="text-right">
-                    {gameboard && <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}`}>
-                        Save to My&nbsp;Gameboards
-                    </RS.Button>}
-                </RS.Col>
-            </RS.Row>
-        </div>
+        <RS.Row className="mt-4 mb-3">
+            <RS.Col>
+                <h3>{boardName}</h3>
+            </RS.Col>
+            <RS.Col className="text-right">
+                {gameboard && <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}`}>
+                    Save to My&nbsp;Gameboards
+                </RS.Button>}
+            </RS.Col>
+        </RS.Row>
 
         <div className="pb-4">
             <ShowLoading
