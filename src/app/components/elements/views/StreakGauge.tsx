@@ -33,6 +33,7 @@ export const HeaderStreakGauge = (props: StreakGaugeProps) => {
     const maxParts = 10;
     return <CircularProgressbarWithChildren value={streakActivity}
         maxValue={maxParts}
+        strokeWidth={12}
         styles={buildStyles({
             pathColor: progressColour,
             trailColor: GRAY_120
