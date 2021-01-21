@@ -123,7 +123,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                 { value: examBoardTagMap[EXAM_BOARD.OCR], label: 'OCR' },
                                 { value: 'ISAAC_BOARD', label: 'Created by Isaac' }]}
                             name="colors"
-                            className={SITE_SUBJECT === SITE.CS ? "basic-multi-select" : ""}
+                            className="basic-multi-select"
                             classNamePrefix="select"
                             placeholder="None"
                             onChange={multiSelectOnChange(setGameboardTags)}
@@ -281,10 +281,13 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
                 {!canSubmit && <div
                     id="gameboard-help" color="light"
-                    className={`text-center mb-0 pt-3 pb-0 ${selectedQuestions.size <= 10 ? "text-muted" : "text-danger"}`}
+                    className={`text-center mb-0 pt-3 pb-0 ${selectedQuestions.size > 10 ? "text-danger" : ""}`}
                 >
-                    Gameboards require both a title and between 1 and 10 questions. {!isValidGameboardId(gameboardURL) && "The " +
-                "gameboard ID should contain numbers, lowercase letters, underscores and hyphens only. It should not be the full URL."}
+                    Gameboards require both a title and between 1 and 10 questions.
+                    {!isValidGameboardId(gameboardURL) && <div className="text-danger">
+                        The gameboard ID should contain numbers, lowercase letters, underscores and hyphens only.<br />
+                        It should not be the full URL.
+                    </div>}
                 </div>}
 
             </RS.CardBody>

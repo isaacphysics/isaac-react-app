@@ -144,12 +144,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             menu: { label: '\\text{e}', texLabel: true },
             properties: { particle: 'e', type: 'electron' }
         }
-    };    
+    };
 
     private _differentialRegex = /^(Delta|delta|d)\s*(?:\^([0-9]+))?\s*([a-zA-Z]+(?:(?:_|\^).+)?)/;
     private _availableSymbols?: string[];
 
     private _inequalityModal = createRef<HTMLDivElement>();
+    private _menuRef = createRef<HTMLDivElement>();
 
     // Call this to close the editor
     public close: () => void;
@@ -661,7 +662,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             // Do this only if we have a single greek letter or a single latin letter.
             letters.push(this.makeSingleLetterMenuItem(this._greekLetterMap[top] || top, this._greekLetterMap[top] ? '\\' + top : top))
         }
-        const pieces = parts.slice(1); 
+        const pieces = parts.slice(1);
         const orders: { [piece: string]: number } = {};
         // Count how many times one should derive each variable
         for (const piece of pieces) {
@@ -714,7 +715,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             children: derivativeOrder > 1 ? { order: { type: 'Num', properties: { significand: `${derivativeOrder}` } } } : { }
         };
         derivativeObject.children = { numerator, denominator };
-        
+
         const derivative = [derivativeObject]
 
         if (isDefined(this._greekLetterMap[top]) || /^[a-zA-Z]$/.test(top)) {
@@ -906,7 +907,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             return;
         }
 
-        if (this._previousCursor) {
+        if (isDefined(this._previousCursor)) {
             const dx =  x - this._previousCursor.x;
             if (this._movingMenuBar) {
                 const menuBarRect = this._movingMenuBar.getBoundingClientRect();
@@ -922,6 +923,16 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             }
             this._movingMenuItem.style.top = `${y}px`;
             this._movingMenuItem.style.left = `${x}px`;
+
+            // Auto-close the menu on small-screens when dragging outside the area
+            if (window.innerWidth < 1024) {
+                const menuBox = this._menuRef.current?.getBoundingClientRect();
+                if (isDefined(menuBox)) {
+                    if (this._previousCursor.y <= menuBox.height && y > menuBox.height) {
+                        this.setState({ menuOpen: false });
+                    }
+                }
+            }
         }
         if (this._potentialSymbolSpec && this.state.sketch) {
             this.state.sketch.updatePotentialSymbol(this._potentialSymbolSpec as WidgetSpec, x, y);
@@ -1072,7 +1083,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         const mathsOtherFunctionsTabLabel = '\\sin\\ \\int';
 
         const menu: JSX.Element =
-        <nav className="inequality-ui">
+        <nav className="inequality-ui" ref={this._menuRef}>
             <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
                 {this.state.activeMenu === 'numbers' && <div className="top-menu numbers">
                     <div className="keypad-box">

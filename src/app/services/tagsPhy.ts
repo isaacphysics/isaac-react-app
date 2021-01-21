@@ -17,7 +17,6 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.waves, title: "Waves", parent: TAG_ID.physics},
         {id: TAG_ID.fields, title: "Fields", parent: TAG_ID.physics},
         {id: TAG_ID.circuits, title: "Circuits", parent: TAG_ID.physics},
-        {id: TAG_ID.chemPhysics, title: "Physical Chemistry", parent: TAG_ID.physics},
         // Mechanics topics
         {id: TAG_ID.statics, title: "Statics", parent: TAG_ID.mechanics},
         {id: TAG_ID.dynamics, title: "Dynamics", parent: TAG_ID.mechanics},
