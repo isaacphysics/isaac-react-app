@@ -101,6 +101,8 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
             "Book now" :
             event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past";
 
+        const isVirtual = event.tags?.includes("virtual");
+
         function submitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
             formEvent.preventDefault();
 
@@ -162,7 +164,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             {event.hasExpired && <div className="alert-danger text-center">This event is in the past.</div>}
                                         </td>
                                     </tr>
-                                    {event.location && event.location.address && event.location.address.addressLine1 && <tr>
+                                    {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <tr>
                                         <td>Location:</td>
                                         <td>
                                             {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
