@@ -13,7 +13,7 @@ import tags from "../../../services/tags";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
-    let linkDestination, icon, iconLabel;
+    let linkDestination, icon, iconLabel, level;
     let itemClasses = "p-0 bg-transparent content-summary-link ";
 
     let titleClasses = "content-summary-link-title flex-grow-1 ";
@@ -37,6 +37,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
             icon = item.correct ? <img src="/assets/tick-rp.svg" alt=""/> : <img src="/assets/question.svg" alt="Question page"/>;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
+            level = item.level;
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
@@ -72,6 +73,8 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                 {item.summary && <div className="small text-muted d-none d-md-block">{item.summary}</div>}
             </div>
             {displayTopicTitle && <span className="small text-muted align-self-center d-none d-md-inline">{topicTitle}</span>}
+            {SITE_SUBJECT === SITE.PHY && level !== undefined && level !== "0" &&
+            <span className="small text-muted align-self-center d-none d-md-inline pl-2"> Level {level}</span>}
         </Link>
     </RS.ListGroupItem>;
 };
