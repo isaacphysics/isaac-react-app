@@ -54,6 +54,8 @@ import tags from "../services/tags";
 type UserState = PotentialUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
     switch (action.type) {
+        case ACTION_TYPE.USER_LOG_IN_REQUEST:
+            return {loggedIn: false, requesting: true};
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS:

@@ -187,6 +187,7 @@ export const LogIn = () => {
                                                 tag="input" value="Log in"
                                                 color="secondary" type="submit" className="mb-2" block
                                                 onClick={attemptLogIn}
+                                                disabled={!!user?.requesting}
                                             />
                                         </Col>
                                         <Col sm={6}>
