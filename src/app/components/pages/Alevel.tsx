@@ -1,13 +1,9 @@
 import React from "react";
-import {Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {openALevelBookChoiceModal} from "../../state/actions";
-import {useDispatch} from "react-redux";
 import {IsaacCard} from "../content/IsaacCard";
 
 export const Alevel = () => {
-
-    const dispatch = useDispatch();
 
     return <Container>
         <Row className="pb-4">
@@ -19,23 +15,9 @@ export const Alevel = () => {
             <IsaacCard doc={{title: "Question Finder", subtitle: "Practise your problem solving skills.",
                 clickUrl: "/gameboards/new", image: {src: "/assets/phy/key_stage_sprite.svg#question"}
             }}/>
-            <Card outline color="green menu-card" onClick={() => dispatch(openALevelBookChoiceModal())}>
-                <CardTitle className="px-3">
-                    Physics Skills Mastery Book
-                </CardTitle>
-                <CardBody className="px-3">
-                    <Row>
-                        <Col md="3" className="justify-content-md-center col-centered">
-                            <img className="menu-card" src="/assets/phy/key_stage_sprite.svg#skills-book-cover" alt="" />
-                        </Col>
-                        <Col md="9">
-                            <aside>
-                                Interactive questions from our Mastering Essential Pre-University Physics book.
-                            </aside>
-                        </Col>
-                    </Row>
-                </CardBody>
-            </Card>
+            <IsaacCard doc={{title: "Physics Skills Mastery Book", subtitle: "Interactive questions from our Mastering Essential Pre-University Physics book.",
+                clickUrl: "/books/physics_skills_19", image: {src: "/assets/phy/key_stage_sprite.svg#skills-book-cover"}
+            }}/>
             <IsaacCard doc={{title: "COVID-19 Lessons", subtitle: "Virtual lessons following the Mastering Essential Pre-University Physics book.",
                 clickUrl: "/pages/covid19_alevel_archive", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
