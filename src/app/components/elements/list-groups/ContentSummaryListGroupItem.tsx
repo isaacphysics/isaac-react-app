@@ -77,8 +77,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             </div>
             {displayTopicTitle && <span className="small text-muted align-self-center d-none d-md-inline">{topicTitle}</span>}
             {displayTopicTitle && displayLevel && <span className="small text-muted align-self-center d-none d-md-inline">,&nbsp;</span>}
-            {SITE_SUBJECT === SITE.PHY && level !== undefined && level !== "0" &&
-            <span className="small text-muted align-self-center d-none d-md-inline"> Level {level}</span>}
+            {displayLevel && <span className="small text-muted align-self-center d-none d-md-inline"> Level {level}</span>}
         </Link>
     </RS.ListGroupItem>;
 };
