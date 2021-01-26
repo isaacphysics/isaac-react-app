@@ -13,7 +13,7 @@ import tags from "../../../services/tags";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
-    let linkDestination, icon, iconLabel;
+    let linkDestination, icon, iconLabel, level;
     let itemClasses = "p-0 bg-transparent content-summary-link ";
 
     let titleClasses = "content-summary-link-title flex-grow-1 ";
@@ -37,6 +37,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
             icon = item.correct ? <img src="/assets/tick-rp.svg" alt=""/> : <img src="/assets/question.svg" alt="Question page"/>;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
+            level = item.level;
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
@@ -64,6 +65,9 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             console.error("Not able to display item as a ContentSummaryListGroupItem: ", item);
             return null;
     }
+
+    const displayLevel = SITE_SUBJECT === SITE.PHY && level !== undefined && level !== "0";
+
     return <RS.ListGroupItem className={itemClasses} key={linkDestination}>
         <Link className="p-3 pr-4" to={{pathname: linkDestination, search: search}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
@@ -71,7 +75,11 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                 <span className={titleTextClass}>{item.title}</span>
                 {item.summary && <div className="small text-muted d-none d-md-block">{item.summary}</div>}
             </div>
-            {displayTopicTitle && <span className="small text-muted align-self-center d-none d-md-inline">{topicTitle}</span>}
+            {displayTopicTitle && topicTitle && <span className="small text-muted align-self-center d-none d-md-inline">
+                {topicTitle}
+                {displayLevel && <span>,&nbsp;</span>}
+            </span>}
+            {displayLevel && <span className="small text-muted align-self-center d-none d-md-inline"> Level {level}</span>}
         </Link>
     </RS.ListGroupItem>;
 };
