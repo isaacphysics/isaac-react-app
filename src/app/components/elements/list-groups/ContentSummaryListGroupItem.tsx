@@ -65,6 +65,9 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             console.error("Not able to display item as a ContentSummaryListGroupItem: ", item);
             return null;
     }
+
+    const displayLevel = SITE_SUBJECT === SITE.PHY && level !== undefined && level !== "0";
+
     return <RS.ListGroupItem className={itemClasses} key={linkDestination}>
         <Link className="p-3 pr-4" to={{pathname: linkDestination, search: search}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
@@ -73,8 +76,9 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                 {item.summary && <div className="small text-muted d-none d-md-block">{item.summary}</div>}
             </div>
             {displayTopicTitle && <span className="small text-muted align-self-center d-none d-md-inline">{topicTitle}</span>}
+            {displayTopicTitle && displayLevel && <span className="small text-muted align-self-center d-none d-md-inline">,&nbsp;</span>}
             {SITE_SUBJECT === SITE.PHY && level !== undefined && level !== "0" &&
-            <span className="small text-muted align-self-center d-none d-md-inline pl-2"> Level {level}</span>}
+            <span className="small text-muted align-self-center d-none d-md-inline"> Level {level}</span>}
         </Link>
     </RS.ListGroupItem>;
 };
