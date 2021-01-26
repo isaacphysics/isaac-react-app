@@ -75,8 +75,10 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                 <span className={titleTextClass}>{item.title}</span>
                 {item.summary && <div className="small text-muted d-none d-md-block">{item.summary}</div>}
             </div>
-            {displayTopicTitle && <span className="small text-muted align-self-center d-none d-md-inline">{topicTitle}</span>}
-            {displayTopicTitle && displayLevel && <span className="small text-muted align-self-center d-none d-md-inline">,&nbsp;</span>}
+            {displayTopicTitle && topicTitle && <span className="small text-muted align-self-center d-none d-md-inline">
+                {topicTitle}
+                {displayLevel && <span>,&nbsp;</span>}
+            </span>}
             {displayLevel && <span className="small text-muted align-self-center d-none d-md-inline"> Level {level}</span>}
         </Link>
     </RS.ListGroupItem>;
