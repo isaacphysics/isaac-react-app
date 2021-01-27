@@ -8,14 +8,14 @@ export const StreakPanel = ({userProgress}: {userProgress?: UserProgress | null}
     const currentDailyStreak = userProgress?.userSnapshot?.dailyStreakRecord?.currentStreak || 0;
     return <div className={"align-items-center"}>
         <div className={"text-center-width"}>
-            Weekly streak
+            Weekly Streak
         </div>
         <div className={"progress-gauge text-center-width ml-4 mr-4"}>
             <StreakGauge streakRecord={userProgress?.userSnapshot}/>
         </div>
         <div id="streak-help" className={"text-center-width"}>
             Longest streak: {largestWeeklyStreak}&nbsp;Week{largestWeeklyStreak != 1 && "s"}<br/>
-            Daily streak: {currentDailyStreak}&nbsp;day{currentDailyStreak != 1 && "s"}
+            Daily streak: {currentDailyStreak}&nbsp;Day{currentDailyStreak != 1 && "s"}
         </div>
         <RS.UncontrolledTooltip placement="bottom" target="streak-help">
             <div className="text-left">

@@ -1,16 +1,13 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
-import {Col, Container, Row, UncontrolledTooltip} from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarCS} from "./NavigationBarCS";
 import {selectors} from "../../../state/selectors";
-import {HeaderStreakGauge} from "../../elements/views/StreakGauge";
-import {AppState} from "../../../state/reducers";
 
 export const HeaderCS = () => {
     const user = useSelector(selectors.user.orNull);
-    const streakRecord = useSelector((state: AppState) => state?.userProgress?.userSnapshot);
     const mainContentId = useSelector(selectors.mainContentId.orDefault);
     return <header className="light">
         <Container className="container-fluid px-0">
