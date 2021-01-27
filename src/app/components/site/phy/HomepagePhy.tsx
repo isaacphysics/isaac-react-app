@@ -17,16 +17,19 @@ export const HomepagePhy = () => {
             <Container className="pt-4">
                 <Row className="mt-3">
                     <Col className="d-none d-md-flex mb-1" lg={9}>
-                        <span className="physics-strapline">Master Physics by Solving Problems<span className="d-none d-md-inline">: from School to University!</span></span>
+                        <span className="physics-strapline">
+                            <strong>Master Physics by Solving Problems:</strong><br />
+                            <span className="d-none d-md-inline">from School to University!</span>
+                        </span>
                     </Col>
-                    <Col lg={3}>
+                    <Col lg={3} className="align-self-center">
                         {!(user && user.loggedIn) && <Row>
-                            <Col size={6} className="text-center">
+                            <Col className="text-center">
                                 <Button size="sm" tag={Link} to="/login" color="primary" outline block>
                                     Log in
                                 </Button>
                             </Col>
-                            <Col size={6} className="text-center">
+                            <Col className="text-center">
                                 <Button size="sm" tag={Link} to="/register" color="secondary" block>
                                     Sign up
                                 </Button>
@@ -34,41 +37,41 @@ export const HomepagePhy = () => {
                         </Row>}
                     </Col>
                 </Row>
-                <Row className="py-4">
-                    <Col xs={12} md={6}>
-                        <table className="homepagePhyTable homepageLearn"><tbody>
-                            <tr>
-                                <th rowSpan={3}><span>Learn</span></th>
-                                <td className="h5"><Link to="/gcse">GCSE</Link></td>
-                            </tr>
-                            <tr>
-                                <td className="h5"><Link to="/alevel">A Level</Link></td>
-                            </tr>
-                            <tr>
-                                <td className="h5"><Link to="/support/student">Student FAQs</Link></td>
-                            </tr>
-                        </tbody></table>
+
+                <Row className="mt-4">
+                    <Col lg="5" className="physics-site-intro">
+                        <p>
+                            Welcome to Isaac Physics, the free platform for teachers and students.
+                        </p>
+                        <ul>
+                            <li>Use it in the <strong>classroom</strong></li>
+                            <li>Use it for <strong>homework</strong></li>
+                            <li>Use it for <strong>revision</strong></li>
+                        </ul>
                     </Col>
-                    <Col xs={12} md={6}>
-                        <table className="homepagePhyTable homepageTeach"><tbody>
-                            <tr>
-                                <th rowSpan={3}><span>Teach</span></th>
-                                <td className="h5"><Link to="/teacher_features">Teacher Features</Link></td>
-                            </tr>
-                            <tr>
-                                <td className="h5"><Link to="/pages/teacher_cpd">Teacher CPD</Link></td>
-                            </tr>
-                            <tr>
-                                <td className="h5"><Link to="/support/teacher">Teacher FAQs</Link></td>
-                            </tr>
-                        </tbody></table>
+                    <Col lg="7" className="pb-4 pb-lg-0 px-lg-4 align-self-center text-center">
+                        <iframe
+                            title="Isaac Physics introduction video" width="600" height="280" className="mw-100"
+                            src="https://www.youtube-nocookie.com/embed/nW4J-NVDziw?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
+                            frameBorder="0" allowFullScreen
+                        />
                     </Col>
                 </Row>
+
+                <div className="physics-site-intro">
+                    Show me resources for...
+                    <Row className="mt-2">
+                        <Col><Button block tag={Link} to="/gcse">GCSE</Button></Col>
+                        <Col><Button block tag={Link} to="/alevel">A level or equivalent</Button></Col>
+                        <Col><Button block tag={Link} to="/teacher_features">teachers</Button></Col>
+                    </Row>
+                </div>
             </Container>
         </section>
 
         <section id="news">
             <Container>
+                <h2 className="h-title mt-5 mb-4">News and features</h2>
                 <Row className="eventList pt-1 pattern-03-reverse">
                     <Col>
                         <NewsCarousel showTitle={true} descending={false} subject="physics" />
