@@ -1,6 +1,6 @@
+import {useContext} from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {FigureNumberingContext} from "../../../IsaacAppTypes";
-import React, {useContext} from "react";
 import {extractFigureId} from "../content/IsaacFigure";
 
 interface WithFigureNumberingProps {
