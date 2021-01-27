@@ -7,11 +7,13 @@ import {NavigationBarPhy} from "./NavigationBarPhy";
 import {selectors} from "../../../state/selectors";
 import {AppState} from "../../../state/reducers";
 import {HeaderStreakGauge} from "../../elements/views/StreakGauge";
+import {useDeviceSize} from "../../../services/device";
 
 export const HeaderPhy = () => {
     const user = useSelector(selectors.user.orNull);
     const streakRecord = useSelector((state: AppState) => state?.userProgress?.userSnapshot);
     const mainContentId = useSelector(selectors.mainContentId.orDefault);
+    const deviceSize = useDeviceSize();
     return <header className="light">
         <Container className="container-fluid px-0">
             <Row className="align-items-center">
@@ -40,7 +42,7 @@ export const HeaderPhy = () => {
                                 </React.Fragment>}
                         </div>
 
-                        <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none pt-md-3">
+                        <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none pt-lg-3">
                             {user &&
                                 (!user.loggedIn ?
                                     <React.Fragment>
@@ -62,7 +64,7 @@ export const HeaderPhy = () => {
                                                 {user.givenName && user.givenName.length <= 20 &&
                                                     <strong className="d-md-block d-none">Hello {user.givenName}</strong>
                                                 }
-                                                <span>YOUR ACCOUNT</span>
+                                                <span>{`${!["xs"].includes(deviceSize) ? "MY " : ""}ACCOUNT`}</span>
                                             </Link>
                                         </div>
                                         <div className="logout m-0 mr-md-4 ml-md-3">
