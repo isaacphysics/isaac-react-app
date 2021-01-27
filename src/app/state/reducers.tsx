@@ -29,7 +29,8 @@ import {
     ContentDTO,
     ContentSummaryDTO,
     EventBookingDTO,
-    GameboardDTO, GameboardItem,
+    GameboardDTO,
+    GameboardItem,
     GameboardListDTO,
     GlossaryTermDTO,
     IsaacPodDTO,
@@ -140,6 +141,11 @@ export const userProgress = (userProgress: UserProgressState = null, action: Act
     switch (action.type) {
         case ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS:
             return action.progress;
+        case ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE:
+            return {  // update only the snapshot and then potentially only partially
+                ...(userProgress || {}),
+                userSnapshot: {...(userProgress?.userSnapshot || {}), ...action.userSnapshot}
+            };
         case ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE:
             return null;
         default:

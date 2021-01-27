@@ -51,6 +51,8 @@ export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_jan20_aqa', 'class_te
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
 
+    USER_SNAPSHOT_PARTIAL_UPDATE = "USER_SNAPSHOT_PARTIAL_UPDATE",
+
     ROUTER_PAGE_CHANGE = "ROUTER_PAGE_CHANGE",
     API_SERVER_ERROR = "API_SERVER_ERROR",
     API_GONE_AWAY = "API_GONE_AWAY",
@@ -807,3 +809,9 @@ export const doughnutColours = {
     ]
 }[SITE_SUBJECT];
 
+export const progressColour = {
+    [SITE.PHY]: '#509E2E',
+    [SITE.CS]: '#000000'
+}[SITE_SUBJECT];
+
+export const GRAY_120 = '#c9cad1';

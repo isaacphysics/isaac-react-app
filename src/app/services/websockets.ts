@@ -1,17 +1,20 @@
 import {api} from "./api";
+import {UserSnapshot} from "../../IsaacAppTypes";
+import {UserSummaryDTO} from "../../IsaacApiTypes";
+import {partiallyUpdateUserSnapshot} from "../state/actions";
+import {store} from "../state/store";
 
 let notificationWebSocket: WebSocket | null  = null;
 let webSocketCheckTimeout: number | null = null;
 let webSocketErrorCount = 0;
 let lastKnownServerTime: number | null = null;
 
-const openNotificationSocket = function(): void {
+const openNotificationSocket = function(user: UserSummaryDTO | null): void {
 
     if (notificationWebSocket !== null) {
         return;
     }
 
-    let user = true; // FIXME : ACTUALLY SUPPLY USER HERE.
     if (!user) {
         return;
     }
@@ -43,13 +46,13 @@ const openNotificationSocket = function(): void {
         }
 
         if (websocketMessage.userSnapshot) {
-            // TODO: DO SOMETHING WITH THE USER SNAPSHOT HERE.
+            store.dispatch(partiallyUpdateUserSnapshot(websocketMessage.userSnapshot));
         } else if (websocketMessage.notifications) {
             websocketMessage.notifications.forEach(function(entry: any) {
                 const notificationMessage = JSON.parse(entry.message);
                 // specific user streak update
-                if (notificationMessage.streakRecord) {
-                    // TODO: UPDATE THE STREAK HERE.
+                if (notificationMessage.dailyStreakRecord && notificationMessage.weeklyStreakRecord) {
+                    store.dispatch(partiallyUpdateUserSnapshot({dailyStreakRecord: notificationMessage.dailyStreakRecord, weeklyStreakRecord: notificationMessage.weeklyStreakRecord}));
                 }
             });
         }
@@ -106,10 +109,9 @@ const openNotificationSocket = function(): void {
     }
 }
 
-export const checkForWebSocket = function(): void {
+export const checkForWebSocket = function(user: UserSummaryDTO | null , userSnapshot?: UserSnapshot): void {
     try {
         if (notificationWebSocket !== null) {
-            const userSnapshot = true;  // FIXME: ACTUALLY CHECK USER SNAPSHOT HERE!
             if (!userSnapshot) {
                 // If we don't have a snapshot, request one.
                 notificationWebSocket.send("user-snapshot-nudge");
@@ -122,7 +124,7 @@ export const checkForWebSocket = function(): void {
             }
             webSocketCheckTimeout = window.setTimeout(checkForWebSocket, 60000);
         } else {
-            openNotificationSocket();
+            openNotificationSocket(user);
         }
     } catch (e) {
         console.log("Error establishing WebSocket connection!", e)

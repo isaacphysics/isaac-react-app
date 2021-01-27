@@ -33,6 +33,7 @@ import {
     QuestionSearchQuery,
     Toast,
     UserPreferencesDTO,
+    UserSnapshot,
     ValidatedChoice,
     ValidationUser,
 } from "../../IsaacAppTypes";
@@ -282,6 +283,11 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE});
     }
+};
+
+
+export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE, userSnapshot: newUserSnapshot});
 };
 
 // TODO scope for pulling out a separate registerUser method from this
