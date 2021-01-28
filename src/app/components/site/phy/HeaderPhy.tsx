@@ -36,7 +36,7 @@ export const HeaderPhy = () => {
                                         <HeaderStreakGauge streakRecord={streakRecord}/>
                                     </div>
                                     <UncontrolledTooltip placement="bottom" autohide={false} target="header-progress">
-                                        The daily streak indicates the number of consecutive weeks you have been active on Isaac.
+                                        The weekly streak indicates the number of consecutive weeks you have been active on Isaac.
                                         <br/><br/>Answer at least <b>ten question parts</b> correctly per week to fill up your daily progress bar and increase your streak!
                                     </UncontrolledTooltip>
                                 </React.Fragment>}
