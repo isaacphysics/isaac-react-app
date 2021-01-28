@@ -4,11 +4,8 @@ a.skip-main:focus, a.skip-main:active {
   left: 7%;
   top: 70px;
 }
-div.header-progress {
-  position: relative;
-  float: bottom;
-  height: 100px;
-  width: 100px;
+div#header-progress {
+  max-width: min-content;
 }
 header {
   z-index: 20;

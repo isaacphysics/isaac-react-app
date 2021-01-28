@@ -29,7 +29,7 @@ export const HeaderPhy = () => {
                         <a href={`#${mainContentId}`} className="skip-main">Skip to main content</a>
 
                         <div className="m-md-0 d-none d-md-block d-flex align-self-center d-print-none pl-4">
-                            {user?.loggedIn && navigator.userAgent.indexOf("Firefox") < 0 &&
+                            {user?.loggedIn &&
                                 <React.Fragment>
                                     <div id="header-progress" className="d-none d-md-block">
                                         Streak:
