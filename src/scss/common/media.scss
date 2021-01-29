@@ -16,6 +16,9 @@ figure {
     margin: 0;
   }
 }
+.figure-reference {
+  font-weight: bold;
+}
 
 @include respond-above(md) {
   .align-left {
