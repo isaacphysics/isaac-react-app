@@ -172,6 +172,21 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
         <RS.Card id="filter-panel" className="mt-4 px-3"><RS.CardBody>
+            {/* Filter Summary */}
+            <RS.Row className="d-none d-sm-flex">
+                <RS.Col sm={4} lg={3} className="text-center my-3 m-sm-0">
+                    {filterExpanded ?
+                        <RS.Button color={"link"} onClick={() => {if (gameboardRef.current) gameboardRef.current.scrollIntoView({behavior: "smooth"});}}>
+                            Scroll to questions...
+                        </RS.Button>
+                        :
+                        <RS.Button color={"link"} onClick={() => setFilterExpanded(true)}>
+                            Edit question filters
+                        </RS.Button>
+                    }
+                </RS.Col>
+            </RS.Row>
+
             {/* Filter */}
             {filterExpanded && <RS.Row className="mt-4">
                 <RS.Col lg={8}>
