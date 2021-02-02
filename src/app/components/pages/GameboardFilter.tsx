@@ -171,7 +171,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
-        <RS.Card id="filter-panel" className="mt-4 px-2 p-sm-4">
+        <RS.Card id="filter-panel" className="mt-4 px-2 pb-3 p-sm-4">
             {/* Filter Summary */}
             <RS.Row className="d-none d-sm-flex">
                 <RS.Col sm={8} lg={9}>
@@ -209,6 +209,9 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             {filterExpanded && <RS.Row className="mt-4">
                 <RS.Col lg={8}>
                     <div className="mb-2"><strong>Select your question filters...</strong></div>
+                    <RS.Label className={`mt-lg-0 d-md-none ${deviceSize == "xs" ? "" : "font-weight-bolder"}`} for="level-selector">
+                        Topics:
+                    </RS.Label>
                     <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
                 </RS.Col>
                 <RS.Col lg={4}>

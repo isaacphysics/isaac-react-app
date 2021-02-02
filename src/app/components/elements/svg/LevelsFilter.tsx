@@ -2,7 +2,6 @@ import React from "react";
 import Select from "react-select";
 import {Item, unwrapValue} from "../../../services/select";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
-import {useDeviceSize} from "../../../services/device";
 
 interface LevelsSummaryProps {
     levelOptions: Item<number>[];
@@ -41,21 +40,14 @@ export function LevelsFilterSummary({levels, levelOptions}: LevelsSummaryProps) 
     </svg>;
 }
 
-export function LevelsFilterHexagonal(props: LevelsFilterProps) {
-    const {levelOptions, levels, setLevels} = props;
-    const deviceSize = useDeviceSize();
+export function LevelsFilterHexagonal({levelOptions, levels, setLevels}: LevelsFilterProps) {
     const hexagon = calculateHexagonProportions(32, 2);
 
     const halfWayBreakPoint = Math.floor(levelOptions.length / 2);
     const levelOptionsFirstRow = levelOptions.slice(0, halfWayBreakPoint);
     const levelOptionsSecondRow = levelOptions.slice(halfWayBreakPoint, levelOptions.length);
 
-    // Use select for small devices
-    if (deviceSize === "xs") {
-        return <LevelsFilterSelect {...props} />;
-    }
-
-    return <svg width="100%" height="160px">
+    return <svg width="100%" height={`${2 + hexagon.quarterHeight * 7 + hexagon.padding * 2}px`}>
         <g transform={`translate(1,1)`}>
             {[levelOptionsFirstRow, levelOptionsSecondRow].map((levelOptionsRow, i) => {
                 return <g transform={`translate(${i * (hexagon.halfWidth + hexagon.padding)}, ${i * ((3*hexagon.quarterHeight) + (2*hexagon.padding))})`}>
