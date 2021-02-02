@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -87,9 +87,10 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
         history.push({search: location.search});
     }
+    const [filterExpanded, setFilterExpanded] = useState(true)
+    const gameboardRef = useRef<HTMLDivElement>(null);
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>(querySelections);
-
     function setTierSelection(tierIndex: number) {
         return ((values: Item<TAG_ID>[]) => {
             const newSelections = selections.slice(0, tierIndex);
@@ -170,8 +171,9 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
-        <RS.Card className="mt-4 px-3"><RS.CardBody>
-            <RS.Row>
+        <RS.Card id="filter-panel" className="mt-4 px-3"><RS.CardBody>
+            {/* Filter */}
+            {filterExpanded && <RS.Row className="mt-4">
                 <RS.Col lg={8}>
                     <div><strong>Select your question filters...</strong></div>
                     <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
@@ -185,9 +187,10 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                         <img width={256} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
                     </div>
                 </RS.Col>
-            </RS.Row>
+            </RS.Row>}
 
-            <RS.Row className="mt-4">
+            {/* Buttons */}
+            <RS.Row>
                 <RS.Col>
                     {boardStack.length > 0 && <RS.Button size="sm" color="primary" outline onClick={previousBoard}>
                         <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
@@ -199,9 +202,14 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                     </RS.Button>
                 </RS.Col>
             </RS.Row>
+            <RS.Button
+                color="link" id="expand-filter-button" onClick={() => setFilterExpanded(!filterExpanded)}
+                className={filterExpanded ? "open" : ""} aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}
+            />
         </RS.CardBody></RS.Card>
 
-        <RS.Row className="mt-4 mb-3">
+
+        <div ref={gameboardRef} className="row mt-4 mb-3">
             <RS.Col>
                 <h3>{boardName}</h3>
             </RS.Col>
@@ -210,7 +218,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                     Save to My&nbsp;Gameboards
                 </RS.Button>}
             </RS.Col>
-        </RS.Row>
+        </div>
 
         <div className="pb-4">
             <ShowLoading

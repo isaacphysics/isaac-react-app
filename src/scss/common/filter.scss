@@ -1,3 +1,23 @@
+#filter-panel {
+  margin-bottom: 42px;
+  #expand-filter-button {
+    background-image: url(/assets/reveal-up.png);
+    &.open {
+      background-image: url(/assets/reveal-down.png);
+    }
+    display: block;
+    height: 34px;
+    width: 40px;
+    left: 48%;
+    bottom: -32px;
+    position: absolute;
+    background-position: 50% top;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    z-index: 10;
+  }
+}
+
 .hexagon-tier-title, .hexagon-level-title {
   pointer-events: none;
   height: 100%;
