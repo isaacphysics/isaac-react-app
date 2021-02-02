@@ -1,7 +1,7 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {Col, Container, Row} from "reactstrap";
+import {Button, Col, Container, Row} from "reactstrap";
 import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
@@ -20,6 +20,9 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import * as persistence from "../../services/localStorage";
+import {KEY} from "../../services/localStorage";
+import {history} from "../../services/history";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -31,6 +34,21 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
     const doc = useSelector((state: AppState) => state?.doc || null);
     const navigation = useNavigation(doc);
+    // let conceptPageSource;
+    // useMemo(() => {conceptPageSource = persistence.load(KEY.CONCEPT_PAGE_SOURCE);},[])
+    // console.log(conceptPageSource);
+
+    const [canGoBack, setCanGoBack] = useState(document.referrer.includes("/questions/") || document.referrer.endsWith("/concepts"));
+
+    function conceptSourceReturn() {
+        window.location.href = document.referrer;
+        setCanGoBack(false);
+    }
+
+    const returnText = document.referrer.includes("/questions/") ? "Return to question" : "Return to concepts";
+
+    console.log(document.referrer);
+    console.log(canGoBack);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
@@ -54,6 +72,7 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
                 <Row className="concept-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4">
                         <TempExamBoardPicker className="text-right" />
+                        {canGoBack && <Button className="mb-2" onClick={() => conceptSourceReturn()}>{returnText}</Button>}
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>
