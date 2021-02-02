@@ -4,17 +4,47 @@ import {Item, unwrapValue} from "../../../services/select";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
 import {useDeviceSize} from "../../../services/device";
 
-interface LevelsFilterProps {
-    id: string;
+interface LevelsSummaryProps {
     levelOptions: Item<number>[];
     levels: Item<number>[];
+}
+
+interface LevelsFilterProps extends LevelsSummaryProps {
+    id: string;
     setLevels: React.Dispatch<React.SetStateAction<Item<number>[]>>
 }
 
+export function LevelsFilterSummary({levels, levelOptions}: LevelsSummaryProps) {
+    const hexagon = calculateHexagonProportions(10, 1);
+
+    if (levels.length == 0) {
+        return <span className="text-muted">No Selection</span>;
+    }
+
+    return <svg
+        width={`${hexagon.padding * 2 + (levels.length * 2 * (hexagon.halfWidth + hexagon.padding))}px`}
+        height={`${hexagon.padding * 2 + (hexagon.quarterHeight * 4)}px`}
+    >
+        <g transform={`translate(${hexagon.padding}, ${hexagon.padding})`}>
+            {levelOptions
+                .filter(lo => levels.map(l => l.value).includes(lo.value)) // maintain option order
+                .map((level, i) => <g key={level.value} transform={`translate(${i * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`}>
+                    <Hexagon {...hexagon} className={`hex level active`} />
+                    <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
+                        <div className={`hexagon-level-title active  hex-level-${level.value}`}>
+                            {level.label}
+                        </div>
+                    </foreignObject>
+                </g>)
+            }
+        </g>
+    </svg>;
+}
+
 export function LevelsFilterHexagonal(props: LevelsFilterProps) {
-    const {levelOptions, levels, setLevels, id} = props;
+    const {levelOptions, levels, setLevels} = props;
     const deviceSize = useDeviceSize();
-    const hexagon = calculateHexagonProportions(34, 2);
+    const hexagon = calculateHexagonProportions(32, 2);
 
     const halfWayBreakPoint = Math.floor(levelOptions.length / 2);
     const levelOptionsFirstRow = levelOptions.slice(0, halfWayBreakPoint);

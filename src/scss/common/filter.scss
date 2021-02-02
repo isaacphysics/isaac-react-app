@@ -42,28 +42,24 @@
 
 $hex_diff_levels : 6;
 
-@for $i from 1 through $hex_diff_levels
-{
+@for $i from 1 through $hex_diff_levels {
   $bg_list : ();
   $pos_list : ();
-  @for $j from 1 through $hex_diff_levels
-  {
+  @for $j from 1 through $hex_diff_levels {
     $pos_list : append($pos_list, ($j - 1) * 100% / $hex_diff_levels );
     @if $i > ($hex_diff_levels - $j) { $bg_list : append($bg_list, url('/assets/hex-filter-yellow.png')); }
     @if $i <= ($hex_diff_levels - $j) { $bg_list : append($bg_list, url('/assets/hex-filter-grey.png')); }
   }
-  .hex-level-#{$i}:not(.active):after
-  {
+  .hex-level-#{$i}:not(.active):after {
     content:'';
     display: inline-block;
-    position: relative;
-    width: 5px;
+    position: absolute;
+    width: 6px;
     height: 7px * $hex_diff_levels;
     background-repeat: no-repeat;
     background-image: nth($bg_list, 1), nth($bg_list, 2), nth($bg_list, 3), nth($bg_list, 4), nth($bg_list, 5), nth($bg_list, 6);
     background-position: left nth($pos_list, 1), left nth($pos_list, 2), left nth($pos_list, 3), left nth($pos_list, 4), left nth($pos_list, 5), left nth($pos_list, 6);
-    top: 3px;
-    left: 24px;
+    top: 19px;
+    right: 3px;
   }
-
 }

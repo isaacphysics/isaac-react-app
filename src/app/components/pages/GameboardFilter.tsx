@@ -14,7 +14,7 @@ import queryString from "query-string";
 import {history} from "../../services/history";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
 import {Item} from "../../services/select";
-import {LevelsFilterHexagonal} from "../elements/svg/LevelsFilter";
+import {LevelsFilterHexagonal, LevelsFilterSummary} from "../elements/svg/LevelsFilter";
 import {useDeviceSize} from "../../services/device";
 
 const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
@@ -181,6 +181,12 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                                 <RS.Label className="d-flex mb-0">
                                     <span>Topics:</span>
                                     <HierarchyFilterSummary {...{tiers, choices, selections}} />
+                                </RS.Label>
+                            </RS.Col>
+                            <RS.Col lg={6} className="text-center mt-2 mt-lg-0">
+                                <RS.Label className="d-flex mb-0">
+                                    Levels:
+                                    <span className="ml-3"><LevelsFilterSummary {...{levelOptions, levels}} /></span>
                                 </RS.Label>
                             </RS.Col>
                         </RS.Row>
