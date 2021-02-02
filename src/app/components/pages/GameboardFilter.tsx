@@ -12,7 +12,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
 import {history} from "../../services/history";
-import {HierarchyFilterHexagonal, Tier} from "../elements/svg/HierarchyFilter";
+import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
 import {Item} from "../../services/select";
 import {LevelsFilterHexagonal} from "../elements/svg/LevelsFilter";
 import {useDeviceSize} from "../../services/device";
@@ -174,6 +174,18 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         <RS.Card id="filter-panel" className="mt-4 px-3"><RS.CardBody>
             {/* Filter Summary */}
             <RS.Row className="d-none d-sm-flex">
+                <RS.Col sm={8} lg={9}>
+                    <button className="bg-transparent w-100" tabIndex={-1} onClick={() => setFilterExpanded(!filterExpanded)}>
+                        <RS.Row>
+                            <RS.Col lg={6}>
+                                <RS.Label className="d-flex mb-0">
+                                    <span>Topics:</span>
+                                    <HierarchyFilterSummary {...{tiers, choices, selections}} />
+                                </RS.Label>
+                            </RS.Col>
+                        </RS.Row>
+                    </button>
+                </RS.Col>
                 <RS.Col sm={4} lg={3} className="text-center my-3 m-sm-0">
                     {filterExpanded ?
                         <RS.Button color={"link"} onClick={() => {if (gameboardRef.current) gameboardRef.current.scrollIntoView({behavior: "smooth"});}}>

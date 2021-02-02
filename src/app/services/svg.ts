@@ -10,14 +10,18 @@ export function addHexagonKeyPoints<T extends {halfWidth: number; quarterHeight:
     return {
         ...hexagon,
         x: {
-            left: (Math.sqrt(3) * hexagon.quarterHeight) / 2,
+            left: 0,
+            leftDiag: (Math.sqrt(3) * hexagon.quarterHeight) / 2,
             center: hexagon.halfWidth,
-            right: (hexagon.halfWidth * 2) - (Math.sqrt(3) * hexagon.quarterHeight) / 2,
+            rightDiag: (hexagon.halfWidth * 2) - (Math.sqrt(3) * hexagon.quarterHeight) / 2,
+            right: hexagon.halfWidth * 2,
         },
         y: {
-            top: hexagon.quarterHeight / 2,
+            top: 0,
+            topDiag: hexagon.quarterHeight / 2,
             center: 2 * hexagon.quarterHeight,
-            bottom: 7 * hexagon.quarterHeight / 2,
+            bottomDiag: 7 * hexagon.quarterHeight / 2,
+            bottom: 4 * hexagon.quarterHeight,
         },
     };
 }

@@ -15,9 +15,9 @@ export function calculateConnectionLine(
 
     // First stroke
     if (sourceIndex <= targetIndex) {
-        result += svgMoveTo(sourceHexagonX + hexagon.x.left, hexagon.y.top);
+        result += svgMoveTo(sourceHexagonX + hexagon.x.leftDiag, hexagon.y.topDiag);
     } else {
-        result += svgMoveTo(sourceHexagonX + hexagon.x.right, hexagon.y.top);
+        result += svgMoveTo(sourceHexagonX + hexagon.x.rightDiag, hexagon.y.topDiag);
     }
     result += svgLine(sourceHexagonX + hexagon.x.center, hexagon.y.center);
 
@@ -28,9 +28,9 @@ export function calculateConnectionLine(
 
     // Last stroke
     if (targetIndex <= sourceIndex) {
-        result += svgLine(targetHexagonX + hexagon.x.left, hexagon.y.bottom);
+        result += svgLine(targetHexagonX + hexagon.x.leftDiag, hexagon.y.bottomDiag);
     } else {
-        result += svgLine(targetHexagonX + hexagon.x.right, hexagon.y.bottom);
+        result += svgLine(targetHexagonX + hexagon.x.rightDiag, hexagon.y.bottomDiag);
     }
 
     return result;
