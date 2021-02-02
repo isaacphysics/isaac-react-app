@@ -25,7 +25,7 @@ export function LevelsFilterSummary({levels, levelOptions}: LevelsSummaryProps) 
         width={`${hexagon.padding * 2 + (levels.length * 2 * (hexagon.halfWidth + hexagon.padding))}px`}
         height={`${hexagon.padding * 2 + (hexagon.quarterHeight * 4)}px`}
     >
-        <g transform={`translate(${hexagon.padding}, ${hexagon.padding})`}>
+        <g transform={`translate(1,1)`}>
             {levelOptions
                 .filter(lo => levels.map(l => l.value).includes(lo.value)) // maintain option order
                 .map((level, i) => <g key={level.value} transform={`translate(${i * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`}>
@@ -56,7 +56,7 @@ export function LevelsFilterHexagonal(props: LevelsFilterProps) {
     }
 
     return <svg width="100%" height="160px">
-        <g transform={`translate(${hexagon.padding}, ${hexagon.padding})`}>
+        <g transform={`translate(1,1)`}>
             {[levelOptionsFirstRow, levelOptionsSecondRow].map((levelOptionsRow, i) => {
                 return <g transform={`translate(${i * (hexagon.halfWidth + hexagon.padding)}, ${i * ((3*hexagon.quarterHeight) + (2*hexagon.padding))})`}>
                     {levelOptionsRow.map((levelOption, j) => {

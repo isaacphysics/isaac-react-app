@@ -1,6 +1,11 @@
 import React from "react"
 
-export function calculateHexagonProportions(unitLength: number, padding: number) {
+export interface HexagonProportions {
+    halfWidth: number;
+    quarterHeight: number;
+    padding: number;
+}
+export function calculateHexagonProportions(unitLength: number, padding: number): HexagonProportions {
     return {
         halfWidth: unitLength,
         quarterHeight: unitLength / Math.sqrt(3),
