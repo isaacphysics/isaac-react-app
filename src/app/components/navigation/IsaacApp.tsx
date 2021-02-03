@@ -110,7 +110,6 @@ export const IsaacApp = () => {
     }, [dispatch, user, notifications]);
 
     useEffect(() => {
-        console.log(window.location.href);
         if (!(window.location.href.includes("/questions/") || window.location.href.includes("/concept"))) {
             persistence.remove(KEY.CONCEPT_PAGE_SOURCE);
         }

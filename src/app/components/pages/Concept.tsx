@@ -34,7 +34,6 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
     const doc = useSelector((state: AppState) => state?.doc || null);
     const navigation = useNavigation(doc);
     const conceptPageSource = persistence.load(KEY.CONCEPT_PAGE_SOURCE);
-    console.log(conceptPageSource);
 
     const [canGoBack, setCanGoBack] = useState(conceptPageSource?.includes("/questions/") || conceptPageSource?.endsWith("/concepts"));
 
