@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
 import ReactGA, {FieldsObject} from "react-ga";
-import {PotentialUser} from "../../../IsaacAppTypes";
+import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {useSelector} from "react-redux";
 import * as persistence from "../../services/localStorage";
@@ -33,7 +33,9 @@ const WrapperComponent = function({component: Component, trackingOptions, ...pro
     useEffect(() => {
         trackPage(props.location.pathname, trackingOptions);
     }, [props.location.pathname, trackingOptions]);
-    return <Component {...props} />;
+    return <FigureNumberingContext.Provider value={{}}> {/* Create a figure numbering scope for each page */}
+        <Component {...props} />
+    </FigureNumberingContext.Provider>;
 };
 
 export const TrackedRoute = function({component, trackingOptions, componentProps, ...rest}: TrackedRouteProps) {
