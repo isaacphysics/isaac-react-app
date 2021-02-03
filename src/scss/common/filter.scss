@@ -37,7 +37,10 @@
   font-size: 0.8rem;
   color: #333;
   &.active {color: white;}
-  &.small {font-size: 0.6rem;}
+  &.small {
+    font-size: 0.6rem;
+    overflow-wrap: anywhere;
+  }
 }
 
 $hex_diff_levels : 6;
