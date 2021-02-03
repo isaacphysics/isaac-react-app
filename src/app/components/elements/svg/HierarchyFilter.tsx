@@ -112,7 +112,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
     const hexagon = calculateHexagonProportions(10, 2);
     const hexKeyPoints = addHexagonKeyPoints(hexagon);
     const connection = {length: 60};
-    const selectionSummary = selections[0].length ?
+    const selectionSummary = selections[0]?.length ?
         selections.map((tierSelections, i) =>
             tierSelections.length != 1 ? `Multiple ${tiers[i].name}s` : `${tierSelections[0].label}`) :
         [`Multiple ${tiers[0].name}s`]; // default
@@ -134,7 +134,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
                             {...connectionProperties}
                             d={`${svgMoveTo(xConnectionStart, yCenter)}${svgLine(xConnectionStart+connection.length, yCenter)}`}
                         />}
-                        <Hexagon className={`hex active ${selections[0].length ? selections[0][0].value : choices[0][0].value}`} {...hexagon} />
+                        <Hexagon className={`hex active ${selections[0]?.length ? selections[0][0].value : choices[0][0].value}`} {...hexagon} />
                     </g>
                 })}
             </g>
