@@ -22,7 +22,6 @@ import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
-import {history} from "../../services/history";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -34,21 +33,18 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
     const doc = useSelector((state: AppState) => state?.doc || null);
     const navigation = useNavigation(doc);
-    // let conceptPageSource;
-    // useMemo(() => {conceptPageSource = persistence.load(KEY.CONCEPT_PAGE_SOURCE);},[])
-    // console.log(conceptPageSource);
+    const conceptPageSource = persistence.load(KEY.CONCEPT_PAGE_SOURCE);
+    console.log(conceptPageSource);
 
-    const [canGoBack, setCanGoBack] = useState(document.referrer.includes("/questions/") || document.referrer.endsWith("/concepts"));
+    const [canGoBack, setCanGoBack] = useState(conceptPageSource?.includes("/questions/") || conceptPageSource?.endsWith("/concepts"));
 
     function conceptSourceReturn() {
-        window.location.href = document.referrer;
-        setCanGoBack(false);
+        if (conceptPageSource) {
+            window.location.href = conceptPageSource
+        }
     }
 
-    const returnText = document.referrer.includes("/questions/") ? "Return to question" : "Return to concepts";
-
-    console.log(document.referrer);
-    console.log(canGoBack);
+    const returnText = conceptPageSource?.includes("/questions/") ? "Return to question" : "Return to concepts";
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;

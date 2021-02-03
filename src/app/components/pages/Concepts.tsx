@@ -16,6 +16,8 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
+import * as persistence from "../../services/localStorage";
+import {KEY} from "../../services/localStorage";
 
 
 export const Concepts = withRouter((props: {history: History; location: Location}) => {
@@ -25,6 +27,7 @@ export const Concepts = withRouter((props: {history: History; location: Location
     const concepts = useSelector((state: AppState) => state?.concepts?.results || null);
 
     useEffect(() => {dispatch(fetchConcepts());}, [dispatch]);
+    useEffect(() => {persistence.save(KEY.CONCEPT_PAGE_SOURCE, window.location.href);},[]);
 
     const searchParsed = queryString.parse(location.search);
 
