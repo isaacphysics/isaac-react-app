@@ -175,16 +175,16 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             {/* Filter Summary */}
             <RS.Row>
                 <RS.Col sm={8} lg={9}>
-                    <button className="bg-transparent w-100" tabIndex={-1} onClick={() => setFilterExpanded(!filterExpanded)}>
+                    <button className="bg-transparent w-100" onClick={() => setFilterExpanded(!filterExpanded)}>
                         <RS.Row>
                             <RS.Col lg={6}>
-                                <RS.Label className="d-block text-left d-sm-flex mb-0">
+                                <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
                                     <span>Topics:</span>
-                                    <HierarchyFilterSummary {...{tiers, choices, selections}} />
+                                    <span><HierarchyFilterSummary {...{tiers, choices, selections}} /></span>
                                 </RS.Label>
                             </RS.Col>
                             <RS.Col lg={6} className="mt-2 mt-lg-0">
-                                <RS.Label className="d-block text-left d-sm-flex mb-0">
+                                <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
                                     Levels:
                                     <span className="ml-3"><LevelsFilterSummary {...{levelOptions, levels}} /></span>
                                 </RS.Label>

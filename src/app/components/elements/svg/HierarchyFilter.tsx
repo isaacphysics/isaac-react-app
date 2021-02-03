@@ -60,6 +60,7 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
         2 * focusPadding + 4 * hexagon.quarterHeight + maxOptions * (4 * hexagon.quarterHeight + hexagon.padding) + (maxOptions ? hexagon.padding : 0);
 
     return <svg width="100%" height={`${height}px`}>
+        <title>Topic filter selector</title>
         <g id="hexagonal-filter" transform={`translate(${focusPadding},${focusPadding})`}>
             {/* Connections */}
             {tiers.slice(1).map((tier, i) => <g key={tier.for} transform={connectionRowTranslation(deviceSize, hexagon, i)}>
@@ -116,9 +117,11 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
         [`Multiple ${tiers[0].name}s`]; // default
 
     return <svg
+        role="img"
         width={`${((hexagon.halfWidth + hexagon.padding) * 2 + connection.length) * selectionSummary.length}px`}
         height={`${hexagon.quarterHeight * 4 + hexagon.padding * 2 + 32}px`}
     >
+        <title>{`${selectionSummary.join(", ")} filters selected`}</title>
         <g id="hexagonal-filter-summary" transform={`translate(1,1)`}>
             {/* Connection & Hexagon */}
             <g transform={`translate(${connection.length / 2 - hexKeyPoints.x.center}, 0)`}>

@@ -3,6 +3,7 @@ import Select from "react-select";
 import {Item, unwrapValue} from "../../../services/select";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
 import {ifKeyIsEnter} from "../../../services/navigation";
+import * as RS from "reactstrap";
 
 interface LevelsSummaryProps {
     levelOptions: Item<number>[];
@@ -18,13 +19,15 @@ export function LevelsFilterSummary({levels, levelOptions}: LevelsSummaryProps) 
     const hexagon = calculateHexagonProportions(10, 1);
 
     if (levels.length == 0) {
-        return <span className="text-muted">No Selection</span>;
+        return <span className="text-muted">None Selected</span>;
     }
 
     return <svg
+        role="img"
         width={`${hexagon.padding * 2 + (levels.length * 2 * (hexagon.halfWidth + hexagon.padding))}px`}
         height={`${hexagon.padding * 2 + (hexagon.quarterHeight * 4)}px`}
     >
+        <title>{`Levels ${levels.map(l => l.label).join(", ")} selected`}</title>
         <g transform={`translate(1,1)`}>
             {levelOptions
                 .filter(lo => levels.map(l => l.value).includes(lo.value)) // maintain option order
@@ -50,6 +53,7 @@ export function LevelsFilterHexagonal({levelOptions, levels, setLevels}: LevelsF
     const levelOptionsSecondRow = levelOptions.slice(halfWayBreakPoint, levelOptions.length);
 
     return <svg width="100%" height={`${2 * focusPadding + 7 * hexagon.quarterHeight + 2 * hexagon.padding}px`}>
+        <title>Levels filter selector</title>
         <g transform={`translate(${focusPadding},${focusPadding})`}>
             {[levelOptionsFirstRow, levelOptionsSecondRow].map((levelOptionsRow, i) => {
                 return <g transform={`translate(${i * (hexagon.halfWidth + hexagon.padding)}, ${i * ((3*hexagon.quarterHeight) + (2*hexagon.padding))})`}>
