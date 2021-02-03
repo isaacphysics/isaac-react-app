@@ -2,6 +2,7 @@ import React from "react";
 import Select from "react-select";
 import {Item, unwrapValue} from "../../../services/select";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
+import {ifKeyIsEnter} from "../../../services/navigation";
 
 interface LevelsSummaryProps {
     levelOptions: Item<number>[];
@@ -42,17 +43,24 @@ export function LevelsFilterSummary({levels, levelOptions}: LevelsSummaryProps) 
 
 export function LevelsFilterHexagonal({levelOptions, levels, setLevels}: LevelsFilterProps) {
     const hexagon = calculateHexagonProportions(32, 2);
+    const focusPadding = 3;
 
     const halfWayBreakPoint = Math.floor(levelOptions.length / 2);
     const levelOptionsFirstRow = levelOptions.slice(0, halfWayBreakPoint);
     const levelOptionsSecondRow = levelOptions.slice(halfWayBreakPoint, levelOptions.length);
 
-    return <svg width="100%" height={`${2 + hexagon.quarterHeight * 7 + hexagon.padding * 2}px`}>
-        <g transform={`translate(1,1)`}>
+    return <svg width="100%" height={`${2 * focusPadding + 7 * hexagon.quarterHeight + 2 * hexagon.padding}px`}>
+        <g transform={`translate(${focusPadding},${focusPadding})`}>
             {[levelOptionsFirstRow, levelOptionsSecondRow].map((levelOptionsRow, i) => {
                 return <g transform={`translate(${i * (hexagon.halfWidth + hexagon.padding)}, ${i * ((3*hexagon.quarterHeight) + (2*hexagon.padding))})`}>
                     {levelOptionsRow.map((levelOption, j) => {
                         const isSelected = levels.map(l => l.value).includes(levelOption.value);
+                        function selectValue() {
+                            setLevels(isSelected ?
+                                levels.filter(l => l.value !== levelOption.value) : // remove
+                                [...levels, levelOption] // add
+                            );
+                        }
                         return <g transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`}>
                             <Hexagon {...hexagon} className={`hex level ${isSelected ? "active" : ""}`} />
                             <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
@@ -62,10 +70,10 @@ export function LevelsFilterHexagonal({levelOptions, levels, setLevels}: LevelsF
                             </foreignObject>
                             <Hexagon
                                 {...hexagon} className="hex none clickable" properties={{clickable: true}}
-                                onClick={() => setLevels(isSelected ?
-                                    levels.filter(l => l.value !== levelOption.value) : // remove
-                                    [...levels, levelOption] // add
-                                )}
+                                tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
+                                role="button" title={<title>
+                                    {`${isSelected ? "Remove" : "Add"} level ${levelOption.label} ${isSelected ? "from" : "to"} your game board filter`}
+                                </title>}
                             />
                         </g>
                     })}

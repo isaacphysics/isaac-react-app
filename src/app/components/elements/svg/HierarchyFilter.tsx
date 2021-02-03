@@ -7,6 +7,7 @@ import {DeviceSize, useDeviceSize} from "../../../services/device";
 import {HexagonConnection} from "./HexagonConnection";
 import {Item, unwrapValue} from "../../../services/select";
 import {addHexagonKeyPoints, svgLine, svgMoveTo} from "../../../services/svg";
+import {ifKeyIsEnter} from "../../../services/navigation";
 
 export interface Tier {id: string; name: string; for: string}
 
@@ -51,14 +52,15 @@ function hexagonTranslation(deviceSize: DeviceSize, hexagon: HexagonProportions,
 export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSelection}: HierarchyFilterProps) {
     const deviceSize = useDeviceSize();
     const hexagon = calculateHexagonProportions(36, deviceSize === "xs" ? 10 : 8);
+    const focusPadding = 3;
 
     const maxOptions = choices.slice(1).map(c => c.length).reduce((a, b) => Math.max(a, b), 0);
     const height = deviceSize != "xs" ?
-        2 + 4 * hexagon.quarterHeight + (tiers.length - 1) * (6 * hexagon.quarterHeight + 2 * hexagon.padding) :
-        2 + 4 * hexagon.quarterHeight + maxOptions * (4 * hexagon.quarterHeight + hexagon.padding) + (maxOptions ? hexagon.padding : 0);
+        2 * focusPadding + 4 * hexagon.quarterHeight + (tiers.length - 1) * (6 * hexagon.quarterHeight + 2 * hexagon.padding) :
+        2 * focusPadding + 4 * hexagon.quarterHeight + maxOptions * (4 * hexagon.quarterHeight + hexagon.padding) + (maxOptions ? hexagon.padding : 0);
 
     return <svg width="100%" height={`${height}px`}>
-        <g id="hexagonal-filter" transform={`translate(1,1)`}>
+        <g id="hexagonal-filter" transform={`translate(${focusPadding},${focusPadding})`}>
             {/* Connections */}
             {tiers.slice(1).map((tier, i) => <g key={tier.for} transform={connectionRowTranslation(deviceSize, hexagon, i)}>
                 <HexagonConnection
@@ -76,6 +78,13 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                     const subject = i == 0 ? choice.value : selections[0][0].value;
                     const isSelected = !!selections[i]?.map(s => s.value).includes(choice.value);
                     const longWordInLabel = choice.label.split(/\s/).some(word => word.length > 10);
+                    function selectValue() {
+                        setTierSelection(i)(isSelected ?
+                            selections[i].filter(s => s.value !== choice.value) : // remove
+                            [...(selections[i] || []), choice] // add
+                        );
+                    }
+
                     return <g key={choice.value} transform={hexagonTranslation(deviceSize, hexagon, i, j)}>
                         <Hexagon {...hexagon} className={`hex ${subject} ${isSelected ? "active" : ""}`} />
                         <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
@@ -85,10 +94,10 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                         </foreignObject>
                         <Hexagon
                             {...hexagon} className="hex none clickable" properties={{clickable: true}}
-                            onClick={() => setTierSelection(i)(isSelected ?
-                                selections[i].filter(s => s.value !== choice.value) : // remove
-                                [...(selections[i] || []), choice] // add
-                            )}
+                            tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
+                            role="button" title={<title>
+                                {`${isSelected ? "Remove" : "Add"} ${tier.name} ${choice.label} ${isSelected ? "from" : "to"} your game board filter`}
+                            </title>}
                         />
                     </g>;
                 })}
