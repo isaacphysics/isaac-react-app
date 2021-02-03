@@ -3,7 +3,6 @@ import Select from "react-select";
 import {Item, unwrapValue} from "../../../services/select";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
 import {ifKeyIsEnter} from "../../../services/navigation";
-import * as RS from "reactstrap";
 
 interface LevelsSummaryProps {
     levelOptions: Item<number>[];
@@ -73,12 +72,13 @@ export function LevelsFilterHexagonal({levelOptions, levels, setLevels}: LevelsF
                                 </div>
                             </foreignObject>
                             <Hexagon
-                                {...hexagon} className="hex none clickable" properties={{clickable: true}}
+                                {...hexagon} className="hex none clickable" properties={{clickable: true}} role="button"
                                 tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
-                                role="button" title={<title>
+                            >
+                                <title>
                                     {`${isSelected ? "Remove" : "Add"} level ${levelOption.label} ${isSelected ? "from" : "to"} your game board filter`}
-                                </title>}
-                            />
+                                </title>
+                            </Hexagon>
                         </g>
                     })}
                 </g>

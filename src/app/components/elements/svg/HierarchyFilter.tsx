@@ -94,12 +94,13 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                             </div>
                         </foreignObject>
                         <Hexagon
-                            {...hexagon} className="hex none clickable" properties={{clickable: true}}
+                            {...hexagon} className="hex none clickable" properties={{clickable: true}} role="button"
                             tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
-                            role="button" title={<title>
+                        >
+                            <title>
                                 {`${isSelected ? "Remove" : "Add"} ${tier.name} ${choice.label} ${isSelected ? "from" : "to"} your game board filter`}
-                            </title>}
-                        />
+                            </title>
+                        </Hexagon>
                     </g>;
                 })}
             </g>)}

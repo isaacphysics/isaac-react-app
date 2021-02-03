@@ -1,4 +1,4 @@
-import React, {ReactElement} from "react"
+import React from "react"
 
 export interface HexagonProportions {
     halfWidth: number;
@@ -50,7 +50,7 @@ interface HexagonProps<T> extends React.SVGProps<SVGPolygonElement> {
     selector?: (t: T) => boolean;
     halfWidth: number;
     quarterHeight: number;
-    title?: ReactElement;
+    children?: React.ReactNode;
     properties?: {
         fill?: {colour: string};
         stroke?: { colour: string; width: number };
@@ -58,7 +58,7 @@ interface HexagonProps<T> extends React.SVGProps<SVGPolygonElement> {
     };
 }
 export function Hexagon<T>(props: HexagonProps<T>) {
-    const {halfWidth, quarterHeight, properties, states, selector=()=>true, title, ...rest} = props;
+    const {halfWidth, quarterHeight, properties, states, selector=()=>true, children, ...rest} = props;
     let polygonAttributes: {fill?: string; stroke?: string; strokeWidth?: number; points: string; strokeDasharray?: string; pointerEvents?: string} = {
         points: generateHexagonPoints(halfWidth, quarterHeight),
         stroke: properties?.stroke?.colour,
@@ -74,6 +74,6 @@ export function Hexagon<T>(props: HexagonProps<T>) {
         polygonAttributes.pointerEvents = 'visible';
     }
     return <polygon {...polygonAttributes} {...rest}>
-        {title}
+        {children}
     </polygon>;
 }
