@@ -98,7 +98,7 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                             tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                         >
                             <title>
-                                {`${isSelected ? "Remove" : "Add"} ${tier.name} ${choice.label} ${isSelected ? "from" : "to"} your game board filter`}
+                                {`${isSelected ? "Remove" : "Add"} ${tier.name} ${choice.label} ${isSelected ? "from" : "to"} your gameboard filter`}
                             </title>
                         </Hexagon>
                     </g>;

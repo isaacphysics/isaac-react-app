@@ -76,7 +76,7 @@ export function LevelsFilterHexagonal({levelOptions, levels, setLevels}: LevelsF
                                 tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                             >
                                 <title>
-                                    {`${isSelected ? "Remove" : "Add"} level ${levelOption.label} ${isSelected ? "from" : "to"} your game board filter`}
+                                    {`${isSelected ? "Remove" : "Add"} level ${levelOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
                                 </title>
                             </Hexagon>
                         </g>
