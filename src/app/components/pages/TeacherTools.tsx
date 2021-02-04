@@ -8,7 +8,7 @@ import {isTeacher} from "../../services/user";
 import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
-import {getProgress} from "../../state/actions";
+import {getMyProgress} from "../../state/actions";
 import {selectors} from "../../state/selectors";
 
 export const TeacherTools = () => {
@@ -18,7 +18,7 @@ export const TeacherTools = () => {
 
     useEffect(() => {
         if (!achievementsSelector) {
-            dispatch(getProgress());
+            dispatch(getMyProgress());
         }
     }, [dispatch, user]);
 

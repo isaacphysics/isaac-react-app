@@ -11,7 +11,7 @@ import {useDeviceSize} from "../../../services/device";
 
 export const HeaderPhy = () => {
     const user = useSelector(selectors.user.orNull);
-    const streakRecord = useSelector((state: AppState) => state?.userProgress?.userSnapshot);
+    const streakRecord = useSelector((state: AppState) => state?.myProgress?.userSnapshot);
     const mainContentId = useSelector(selectors.mainContentId.orDefault);
     const deviceSize = useDeviceSize();
     return <header className="light">
