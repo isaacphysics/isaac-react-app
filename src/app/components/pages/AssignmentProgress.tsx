@@ -183,11 +183,14 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
             if (studentProgress.tickCount == questions.length) {
                 studentsCorrect++;
             }
-
         }
     }
 
-    const sortedProgress = orderBy(progress, (item) => {
+    const semiSortedProgress = orderBy(progress, (item) => {
+        return item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
+    }, [reverseOrder ? "desc" : "asc"]);
+
+    const sortedProgress = orderBy(semiSortedProgress, (item) => {
         switch (sortOrder) {
             case "name":
                 return (item.user.familyName + ", " + item.user.givenName).toLowerCase();
