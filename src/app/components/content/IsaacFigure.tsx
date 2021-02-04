@@ -30,11 +30,11 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                     </div>
                     <div className="text-center figure-caption">
                         {doc.children && doc.children.length > 0 && figId && <div>
-                            <strong className="text-secondary">{figureString}</strong>
+                            <strong className="text-secondary figure-reference">{figureString}</strong>
                         </div>}
                         <IsaacContentValueOrChildren
                             encoding={doc.encoding}
-                            value={doc.value && figId && `<strong class="text-secondary">${figureString}:</strong> ${doc.value}`}
+                            value={doc.value && figId && `<strong class="text-secondary figure-reference">${figureString}:</strong> ${doc.value}`}
                         >
                             {doc.children}
                         </IsaacContentValueOrChildren>
