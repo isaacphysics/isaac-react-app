@@ -15,6 +15,11 @@
     flex-grow: 1;
   }
 
+  .search-item-icon {
+    max-width: 2rem;
+    max-height: 2rem;
+  }
+
   .search-filters label {
     @include respond-above(sm) {
       margin-left: 0.5rem;

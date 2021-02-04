@@ -1,6 +1,6 @@
+import {useContext} from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {FigureNumberingContext, FigureNumbersById} from "../../../IsaacAppTypes";
-import React from "react";
+import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {extractFigureId} from "../content/IsaacFigure";
 
 interface WithFigureNumberingProps {
@@ -9,15 +9,18 @@ interface WithFigureNumberingProps {
 }
 
 export const WithFigureNumbering = ({doc, children}: WithFigureNumberingProps) => {
-    let figureNumbers: FigureNumbersById = {};
+    const figureNumbers = useContext(FigureNumberingContext);
 
-    let n = 1;
-    let walk = (d: any) => {
+    let n = Object.keys(figureNumbers).length + 1;
+    function walk(d: any) {
         if (!d) {
             // Nothing to see here. Move along.
             return;
         } else if (d.type == "figure" && d.id) {
-            figureNumbers[extractFigureId(d.id)] = n++;
+            const figureId = extractFigureId(d.id)
+            if (!Object.keys(figureNumbers).includes(figureId)) {
+                figureNumbers[figureId] = n++;
+            }
         } else {
             // Walk all the things that might possibly contain figures. Doesn't blow up if they don't exist.
             for (let c of d.children || []) {
@@ -30,11 +33,9 @@ export const WithFigureNumbering = ({doc, children}: WithFigureNumberingProps) =
 
             // If we find that some figures aren't getting numbers, add additional walks here to find them.
         }
-    };
+    }
 
     walk(doc);
 
-    return <FigureNumberingContext.Provider value={figureNumbers}>
-        {children}
-    </FigureNumberingContext.Provider>
+    return children;
 };
