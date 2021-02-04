@@ -34,7 +34,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                         </div>}
                         <IsaacContentValueOrChildren
                             encoding={doc.encoding}
-                            value={doc.value && figId && `<strong class="text-secondary">${figureString}:</strong> ${doc.value}`}
+                            value={doc.value && figId && `<strong class="text-secondary figure-reference">${figureString}:</strong> ${doc.value}`}
                         >
                             {doc.children}
                         </IsaacContentValueOrChildren>
