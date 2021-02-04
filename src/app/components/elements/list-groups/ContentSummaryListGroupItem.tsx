@@ -22,9 +22,16 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     if (itemSubject) {
         titleClasses += itemSubject.id;
     }
+    const iconClasses = `search-item-icon ${itemSubject?.id}-fill`;
 
     const itemTopic = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[]);
     let topicTitle = itemTopic ? itemTopic.title : null;
+
+    const questionIcon = {
+        [SITE.CS]: item.correct ? <img src="/assets/tick-rp.svg" alt=""/> : <img src="/assets/question.svg" alt="Question page"/>,
+        [SITE.PHY]: item.correct ? <svg className={iconClasses}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg> :
+            <svg className={iconClasses}><use href={`/assets/question-hex.svg#icon`} xlinkHref={`/assets/question-hex.svg#icon`}/></svg>
+    }[SITE_SUBJECT];
 
     switch (item.type) {
         case (SEARCH_RESULT_TYPE.SHORTCUT):
@@ -35,7 +42,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
         case (DOCUMENT_TYPE.QUESTION):
             itemClasses += item.correct ? "bg-success" : "text-info";
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
-            icon = item.correct ? <img src="/assets/tick-rp.svg" alt=""/> : <img src="/assets/question.svg" alt="Question page"/>;
+            icon = questionIcon;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
             level = item.level;
             break;
