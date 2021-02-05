@@ -14,7 +14,7 @@ import {selectors} from "../../state/selectors";
 export const TeacherTools = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
-    const achievementsSelector = useSelector((state: AppState) => state && state.userProgress && state.userProgress.userSnapshot && state.userProgress.userSnapshot.achievementsRecord);
+    const achievementsSelector = useSelector((state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord);
 
     useEffect(() => {
         if (!achievementsSelector) {
