@@ -361,10 +361,10 @@ export const updateCurrentUser = (
 
 export const setTempExamBoard = (examBoard: EXAM_BOARD) => ({type: ACTION_TYPE.EXAM_BOARD_SET_TEMP, examBoard});
 
-export const getMyProgress = (userIdOfInterest?: string) => async (dispatch: Dispatch<Action>) => {
+export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.MY_PROGRESS_REQUEST});
     try {
-        const response = await api.users.getProgress(userIdOfInterest);
+        const response = await api.users.getProgress();
         dispatch({type: ACTION_TYPE.MY_PROGRESS_RESPONSE_SUCCESS, myProgress: response.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.MY_PROGRESS_RESPONSE_FAILURE});
