@@ -158,11 +158,7 @@ export const userProgress = (userProgress: UserProgressState = null, action: Act
     switch (action.type) {
         case ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS:
             return action.userProgress;
-        case ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE:
-            return {  // update only the snapshot and then potentially only partially
-                ...(userProgress || {}),
-                userSnapshot: {...(userProgress?.userSnapshot || {}), ...action.userSnapshot}
-            };
+        // don't want to update the user snapshot when viewing another user's progress, see myProgress
         case ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE:
             return null;
         default:
