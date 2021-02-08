@@ -1,0 +1,68 @@
+#filter-panel {
+  margin-bottom: 42px;
+  #expand-filter-button {
+    background-image: url(/assets/reveal-up.png);
+    &.open {
+      background-image: url(/assets/reveal-down.png);
+    }
+    display: block;
+    height: 34px;
+    width: 40px;
+    left: 48%;
+    bottom: -32px;
+    position: absolute;
+    background-position: 50% top;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    z-index: 10;
+  }
+}
+
+.hexagon-tier-title, .hexagon-level-title {
+  pointer-events: none;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: $secondary-font-semi-bold;
+}
+.hexagon-level-title {
+  font-weight: 600;
+  font-size: 1rem;
+  &.active {color: white;}
+}
+.hexagon-tier-title {
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #333;
+  &.active {color: white;}
+  &.small {
+    font-size: 0.6rem;
+    overflow-wrap: anywhere;
+  }
+}
+
+$hex_diff_levels : 6;
+
+@for $i from 1 through $hex_diff_levels {
+  $bg_list : ();
+  $pos_list : ();
+  @for $j from 1 through $hex_diff_levels {
+    $pos_list : append($pos_list, ($j - 1) * 100% / $hex_diff_levels );
+    @if $i > ($hex_diff_levels - $j) { $bg_list : append($bg_list, url('/assets/hex-filter-yellow.png')); }
+    @if $i <= ($hex_diff_levels - $j) { $bg_list : append($bg_list, url('/assets/hex-filter-grey.png')); }
+  }
+  .hex-level-#{$i}:not(.active):after {
+    content:'';
+    display: inline-block;
+    position: absolute;
+    width: 6px;
+    height: 7px * $hex_diff_levels;
+    background-repeat: no-repeat;
+    background-image: nth($bg_list, 1), nth($bg_list, 2), nth($bg_list, 3), nth($bg_list, 4), nth($bg_list, 5), nth($bg_list, 6);
+    background-position: left nth($pos_list, 1), left nth($pos_list, 2), left nth($pos_list, 3), left nth($pos_list, 4), left nth($pos_list, 5), left nth($pos_list, 6);
+    top: 19px;
+    right: 3px;
+  }
+}
