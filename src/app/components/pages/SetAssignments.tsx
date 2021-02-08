@@ -41,10 +41,11 @@ import {
     formatBoardOwner,
     generateGameboardSubjectHexagons
 } from "../../services/gameboards";
-import {connect, useDispatch} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import { isStaff } from "../../services/user";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -76,6 +77,8 @@ type BoardProps = SetAssignmentsPageProps & {
 const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     const [groupId, setGroupId] = useState<number>();
     const [dueDate, setDueDate] = useState<Date>();
+    const [assignmentNotes, setAssignmentNotes] = useState<string>();
+    const user = useSelector(selectors.user.orNull);
 
     function assign() {
         assignBoard(board, groupId, dueDate).then(success => {
@@ -100,6 +103,14 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
         </Label>
+        {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
+            <Input type="textarea"
+                   spellCheck={true}
+                   rows={3}
+                   value={assignmentNotes}
+                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
+                />
+        </Label>}
         <Button className="mt-3 mb-2" block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]} onClick={assign} disabled={groupId === null}>Assign to group</Button>
     </Container>;
 };

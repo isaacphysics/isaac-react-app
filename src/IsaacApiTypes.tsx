@@ -9,6 +9,7 @@ export interface AssignmentDTO {
     groupId?: number;
     ownerUserId?: number;
     assignerSummary?: UserSummaryDTO;
+    notes?: string;
     creationDate?: Date;
     dueDate?: Date;
     _id?: number;
