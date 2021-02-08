@@ -6,7 +6,7 @@ export enum KEY {
     REQUIRED_MODAL_SHOWN_TIME = "requiredModalShownTime",
     LAST_NOTIFICATION_TIME = "lastNotificationTime",
     ANONYMISE_USERS = "anonymiseUsers",
-    CONCEPT_PAGE_SOURCE = "conceptPageSource"
+    CONCEPT_PAGE_REFERRER = "conceptPageReferrer"
 }
 
 export const LOADING_FAILURE_VALUE = null;

@@ -16,8 +16,6 @@ import {
 } from "../../services/fastTrack";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
-import * as persistence from "../../services/localStorage";
-import {KEY} from "../../services/localStorage";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQuestionBaseDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -30,8 +28,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
     const canSubmit = questionPart?.canSubmit && !locked || false;
     const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
-
-    useEffect(() => {persistence.save(KEY.CONCEPT_PAGE_SOURCE, window.location.href);},[]);
 
     // Register Question Part in Redux
     useEffect((): (() => void) => {

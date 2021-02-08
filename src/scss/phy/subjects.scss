@@ -27,6 +27,10 @@
     }
   }
 
+  .concept-subject {
+    color: $color;
+  }
+
   /* btn classes */
   .btn-secondary {
     @include button-variant($color, $color);

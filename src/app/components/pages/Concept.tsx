@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {withRouter} from "react-router-dom";
+import React, {useEffect, useRef, useState} from "react";
+import {Link, withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Col, Container, Row} from "reactstrap";
 import {fetchDoc} from "../../state/actions";
@@ -33,17 +33,17 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
     const doc = useSelector((state: AppState) => state?.doc || null);
     const navigation = useNavigation(doc);
-    const conceptPageSource = persistence.load(KEY.CONCEPT_PAGE_SOURCE);
+    const conceptPageReferrer = useRef(persistence.load(KEY.CONCEPT_PAGE_REFERRER));
 
-    const [canGoBack, setCanGoBack] = useState(conceptPageSource?.includes("/questions/") || conceptPageSource?.endsWith("/concepts"));
+    const canGoBack = conceptPageReferrer?.current?.includes("/questions/") || conceptPageReferrer?.current?.endsWith("/concepts");
 
     function conceptSourceReturn() {
-        if (conceptPageSource) {
-            window.location.href = conceptPageSource
+        if (conceptPageReferrer?.current) {
+            window.location.href = conceptPageReferrer?.current
         }
     }
 
-    const returnText = conceptPageSource?.includes("/questions/") ? "Return to question" : "Return to concepts";
+    const returnText = conceptPageReferrer?.current?.includes("/questions/") ? "Return to question" : "Return to concepts";
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
@@ -56,6 +56,9 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
                 />
                 <div className="no-print d-flex align-items-center">
                     <EditContentButton doc={doc} />
+                    {canGoBack && <Link onClick={() => conceptSourceReturn()}>
+                        <div className="isaac-nav-link concept-subject a-alt d-block lrg-text font-weight-bold previous-link">{returnText}</div>
+                    </Link>}
                     <div className="question-actions question-actions-leftmost mt-3">
                         <ShareLink linkUrl={`/concepts/${doc.id}`}/>
                     </div>
@@ -67,7 +70,7 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
                 <Row className="concept-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4">
                         <TempExamBoardPicker className="text-right" />
-                        {canGoBack && <Button className="mb-2" onClick={() => conceptSourceReturn()}>{returnText}</Button>}
+                        {/*{canGoBack && <Button className="mb-2" onClick={() => conceptSourceReturn()}>{returnText}</Button>}*/}
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>
