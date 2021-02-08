@@ -70,7 +70,6 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
                 <Row className="concept-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4">
                         <TempExamBoardPicker className="text-right" />
-                        {/*{canGoBack && <Button className="mb-2" onClick={() => conceptSourceReturn()}>{returnText}</Button>}*/}
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>
