@@ -29,4 +29,19 @@ svg {
       stroke: $phy_green;
     }
   }
+  .connection {
+    fill: none;
+    &.active.physics {
+      stroke: $phy_physics;
+    }
+    &.active.maths {
+      stroke: $phy_maths;
+    }
+    &.active.chemistry {
+      stroke: $phy_chemistry;
+    }
+    &:not(.active) {
+      stroke: $gray-118;
+    }
+  }
 }

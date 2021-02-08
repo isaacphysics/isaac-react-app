@@ -11,7 +11,7 @@ import {ifKeyIsEnter} from "../../../services/navigation";
 
 export interface Tier {id: string; name: string; for: string}
 
-const connectionProperties = {fill: 'none', stroke: '#fea100', optionStrokeColour: "#d9d9d9", strokeWidth: 4, strokeDasharray: 4};
+const connectionProperties = {fill: 'none', strokeWidth: 4, strokeDasharray: 4};
 
 interface HierarchySummaryProps {
     tiers: Tier[];
@@ -63,15 +63,18 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
         <title>Topic filter selector</title>
         <g id="hexagonal-filter" transform={`translate(${focusPadding},${focusPadding})`}>
             {/* Connections */}
-            {tiers.slice(1).map((tier, i) => <g key={tier.for} transform={connectionRowTranslation(deviceSize, hexagon, i)}>
-                <HexagonConnection
-                    sourceIndex={choices[i].map(c => c.value).indexOf(selections[i][0]?.value)}
-                    optionIndices={[...choices[i+1].keys()]} // range from 0 to choices[i+1].length
-                    targetIndices={selections[i+1]?.map(s => choices[i+1].map(c => c.value).indexOf(s.value)) || [-1]}
-                    hexagonProportions={hexagon} connectionProperties={connectionProperties}
-                    rowIndex={i} mobile={deviceSize === "xs"}
-                />
-            </g>)}
+            {tiers.slice(1).map((tier, i) => {
+                const subject = selections?.[0]?.[0] ? selections[0][0].value : "";
+                return <g key={tier.for} transform={connectionRowTranslation(deviceSize, hexagon, i)}>
+                    <HexagonConnection
+                        sourceIndex={choices[i].map(c => c.value).indexOf(selections[i][0]?.value)}
+                        optionIndices={[...choices[i+1].keys()]} // range from 0 to choices[i+1].length
+                        targetIndices={selections[i+1]?.map(s => choices[i+1].map(c => c.value).indexOf(s.value)) || [-1]}
+                        hexagonProportions={hexagon} connectionProperties={connectionProperties}
+                        rowIndex={i} mobile={deviceSize === "xs"} className={`connection ${subject}`}
+                    />
+                </g>;
+            })}
 
             {/* Hexagons */}
             {tiers.map((tier, i) => <g key={tier.for} transform={hexRowTranslation(deviceSize, hexagon, i)}>
@@ -133,6 +136,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
                         {i != selectionSummary.length - 1 && <path
                             {...connectionProperties}
                             d={`${svgMoveTo(xConnectionStart, yCenter)}${svgLine(xConnectionStart+connection.length, yCenter)}`}
+                            className={`connection`}
                         />}
                         <Hexagon className={`hex active ${selections[0]?.length ? selections[0][0].value : choices[0][0].value}`} {...hexagon} />
                     </g>

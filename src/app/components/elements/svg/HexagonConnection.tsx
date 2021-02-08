@@ -102,20 +102,26 @@ interface HexagonConnectionProps {
     targetIndices: number[];
     hexagonProportions: HexagonProportions;
     connectionProperties: React.SVGProps<SVGPathElement> & {optionStrokeColour?: string;};
+    className?: string;
     mobile?: boolean;
     rowIndex?: number;
 }
-export function HexagonConnection({sourceIndex, targetIndices, hexagonProportions, connectionProperties, optionIndices=[], mobile=false, rowIndex}: HexagonConnectionProps) {
+export function HexagonConnection({
+    sourceIndex, targetIndices, optionIndices=[], hexagonProportions,
+    connectionProperties, className, mobile=false, rowIndex
+}: HexagonConnectionProps) {
     const filteredTargetIndices = targetIndices.filter(i => ![sourceIndex, i].includes(-1)); // Filter "not found" selections
     const {optionStrokeColour, ...pathProperties} = connectionProperties;
     const connectionFunction = !mobile ? oldConnectionLine : mobileConnectionLine.bind(null, rowIndex);
 
     return <g>
         {optionIndices.filter(o => !targetIndices.includes(o)).map(optionIndex => <path
+            className={`${className ?? ""}`}
             d={connectionFunction(hexagonProportions, sourceIndex, optionIndex)}
             {...{...pathProperties, stroke: optionStrokeColour}} key={`${sourceIndex}->${optionIndex}`}
         />)}
         {filteredTargetIndices.map(targetIndex => <path
+            className={`active ${className ?? ""}`}
             d={connectionFunction(hexagonProportions, sourceIndex, targetIndex)}
             {...pathProperties} key={`${sourceIndex}->${targetIndex}`}
         />)}
