@@ -28,6 +28,11 @@ svg {
       fill: $phy_green;
       stroke: $phy_green;
     }
+    &:focus {
+      outline: none;
+      stroke: black !important;
+      stroke-width: 0.2rem;
+    }
   }
   .connection {
     fill: none;
