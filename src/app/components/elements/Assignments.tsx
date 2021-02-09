@@ -9,8 +9,6 @@ import {determineGameboardSubjects, generateGameboardSubjectHexagons} from "../.
 import { isDefined } from "../../services/miscUtils";
 import tags from "../../services/tags";
 import { TAG_ID } from "../../services/constants";
-import {selectors} from "../../state/selectors";
-import { useSelector } from "react-redux";
 
 interface AssignmentsProps {
     assignments: AssignmentDTO[];
