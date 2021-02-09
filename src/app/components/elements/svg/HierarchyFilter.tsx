@@ -11,7 +11,7 @@ import {ifKeyIsEnter} from "../../../services/navigation";
 
 export interface Tier {id: string; name: string; for: string}
 
-const connectionProperties = {fill: 'none', strokeWidth: 4, strokeDasharray: 4};
+const connectionProperties = {fill: 'none', strokeWidth: 3, strokeDasharray: 3};
 
 interface HierarchySummaryProps {
     tiers: Tier[];

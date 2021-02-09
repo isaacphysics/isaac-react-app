@@ -2,7 +2,7 @@ import React from "react";
 import {addHexagonKeyPoints, svgLine, svgMoveTo} from "../../../services/svg";
 import {HexagonProportions} from "./Hexagon";
 
-function oldConnectionLine(hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
+function rightAngledConnectionLine(hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
     const hexagon = addHexagonKeyPoints(hexagonProperties);
     let result = '';
     const hexagonWidth = 2 * (hexagon.halfWidth + hexagon.padding);
@@ -12,25 +12,15 @@ function oldConnectionLine(hexagonProperties: HexagonProportions, sourceIndex: n
     // First stroke
     result += svgMoveTo(sourceHexagonX + hexagon.x.right + hexagon.padding, hexagon.y.top + hexagon.quarterHeight);
     result += svgLine(sourceHexagonX + hexagon.x.right + hexagon.padding, hexagon.y.center);
-
     // Horizontal connection
-    if (targetIndex == 0) {
-        result += svgLine(targetHexagonX + hexagon.x.right + hexagon.padding, hexagon.y.center);
-    } else {
-        result += svgLine(targetHexagonX + hexagon.x.center, hexagon.y.center);
-    }
-
+    result += svgLine(targetHexagonX + hexagon.x.right + hexagon.padding, hexagon.y.center);
     // Last stroke
-    if (targetIndex == 0) {
-        result += svgLine(targetHexagonX + hexagon.x.right + hexagon.padding, hexagon.y.bottom - hexagon.quarterHeight);
-    } else {
-        result += svgLine(targetHexagonX + hexagon.x.rightDiag, hexagon.y.bottomDiag);
-    }
+    result += svgLine(targetHexagonX + hexagon.x.right + hexagon.padding, hexagon.y.bottom - hexagon.quarterHeight);
 
     return result;
 }
 
-function connectionLine(hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
+function fastTrackConnectionLine(hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
     const hexagon = addHexagonKeyPoints(hexagonProperties);
     let result = '';
     const hexagonWidth = 2 * (hexagon.halfWidth + hexagon.padding);
@@ -104,15 +94,19 @@ interface HexagonConnectionProps {
     connectionProperties: React.SVGProps<SVGPathElement> & {optionStrokeColour?: string;};
     className?: string;
     mobile?: boolean;
+    fastTrack?: boolean;
     rowIndex?: number;
 }
 export function HexagonConnection({
     sourceIndex, targetIndices, optionIndices=[], hexagonProportions,
-    connectionProperties, className, mobile=false, rowIndex
+    connectionProperties, className, fastTrack=false, mobile=false, rowIndex
 }: HexagonConnectionProps) {
     const filteredTargetIndices = targetIndices.filter(i => ![sourceIndex, i].includes(-1)); // Filter "not found" selections
     const {optionStrokeColour, ...pathProperties} = connectionProperties;
-    const connectionFunction = !mobile ? oldConnectionLine : mobileConnectionLine.bind(null, rowIndex);
+    const connectionFunction =
+        fastTrack ? fastTrackConnectionLine :
+        mobile ? mobileConnectionLine.bind(null, rowIndex) :
+        rightAngledConnectionLine;
 
     return <g>
         {optionIndices.filter(o => !targetIndices.includes(o)).map(optionIndex => <path
