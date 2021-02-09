@@ -177,16 +177,16 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                 <RS.Col sm={8} lg={9}>
                     <button className="bg-transparent w-100" onClick={() => setFilterExpanded(!filterExpanded)}>
                         <RS.Row>
-                            <RS.Col lg={6}>
-                                <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
-                                    <span>Topics:</span>
-                                    <span><HierarchyFilterSummary {...{tiers, choices, selections}} /></span>
-                                </RS.Label>
-                            </RS.Col>
                             <RS.Col lg={6} className="mt-2 mt-lg-0">
                                 <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
                                     Levels:
                                     <span className="ml-3"><LevelsFilterSummary {...{levelOptions, levels}} /></span>
+                                </RS.Label>
+                            </RS.Col>
+                            <RS.Col lg={6}>
+                                <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
+                                    <span>Topics:</span>
+                                    <span><HierarchyFilterSummary {...{tiers, choices, selections}} /></span>
                                 </RS.Label>
                             </RS.Col>
                         </RS.Row>
@@ -206,22 +206,24 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             </RS.Row>
 
             {/* Filter */}
-            {filterExpanded && <RS.Row className="mt-sm-4 mb-sm-2">
-                <RS.Col lg={8}>
-                    <div className="mb-2"><strong>Select your question filters...</strong></div>
-                    <RS.Label className={`mt-lg-0 d-md-none ${deviceSize == "xs" ? "" : "font-weight-bolder"}`} for="level-selector">
-                        Topics:
-                    </RS.Label>
-                    <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
+            {filterExpanded && <RS.Row className="my-sm-4">
+                <RS.Col xs={12}>
+                    <div className="mb-1"><strong>Select your question filters...</strong></div>
                 </RS.Col>
                 <RS.Col lg={4}>
-                    <RS.Label className={`mt-4 mt-lg-0 ${deviceSize == "xs" ? "" : "font-weight-bolder"}`} for="level-selector">
+                    <RS.Label className={`mt-2 mt-lg-0`} for="level-selector">
                         Levels:
                     </RS.Label>
                     <LevelsFilterHexagonal id="level-selector" {...{levelOptions, levels, setLevels}} />
                     <div className="mt-2 mt-sm-4">
                         <img width={256} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
                     </div>
+                </RS.Col>
+                <RS.Col lg={8}>
+                    <RS.Label className={`mt-4 mt-lg-0`}>
+                        Topics:
+                    </RS.Label>
+                    <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
                 </RS.Col>
             </RS.Row>}
 
