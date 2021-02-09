@@ -53,23 +53,23 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                             <h4>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
                         </Link>
                         {isDefined(assignment.creationDate) &&
-                        <p className="mb-0">Assigned: {formatDate(assignment.creationDate)}</p>
+                        <p className="mb-0"><strong>Assigned:</strong> {formatDate(assignment.creationDate)}</p>
                         }
                         {isDefined(assignment.dueDate) &&
-                        <p className="mb-0">Due: {formatDate(assignment.dueDate)}</p>
+                        <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>
                         }
                         {isDefined(assignment.groupName) &&
-                        <p className="mb-0">Group: {assignment.groupName}</p>
+                        <p className="mb-0"><strong>Group:</strong> {assignment.groupName}</p>
                         }
                         {isDefined(assignment.assignerSummary) &&
-                        <p>By: {extractTeacherName(assignment.assignerSummary)}</p>
+                        <p><strong>By:</strong> {extractTeacherName(assignment.assignerSummary)}</p>
                         }
                     </Col>
                     <Col xs={7} md={5} className="mt-sm-2">
-                        <p>Questions: {assignment.gameboard?.questions?.length || "0"}</p>
-                        {isDefined(levels) && levels.length > 0 && <p>{levels.length === 1 ? "Level" : "Levels"}: {levels.join(", ")}</p>}
-                        {isDefined(topics) && topics.length > 0 && <p>{topics.length === 1 ? "Topic" : "Topics"}: {topics.join(", ")}</p>}
-                        {isDefined(assignment.notes) && <p>Notes: {assignment.notes}</p>}
+                        <p className="mb-0"><strong>Questions:</strong> {assignment.gameboard?.questions?.length || "0"}</p>
+                        {isDefined(levels) && levels.length > 0 && <p className="mb-0"><strong>{levels.length === 1 ? "Level" : "Levels"}:</strong> {levels.join(", ")}</p>}
+                        {isDefined(topics) && topics.length > 0 && <p className="mb-0"><strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong> {topics.join(", ")}</p>}
+                        {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
                     </Col>
                     <Col xs={5} md={2} className="mt-sm-2 text-right">
                         <Link to={`/gameboards#${assignment.gameboardId}`}>
