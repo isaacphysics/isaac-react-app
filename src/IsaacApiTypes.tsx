@@ -7,6 +7,7 @@ export interface AssignmentDTO {
     gameboardId?: string;
     gameboard?: GameboardDTO;
     groupId?: number;
+    groupName?: string;
     ownerUserId?: number;
     assignerSummary?: UserSummaryDTO;
     notes?: string;
