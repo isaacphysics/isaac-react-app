@@ -123,15 +123,21 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
     const hexagon = calculateHexagonProportions(10, 2);
     const hexKeyPoints = addHexagonKeyPoints(hexagon);
     const connection = {length: 60};
-    const selectionSummary = selections[0]?.length ?
-        selections.map((tierSelections, i) =>
-            tierSelections.length != 1 ? `Multiple ${tiers[i].name}` : `${tierSelections[0].label}`) :
-        [`Multiple ${tiers[0].name}`]; // default
+    const height = `${hexagon.quarterHeight * 4 + hexagon.padding * 2 + 32}px`
+
+    if (! selections[0]?.length) {
+        return <span className="text-muted ml-3 d-inline-block" style={{height}}>
+            None Selected
+        </span>;
+    }
+
+    const selectionSummary = selections.map((tierSelections, i) =>
+        tierSelections.length != 1 ? `Multiple ${tiers[i].name}` : `${tierSelections[0].label}`);
 
     return <svg
         role="img"
         width={`${((hexagon.halfWidth + hexagon.padding) * 2 + connection.length) * selectionSummary.length}px`}
-        height={`${hexagon.quarterHeight * 4 + hexagon.padding * 2 + 32}px`}
+        height={height}
     >
         <title>
             {`${naturalLanguageList(selectionSummary)} filter${selectionSummary.length != 1 || selections[0]?.length != 1 ? "s" : ""} selected`}

@@ -127,7 +127,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
-                    params[tier.id] = "physics,maths";
+                    params[tier.id] = "physics,maths,chemistry";
                 }
                 return;
             }
