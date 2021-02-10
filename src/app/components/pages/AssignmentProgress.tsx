@@ -187,7 +187,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
     }
 
     const semiSortedProgress = orderBy(progress, (item) => {
-        return item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
+        return item.user.authorisedFullAccess && item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
     }, [reverseOrder ? "desc" : "asc"]);
 
     const sortedProgress = orderBy(semiSortedProgress, (item) => {
