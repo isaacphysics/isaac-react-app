@@ -181,7 +181,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             {/* Filter Summary */}
             <RS.Row>
                 <RS.Col sm={8} lg={9}>
-                    <button className="bg-transparent w-100" onClick={() => setFilterExpanded(!filterExpanded)}>
+                    <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
                         <RS.Row>
                             <RS.Col lg={6}>
                                 <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">

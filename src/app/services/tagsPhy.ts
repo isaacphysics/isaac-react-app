@@ -25,7 +25,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.shm, title: "SHM", parent: TAG_ID.mechanics},
         {id: TAG_ID.angularMotion, title: "Angular Motion", parent: TAG_ID.mechanics},
         {id: TAG_ID.circularMotion, title: "Circular Motion", parent: TAG_ID.mechanics},
-        {id: TAG_ID.kinematics, title: "Kinematics", parent: TAG_ID.mechanics},
+        {id: TAG_ID.kinematics, title: `Kine${softHyphen}matics`, parent: TAG_ID.mechanics},
         // Fields topics
         {id: TAG_ID.electric, title: "Electric Fields", parent: TAG_ID.fields},
         {id: TAG_ID.magnetic, title: "Magnetic Fields", parent: TAG_ID.fields},
@@ -50,7 +50,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.trigonometry, title: `Trigon${softHyphen}ometry`, parent: TAG_ID.geometry},
         {id: TAG_ID.shapes, title: "Shapes", parent: TAG_ID.geometry},
         // Calculus topics
-        {id: TAG_ID.differentiation, title: `Different${softHyphen}iation`, parent: TAG_ID.calculus},
+        {id: TAG_ID.differentiation, title: `Differen${softHyphen}tiation`, parent: TAG_ID.calculus},
         {id: TAG_ID.integration, title: "Integration", parent: TAG_ID.calculus},
         {id: TAG_ID.differentialEq, title: "Differential Equations", parent: TAG_ID.calculus},
         // Algebra topics
