@@ -177,7 +177,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
-        <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4">
+        <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
             {/* Filter Summary */}
             <RS.Row>
                 <RS.Col sm={8} lg={9}>
