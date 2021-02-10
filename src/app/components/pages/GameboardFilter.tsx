@@ -168,6 +168,12 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         You can select more than one entry in each area.
     </span>;
 
+    function scrollToQuestions() {
+        if (gameboardRef.current) {
+            gameboardRef.current.scrollIntoView({behavior: "smooth"});
+        }
+    }
+
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
@@ -179,26 +185,26 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                         <RS.Row>
                             <RS.Col lg={6}>
                                 <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
-                                    <span>Topics:</span>
-                                    <span><HierarchyFilterSummary {...{tiers, choices, selections}} /></span>
-                                </RS.Label>
-                            </RS.Col>
-                            <RS.Col lg={6} className="mt-2 mt-lg-0">
-                                <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
                                     Levels:
                                     <span className="ml-3"><LevelsFilterSummary {...{levelOptions, levels}} /></span>
+                                </RS.Label>
+                            </RS.Col>
+                            <RS.Col lg={6} className="mt-3 mt-lg-0">
+                                <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
+                                    <span>Topics:</span>
+                                    <span><HierarchyFilterSummary {...{tiers, choices, selections}} /></span>
                                 </RS.Label>
                             </RS.Col>
                         </RS.Row>
                     </button>
                 </RS.Col>
-                <RS.Col sm={4} lg={3} className="text-center my-3 m-sm-0">
+                <RS.Col sm={4} lg={3} className="text-center mt-3 mb-4 m-sm-0">
                     {filterExpanded ?
-                        <RS.Button color={"link"} onClick={() => {if (gameboardRef.current) gameboardRef.current.scrollIntoView({behavior: "smooth"});}}>
+                        <RS.Button color={"link"} block className="filter-action" onClick={scrollToQuestions}>
                             Scroll to questions...
                         </RS.Button>
                         :
-                        <RS.Button color={"link"} onClick={() => setFilterExpanded(true)}>
+                        <RS.Button color={"link"} className="filter-action" onClick={() => setFilterExpanded(true)}>
                             Edit question filters
                         </RS.Button>
                     }
@@ -206,22 +212,24 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             </RS.Row>
 
             {/* Filter */}
-            {filterExpanded && <RS.Row className="mt-sm-4 mb-sm-2">
-                <RS.Col lg={8}>
-                    <div className="mb-2"><strong>Select your question filters...</strong></div>
-                    <RS.Label className={`mt-lg-0 d-md-none ${deviceSize == "xs" ? "" : "font-weight-bolder"}`} for="level-selector">
-                        Topics:
-                    </RS.Label>
-                    <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
+            {filterExpanded && <RS.Row className="mb-sm-4">
+                <RS.Col xs={12}>
+                    <div className="mb-1"><strong>Select your question filters...</strong></div>
                 </RS.Col>
                 <RS.Col lg={4}>
-                    <RS.Label className={`mt-4 mt-lg-0 ${deviceSize == "xs" ? "" : "font-weight-bolder"}`} for="level-selector">
+                    <RS.Label className={`mt-2 mt-lg-0`} for="level-selector">
                         Levels:
                     </RS.Label>
                     <LevelsFilterHexagonal id="level-selector" {...{levelOptions, levels, setLevels}} />
                     <div className="mt-2 mt-sm-4">
                         <img width={256} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
                     </div>
+                </RS.Col>
+                <RS.Col lg={8}>
+                    <RS.Label className={`mt-4 mt-lg-0`}>
+                        Topics:
+                    </RS.Label>
+                    <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
                 </RS.Col>
             </RS.Row>}
 
@@ -238,6 +246,9 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                     </RS.Button>
                 </RS.Col>
             </RS.Row>
+            <RS.Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
+                Go to Questions...
+            </RS.Button>
             <RS.Button
                 color="link" id="expand-filter-button" onClick={() => setFilterExpanded(!filterExpanded)}
                 className={filterExpanded ? "open" : ""} aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}

@@ -16,9 +16,28 @@
     cursor: pointer;
     z-index: 10;
   }
+  .filter-go-to-questions {
+    color: $secondary;
+    display: block;
+    width: 160px;
+    text-align: center;
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    margin-left: -80px;
+    border: 1px solid #509e2e;
+    border-bottom: none;
+    padding: 8px 0px;
+    border-radius: 10px 10px 0 0;
+    font-weight: bold;
+  }
+  .filter-action {
+    text-decoration: underline;
+    &:hover, &:focus {text-decoration: none;}
+  }
 }
 
-.hexagon-tier-title, .hexagon-level-title {
+.hexagon-tier-title, .hexagon-level-title, .hexagon-tier-summary {
   pointer-events: none;
   height: 100%;
   display: flex;
@@ -36,11 +55,20 @@
   font-weight: 600;
   font-size: 0.8rem;
   color: #333;
+  hyphens: manual;
   &.active {color: white;}
   &.small {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     overflow-wrap: anywhere;
   }
+}
+.hexagon-tier-summary {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8rem;
+  font-weight: 100;
 }
 
 $hex_diff_levels : 6;

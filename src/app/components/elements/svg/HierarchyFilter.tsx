@@ -11,7 +11,7 @@ import {ifKeyIsEnter} from "../../../services/navigation";
 
 export interface Tier {id: string; name: string; for: string}
 
-const connectionProperties = {fill: 'none', stroke: '#fea100', optionStrokeColour: "#d9d9d9", strokeWidth: 4, strokeDasharray: 4};
+const connectionProperties = {fill: 'none', strokeWidth: 3, strokeDasharray: 3};
 
 interface HierarchySummaryProps {
     tiers: Tier[];
@@ -21,6 +21,14 @@ interface HierarchySummaryProps {
 
 interface HierarchyFilterProps extends HierarchySummaryProps {
     setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>
+}
+
+function naturalLanguageList(list: string[]) {
+    if (list.length === 0) return "No";
+    const lowerCaseList = [list[0][0] + list[0].slice(1).toLowerCase(), ...list.slice(1).map(l => l.toLowerCase())];
+    if (list.length === 1) return lowerCaseList[0];
+    const lastIndex = list.length - 1;
+    return `${lowerCaseList.slice(0, lastIndex).join(", ")} and ${lowerCaseList[lastIndex]}`;
 }
 
 function hexRowTranslation(deviceSize: DeviceSize, hexagon: HexagonProportions, i: number) {
@@ -63,15 +71,18 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
         <title>Topic filter selector</title>
         <g id="hexagonal-filter" transform={`translate(${focusPadding},${focusPadding})`}>
             {/* Connections */}
-            {tiers.slice(1).map((tier, i) => <g key={tier.for} transform={connectionRowTranslation(deviceSize, hexagon, i)}>
-                <HexagonConnection
-                    sourceIndex={choices[i].map(c => c.value).indexOf(selections[i][0]?.value)}
-                    optionIndices={[...choices[i+1].keys()]} // range from 0 to choices[i+1].length
-                    targetIndices={selections[i+1]?.map(s => choices[i+1].map(c => c.value).indexOf(s.value)) || [-1]}
-                    hexagonProportions={hexagon} connectionProperties={connectionProperties}
-                    rowIndex={i} mobile={deviceSize === "xs"}
-                />
-            </g>)}
+            {tiers.slice(1).map((tier, i) => {
+                const subject = selections?.[0]?.[0] ? selections[0][0].value : "";
+                return <g key={tier.for} transform={connectionRowTranslation(deviceSize, hexagon, i)}>
+                    <HexagonConnection
+                        sourceIndex={choices[i].map(c => c.value).indexOf(selections[i][0]?.value)}
+                        optionIndices={[...choices[i+1].keys()]} // range from 0 to choices[i+1].length
+                        targetIndices={selections[i+1]?.map(s => choices[i+1].map(c => c.value).indexOf(s.value)) || [-1]}
+                        hexagonProportions={hexagon} connectionProperties={connectionProperties}
+                        rowIndex={i} mobile={deviceSize === "xs"} className={`connection ${subject}`}
+                    />
+                </g>;
+            })}
 
             {/* Hexagons */}
             {tiers.map((tier, i) => <g key={tier.for} transform={hexRowTranslation(deviceSize, hexagon, i)}>
@@ -98,7 +109,7 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                             tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                         >
                             <title>
-                                {`${isSelected ? "Remove" : "Add"} ${tier.name} ${choice.label} ${isSelected ? "from" : "to"} your gameboard filter`}
+                                {`${isSelected ? "Remove" : "Add"} the ${tier.name.toLowerCase()} "${choice.label}" ${isSelected ? "from" : "to"} your gameboard filter`}
                             </title>
                         </Hexagon>
                     </g>;
@@ -114,15 +125,17 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
     const connection = {length: 60};
     const selectionSummary = selections[0]?.length ?
         selections.map((tierSelections, i) =>
-            tierSelections.length != 1 ? `Multiple ${tiers[i].name}s` : `${tierSelections[0].label}`) :
-        [`Multiple ${tiers[0].name}s`]; // default
+            tierSelections.length != 1 ? `Multiple ${tiers[i].name}` : `${tierSelections[0].label}`) :
+        [`Multiple ${tiers[0].name}`]; // default
 
     return <svg
         role="img"
         width={`${((hexagon.halfWidth + hexagon.padding) * 2 + connection.length) * selectionSummary.length}px`}
         height={`${hexagon.quarterHeight * 4 + hexagon.padding * 2 + 32}px`}
     >
-        <title>{`${selectionSummary.join(", ")} filters selected`}</title>
+        <title>
+            {`${naturalLanguageList(selectionSummary)} filter${selectionSummary.length != 1 || selections[0]?.length != 1 ? "s" : ""} selected`}
+        </title>
         <g id="hexagonal-filter-summary" transform={`translate(1,1)`}>
             {/* Connection & Hexagon */}
             <g transform={`translate(${connection.length / 2 - hexKeyPoints.x.center}, 0)`}>
@@ -133,6 +146,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
                         {i != selectionSummary.length - 1 && <path
                             {...connectionProperties}
                             d={`${svgMoveTo(xConnectionStart, yCenter)}${svgLine(xConnectionStart+connection.length, yCenter)}`}
+                            className={`connection`}
                         />}
                         <Hexagon className={`hex active ${selections[0]?.length ? selections[0][0].value : choices[0][0].value}`} {...hexagon} />
                     </g>
@@ -144,7 +158,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
                 return <g key={selection} transform={`translate(${((hexagon.halfWidth + hexagon.padding) * 2 + connection.length) * i}, 0)`}>
                     <g transform={`translate(0, ${hexagon.quarterHeight * 4 + hexagon.padding})`}>
                         <foreignObject width={connection.length} height={hexagon.quarterHeight * 5}>
-                            <div className={`hexagon-tier-title small`}>
+                            <div className={`hexagon-tier-summary text-dark`}>
                                 {selection}
                             </div>
                         </foreignObject>
