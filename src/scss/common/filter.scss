@@ -37,7 +37,7 @@
   }
 }
 
-.hexagon-tier-title, .hexagon-level-title {
+.hexagon-tier-title, .hexagon-level-title, .hexagon-tier-summary {
   pointer-events: none;
   height: 100%;
   display: flex;
@@ -55,11 +55,20 @@
   font-weight: 600;
   font-size: 0.8rem;
   color: #333;
+  hyphens: manual;
   &.active {color: white;}
   &.small {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     overflow-wrap: anywhere;
   }
+}
+.hexagon-tier-summary {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8rem;
+  font-weight: 100;
 }
 
 $hex_diff_levels : 6;

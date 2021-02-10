@@ -23,6 +23,14 @@ interface HierarchyFilterProps extends HierarchySummaryProps {
     setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>
 }
 
+function naturalLanguageList(list: string[]) {
+    if (list.length === 0) return "No";
+    const lowerCaseList = [list[0][0] + list[0].slice(1).toLowerCase(), ...list.slice(1).map(l => l.toLowerCase())];
+    if (list.length === 1) return lowerCaseList[0];
+    const lastIndex = list.length - 1;
+    return `${lowerCaseList.slice(0, lastIndex).join(", ")} and ${lowerCaseList[lastIndex]}`;
+}
+
 function hexRowTranslation(deviceSize: DeviceSize, hexagon: HexagonProportions, i: number) {
     if (i == 0 || deviceSize != "xs") {
         return `translate(0,${i * (6 * hexagon.quarterHeight + 2 * hexagon.padding)})`;
@@ -101,7 +109,7 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                             tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                         >
                             <title>
-                                {`${isSelected ? "Remove" : "Add"} ${tier.name} ${choice.label} ${isSelected ? "from" : "to"} your gameboard filter`}
+                                {`${isSelected ? "Remove" : "Add"} the ${tier.name.toLowerCase()} "${choice.label}" ${isSelected ? "from" : "to"} your gameboard filter`}
                             </title>
                         </Hexagon>
                     </g>;
@@ -117,15 +125,17 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
     const connection = {length: 60};
     const selectionSummary = selections[0]?.length ?
         selections.map((tierSelections, i) =>
-            tierSelections.length != 1 ? `Multiple ${tiers[i].name}s` : `${tierSelections[0].label}`) :
-        [`Multiple ${tiers[0].name}s`]; // default
+            tierSelections.length != 1 ? `Multiple ${tiers[i].name}` : `${tierSelections[0].label}`) :
+        [`Multiple ${tiers[0].name}`]; // default
 
     return <svg
         role="img"
         width={`${((hexagon.halfWidth + hexagon.padding) * 2 + connection.length) * selectionSummary.length}px`}
         height={`${hexagon.quarterHeight * 4 + hexagon.padding * 2 + 32}px`}
     >
-        <title>{`${selectionSummary.join(", ")} filters selected`}</title>
+        <title>
+            {`${naturalLanguageList(selectionSummary)} filter${selectionSummary.length != 1 || selections[0]?.length != 1 ? "s" : ""} selected`}
+        </title>
         <g id="hexagonal-filter-summary" transform={`translate(1,1)`}>
             {/* Connection & Hexagon */}
             <g transform={`translate(${connection.length / 2 - hexKeyPoints.x.center}, 0)`}>
@@ -148,7 +158,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
                 return <g key={selection} transform={`translate(${((hexagon.halfWidth + hexagon.padding) * 2 + connection.length) * i}, 0)`}>
                     <g transform={`translate(0, ${hexagon.quarterHeight * 4 + hexagon.padding})`}>
                         <foreignObject width={connection.length} height={hexagon.quarterHeight * 5}>
-                            <div className={`hexagon-tier-title small`}>
+                            <div className={`hexagon-tier-summary text-dark`}>
                                 {selection}
                             </div>
                         </foreignObject>
