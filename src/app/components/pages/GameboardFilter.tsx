@@ -168,6 +168,12 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         You can select more than one entry in each area.
     </span>;
 
+    function scrollToQuestions() {
+        if (gameboardRef.current) {
+            gameboardRef.current.scrollIntoView({behavior: "smooth"});
+        }
+    }
+
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
@@ -177,13 +183,13 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                 <RS.Col sm={8} lg={9}>
                     <button className="bg-transparent w-100" onClick={() => setFilterExpanded(!filterExpanded)}>
                         <RS.Row>
-                            <RS.Col lg={6} className="mt-2 mt-lg-0">
+                            <RS.Col lg={6}>
                                 <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
                                     Levels:
                                     <span className="ml-3"><LevelsFilterSummary {...{levelOptions, levels}} /></span>
                                 </RS.Label>
                             </RS.Col>
-                            <RS.Col lg={6}>
+                            <RS.Col lg={6} className="mt-3 mt-lg-0">
                                 <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
                                     <span>Topics:</span>
                                     <span><HierarchyFilterSummary {...{tiers, choices, selections}} /></span>
@@ -192,13 +198,13 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                         </RS.Row>
                     </button>
                 </RS.Col>
-                <RS.Col sm={4} lg={3} className="text-center my-3 m-sm-0">
+                <RS.Col sm={4} lg={3} className="text-center mt-3 mb-4 m-sm-0">
                     {filterExpanded ?
-                        <RS.Button color={"link"} onClick={() => {if (gameboardRef.current) gameboardRef.current.scrollIntoView({behavior: "smooth"});}}>
+                        <RS.Button color={"link"} block className="filter-action" onClick={scrollToQuestions}>
                             Scroll to questions...
                         </RS.Button>
                         :
-                        <RS.Button color={"link"} onClick={() => setFilterExpanded(true)}>
+                        <RS.Button color={"link"} className="filter-action" onClick={() => setFilterExpanded(true)}>
                             Edit question filters
                         </RS.Button>
                     }
@@ -206,7 +212,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             </RS.Row>
 
             {/* Filter */}
-            {filterExpanded && <RS.Row className="my-sm-4">
+            {filterExpanded && <RS.Row className="mb-sm-4">
                 <RS.Col xs={12}>
                     <div className="mb-1"><strong>Select your question filters...</strong></div>
                 </RS.Col>
@@ -240,6 +246,9 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                     </RS.Button>
                 </RS.Col>
             </RS.Row>
+            <RS.Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
+                Go to Questions...
+            </RS.Button>
             <RS.Button
                 color="link" id="expand-filter-button" onClick={() => setFilterExpanded(!filterExpanded)}
                 className={filterExpanded ? "open" : ""} aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}
