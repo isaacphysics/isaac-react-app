@@ -8,7 +8,7 @@ let previousPathname = window.location.pathname;
 history.listen((location) => {
     const nextPathname = location.pathname;
     if (previousPathname != nextPathname) {
-        registerPageChange(location.pathname);
+        registerPageChange(previousPathname, location.pathname);
         previousPathname = nextPathname;
     }
 });

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect} from "react";
 import {Link, withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {Col, Container, Row} from "reactstrap";
@@ -20,8 +20,7 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import * as persistence from "../../services/localStorage";
-import {KEY} from "../../services/localStorage";
+import {history} from "../../services/history";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -32,18 +31,16 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
     const conceptId = conceptIdOverride || params.conceptId;
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
     const doc = useSelector((state: AppState) => state?.doc || null);
+    const previousRoute = useSelector((state: AppState) => state?.previousRoute || null );
     const navigation = useNavigation(doc);
-    const conceptPageReferrer = useRef(persistence.load(KEY.CONCEPT_PAGE_REFERRER));
 
-    const canGoBack = conceptPageReferrer?.current?.includes("/questions/") || conceptPageReferrer?.current?.endsWith("/concepts");
+    const canGoBack = previousRoute?.includes("/questions/") || previousRoute?.endsWith("/concepts");
 
     function conceptSourceReturn() {
-        if (conceptPageReferrer?.current) {
-            window.location.href = conceptPageReferrer?.current
-        }
+        history.goBack();
     }
 
-    const returnText = conceptPageReferrer?.current?.includes("/questions/") ? "Return to question" : "Return to concepts";
+    const returnText = previousRoute?.includes("/questions/") ? "Return to question" : "Return to concepts";
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;

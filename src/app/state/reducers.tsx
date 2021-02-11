@@ -14,8 +14,8 @@ import {
     EventOverview,
     GroupMembershipDetailDTO,
     isValidatedChoice,
-    PotentialUser,
     NOT_FOUND_TYPE,
+    PotentialUser,
     PrintingSettings,
     TemplateEmail,
     Toast,
@@ -39,14 +39,14 @@ import {
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
+    TOTPSharedSecretDTO,
     UserAuthenticationSettingsDTO,
+    UserGameboardProgressSummaryDTO,
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO,
-    TOTPSharedSecretDTO,
-    UserGameboardProgressSummaryDTO
+    UserSummaryWithGroupMembershipDTO
 } from "../../IsaacApiTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
@@ -478,6 +478,15 @@ export const progress = (progress: ProgressState = null, action: Action) => {
             return {...progress, [action.assignment._id as number]: action.progress};
         default:
             return progress;
+    }
+};
+
+export type PreviousRouteState = string | null;
+export const previousRoute = (previousRoute: PreviousRouteState = null, action: Action) => {
+    if (action.type === ACTION_TYPE.ROUTER_PAGE_CHANGE) {
+        return action.previousPath;
+    } else {
+        return previousRoute;
     }
 };
 
@@ -1008,6 +1017,7 @@ const appReducer = combineReducers({
     boards,
     assignmentsByMe,
     progress,
+    previousRoute,
     events,
     news,
     currentEvent,
@@ -1063,6 +1073,7 @@ export type AppState = undefined | {
     boards: BoardsState;
     assignmentsByMe: AssignmentsState;
     progress: ProgressState;
+    previousRoute: PreviousRouteState;
     events: EventsState;
     news: NewsState;
     currentEvent: CurrentEventState;

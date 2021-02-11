@@ -1920,8 +1920,8 @@ export const changePage = (path: string) => {
     history.push(path);
 };
 
-export const registerPageChange = (path: string) => {
-    store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});
+export const registerPageChange = (previousPath: string, nextPath: string) => {
+    store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, previousPath, nextPath});
 };
 
 export const handleServerError = () => {
