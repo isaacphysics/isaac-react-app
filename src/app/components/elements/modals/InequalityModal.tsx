@@ -975,8 +975,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onQuestionReminderClick() {
-        debugger;
-        this.setState({ showQuestionReminder: !this.state.showQuestionReminder });
+        this.setState((prevState: InequalityModalState) => ({ showQuestionReminder: !prevState.showQuestionReminder }) );
     }
 
     public render(): JSX.Element {
@@ -1228,9 +1227,9 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 <div
                     className="reminder-toggle"
                     role="button" tabIndex={-1}
-                    onClick={this.onQuestionReminderClick}
-                    onKeyUp={this.onQuestionReminderClick}
-                >{this.state.showQuestionReminder ? 'Hide' : 'Show'}</div>
+                    onClick={() => this.onQuestionReminderClick()}
+                    onKeyUp={() => this.onQuestionReminderClick()}
+                >{this.state.showQuestionReminder ? 'Hide' : 'Show'} Question</div>
             </div>}
             <div className="orientation-warning">The Isaac Equation Editor may only be used in landscape mode. Please rotate your device.</div>
             { menu }

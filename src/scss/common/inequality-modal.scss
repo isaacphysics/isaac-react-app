@@ -16,7 +16,7 @@
 
     .question-reminder {
         position: absolute;
-        bottom: 80px;
+        bottom: 30px;
         left: 250px;
         right: 250px;
         text-align: justify;
@@ -28,11 +28,17 @@
         z-index: 255 !important;
 
         .reminder-toggle {
+            position: relative;
             text-transform: uppercase;
             font-weight: bold;
             text-align: center;
+            pointer-events: all;
+            background: white;
+            color: black;
+            width: 200px;
             margin: 0 auto;
-            display: block;
+            padding: 6px;
+            border-radius: 6px;
         }
     }
 
