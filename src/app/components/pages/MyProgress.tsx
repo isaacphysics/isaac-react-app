@@ -52,7 +52,8 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
     const dispatch = useDispatch();
     const myProgress = useSelector((state: AppState) => state?.myProgress);
     const userProgress = useSelector((state: AppState) => state?.userProgress);
-    const achievements = useSelector((state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord);
+    const myAchievements = useSelector((state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord);
+    const userAchievements = useSelector((state: AppState) => state?.userProgress?.userSnapshot?.achievementsRecord);
     const answeredQuestionsByDate = useSelector((state: AppState) => state?.answeredQuestionsByDate);
 
     useEffect(() => {
@@ -71,9 +72,10 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
         return <Unauthorised />
     }
 
-    const viewedProgress = (!viewingOwnData && isTeacher(user)) ? userProgress : myProgress;
+    const progress = (!viewingOwnData && isTeacher(user)) ? userProgress : myProgress;
+    const achievements = (!viewingOwnData && isTeacher(user)) ? userAchievements : myAchievements;
 
-    const userName = `${viewedProgress?.userDetails?.givenName || ""}${viewedProgress?.userDetails?.givenName ? " " : ""}${viewedProgress?.userDetails?.familyName || ""}`;
+    const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
 
     return <RS.Container id="my-progress" className="mb-5">
@@ -84,10 +86,10 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                     "Question activity": <div>
                         <RS.Row>
                             <RS.Col>
-                                <AggregateQuestionStats userProgress={viewedProgress} />
+                                <AggregateQuestionStats userProgress={progress} />
                             </RS.Col>
                             {SITE_SUBJECT === SITE.PHY && <RS.Col className="align-self-center" xs={12} md={3}>
-                                <StreakPanel userProgress={viewedProgress} />
+                                <StreakPanel userProgress={progress} />
                             </RS.Col>}
                         </RS.Row>
 
@@ -109,13 +111,13 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                                     {{
                                         "Correct questions": <QuestionProgressCharts
                                             subId="correct"
-                                            questionsByTag={(viewedProgress?.correctByTag) || {}}
-                                            questionsByLevel={(viewedProgress?.correctByLevel) || {}}
+                                            questionsByTag={(progress?.correctByTag) || {}}
+                                            questionsByLevel={(progress?.correctByLevel) || {}}
                                             flushRef={tabRefs[0]} />,
                                         "Attempted questions": <QuestionProgressCharts
                                             subId="attempted"
-                                            questionsByTag={(viewedProgress?.attemptsByTag) || {}}
-                                            questionsByLevel={(viewedProgress?.attemptsByLevel) || {}}
+                                            questionsByTag={(progress?.attemptsByTag) || {}}
+                                            questionsByLevel={(progress?.attemptsByLevel) || {}}
                                             flushRef={tabRefs[1]}/>
                                     }}
                                 </Tabs>
@@ -126,8 +128,8 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                             <h4>Question parts correct by Type</h4>
                             <RS.Row>
                                 {siteSpecific.questionTypeStatsList.map((qType: string) => {
-                                    const correct = viewedProgress?.correctByType?.[qType] || null;
-                                    const attempts = viewedProgress?.attemptsByType?.[qType] || null;
+                                    const correct = progress?.correctByType?.[qType] || null;
+                                    const attempts = progress?.attemptsByType?.[qType] || null;
                                     const percentage = safePercentage(correct, attempts);
                                     return <RS.Col key={qType} className={`${siteSpecific.typeColWidth} mt-2 type-progress-bar`}>
                                         <div className={"px-2"}>
@@ -147,8 +149,8 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                             <h4>Isaac Books</h4>
                             <RS.Row>
                                 {siteSpecific.questionTagsStatsList.map((qType: string) => {
-                                    const correct = viewedProgress?.correctByTag?.[qType] || null;
-                                    const attempts = viewedProgress?.attemptsByTag?.[qType] || null;
+                                    const correct = progress?.correctByTag?.[qType] || null;
+                                    const attempts = progress?.attemptsByTag?.[qType] || null;
                                     const percentage = safePercentage(correct, attempts);
                                     return <RS.Col key={qType} className={`${siteSpecific.tagColWidth} mt-2 type-progress-bar`}>
                                         <div className={"px-2"}>
