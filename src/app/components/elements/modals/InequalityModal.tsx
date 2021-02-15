@@ -49,6 +49,7 @@ interface InequalityModalState {
     activeSubMenu: string;
     trashActive: boolean;
     menuOpen: boolean;
+    showQuestionReminder: boolean;
     editorState: any;
     menuItems: {
         upperCaseLetters: MenuItem[];
@@ -170,6 +171,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             activeSubMenu: props.editorMode === 'logic' ? "upperCaseLetters" : "lowerCaseLetters",
             trashActive: false,
             menuOpen: false,
+            showQuestionReminder: true,
             editorState: {},
             menuItems: {
                 upperCaseLetters: [],
@@ -972,6 +974,11 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         this.setState({ numberInputValue: void 0 });
     }
 
+    private onQuestionReminderClick() {
+        debugger;
+        this.setState({ showQuestionReminder: !this.state.showQuestionReminder });
+    }
+
     public render(): JSX.Element {
         let lettersMenu: JSX.Element | null = null;
         if (!this.state.disableLetters) {
@@ -1215,9 +1222,15 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             >Centre</div>
             <div id="inequality-trash" className="inequality-ui trash button">Trash</div>
             {(this.props.questionDoc?.value || (this.props.questionDoc?.children && this.props.questionDoc?.children?.length > 0)) && <div className="question-reminder">
-                <IsaacContentValueOrChildren value={this.props.questionDoc.value} encoding={this.props.questionDoc.encoding}>
+                {this.state.showQuestionReminder && <IsaacContentValueOrChildren value={this.props.questionDoc.value} encoding={this.props.questionDoc.encoding}>
                     {this.props.questionDoc?.children}
-                </IsaacContentValueOrChildren>
+                </IsaacContentValueOrChildren>}
+                <div
+                    className="reminder-toggle"
+                    role="button" tabIndex={-1}
+                    onClick={this.onQuestionReminderClick}
+                    onKeyUp={this.onQuestionReminderClick}
+                >{this.state.showQuestionReminder ? 'Hide' : 'Show'}</div>
             </div>}
             <div className="orientation-warning">The Isaac Equation Editor may only be used in landscape mode. Please rotate your device.</div>
             { menu }
