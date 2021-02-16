@@ -11,7 +11,7 @@ fi
 
 # Need at least four args and the first argument to be the site:
 if [ $# -lt 4 ] || ! { [ $1 = "cs" ] || [ $1 = "phy" ]; } || ! { [ $2 = "dev" ] || [ $2 = "staging" ] || [ $2 = "test" ]; } ; then
-  echo "Usage: compose [cs|phy] [ENVIRONMENT] [APP_VERSION] [DOCKER_ARGS]..."
+  echo "Usage: compose [cs|phy] [staging|dev|test] [APP_VERSION] [DOCKER_ARGS]..."
   exit 1
 fi
 
