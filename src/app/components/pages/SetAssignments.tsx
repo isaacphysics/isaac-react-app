@@ -86,6 +86,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
             if (success) {
                 setGroupId(-1);
                 setDueDate(undefined);
+                setAssignmentNotes('');
             }
         });
     }
