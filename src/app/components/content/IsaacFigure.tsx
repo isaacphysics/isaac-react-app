@@ -22,7 +22,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
         <FigureNumberingContext.Consumer>
             {figureNumbers => {
                 const figureString = figId && Object.keys(figureNumbers).includes(figId) ?
-                    `Figure&nbsp;${figureNumbers[figId]}` : "Figure";
+                    `Figure\u00A0${figureNumbers[figId]}` : "Figure";
                 return <figure>
                     <div className="text-center">
                         {!doc.clickUrl && <img src={path} alt={doc.altText}/>}
@@ -30,11 +30,11 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                     </div>
                     <div className="text-center figure-caption">
                         {doc.children && doc.children.length > 0 && figId && <div>
-                            <strong className="text-secondary">${figureString}</strong>
+                            <strong className="text-secondary figure-reference">{figureString}</strong>
                         </div>}
                         <IsaacContentValueOrChildren
                             encoding={doc.encoding}
-                            value={doc.value && figId && `<strong class="text-secondary">${figureString}:</strong> ${doc.value}`}
+                            value={doc.value && figId && `<strong class="text-secondary figure-reference">${figureString}:</strong> ${doc.value}`}
                         >
                             {doc.children}
                         </IsaacContentValueOrChildren>

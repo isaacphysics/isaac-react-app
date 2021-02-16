@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import Select, {ValueType} from "react-select";
 import {Link, withRouter} from "react-router-dom";
 import tags from '../../services/tags';
 import {NOT_FOUND, TAG_ID} from '../../services/constants';
@@ -13,17 +12,13 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
 import {history} from "../../services/history";
-
-interface Item<T> {
-    value: T;
-    label: string;
-}
+import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
+import {Item} from "../../services/select";
+import {LevelsFilterHexagonal, LevelsFilterSummary} from "../elements/svg/LevelsFilter";
+import {useDeviceSize} from "../../services/device";
 
 const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
 
-function unwrapValue<T>(f: React.Dispatch<React.SetStateAction<Item<T>[]>>) {
-    return (value: ValueType<Item<T>>) => f(Array.isArray(value) ? value : !value ? [] : [value]);
-}
 function itemiseTag(tag: Tag) {
     return {value: tag.id, label: tag.title}
 }
@@ -81,6 +76,7 @@ function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[])
 
 export const GameboardFilter = withRouter(({location}: {location: Location}) => {
     const dispatch = useDispatch();
+    const deviceSize = useDeviceSize();
     const {queryLevels, querySelections} = processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
@@ -91,10 +87,11 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
         history.push({search: location.search});
     }
+    const [filterExpanded, setFilterExpanded] = useState(deviceSize != "xs");
+    const gameboardRef = useRef<HTMLDivElement>(null);
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>(querySelections);
-
-    function setSelection(tierIndex: number) {
+    function setTierSelection(tierIndex: number) {
         return ((values: Item<TAG_ID>[]) => {
             const newSelections = selections.slice(0, tierIndex);
             newSelections.push(values);
@@ -110,7 +107,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         choices.push(tags.getChildren(selection[0].value).map(itemiseTag));
     }
 
-    const tiers = [
+    const tiers: Tier[] = [
         {id: "subjects", name: "Subject"},
         {id: "fields", name: "Field"},
         {id: "topics", name: "Topic"},
@@ -130,7 +127,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
-                    params[tier.id] = "physics,maths";
+                    params[tier.id] = "physics,maths,chemistry";
                 }
                 return;
             }
@@ -171,55 +168,104 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         You can select more than one entry in each area.
     </span>;
 
+    function scrollToQuestions() {
+        if (gameboardRef.current) {
+            gameboardRef.current.scrollIntoView({behavior: "smooth"});
+        }
+    }
+
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
-        <RS.Row>
-            <RS.Col lg={{size: 10, offset: 1}}>
-                <div className="pt-3"><strong>Select your question filters</strong></div>
-                <RS.Row>
-                    <RS.Col lg={6}>
-                        {tiers.map((tier, i) => (
-                            <React.Fragment key={tier.for}>
-                                <RS.Label for={tier.for} className="pt-2 pb-0">{tier.name}: </RS.Label>
-                                <Select name={tier.for} onChange={unwrapValue(setSelection(i))} isMulti={true} options={choices[i]} value={selections[i]} />
-                            </React.Fragment>
-                        ))}
-                    </RS.Col>
-                    <RS.Col lg={6}>
-                        <div className="d-flex justify-content-between mt-0 mt-sm-4 mt-lg-0">
-                            <RS.Label className="pt-2 pb-0" for="level-selector">Levels: </RS.Label>
-                            <img width={270} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
-                        </div>
-                        <Select name="level-selector" onChange={unwrapValue(setLevels)} isMulti={true} value={levels} options={levelOptions} />
-                    </RS.Col>
-                </RS.Row>
-
-                <RS.Row className="mt-4">
-                    <RS.Col>
-                        {boardStack.length > 0 && <RS.Button size="sm" color="primary" outline onClick={previousBoard}>
-                            <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
-                        </RS.Button>}
-                    </RS.Col>
-                    <RS.Col className="text-right">
-                        <RS.Button size="sm" color="primary" outline onClick={refresh}>
-                            <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
+        <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
+            {/* Filter Summary */}
+            <RS.Row>
+                <RS.Col sm={8} lg={9}>
+                    <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
+                        <RS.Row>
+                            <RS.Col lg={6}>
+                                <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
+                                    Levels:
+                                    <span className="ml-3"><LevelsFilterSummary {...{levelOptions, levels}} /></span>
+                                </RS.Label>
+                            </RS.Col>
+                            <RS.Col lg={6} className="mt-3 mt-lg-0">
+                                <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
+                                    <span>Topics:</span>
+                                    <span><HierarchyFilterSummary {...{tiers, choices, selections}} /></span>
+                                </RS.Label>
+                            </RS.Col>
+                        </RS.Row>
+                    </button>
+                </RS.Col>
+                <RS.Col sm={4} lg={3} className="text-center mt-3 mb-4 m-sm-0">
+                    {filterExpanded ?
+                        <RS.Button color={"link"} block className="filter-action" onClick={scrollToQuestions}>
+                            Scroll to questions...
                         </RS.Button>
-                    </RS.Col>
-                </RS.Row>
+                        :
+                        <RS.Button color={"link"} className="filter-action" onClick={() => setFilterExpanded(true)}>
+                            Edit question filters
+                        </RS.Button>
+                    }
+                </RS.Col>
+            </RS.Row>
 
-                <RS.Row className="mt-4 mt-md-5 mb-3">
-                    <RS.Col>
-                        <h3>{boardName}</h3>
-                    </RS.Col>
-                    <RS.Col className="text-right">
-                        {gameboard && <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}`}>
-                            Save to My&nbsp;Gameboards
-                        </RS.Button>}
-                    </RS.Col>
-                </RS.Row>
+            {/* Filter */}
+            {filterExpanded && <RS.Row className="mb-sm-4">
+                <RS.Col xs={12}>
+                    <div className="mb-1"><strong>Select your question filters...</strong></div>
+                </RS.Col>
+                <RS.Col lg={4}>
+                    <RS.Label className={`mt-2 mt-lg-0`} for="level-selector">
+                        Levels:
+                    </RS.Label>
+                    <LevelsFilterHexagonal id="level-selector" {...{levelOptions, levels, setLevels}} />
+                    <div className="mt-2 mt-sm-4">
+                        <img width={256} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
+                    </div>
+                </RS.Col>
+                <RS.Col lg={8}>
+                    <RS.Label className={`mt-4 mt-lg-0`}>
+                        Topics:
+                    </RS.Label>
+                    <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
+                </RS.Col>
+            </RS.Row>}
+
+            {/* Buttons */}
+            <RS.Row className={filterExpanded ? "mt-4" : ""}>
+                <RS.Col>
+                    {boardStack.length > 0 && <RS.Button size="sm" color="primary" outline onClick={previousBoard}>
+                        <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
+                    </RS.Button>}
+                </RS.Col>
+                <RS.Col className="text-right">
+                    <RS.Button size="sm" color="primary" outline onClick={refresh}>
+                        <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
+                    </RS.Button>
+                </RS.Col>
+            </RS.Row>
+            <RS.Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
+                Go to Questions...
+            </RS.Button>
+            <RS.Button
+                color="link" id="expand-filter-button" onClick={() => setFilterExpanded(!filterExpanded)}
+                className={filterExpanded ? "open" : ""} aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}
+            />
+        </RS.Card>
+
+
+        <div ref={gameboardRef} className="row mt-4 mb-3">
+            <RS.Col>
+                <h3>{boardName}</h3>
             </RS.Col>
-        </RS.Row>
+            <RS.Col className="text-right">
+                {gameboard && <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}`}>
+                    Save to My&nbsp;Gameboards
+                </RS.Button>}
+            </RS.Col>
+        </div>
 
         <div className="pb-4">
             <ShowLoading

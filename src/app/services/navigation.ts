@@ -91,7 +91,7 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
 };
 
 export const ifKeyIsEnter = (action: () => void) => (event: React.KeyboardEvent) => {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 || event.charCode === 13) {
         action();
     }
 };

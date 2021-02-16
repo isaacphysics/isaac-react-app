@@ -1,0 +1,52 @@
+@import "../common/filter";
+svg {
+  .hex {
+    &.active.physics {
+      fill: $phy_physics;
+      stroke: $phy_physics;
+    }
+    &.active.maths {
+      fill: $phy_maths;
+      stroke: $phy_maths;
+    }
+    &.active.chemistry {
+      fill: $phy_chemistry;
+      stroke: $phy_chemistry;
+    }
+    &:not(.active) {
+      fill: none;
+      stroke: $gray-160;
+    }
+    &.none {
+      fill: none;
+      stroke: none;
+    }
+    &.clickable {
+      cursor: pointer;
+    }
+    &.level.active {
+      fill: $phy_green;
+      stroke: $phy_green;
+    }
+    &:focus {
+      outline: none;
+      stroke: black !important;
+      stroke-width: 0.2rem;
+    }
+  }
+  .connection {
+    fill: none;
+    &.active.physics {
+      stroke: $phy_physics;
+    }
+    &.active.maths {
+      stroke: $phy_maths;
+    }
+    &.active.chemistry {
+      stroke: $phy_chemistry;
+    }
+    &:not(.active) {
+      stroke: $gray-118;
+    }
+  }
+}

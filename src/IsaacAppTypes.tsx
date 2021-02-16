@@ -18,6 +18,8 @@ import {FasttrackConceptsState} from "./app/state/reducers";
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
 
+    | {type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE; userSnapshot: UserSnapshot}
+
     | {type: ACTION_TYPE.ROUTER_PAGE_CHANGE; path: string}
 
     | {type: ACTION_TYPE.API_SERVER_ERROR}
@@ -748,7 +750,7 @@ export interface UserProgress {
     correctByLevel?: LevelAttempts<number>;
     totalQuestionsAttempted?: number;
     totalQuestionsCorrect?: number;
-    totalQuestionPartsCorrect: number;
+    totalQuestionPartsCorrect?: number;
     totalQuestionPartsAttempted?: number;
     totalQuestionsCorrectThisAcademicYear?: number;
     totalQuestionsAttemptedThisAcademicYear?: number;
@@ -757,7 +759,7 @@ export interface UserProgress {
     attemptsByType?: { [type: string]: number };
     correctByType?: { [type: string]: number };
     attemptsByTag?: { [tag: string]: number };
-    correctByTag: { [tag: string]: number };
+    correctByTag?: { [tag: string]: number };
     userSnapshot?: UserSnapshot;
     userDetails?: ApiTypes.UserSummaryDTO;
 }

@@ -137,7 +137,7 @@ header {
     justify-content: flex-end !important;
 
     @include respond-below(xs) {
-      padding-right: 33% !important;
+      padding-right: 20% !important;
     }
     @include respond-above(xs){
       padding-right: 28% !important;

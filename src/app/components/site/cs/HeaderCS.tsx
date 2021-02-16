@@ -5,10 +5,12 @@ import {Col, Container, Row} from "reactstrap";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarCS} from "./NavigationBarCS";
 import {selectors} from "../../../state/selectors";
+import {useDeviceSize} from "../../../services/device";
 
 export const HeaderCS = () => {
     const user = useSelector(selectors.user.orNull);
     const mainContentId = useSelector(selectors.mainContentId.orDefault);
+    const deviceSize = useDeviceSize();
     return <header className="light">
         <Container className="container-fluid px-0">
             <Row>
@@ -41,7 +43,7 @@ export const HeaderCS = () => {
                                     <React.Fragment>
                                         <div className="my-account mx-5 mx-sm-2">
                                             <Link to="/account">
-                                                <span>MY ACCOUNT</span>
+                                                <span>{`${!["xs"].includes(deviceSize) ? "MY " : ""}ACCOUNT`}</span>
                                             </Link>
                                         </div>
                                         <div className="logout m-0 mr-md-4 ml-md-3">

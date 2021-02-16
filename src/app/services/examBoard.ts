@@ -6,14 +6,14 @@ import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 export const useCurrentExamBoard = () => {
     const user = useSelector((state: AppState) => state && state.user);
-    const tempExamBoardPreference = useSelector((state: AppState) => state && state.tempExamBoard);
+    const tempExamBoardPreference = useSelector((state: AppState) => state?.tempExamBoard);
 
     if (SITE_SUBJECT === SITE.PHY) {
         return EXAM_BOARD.NONE;
     }
 
     if (!user || user.examBoard == undefined || user.examBoard == EXAM_BOARD.OTHER) {
-        return tempExamBoardPreference || EXAM_BOARD.OCR;
+        return tempExamBoardPreference || EXAM_BOARD.AQA;
     } else {
         return user.examBoard;
     }

@@ -236,7 +236,7 @@ export function katexify(html: string, user: PotentialUser | null, examBoard: EX
             const number = figureNumbers[ref];
             if (number) {
                 const figure = `Figure&nbsp;${number}`;
-                return format ? `<strong class="text-secondary">${figure}</strong>` : figure;
+                return format ? `<strong class="text-secondary figure-reference">${figure}</strong>` : figure;
             }
         }
         return ifMissing;

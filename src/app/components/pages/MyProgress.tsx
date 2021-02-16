@@ -9,7 +9,7 @@ import {withRouter} from "react-router-dom";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {Unauthorised} from "./Unauthorised";
 import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats";
-import {DailyStreakPanel} from "../elements/panels/DailyStreakPanel";
+import {StreakPanel} from "../elements/panels/StreakPanel";
 import {Tabs} from "../elements/Tabs";
 import {FlushableRef, QuestionProgressCharts} from "../elements/views/QuestionProgressCharts";
 import {HUMAN_QUESTION_TAGS, HUMAN_QUESTION_TYPES} from "../../services/questions";
@@ -84,7 +84,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                                 <AggregateQuestionStats userProgress={userProgress} />
                             </RS.Col>
                             {SITE_SUBJECT === SITE.PHY && <RS.Col className="align-self-center" xs={12} md={3}>
-                                <DailyStreakPanel userProgress={userProgress} />
+                                <StreakPanel userProgress={userProgress} />
                             </RS.Col>}
                         </RS.Row>
 
