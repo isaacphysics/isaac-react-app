@@ -63,7 +63,7 @@ interface SetAssignmentsPageProps {
     loadBoards: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => void;
     loadGroupsForBoard: (board: GameboardDTO) => void;
     deleteBoard: (board: GameboardDTO) => void;
-    assignBoard: (board: GameboardDTO, groupId?: number, dueDate?: Date) => Promise<boolean>;
+    assignBoard: (board: GameboardDTO, groupId?: number, dueDate?: Date, assignmentNotes?: string) => Promise<boolean>;
     unassignBoard: (board: GameboardDTO, group: UserGroupDTO) => void;
     showToast: (toast: Toast) => void;
     location: {hash: string};
@@ -81,7 +81,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     const user = useSelector(selectors.user.orNull);
 
     function assign() {
-        assignBoard(board, groupId, dueDate).then(success => {
+        assignBoard(board, groupId, dueDate, assignmentNotes).then(success => {
             if (success) {
                 setGroupId(-1);
                 setDueDate(undefined);
