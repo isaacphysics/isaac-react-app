@@ -77,7 +77,6 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/accordions";
 @import "../common/cards";
 @import "../common/list-groups";
-@import "../common/featured-profile";
 @import "inequality-modal";
 @import "../common/carousel";
 @import "../common/icons";
@@ -90,6 +89,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/fasttrack";
 @import "button";
 @import "logo";
+@import "featured-profile";
 
 // Navigation
 @import "header";
