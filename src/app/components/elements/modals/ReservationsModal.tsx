@@ -2,7 +2,8 @@ import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     cancelReservationsOnEvent,
-    closeActiveModal, getEventBookingsForAllGroups,
+    closeActiveModal,
+    getEventBookingsForAllGroups,
     getEventBookingsForGroup,
     getGroupMembers,
     loadGroups,
@@ -15,10 +16,9 @@ import {AppState} from "../../../state/reducers";
 import {selectors} from '../../../state/selectors';
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {ActiveModal, AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
-import {EventBookingDTO} from "../../../../IsaacApiTypes";
+import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
 import _orderBy from "lodash/orderBy";
-import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {isLoggedIn} from "../../../services/user";
 import {Link} from "react-router-dom";
 
