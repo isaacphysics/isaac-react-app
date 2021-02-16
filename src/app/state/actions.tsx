@@ -75,6 +75,7 @@ import {atLeastOne} from "../services/validation";
 import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
+import {isDefined} from "../services/miscUtils";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -1683,7 +1684,18 @@ export const getEventBookingsForGroup = (eventId: string, groupId: number) => as
         dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
     }
-}
+};
+
+export const getEventBookingsForAllGroups = (eventId: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_REQUEST});
+        const response = await api.eventBookings.getEventBookingsForAllGroups(eventId);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_SUCCESS, eventBookingsForAllGroups: response.data});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
+    }
+};
 
 export const getEventBookingCSV = (eventId: string) => async (dispatch: Dispatch<Action>) => {
     try {
@@ -1729,11 +1741,15 @@ export const reserveUsersOnEvent = (eventId: string, userIds: number[], groupId:
     }
 };
 
-export const cancelReservationsOnEvent = (eventId: string, userIds: number[], groupId: number) => async (dispatch: Dispatch<Action>) => {
+export const cancelReservationsOnEvent = (eventId: string, userIds: number[], groupId: number | undefined) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_REQUEST});
         await api.eventBookings.cancelUsersReservationsOnEvent(eventId, userIds);
-        await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
+        if (isDefined(groupId)) {
+            await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
+        } else {
+            await dispatch(getEventBookingsForAllGroups(eventId) as any);
+        }
         await dispatch(getEvent(eventId) as any);
         dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_SUCCESS});
         dispatch(showToast({
