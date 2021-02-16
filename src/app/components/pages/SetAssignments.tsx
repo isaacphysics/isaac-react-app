@@ -112,12 +112,17 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
                    value={assignmentNotes}
                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
                 />
-                <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/240 characters</small></p>
-                {isDefined(assignmentNotes) && assignmentNotes.length > 240 &&
+                <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
+                {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
                     <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
                 }
         </Label>}
-        <Button className="mt-2 mb-2" block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]} onClick={assign} disabled={groupId === null || (isDefined(assignmentNotes) && assignmentNotes.length > 240)}>Assign to group</Button>
+        <Button
+            className="mt-2 mb-2"
+            block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]}
+            onClick={assign}
+            disabled={groupId === null || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
+        >Assign to group</Button>
     </Container>;
 };
 
