@@ -592,7 +592,9 @@ export interface AdminStatsResponse {
 
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
-export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string}>({id: undefined, clientId: "unknown"});
+export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string, open: boolean | null}>(
+    {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
+);
 export const QuestionContext = React.createContext<string | undefined>(undefined);
 
 export interface AppAssignmentProgress {
