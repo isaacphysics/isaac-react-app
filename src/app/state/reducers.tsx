@@ -429,17 +429,32 @@ export const testQuestions = (testQuestions: TestQuestionsState = null, action: 
     }
 };
 
-type AnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
-export const answeredQuestionsByDate = (answeredQuestionsByDateState: AnsweredQuestionsByDateState = null, action: Action) => {
+type MyAnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
+export const myAnsweredQuestionsByDate = (myAnsweredQuestionsByDateState: MyAnsweredQuestionsByDateState = null, action: Action) => {
     switch (action.type) {
-        case ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST: {
+        case ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST: {
             return null;
         }
-        case ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
-            return action.answeredQuestionsByDate;
+        case ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
+            return action.myAnsweredQuestionsByDate;
         }
         default: {
-            return answeredQuestionsByDateState;
+            return myAnsweredQuestionsByDateState;
+        }
+    }
+};
+
+type UserAnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
+export const userAnsweredQuestionsByDate = (userAnsweredQuestionsByDateState: UserAnsweredQuestionsByDateState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST: {
+            return null;
+        }
+        case ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
+            return action.userAnsweredQuestionsByDate;
+        }
+        default: {
+            return userAnsweredQuestionsByDateState;
         }
     }
 };
@@ -1006,7 +1021,8 @@ const appReducer = combineReducers({
     notifications,
     doc,
     questions,
-    answeredQuestionsByDate,
+    myAnsweredQuestionsByDate,
+    userAnsweredQuestionsByDate,
     currentTopic,
     currentGameboard,
     tempExamBoard,
@@ -1060,7 +1076,8 @@ export type AppState = undefined | {
     groupMemberships: GroupMembershipsState;
     doc: DocState;
     questions: QuestionsState;
-    answeredQuestionsByDate: AnsweredQuestionsByDateState;
+    myAnsweredQuestionsByDate: MyAnsweredQuestionsByDateState;
+    userAnsweredQuestionsByDate: UserAnsweredQuestionsByDateState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
     tempExamBoard: TempExamBoardState;

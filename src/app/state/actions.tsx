@@ -933,14 +933,25 @@ export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: []});
 };
 
-export const getAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST});
+export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST});
     try {
-        const answeredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
-        dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, answeredQuestionsByDate: answeredQuestionsByDate.data});
+        const myAnsweredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
+        dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, myAnsweredQuestionsByDate: myAnsweredQuestionsByDate.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE})
-        dispatch(showErrorToastIfNeeded("Failed to get answered question activity data", e));
+        dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get my answered question activity data", e));
+    }
+};
+
+export const getUserAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST});
+    try {
+        const userAnsweredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
+        dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, userAnsweredQuestionsByDate: userAnsweredQuestionsByDate.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get user answered question activity data", e));
     }
 };
 

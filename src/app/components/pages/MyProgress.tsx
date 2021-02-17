@@ -2,7 +2,12 @@ import React, {useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {getAnsweredQuestionsByDate, getMyProgress, getUserProgress} from "../../state/actions";
+import {
+    getMyAnsweredQuestionsByDate,
+    getMyProgress,
+    getUserAnsweredQuestionsByDate,
+    getUserProgress
+} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
 import {withRouter} from "react-router-dom";
@@ -52,17 +57,17 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
     const dispatch = useDispatch();
     const myProgress = useSelector((state: AppState) => state?.myProgress);
     const userProgress = useSelector((state: AppState) => state?.userProgress);
-    const myAchievements = useSelector((state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord);
-    const userAchievements = useSelector((state: AppState) => state?.userProgress?.userSnapshot?.achievementsRecord);
-    const answeredQuestionsByDate = useSelector((state: AppState) => state?.answeredQuestionsByDate);
+    const achievements = useSelector((state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord);
+    const myAnsweredQuestionsByDate = useSelector((state: AppState) => state?.myAnsweredQuestionsByDate);
+    const userAnsweredQuestionsByDate = useSelector((state: AppState) => state?.userAnsweredQuestionsByDate);
 
     useEffect(() => {
         if (viewingOwnData && user.loggedIn) {
             dispatch(getMyProgress());
-            dispatch(getAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
+            dispatch(getMyAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
         } else if (isTeacher(user)) {
             dispatch(getUserProgress(userIdOfInterest));
-            dispatch(getAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
+            dispatch(getUserAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
         }
     }, [dispatch, userIdOfInterest, viewingOwnData, user]);
 
@@ -73,7 +78,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
     }
 
     const progress = (!viewingOwnData && isTeacher(user)) ? userProgress : myProgress;
-    const achievements = (!viewingOwnData && isTeacher(user)) ? userAchievements : myAchievements;
+    const answeredQuestionsByDate = (!viewingOwnData && isTeacher(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
 
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
