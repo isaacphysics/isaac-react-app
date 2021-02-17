@@ -136,16 +136,29 @@ export const userSchoolLookup = (userSchoolLookup: UserSchoolLookupState = null,
     }
 };
 
+export type MyProgressState = UserProgress | null;
+export const myProgress = (myProgress: MyProgressState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.MY_PROGRESS_RESPONSE_SUCCESS:
+            return action.myProgress;
+        case ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE:
+            return {  // update only the snapshot and then potentially only partially
+                ...(myProgress || {}),
+                userSnapshot: {...(myProgress?.userSnapshot || {}), ...action.userSnapshot}
+            };
+        case ACTION_TYPE.MY_PROGRESS_RESPONSE_FAILURE:
+            return null;
+        default:
+            return myProgress;
+    }
+};
+
 export type UserProgressState = UserProgress | null;
 export const userProgress = (userProgress: UserProgressState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS:
-            return action.progress;
-        case ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE:
-            return {  // update only the snapshot and then potentially only partially
-                ...(userProgress || {}),
-                userSnapshot: {...(userProgress?.userSnapshot || {}), ...action.userSnapshot}
-            };
+            return action.userProgress;
+        // don't want to update the user snapshot when viewing another user's progress, see myProgress
         case ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE:
             return null;
         default:
@@ -416,17 +429,32 @@ export const testQuestions = (testQuestions: TestQuestionsState = null, action: 
     }
 };
 
-type AnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
-export const answeredQuestionsByDate = (answeredQuestionsByDateState: AnsweredQuestionsByDateState = null, action: Action) => {
+type MyAnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
+export const myAnsweredQuestionsByDate = (myAnsweredQuestionsByDateState: MyAnsweredQuestionsByDateState = null, action: Action) => {
     switch (action.type) {
-        case ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST: {
+        case ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST: {
             return null;
         }
-        case ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
-            return action.answeredQuestionsByDate;
+        case ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
+            return action.myAnsweredQuestionsByDate;
         }
         default: {
-            return answeredQuestionsByDateState;
+            return myAnsweredQuestionsByDateState;
+        }
+    }
+};
+
+type UserAnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
+export const userAnsweredQuestionsByDate = (userAnsweredQuestionsByDateState: UserAnsweredQuestionsByDateState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST: {
+            return null;
+        }
+        case ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
+            return action.userAnsweredQuestionsByDate;
+        }
+        default: {
+            return userAnsweredQuestionsByDateState;
         }
     }
 };
@@ -988,6 +1016,7 @@ const appReducer = combineReducers({
     user,
     userAuthSettings,
     userPreferences,
+    myProgress,
     userProgress,
     adminUserSearch,
     adminContentErrors,
@@ -1003,7 +1032,8 @@ const appReducer = combineReducers({
     notifications,
     doc,
     questions,
-    answeredQuestionsByDate,
+    myAnsweredQuestionsByDate,
+    userAnsweredQuestionsByDate,
     currentTopic,
     currentGameboard,
     tempExamBoard,
@@ -1044,6 +1074,7 @@ export type AppState = undefined | {
     selectedUserAuthSettings: SelectedUserAuthSettingsState;
     userAuthSettings: UserAuthSettingsState;
     userPreferences: UserPreferencesState;
+    myProgress: MyProgressState;
     userProgress: UserProgressState;
     adminUserSearch: AdminUserSearchState;
     adminContentErrors: AdminContentErrorsState;
@@ -1057,7 +1088,8 @@ export type AppState = undefined | {
     groupMemberships: GroupMembershipsState;
     doc: DocState;
     questions: QuestionsState;
-    answeredQuestionsByDate: AnsweredQuestionsByDateState;
+    myAnsweredQuestionsByDate: MyAnsweredQuestionsByDateState;
+    userAnsweredQuestionsByDate: UserAnsweredQuestionsByDateState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
     tempExamBoard: TempExamBoardState;
