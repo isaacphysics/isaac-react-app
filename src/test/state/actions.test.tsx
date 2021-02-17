@@ -175,7 +175,7 @@ describe("fetchSearch action", () => {
     });
 
     it("dispatches SEARCH_RESPONSE_SUCCESS after a successful request", async () => {
-        axiosMock.onGet(`/search/foo`, {params: {types: "bar"}}).replyOnce(200, searchResultsList);
+        axiosMock.onGet(`/search`, {params: {types: "bar", query: "foo"}}).replyOnce(200, searchResultsList);
         const store = mockStore();
         await store.dispatch(fetchSearch("foo", "bar") as any);
         const expectedActions = [
