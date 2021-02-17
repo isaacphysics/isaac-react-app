@@ -92,9 +92,9 @@ export function IsaacVideo(props: IsaacVideoProps) {
 
 
     // Exit early if a parent accordion section is closed (for the sake of pages containing many videos)
-    const {open: accordionOpen} = useContext(AccordionSectionContext);
-    const videoInAnAccordion = accordionOpen !== null;
-    if (videoInAnAccordion && !accordionOpen) {
+    const accordionContext = useContext(AccordionSectionContext);
+    const videoInAnAccordion = accordionContext.open !== null;
+    if (videoInAnAccordion && !accordionContext.open) {
         return null;
     }
 
