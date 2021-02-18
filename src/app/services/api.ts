@@ -95,6 +95,9 @@ export const api = {
         },
         getProgress: (userIdOfInterest = "current_user"): AxiosPromise<AppTypes.UserProgress> => {
             return endpoint.get(`users/${userIdOfInterest}/progress`);
+        },
+        getSnapshot: (): AxiosPromise<AppTypes.UserSnapshot> => {
+            return endpoint.get(`users/current_user/snapshot`);
         }
     },
     authentication: {

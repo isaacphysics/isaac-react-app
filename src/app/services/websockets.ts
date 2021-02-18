@@ -1,7 +1,7 @@
 import {api} from "./api";
 import {UserSnapshot} from "../../IsaacAppTypes";
 import {UserSummaryDTO} from "../../IsaacApiTypes";
-import {partiallyUpdateUserSnapshot} from "../state/actions";
+import {getSnapshot, partiallyUpdateUserSnapshot} from "../state/actions";
 import {store} from "../state/store";
 
 let notificationWebSocket: WebSocket | null  = null;
@@ -60,6 +60,7 @@ const openNotificationSocket = function(user: UserSummaryDTO | null): void {
 
     notificationWebSocket.onerror = function(error) {
         console.error("WebSocket error:", error);
+        store.dispatch(getSnapshot());
     }
 
 

@@ -382,6 +382,16 @@ export const getUserProgress = (userIdOfInterest?: string) => async (dispatch: D
     }
 };
 
+export const getSnapshot = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_SNAPSHOT_REQUEST});
+    try {
+        const response = await api.users.getSnapshot();
+        dispatch({type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_SUCCESS, snapshot: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_FAILURE});
+    }
+};
+
 export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_OUT_REQUEST});
     try {

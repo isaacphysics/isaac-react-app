@@ -146,6 +146,11 @@ export const myProgress = (myProgress: MyProgressState = null, action: Action) =
                 ...(myProgress || {}),
                 userSnapshot: {...(myProgress?.userSnapshot || {}), ...action.userSnapshot}
             };
+        case ACTION_TYPE.USER_SNAPSHOT_RESPONSE_SUCCESS:
+            return {  // update only the snapshot and then potentially only partially
+                ...(myProgress || {}),
+                userSnapshot: {...(myProgress?.userSnapshot || {}), ...action.snapshot}
+            };
         case ACTION_TYPE.MY_PROGRESS_RESPONSE_FAILURE:
             return null;
         default:
