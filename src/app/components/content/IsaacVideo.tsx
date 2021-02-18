@@ -1,10 +1,11 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useContext} from 'react';
 import {VideoDTO} from "../../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
 import {selectors} from "../../state/selectors";
 import {NOT_FOUND} from "../../services/constants";
 import ReactGA from "react-ga";
+import {AccordionSectionContext} from "../../../IsaacAppTypes";
 
 interface IsaacVideoProps {
     doc: VideoDTO;
@@ -88,6 +89,14 @@ export function IsaacVideo(props: IsaacVideoProps) {
             }
         }
     }, [dispatch, pageId]);
+
+
+    // Exit early if a parent accordion section is closed (for the sake of pages containing many videos)
+    const accordionSectionContext = useContext(AccordionSectionContext);
+    const videoInAnAccordionSection = accordionSectionContext.open !== null;
+    if (videoInAnAccordionSection && !accordionSectionContext.open) {
+        return null;
+    }
 
     return <div>
         <div className="no-print content-value text-center">

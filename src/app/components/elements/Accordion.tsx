@@ -152,7 +152,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, locatio
             </RS.Button>
         </div>
         <RS.Collapse isOpen={open} className="mt-1">
-            <AccordionSectionContext.Provider value={{id, clientId: clientId.current}}>
+            <AccordionSectionContext.Provider value={{id, clientId: clientId.current, open}}>
                 <RS.Card>
                     <RS.CardBody>
                         {children}

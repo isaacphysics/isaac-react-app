@@ -434,17 +434,32 @@ export const testQuestions = (testQuestions: TestQuestionsState = null, action: 
     }
 };
 
-type AnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
-export const answeredQuestionsByDate = (answeredQuestionsByDateState: AnsweredQuestionsByDateState = null, action: Action) => {
+type MyAnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
+export const myAnsweredQuestionsByDate = (myAnsweredQuestionsByDateState: MyAnsweredQuestionsByDateState = null, action: Action) => {
     switch (action.type) {
-        case ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST: {
+        case ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST: {
             return null;
         }
-        case ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
-            return action.answeredQuestionsByDate;
+        case ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
+            return action.myAnsweredQuestionsByDate;
         }
         default: {
-            return answeredQuestionsByDateState;
+            return myAnsweredQuestionsByDateState;
+        }
+    }
+};
+
+type UserAnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
+export const userAnsweredQuestionsByDate = (userAnsweredQuestionsByDateState: UserAnsweredQuestionsByDateState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST: {
+            return null;
+        }
+        case ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
+            return action.userAnsweredQuestionsByDate;
+        }
+        default: {
+            return userAnsweredQuestionsByDateState;
         }
     }
 };
@@ -617,6 +632,17 @@ export const eventBookingsForGroup = (eventBookingsForGroup: EventBookingsState 
             return null;
         default:
             return eventBookingsForGroup;
+    }
+};
+
+export const eventBookingsForAllGroups = (eventBookingsForAllGroups: EventBookingsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_SUCCESS:
+            return [...action.eventBookingsForAllGroups];
+        case ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_REQUEST:
+            return null;
+        default:
+            return eventBookingsForAllGroups;
     }
 };
 
@@ -1011,7 +1037,8 @@ const appReducer = combineReducers({
     notifications,
     doc,
     questions,
-    answeredQuestionsByDate,
+    myAnsweredQuestionsByDate,
+    userAnsweredQuestionsByDate,
     currentTopic,
     currentGameboard,
     tempExamBoard,
@@ -1034,6 +1061,7 @@ const appReducer = combineReducers({
     eventMapData,
     eventBookings,
     eventBookingsForGroup,
+    eventBookingsForAllGroups,
     fragments,
     glossaryTerms,
     testQuestions,
@@ -1065,7 +1093,8 @@ export type AppState = undefined | {
     groupMemberships: GroupMembershipsState;
     doc: DocState;
     questions: QuestionsState;
-    answeredQuestionsByDate: AnsweredQuestionsByDateState;
+    myAnsweredQuestionsByDate: MyAnsweredQuestionsByDateState;
+    userAnsweredQuestionsByDate: UserAnsweredQuestionsByDateState;
     currentTopic: CurrentTopicState;
     currentGameboard: CurrentGameboardState;
     tempExamBoard: TempExamBoardState;
@@ -1090,6 +1119,7 @@ export type AppState = undefined | {
     eventMapData: EventMapDataState;
     eventBookings: EventBookingsState;
     eventBookingsForGroup: EventBookingsState;
+    eventBookingsForAllGroups: EventBookingsState;
     fragments: FragmentsState;
     printingSettings: PrintingSettingsState;
     glossaryTerms: GlossaryTermsState;

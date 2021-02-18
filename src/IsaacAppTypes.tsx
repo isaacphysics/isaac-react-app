@@ -215,9 +215,13 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; answeredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
-    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST}
+    | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; myAnsweredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
+    | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST}
+    | {type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; userAnsweredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
+    | {type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
@@ -344,6 +348,10 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS; eventBookingsForGroup: ApiTypes.EventBookingDTO[]}
     | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_SUCCESS; eventBookingsForAllGroups: ApiTypes.EventBookingDTO[]}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_SUCCESS; eventBookingCSV: any}
@@ -594,7 +602,9 @@ export interface AdminStatsResponse {
 
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
-export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string}>({id: undefined, clientId: "unknown"});
+export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string, open: boolean | null}>(
+    {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
+);
 export const QuestionContext = React.createContext<string | undefined>(undefined);
 
 export interface AppAssignmentProgress {
