@@ -259,9 +259,9 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
                                 {/* Options for logged-in users */}
                                 {isLoggedIn(user) && !event.hasExpired && <React.Fragment>
-                                    {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED', 'RESERVED'].includes(event.userBookingStatus || '') &&
+                                    {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
                                         <RS.Button onClick={() => {setBookingFormOpen(true)}}>
-                                            {event.userBookingStatus === 'RESERVED' ? 'Confirm your booking' : 'Book a place'}
+                                            {event.userBookingStatus === 'RESERVED' ? 'Confirm your reservation' : 'Book a place'}
                                         </RS.Button>
                                     }
                                     {canReserveSpaces &&
