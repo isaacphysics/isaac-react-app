@@ -1052,23 +1052,21 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
     }
 };
 
-export const addGameboard = (gameboardId: string, user: PotentialUser) => async (dispatch: Dispatch<Action>) => {
+export const addGameboard = (gameboardId: string, user: PotentialUser, redirect?: boolean) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST});
         await api.gameboards.save(gameboardId);
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS});
+        if (redirect) {
+            if (isTeacher(user)) {
+                history.push(`/set_assignments#${gameboardId}`);
+            } else {
+                history.push(`/my_gameboards#${gameboardId}`);
+            }
+        }
     } catch (e) {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Error saving gameboard", e));
-    }
-};
-
-export const addGameboardAndReturnHome = (gameboardId: string, user: PotentialUser) => async (dispatch: Dispatch<Action>) => {
-    await dispatch(addGameboard(gameboardId, user) as any);
-    if (isTeacher(user)) {
-        history.push(`/set_assignments#${gameboardId}`);
-    } else {
-        history.push(`/my_gameboards#${gameboardId}`);
     }
 };
 
