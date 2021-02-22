@@ -14,6 +14,7 @@ import {EventStatusFilter, EventTypeFilter} from "../../services/constants";
 import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
+import {isTeacher} from "../../services/user";
 
 
 interface EventsPageQueryParams {
@@ -65,6 +66,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
                         }}>
                             {Object.entries(EventStatusFilter)
                                 .filter(([statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
+                                .filter(([statusLabel, statusValue]) => (user && user.loggedIn && isTeacher(user)) || statusValue !== EventStatusFilter["My event reservations"])
                                 .map(([statusLabel, statusValue]) =>
                                     <option key={statusValue} value={statusValue}>{statusLabel}</option>
                                 )
