@@ -1063,63 +1063,7 @@ const appReducer = combineReducers({
     groupProgress
 });
 
-export type AppState = undefined | {
-    adminUserGet: AdminUserGetState;
-    user: UserState;
-    selectedUserAuthSettings: SelectedUserAuthSettingsState;
-    userAuthSettings: UserAuthSettingsState;
-    userPreferences: UserPreferencesState;
-    myProgress: MyProgressState;
-    userProgress: UserProgressState;
-    adminUserSearch: AdminUserSearchState;
-    adminContentErrors: AdminContentErrorsState;
-    adminStats: AdminStatsState;
-    adminEmailTemplate: AdminEmailTemplateState;
-    userSchoolLookup: UserSchoolLookupState;
-    activeAuthorisations: ActiveAuthorisationsState;
-    otherUserAuthorisations: OtherUserAuthorisationsState;
-    totpSharedSecret: TotpSharedSecretState;
-    totpChallengePending: TotpChallengePendingState;
-    groupMemberships: GroupMembershipsState;
-    doc: DocState;
-    questions: QuestionsState;
-    myAnsweredQuestionsByDate: MyAnsweredQuestionsByDateState;
-    userAnsweredQuestionsByDate: UserAnsweredQuestionsByDateState;
-    currentTopic: CurrentTopicState;
-    currentGameboard: CurrentGameboardState;
-    tempExamBoard: TempExamBoardState;
-    wildcards: WildcardsState;
-    gameboardEditorQuestions: GameboardEditorQuestionsState;
-    assignments: AssignmentsState;
-    contentVersion: ContentVersionState;
-    search: SearchState;
-    constants: ConstantsState;
-    notifications: NotificationsState;
-    error: ErrorState;
-    toasts: ToastsState;
-    activeModals: ActiveModalsState;
-    groups: GroupsState;
-    boards: BoardsState;
-    assignmentsByMe: AssignmentsState;
-    progress: ProgressState;
-    events: EventsState;
-    news: NewsState;
-    currentEvent: CurrentEventState;
-    eventOverviews: EventOverviewsState;
-    eventMapData: EventMapDataState;
-    eventBookings: EventBookingsState;
-    eventBookingsForGroup: EventBookingsState;
-    eventBookingsForAllGroups: EventBookingsState;
-    fragments: FragmentsState;
-    printingSettings: PrintingSettingsState;
-    glossaryTerms: GlossaryTermsState;
-    testQuestions: TestQuestionsState;
-    concepts: ConceptsState;
-    fasttrackConcepts: FasttrackConceptsState;
-    graphSketcherSpec: GraphSpecState;
-    mainContentId: MainContentIdState;
-    groupProgress: GroupProgressState;
-}
+export type AppState = ReturnType<typeof appReducer> | undefined;
 
 export const rootReducer = (state: AppState, action: Action) => {
     if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
