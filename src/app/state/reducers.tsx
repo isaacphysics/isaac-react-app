@@ -80,16 +80,6 @@ export const userAuthSettings = (userAuthSettings: UserAuthSettingsState = null,
     }
 };
 
-type SelectedUserAuthSettingsState = UserAuthenticationSettingsDTO | null;
-export const selectedUserAuthSettings = (selectedUserAuthSettings: SelectedUserAuthSettingsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS:
-            return action.selectedUserAuthSettings;
-        default:
-            return selectedUserAuthSettings;
-    }
-};
-
 type UserPreferencesState = UserPreferencesDTO | null;
 export const userPreferences = (userPreferences: UserPreferencesState = null, action: Action) => {
     switch (action.type) {

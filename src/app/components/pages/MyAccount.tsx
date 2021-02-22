@@ -53,7 +53,6 @@ const stateToProps = (state: AppState, props: any) => {
     return {
         errorMessage: state ? state.error : null,
         userAuthSettings: state ? state.userAuthSettings : null,
-        selectedUserAuthSettings: state ? state.selectedUserAuthSettings : null,
         userPreferences: state ? state.userPreferences : null,
         firstLogin: history.location && history.location.state && (history.location.state as any).firstLogin,
         hashAnchor: (hash && hash.slice(1)) || null,
@@ -74,7 +73,6 @@ interface AccountPageProps {
     user: PotentialUser;
     errorMessage: ErrorState;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
-    selectedUserAuthSettings: UserAuthenticationSettingsDTO | null;
     getChosenUserAuthSettings: (userid: number) => void;
     userPreferences: UserPreferencesDTO | null;
     updateCurrentUser: (
