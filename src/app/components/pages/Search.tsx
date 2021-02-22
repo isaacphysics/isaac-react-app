@@ -10,7 +10,7 @@ import {AppState} from "../../state/reducers";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
-import {DOCUMENT_TYPE, documentDescription} from "../../services/constants";
+import {DOCUMENT_TYPE, documentDescription, SEARCH_CHAR_LENGTH_LIMIT} from "../../services/constants";
 import {pushSearchToHistory, searchResultIsPublic} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
@@ -112,6 +112,7 @@ export const Search = withRouter((props: {history: History; location: Location})
                             type="search" value={queryState}
                             placeholder="Search"
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setQueryState(e.target.value)}
+                            maxLength={SEARCH_CHAR_LENGTH_LIMIT}
                         />
                     </Form>
                 </Col>
