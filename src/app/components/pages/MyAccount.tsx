@@ -16,7 +16,7 @@ import {
     TabPane,
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
-import {AdminUserGetState, AppState, ErrorState} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
     PotentialUser,
@@ -46,6 +46,7 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
+import {AdminUserGetState, ErrorState} from "../../state/reducers/reducers";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;

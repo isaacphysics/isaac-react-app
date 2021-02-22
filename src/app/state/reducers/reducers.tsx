@@ -1,4 +1,3 @@
-import {combineReducers} from "redux";
 import {
     Action,
     ActiveModal,
@@ -14,15 +13,15 @@ import {
     EventOverview,
     GroupMembershipDetailDTO,
     isValidatedChoice,
-    PotentialUser,
     NOT_FOUND_TYPE,
+    PotentialUser,
     PrintingSettings,
     TemplateEmail,
     Toast,
     UserPreferencesDTO,
     UserProgress,
     UserSchoolLookup
-} from "../../IsaacAppTypes";
+} from "../../../IsaacAppTypes";
 import {
     AnsweredQuestionsByDate,
     AssignmentDTO,
@@ -39,18 +38,18 @@ import {
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
+    TOTPSharedSecretDTO,
     UserAuthenticationSettingsDTO,
+    UserGameboardProgressSummaryDTO,
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO,
-    TOTPSharedSecretDTO,
-    UserGameboardProgressSummaryDTO
-} from "../../IsaacApiTypes";
-import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
+    UserSummaryWithGroupMembershipDTO
+} from "../../../IsaacApiTypes";
+import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
-import tags from "../services/tags";
+import tags from "../../services/tags";
 
 type UserState = PotentialUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -1004,70 +1003,4 @@ export const mainContentId = (state: MainContentIdState = null, action: Action) 
         default:
             return state;
     }
-};
-
-const appReducer = combineReducers({
-    adminUserGet,
-    user,
-    userAuthSettings,
-    userPreferences,
-    myProgress,
-    userProgress,
-    adminUserSearch,
-    adminContentErrors,
-    adminStats,
-    adminEmailTemplate,
-    userSchoolLookup,
-    activeAuthorisations,
-    otherUserAuthorisations,
-    totpSharedSecret,
-    totpChallengePending,
-    groupMemberships,
-    constants,
-    notifications,
-    doc,
-    questions,
-    myAnsweredQuestionsByDate,
-    userAnsweredQuestionsByDate,
-    currentTopic,
-    currentGameboard,
-    tempExamBoard,
-    wildcards,
-    gameboardEditorQuestions,
-    assignments,
-    contentVersion,
-    search,
-    error,
-    toasts,
-    activeModals,
-    groups,
-    boards,
-    assignmentsByMe,
-    progress,
-    events,
-    news,
-    currentEvent,
-    eventOverviews,
-    eventMapData,
-    eventBookings,
-    eventBookingsForGroup,
-    eventBookingsForAllGroups,
-    fragments,
-    glossaryTerms,
-    testQuestions,
-    printingSettings,
-    concepts,
-    fasttrackConcepts,
-    graphSketcherSpec,
-    mainContentId,
-    groupProgress
-});
-
-export type AppState = ReturnType<typeof appReducer> | undefined;
-
-export const rootReducer = (state: AppState, action: Action) => {
-    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
-        state = undefined;
-    }
-    return appReducer(state, action);
 };

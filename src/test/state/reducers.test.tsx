@@ -1,21 +1,21 @@
-import {
-    boards,
-    BoardsState,
-    constants,
-    groups,
-    GroupsState,
-    questions,
-    rootReducer,
-    search,
-    toasts,
-    user
-} from "../../app/state/reducers";
+
 import {Action, AppGameBoard, AppGroupMembership, AppQuestionDTO, PotentialUser, AppGroup} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
 import {mapValues, union, without} from "lodash";
 import {selectors} from "../../app/state/selectors";
 import {UserGroupDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
+import {rootReducer} from "../../app/state/reducers";
+import {
+    boards,
+    BoardsState,
+    constants,
+    groups,
+    questions,
+    search,
+    toasts,
+    user
+} from "../../app/state/reducers/reducers";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 

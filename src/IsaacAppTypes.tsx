@@ -13,7 +13,7 @@ import {
     TOTPSharedSecretDTO, UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
-import {FasttrackConceptsState} from "./app/state/reducers";
+import {FasttrackConceptsState} from "./app/state/reducers/reducers";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteBoard, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState, Boards} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {
     Button,
     Card,
@@ -38,6 +38,7 @@ import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import Select from "react-select";
 import {multiSelectOnChange} from "../../services/gameboardBuilder";
+import {Boards} from "../../state/reducers/reducers";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
