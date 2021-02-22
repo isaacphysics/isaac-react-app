@@ -831,3 +831,5 @@ export const progressColour = {
 }[SITE_SUBJECT];
 
 export const GRAY_120 = '#c9cad1';
+
+export const SEARCH_CHAR_LENGTH_LIMIT = 255;
