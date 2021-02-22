@@ -18,6 +18,7 @@ import {selectors} from "../../state/selectors";
 
 interface EventsPageQueryParams {
     show_booked_only?: boolean;
+    show_reservations_only?: boolean;
     event_status?: "all";
     types?: EventTypeFilter;
 }
@@ -35,6 +36,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
 
     const statusFilter =
         (user && user.loggedIn && query.show_booked_only && EventStatusFilter["My booked events"]) ||
+        (user && user.loggedIn && query.show_reservations_only && EventStatusFilter["My event reservations"]) ||
         (query.event_status === "all" && EventStatusFilter["All events"]) ||
         EventStatusFilter["Upcoming events"];
     const typeFilter = query.types || EventTypeFilter["All events"];
@@ -57,6 +59,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
                         <RS.Input id="event-status-filter" className="ml-2 mr-3" type="select" value={statusFilter} onChange={e => {
                             const selectedFilter = e.target.value as EventStatusFilter;
                             query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
+                            query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
                             query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
                             history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
                         }}>

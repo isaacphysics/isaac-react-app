@@ -266,7 +266,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                     }
                                     {canReserveSpaces &&
                                         <RS.Button color="primary" onClick={() => {dispatch(openActiveModal(reservationsModal()))}}>
-                                            Reserve spaces
+                                            Manage reservations
                                         </RS.Button>
                                     }
                                     {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
