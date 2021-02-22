@@ -54,7 +54,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
         if (event) {event.preventDefault();}
         if (questionPart?.currentAttempt) {
             dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt));
-            currentUser && currentGameboard?.id && dispatch(addGameboard(currentGameboard.id, currentUser));
+            currentUser && currentGameboard?.id && !currentGameboard.savedToCurrentUser && dispatch(addGameboard(currentGameboard.id, currentUser));
         }
     }}>
         <div className={`question-component p-md-5 ${doc.type} ${doc.type === 'isaacParsonsQuestion' ? "parsons-layout" : ""}`}>

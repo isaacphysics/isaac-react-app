@@ -523,6 +523,8 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
             return action.gameboard;
         case ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS:
             return {id: action.gameboardId};
+        case ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS:
+            return {...currentGameboard as {}, savedToCurrentUser: true};
         case ACTION_TYPE.GAMEBOARD_RESPONSE_NO_CONTENT:
         case ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE:
             return NOT_FOUND;
