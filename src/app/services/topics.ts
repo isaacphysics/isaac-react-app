@@ -3,7 +3,7 @@ import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, documentTypePathPrefix, EXAM_BOARD, NOT
 import {LinkInfo} from "./navigation";
 import {filterOnExamBoard} from "./examBoard";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {CurrentTopicState} from "../state/reducers/reducers";
+import {CurrentTopicState} from "../state/reducers/topicState";
 
 const filterForConcepts = (contents: ContentSummaryDTO[]) => {
     return contents.filter(content => content.type === DOCUMENT_TYPE.CONCEPT);

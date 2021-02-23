@@ -17,7 +17,7 @@ import {AppState} from "../../../state/reducers";
 import classnames from "classnames";
 import {MEMBERSHIP_STATUS} from "../../../services/constants";
 import {extractTeacherName} from "../../../services/user";
-import {AdminUserGetState} from "../../../state/reducers/reducers";
+import {AdminUserGetState} from "../../../state/reducers/adminState";
 
 
 interface TeacherConnectionsProps {
