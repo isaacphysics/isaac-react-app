@@ -46,7 +46,7 @@ interface InequalityModalProps {
     logicSyntax?: string;
     visible: boolean;
     questionDoc?: ContentDTO;
-    showHelpModal: () => {
+    showHelpModal: (editorModal: string) => {
         type: ACTION_TYPE;
         activeModal: ActiveModal;
     };
@@ -82,9 +82,14 @@ interface InequalityModalState {
     numberInputValue?: number;
 }
 
-const InequalityHelpModal = () => {
+interface InequalityHelpModalProps {
+    editorMode: string;
+}
+
+const InequalityHelpModal = (props: InequalityHelpModalProps) => {
+    const fragmentId = `eqn_editor_help_modal_${props.editorMode}`;
     return <>
-        <PageFragment fragmentId="eqn_editor_help_modal"/>
+        <PageFragment fragmentId={fragmentId}/>
         </>
 }
 
@@ -1231,8 +1236,8 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
             <div
                 className="inequality-ui help button"
                 role="button" tabIndex={-1}
-                onClick={() => this.props.showHelpModal()}
-                onKeyUp={() => this.props.showHelpModal()}
+                onClick={() => this.props.showHelpModal(this.props.editorMode || 'modemissing')}
+                onKeyUp={() => this.props.showHelpModal(this.props.editorMode || 'modemissing')}
             >Help</div>
 
             <div id="inequality-trash" className="inequality-ui trash button">Trash</div>
@@ -1248,10 +1253,10 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
 }
 
 export const InequalityModal = connect(null, dispatch => ({
-    showHelpModal: () => dispatch(openActiveModal({
+    showHelpModal: (editorMode: string) => dispatch(openActiveModal({
         closeAction: () => { store.dispatch(closeActiveModal()) },
         size: 'xl',
         title: 'Quick Help',
-        body: InequalityHelpModal
+        body: <InequalityHelpModal editorMode={editorMode} />
     }))
 }))(InequalityModalComponent);
