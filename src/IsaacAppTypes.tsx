@@ -7,13 +7,13 @@ import {
     ContentBase,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardItem,
+    GameboardItem, RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
-    TOTPSharedSecretDTO
+    TOTPSharedSecretDTO, UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
-import {FasttrackConceptsState} from "./app/state/reducers";
+import {FasttrackConceptsState} from "./app/state/reducers/reducers";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -103,10 +103,10 @@ export type Action =
     | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS; users: {}[]}
+    | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS; users: UserSummaryForAdminUsersDTO[]}
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.ADMIN_USER_GET_REQUEST}
-    | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS; getUsers: {}}
+    | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS; getUsers: RegisteredUserDTO}
     | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS}
