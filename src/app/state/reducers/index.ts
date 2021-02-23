@@ -15,17 +15,10 @@ import {
     concepts,
     constants,
     contentVersion,
-    currentEvent,
     currentGameboard,
     currentTopic,
     doc,
     error,
-    eventBookings,
-    eventBookingsForAllGroups,
-    eventBookingsForGroup,
-    eventMapData,
-    eventOverviews,
-    events,
     fasttrackConcepts,
     fragments,
     gameboardEditorQuestions,
@@ -57,6 +50,15 @@ import {
     userSchoolLookup,
     wildcards
 } from "./reducers";
+import {
+    currentEvent,
+    eventBookings,
+    eventBookingsForAllGroups,
+    eventBookingsForGroup,
+    eventMapData,
+    eventOverviews,
+    events
+} from "./events";
 
 const appReducer = combineReducers({
     user,
@@ -97,13 +99,6 @@ const appReducer = combineReducers({
     assignmentsByMe,
     progress,
     news,
-    events,
-    currentEvent,
-    eventOverviews,
-    eventMapData,
-    eventBookings,
-    eventBookingsForGroup,
-    eventBookingsForAllGroups,
     fragments,
     glossaryTerms,
     testQuestions,
@@ -112,7 +107,17 @@ const appReducer = combineReducers({
     fasttrackConcepts,
     graphSketcherSpec,
     mainContentId,
-    groupProgress
+    groupProgress,
+
+    // Events
+    events,
+    currentEvent,
+    eventOverviews,
+    eventMapData,
+    eventBookings,
+    eventBookingsForGroup,
+    eventBookingsForAllGroups,
+
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;
