@@ -14,6 +14,7 @@ import { store } from '../../../state/store';
 import { closeActiveModal, openActiveModal } from "../../../state/actions";
 import { connect } from "react-redux";
 import { ActiveModal } from "../../../../IsaacAppTypes";
+import { PageFragment } from "../PageFragment";
 
 class MenuItem {
     public type: string;
@@ -83,7 +84,7 @@ interface InequalityModalState {
 
 const InequalityHelpModal = () => {
     return <>
-        <p>Some help content, perhaps also a link to a longer explanation?</p>
+        <PageFragment fragmentId="eqn_editor_help_modal"/>
         </>
 }
 
