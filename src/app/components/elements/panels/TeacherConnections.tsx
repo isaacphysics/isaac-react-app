@@ -13,10 +13,11 @@ import {
     revokeAuthorisationAfterPrompt
 } from "../../../state/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {AdminUserGetState, AppState} from "../../../state/reducers";
+import {AppState} from "../../../state/reducers";
 import classnames from "classnames";
 import {MEMBERSHIP_STATUS} from "../../../services/constants";
 import {extractTeacherName} from "../../../services/user";
+import {AdminUserGetState} from "../../../state/reducers/reducers";
 
 
 interface TeacherConnectionsProps {

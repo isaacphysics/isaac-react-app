@@ -1,4 +1,3 @@
-import {combineReducers} from "redux";
 import {
     Action,
     ActiveModal,
@@ -7,28 +6,24 @@ import {
     AppGroup,
     AppGroupMembership,
     AppQuestionDTO,
-    AugmentedEvent,
     Concepts,
     ContentErrorsResponse,
-    EventMapData,
-    EventOverview,
     GroupMembershipDetailDTO,
     isValidatedChoice,
-    PotentialUser,
     NOT_FOUND_TYPE,
+    PotentialUser,
     PrintingSettings,
     TemplateEmail,
     Toast,
     UserPreferencesDTO,
     UserProgress,
     UserSchoolLookup
-} from "../../IsaacAppTypes";
+} from "../../../IsaacAppTypes";
 import {
     AnsweredQuestionsByDate,
     AssignmentDTO,
     ContentDTO,
     ContentSummaryDTO,
-    EventBookingDTO,
     GameboardDTO,
     GameboardItem,
     GameboardListDTO,
@@ -39,18 +34,18 @@ import {
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
+    TOTPSharedSecretDTO,
     UserAuthenticationSettingsDTO,
+    UserGameboardProgressSummaryDTO,
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryForAdminUsersDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO,
-    TOTPSharedSecretDTO,
-    UserGameboardProgressSummaryDTO
-} from "../../IsaacApiTypes";
-import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../services/constants";
+    UserSummaryWithGroupMembershipDTO
+} from "../../../IsaacApiTypes";
+import {ACTION_TYPE, ContentVersionUpdatingStatus, EXAM_BOARD, NOT_FOUND} from "../../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith, without} from "lodash";
-import tags from "../services/tags";
+import tags from "../../services/tags";
 
 type UserState = PotentialUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -77,16 +72,6 @@ export const userAuthSettings = (userAuthSettings: UserAuthSettingsState = null,
             return action.userAuthSettings;
         default:
             return userAuthSettings;
-    }
-};
-
-type SelectedUserAuthSettingsState = UserAuthenticationSettingsDTO | null;
-export const selectedUserAuthSettings = (selectedUserAuthSettings: SelectedUserAuthSettingsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS:
-            return action.selectedUserAuthSettings;
-        default:
-            return selectedUserAuthSettings;
     }
 };
 
@@ -574,19 +559,6 @@ export const currentTopic = (currentTopic: CurrentTopicState = null, action: Act
     }
 };
 
-type EventsState = {events: AugmentedEvent[]; total: number} | null;
-export const events = (events: EventsState = null, action: Action) => {
-    const currentEvents = events ? events.events : [];
-    switch (action.type) {
-        case ACTION_TYPE.EVENTS_RESPONSE_SUCCESS:
-            return {events: Array.from(new Set([...currentEvents, ...action.augmentedEvents])), total: action.total};
-        case ACTION_TYPE.EVENTS_CLEAR:
-            return null;
-        default:
-            return events;
-    }
-};
-
 type NewsState = {news: IsaacPodDTO[]} | null;
 export const news = (news: NewsState = null, action: Action) => {
     switch (action.type) {
@@ -597,78 +569,6 @@ export const news = (news: NewsState = null, action: Action) => {
     }
 };
 
-export type CurrentEventState = AugmentedEvent | NOT_FOUND_TYPE | null;
-export const currentEvent = (currentEvent: CurrentEventState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.EVENT_RESPONSE_SUCCESS:
-            return {...action.augmentedEvent};
-        case ACTION_TYPE.EVENT_RESPONSE_FAILURE:
-            return NOT_FOUND;
-        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
-        case ACTION_TYPE.EVENT_REQUEST:
-            return null;
-        default:
-            return currentEvent;
-    }
-};
-
-export type EventBookingsState = EventBookingDTO[] | null;
-export const eventBookings = (eventBookings: EventBookingsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS:
-            return [...action.eventBookings];
-        case ACTION_TYPE.EVENT_BOOKING_REQUEST:
-            return null;
-        default:
-            return eventBookings;
-    }
-};
-
-export const eventBookingsForGroup = (eventBookingsForGroup: EventBookingsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS:
-            return [...action.eventBookingsForGroup];
-        case ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_REQUEST:
-            return null;
-        default:
-            return eventBookingsForGroup;
-    }
-};
-
-export const eventBookingsForAllGroups = (eventBookingsForAllGroups: EventBookingsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_SUCCESS:
-            return [...action.eventBookingsForAllGroups];
-        case ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_REQUEST:
-            return null;
-        default:
-            return eventBookingsForAllGroups;
-    }
-};
-
-type EventOverviewsState = EventOverview[] | null;
-export const eventOverviews = (eventOverviews: EventOverviewsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.EVENT_OVERVIEWS_REQUEST:
-            return null;
-        case ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS:
-            return [...action.eventOverviews];
-        default:
-            return eventOverviews;
-    }
-};
-
-type EventMapDataState = EventMapData[] | null;
-export const eventMapData = (eventMapData: EventMapDataState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.EVENT_MAP_DATA_REQUEST:
-            return null;
-        case ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS:
-            return [...action.eventMapData];
-        default:
-            return eventMapData;
-    }
-};
 
 
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
@@ -1014,126 +914,4 @@ export const mainContentId = (state: MainContentIdState = null, action: Action) 
         default:
             return state;
     }
-};
-
-const appReducer = combineReducers({
-    adminUserGet,
-    user,
-    userAuthSettings,
-    userPreferences,
-    myProgress,
-    userProgress,
-    adminUserSearch,
-    adminContentErrors,
-    adminStats,
-    adminEmailTemplate,
-    userSchoolLookup,
-    activeAuthorisations,
-    otherUserAuthorisations,
-    totpSharedSecret,
-    totpChallengePending,
-    groupMemberships,
-    constants,
-    notifications,
-    doc,
-    questions,
-    myAnsweredQuestionsByDate,
-    userAnsweredQuestionsByDate,
-    currentTopic,
-    currentGameboard,
-    tempExamBoard,
-    wildcards,
-    gameboardEditorQuestions,
-    assignments,
-    contentVersion,
-    search,
-    error,
-    toasts,
-    activeModals,
-    groups,
-    boards,
-    assignmentsByMe,
-    progress,
-    events,
-    news,
-    currentEvent,
-    eventOverviews,
-    eventMapData,
-    eventBookings,
-    eventBookingsForGroup,
-    eventBookingsForAllGroups,
-    fragments,
-    glossaryTerms,
-    testQuestions,
-    printingSettings,
-    concepts,
-    fasttrackConcepts,
-    graphSketcherSpec,
-    mainContentId,
-    groupProgress
-});
-
-export type AppState = undefined | {
-    adminUserGet: AdminUserGetState;
-    user: UserState;
-    selectedUserAuthSettings: SelectedUserAuthSettingsState;
-    userAuthSettings: UserAuthSettingsState;
-    userPreferences: UserPreferencesState;
-    myProgress: MyProgressState;
-    userProgress: UserProgressState;
-    adminUserSearch: AdminUserSearchState;
-    adminContentErrors: AdminContentErrorsState;
-    adminStats: AdminStatsState;
-    adminEmailTemplate: AdminEmailTemplateState;
-    userSchoolLookup: UserSchoolLookupState;
-    activeAuthorisations: ActiveAuthorisationsState;
-    otherUserAuthorisations: OtherUserAuthorisationsState;
-    totpSharedSecret: TotpSharedSecretState;
-    totpChallengePending: TotpChallengePendingState;
-    groupMemberships: GroupMembershipsState;
-    doc: DocState;
-    questions: QuestionsState;
-    myAnsweredQuestionsByDate: MyAnsweredQuestionsByDateState;
-    userAnsweredQuestionsByDate: UserAnsweredQuestionsByDateState;
-    currentTopic: CurrentTopicState;
-    currentGameboard: CurrentGameboardState;
-    tempExamBoard: TempExamBoardState;
-    wildcards: WildcardsState;
-    gameboardEditorQuestions: GameboardEditorQuestionsState;
-    assignments: AssignmentsState;
-    contentVersion: ContentVersionState;
-    search: SearchState;
-    constants: ConstantsState;
-    notifications: NotificationsState;
-    error: ErrorState;
-    toasts: ToastsState;
-    activeModals: ActiveModalsState;
-    groups: GroupsState;
-    boards: BoardsState;
-    assignmentsByMe: AssignmentsState;
-    progress: ProgressState;
-    events: EventsState;
-    news: NewsState;
-    currentEvent: CurrentEventState;
-    eventOverviews: EventOverviewsState;
-    eventMapData: EventMapDataState;
-    eventBookings: EventBookingsState;
-    eventBookingsForGroup: EventBookingsState;
-    eventBookingsForAllGroups: EventBookingsState;
-    fragments: FragmentsState;
-    printingSettings: PrintingSettingsState;
-    glossaryTerms: GlossaryTermsState;
-    testQuestions: TestQuestionsState;
-    concepts: ConceptsState;
-    fasttrackConcepts: FasttrackConceptsState;
-    graphSketcherSpec: GraphSpecState;
-    mainContentId: MainContentIdState;
-    groupProgress: GroupProgressState;
-}
-
-export const rootReducer = (state: AppState, action: Action) => {
-    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
-        state = undefined;
-    }
-    return appReducer(state, action);
 };

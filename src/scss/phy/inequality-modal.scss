@@ -9,6 +9,9 @@
             &.centre {
                 background-image: url('/assets/inequality-centre-phy.svg');
             }
+            &.show-question {
+                background-image: url('/assets/inequality-togglequestion-phy.svg');
+            }
         }
 
         &.katex-preview {
