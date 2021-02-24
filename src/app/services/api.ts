@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {AuthenticationProvider, EventBookingDTO, GameboardDTO, TestCaseDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, EventBookingDTO, GameboardDTO, IsaacQuizDTO, ResultsWrapper, TestCaseDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
@@ -525,5 +525,10 @@ export const api = {
                 return new WebSocket(window.location.origin.replace(/^http/, "ws") + API_PATH + userAlertsURI);
             }
         }
-    }
+    },
+    quizzes: {
+        available: (): AxiosPromise<ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+            return endpoint.get(`/quiz/available`);
+        }
+    },
 };

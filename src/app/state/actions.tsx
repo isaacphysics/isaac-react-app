@@ -115,7 +115,7 @@ export const showToast = (toast: Toast) => (dispatch: any) => {
     return toastId;
 };
 
-function showErrorToastIfNeeded(error: string, e: any) {
+export function showErrorToastIfNeeded(error: string, e: any) {
     if (e) {
         if (e.response) {
             if (e.response.status < 500) {

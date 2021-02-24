@@ -7,7 +7,7 @@ import {
     ContentBase,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardItem, RegisteredUserDTO,
+    GameboardItem, IsaacQuizDTO, RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
     TOTPSharedSecretDTO, UserSummaryForAdminUsersDTO
@@ -439,7 +439,12 @@ export type Action =
     | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
 
     | {type: ACTION_TYPE.SET_MAIN_CONTENT_ID; id: string}
-;
+
+    | {type: ACTION_TYPE.QUIZZES_REQUEST}
+    | {type: ACTION_TYPE.QUIZZES_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS; quizzes: ResultsWrapper<ContentSummaryDTO>}
+
+    ;
 
 export type NOT_FOUND_TYPE = 404;
 

@@ -483,7 +483,11 @@ export enum ACTION_TYPE {
 
     LOG_EVENT = "LOG_EVENT",
 
-    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID"
+    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID",
+
+    QUIZZES_REQUEST = "QUIZZES_REQUEST",
+    QUIZZES_RESPONSE_SUCCESS = "QUIZZES_RESPONSE_SUCCESS",
+    QUIZZES_RESPONSE_FAILURE = "QUIZZES_RESPONSE_FAILURE",
 }
 
 export enum EXAM_BOARD {
@@ -654,6 +658,7 @@ export enum DOCUMENT_TYPE {
     EVENT = "isaacEventPage",
     TOPIC_SUMMARY = "isaacTopicSummaryPage",
     GENERIC = "page",
+    QUIZ = "isaacQuiz",
 }
 export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 
@@ -663,7 +668,8 @@ export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "Questions",
     [DOCUMENT_TYPE.EVENT]: "Events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
-    [DOCUMENT_TYPE.GENERIC]: "Other pages"
+    [DOCUMENT_TYPE.GENERIC]: "Other pages",
+    [DOCUMENT_TYPE.QUIZ]: "Quizzes",
 };
 
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
@@ -672,7 +678,8 @@ export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} =
     [DOCUMENT_TYPE.QUESTION]: "questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "questions",
     [DOCUMENT_TYPE.EVENT]: "events",
-    [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics"
+    [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics",
+    [DOCUMENT_TYPE.QUIZ]: "quiz",
 };
 
 export enum ContentVersionUpdatingStatus {

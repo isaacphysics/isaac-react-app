@@ -130,7 +130,11 @@ export const selectors = {
 
     assignments: {
         progress: (state: AppState) => state?.progress && load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.progressState(state?.progress) : state?.progress
-    }
+    },
+
+    quizzes: {
+        available: (state: AppState) => state?.quizzes?.quizzes,
+    },
 };
 
 export const anonymisationFunctions = {

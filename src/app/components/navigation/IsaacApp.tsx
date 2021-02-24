@@ -73,6 +73,7 @@ import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ClientError} from "../pages/ClientError";
 import {checkForWebSocket, closeWebSocket} from "../../services/websockets";
+import {SetQuizzes} from "../pages/quizzes/SetQuizzes";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -161,6 +162,7 @@ export const IsaacApp = () => {
                     {/* Teacher pages */}
                     <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
                     <TrackedRoute exact path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
+                    <TrackedRoute exact path="/set_quizzes" ifUser={isTeacher} component={SetQuizzes} />
 
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />

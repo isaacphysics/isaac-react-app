@@ -59,6 +59,9 @@ import {
     eventOverviews,
     events
 } from "./events";
+import {
+    quizzes
+} from "./quizzes";
 
 const appReducer = combineReducers({
     user,
@@ -117,6 +120,9 @@ const appReducer = combineReducers({
     eventBookings,
     eventBookingsForGroup,
     eventBookingsForAllGroups,
+
+    // Quizzes
+    quizzes,
 
 });
 

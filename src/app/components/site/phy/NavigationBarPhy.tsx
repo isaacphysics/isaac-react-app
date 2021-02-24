@@ -21,6 +21,7 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/groups">Manage Groups</LinkItem>
             <LinkItem to="/set_assignments">Set Assignments</LinkItem>
             <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
+            <LinkItem to="/set_quizzes">Set quizzes</LinkItem>
         </NavigationSection>}
 
         <NavigationSection title="Learn">
