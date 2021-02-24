@@ -51,10 +51,11 @@ export const HomepagePhy = () => {
                     </Col>
                     <Col lg="7" className="pb-4 pb-lg-0 px-lg-4 align-self-center text-center">
                         <iframe
-                            title="Isaac Physics introduction video" width="600" height="280" className="mw-100"
-                            src="https://www.youtube-nocookie.com/embed/nW4J-NVDziw?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
-                            frameBorder="0" allowFullScreen
+                            title="Isaac Physics introduction video" width="500" height="281"
+                            src="https://www.youtube-nocookie.com/embed/wd9vdc_yYKM?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
+                            frameBorder="0" allowFullScreen className="mw-100"
                         />
+
                     </Col>
                 </Row>
 
