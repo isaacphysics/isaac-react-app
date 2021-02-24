@@ -431,11 +431,11 @@ export const api = {
         },
         getEvents: (
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
-            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
+            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean, showReservedOnly: boolean
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
             return endpoint.get(`/events`, {params: {
                 start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
-                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
+                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, show_reservations_only: showReservedOnly, tags: filterEventsByType
             }});
         },
         getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {

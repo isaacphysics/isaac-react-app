@@ -741,6 +741,7 @@ export enum EventStatusFilter {
     "All events" = "all",
     "Upcoming events" = "upcoming",
     "My booked events" = "showBookedOnly",
+    "My event reservations" = "showReservationsOnly"
 }
 export enum EventTypeFilter {
     "All events" = "all",
