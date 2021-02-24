@@ -29,7 +29,7 @@ import {
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {ActualBoardLimit, AppGameBoard, BoardOrder, Toast} from "../../../IsaacAppTypes";
+import {ActualBoardLimit, AppGameBoard, BoardOrder, Boards, Toast} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {range, sortBy} from "lodash";
@@ -45,7 +45,6 @@ import {connect, useDispatch} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {Boards} from "../../state/reducers/reducers";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,

@@ -2,55 +2,6 @@ import {combineReducers} from "redux";
 import {Action} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services/constants";
 import {
-    activeAuthorisations,
-    activeModals,
-    adminContentErrors,
-    adminEmailTemplate,
-    adminStats,
-    adminUserGet,
-    adminUserSearch,
-    assignments,
-    assignmentsByMe,
-    boards,
-    concepts,
-    constants,
-    contentVersion,
-    currentGameboard,
-    currentTopic,
-    doc,
-    error,
-    fasttrackConcepts,
-    fragments,
-    gameboardEditorQuestions,
-    glossaryTerms,
-    graphSketcherSpec,
-    groupMemberships,
-    groupProgress,
-    groups,
-    mainContentId,
-    myAnsweredQuestionsByDate,
-    myProgress,
-    news,
-    notifications,
-    otherUserAuthorisations,
-    printingSettings,
-    progress,
-    questions,
-    search,
-    tempExamBoard,
-    testQuestions,
-    toasts,
-    totpChallengePending,
-    totpSharedSecret,
-    user,
-    userAnsweredQuestionsByDate,
-    userAuthSettings,
-    userPreferences,
-    userProgress,
-    userSchoolLookup,
-    wildcards
-} from "./reducers";
-import {
     currentEvent,
     eventBookings,
     eventBookingsForAllGroups,
@@ -58,56 +9,109 @@ import {
     eventMapData,
     eventOverviews,
     events
-} from "./events";
-
-const appReducer = combineReducers({
+} from "./eventsState";
+import {
+    totpChallengePending,
+    totpSharedSecret,
     user,
     userAuthSettings,
     userPreferences,
+    userSchoolLookup
+} from "./userState";
+import {error, mainContentId, printingSettings, tempExamBoard} from "./internalAppState";
+import {constants, glossaryTerms, news} from "./staticState";
+import {concepts, doc, fragments} from "./contentState";
+import {graphSketcherSpec, questions} from "./questionState";
+import {activeModals, notifications, toasts} from "./notifiersState";
+import {myAnsweredQuestionsByDate, myProgress, userAnsweredQuestionsByDate, userProgress} from "./progressState";
+import {
+    adminContentErrors,
+    adminEmailTemplate,
+    adminStats,
+    adminUserGet,
+    adminUserSearch,
+    contentVersion, testQuestions
+} from "./adminState";
+import {activeAuthorisations, groupMemberships, groups, otherUserAuthorisations} from "./groupsState";
+import {currentTopic} from "./topicState";
+import {boards, currentGameboard, fasttrackConcepts, gameboardEditorQuestions, wildcards} from "./gameboardsState";
+import {search} from "./searchState";
+import {assignments, assignmentsByMe, groupProgress, progress} from "./assignmentsState";
+
+
+const appReducer = combineReducers({
+    // User
+    user,
+    userAuthSettings,
+    userPreferences,
+    userSchoolLookup,
+    totpSharedSecret,
+    totpChallengePending,
+
+    // Internal App
+    printingSettings,
+    mainContentId,
+    tempExamBoard,
+    error,
+
+    // Notifiers
+    toasts,
+    activeModals,
+    notifications,
+
+    // Static Content
+    constants,
+    news,
+    glossaryTerms,
+
+    // Content
+    doc,
+    fragments,
+    concepts,
+
+    // Question
+    questions,
+    graphSketcherSpec,
+
+    // Progress
     myProgress,
     myAnsweredQuestionsByDate,
-    userAnsweredQuestionsByDate,
-    userSchoolLookup,
     userProgress,
+    userAnsweredQuestionsByDate,
+
+    // Admin
     adminUserGet,
     adminUserSearch,
     adminContentErrors,
     adminStats,
     adminEmailTemplate,
+    contentVersion,
+    testQuestions,
+
+    // Groups
+    groups,
+    groupMemberships,
     activeAuthorisations,
     otherUserAuthorisations,
-    totpSharedSecret,
-    totpChallengePending,
-    groupMemberships,
-    constants,
-    notifications,
-    doc,
-    questions,
+
+    // Topics
     currentTopic,
+
+    // Gameboards
+    boards,
     currentGameboard,
-    tempExamBoard,
     wildcards,
     gameboardEditorQuestions,
+    fasttrackConcepts,
+
+    // Assignments
     assignments,
-    contentVersion,
-    search,
-    error,
-    toasts,
-    activeModals,
-    groups,
-    boards,
     assignmentsByMe,
     progress,
-    news,
-    fragments,
-    glossaryTerms,
-    testQuestions,
-    printingSettings,
-    concepts,
-    fasttrackConcepts,
-    graphSketcherSpec,
-    mainContentId,
     groupProgress,
+
+    // Search
+    search,
 
     // Events
     events,
@@ -117,7 +121,6 @@ const appReducer = combineReducers({
     eventBookings,
     eventBookingsForGroup,
     eventBookingsForAllGroups,
-
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;

@@ -4,7 +4,7 @@ import React from "react";
 import countBy from "lodash/countBy"
 import intersection from "lodash/intersection"
 import {SITE, SITE_SUBJECT} from "./siteConstants";
-import {CurrentGameboardState} from "../state/reducers/reducers";
+import {CurrentGameboardState} from "../state/reducers/gameboardsState";
 
 enum boardCompletions {
     "any" = "Any",

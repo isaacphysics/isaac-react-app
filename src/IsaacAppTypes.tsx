@@ -13,7 +13,6 @@ import {
     TOTPSharedSecretDTO, UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
-import {FasttrackConceptsState} from "./app/state/reducers/reducers";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -575,6 +574,17 @@ export type ActualBoardLimit = number | "ALL";
 
 export type AppGameBoard = ApiTypes.GameboardDTO & {assignedGroups?: ApiTypes.UserGroupDTO[]};
 
+export interface Boards {
+    boards: GameboardDTO[];
+    totalResults: number;
+}
+
+export interface BoardAssignees {
+    boardAssignees?: {[key: string]: number[]};
+}
+
+
+
 // Admin Content Errors:
 export interface ContentErrorItem {
     listOfErrors: string[];
@@ -836,3 +846,5 @@ export interface SingleProgressDetailsProps {
     progress: AppAssignmentProgress[];
     pageSettings: PageSettings;
 }
+
+export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;
