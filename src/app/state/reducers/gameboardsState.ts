@@ -1,4 +1,4 @@
-import {ContentSummaryDTO, GameboardDTO, GameboardItem, GameboardListDTO, IsaacWildcard} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardDTO, GameboardListDTO, IsaacWildcard} from "../../../IsaacApiTypes";
 import {Action, BoardAssignees, Boards, FasttrackConceptsState, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
 import {difference, differenceBy, mapValues, union, unionWith} from "lodash";
