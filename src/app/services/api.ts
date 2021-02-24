@@ -62,7 +62,7 @@ export const apiHelper = {
 export const api = {
     search: {
         get: (query: string, types: string | undefined): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
-            return endpoint.get(`/search/` + encodeURIComponent(query), {params: {types}});
+            return endpoint.get(`/search`, {params: {query, types}});
         }
     },
     users: {
