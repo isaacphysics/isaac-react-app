@@ -6,16 +6,13 @@ import {mapValues, union, without} from "lodash";
 import {selectors} from "../../app/state/selectors";
 import {UserGroupDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
 import {rootReducer} from "../../app/state/reducers";
-import {
-    boards,
-    BoardsState,
-    constants,
-    groups,
-    questions,
-    search,
-    toasts,
-    user
-} from "../../app/state/reducers/reducers";
+import {user} from "../../app/state/reducers/userState";
+import {questions} from "../../app/state/reducers/questionState";
+import {constants} from "../../app/state/reducers/staticState";
+import {toasts} from "../../app/state/reducers/notifiersState";
+import {groups} from "../../app/state/reducers/groupsState";
+import {search} from "../../app/state/reducers/searchState";
+import {boards, BoardsState} from "../../app/state/reducers/gameboardsState";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 

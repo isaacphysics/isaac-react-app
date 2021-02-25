@@ -18,7 +18,7 @@ import {
     Spinner,
     Table
 } from 'reactstrap';
-import {ActualBoardLimit, AppGameBoard, BoardOrder} from "../../../IsaacAppTypes";
+import {ActualBoardLimit, AppGameBoard, BoardOrder, Boards} from "../../../IsaacAppTypes";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -38,7 +38,6 @@ import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import Select from "react-select";
 import {multiSelectOnChange} from "../../services/gameboardBuilder";
-import {Boards} from "../../state/reducers/reducers";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;

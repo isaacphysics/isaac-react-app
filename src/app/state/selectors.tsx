@@ -3,7 +3,7 @@ import {sortBy} from "lodash";
 import {NOT_FOUND} from "../services/constants";
 import {AppGroup} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
-import {GroupProgressState, ProgressState} from "./reducers/reducers";
+import {GroupProgressState, ProgressState} from "./reducers/assignmentsState";
 
 export const selectors = {
     groups: {

@@ -46,7 +46,8 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
-import {AdminUserGetState, ErrorState} from "../../state/reducers/reducers";
+import {ErrorState} from "../../state/reducers/internalAppState";
+import {AdminUserGetState} from "../../state/reducers/adminState";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;

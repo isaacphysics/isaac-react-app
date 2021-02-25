@@ -49,6 +49,7 @@ interface InequalityModalState {
     activeSubMenu: string;
     trashActive: boolean;
     menuOpen: boolean;
+    showQuestionReminder: boolean;
     editorState: any;
     menuItems: {
         upperCaseLetters: MenuItem[];
@@ -170,6 +171,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
             activeSubMenu: props.editorMode === 'logic' ? "upperCaseLetters" : "lowerCaseLetters",
             trashActive: false,
             menuOpen: false,
+            showQuestionReminder: true,
             editorState: {},
             menuItems: {
                 upperCaseLetters: [],
@@ -972,6 +974,10 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         this.setState({ numberInputValue: void 0 });
     }
 
+    private onQuestionReminderClick() {
+        this.setState((prevState: InequalityModalState) => ({ showQuestionReminder: !prevState.showQuestionReminder }) );
+    }
+
     public render(): JSX.Element {
         let lettersMenu: JSX.Element | null = null;
         if (!this.state.disableLetters) {
@@ -1207,6 +1213,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 onClick={this.close}
                 onKeyUp={this.close}>OK</div>
             <div className={`inequality-ui katex-preview ${previewTexString === "" ? "empty" : ""}`} dangerouslySetInnerHTML={{ __html: katex.renderToString(previewTexString) }}></div>
+            {!this.state.showQuestionReminder && <div
+                className="inequality-ui show-question button"
+                role="button" tabIndex={-1}
+                onClick={() => { if (!this.state.showQuestionReminder) { this.onQuestionReminderClick() }} }
+                onKeyUp={() => { if (!this.state.showQuestionReminder) { this.onQuestionReminderClick() }} }
+            >Show Question</div>}
             <div
                 className="inequality-ui centre button"
                 role="button" tabIndex={-1}
@@ -1214,10 +1226,16 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 onKeyUp={() => { if (this.state.sketch) this.state.sketch.centre() }}
             >Centre</div>
             <div id="inequality-trash" className="inequality-ui trash button">Trash</div>
-            {(this.props.questionDoc?.value || (this.props.questionDoc?.children && this.props.questionDoc?.children?.length > 0)) && <div className="question-reminder">
-                <IsaacContentValueOrChildren value={this.props.questionDoc.value} encoding={this.props.questionDoc.encoding}>
+            {this.state.showQuestionReminder && (this.props.questionDoc?.value || (this.props.questionDoc?.children && this.props.questionDoc?.children?.length > 0)) && <div className="question-reminder">
+                {this.state.showQuestionReminder && <IsaacContentValueOrChildren value={this.props.questionDoc.value} encoding={this.props.questionDoc.encoding}>
                     {this.props.questionDoc?.children}
-                </IsaacContentValueOrChildren>
+                </IsaacContentValueOrChildren>}
+                <div
+                    className="reminder-toggle"
+                    role="button" tabIndex={-1}
+                    onClick={() => this.onQuestionReminderClick()}
+                    onKeyUp={() => this.onQuestionReminderClick()}
+                >Hide Question</div>
             </div>}
             <div className="orientation-warning">The Isaac Equation Editor may only be used in landscape mode. Please rotate your device.</div>
             { menu }
