@@ -447,6 +447,8 @@ export type Action =
     | {type: ACTION_TYPE.QUIZ_SET_REQUEST; assignment: ApiTypes.QuizAssignmentDTO}
     | {type: ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS; newAssignment: ApiTypes.QuizAssignmentDTO}
 
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_REQUEST}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
     ;
 
 export type NOT_FOUND_TYPE = 404;
@@ -858,3 +860,7 @@ export interface SingleProgressDetailsProps {
 }
 
 export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;
+
+export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
+    groupName?: string;
+}

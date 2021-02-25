@@ -38,7 +38,8 @@ import {boards, currentGameboard, fasttrackConcepts, gameboardEditorQuestions, w
 import {search} from "./searchState";
 import {assignments, assignmentsByMe, groupProgress, progress} from "./assignmentsState";
 import {
-    quizzes
+    quizzes,
+    quizAssignments,
 } from "./quizState";
 
 const appReducer = combineReducers({
@@ -126,6 +127,7 @@ const appReducer = combineReducers({
 
     // Quizzes
     quizzes,
+    quizAssignments,
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;

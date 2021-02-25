@@ -43,3 +43,13 @@ export const showQuizSettingModal = (quiz: ContentSummaryDTO, dueDate?: Date | n
         />
     }));
 }
+
+export const loadQuizAssignments = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENTS_REQUEST});
+    try {
+        const assignments = await api.quizzes.assignments();
+        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignments.data});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Loading quiz assignments failed", e));
+    }
+};

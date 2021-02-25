@@ -82,7 +82,7 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
             {groupInvalid && <RS.FormFeedback className="d-block" valid={false}>You must select a group</RS.FormFeedback>}
         </RS.Label>
         <RS.Label className="w-100">Set an optional due date:<br/>
-            <DateInput invalid={dueDateInvalid} value={dueDate ?? undefined} yearRange={yearRange} defaultYear={currentYear}
+            <DateInput invalid={dueDateInvalid || undefined} value={dueDate ?? undefined} yearRange={yearRange} defaultYear={currentYear}
                        defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
             {dueDateInvalid && <RS.FormFeedback>Due date must be after today</RS.FormFeedback>}
         </RS.Label>

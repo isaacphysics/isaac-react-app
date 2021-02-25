@@ -1,6 +1,6 @@
 import {Action} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services/constants";
-import {ContentSummaryDTO} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, QuizAssignmentDTO} from "../../../IsaacApiTypes";
 
 type QuizState = {quizzes: ContentSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {
@@ -11,3 +11,15 @@ export const quizzes = (quizzes: QuizState = null, action: Action) => {
             return quizzes;
     }
 };
+
+type QuizAssignmentsState = QuizAssignmentDTO[] | null;
+export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS:
+            return action.assignments;
+        case ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS:
+            return [...quizAssignments ?? [], action.newAssignment];
+        default:
+            return quizAssignments;
+    }
+}
