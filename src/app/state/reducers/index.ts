@@ -39,7 +39,7 @@ import {search} from "./searchState";
 import {assignments, assignmentsByMe, groupProgress, progress} from "./assignmentsState";
 import {
     quizzes
-} from "./quizzes";
+} from "./quizState";
 
 const appReducer = combineReducers({
     // User
