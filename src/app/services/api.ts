@@ -529,6 +529,9 @@ export const api = {
     quizzes: {
         available: (): AxiosPromise<ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
             return endpoint.get(`/quiz/available`);
+        },
+        createQuizAssignment: (assignment: ApiTypes.QuizAssignmentDTO): AxiosPromise<ApiTypes.QuizAssignmentDTO> => {
+            return endpoint.post(`/quiz/assignment`, assignment);
         }
     },
 };

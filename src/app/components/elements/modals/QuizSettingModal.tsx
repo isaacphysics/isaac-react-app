@@ -1,0 +1,143 @@
+import {ContentSummaryDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
+import {AppGroup} from "../../../../IsaacAppTypes";
+import {AppDispatch} from "../../../state/store";
+import {useDispatch} from "react-redux";
+import React, {useState} from "react";
+import {Item, unwrapValue} from "../../../services/select";
+import {range} from "lodash";
+import {currentYear, DateInput} from "../inputs/DateInput";
+import {isDefined} from "../../../services/miscUtils";
+import * as RS from "reactstrap";
+import Select from "react-select";
+import {closeActiveModal, hideToast, showToast} from "../../../state/actions";
+import {setQuiz, showQuizSettingModal} from "../../../state/actions/quizzes";
+
+type QuizFeedbackOption = Item<QuizFeedbackMode>;
+const feedbackOptions = {
+    NONE: "No feedback",
+    OVERALL_MARK: "Overall mark",
+    SECTION_MARKS: "Mark for each quiz section",
+    DETAILED_FEEDBACK: "Detailed feedback on each question",
+};
+
+const feedbackOptionsList: QuizFeedbackOption[] = Object.keys(feedbackOptions).map(key => {
+    const mode = key as QuizFeedbackMode;
+    return {label: feedbackOptions[mode], value: mode};
+});
+
+const feedbackOptionsMap = feedbackOptionsList.reduce((obj, option) => {
+    obj[option.value] = option;
+    return obj;
+}, {} as {[key in QuizFeedbackMode]: QuizFeedbackOption});
+
+type ControlName = 'group' | 'dueDate' | 'feedbackMode';
+
+interface QuizSettingModalProps {
+    quiz: ContentSummaryDTO;
+    groups: AppGroup[];
+    dueDate?: Date | null;
+    feedbackMode?: QuizFeedbackMode | null;
+}
+
+export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
+    const dispatch: AppDispatch = useDispatch();
+    const [validated, setValidated] = useState<Set<ControlName>>(new Set());
+    const [submitting, setSubmitting] = useState(false);
+    const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
+    const [dueDate, setDueDate] = useState<Date | null>(initialDueDate ?? null);
+    const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | null>(initialFeedbackMode ?? null);
+
+    const yearRange = range(currentYear, currentYear + 5);
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentDay = now.getDate();
+
+    const groupOptions = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
+
+    function addValidated(what: ControlName) {
+        setValidated(validated => {
+            return new Set([...validated, what]);
+        });
+    }
+
+    const groupInvalid = validated.has('group') && selectedGroups.length === 0;
+    const dueDateInvalid = isDefined(dueDate) && dueDate.getTime() < now.getTime();
+    const feedbackModeInvalid = validated.has('feedbackMode') && feedbackMode === null;
+
+    return <div>
+        <RS.Label className="w-100">Set quiz to the following groups:<br/>
+            <Select
+                value={selectedGroups}
+                onChange={(s) => {
+                    unwrapValue(setSelectedGroups)(s);
+                    addValidated('group');
+                }}
+                onBlur={() => addValidated('group')}
+                options={groupOptions}
+                isSearchable
+                styles={{
+                    control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
+                }}
+            />
+            {groupInvalid && <RS.FormFeedback className="d-block" valid={false}>You must select a group</RS.FormFeedback>}
+        </RS.Label>
+        <RS.Label className="w-100">Set an optional due date:<br/>
+            <DateInput invalid={dueDateInvalid} value={dueDate ?? undefined} yearRange={yearRange} defaultYear={currentYear}
+                       defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
+            {dueDateInvalid && <RS.FormFeedback>Due date must be after today</RS.FormFeedback>}
+        </RS.Label>
+        <RS.Label className="w-100">What level of feedback should students get:<br/>
+            <Select
+                value={feedbackMode ? feedbackOptionsMap[feedbackMode] : null}
+                onChange={(s) => {
+                    if (s && (s as QuizFeedbackOption).value) {
+                        const item = s as QuizFeedbackOption;
+                        setFeedbackMode(item.value);
+                    }
+                    addValidated('feedbackMode');
+                }}
+                onBlur={() => addValidated('feedbackMode')}
+                options={feedbackOptionsList}
+                styles={{
+                    control: (styles) => ({...styles, ...(feedbackModeInvalid ? {borderColor: '#dc3545'} : {})}),
+                }}
+            />
+            {feedbackModeInvalid && <RS.FormFeedback className="d-block" valid={false}>You must select a feedback mode</RS.FormFeedback>}
+        </RS.Label>
+        <div className="text-right">
+            <RS.Button disabled={selectedGroups.length === 0 || !feedbackMode || submitting}
+                       onMouseEnter={() => setValidated(new Set(['group', 'feedbackMode']))}
+                       onClick={async () => {
+                           const assignment = {
+                               quizId: quiz.id,
+                               groupId: selectedGroups[0].value,
+                               dueDate: dueDate ?? undefined,
+                               quizFeedbackMode: feedbackMode ?? undefined,
+                           };
+                           let toastId: string | null;
+                           const again = () => {
+                               if (toastId) {
+                                   dispatch(hideToast(toastId));
+                               }
+                               dispatch(showQuizSettingModal(quiz, dueDate, feedbackMode));
+                           };
+                           try {
+                               setSubmitting(true);
+                               await dispatch(setQuiz(assignment));
+                               toastId = await dispatch(showToast({
+                                   color: "success", title: "Quiz set", body: "Quiz set to " + selectedGroups[0].label + " successfully", timeout: 7000,
+                                   buttons: [<RS.Button key="again" onClick={again}>Set to another group</RS.Button>]
+                               }));
+                           } catch (e) {
+                               return;
+                           } finally {
+                               setSubmitting(false);
+                           }
+                           dispatch(closeActiveModal());
+                       }}
+            >
+                {submitting ? <RS.Spinner/> : "Set quiz"}
+            </RS.Button>
+        </div>
+    </div>;
+}

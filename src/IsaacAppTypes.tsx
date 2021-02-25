@@ -1,4 +1,4 @@
-import React from "react";
+import React, {ReactElement} from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
@@ -7,7 +7,8 @@ import {
     ContentBase,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardItem, IsaacQuizDTO, RegisteredUserDTO,
+    GameboardItem,
+    RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
     TOTPSharedSecretDTO, UserSummaryForAdminUsersDTO
@@ -442,7 +443,10 @@ export type Action =
 
     | {type: ACTION_TYPE.QUIZZES_REQUEST}
     | {type: ACTION_TYPE.QUIZZES_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS; quizzes: ResultsWrapper<ContentSummaryDTO>}
+    | {type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS; quizzes: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
+
+    | {type: ACTION_TYPE.QUIZ_SET_REQUEST; assignment: ApiTypes.QuizAssignmentDTO}
+    | {type: ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS; newAssignment: ApiTypes.QuizAssignmentDTO}
 
     ;
 
@@ -550,6 +554,7 @@ export interface Toast {
     body?: string;
     timeout?: number;
     closable?: boolean;
+    buttons?: ReactElement[];
 
     // For internal use
     id?: string;
