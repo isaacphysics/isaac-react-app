@@ -11,10 +11,11 @@ interface NewsCarouselProps {
     subject: "news" | "physics";
     descending?: boolean;
     showTitle?: boolean;
+    className?: string;
 }
 
 export const NewsCarousel = (props: NewsCarouselProps) => {
-    const {descending, subject, showTitle} = props;
+    const {descending, subject, showTitle, className} = props;
     const dispatch = useDispatch();
     const newsState = useSelector((state: AppState) => state && state.news);
     useEffect(() => {
@@ -35,7 +36,7 @@ export const NewsCarousel = (props: NewsCarouselProps) => {
     }
 
     return <ShowLoading until={newsState} thenRender={({news}) => <div>
-        <ResponsiveCarousel groupingLimit={3}>
+        <ResponsiveCarousel groupingLimit={3} className={className}>
             {news?.sort(compare).map((newsItem: IsaacPodDTO, index: number) => <NewsCard newsItem={newsItem} showTitle={showTitle} key={index} />)}
         </ResponsiveCarousel>
     </div>} />
