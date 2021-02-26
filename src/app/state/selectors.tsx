@@ -145,9 +145,7 @@ function augmentWithGroupName(state: AppState, quizAssignments: QuizAssignmentDT
         return null;
     }
     const groupCache = state?.groups?.cache ?? {};
-    console.log(groupCache);
     return quizAssignments.map(assignment => {
-        console.log(assignment);
         const groupName = groupCache[assignment.groupId as number]?.groupName;
         return {
             ...assignment,

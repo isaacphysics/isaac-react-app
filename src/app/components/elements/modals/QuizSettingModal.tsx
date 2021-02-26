@@ -75,8 +75,10 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
                 onBlur={() => addValidated('group')}
                 options={groupOptions}
                 isSearchable
+                menuPortalTarget={document.body}
                 styles={{
                     control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
+                    menuPortal: base => ({...base, zIndex: 9999}),
                 }}
             />
             {groupInvalid && <RS.FormFeedback className="d-block" valid={false}>You must select a group</RS.FormFeedback>}
@@ -98,8 +100,10 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
                 }}
                 onBlur={() => addValidated('feedbackMode')}
                 options={feedbackOptionsList}
+                menuPortalTarget={document.body}
                 styles={{
                     control: (styles) => ({...styles, ...(feedbackModeInvalid ? {borderColor: '#dc3545'} : {})}),
+                    menuPortal: base => ({...base, zIndex: 9999}),
                 }}
             />
             {feedbackModeInvalid && <RS.FormFeedback className="d-block" valid={false}>You must select a feedback mode</RS.FormFeedback>}
