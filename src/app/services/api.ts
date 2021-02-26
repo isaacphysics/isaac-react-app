@@ -1,5 +1,5 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
+import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {AuthenticationProvider, EventBookingDTO, GameboardDTO, TestCaseDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
@@ -20,6 +20,7 @@ import {
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
+import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -61,7 +62,7 @@ export const apiHelper = {
 export const api = {
     search: {
         get: (query: string, types: string | undefined): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
-            return endpoint.get(`/search/` + encodeURIComponent(query), {params: {types}});
+            return endpoint.get(`/search`, {params: {query, types}});
         }
     },
     users: {
@@ -310,6 +311,10 @@ export const api = {
             return endpoint.get(`gameboards/wildcards`);
         },
         generateTemporary: (params: {[key: string]: string}): AxiosPromise<ApiTypes.GameboardDTO> => {
+            // TODO FILTER: Temporarily force physics to search for problem solving questions
+            if (SITE_SUBJECT === SITE.PHY) {
+                params['questionCategories'] = QUESTION_CATEGORY.PROBLEM_SOLVING;
+            }
             return endpoint.get(`/gameboards`, {params});
         }
     },
@@ -426,11 +431,11 @@ export const api = {
         },
         getEvents: (
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
-            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
+            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean, showReservedOnly: boolean
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
             return endpoint.get(`/events`, {params: {
                 start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
-                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
+                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, show_reservations_only: showReservedOnly, tags: filterEventsByType
             }});
         },
         getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {

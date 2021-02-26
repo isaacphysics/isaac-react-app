@@ -1619,10 +1619,11 @@ export const getEventsList = (startIndex: number, eventsPerPage: number, typeFil
     const filterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
     const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
     const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
+    const showReservedOnly = statusFilter === EventStatusFilter["My event reservations"];
     const showInactiveOnly = false;
     try {
         dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
-        const response = await api.events.getEvents(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly);
+        const response = await api.events.getEvents(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly, showReservedOnly);
         const augmentedEvents = response.data.results.map(event => augmentEvent(event));
         dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: response.data.totalResults});
     } catch (e) {
