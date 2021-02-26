@@ -541,5 +541,8 @@ export const api = {
         assignments: (): AxiosPromise<ApiTypes.QuizAssignmentDTO[]> => {
             return endpoint.get(`/quiz/assigned`);
         },
+        assignedToMe: (): AxiosPromise<ApiTypes.QuizAssignmentDTO[]> => {
+            return endpoint.get(`/quiz/assignments`);
+        },
     },
 };

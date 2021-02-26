@@ -15,6 +15,7 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/my_gameboards" muted={!isLoggedIn(user)}>My Gameboards</LinkItem>
             <LinkItem to="/assignments" muted={!isLoggedIn(user)}>My Assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/progress" muted={!isLoggedIn(user)}>My Progress</LinkItem>
+            <LinkItem to="/quizzes" muted={!isLoggedIn(user)}>My Quizzes</LinkItem>
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teach">

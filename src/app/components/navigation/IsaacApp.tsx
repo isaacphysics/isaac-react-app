@@ -74,6 +74,7 @@ import {ErrorBoundary} from "react-error-boundary";
 import {ClientError} from "../pages/ClientError";
 import {checkForWebSocket, closeWebSocket} from "../../services/websockets";
 import {SetQuizzes} from "../pages/quizzes/SetQuizzes";
+import {MyQuizzes} from "../pages/quizzes/MyQuizzes";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -158,6 +159,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
                     <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                     <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
+                    <TrackedRoute exact path="/quizzes" ifUser={isLoggedIn} component={MyQuizzes} />
 
                     {/* Teacher pages */}
                     <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />

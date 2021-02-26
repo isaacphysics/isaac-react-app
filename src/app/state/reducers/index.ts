@@ -40,6 +40,7 @@ import {assignments, assignmentsByMe, groupProgress, progress} from "./assignmen
 import {
     quizzes,
     quizAssignments,
+    quizAssignedToMe,
 } from "./quizState";
 
 const appReducer = combineReducers({
@@ -128,6 +129,7 @@ const appReducer = combineReducers({
     // Quizzes
     quizzes,
     quizAssignments,
+    quizAssignedToMe,
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;

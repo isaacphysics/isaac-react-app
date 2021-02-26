@@ -54,3 +54,13 @@ export const loadQuizAssignments = () => async (dispatch: Dispatch<Action>) => {
         dispatch(showErrorToastIfNeeded("Loading quiz assignments failed", e));
     }
 };
+
+export const loadQuizAssignedToMe = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_REQUEST});
+    try {
+        const assignments = await api.quizzes.assignedToMe();
+        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS, assignments: assignments.data});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Loading quizzes assigned to you failed", e));
+    }
+};

@@ -449,6 +449,9 @@ export type Action =
 
     | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_REQUEST}
     | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
+
+    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_REQUEST}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
     ;
 
 export type NOT_FOUND_TYPE = 404;

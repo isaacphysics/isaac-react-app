@@ -135,6 +135,7 @@ export const selectors = {
     },
 
     quizzes: {
+        assignedToMe: (state: AppState) => state?.quizAssignedToMe,
         available: (state: AppState) => state?.quizzes?.quizzes,
         assignments: (state: AppState) => augmentWithGroupNameIfInCache(state, state?.quizAssignments),
     },

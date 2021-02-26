@@ -23,3 +23,13 @@ export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, ac
             return quizAssignments;
     }
 }
+
+type QuizAssignedToMeState = QuizAssignmentDTO[] | null;
+export const quizAssignedToMe = (quizAssignments: QuizAssignedToMeState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS:
+            return action.assignments;
+        default:
+            return quizAssignments;
+    }
+}
