@@ -17,6 +17,7 @@ import {QuestionContext} from "../../../IsaacAppTypes";
 import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 import {IsaacCard} from "./IsaacCard";
 import {IsaacCardDeck} from "./IsaacCardDeck";
+import {QuizQuestion} from "./QuizQuestion";
 
 const classBasedLayouts = {
     left: "align-left",
@@ -52,6 +53,8 @@ export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: s
         case "isaacParsonsQuestion":
             if (match.path.startsWith("/quizzes")) {
                 tempSelectedComponent = <IsaacQuizTabs {...props} />;
+            } else if (match.path.startsWith("/quiz/")) {
+                tempSelectedComponent = <QuizQuestion {...props} />;
             } else {
                 tempSelectedComponent = <IsaacQuestion {...props} />;
             }

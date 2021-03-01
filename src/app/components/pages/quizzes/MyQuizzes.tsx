@@ -13,6 +13,7 @@ import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {extractTeacherName} from "../../../services/user";
 import {isDefined} from "../../../services/miscUtils";
 import { partition } from 'lodash';
+import { Link } from 'react-router-dom';
 
 interface MyQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -23,21 +24,27 @@ interface QuizAssignmentProps {
     assignment: AppQuizAssignment;
 }
 
+enum Status {
+    Unstarted, Started, Complete
+}
+
 function QuizAssignment({assignment}: QuizAssignmentProps) {
     const attempt = assignment.attempt;
+    const status: Status = !attempt ? Status.Unstarted : !attempt.completedDate ? Status.Started : Status.Complete;
     return <div className="p-2">
         <RS.Card><RS.CardBody>
             <RS.CardTitle><h4>{assignment.quizSummary?.title || assignment.quizId}</h4></RS.CardTitle>
             <p>
                 {assignment.dueDate && <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></>}
             </p>
-            {!attempt && <RS.Button>Start quiz</RS.Button>}
-            {attempt && !attempt.completedDate && <RS.Button>Continue quiz</RS.Button>}
-            {attempt && !!attempt.completedDate && <RS.Button>View feedback</RS.Button>}
+            {status === Status.Unstarted && <RS.Button tag={Link} to={`/quiz/do_assignment/${assignment.id}`}>Start quiz</RS.Button>}
+            {status === Status.Started && <RS.Button tag={Link} to={`/quiz/do_assignment/${assignment.id}`}>Continue quiz</RS.Button>}
+            {status === Status.Complete && <RS.Button>View feedback</RS.Button>}
             <p className="mb-1 mt-3">
                 Set: {formatDate(assignment.creationDate)} {assignment.assignerSummary && <>by {extractTeacherName(assignment.assignerSummary)}</>}
-                {attempt && (attempt.completedDate ? <><br />Completed: {formatDate(attempt.completedDate)}</>
-                                                  : <><br />Started: {formatDate(attempt?.startDate)}</>)}
+                {attempt && (status === Status.Complete ?
+                    <><br />Completed: {formatDate(attempt.completedDate)}</>
+                    : <><br />Started: {formatDate(attempt.startDate)}</>)}
             </p>
         </RS.CardBody>
     </RS.Card></div>;

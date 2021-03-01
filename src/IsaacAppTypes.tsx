@@ -452,6 +452,12 @@ export type Action =
 
     | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_REQUEST}
     | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
+
+    | {type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST; quizAssignmentId: number}
+    | {type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
+
+    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST; quizAttemptId: number}
+    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS; quizAttemptId: number}
     ;
 
 export type NOT_FOUND_TYPE = 404;

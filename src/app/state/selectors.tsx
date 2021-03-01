@@ -5,7 +5,9 @@ import {AppGroup, AppQuizAssignment} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
 import {GroupProgressState, ProgressState} from "./reducers/assignmentsState";
 import {isDefined} from "../services/miscUtils";
-import {QuizAssignmentDTO} from "../../IsaacApiTypes";
+import {QuestionValidationResponseDTO, QuizAssignmentDTO} from "../../IsaacApiTypes";
+import {useSelector} from "react-redux";
+import {extractQuestions} from "../services/quiz";
 
 export const selectors = {
     groups: {
@@ -138,6 +140,23 @@ export const selectors = {
         assignedToMe: (state: AppState) => state?.quizAssignedToMe,
         available: (state: AppState) => state?.quizzes?.quizzes,
         assignments: (state: AppState) => augmentWithGroupNameIfInCache(state, state?.quizAssignments),
+        currentQuizAttempt: (state: AppState) => {
+            const quizAttempt = state?.quizAttempt;
+            if (isDefined(quizAttempt) && isDefined(quizAttempt.quiz)) {
+                const questions = selectors.questions.getQuestions(state);
+                const answerMap = questions?.reduce((map, q) => {
+                    map[q.id as string] = q.bestAttempt;
+                    return map;
+                }, {} as {[id: string]: QuestionValidationResponseDTO | undefined}) ?? {};
+                const quizQuestions = extractQuestions(quizAttempt.quiz);
+                quizQuestions.forEach(question => {
+                    if (answerMap[question.id as string]) {
+                        question.bestAttempt = answerMap[question.id as string];
+                    }
+                });
+            }
+            return quizAttempt;
+        },
     },
 };
 

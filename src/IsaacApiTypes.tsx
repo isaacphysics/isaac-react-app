@@ -27,7 +27,7 @@ export interface TestQuestionDTO extends ChoiceQuestionDTO {
     testCases?: TestCaseDTO[];
 }
 
-// Generated using typescript-generator version 2.12.476 on 2021-02-23 14:46:50.
+// Generated using typescript-generator version 2.12.476 on 2021-03-01 09:58:17.
 
 export interface AssignmentDTO extends IAssignmentLike {
     gameboardId?: string;
@@ -207,6 +207,8 @@ export interface QuizAttemptDTO extends IHasQuizSummary {
     quizAssignmentId?: number;
     startDate?: Date;
     completedDate?: Date;
+    quiz?: IsaacQuizDTO;
+    quizAssignment?: QuizAssignmentDTO;
 }
 
 export interface QuizFeedbackDTO {
@@ -452,8 +454,8 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     lastUpdated?: Date;
     lastSeen?: Date;
     emailVerificationStatus?: EmailVerificationStatus;
-    _id?: number;
     id?: number;
+    _id?: number;
 }
 
 export interface UserAuthenticationSettingsDTO extends AbstractSegueUserDTO {

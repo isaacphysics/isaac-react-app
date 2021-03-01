@@ -41,6 +41,7 @@ import {
     quizzes,
     quizAssignments,
     quizAssignedToMe,
+    quizAttempt,
 } from "./quizState";
 
 const appReducer = combineReducers({
@@ -130,6 +131,7 @@ const appReducer = combineReducers({
     quizzes,
     quizAssignments,
     quizAssignedToMe,
+    quizAttempt: quizAttempt,
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;

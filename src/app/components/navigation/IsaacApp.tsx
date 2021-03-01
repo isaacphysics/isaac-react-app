@@ -75,6 +75,7 @@ import {ClientError} from "../pages/ClientError";
 import {checkForWebSocket, closeWebSocket} from "../../services/websockets";
 import {SetQuizzes} from "../pages/quizzes/SetQuizzes";
 import {MyQuizzes} from "../pages/quizzes/MyQuizzes";
+import {QuizDoAsssignment} from "../pages/quizzes/QuizDoAssignment";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -154,6 +155,9 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path='/events' component={Events}/>
                     <TrackedRoute exact path='/events/:eventId' component={EventDetails}/>
                     <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />
+
+                    <TrackedRoute exact path="/quiz/do_assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAsssignment} />
+                    <TrackedRoute exact path="/quiz/do_assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAsssignment} />
 
                     {/* Student pages */}
                     <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
