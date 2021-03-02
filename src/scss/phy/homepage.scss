@@ -5,6 +5,7 @@
   }
   small {
     font-family: "exo_2regular", sans-serif;
+    line-height: 1;
   }
 }
 
@@ -23,5 +24,7 @@
 }
 
 .physics-site-intro {
-  font-size: large;
+  @include respond-above(sm) {
+    font-size: large;
+  }
 }
