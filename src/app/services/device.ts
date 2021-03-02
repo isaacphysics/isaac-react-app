@@ -7,15 +7,24 @@ export const isMobile = () => {
 };
 export const isNotMobile = !isMobile();
 
-export type DeviceSize = "xl" | "lg" | "md" | "sm" | "xs";
+export enum DeviceSize {
+    XL = "xl",
+    LG = "lg",
+    MD = "md",
+    SM = "sm",
+    XS = "xs",
+}
+
+const descDeviceSizes = [DeviceSize.XL, DeviceSize.LG, DeviceSize.MD, DeviceSize.SM, DeviceSize.XS];
+
 export const useDeviceSize = () => {
     const getSize = (): DeviceSize => {
         const width = window.innerWidth;
-        if (width >= 1200) return "xl";
-        else if (width >= 992) return "lg";
-        else if (width >= 768) return "md";
-        else if (width >= 576) return "sm";
-        else return "xs";
+        if (width >= 1200) return DeviceSize.XL;
+        else if (width >= 992) return DeviceSize.LG;
+        else if (width >= 768) return DeviceSize.MD;
+        else if (width >= 576) return DeviceSize.SM;
+        else return DeviceSize.XS;
     };
 
     const [windowSize, setWindowSize] = useState(getSize);
@@ -28,3 +37,30 @@ export const useDeviceSize = () => {
 
     return windowSize;
 };
+
+// above(ds) and below(ds) return true if device size === ds to match the scss functions respond-above(ds) and respond-below(ds)
+const seenSoFar: DeviceSize[] = [];
+export const above: {[ds in DeviceSize]: (currentDS: DeviceSize) => boolean} = Object.fromEntries(
+    descDeviceSizes.map(ds => {
+        seenSoFar.push(ds);
+        return [
+            [ds],
+            function(greaterThanDSs: DeviceSize[], currentDS: DeviceSize) {
+                return greaterThanDSs.includes(currentDS);
+            }.bind(null, [...seenSoFar])
+        ];
+    })
+);
+export const below: {[ds in DeviceSize]: (currentDS: DeviceSize) => boolean} = Object.fromEntries(
+    descDeviceSizes.map(ds => {
+        if (seenSoFar[0] !== ds) {
+            seenSoFar.shift();
+        }
+        return [
+            [ds],
+            function(lessThanDSs: DeviceSize[], currentDS: DeviceSize) {
+                return lessThanDSs.includes(currentDS);
+            }.bind(null, [...seenSoFar])
+        ];
+    })
+);
