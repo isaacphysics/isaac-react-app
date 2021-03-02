@@ -40,27 +40,19 @@ export const useDeviceSize = () => {
 
 // above(ds) and below(ds) return true if device size === ds to match the scss functions respond-above(ds) and respond-below(ds)
 const seenSoFar: DeviceSize[] = [];
-export const above: {[ds in DeviceSize]: (currentDS: DeviceSize) => boolean} = Object.fromEntries(
-    descDeviceSizes.map(ds => {
-        seenSoFar.push(ds);
-        return [
-            [ds],
-            function(greaterThanDSs: DeviceSize[], currentDS: DeviceSize) {
-                return greaterThanDSs.includes(currentDS);
-            }.bind(null, [...seenSoFar])
-        ];
-    })
-);
-export const below: {[ds in DeviceSize]: (currentDS: DeviceSize) => boolean} = Object.fromEntries(
-    descDeviceSizes.map(ds => {
-        if (seenSoFar[0] !== ds) {
-            seenSoFar.shift();
-        }
-        return [
-            [ds],
-            function(lessThanDSs: DeviceSize[], currentDS: DeviceSize) {
-                return lessThanDSs.includes(currentDS);
-            }.bind(null, [...seenSoFar])
-        ];
-    })
-);
+export const above = descDeviceSizes.reduce((map: {[ds: string]: (currentDS: DeviceSize) => boolean}, deviceSize: DeviceSize) => {
+    // push yourself to the list of device sizes greater or equal than deviceSize
+    seenSoFar.push(deviceSize);
+    map[deviceSize] = function(greaterThanDSs: DeviceSize[], currentDS: DeviceSize) {
+        return greaterThanDSs.includes(currentDS);
+    }.bind(null, [...seenSoFar]);
+    return map;
+}, {});
+export const below = descDeviceSizes.reduce((map: {[ds: string]: (currentDS: DeviceSize) => boolean}, deviceSize: DeviceSize) => {
+    // if the largest item on the (reversed) stack is not yourself pop
+    if (seenSoFar[0] !== deviceSize) { seenSoFar.shift(); }
+    map[deviceSize] = function(greaterThanDSs: DeviceSize[], currentDS: DeviceSize) {
+        return greaterThanDSs.includes(currentDS);
+    }.bind(null, [...seenSoFar]);
+    return map;
+}, {});
