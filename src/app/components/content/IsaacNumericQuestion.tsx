@@ -15,6 +15,7 @@ interface IsaacNumericQuestionProps {
     doc: IsaacNumericQuestionDTO;
     questionId: string;
     validationResponse?: QuantityValidationResponseDTO;
+    readonly: boolean;
 }
 
 function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
@@ -85,7 +86,7 @@ function wrapUnitForSelect(unit?: string): string {
     }
 }
 
-export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: IsaacNumericQuestionProps): JSX.Element => {
+export const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps): JSX.Element => {
     const dispatch = useDispatch();
     const userId = useSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
     const units = useSelector((state: AppState) => state?.constants?.units || undefined);
@@ -137,7 +138,8 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: Isaa
                             Value <br />
                             <InputGroup>
                                 <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong || undefined}
-                                    onChange={updateValue}
+                                       onChange={updateValue}
+                                       disabled={readonly}
                                 />
                                 <InputGroupAddon addonType="append">
                                     <Button type="button" className="numeric-help" size="sm" id={helpTooltipId}>?</Button>
@@ -155,7 +157,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse}: Isaa
                     {doc.requireUnits && <div className="unit-selection w-100 w-sm-50 w-md-100 w-lg-25">
                         <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-5">
                             Units <br/>
-                            <Dropdown isOpen={isOpen} toggle={() => {setIsOpen(!isOpen);}}>
+                            <Dropdown disabled={readonly} isOpen={isOpen} toggle={() => {setIsOpen(!isOpen);}}>
                                 <DropdownToggle caret className="px-2 py-1" color={currentAttemptUnitsWrong ? "danger" : undefined}>
                                     <TrustedHtml span html={wrapUnitForSelect(currentAttemptUnits)}/>
                                 </DropdownToggle>

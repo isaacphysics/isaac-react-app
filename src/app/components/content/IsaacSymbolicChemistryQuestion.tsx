@@ -30,9 +30,10 @@ interface IsaacSymbolicChemistryQuestionProps {
     questionId: string;
     currentAttempt?: ChemicalFormulaDTO | null;
     setCurrentAttempt: (questionId: string, attempt: ChemicalFormulaDTO) => void;
+    readonly?: boolean;
 }
 const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
+    const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
 
@@ -66,8 +67,8 @@ const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQu
             </div>
             {/* TODO Accessibility */}
             <div
-                role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={0}
-                onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
+                role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
+                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
                 dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
             />
             {modalVisible && <InequalityModal
