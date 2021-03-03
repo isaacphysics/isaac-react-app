@@ -361,6 +361,11 @@ export interface StringChoiceDTO extends ChoiceDTO {
 export interface VideoDTO extends MediaDTO {
 }
 
+export interface CodeDTO extends ContentDTO {
+    code?: ContentDTO;
+    pythonUrl?: string;
+}
+
 export interface AbstractSegueUserDTO {
 }
 

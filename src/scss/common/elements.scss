@@ -12,6 +12,23 @@
   width: 24px;
 }
 
+.code-block {
+  width: 70%;
+  margin-left: 15%;
+  margin-right: 15%;
+
+  .code-caption {
+    margin-top: -1rem;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    font-size: 1rem !important;
+    background-color: $gray-103;
+    p {
+      margin: 0;
+    }
+  }
+}
+
 .content-summary-link a {
   text-decoration: none;
 }

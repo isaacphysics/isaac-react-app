@@ -17,6 +17,7 @@ import {QuestionContext} from "../../../IsaacAppTypes";
 import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 import {IsaacCard} from "./IsaacCard";
 import {IsaacCardDeck} from "./IsaacCardDeck";
+import {IsaacCode} from "./IsaacCode";
 
 const classBasedLayouts = {
     left: "align-left",
@@ -33,6 +34,7 @@ export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: s
         case "figure": selectedComponent = <IsaacFigure {...props} />; break;
         case "image": selectedComponent = <IsaacImage {...props} />; break;
         case "video": selectedComponent = <IsaacVideo {...props} />; break;
+        case "code": selectedComponent = <IsaacCode {...props} />; break;
         case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...props} />; break;
         case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break;
         case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break;
