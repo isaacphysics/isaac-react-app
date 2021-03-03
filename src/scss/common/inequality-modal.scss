@@ -16,21 +16,42 @@
 
     .question-reminder {
         position: absolute;
-        bottom: 140px;
+        bottom: 30px;
         left: 250px;
         right: 250px;
-        text-align: center;
+        text-align: justify;
         border-radius: 20px;
         background-color: rgba(0, 0, 0, 0.6);
         color: white;
-        padding: 1.25rem 1px 0;
+        padding: 1.25rem;
         pointer-events: none;
         z-index: 255 !important;
+
+        .reminder-toggle {
+            position: relative;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-align: center;
+            pointer-events: all;
+            background: white;
+            color: black;
+            width: 200px;
+            margin: 0 auto;
+            padding: 6px;
+            border-radius: 6px;
+        }
     }
 
     @media screen and (orientation: portrait) {
         .question-reminder {
             display: none;
+        }
+    }
+
+    @media screen and (max-width: 1023px) {
+        .question-reminder {
+            left: 100px;
+            right: 100px;
         }
     }
 
@@ -72,6 +93,19 @@
                 bottom: 25px;
                 right: 5px;
                 background-color: transparent;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position-y: center;
+                z-index: 255;
+            }
+
+            &.show-question {
+                width: 90px;
+                height: 90px;
+                bottom: 25px;
+                right: 95px;
+                background-color: transparent;
+                background-image: url('/assets/inequality-togglequestion-cs.svg');
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position-y: center;

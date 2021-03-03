@@ -12,6 +12,9 @@
             &.help {
                 background-image: url('/assets/inequality-help-cs.svg');
             }
+            &.show-question {
+                background-image: url('/assets/inequality-togglequestion-cs.svg');
+            }
         }
 
         &.katex-preview {

@@ -741,6 +741,7 @@ export enum EventStatusFilter {
     "All events" = "all",
     "Upcoming events" = "upcoming",
     "My booked events" = "showBookedOnly",
+    "My event reservations" = "showReservationsOnly"
 }
 export enum EventTypeFilter {
     "All events" = "all",
@@ -795,6 +796,11 @@ for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
 _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
 export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
 
+
+export enum QUESTION_CATEGORY {
+    PROBLEM_SOLVING = "problem_solving"
+}
+
 export const specificDoughnutColours: { [key: string]: string } = {
     [SITE.PHY]: {
         "Physics": "#944cbe",
@@ -831,3 +837,5 @@ export const progressColour = {
 }[SITE_SUBJECT];
 
 export const GRAY_120 = '#c9cad1';
+
+export const SEARCH_CHAR_LENGTH_LIMIT = 255;

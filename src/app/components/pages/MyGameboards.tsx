@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteBoard, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState, Boards} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {
     Button,
     Card,
@@ -18,7 +18,7 @@ import {
     Spinner,
     Table
 } from 'reactstrap';
-import {ActualBoardLimit, AppGameBoard, BoardOrder} from "../../../IsaacAppTypes";
+import {ActualBoardLimit, AppGameBoard, BoardOrder, Boards} from "../../../IsaacAppTypes";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
