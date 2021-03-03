@@ -138,7 +138,7 @@ export function QuizPagination({attempt, page, sections, pageLink, finalLabel}: 
 
 export function QuizAttemptComponent(props: QuizAttemptProps) {
     const {page} = props;
-    return <QuizAttemptContext.Provider value={{quizAttemptId: props.attempt.id as number}}>
+    return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt}}>
         <QuizTitle {...props} />
         {page === null ?
             <>

@@ -138,8 +138,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                             Value <br />
                             <InputGroup>
                                 <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong || undefined}
-                                       onChange={updateValue}
-                                       disabled={readonly}
+                                       onChange={updateValue} readOnly={readonly}
                                 />
                                 <InputGroupAddon addonType="append">
                                     <Button type="button" className="numeric-help" size="sm" id={helpTooltipId}>?</Button>

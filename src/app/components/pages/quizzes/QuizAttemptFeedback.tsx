@@ -11,6 +11,7 @@ import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps, QuizPagination}
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
+import {deregisterQuestion, registerQuestion} from "../../../state/actions";
 
 
 interface QuizAttemptFeedbackProps {

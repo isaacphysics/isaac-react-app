@@ -126,14 +126,6 @@ const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}:
         dispatch(loadQuizAssignmentAttempt(parseInt(quizAssignmentId, 10)));
     }, [dispatch, quizAssignmentId]);
 
-    useEffect( () => {
-        questions.forEach(question => dispatch(registerQuestion(question)));
-        const ids = questions.map(q => q.id as string);
-        return () => {
-            ids.forEach(id => dispatch(deregisterQuestion(id)));
-        };
-    }, [dispatch, questions]);
-
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp};

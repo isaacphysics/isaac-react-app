@@ -1,10 +1,11 @@
-import {useMemo} from "react";
-import {useSelector} from "react-redux";
+import {useEffect, useMemo} from "react";
+import {useDispatch, useSelector} from "react-redux";
 
 import {isDefined} from "./miscUtils";
 import {isQuestion} from "./questions";
 import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {selectors} from "../state/selectors";
+import {deregisterQuestion, registerQuestion} from "../state/actions";
 
 export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
     const qs: QuestionDTO[] = [];
@@ -41,5 +42,16 @@ export function useCurrentQuizAttempt() {
         });
         return sections;
     }, [attempt?.quiz]);
+
+    const dispatch = useDispatch();
+
+    useEffect( () => {
+        questions.forEach(question => dispatch(registerQuestion(question)));
+        const ids = questions.map(q => q.id as string);
+        return () => {
+            ids.forEach(id => dispatch(deregisterQuestion(id)));
+        };
+    }, [dispatch, questions]);
+
     return {attempt, questions, sections, error};
 }
