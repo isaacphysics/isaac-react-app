@@ -67,8 +67,8 @@ export const HomepagePhy = () => {
                         <Col xs={4} className="px-1 px-sm-2">
                             <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/alevel" className="h-100 d-inline-flex align-items-center justify-content-center">
                                 {above["md"](deviceSize) ?
-                                    "A\u00A0level or\u00A0equivalent" :
-                                    "A\u00A0level"}
+                                    "A\u00A0Level or\u00A0equivalent" :
+                                    "A\u00A0Level"}
                             </Button>
                         </Col>
                         <Col xs={4} className="pl-1 pl-sm-2">
