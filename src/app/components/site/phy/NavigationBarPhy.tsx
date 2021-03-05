@@ -3,6 +3,7 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
 import {selectors} from "../../../state/selectors";
+import {QUIZ_FEATURE} from "../../../services/constants";
 
 export const NavigationBarPhy = () => {
     const user = useSelector(selectors.user.orNull);
@@ -21,7 +22,7 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/groups">Manage Groups</LinkItem>
             <LinkItem to="/set_assignments">Set Assignments</LinkItem>
             <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
-            <LinkItem to="/set_quizzes">Set quizzes</LinkItem>
+            {QUIZ_FEATURE && <LinkItem to="/set_quizzes">Set quizzes</LinkItem>}
         </NavigationSection>}
 
         <NavigationSection title="Learn">

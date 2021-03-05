@@ -4,6 +4,10 @@ import {invert} from "lodash";
 import {BookingStatus} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
+// Static (Temporary) Feature Flags
+export const QUIZ_FEATURE = false;
+
+
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 

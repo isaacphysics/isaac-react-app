@@ -3,6 +3,7 @@ import {LinkItem, NavigationBar, NavigationSection, useAssignmentBadge} from "..
 import {useSelector} from "react-redux";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
 import {selectors} from "../../../state/selectors";
+import {QUIZ_FEATURE} from "../../../services/constants";
 
 export const NavigationBarCS = () => {
     const user = useSelector(selectors.user.orNull);
@@ -21,7 +22,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/set_assignments">Set assignments</LinkItem>
             <LinkItem to="/groups">Manage groups</LinkItem>
             <LinkItem to="/assignment_progress">Markbook</LinkItem>
-            <LinkItem to="/set_quizzes">Set quizzes</LinkItem>
+            {QUIZ_FEATURE && <LinkItem to="/set_quizzes">Set quizzes</LinkItem>}
         </NavigationSection>}
 
         <NavigationSection title="Topics">

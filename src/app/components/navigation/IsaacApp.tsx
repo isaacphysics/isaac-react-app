@@ -49,7 +49,7 @@ import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
 import {Support} from "../pages/Support";
 import {AddGameboard} from "../handlers/AddGameboard";
-import {isTest} from "../../services/constants";
+import {isTest, QUIZ_FEATURE} from "../../services/constants";
 import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
 import {RedirectToEvent} from "./RedirectToEvent";
@@ -162,7 +162,7 @@ export const IsaacApp = () => {
                     {/* Teacher pages */}
                     <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
                     <TrackedRoute exact path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
-                    <TrackedRoute exact path="/set_quizzes" ifUser={isTeacher} component={SetQuizzes} />
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/set_quizzes" ifUser={isTeacher} component={SetQuizzes} />}
 
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
