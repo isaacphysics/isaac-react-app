@@ -4,6 +4,10 @@ import {invert} from "lodash";
 import {BookingStatus} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
+// Static (Temporary) Feature Flags
+export const QUIZ_FEATURE = false;
+
+
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
@@ -483,7 +487,17 @@ export enum ACTION_TYPE {
 
     LOG_EVENT = "LOG_EVENT",
 
-    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID"
+    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID",
+
+    QUIZZES_REQUEST = "QUIZZES_REQUEST",
+    QUIZZES_RESPONSE_SUCCESS = "QUIZZES_RESPONSE_SUCCESS",
+    QUIZZES_RESPONSE_FAILURE = "QUIZZES_RESPONSE_FAILURE",
+
+    QUIZ_SET_REQUEST = "QUIZ_SET_REQUEST",
+    QUIZ_SET_RESPONSE_SUCCESS = "QUIZ_SET_RESPONSE_SUCCESS",
+
+    QUIZ_ASSIGNMENTS_REQUEST = "QUIZ_ASSIGNMENTS_REQUEST",
+    QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS = "QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS",
 }
 
 export enum EXAM_BOARD {
@@ -654,6 +668,7 @@ export enum DOCUMENT_TYPE {
     EVENT = "isaacEventPage",
     TOPIC_SUMMARY = "isaacTopicSummaryPage",
     GENERIC = "page",
+    QUIZ = "isaacQuiz",
 }
 export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 
@@ -663,7 +678,8 @@ export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "Questions",
     [DOCUMENT_TYPE.EVENT]: "Events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
-    [DOCUMENT_TYPE.GENERIC]: "Other pages"
+    [DOCUMENT_TYPE.GENERIC]: "Other pages",
+    [DOCUMENT_TYPE.QUIZ]: "Quizzes",
 };
 
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
@@ -672,7 +688,8 @@ export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} =
     [DOCUMENT_TYPE.QUESTION]: "questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "questions",
     [DOCUMENT_TYPE.EVENT]: "events",
-    [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics"
+    [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics",
+    [DOCUMENT_TYPE.QUIZ]: "quiz",
 };
 
 export enum ContentVersionUpdatingStatus {

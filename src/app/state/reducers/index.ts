@@ -37,7 +37,10 @@ import {currentTopic} from "./topicState";
 import {boards, currentGameboard, fasttrackConcepts, gameboardEditorQuestions, wildcards} from "./gameboardsState";
 import {search} from "./searchState";
 import {assignments, assignmentsByMe, groupProgress, progress} from "./assignmentsState";
-
+import {
+    quizzes,
+    quizAssignments,
+} from "./quizState";
 
 const appReducer = combineReducers({
     // User
@@ -121,6 +124,10 @@ const appReducer = combineReducers({
     eventBookings,
     eventBookingsForGroup,
     eventBookingsForAllGroups,
+
+    // Quizzes
+    quizzes,
+    quizAssignments,
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;

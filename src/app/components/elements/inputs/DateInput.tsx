@@ -6,12 +6,12 @@ import {range} from 'lodash';
 export interface DateInputProps extends InputProps {
     labelSuffix?: string;
     defaultYear?: number;
-    defaultMonth?: number;
+    defaultMonth?: number | ((day: number | undefined) => number);
     yearRange?: number[];
     value?: string | string[] | number | Date;
 }
 
-var MONTHS = [
+const MONTHS = [
     "January",
     "February",
     "March",
@@ -163,7 +163,7 @@ export const DateInput = (props: DateInputProps) => {
 
         if (what == "day" && values[what].get() != undefined) {
             if (values["month"].get() == undefined && values["year"].get() == undefined) {
-                values["month"].set(props.defaultMonth);
+                values["month"].set(typeof props.defaultMonth === 'function' ? props.defaultMonth(day) : props.defaultMonth);
                 values["year"].set(props.defaultYear);
             }
         }
