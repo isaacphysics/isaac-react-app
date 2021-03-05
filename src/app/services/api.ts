@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {AuthenticationProvider, EventBookingDTO, GameboardDTO, IsaacQuizDTO, ResultsWrapper, TestCaseDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, EventBookingDTO, GameboardDTO, ResultsWrapper, TestCaseDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
