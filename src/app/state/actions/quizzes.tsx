@@ -37,9 +37,10 @@ export const showQuizSettingModal = (quiz: ContentSummaryDTO, dueDate?: Date | n
             dispatch(closeActiveModal())
         },
         title: "Setting quiz " + (quiz.title ?? quiz.id),
-        body: <WithLoadedSelector selector={selectors.groups.active}
-                                  loadingThunk={() => dispatch(loadGroups(false))}
-                                  thenRender={groups => <QuizSettingModal quiz={quiz} groups={groups} dueDate={dueDate} feedbackMode={feedbackMode}/>}
+        body: <WithLoadedSelector
+            selector={selectors.groups.active}
+            loadingThunk={() => dispatch(loadGroups(false))}
+            thenRender={groups => <QuizSettingModal quiz={quiz} groups={groups} dueDate={dueDate} feedbackMode={feedbackMode}/>}
         />
     }));
 }

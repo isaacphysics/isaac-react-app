@@ -136,11 +136,11 @@ export const selectors = {
 
     quizzes: {
         available: (state: AppState) => state?.quizzes?.quizzes,
-        assignments: (state: AppState) => augmentWithGroupName(state, state?.quizAssignments),
+        assignments: (state: AppState) => augmentWithGroupNameIfInCache(state, state?.quizAssignments),
     },
 };
 
-function augmentWithGroupName(state: AppState, quizAssignments: QuizAssignmentDTO[] | null | undefined): AppQuizAssignment[] | null {
+function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAssignmentDTO[] | null | undefined): AppQuizAssignment[] | null {
     if (!isDefined(quizAssignments)) {
         return null;
     }
