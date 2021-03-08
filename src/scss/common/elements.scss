@@ -13,12 +13,11 @@
 }
 
 .code-block {
-  width: 70%;
-  margin-left: 15%;
-  margin-right: 15%;
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
 
   .code-caption {
-    margin-top: -1rem;
     margin-left: 0 !important;
     margin-right: 0 !important;
     font-size: 1rem !important;
@@ -26,6 +25,15 @@
     p {
       margin: 0;
     }
+  }
+}
+
+.tabbed-code {
+  @include respond-above(sm) {margin-top: 1.25rem;}
+  @include respond-above(md) {margin-top: 1.5rem;}
+  ul li {
+    @include respond-below(lg) {padding-left: 0.5rem !important; padding-right: 0.5rem !important;}
+    @include respond-below(xs) {padding-left: 0 !important; padding-right: 0 !important;}
   }
 }
 

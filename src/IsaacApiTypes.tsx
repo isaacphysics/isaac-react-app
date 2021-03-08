@@ -362,8 +362,7 @@ export interface VideoDTO extends MediaDTO {
 }
 
 export interface CodeDTO extends ContentDTO {
-    code?: ContentDTO;
-    pythonUrl?: string;
+    code?: any[];
 }
 
 export interface AbstractSegueUserDTO {
