@@ -14,7 +14,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/assignments">My assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
-            <LinkItem to="/quizzes">My quizzes</LinkItem>
+            {QUIZ_FEATURE && <LinkItem to="/quizzes">My quizzes</LinkItem>}
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
