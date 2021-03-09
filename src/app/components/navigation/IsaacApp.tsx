@@ -57,7 +57,6 @@ import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
-import {Quiz} from "../pages/Quiz";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MyProgress} from "../pages/MyProgress";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
@@ -144,7 +143,6 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                     <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                     <TrackedRoute exact path="/questions/:questionId" component={Question} />
-                    <TrackedRoute exact path="/quizzes/:quizId" ifUser={isLoggedIn} component={Quiz} />
 
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
                     <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
@@ -156,14 +154,14 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path='/events/:eventId' component={EventDetails}/>
                     <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />
 
-                    <TrackedRoute exact path="/quiz/do_assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAsssignment} />
-                    <TrackedRoute exact path="/quiz/do_assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAsssignment} />
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/do_assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAsssignment} />}
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/do_assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAsssignment} />}
 
                     {/* Student pages */}
                     <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
                     <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                     <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
-                    <TrackedRoute exact path="/quizzes" ifUser={isLoggedIn} component={MyQuizzes} />
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quizzes" ifUser={isLoggedIn} component={MyQuizzes} />}
 
                     {/* Teacher pages */}
                     <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
