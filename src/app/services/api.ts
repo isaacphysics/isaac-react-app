@@ -550,7 +550,7 @@ export const api = {
         answer: (quizAttemptId: number, questionId: string, attempt: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/quiz/attempt/${quizAttemptId}/answer/${questionId}`, attempt);
         },
-        markQuizAttemptAsComplete: (quizAttemptId: number): AxiosPromise<never> => {
+        markQuizAttemptAsComplete: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
             return endpoint.post(`/quiz/attempt/${quizAttemptId}/complete`);
         }
     },

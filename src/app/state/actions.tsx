@@ -82,7 +82,7 @@ function isAxiosError(e: Error): e is AxiosError {
     return 'isAxiosError' in e && (e as AxiosError).isAxiosError;
 }
 
-function extractMessage(e: Error) {
+export function extractMessage(e: Error) {
     if (isAxiosError(e) && e.response && e.response.data && e.response.data.errorMessage) {
         return e.response.data.errorMessage;
     }

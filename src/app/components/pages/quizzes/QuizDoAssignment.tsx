@@ -219,7 +219,8 @@ function QuizAttemptEditor(props: QuizViewerProps) {
 }
 
 const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}: QuizDoAsssignmentProps) => {
-    const attempt = useSelector(selectors.quizzes.currentQuizAttempt);
+    const attemptState = useSelector(selectors.quizzes.currentQuizAttempt);
+    const attempt = isDefined(attemptState) && 'attempt' in attemptState ? attemptState.attempt : null;
     const questions = useMemo(() => {
         return extractQuestions(attempt?.quiz);
     }, [attempt?.quiz]);
@@ -248,8 +249,16 @@ const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}:
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 
     return <RS.Container>
-        <ShowLoading until={attempt}>
+        <ShowLoading until={attemptState} >
             {attempt && <QuizAttemptEditor attempt={attempt} page={pageNumber} questions={questions} sections={sections}/>}
+            {attemptState && 'error' in attemptState && <>
+                <TitleAndBreadcrumb currentPageTitle="Quiz"
+                                    intermediateCrumbs={intermediateCrumbs} />
+                <RS.Alert color="danger">
+                    <h4 className="alert-heading">Error loading assignment!</h4>
+                    <p>{attemptState.error}</p>
+                </RS.Alert>
+            </>}
         </ShowLoading>
     </RS.Container>;
 };

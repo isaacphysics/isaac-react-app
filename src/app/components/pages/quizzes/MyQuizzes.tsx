@@ -14,6 +14,7 @@ import {extractTeacherName} from "../../../services/user";
 import {isDefined} from "../../../services/miscUtils";
 import { partition } from 'lodash';
 import { Link } from 'react-router-dom';
+import {NOT_FOUND} from "../../../services/constants";
 
 interface MyQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -81,11 +82,11 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         You can also take some quizzes freely whenever you want to test your knowledge.
     </span>;
 
-    const [completedAssignments, incompleteAssignments] = partition(quizAssignments ?? [], a => isDefined(a.attempt?.completedDate));
+    const [completedAssignments, incompleteAssignments] = partition(isDefined(quizAssignments) && quizAssignments !== NOT_FOUND ? quizAssignments : [], a => isDefined(a.attempt?.completedDate));
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle="My quizzes" help={pageHelp} />
-        <ShowLoading until={quizAssignments}>
+        <ShowLoading until={quizAssignments} ifNotFound={<RS.Alert color="warning">Your quiz assignments failed to load, please try refreshing the page.</RS.Alert>}>
             <AssignmentGrid quizAssignments={incompleteAssignments} title="Quizzes you have been assigned" empty="You don't have any incomplete assigned quizzes." />
             <AssignmentGrid quizAssignments={completedAssignments} title="Quizzes you have completed" empty="You haven't completed any assigned quizzes." />
         </ShowLoading>

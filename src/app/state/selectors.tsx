@@ -1,12 +1,11 @@
 import {AppState} from "./reducers";
 import {sortBy} from "lodash";
 import {NOT_FOUND} from "../services/constants";
-import {AppGroup, AppQuizAssignment} from "../../IsaacAppTypes";
+import {AppGroup, AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
 import {GroupProgressState, ProgressState} from "./reducers/assignmentsState";
 import {isDefined} from "../services/miscUtils";
 import {QuestionValidationResponseDTO, QuizAssignmentDTO} from "../../IsaacApiTypes";
-import {useSelector} from "react-redux";
 import {extractQuestions} from "../services/quiz";
 
 export const selectors = {
@@ -142,13 +141,19 @@ export const selectors = {
         assignments: (state: AppState) => augmentWithGroupNameIfInCache(state, state?.quizAssignments),
         currentQuizAttempt: (state: AppState) => {
             const quizAttempt = state?.quizAttempt;
-            if (isDefined(quizAttempt) && isDefined(quizAttempt.quiz)) {
+            if (!isDefined(quizAttempt)) {
+                return null;
+            }
+            if ('error' in quizAttempt) {
+                return quizAttempt;
+            }
+            if (isDefined(quizAttempt.attempt.quiz)) {
                 const questions = selectors.questions.getQuestions(state);
                 const answerMap = questions?.reduce((map, q) => {
                     map[q.id as string] = q.bestAttempt;
                     return map;
                 }, {} as {[id: string]: QuestionValidationResponseDTO | undefined}) ?? {};
-                const quizQuestions = extractQuestions(quizAttempt.quiz);
+                const quizQuestions = extractQuestions(quizAttempt.attempt.quiz);
                 quizQuestions.forEach(question => {
                     if (answerMap[question.id as string]) {
                         question.bestAttempt = answerMap[question.id as string];
@@ -160,9 +165,9 @@ export const selectors = {
     },
 };
 
-function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAssignmentDTO[] | null | undefined): AppQuizAssignment[] | null {
-    if (!isDefined(quizAssignments)) {
-        return null;
+function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAssignmentDTO[] | NOT_FOUND_TYPE | null | undefined) {
+    if (!isDefined(quizAssignments) || quizAssignments === NOT_FOUND) {
+        return quizAssignments;
     }
     const groupCache = state?.groups?.cache ?? {};
     return quizAssignments.map(assignment => {

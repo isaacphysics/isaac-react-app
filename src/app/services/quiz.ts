@@ -2,7 +2,7 @@ import {ContentDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {isDefined} from "./miscUtils";
 import {isQuestion} from "./questions";
 
-export function extractQuestions(doc: ContentDTO | undefined) {
+export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
     const qs: QuestionDTO[] = [];
 
     function walk(doc: ContentDTO) {

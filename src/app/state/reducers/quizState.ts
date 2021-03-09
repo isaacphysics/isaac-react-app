@@ -1,6 +1,6 @@
-import {Action} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
-import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../../IsaacApiTypes";
+import {Action, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
+import {ContentSummaryDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../../IsaacApiTypes";
 
 type QuizState = {quizzes: ContentSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {
@@ -12,11 +12,15 @@ export const quizzes = (quizzes: QuizState = null, action: Action) => {
     }
 };
 
-type QuizAssignmentsState = QuizAssignmentDTO[] | null;
+type QuizAssignmentsState = QuizAssignmentDTO[] | NOT_FOUND_TYPE | null;
 export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, action: Action) => {
     switch (action.type) {
+        case ACTION_TYPE.QUIZ_ASSIGNMENTS_REQUEST:
+            return null;
         case ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS:
             return action.assignments;
+        case ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_FAILURE:
+            return NOT_FOUND;
         case ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS:
             return [...quizAssignments ?? [], action.newAssignment];
         default:
@@ -24,36 +28,39 @@ export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, ac
     }
 }
 
-type QuizAssignedToMeState = QuizAssignmentDTO[] | null;
+type QuizAssignedToMeState = QuizAssignmentDTO[] | NOT_FOUND_TYPE | null;
 export const quizAssignedToMe = (quizAssignments: QuizAssignedToMeState = null, action: Action) => {
     switch (action.type) {
+        case ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_REQUEST:
+            return null;
         case ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS:
             return action.assignments;
+        case ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_FAILURE:
+            return NOT_FOUND;
         case ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS:
-            return quizAssignments?.map(assignment => {
-                if (assignment.attempt?.id === action.quizAttemptId) {
+            return (quizAssignments !== NOT_FOUND && quizAssignments?.map(assignment => {
+                if (assignment.attempt?.id === action.attempt.id) {
                     return {
                         ...assignment,
-                        attempt: {
-                            ...assignment.attempt,
-                            completedDate: new Date(),
-                        },
+                        attempt: action.attempt,
                     };
                 }
                 return assignment;
-            }) ?? null;
+            })) || null;
         default:
             return quizAssignments;
     }
 }
 
-type QuizAttemptState = QuizAttemptDTO | null;
+type QuizAttemptState = {attempt: QuizAttemptDTO} | {error: string} | null;
 export const quizAttempt = (quizAssignment: QuizAttemptState = null, action: Action): QuizAttemptState => {
     switch (action.type) {
         case ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_RESPONSE_SUCCESS:
-            return action.attempt;
+            return {attempt: action.attempt};
+        case ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_RESPONSE_FAILURE:
+            return {error: action.error};
         case ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST:
-            if (quizAssignment && quizAssignment.quizAssignmentId === action.quizAssignmentId) {
+            if (quizAssignment && 'attempt' in quizAssignment && quizAssignment.attempt.quizAssignmentId === action.quizAssignmentId) {
                 // Optimisically keep current attempt
                 return quizAssignment;
             }

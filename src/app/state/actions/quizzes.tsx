@@ -2,7 +2,7 @@ import React, {Dispatch} from "react";
 import {Action} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services/constants";
 import {api} from "../../services/api";
-import {closeActiveModal, loadGroups, openActiveModal, showErrorToastIfNeeded} from "../actions";
+import {closeActiveModal, extractMessage, loadGroups, openActiveModal, showErrorToastIfNeeded} from "../actions";
 import {ContentSummaryDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
 import {AppDispatch} from "../store";
 import {WithLoadedSelector} from "../../components/handlers/ShowLoading";
@@ -53,6 +53,7 @@ export const loadQuizAssignments = () => async (dispatch: Dispatch<Action>) => {
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignments.data});
     } catch (e) {
         dispatch(showErrorToastIfNeeded("Loading quiz assignments failed", e));
+        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_FAILURE});
     }
 };
 
@@ -63,6 +64,7 @@ export const loadQuizAssignedToMe = () => async (dispatch: Dispatch<Action>) => 
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS, assignments: assignments.data});
     } catch (e) {
         dispatch(showErrorToastIfNeeded("Loading quizzes assigned to you failed", e));
+        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_FAILURE});
     }
 };
 
@@ -73,6 +75,7 @@ export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (di
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
     } catch (e) {
         dispatch(showErrorToastIfNeeded("Loading assigned quiz attempt failed", e));
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
 
@@ -97,8 +100,8 @@ export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: str
 export const markQuizAttemptAsComplete = (quizAttemptId: number) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST, quizAttemptId});
     try {
-        await api.quizzes.markQuizAttemptAsComplete(quizAttemptId);
-        dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS, quizAttemptId});
+        const attempt = await api.quizzes.markQuizAttemptAsComplete(quizAttemptId);
+        dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS, attempt: attempt.data});
     } catch (e) {
         dispatch(showErrorToastIfNeeded("Failed to submit your quiz answers", e));
     }
