@@ -7,9 +7,10 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {loadQuizAttemptFeedback} from "../../../state/actions/quizzes";
 import {isDefined} from "../../../services/miscUtils";
 import {useCurrentQuizAttempt} from "../../../services/quiz";
-import {QuizAttemptComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizAttemptComponent";
+import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizAttemptComponent";
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
+import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 
 
 interface QuizAttemptFeedbackProps {
@@ -54,7 +55,7 @@ const pageHelp = <span>
 </span>;
 
 const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page}}}: QuizAttemptFeedbackProps) => {
-    const {attempt, questions, sections} = useCurrentQuizAttempt();
+    const {attempt, questions, sections, error} = useCurrentQuizAttempt();
 
     const dispatch = useDispatch();
 
@@ -72,6 +73,13 @@ const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page}}}: 
             {attempt && <>
                 <QuizAttemptComponent {...subProps} />
                 {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizFooter {...subProps} />}
+            </>}
+            {error && <>
+                <TitleAndBreadcrumb currentPageTitle="Quiz Feedback" intermediateCrumbs={myQuizzesCrumbs} />
+                <RS.Alert color="danger">
+                    <h4 className="alert-heading">Error loading your feedback!</h4>
+                    <p>{error}</p>
+                </RS.Alert>
             </>}
         </ShowLoading>
     </RS.Container>;
