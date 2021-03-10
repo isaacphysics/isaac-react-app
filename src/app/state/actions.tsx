@@ -1056,7 +1056,7 @@ export const addGameboard = (gameboardId: string, user: PotentialUser, redirect?
     try {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST});
         await api.gameboards.save(gameboardId);
-        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS});
+        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS, gameboardId: gameboardId});
         if (redirect) {
             if (isTeacher(user)) {
                 history.push(`/set_assignments#${gameboardId}`);
