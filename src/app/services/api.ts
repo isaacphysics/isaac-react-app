@@ -552,6 +552,9 @@ export const api = {
         },
         markQuizAttemptAsComplete: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
             return endpoint.post(`/quiz/attempt/${quizAttemptId}/complete`);
-        }
+        },
+        loadQuizAttemptFeedback: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
+            return endpoint.get(`/quiz/attempt/${quizAttemptId}/feedback`);
+        },
     },
 };

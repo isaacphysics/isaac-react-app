@@ -131,7 +131,7 @@ const appReducer = combineReducers({
     quizzes,
     quizAssignments,
     quizAssignedToMe,
-    quizAttempt: quizAttempt,
+    quizAttempt,
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;

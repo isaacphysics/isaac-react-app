@@ -53,19 +53,25 @@ export const quizAssignedToMe = (quizAssignments: QuizAssignedToMeState = null, 
 }
 
 type QuizAttemptState = {attempt: QuizAttemptDTO} | {error: string} | null;
-export const quizAttempt = (quizAssignment: QuizAttemptState = null, action: Action): QuizAttemptState => {
+export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Action): QuizAttemptState => {
     switch (action.type) {
-        case ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_RESPONSE_SUCCESS:
+        case ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS:
             return {attempt: action.attempt};
-        case ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_RESPONSE_FAILURE:
+        case ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE:
             return {error: action.error};
         case ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST:
-            if (quizAssignment && 'attempt' in quizAssignment && quizAssignment.attempt.quizAssignmentId === action.quizAssignmentId) {
-                // Optimisically keep current attempt
-                return quizAssignment;
+            if (possibleAttempt && 'attempt' in possibleAttempt && possibleAttempt.attempt.quizAssignmentId === action.quizAssignmentId) {
+                // Optimistically keep current attempt
+                return possibleAttempt;
+            }
+            return null;
+        case ACTION_TYPE.QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST:
+            if (possibleAttempt && 'attempt' in possibleAttempt && possibleAttempt.attempt.id === action.quizAttemptId) {
+                // Optimistically keep current attempt
+                return possibleAttempt;
             }
             return null;
         default:
-            return quizAssignment;
+            return possibleAttempt;
     }
 }

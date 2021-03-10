@@ -40,7 +40,12 @@ function QuizAssignment({assignment}: QuizAssignmentProps) {
             </p>
             {status === Status.Unstarted && <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}`}>Start quiz</RS.Button>}
             {status === Status.Started && <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}`}>Continue quiz</RS.Button>}
-            {status === Status.Complete && <RS.Button>View feedback</RS.Button>}
+            {status === Status.Complete && (
+                assignment.quizFeedbackMode !== "NONE" ?
+                    <RS.Button tag={Link} to={`/quiz/attempt/${assignment.attempt?.id}/feedback`}>View feedback</RS.Button>
+                :
+                    <p>No feedback available</p>
+            )}
             <p className="mb-1 mt-3">
                 Set: {formatDate(assignment.creationDate)} {assignment.assignerSummary && <>by {extractTeacherName(assignment.assignerSummary)}</>}
                 {attempt && (status === Status.Complete ?
