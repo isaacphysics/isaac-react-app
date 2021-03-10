@@ -157,7 +157,6 @@ export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
     total?: number;
     sectionTotals?: { [index: string]: number };
     individualFeedback?: QuizFeedbackDTO;
-    userFeedback?: QuizUserFeedbackDTO[];
 }
 
 export interface IsaacQuizSectionDTO extends SeguePageDTO {
@@ -199,6 +198,8 @@ export interface QuizAssignmentDTO extends IAssignmentLike, IHasQuizSummary {
     assignerSummary?: UserSummaryDTO;
     quizFeedbackMode?: QuizFeedbackMode;
     attempt?: QuizAttemptDTO;
+    userFeedback?: QuizUserFeedbackDTO[];
+    quiz?: IsaacQuizDTO;
 }
 
 export interface QuizAttemptDTO extends IHasQuizSummary {

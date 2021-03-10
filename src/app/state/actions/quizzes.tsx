@@ -119,3 +119,14 @@ export const loadQuizAttemptFeedback = (quizAttemptId: number) => async (dispatc
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
+
+export const loadQuizAssignmentFeedback = (quizAssignmentId: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_REQUEST, quizAssignmentId});
+    try {
+        const assignment = await api.quizzes.loadQuizAssignmentFeedback(quizAssignmentId);
+        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_SUCCESS, assignment: assignment.data});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Loading quiz feedback failed", e));
+        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_FAILURE, error: extractMessage(e)});
+    }
+};

@@ -462,6 +462,10 @@ export type Action =
 
     | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST; quizAttemptId: number}
     | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
+
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_REQUEST; quizAssignmentId: number}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_SUCCESS; assignment: ApiTypes.QuizAssignmentDTO}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_FAILURE; error: string}
     ;
 
 export type NOT_FOUND_TYPE = 404;

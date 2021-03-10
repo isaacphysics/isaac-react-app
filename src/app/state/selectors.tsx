@@ -162,6 +162,9 @@ export const selectors = {
             }
             return quizAttempt;
         },
+        assignment: function (state: AppState) {
+            return state?.quizAssignment;
+        },
     },
 };
 

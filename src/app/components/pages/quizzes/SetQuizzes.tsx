@@ -42,7 +42,7 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
                 <br />
                 {assignment.dueDate ? <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></> : "No due date"}
             </p>
-            <RS.Button>View results</RS.Button>
+            <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`}>View results</RS.Button>
             <p className="mb-1 mt-3">
                 Set: {formatDate(assignment.creationDate)} by {formatAssignmentOwner(user, assignment)}
             </p>

@@ -26,7 +26,7 @@ export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, ac
         default:
             return quizAssignments;
     }
-}
+};
 
 type QuizAssignedToMeState = QuizAssignmentDTO[] | NOT_FOUND_TYPE | null;
 export const quizAssignedToMe = (quizAssignments: QuizAssignedToMeState = null, action: Action) => {
@@ -50,7 +50,7 @@ export const quizAssignedToMe = (quizAssignments: QuizAssignedToMeState = null, 
         default:
             return quizAssignments;
     }
-}
+};
 
 type QuizAttemptState = {attempt: QuizAttemptDTO} | {error: string} | null;
 export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Action): QuizAttemptState => {
@@ -74,4 +74,18 @@ export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Ac
         default:
             return possibleAttempt;
     }
-}
+};
+
+type QuizAssignmentState = {assignment: QuizAssignmentDTO} | {error: string} | null;
+export const quizAssignment = (possibleAssignment: QuizAssignmentState = null, action: Action): QuizAssignmentState => {
+    switch (action.type) {
+        case ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_REQUEST:
+            return null;
+        case ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_SUCCESS:
+            return {assignment: action.assignment};
+        case ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_FAILURE:
+            return {error: action.error};
+        default:
+            return possibleAssignment;
+    }
+};

@@ -556,5 +556,8 @@ export const api = {
         loadQuizAttemptFeedback: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
             return endpoint.get(`/quiz/attempt/${quizAttemptId}/feedback`);
         },
+        loadQuizAssignmentFeedback: (quizAssignmentId: number): AxiosPromise<ApiTypes.QuizAssignmentDTO> => {
+            return endpoint.get(`/quiz/assignment/${quizAssignmentId}`);
+        },
     },
 };

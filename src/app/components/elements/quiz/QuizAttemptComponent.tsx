@@ -103,8 +103,6 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
     ;
 }
 
-
-
 export const myQuizzesCrumbs = [{title: "My quizzes", to: `/quizzes`}];
 const QuizTitle = ({attempt, page, pageLink, pageHelp}: QuizAttemptProps) => {
     let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Quiz";
