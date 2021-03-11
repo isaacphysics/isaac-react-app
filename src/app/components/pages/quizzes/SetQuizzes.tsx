@@ -6,7 +6,7 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {QuizAssignmentDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {loadQuizzes, showQuizSettingModal, loadQuizAssignments} from "../../../state/actions/quizzes";
+import {loadQuizzes, showQuizSettingModal, loadQuizAssignments, markQuizAsCancelled} from "../../../state/actions/quizzes";
 import {Spacer} from "../../elements/Spacer";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
@@ -34,6 +34,13 @@ function formatAssignmentOwner(user: RegisteredUserDTO, assignment: QuizAssignme
 }
 
 function QuizAssignment({user, assignment}: QuizAssignmentProps) {
+    const dispatch = useDispatch();
+    const cancel = () => {
+        if (window.confirm("Are you sure you want to cancel?\r\nStudents will no longer be able to take the quiz or see any feedback.")) {
+            dispatch(markQuizAsCancelled(assignment.id as number));
+        }
+    };
+    const isCancelling = 'cancelling' in assignment && (assignment as {cancelling: boolean}).cancelling;
     return <div className="p-2">
         <RS.Card><RS.CardBody>
             <RS.CardTitle><h4>{assignment.quizSummary?.title || assignment.quizId}</h4></RS.CardTitle>
@@ -42,13 +49,15 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
                 <br />
                 {assignment.dueDate ? <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></> : "No due date"}
             </p>
-            <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`}>View results</RS.Button>
+            <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined}>
+                View results
+            </RS.Button>
             <p className="mb-1 mt-3">
                 Set: {formatDate(assignment.creationDate)} by {formatAssignmentOwner(user, assignment)}
             </p>
         </RS.CardBody>
         <RS.CardFooter>
-            <RS.Button color="warning" outline>Cancel quiz</RS.Button>
+            <RS.Button color="warning" outline onClick={cancel} disabled={isCancelling}>{isCancelling ? <><RS.Spinner size="sm" /> Cancelling...</> : "Cancel quiz"}</RS.Button>
         </RS.CardFooter>
     </RS.Card></div>;
 }

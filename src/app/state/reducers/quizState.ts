@@ -23,6 +23,24 @@ export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, ac
             return NOT_FOUND;
         case ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS:
             return [...quizAssignments ?? [], action.newAssignment];
+        case ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_REQUEST:
+            return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.map(assignment => {
+                if (assignment.id === action.quizAssignmentId) {
+                    return {...assignment, cancelling: true};
+                }
+                return assignment;
+            }) : quizAssignments;
+        case ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_FAILURE:
+            return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.map(assignment => {
+                if (assignment.id === action.quizAssignmentId) {
+                    return {...assignment, cancelling: undefined};
+                }
+                return assignment;
+            }) : quizAssignments;
+        case ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_SUCCESS:
+            return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.filter(assignment => {
+                return assignment.id !== action.quizAssignmentId;
+            }) : quizAssignments;
         default:
             return quizAssignments;
     }
