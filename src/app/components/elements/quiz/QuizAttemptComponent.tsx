@@ -27,31 +27,37 @@ function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
 }
 
 function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps) {
-    return isDefined(attempt.completedDate) ?
-        attempt.feedbackMode === "NONE" ?
+    if (isDefined(attempt.completedDate)) {
+        return attempt.feedbackMode === "NONE" ?
             <h4>No feedback available</h4>
-        : attempt.feedbackMode === "OVERALL_MARK" ?
-            <h4>Your mark is {attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</h4>
-        :
-            <table className="quiz-marks-table">
-                <tbody>
-                <tr><th>Overall mark</th><td>{attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</td></tr>
-                <tr><th colSpan={2}>Section mark breakdown</th></tr>
-                {Object.keys(sections).map((k, index) => {
-                    const section = sections[k];
-                    return <tr key={k}>
-                        <td><Link replace to={pageLink(attempt, index + 1)}>{section.title}</Link></td>
-                        <td>
-                            {attempt.quiz?.individualFeedback?.sectionMarks?.[section.id as string]?.correct}
-                            {" / "}
-                            {attempt.quiz?.sectionTotals?.[section.id as string]}
-                        </td>
-                    </tr>;
-                })}
-                </tbody>
-            </table>
-    :
-        <div>
+            : attempt.feedbackMode === "OVERALL_MARK" ?
+                <h4>Your mark is {attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</h4>
+                :
+                <table className="quiz-marks-table">
+                    <tbody>
+                    <tr>
+                        <th>Overall mark</th>
+                        <td>{attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</td>
+                    </tr>
+                    <tr>
+                        <th colSpan={2}>Section mark breakdown</th>
+                    </tr>
+                    {Object.keys(sections).map((k, index) => {
+                        const section = sections[k];
+                        return <tr key={k}>
+                            <td><Link replace to={pageLink(attempt, index + 1)}>{section.title}</Link></td>
+                            <td>
+                                {attempt.quiz?.individualFeedback?.sectionMarks?.[section.id as string]?.correct}
+                                {" / "}
+                                {attempt.quiz?.sectionTotals?.[section.id as string]}
+                            </td>
+                        </tr>;
+                    })}
+                    </tbody>
+                </table>;
+    } else {
+        const anyStarted = questions.some(q => q.bestAttempt !== undefined);
+        return <div>
             <h4>Quiz sections</h4>
             <ul>
                 {Object.keys(sections).map((k, index) => {
@@ -59,15 +65,15 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
                     const questionsInSection = inSection(section, questions);
                     const answerCount = questionsInSection.filter(q => q.bestAttempt !== undefined).length;
                     const completed = questionsInSection.length === answerCount;
-                    const started = answerCount > 0;
                     return <li key={k}>
                         <Link replace to={pageLink(attempt, index + 1)}>{section.title}</Link>
                         {" "}
-                        <small className="text-muted">{completed ? "Completed" : started ? `${answerCount} / ${questionsInSection.length}` : ""}</small>
+                        <small className="text-muted">{completed ? "Completed" : anyStarted ? `${answerCount} / ${questionsInSection.length}` : ""}</small>
                     </li>;
                 })}
             </ul>
         </div>;
+    }
 }
 
 function QuizHeader({attempt}: QuizAttemptProps) {
