@@ -56,7 +56,7 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}, linkToGlossary = fal
             </Col>
             <Col>
                 {doc.explanation && <IsaacContent doc={doc.explanation} />}
-                {_tags && _tags.length > 0 && <p className="topics">Used in: {_tags.map(tag => tag.title).join(', ')}</p>}
+                {/* {_tags && _tags.length > 0 && <p className="topics">Used in: {_tags.map(tag => tag.title).join(', ')}</p>} */}
             </Col>
         </Row>}
     </React.Fragment>;
