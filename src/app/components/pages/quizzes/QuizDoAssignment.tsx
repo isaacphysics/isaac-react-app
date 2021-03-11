@@ -24,9 +24,9 @@ interface QuizDoAsssignmentProps {
 
 function pageLink(attempt: QuizAttemptDTO, page?: number) {
     if (page !== undefined) {
-        return `/quiz/do_assignment/${attempt.quizAssignmentId}/page/${page}`;
+        return `/quiz/assignment/${attempt.quizAssignmentId}/page/${page}`;
     } else {
-        return `/quiz/do_assignment/${attempt.quizAssignmentId}`;
+        return `/quiz/assignment/${attempt.quizAssignmentId}`;
     }
 }
 

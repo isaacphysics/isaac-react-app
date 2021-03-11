@@ -38,8 +38,8 @@ function QuizAssignment({assignment}: QuizAssignmentProps) {
             <p>
                 {assignment.dueDate && <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></>}
             </p>
-            {status === Status.Unstarted && <RS.Button tag={Link} to={`/quiz/do_assignment/${assignment.id}`}>Start quiz</RS.Button>}
-            {status === Status.Started && <RS.Button tag={Link} to={`/quiz/do_assignment/${assignment.id}`}>Continue quiz</RS.Button>}
+            {status === Status.Unstarted && <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}`}>Start quiz</RS.Button>}
+            {status === Status.Started && <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}`}>Continue quiz</RS.Button>}
             {status === Status.Complete && <RS.Button>View feedback</RS.Button>}
             <p className="mb-1 mt-3">
                 Set: {formatDate(assignment.creationDate)} {assignment.assignerSummary && <>by {extractTeacherName(assignment.assignerSummary)}</>}

@@ -154,8 +154,8 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path='/events/:eventId' component={EventDetails}/>
                     <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />
 
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/do_assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAsssignment} />}
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/do_assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAsssignment} />}
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAsssignment} />}
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAsssignment} />}
 
                     {/* Student pages */}
                     <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
