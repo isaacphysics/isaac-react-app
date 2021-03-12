@@ -25,16 +25,17 @@ interface IsaacGraphSketcherQuestionProps {
     questionId: string;
     currentAttempt?: GraphChoiceDTO | null;
     setCurrentAttempt: (questionId: string, attempt: GraphChoiceDTO) => void;
+    readonly?: boolean;
 }
 const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
+    const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
     const initialState: GraphSketcherState | undefined = currentAttempt?.value ? JSON.parse(currentAttempt?.value) : undefined;
     const previewRef = useRef(null);
 
     function openModal() {
-        setModalVisible(true);
+        !readonly && setModalVisible(true);
     }
 
     function closeModal() {
@@ -86,7 +87,8 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     }, [currentAttempt]);
 
     return <div className="graph-sketcher-question">
-        <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
+        <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role={readonly ? undefined : "button"}
+             tabIndex={readonly ? undefined : 0}>
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
         </div>
         {modalVisible && <GraphSketcherModal

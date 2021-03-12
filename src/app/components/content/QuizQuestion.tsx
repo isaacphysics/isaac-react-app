@@ -6,22 +6,32 @@ import * as ApiTypes from "../../../IsaacApiTypes";
 import {QUESTION_TYPES} from "../../services/questions";
 import {submitQuizQuestionIfDirty} from "../../state/actions/quizzes";
 import {isDefined} from "../../services/miscUtils";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
+import {IsaacContent} from "./IsaacContent";
+import {QuizAttemptDTO} from "../../../IsaacApiTypes";
 
-export const QuizAttemptContext = React.createContext<{quizAttemptId: number | null}>({quizAttemptId: null});
+export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null}>({quizAttempt: null});
 
 export const QuizQuestion = ({doc}: { doc: ApiTypes.IsaacQuestionBaseDTO }) => {
     const dispatch = useDispatch();
 
-    const {quizAttemptId} = useContext(QuizAttemptContext);
+    const {quizAttempt} = useContext(QuizAttemptContext);
 
     useEffect((): (() => void) => {
         return () => {
             // Submit answer when unmounting if it is dirty
-            if (isDefined(quizAttemptId)) {
-                dispatch(submitQuizQuestionIfDirty(quizAttemptId, doc.id as string));
+            if (isDefined(quizAttempt) && quizAttempt.completedDate === undefined) {
+                dispatch(submitQuizQuestionIfDirty(quizAttempt.id as number, doc.id as string));
             }
         };
-    }, [dispatch, doc.id, quizAttemptId]);
+    }, [dispatch, doc.id, quizAttempt]);
+
+    const validationResponse = doc?.bestAttempt;
+    const validated = validationResponse?.correct !== undefined || (!validationResponse && isDefined(quizAttempt?.completedDate));
+    const correct = validationResponse?.correct;
+    const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs");
+    const noAnswer = validated && correct === undefined;
 
     const QuestionComponent = QUESTION_TYPES.get(doc.type || "default");
 
@@ -30,7 +40,27 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.IsaacQuestionBaseDTO }) => {
             classnames({"question-component p-md-5": true, "parsons-layout": doc.type === 'isaacParsonsQuestion'})
         }>
             {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
-            <QuestionComponent questionId={doc.id as string} doc={doc}/>
+            <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} readonly={validated} />
+
+            {/* CS Hints */}
+            {SITE_SUBJECT === SITE.CS && <React.Fragment>
+                <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />
+            </React.Fragment>}
+
+            {/* Validation Response */}
+            {validated && <div className={`validation-response-panel p-2 mt-2 ${correct ? "correct" : ""}`}>
+                <div className="pb-1">
+                    <h3 className="m-0">{noAnswer ? "Not answered" : sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h3>
+                </div>
+                {validationResponse && validationResponse.explanation && <div className="mb-1">
+                    <IsaacContent doc={validationResponse.explanation} />
+                </div>}
+            </div>}
+
+            {/* Physics Hints */}
+            {SITE_SUBJECT === SITE.PHY && <div className={correct ? "mt-5" : ""}>
+                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints}/>
+            </div>}
         </div>
     </React.Fragment>;
 }

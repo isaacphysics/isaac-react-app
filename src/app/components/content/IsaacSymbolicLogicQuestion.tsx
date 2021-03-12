@@ -63,15 +63,16 @@ interface IsaacSymbolicLogicQuestionProps {
     currentAttempt?: LogicFormulaDTO | null;
     setCurrentAttempt: (questionId: string, attempt: LogicFormulaDTO) => void;
     examBoard: EXAM_BOARD;
+    readonly?: boolean;
 }
 const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
+    const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
     const examBoard = useCurrentExamBoard();
     const [textInput, setTextInput] = useState('');
     const user = useSelector(selectors.user.orNull);
-    
+
     function currentAttemptPythonExpression(): string {
         return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
     }
@@ -166,7 +167,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 const closeBracketsCount = pycode.split(')').length - 1;
                 const regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+"
                 const badCharacters = new RegExp(regexStr);
-                
+
                 const _errors = [];
                 if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
                     _errors.push('LaTeX syntax is not supported.');
@@ -218,8 +219,8 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
             </div>
             {/* TODO Accessibility */}
             <div
-                role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={0}
-                onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
+                role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
+                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
                 dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
             />
             {modalVisible && <InequalityModal
@@ -239,7 +240,8 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2">
                     <Input type="text" onChange={updateEquation} value={textInput}
-                        placeholder="or type your expression here"/>
+                           readOnly={readonly}
+                           placeholder="or type your expression here"/>
                     <InputGroupAddon addonType="append">
                         <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>
                         <UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>

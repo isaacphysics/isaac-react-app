@@ -5,7 +5,7 @@ import {AppGroup, AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
 import {GroupProgressState, ProgressState} from "./reducers/assignmentsState";
 import {isDefined} from "../services/miscUtils";
-import {QuestionValidationResponseDTO, QuizAssignmentDTO} from "../../IsaacApiTypes";
+import {ChoiceDTO, QuizAssignmentDTO} from "../../IsaacApiTypes";
 import {extractQuestions} from "../services/quiz";
 
 export const selectors = {
@@ -150,13 +150,13 @@ export const selectors = {
             if (isDefined(quizAttempt.attempt.quiz)) {
                 const questions = selectors.questions.getQuestions(state);
                 const answerMap = questions?.reduce((map, q) => {
-                    map[q.id as string] = q.bestAttempt;
+                    map[q.id as string] = q.currentAttempt;
                     return map;
-                }, {} as {[id: string]: QuestionValidationResponseDTO | undefined}) ?? {};
+                }, {} as {[id: string]: ChoiceDTO | undefined}) ?? {};
                 const quizQuestions = extractQuestions(quizAttempt.attempt.quiz);
                 quizQuestions.forEach(question => {
-                    if (answerMap[question.id as string]) {
-                        question.bestAttempt = answerMap[question.id as string];
+                    if (answerMap[question.id as string] && (question.bestAttempt === null || question.bestAttempt?.correct === undefined)) {
+                        question.bestAttempt = {answer: answerMap[question.id as string]};
                     }
                 });
             }

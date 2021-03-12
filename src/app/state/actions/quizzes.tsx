@@ -72,10 +72,10 @@ export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (di
     dispatch({type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST, quizAssignmentId});
     try {
         const attempt = await api.quizzes.loadQuizAssignmentAttempt(quizAssignmentId);
-        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
     } catch (e) {
         dispatch(showErrorToastIfNeeded("Loading assigned quiz attempt failed", e));
-        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
 
@@ -102,7 +102,20 @@ export const markQuizAttemptAsComplete = (quizAttemptId: number) => async (dispa
     try {
         const attempt = await api.quizzes.markQuizAttemptAsComplete(quizAttemptId);
         dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS, attempt: attempt.data});
+        return true;
     } catch (e) {
         dispatch(showErrorToastIfNeeded("Failed to submit your quiz answers", e));
+        return false;
+    }
+};
+
+export const loadQuizAttemptFeedback = (quizAttemptId: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST, quizAttemptId});
+    try {
+        const attempt = await api.quizzes.loadQuizAttemptFeedback(quizAttemptId);
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Loading quiz feedback failed", e));
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
