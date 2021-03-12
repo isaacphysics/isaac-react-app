@@ -28,8 +28,8 @@ import {
     unassignBoard
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState, Boards} from "../../state/reducers";
-import {ActualBoardLimit, AppGameBoard, BoardOrder, Toast} from "../../../IsaacAppTypes";
+import {AppState} from "../../state/reducers";
+import {ActualBoardLimit, AppGameBoard, BoardOrder, Boards, Toast} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {range, sortBy} from "lodash";
@@ -212,7 +212,9 @@ const orderNames: {[key in BoardOrder]: string} = {
     "visited": "Date Visited Ascending",
     "-visited": "Date Visited Descending",
     "title": "Title Ascending",
-    "-title": "Title Descending"
+    "-title": "Title Descending",
+    "completion": "Completion Ascending",
+    "-completion": "Completion Descending"
 };
 function orderName(order: BoardOrder) {
     return orderNames[order];

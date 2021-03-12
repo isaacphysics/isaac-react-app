@@ -77,7 +77,6 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/accordions";
 @import "../common/cards";
 @import "../common/list-groups";
-@import "../common/featured-profile";
 @import "inequality-modal";
 @import "../common/carousel";
 @import "../common/icons";
@@ -85,10 +84,12 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/focus";
 @import "../common/progress-bar";
 @import "../common/anvil";
+@import "../common/filter";
 @import "../common/reservation-modal";
 @import "../common/fasttrack";
 @import "button";
 @import "logo";
+@import "featured-profile";
 
 // Navigation
 @import "header";
@@ -111,6 +112,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/groups";
 @import "../common/events";
 @import "../common/glossary";
+@import "../common/quiz";
 
 // Print
 @import "../common/print";

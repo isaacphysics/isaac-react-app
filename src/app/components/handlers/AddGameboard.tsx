@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {LoggedInUser} from "../../../IsaacAppTypes";
+import {PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "./ShowLoading";
 import {useDispatch} from "react-redux";
 import {addGameboard} from "../../state/actions";
@@ -7,7 +7,7 @@ import {withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 interface AddGameboardProps {
-    user: LoggedInUser;
+    user: PotentialUser;
     match: {params: {gameboardId: string}};
 }
 

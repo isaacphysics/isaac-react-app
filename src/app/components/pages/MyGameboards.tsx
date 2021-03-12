@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteBoard, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState, Boards} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {
     Button,
     Card,
@@ -18,7 +18,7 @@ import {
     Spinner,
     Table
 } from 'reactstrap';
-import {ActualBoardLimit, AppGameBoard, BoardOrder} from "../../../IsaacAppTypes";
+import {ActualBoardLimit, AppGameBoard, BoardOrder, Boards} from "../../../IsaacAppTypes";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -72,7 +72,9 @@ const orderNames: {[key in BoardOrder]: string} = {
     "visited": "Date Visited Ascending",
     "-visited": "Date Visited Descending",
     "title": "Title Ascending",
-    "-title": "Title Descending"
+    "-title": "Title Descending",
+    "completion": "Completion Ascending",
+    "-completion": "Completion Descending"
 };
 
 type BoardTableProps = MyBoardsPageProps & {
@@ -187,6 +189,9 @@ export const MyGameboards = () => {
     const [boardCreator, setBoardCreator] = useState<boardCreators>(boardCreators.all);
     const [boardCompletion, setBoardCompletion] = useState<boardCompletions>(boardCompletions.any);
     const [levels, setLevels] = useState<string[]>([]);
+    const [completed, setCompleted] = useState(0);
+    const [inProgress, setInProgress] = useState(0);
+    const [notStarted, setNotStarted] = useState(0);
 
     let actualBoardLimit: ActualBoardLimit = toActual(boardLimit);
 
@@ -232,6 +237,9 @@ export const MyGameboards = () => {
     useEffect( () => {
         if (boards && boards.totalResults != 0) {
             const wasLoading = loading;
+            let boardsCompleted = 0;
+            let boardsNotStarted = 0;
+            let boardsInProgress = 0;
             setLoading(false);
             if (boards.boards) {
                 if (actualBoardLimit != boards.boards.length) {
@@ -242,6 +250,18 @@ export const MyGameboards = () => {
                     }
                 }
             }
+            boards.boards.map(board => {
+                if (board.percentageCompleted === 0) {
+                    boardsNotStarted += 1;
+                } else if (board.percentageCompleted === 100) {
+                    boardsCompleted += 1;
+                } else {
+                    boardsInProgress += 1;
+                }
+            });
+            setCompleted(boardsCompleted);
+            setInProgress(boardsInProgress);
+            setNotStarted(boardsNotStarted);
         }
     }, [boards]);
 
@@ -256,7 +276,8 @@ export const MyGameboards = () => {
             :
             <React.Fragment>
                 <div className="mt-4 mb-2">
-                    {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} saved...</h4>}
+                    {boards && boards.totalResults > 0 && <h4>You have completed <strong>{completed}</strong> of <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"},
+                        with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
                     {!boards && <h4>You have <Spinner size="sm" /> saved gameboards...</h4>}
                 </div>
                 <div>
@@ -368,7 +389,11 @@ export const MyGameboards = () => {
                                             <Table className="mb-0">
                                                 <thead>
                                                     <tr>
-                                                        <th className="align-middle">Completion</th>
+                                                        <th className="align-middle pointer-cursor">
+                                                            <button className="table-button" onClick={() => boardOrder == BoardOrder.completion ? setBoardOrder(BoardOrder["-completion"]) : setBoardOrder(BoardOrder.completion)}>
+                                                                Completion {boardOrder == BoardOrder.completion ? sortIcon.ascending : boardOrder == BoardOrder["-completion"] ? sortIcon.descending : sortIcon.sortable}
+                                                            </button>
+                                                        </th>
                                                         <th className="align-middle pointer-cursor">
                                                             <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
                                                                 Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}

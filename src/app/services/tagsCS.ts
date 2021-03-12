@@ -22,11 +22,11 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.computingPracticalProject, title: "Computing practical project", parent: TAG_ID.programming},
 
         // GCSE to A level transition topics
-        {id: TAG_ID.gcseProgrammingConcepts, title: "Programming concepts", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseDataRepresentation, title: "Data representation", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseBooleanLogic, title: "Boolean logic", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseSystems, title: "Systems", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseNetworking, title: "Networking", parent: TAG_ID.gcseToALevel},
+        {id: TAG_ID.gcseProgrammingConcepts, title: "GCSE Programming concepts", parent: TAG_ID.gcseToALevel},
+        {id: TAG_ID.gcseDataRepresentation, title: "GCSE Data representation", parent: TAG_ID.gcseToALevel},
+        {id: TAG_ID.gcseBooleanLogic, title: "GCSE Boolean logic", parent: TAG_ID.gcseToALevel},
+        {id: TAG_ID.gcseSystems, title: "GCSE Systems", parent: TAG_ID.gcseToALevel},
+        {id: TAG_ID.gcseNetworking, title: "GCSE Networking", parent: TAG_ID.gcseToALevel},
         // Data structures and algorithms topics
         {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms},
         {id: TAG_ID.searchingSortingPathfinding, title: "Searching, sorting & pathfinding", parent: TAG_ID.dataStructuresAndAlgorithms},
@@ -44,7 +44,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems},
         {id: TAG_ID.operatingSystemsAndSoftware, title: "Operating systems and software", parent: TAG_ID.computerSystems},
         {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems},
-        {id: TAG_ID.programmingLanguages, title: "Programming languages", parent: TAG_ID.computerSystems},
+        {id: TAG_ID.programmingLanguages, title: "Types of programming languages", parent: TAG_ID.computerSystems},
         // Data and information topics
         {id: TAG_ID.numberSystems, title: "Number systems (AQA)", parent: TAG_ID.dataAndInformation},
         {id: TAG_ID.numberBases, title: "Number bases", parent: TAG_ID.dataAndInformation},
@@ -60,7 +60,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.subroutines, title: "Subroutines", parent: TAG_ID.programmingFundamentals},
         {id: TAG_ID.files, title: "Files", parent: TAG_ID.programmingFundamentals},
         {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.programmingFundamentals},
-        {id: TAG_ID.guis, title: "GUIs (OCR)", parent: TAG_ID.programmingFundamentals},
+        {id: TAG_ID.guis, title: "Web technologies and GUIs (OCR)", parent: TAG_ID.programmingFundamentals},
         {id: TAG_ID.computationalThinking, title: "Computational thinking", parent: TAG_ID.dataStructuresAndAlgorithms},
         {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.programmingFundamentals},
         // Programming paradigms topics:

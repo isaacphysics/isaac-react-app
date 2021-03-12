@@ -4,7 +4,7 @@ import {Provider, useSelector, useStore} from "react-redux";
 import * as RS from "reactstrap";
 import {Router} from "react-router-dom";
 import {AppState} from "../../state/reducers";
-import {MARKDOWN_RENDERER} from "../../services/constants";
+import {EXAM_BOARD, MARKDOWN_RENDERER} from "../../services/constants";
 import {TrustedHtml} from "./TrustedHtml";
 import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
@@ -40,6 +40,9 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
     const examBoard = useCurrentExamBoard();
+    let examBoardTag = ''
+    if (examBoard === EXAM_BOARD.AQA) { examBoardTag = 'aqa' }
+    else if (examBoard === EXAM_BOARD.OCR) { examBoardTag = 'ocr' }
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));
@@ -68,7 +71,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         // Markdown can't cope with React components, so we pre-render our component to static HTML, which Markdown will then ignore.
         // This requires a bunch of stuff to be passed down along with the component.
         markdown = markdown.replace(glossaryBlockRegexp, (_match, id) => {
-            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string).startsWith(id)));
+            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string) === id || (term.id as string) === `${id}|${examBoardTag}`));
             if (term === null) {
                 console.error('No valid term for "' + id + '" found among the filtered terms: ', filteredTerms);
                 return "";
@@ -87,7 +90,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         // The tooltip components can be rendered as regular react objects, so we just add them to an array,
         // and return them inside the JSX.Element that is returned as TrustedMarkdown.
         markdown = markdown.replace(glossaryInlineRegexp, (_match, id, text, offset) => {
-            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string).startsWith(id)));
+            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string) === id || (term.id as string) === `${id}|${examBoardTag}`));
             if (term === null) {
                 console.error('No valid term for "' + id + '" found among the filtered terms: ', filteredTerms);
                 return "";

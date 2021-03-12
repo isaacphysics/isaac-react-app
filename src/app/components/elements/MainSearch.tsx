@@ -4,6 +4,7 @@ import {pushSearchToHistory} from "../../services/search";
 import {History} from "history";
 import {withRouter} from "react-router";
 import {Collapse, Form, FormGroup, Input, Label, Nav, Navbar, NavbarToggler, NavItem} from "reactstrap";
+import {SEARCH_CHAR_LENGTH_LIMIT} from "../../services/constants";
 
 interface MainSearchProps {
     history: History;
@@ -41,7 +42,7 @@ const MainSearchComponent = ({history}: MainSearchProps) => {
                             <Label for='header-search' className='sr-only'>Search</Label>
                             <Input
                                 id="header-search" type="search" name="query" placeholder="Search" aria-label="Search"
-                                value={searchText} onChange={setSearchTextAsValue} innerRef={searchInputRef}
+                                value={searchText} onChange={setSearchTextAsValue} innerRef={searchInputRef} maxLength={SEARCH_CHAR_LENGTH_LIMIT}
                             />
                             <SearchButton />
                             <input type="hidden" name="types" value="isaacQuestionPage,isaacConceptPage" />

@@ -100,6 +100,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/anvil";
 @import "../common/reservation-modal";
 @import "../common/assignments";
+@import "filter";
 @import "inequality-modal";
 @import "questions";
 @import "progress-bar";
@@ -134,6 +135,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "books";
 @import "gameboard";
 @import "menu-page-phy";
+@import "../common/quiz";
 
 @import "../common/glossary";
 

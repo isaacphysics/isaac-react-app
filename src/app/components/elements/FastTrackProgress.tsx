@@ -1,10 +1,4 @@
-import {
-    GameboardDTO,
-    GameboardItem,
-    GameboardItemState,
-    IsaacFastTrackQuestionPageDTO,
-    QuestionPartState
-} from "../../../IsaacApiTypes";
+import {GameboardDTO, GameboardItem, IsaacFastTrackQuestionPageDTO} from "../../../IsaacApiTypes";
 import queryString from "query-string";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
@@ -15,6 +9,8 @@ import {selectors} from "../../state/selectors";
 import {Link} from "react-router-dom";
 import {useDeviceSize} from "../../services/device";
 import {TrustedHtml} from "./TrustedHtml";
+import {Hexagon} from "./svg/Hexagon";
+import {HexagonConnection} from "./svg/HexagonConnection";
 
 type QuestionLevel = "topTen" | "upper" | "lower";
 
@@ -58,50 +54,10 @@ interface AugmentedQuestion {
     questionPartStates?: string[];
 }
 
-function moveTo(x: number, y: number) {
-    return 'M' + x + ' ' + y;
-}
-
-function line(x: number, y: number) {
-    return 'L' + x + ' ' + y;
-}
-
-function calculateDashArray<T>(elements: T[] | undefined, evaluator: (t: T) => boolean, perimiterLength: number) {
-    if (elements === undefined) {
-        return null;
-    }
-    let sectionLength = perimiterLength / elements.length;
-    let recordingDash = true;
-    let lengthCollector = 0;
-    let dashArray = [];
-    for (let element of elements) {
-        let shouldRecordDash = evaluator(element);
-        if (shouldRecordDash === recordingDash) {
-            lengthCollector += sectionLength;
-        } else {
-            dashArray.push(lengthCollector);
-            recordingDash = !recordingDash;
-            lengthCollector = sectionLength;
-        }
-    }
-    dashArray.push(lengthCollector);
-    return dashArray.join(',');
-}
-
 function calculateProgressBarHeight(questionLevel: LevelTag, hexagonQuarterHeight: number, hexagonPadding: number, progressBarPadding: number) {
     let numberOfHexagonRows = {"ft_top_ten": 1, "ft_upper": 2, "ft_lower": 3}[questionLevel];
     return 2 * progressBarPadding + 4 * hexagonQuarterHeight + (numberOfHexagonRows - 1) * (6 * hexagonQuarterHeight + 2 * hexagonPadding);
 }
-
-function generateHexagonPoints(halfWidth: number, quarterHeight: number) {
-    return '' + 1 * halfWidth + ' ' + 0 * quarterHeight +
-        ', ' + 2 * halfWidth + ' ' + 1 * quarterHeight +
-        ', ' + 2 * halfWidth + ' ' + 3 * quarterHeight +
-        ', ' + 1 * halfWidth + ' ' + 4 * quarterHeight +
-        ', ' + 0 * halfWidth + ' ' + 3 * quarterHeight +
-        ', ' + 0 * halfWidth + ' ' + 1 * quarterHeight;
-}
-
 
 export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; search: string}) {
     const {questionHistory: qhs}: {questionHistory?: string} = queryString.parse(search);
@@ -124,12 +80,12 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             : null;
 
     useEffect(() => {
-        if (conceptQuestions === null && gameboardMaybeNull) {
+        if (gameboardMaybeNull) {
             const uppers = questionHistory.filter(e => /upper/i.test(e));
             const upper = uppers.pop() || "";
             dispatch(fetchFasttrackConcepts(gameboardMaybeNull.id as string, doc.title as string, upper));
         }
-    }, [dispatch, gameboardMaybeNull, doc, conceptQuestions]);
+    }, [dispatch, gameboardMaybeNull, doc]);
 
     if (gameboardMaybeNull === null && conceptQuestions === null) return null;
 
@@ -157,16 +113,6 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         padding: hexagonPadding,
         halfWidth: hexagonHalfWidth,
         quarterHeight: hexagonQuarterHeight,
-        x: {
-            left: (Math.sqrt(3) * hexagonQuarterHeight) / 2,
-            center: hexagonHalfWidth,
-            right: (hexagonHalfWidth * 2) - (Math.sqrt(3) * hexagonQuarterHeight) / 2,
-        },
-        y: {
-            top: hexagonQuarterHeight / 2,
-            center: 2 * hexagonQuarterHeight,
-            bottom: 7 * hexagonQuarterHeight / 2,
-        },
         base: {
             stroke: {
                 width: {xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
@@ -188,13 +134,11 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         },
     };
 
-    const conceptConnection = {
+    const conceptConnectionProperties = {
         fill: 'none',
-        stroke: {
-            colour: '#fea100',
-            width: {xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
-            dashArray: 4
-        },
+        stroke: '#fea100',
+        strokeWidth: {xl: 3, lg: 3, md: 2, sm: 2, xs: 2}[deviceSize],
+        strokeDasharray: 4
     };
 
     function augmentQuestion(question: GameboardItem, gameboardId: string, questionHistory: string[], index: number): AugmentedQuestion {
@@ -230,14 +174,14 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
     function getMostRecentQuestion(questionHistory: string[], conceptLevel: LevelTag) {
         const reversedQuestionHistory = questionHistory.slice().reverse();
-        const questionLevelMatcheFunctions = {
-            "ft_top_ten": (questionId: string) => questionId.indexOf('fasttrack') != -1,
-            "ft_upper": (questionId: string) => questionId.indexOf('upper') != -1,
+        const questionLevelMatchFunctions = {
+            "ft_top_ten": (questionId: string) => !questionId.includes('upper') && !questionId.includes('lower'),
+            "ft_upper": (questionId: string) => questionId.includes('upper'),
             "ft_lower": () => false,
         };
         let result = null;
         for (let questionId of reversedQuestionHistory) {
-            if (questionLevelMatcheFunctions[conceptLevel](questionId)) {
+            if (questionLevelMatchFunctions[conceptLevel](questionId)) {
                 result = questionId;
             }
         }
@@ -254,7 +198,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
     interface Connection {
         sourceIndex: number;
-        targetIndex: number;
+        targetIndices: number[];
         isMostRecent: boolean;
         message: string;
     }
@@ -324,7 +268,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             // Top Ten to Upper connection
             progress.connections.topTenToUpper.push({
                 sourceIndex: mostRecentTopTenIndex,
-                targetIndex: upperIndex,
+                targetIndices: [upperIndex],
                 isMostRecent: true,
                 message: "Practise the concept before returning to complete the board"
             });
@@ -334,31 +278,13 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                 let lowerIndex = conceptQuestions.lowerLevelQuestions.map(question => question.id).indexOf(currentlyWorkingOn.id);
                 progress.connections.upperToLower.push({
                     sourceIndex: upperIndex,
-                    targetIndex: lowerIndex,
+                    targetIndices: [lowerIndex],
                     isMostRecent: true,
-                    message: "Practise the concept with easier quesitons before returning to complete the board"
+                    message: "Practise the concept with easier questions before returning to complete the board"
                 });
             }
         }
         return progress;
-    }
-
-    function generateHexagon<T>(states: T[] | undefined, selector: (t: T) => boolean, properties: { stroke: { colour: string; width: number } }, fillColour: string, clickable: boolean) {
-        let polygonAttributes: { strokeWidth: number; fill: string; stroke: string; points: string; strokeDasharray?: string; pointerEvents?: string } = {
-            points: generateHexagonPoints(hexagon.halfWidth, hexagon.quarterHeight),
-            stroke: properties.stroke.colour,
-            strokeWidth: properties.stroke.width,
-            fill: fillColour,
-        };
-        const perimiter = 6 * 2 * (hexagon.quarterHeight);
-        const dashArray = calculateDashArray(states, selector, perimiter);
-        if (dashArray) {
-            polygonAttributes.strokeDasharray = dashArray;
-        }
-        if (clickable) {
-            polygonAttributes.pointerEvents = 'visible';
-        }
-        return <polygon {...polygonAttributes} />;
     }
 
     function generateHexagonTitle(title: string, isCurrentQuestion: boolean) {
@@ -392,37 +318,6 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         />;
     }
 
-    function calculateConnectionLine(sourceIndex: number, targetIndex: number) {
-        let result = '';
-
-        let hexagonWidth = 2 * (hexagon.halfWidth + hexagon.padding);
-
-        let sourceHexagonX = (sourceIndex <= targetIndex ? sourceIndex * hexagonWidth : Math.max(sourceIndex - 1, 0) * hexagonWidth);
-        let targetHexagonX = (targetIndex <= sourceIndex ? targetIndex * hexagonWidth : Math.max(targetIndex - 1, 0) * hexagonWidth);
-
-        // First stroke
-        if (sourceIndex <= targetIndex) {
-            result += moveTo(sourceHexagonX + hexagon.x.left, hexagon.y.top);
-        } else {
-            result += moveTo(sourceHexagonX + hexagon.x.right, hexagon.y.top);
-        }
-        result += line(sourceHexagonX + hexagon.x.center, hexagon.y.center);
-
-        // Horizontal connection
-        if (Math.abs(sourceIndex - targetIndex) > 1) {
-            result += line(targetHexagonX + hexagon.x.center, hexagon.y.center);
-        }
-
-        // Last stroke
-        if (targetIndex <= sourceIndex) {
-            result += line(targetHexagonX + hexagon.x.left, hexagon.y.bottom);
-        } else {
-            result += line(targetHexagonX + hexagon.x.right, hexagon.y.bottom);
-        }
-
-        return result;
-    }
-
     function createQuestionHexagon(question: AugmentedQuestion) {
         const fillColour = (question.isCompleted) ?
             question.isCurrentQuestion ? hexagon.base.fill.completedColour : hexagon.base.fill.deselectedCompletedColour :
@@ -430,37 +325,15 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
         return <Link to={question.href}>
             <title>{question.title + (question.isCurrentQuestion ? ' (Current)' : '')}</title>
-            {generateHexagon(
-                [true],
-                allVisible => allVisible,
-                hexagon.base,
-                fillColour,
-                true)}
-
-            {generateHexagon(
-                question.questionPartStates,
-                state => state === 'CORRECT',
-                hexagon.questionPartProgress,
-                'none',
-                false)}
-
+            <Hexagon {...hexagon} properties={{...hexagon.base, fill: {colour: fillColour}, clickable: true}} />
+            <Hexagon
+                {...hexagon} properties={hexagon.questionPartProgress}
+                states={question.questionPartStates} selector={state => state === "CORRECT"}
+             />
             {question.isCompleted ?
                 generateCompletionTick(question.isCurrentQuestion) :
                 generateHexagonTitle(question.hexagonTitle, question.isCurrentQuestion)}
         </Link>;
-    }
-
-    function createConnection(sourceIndex: number, targetIndex: number) {
-        if ([sourceIndex, targetIndex].includes(-1)) {
-            return <React.Fragment />;
-        }
-        return <path
-            d={calculateConnectionLine(sourceIndex, targetIndex)}
-            fill={conceptConnection.fill}
-            stroke={conceptConnection.stroke.colour}
-            strokeWidth={conceptConnection.stroke.width}
-            strokeDasharray={conceptConnection.stroke.dashArray}
-        />;
     }
 
     function createQuestionRow(questions: AugmentedQuestion[], fastTrackLevel: string, conceptRowIndex: number) {
@@ -482,7 +355,11 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                   (3 * hexagon.quarterHeight + hexagon.padding + connectionRowIndex * (6 * hexagon.quarterHeight + 2 * hexagon.padding)) + ')'}>
             {conceptConnections.map(conceptConnection => (<React.Fragment key={JSON.stringify(conceptConnection)}>
                 <title>{conceptConnection.message}</title>
-                {createConnection(conceptConnection.sourceIndex, conceptConnection.targetIndex)}
+                <HexagonConnection
+                    fastTrack {...conceptConnection}
+                    hexagonProportions={hexagon}
+                    connectionProperties={conceptConnectionProperties}
+                />
             </React.Fragment>))}
         </g>;
     }

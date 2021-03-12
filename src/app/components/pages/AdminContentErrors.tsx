@@ -14,7 +14,7 @@ const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number
 
 const ContentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
     return <tr key={index}>
-        <td>
+        <td className="text-break">
             {/* eslint-disable-next-line react/jsx-no-target-blank */}
             <a href={EDITOR_URL + errorRecord.partialContent.canonicalSourceFile} target="_blank" rel="noopener">
                 {errorRecord.partialContent.title || errorRecord.partialContent.id}

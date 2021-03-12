@@ -21,14 +21,43 @@
     a > span:first-of-type {
       border-color: #ddd;
     }
+
+    a {
+      // Slightly higher contrast colours to achieve 4.5 contrast ratio with light green background
+      .maths > .text-secondary {
+        color: #017195 !important;
+      }
+      .physics > .text-secondary {
+        color: #8f49b8 !important;
+      }
+      .chemistry > .text-secondary {
+        color: #cb2921 !important;
+      }
+    }
   }
-  .try-again {
+
+  .gameboard-item-icon {
+    max-width: 2rem;
+    max-height: 2rem;
+  }
+
+  .gameboard-item-message {
     font-size: 0.875rem;
     font-weight: normal;
     color: $gray-160;
     align-self: center;
     padding-left: 1.5rem;
   }
+
+  .gameboard-item-message-phy {
+    font-size: 0.875rem;
+    font-weight: normal;
+    color: #000000;
+    align-self: center;
+    padding-left: 1.5rem;
+    text-transform: uppercase;
+  }
+
   .gameboard-tags {
     font-size: 0.875rem;
     color: $gray-160;

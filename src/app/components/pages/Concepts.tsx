@@ -31,23 +31,25 @@ export const Concepts = withRouter((props: {history: History; location: Location
     const queryParsed = searchParsed.query || "";
     const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
 
-    const filterParsed = (searchParsed.types || (TAG_ID.physics + "," + TAG_ID.maths));
+    const filterParsed = (searchParsed.types || (TAG_ID.physics + "," + TAG_ID.maths + "," + TAG_ID.chemistry));
     const filters = (filterParsed instanceof Array ? filterParsed[0] : filterParsed).split(",");
 
     const physics = filters.includes(TAG_ID.physics);
     const maths = filters.includes(TAG_ID.maths);
+    const chemistry = filters.includes(TAG_ID.chemistry);
 
     let [searchText, setSearchText] = useState(query);
     let [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
     let [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
+    let [conceptFilterChemistry, setConceptFilterChemistry] = useState(chemistry);
     let [shortcutResponse, setShortcutResponse] = useState<(ShortcutResponse | ContentSummaryDTO)[]>();
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {
             e.preventDefault();
         }
-        if (searchText != query || conceptFilterPhysics != physics || conceptFilterMaths != maths) {
-            pushConceptsToHistory(history, searchText, conceptFilterPhysics, conceptFilterMaths);
+        if (searchText != query || conceptFilterPhysics != physics || conceptFilterMaths != maths || conceptFilterChemistry != chemistry) {
+            pushConceptsToHistory(history, searchText, conceptFilterPhysics, conceptFilterMaths, conceptFilterChemistry);
         }
         if (searchText) {
             setShortcutResponse(shortcuts(searchText));
@@ -64,7 +66,7 @@ export const Concepts = withRouter((props: {history: History; location: Location
         };
     }, [searchText]);
 
-    useEffect(() => {doSearch();}, [conceptFilterPhysics, conceptFilterMaths]);
+    useEffect(() => {doSearch();}, [conceptFilterPhysics, conceptFilterMaths, conceptFilterChemistry]);
 
     const searchResults = concepts
         ?.filter(c =>
@@ -110,12 +112,16 @@ export const Concepts = withRouter((props: {history: History; location: Location
                                 <Form id="concept-filter" inline className="search-filters">
                                     <Label for="concept-filter" className="d-none d-sm-inline-block">Filter:</Label>
                                     <Label>
-                                        <CustomInput id="problem-search" type="checkbox" defaultChecked={conceptFilterPhysics} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterPhysics(e.target.checked)} />
+                                        <CustomInput id="problem-search-phy" type="checkbox" defaultChecked={conceptFilterPhysics} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterPhysics(e.target.checked)} />
                                         <span className="sr-only">Show </span>Physics<span className="sr-only"> concept</span>
                                     </Label>
                                     <Label>
-                                        <CustomInput id="concept-search" type="checkbox" defaultChecked={conceptFilterMaths} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterMaths(e.target.checked)} />
+                                        <CustomInput id="concept-search-maths" type="checkbox" defaultChecked={conceptFilterMaths} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterMaths(e.target.checked)} />
                                         <span className="sr-only">Show </span>Maths<span className="sr-only"> concept</span>
+                                    </Label>
+                                    <Label>
+                                        <CustomInput id="concept-search-chem" type="checkbox" defaultChecked={conceptFilterChemistry} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterChemistry(e.target.checked)} />
+                                        <span className="sr-only">Show </span>Chemistry<span className="sr-only"> concept</span>
                                     </Label>
                                 </Form>
                             </Col>
@@ -123,7 +129,7 @@ export const Concepts = withRouter((props: {history: History; location: Location
                         <RS.CardBody>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {shortcutAndFilteredSearchResults ?
-                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} displayTopicTitle={true}/>
+                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} displayTopicTitle={false}/>
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </RS.CardBody>

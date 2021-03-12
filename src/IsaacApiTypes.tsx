@@ -1,22 +1,42 @@
 /* tslint:disable */
-// Generated using typescript-generator version 2.12.476 on 2019-05-15 20:09:01.
+
+// Manually added/modified parts
 
 import {EXAM_BOARD} from "./app/services/constants";
 
-export interface AssignmentDTO {
+export interface IsaacCardDTO extends ContentDTO {
+    image?: ImageDTO;
+    clickUrl?: string;
+    disabled?: boolean;
+    verticalContent?: boolean;
+}
+
+export interface IsaacCardDeckDTO extends ContentDTO {
+    cards?: IsaacCardDTO[];
+}
+
+export interface ChemicalFormulaDTO extends ChoiceDTO {
+    mhchemExpression?: string;
+}
+
+export interface TestCaseDTO extends QuestionValidationResponseDTO {
+    expected?: boolean;
+}
+
+export interface TestQuestionDTO extends ChoiceQuestionDTO {
+    testCases?: TestCaseDTO[];
+}
+
+// Generated using typescript-generator version 2.12.476 on 2021-02-23 14:46:50.
+
+export interface AssignmentDTO extends IAssignmentLike {
     gameboardId?: string;
     gameboard?: GameboardDTO;
-    groupId?: number;
-    ownerUserId?: number;
     assignerSummary?: UserSummaryDTO;
-    creationDate?: Date;
-    dueDate?: Date;
     _id?: number;
 }
 
-export interface GameboardDTO {
-    id?: string;
-    title?: string;
+export interface GameboardDTO extends HasTitleOrId {
     questions?: GameboardItem[];
     wildCard?: IsaacWildcard;
     wildCardPosition?: number;
@@ -38,12 +58,26 @@ export interface GameboardListDTO extends ResultsWrapper<GameboardDTO> {
     totalCompleted?: number;
 }
 
+export interface GameboardProgressSummaryDTO {
+    assignmentId?: number;
+    gameboardId?: string;
+    gameboardTitle?: string;
+    dueDate?: Date;
+    creationDate?: Date;
+    questionPartsCorrect?: number;
+    questionPartsIncorrect?: number;
+    questionPartsNotAttempted?: number;
+    questionPartsTotal?: number;
+    passMark?: number;
+    questionPagesPerfect?: number;
+    questionPagesTotal?: number;
+}
+
 export interface IsaacAnvilQuestionDTO extends IsaacQuestionBaseDTO {
     anvilApp?: AnvilAppDTO;
 }
 
 export interface IsaacConceptPageDTO extends SeguePageDTO {
-    canonicalSourceFile?: string;
 }
 
 export interface IsaacEventPageDTO extends ContentDTO {
@@ -53,11 +87,11 @@ export interface IsaacEventPageDTO extends ContentDTO {
     location?: Location;
     eventThumbnail?: ImageDTO;
     numberOfPlaces?: number;
+    groupReservationLimit?: number;
+    allowGroupReservations?: boolean;
     eventStatus?: EventStatus;
     placesAvailable?: number;
     endDate?: Date;
-    groupReservationLimit?: number;
-    allowGroupReservations?: boolean;
 }
 
 export interface IsaacFastTrackQuestionPageDTO extends IsaacQuestionPageDTO {
@@ -75,6 +109,10 @@ export interface IsaacFreeTextQuestionDTO extends IsaacQuestionBaseDTO {
 export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
 }
 
+export interface IsaacItemQuestionDTO extends IsaacQuestionBaseDTO {
+    items?: ItemDTO[];
+}
+
 export interface IsaacMultiChoiceQuestionDTO extends IsaacQuestionBaseDTO {
     choices?: ChoiceDTO[];
 }
@@ -83,10 +121,6 @@ export interface IsaacNumericQuestionDTO extends IsaacQuestionBaseDTO {
     requireUnits?: boolean;
     availableUnits?: string[];
     knownUnits?: string[];
-}
-
-export interface IsaacItemQuestionDTO extends IsaacQuestionBaseDTO {
-    items?: ItemDTO[];
 }
 
 export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
@@ -102,7 +136,7 @@ export interface IsaacQuestionBaseDTO extends ChoiceQuestionDTO {
 }
 
 export interface IsaacQuestionPageDTO extends SeguePageDTO {
-    canonicalSourceFile?: string;
+    difficulty?: number;
     passMark?: number;
     supersededBy?: string;
 }
@@ -117,8 +151,21 @@ export interface IsaacQuickQuestionDTO extends IsaacQuestionBaseDTO {
     answer?: ContentBaseDTO;
 }
 
+export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
+    visibleToStudents?: boolean;
+    defaultFeedbackMode?: QuizFeedbackMode;
+    total?: number;
+    sectionTotals?: { [index: string]: number };
+    individualFeedback?: QuizFeedbackDTO;
+    userFeedback?: QuizUserFeedbackDTO[];
+}
+
+export interface IsaacQuizSectionDTO extends SeguePageDTO {
+}
+
 export interface IsaacStringMatchQuestionDTO extends IsaacQuestionBaseDTO {
     multiLineEntry?: boolean;
+    preserveTrailingWhitespace?: boolean;
 }
 
 export interface IsaacSymbolicChemistryQuestionDTO extends IsaacSymbolicQuestionDTO {
@@ -148,6 +195,36 @@ export interface QuestionPartConceptDTO {
     lowerQuestions?: GameboardItem[];
 }
 
+export interface QuizAssignmentDTO extends IAssignmentLike, IHasQuizSummary {
+    assignerSummary?: UserSummaryDTO;
+    quizFeedbackMode?: QuizFeedbackMode;
+    attempt?: QuizAttemptDTO;
+}
+
+export interface QuizAttemptDTO extends IHasQuizSummary {
+    id?: number;
+    userId?: number;
+    quizAssignmentId?: number;
+    startDate?: Date;
+    completedDate?: Date;
+}
+
+export interface QuizFeedbackDTO {
+    complete?: boolean;
+    overallMark?: Mark;
+    sectionMarks?: { [index: string]: Mark };
+}
+
+export interface QuizUserFeedbackDTO {
+    user?: UserSummaryDTO;
+    feedback?: QuizFeedbackDTO;
+}
+
+export interface UserGameboardProgressSummaryDTO {
+    user?: UserSummaryDTO;
+    progress?: GameboardProgressSummaryDTO[];
+}
+
 export interface EventBookingDTO {
     bookingId?: number;
     userBooked?: UserSummaryDTO;
@@ -167,6 +244,18 @@ export interface FormulaValidationResponseDTO extends QuestionValidationResponse
     correctNumeric?: boolean;
 }
 
+export interface LocalAuthDTO {
+    email?: string;
+    password?: string;
+    rememberMe?: boolean;
+    _randomPadding?: string;
+}
+
+export interface MFAResponseDTO {
+    mfaVerificationCode?: string;
+    rememberMe?: boolean;
+}
+
 export interface QuantityValidationResponseDTO extends QuestionValidationResponseDTO {
     correctValue?: boolean;
     correctUnits?: boolean;
@@ -181,6 +270,7 @@ export interface QuestionValidationResponseDTO {
 }
 
 export interface UserGroupDTO {
+    id?: number;
     groupName?: string;
     ownerId?: number;
     created?: Date;
@@ -189,24 +279,12 @@ export interface UserGroupDTO {
     archived?: boolean;
     ownerSummary?: UserSummaryWithEmailAddressDTO;
     additionalManagers?: UserSummaryWithEmailAddressDTO[];
-    id?: number;
     _id?: number;
 }
 
 export interface AnvilAppDTO extends ContentDTO {
     appId?: string;
     appAccessKey?: string;
-}
-
-export interface IsaacCardDTO extends ContentDTO {
-    image?: ImageDTO;
-    clickUrl?: string;
-    disabled?: boolean;
-    verticalContent?: boolean;
-}
-
-export interface IsaacCardDeckDTO extends ContentDTO {
-    cards?: IsaacCardDTO[];
 }
 
 export interface ChemicalFormulaDTO extends ChoiceDTO {
@@ -217,19 +295,6 @@ export interface ChoiceDTO extends ContentDTO {
 }
 
 export interface ChoiceQuestionDTO extends QuestionDTO {
-}
-
-export interface TestCaseDTO extends QuestionValidationResponseDTO {
-    expected?: boolean;
-}
-
-export interface TestQuestionDTO extends ChoiceQuestionDTO {
-    testCases?: TestCaseDTO[];
-}
-
-export interface GlossaryTermDTO extends ContentDTO {
-    explanation?: ContentDTO;
-    examBoard: string;
 }
 
 export interface ContentBaseDTO {
@@ -244,7 +309,7 @@ export interface ContentDTO extends ContentBaseDTO {
     subtitle?: string;
     encoding?: string;
     layout?: string;
-    children?: any[];
+    children?: ContentBaseDTO[];
     value?: string;
     attribution?: string;
     relatedContent?: ContentSummaryDTO[];
@@ -258,17 +323,20 @@ export interface ContentSummaryDTO {
     summary?: string;
     type?: string;
     level?: string;
-    difficulty?: string;
     tags?: string[];
     url?: string;
     correct?: boolean;
     supersededBy?: string;
+    difficulty?: string;
 }
 
 export interface EmailTemplateDTO extends ContentDTO {
     subject?: string;
     plainTextContent?: string;
     htmlContent?: string;
+    overrideFromAddress?: string;
+    overrideFromName?: string;
+    overrideEnvelopeFrom?: string;
     replyToEmailAddress?: string;
     replyToName?: string;
 }
@@ -281,6 +349,12 @@ export interface FormulaDTO extends ChoiceDTO {
 }
 
 export interface FreeTextRuleDTO extends ChoiceDTO {
+    wordProximity?: number;
+}
+
+export interface GlossaryTermDTO extends ContentDTO {
+    explanation?: ContentDTO;
+    examBoard?: EXAM_BOARD;
 }
 
 export interface GraphChoiceDTO extends ChoiceDTO {
@@ -290,6 +364,13 @@ export interface GraphChoiceDTO extends ChoiceDTO {
 export interface ImageDTO extends MediaDTO {
     clickUrl?: string;
     clickTarget?: string;
+}
+
+export interface ItemChoiceDTO extends ChoiceDTO {
+    items?: ItemDTO[];
+}
+
+export interface ItemDTO extends ContentDTO {
 }
 
 export interface LogicFormulaDTO extends ChoiceDTO {
@@ -304,10 +385,6 @@ export interface MediaDTO extends ContentDTO {
 export interface NotificationDTO extends ContentDTO {
     externalReference?: ExternalReference;
     expiry?: Date;
-}
-
-export interface ItemChoiceDTO extends ChoiceDTO {
-    items?: ItemDTO[];
 }
 
 export interface ParsonsChoiceDTO extends ItemChoiceDTO {
@@ -326,11 +403,12 @@ export interface QuantityDTO extends ChoiceDTO {
 }
 
 export interface QuestionDTO extends ContentDTO {
-    hints?: any[];
+    hints?: ContentBaseDTO[];
     bestAttempt?: QuestionValidationResponseDTO;
 }
 
 export interface SeguePageDTO extends ContentDTO {
+    canonicalSourceFile?: string;
     summary?: string;
 }
 
@@ -348,10 +426,7 @@ export interface AnonymousUserDTO extends AbstractSegueUserDTO {
     sessionId?: string;
     temporaryQuestionAttempts?: { [index: string]: { [index: string]: QuestionValidationResponseDTO[] } };
     dateCreated?: Date;
-}
-
-export interface DetailedUserSummaryDTO extends UserSummaryDTO {
-    email?: string;
+    lastUpdated?: Date;
 }
 
 export interface GroupMembershipDTO {
@@ -371,8 +446,8 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     registrationDate?: Date;
     schoolId?: string;
     role?: Role;
-    examBoard?: EXAM_BOARD;
     schoolOther?: string;
+    examBoard?: EXAM_BOARD;
     firstLogin?: boolean;
     lastUpdated?: Date;
     lastSeen?: Date;
@@ -382,10 +457,15 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
 }
 
 export interface UserAuthenticationSettingsDTO extends AbstractSegueUserDTO {
-    mfaStatus?: boolean;
     linkedAccounts?: AuthenticationProvider[];
     hasSegueAccount?: boolean;
+    mfaStatus?: boolean;
     id?: number;
+}
+
+export interface UserIdMergeDTO {
+    targetId?: number;
+    sourceId?: number;
 }
 
 export interface UserSummaryDTO extends AbstractSegueUserDTO {
@@ -394,8 +474,8 @@ export interface UserSummaryDTO extends AbstractSegueUserDTO {
     role?: Role;
     authorisedFullAccess?: boolean;
     emailVerificationStatus?: EmailVerificationStatus;
+    examBoard?: EXAM_BOARD;
     id?: number;
-    examBoard?: EXAM_BOARD; // This is odd, it shouldn't be here.
 }
 
 export interface UserSummaryForAdminUsersDTO extends UserSummaryWithEmailAddressDTO {
@@ -414,6 +494,14 @@ export interface UserSummaryWithGroupMembershipDTO extends UserSummaryDTO {
     groupMembershipInformation?: GroupMembershipDTO;
 }
 
+export interface IAssignmentLike {
+    groupId?: number;
+    id?: number;
+    creationDate?: Date;
+    dueDate?: Date;
+    ownerUserId?: number;
+}
+
 export interface GameboardItem {
     id?: string;
     title?: string;
@@ -421,6 +509,7 @@ export interface GameboardItem {
     uri?: string;
     tags?: string[];
     level?: number;
+    difficulty?: number;
     questionPartsCorrect?: number;
     questionPartsIncorrect?: number;
     questionPartsNotAttempted?: number;
@@ -445,20 +534,31 @@ export interface GameFilter {
     concepts?: string[];
 }
 
+export interface HasTitleOrId {
+    title?: string;
+    id?: string;
+}
+
 export interface Location {
     address?: Address;
     latitude?: number;
     longitude?: number;
 }
 
+export interface IHasQuizSummary {
+    quizId?: string;
+    quizSummary?: ContentSummaryDTO;
+}
+
+export interface Mark {
+    correct?: number;
+    incorrect?: number;
+    notAttempted?: number;
+}
+
 export interface ExternalReference {
     title?: string;
     url?: string;
-}
-
-export interface GlossaryTerm extends Content {
-    explanation?: Content;
-    examBoard: string;
 }
 
 export interface ContentBase {
@@ -481,6 +581,7 @@ export interface Content extends ContentBase {
     relatedContent?: string[];
     published?: boolean;
     level?: number;
+    searchableContent?: string;
 }
 
 export interface ResultsWrapper<T> {
@@ -515,9 +616,11 @@ export type FastTrackConceptState = "ft_top_ten" | "ft_upper" | "ft_lower";
 
 export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT" | "RESERVED";
 
-export type Role = "STUDENT" | "TEACHER" | "EVENT_LEADER"| "CONTENT_EDITOR" | "EVENT_MANAGER" | "ADMIN";
+export type Role = "STUDENT" | "TEACHER" | "EVENT_LEADER" | "CONTENT_EDITOR" | "EVENT_MANAGER" | "ADMIN";
 
 export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED";
+
+export type QuizFeedbackMode = "NONE" | "OVERALL_MARK" | "SECTION_MARKS" | "DETAILED_FEEDBACK";
 
 export type GroupMembershipStatus = "ACTIVE" | "INACTIVE" | "DELETED";
 

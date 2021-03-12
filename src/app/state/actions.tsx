@@ -26,13 +26,14 @@ import {
     AppGroupMembership,
     ATTENDANCE,
     BoardOrder,
-    Credentials,
+    CredentialsAuthDTO,
     EmailUserRoles,
     FreeTextRule,
-    LoggedInUser,
+    PotentialUser,
     QuestionSearchQuery,
     Toast,
     UserPreferencesDTO,
+    UserSnapshot,
     ValidatedChoice,
     ValidationUser,
 } from "../../IsaacAppTypes";
@@ -74,6 +75,7 @@ import {atLeastOne} from "../services/validation";
 import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
+import {isDefined} from "../services/miscUtils";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -113,7 +115,7 @@ export const showToast = (toast: Toast) => (dispatch: any) => {
     return toastId;
 };
 
-function showErrorToastIfNeeded(error: string, e: any) {
+export function showErrorToastIfNeeded(error: string, e: any) {
     if (e) {
         if (e.response) {
             if (e.response.status < 500) {
@@ -225,11 +227,11 @@ export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: strin
     }
 };
 
-export const submitTotpChallengeResponse = (mfaVerificationCode: string) => async (dispatch: Dispatch<Action>) => {
+export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
     try {
         const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode);
+        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
 
         await dispatch(requestCurrentUser() as any); // Request user preferences
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
@@ -284,12 +286,17 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
+
+export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE, userSnapshot: newUserSnapshot});
+};
+
 // TODO scope for pulling out a separate registerUser method from this
 export const updateCurrentUser = (
     updatedUser: ValidationUser,
     updatedUserPreferences: UserPreferencesDTO,
     passwordCurrent: string | null,
-    currentUser: LoggedInUser
+    currentUser: PotentialUser
 ) => async (dispatch: Dispatch<Action>) => {
     // Confirm email change
     if (currentUser.loggedIn && currentUser.id == updatedUser.id) {
@@ -355,13 +362,33 @@ export const updateCurrentUser = (
 
 export const setTempExamBoard = (examBoard: EXAM_BOARD) => ({type: ACTION_TYPE.EXAM_BOARD_SET_TEMP, examBoard});
 
-export const getProgress = (userIdOfInterest?: string) => async (dispatch: Dispatch<Action>) => {
+export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.MY_PROGRESS_REQUEST});
+    try {
+        const response = await api.users.getProgress();
+        dispatch({type: ACTION_TYPE.MY_PROGRESS_RESPONSE_SUCCESS, myProgress: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.MY_PROGRESS_RESPONSE_FAILURE});
+    }
+};
+
+export const getUserProgress = (userIdOfInterest?: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PROGRESS_REQUEST});
     try {
         const response = await api.users.getProgress(userIdOfInterest);
-        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, progress: response.data});
+        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, userProgress: response.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE});
+    }
+};
+
+export const getSnapshot = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_SNAPSHOT_REQUEST});
+    try {
+        const response = await api.users.getSnapshot();
+        dispatch({type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_SUCCESS, snapshot: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_FAILURE});
     }
 };
 
@@ -375,7 +402,17 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-export const logInUser = (provider: AuthenticationProvider, credentials: Credentials) => async (dispatch: Dispatch<Action>) => {
+export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST});
+    try {
+        await api.authentication.logoutEverywhere();
+        dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Logout everywhere failed", e));
+    }
+};
+
+export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
     const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
 
@@ -507,6 +544,13 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
         await api.email.verify(params);
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
         dispatch(requestCurrentUser() as any);
+        dispatch(showToast({
+            title: "Email address verified",
+            body: "The email address has been verified",
+            color: "success",
+            timeout: 5000,
+            closable: false,
+        }) as any);
     } catch(e) {
         dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
@@ -900,14 +944,25 @@ export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: []});
 };
 
-export const getAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST});
+export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST});
     try {
-        const answeredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
-        dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, answeredQuestionsByDate: answeredQuestionsByDate.data});
+        const myAnsweredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
+        dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, myAnsweredQuestionsByDate: myAnsweredQuestionsByDate.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE})
-        dispatch(showErrorToastIfNeeded("Failed to get answered question activity data", e));
+        dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get my answered question activity data", e));
+    }
+};
+
+export const getUserAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST});
+    try {
+        const userAnsweredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
+        dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, userAnsweredQuestionsByDate: userAnsweredQuestionsByDate.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get user answered question activity data", e));
     }
 };
 
@@ -997,7 +1052,7 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
     }
 };
 
-export const addGameboard = (gameboardId: string, user: LoggedInUser) => async (dispatch: Dispatch<Action>) => {
+export const addGameboard = (gameboardId: string, user: PotentialUser) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST});
         await api.gameboards.save(gameboardId);
@@ -1423,6 +1478,17 @@ export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_
     }
 };
 
+export const getGroupProgress = (group: UserGroupDTO) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.GROUP_PROGRESS_REQUEST});
+    try {
+        const result = await api.groups.groupProgress(group);
+        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS, groupId: group.id || 0, progress: result.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_FAILURE, groupId: group.id || 0});
+        dispatch(showErrorToastIfNeeded("Loading group members failed", e));
+    }
+};
+
 // Gameboards
 export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => async (dispatch: Dispatch<Action>) => {
     const accumulate = startIndex != 0;
@@ -1551,10 +1617,11 @@ export const getEventsList = (startIndex: number, eventsPerPage: number, typeFil
     const filterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
     const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
     const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
+    const showReservedOnly = statusFilter === EventStatusFilter["My event reservations"];
     const showInactiveOnly = false;
     try {
         dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
-        const response = await api.events.getEvents(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly);
+        const response = await api.events.getEvents(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly, showReservedOnly);
         const augmentedEvents = response.data.results.map(event => augmentEvent(event));
         dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: response.data.totalResults});
     } catch (e) {
@@ -1649,7 +1716,18 @@ export const getEventBookingsForGroup = (eventId: string, groupId: number) => as
         dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
     }
-}
+};
+
+export const getEventBookingsForAllGroups = (eventId: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_REQUEST});
+        const response = await api.eventBookings.getEventBookingsForAllGroups(eventId);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_SUCCESS, eventBookingsForAllGroups: response.data});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
+    }
+};
 
 export const getEventBookingCSV = (eventId: string) => async (dispatch: Dispatch<Action>) => {
     try {
@@ -1695,11 +1773,15 @@ export const reserveUsersOnEvent = (eventId: string, userIds: number[], groupId:
     }
 };
 
-export const cancelReservationsOnEvent = (eventId: string, userIds: number[], groupId: number) => async (dispatch: Dispatch<Action>) => {
+export const cancelReservationsOnEvent = (eventId: string, userIds: number[], groupId: number | undefined) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_REQUEST});
         await api.eventBookings.cancelUsersReservationsOnEvent(eventId, userIds);
-        await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
+        if (isDefined(groupId)) {
+            await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
+        } else {
+            await dispatch(getEventBookingsForAllGroups(eventId) as any);
+        }
         await dispatch(getEvent(eventId) as any);
         dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_SUCCESS});
         dispatch(showToast({
@@ -1870,8 +1952,6 @@ export const fetchConcepts = () => async (dispatch: Dispatch<Action>) => {
 
 // Fasttrack concepts
 export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upperQuestionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const state = getState();
-    if (state && state.fasttrackConcepts && state.fasttrackConcepts.gameboardId === gameboardId && state.fasttrackConcepts.concept === concept) return;
     dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST});
     try {
         const concepts = await api.fasttrack.concepts(gameboardId, concept, upperQuestionId);

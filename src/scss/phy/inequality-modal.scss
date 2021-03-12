@@ -1,10 +1,6 @@
 @import "../common/inequality-modal.scss";
 
 #inequality-modal {
-    .beta-badge {
-        background: $phy_purple;
-    }
-
     .inequality-ui {
         &.button {
             &.confirm {
@@ -12,6 +8,9 @@
             }
             &.centre {
                 background-image: url('/assets/inequality-centre-phy.svg');
+            }
+            &.show-question {
+                background-image: url('/assets/inequality-togglequestion-phy.svg');
             }
         }
 

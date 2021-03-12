@@ -3,6 +3,7 @@ import {LinkItem, NavigationBar, NavigationSection, useAssignmentBadge} from "..
 import {useSelector} from "react-redux";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
 import {selectors} from "../../../state/selectors";
+import {QUIZ_FEATURE} from "../../../services/constants";
 
 export const NavigationBarCS = () => {
     const user = useSelector(selectors.user.orNull);
@@ -13,30 +14,32 @@ export const NavigationBarCS = () => {
             <LinkItem to="/assignments">My assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
-            <LinkItem to="/pages/2020_student_mentoring_cohort2">Student mentoring</LinkItem>
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
-            <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teachers">
             <LinkItem to="/teachers">Teacher tools</LinkItem>
             <LinkItem to="/set_assignments">Set assignments</LinkItem>
-            <LinkItem to="/assignment_progress">My markbook</LinkItem>
             <LinkItem to="/groups">Manage groups</LinkItem>
-            <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
-            <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
+            <LinkItem to="/assignment_progress">Markbook</LinkItem>
+            {QUIZ_FEATURE && <LinkItem to="/set_quizzes">Set quizzes</LinkItem>}
         </NavigationSection>}
 
         <NavigationSection title="Topics">
             <LinkItem to="/topics">All topics</LinkItem>
-            <LinkItem to="/pages/specification_page_aqa">AQA specification view</LinkItem>
-            <LinkItem to="/pages/specification_page_ocr">OCR specification view</LinkItem>
-            {/* <LinkItem to="/glossary">Glossary</LinkItem> */}
+            <LinkItem to="/pages/specification_page_aqa">AQA view</LinkItem>
+            <LinkItem to="/pages/specification_page_ocr">OCR view</LinkItem>
+            <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
+            <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
+            <LinkItem to="/glossary">Glossary</LinkItem>
         </NavigationSection>
 
         <NavigationSection title="Events">
-            <LinkItem to="/events?types=teacher">Teacher events</LinkItem>
+            {isTeacher(user) && <LinkItem to="/events?show_reservations_only=true">My Event Reservations</LinkItem>}
             <LinkItem to="/events?types=student">Student events</LinkItem>
+            <LinkItem to="/events?types=teacher">Teacher events</LinkItem>
+            <LinkItem to="/pages/2020_student_mentoring_cohort2">Student mentoring</LinkItem>
+            <LinkItem to="/pages/2020_teacher_mentoring_cohort2">Teacher Mentoring</LinkItem>
         </NavigationSection>
 
         <NavigationSection title={<React.Fragment>

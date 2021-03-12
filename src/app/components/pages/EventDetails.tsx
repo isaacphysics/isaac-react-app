@@ -101,6 +101,8 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
             "Book now" :
             event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past";
 
+        const isVirtual = event.tags?.includes("virtual");
+
         function submitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
             formEvent.preventDefault();
 
@@ -155,10 +157,6 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                             {/* Key event info */}
                             <RS.Table borderless className="event-key-info mb-4">
                                 <tbody>
-                                    {event.field && <tr>
-                                        <td>Field:</td>
-                                        <td>event.field</td>
-                                    </tr>}
                                     <tr>
                                         <td>When:</td>
                                         <td>
@@ -166,7 +164,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             {event.hasExpired && <div className="alert-danger text-center">This event is in the past.</div>}
                                         </td>
                                     </tr>
-                                    {event.location && event.location.address && event.location.address.addressLine1 && <tr>
+                                    {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <tr>
                                         <td>Location:</td>
                                         <td>
                                             {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
@@ -180,7 +178,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                 <strong className="text-danger">FULL</strong>
                                                 {event.isAStudentEvent && isTeacher(user) && <span> - for student bookings</span>}
                                             </div>}
-                                            {event.userBookingStatus == "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
+                                            {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
                                             {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
                                                 You have been reserved a place on this event!
                                                 <RS.Button color="link text-success" onClick={openAndScrollToBookingForm}>
@@ -188,7 +186,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                                 </RS.Button>
                                             </span></span>}
                                             {canBeAddedToWaitingList && <span> - Waiting list booking is available!</span>}
-                                            {event.userBookingStatus == "WAITING_LIST" && <span> - You are on the waiting list for this event.</span>}
+                                            {event.userBookingStatus === "WAITING_LIST" && <span> - You are on the waiting list for this event.</span>}
                                             {event.isStudentOnly && !studentOnlyRestrictionSatisfied &&
                                                 <div className="text-muted font-weight-normal">
                                                     {studentOnlyEventMessage(eventId)}
@@ -196,11 +194,11 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             }
                                         </td>
                                     </tr>}
-                                    {SITE_SUBJECT === SITE.PHY && event.bookingDeadline && <tr>
+                                    {event.bookingDeadline && <tr>
                                         <td>Booking Deadline:</td>
                                         <td>
                                             <DateString>{event.bookingDeadline}</DateString>
-                                            {!event.isWithinBookingDeadline && <div className="alert-danger text-center">
+                                            {!event.isWithinBookingDeadline && !event.hasExpired && <div className="alert-danger text-center">
                                                 The booking deadline for this event has passed.
                                             </div>}
                                         </td>
@@ -214,7 +212,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                             </div>
 
                             {/* Booking form */}
-                            {bookingFormOpen && user?.loggedIn && <span>
+                            {bookingFormOpen && user?.loggedIn && 'CONFIRMED' !== event.userBookingStatus && <span>
                                 <RS.Card className="mb-4">
                                     <RS.CardBody>
                                         <h3>Event booking form</h3>
@@ -261,14 +259,14 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
                                 {/* Options for logged-in users */}
                                 {isLoggedIn(user) && !event.hasExpired && <React.Fragment>
-                                    {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen &&
+                                    {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
                                         <RS.Button onClick={() => {setBookingFormOpen(true)}}>
-                                            Book a place
+                                            {event.userBookingStatus === 'RESERVED' ? 'Confirm your reservation' : 'Book a place'}
                                         </RS.Button>
                                     }
                                     {canReserveSpaces &&
                                         <RS.Button color="primary" onClick={() => {dispatch(openActiveModal(reservationsModal()))}}>
-                                            Reserve spaces
+                                            Manage reservations
                                         </RS.Button>
                                     }
                                     {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useLayoutEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {withRouter} from "react-router-dom";
 import {Button, Col, Container, Input, InputGroup, InputGroupAddon, Label, Row, UncontrolledTooltip} from "reactstrap";
 import queryString from "query-string";
@@ -9,9 +9,13 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RouteComponentProps} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import { Inequality, makeInequality } from 'inequality';
-import _flattenDeep from 'lodash/flattenDeep';
 import { sanitiseInequalityState } from '../../services/questions';
-import { parseExpression } from 'inequality-grammar';
+import { parseMathsExpression, parseBooleanExpression, ParsingError } from 'inequality-grammar';
+
+import { isDefined } from "isaac-graph-sketcher/dist/src/GraphUtils";
+import { useSelector } from 'react-redux';
+import { selectors } from '../../state/selectors';
+import { isStaff } from '../../services/user';
 
 export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
     const queryParams = queryString.parse(location.search);
@@ -22,6 +26,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
     const [editorSyntax, setEditorSyntax] = useState('logic');
     const [textInput, setTextInput] = useState('');
     const [errors, setErrors] = useState<string[]>();
+    const user = useSelector(selectors.user.orNull);
     // Does this really need to be a state variable if it is immutable?
     const [editorMode, setEditorMode] = useState(queryParams.mode || { [SITE.PHY]: 'maths', [SITE.CS]: 'logic' }[SITE_SUBJECT]);
 
@@ -31,7 +36,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
     const debounceTimer = useRef<number|null>(null);
     const [inputState, setInputState] = useState(() => ({pythonExpression: '', userInput: '', valid: true}));
 
-    function isError(p: {error: string} | any[]): p is {error: string} {
+    function isError(p: ParsingError | any[]): p is ParsingError {
         return p.hasOwnProperty("error");
     }
 
@@ -66,7 +71,11 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
     }
 
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        const pycode = e.target.value;
+        _updateEquation(e.target.value);
+    }
+
+    const _updateEquation = (pycode: string) => {
+        // const pycode = e.target.value;
         setTextInput(pycode);
         setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
 
@@ -76,16 +85,29 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
             debounceTimer.current = null;
         }
         debounceTimer.current = window.setTimeout(() => {
-            let parsedExpression = parseExpression(pycode);
-            let _errors = [];
+            let parsedExpression: any[] | ParsingError | undefined;
+            if (editorMode === 'maths') {
+                parsedExpression = parseMathsExpression(pycode);
+            } else if (editorMode === 'logic') {
+                parsedExpression = parseBooleanExpression(pycode);
+            }
+            const _errors = [];
 
-            if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
-                let openBracketsCount = pycode.split('(').length - 1;
-                let closeBracketsCount = pycode.split(')').length - 1;
-                let regexStr = "[^ (-)*-/0-9<->A-Z^-_a-z±²-³¼-¾×÷]+";
-                let badCharacters = new RegExp(regexStr);
+            if (isDefined(parsedExpression) && (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== ''))) {
+                const openBracketsCount = pycode.split('(').length - 1;
+                const closeBracketsCount = pycode.split(')').length - 1;
+                let regexStr = '';
+                if (editorMode === 'maths') {
+                    regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
+                } else {
+                    regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+"
+                }
+                const badCharacters = new RegExp(regexStr);
                 setErrors([]);
                 
+                if (isError(parsedExpression) && parsedExpression.error) {
+                    _errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`)
+                }
                 if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
                     _errors.push('LaTeX syntax is not supported.');
                 }
@@ -117,18 +139,29 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                     const state = {result: {tex: "", python: "", mathml: ""}};
                     setCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
                     initialEditorSymbols.current = [];
-                } else if (parsedExpression.length === 1) {
+                } else if (isDefined(parsedExpression) && parsedExpression.length === 1) {
                     // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
                     // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
-                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
-                } else {
-                    let sizes = parsedExpression.map(countChildren);
-                    let i = sizes.indexOf(Math.max.apply(null, sizes));
-                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
+                    if (sketchRef.current) {
+                        sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
+                    }
+                } else if (isDefined(parsedExpression)) {
+                    if (sketchRef.current) {
+                        const sizes = parsedExpression.map(countChildren);
+                        const i = sizes.indexOf(Math.max.apply(null, sizes));
+                        sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
+                    }
                 }
             }
         }, 250);
     };
+
+    useEffect(() => {
+        if (sketchRef.current) {
+            sketchRef.current.logicSyntax = editorSyntax;
+        }
+    }, [editorSyntax]);
+
     useLayoutEffect(() => {
         const {sketch} = makeInequality(
             hiddenEditorRef.current,
@@ -143,16 +176,16 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
         );
         sketch.log = { initialState: [], actions: [] };
         sketch.onNewEditorState = updateState;
-        sketch.onCloseMenus = () => {};
+        sketch.onCloseMenus = () => { void 0 };
         sketch.isUserPrivileged = () => { return true; };
-        sketch.onNotifySymbolDrag = () => {};
+        sketch.onNotifySymbolDrag = () => { void 0 };
         sketch.isTrashActive = () => { return false; };
 
         sketchRef.current = sketch;
     }, [hiddenEditorRef.current]);
     /*** End of text based input stuff */
 
-    let availableSymbols = queryParams.symbols && (queryParams.symbols as string).split(',').map(s => s.trim());
+    const availableSymbols = queryParams.symbols && (queryParams.symbols as string).split(',').map(s => s.trim());
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -189,7 +222,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                     </div>
                     {(editorMode === 'logic') && <div className="mt-4">
                         <Label for="inequality-syntax-select">Boolean Logic Syntax</Label>
-                        <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditorSyntax(e.target.value)}>
+                        <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEditorSyntax(e.target.value); _updateEquation(textInput); } }>
                             <option value="logic">Boolean Logic</option>
                             <option value="binary">Digital Electronics</option>
                         </Input>
@@ -222,14 +255,14 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                             visible={modalVisible}
                         />}
                     </div>
-                    {editorMode === 'maths' && <div className="eqn-editor-input">
+                    {(editorMode === 'maths' || (isStaff(user) && editorMode === 'logic')) && <div className="eqn-editor-input">
                         <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                         <InputGroup className="my-2">
                             <Input type="text" onChange={updateEquation} value={textInput}
-                                placeholder="or type your formula here"/>
+                                placeholder="or type your expression here"/>
                             <InputGroupAddon addonType="append">
-                                <Button type="button" className="eqn-editor-help" id='inequality-help'>?</Button>
-                                <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
+                                <Button type="button" className="eqn-editor-help" id='inequality-help' size="sm">?</Button>
+                                {editorMode === 'maths' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
                                     Here are some examples of expressions you can type:<br />
                                     <br />
                                     a*x^2 + b x + c<br />
@@ -238,10 +271,19 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                                     log(x_a, 2) == log(x_a) / log(2)<br />
                                     <br />
                                     As you type, the box above will preview the result.
-                                </UncontrolledTooltip>
+                                </UncontrolledTooltip>}
+                                {editorMode === 'logic' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
+                                    Here are some examples of expressions you can type:<br />
+                                    <br />
+                                    A AND (B XOR NOT C)<br />
+                                    A &amp; (B ^ !C)<br />
+                                    T &amp; ~(F + A)<br />
+                                    1 . ~(0 + A)<br />
+                                    As you type, the box above will preview the result.
+                                </UncontrolledTooltip>}
                             </InputGroupAddon>
                         </InputGroup>
-                        {errors && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
+                        {errors && errors.length > 0 && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
                             {errors.map(e => (<li key={e}>{e}</li>))}
                         </ul></div>}
                     </div>}

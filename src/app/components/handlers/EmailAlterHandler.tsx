@@ -22,11 +22,11 @@ export const EmailAlterHandler = () => {
 
     const emailVerificationSuccess = validParameters && idsMatch && emailVerified;
 
-    let successMessage = "Email address verification token received. Log in to confirm verification.";
+    let successMessage = "Email address verification token received.";
     if (emailVerificationSuccess) {
         successMessage = "Email address verified";
     } else if (!errorMessage && idsMismatch) {
-        successMessage = "You are signed in as a different user to the user with the email you have just verified. Log in as the other user to confirm verification.";
+        successMessage = "You are signed in as a different user to the user with the email you have just verified.";
     }
 
     useEffect(() => {
@@ -46,9 +46,9 @@ export const EmailAlterHandler = () => {
                         {(!errorMessage || emailVerificationSuccess) &&
                             <React.Fragment>
                                 <h3 className="mb-4">{successMessage}</h3>
-                                {!idsMismatch && <Button tag={Link} to="/account" color="secondary" block>
-                                    Continue to My account
-                                </Button>}
+                                <Button tag={Link} to="/" color="secondary" block>
+                                    Continue
+                                </Button>
                             </React.Fragment>}
                         {!emailVerificationSuccess && errorMessage &&
                             <React.Fragment>
@@ -70,7 +70,7 @@ export const EmailAlterHandler = () => {
                                     }
                                 </p>
                                     :
-                                    <p>Please login to resend the verification email.</p>}
+                                    <p>Please login to your <Link to="/account">account</Link> to resend the verification email.</p>}
                             </React.Fragment>
                         }
                     </CardBody>

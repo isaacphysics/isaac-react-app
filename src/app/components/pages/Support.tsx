@@ -48,21 +48,26 @@ const support: {student: SupportCategories; teacher: SupportCategories} = {
     },
     [SITE.PHY]: {
         student: {
-            title: "Student Support",
+            title: "Student FAQ",
             categories:{
-                general: {category: "general", title: "General Questions", icon: "faq"},
-                homework: {category: "homework", title: "Finding Homework", icon: "faq"},
-                questions: {category: "questions", title: "Answering Questions", icon: "faq"},
+                general: {category: "general", title: "Get started", icon: "faq"},
+                homework: {category: "homework", title: "Doing homework", icon: "faq"},
+                questions: {category: "questions", title: "Answering questions", icon: "faq"},
+                events: {category: "events", title: "Events and support", icon: "faq"},
+                troubleshooting: {category: "troubleshooting", title: "Troubleshooting & legal", icon: "faq"},
             }
         },
         teacher: {
-            title: "Teacher Support",
+            title: "Teacher FAQ",
             categories: {
-                general: { category: "general", title: "General Questions", icon: "faq" },
-                assignments: { category: "assignments", title: "Assigning Work", icon: "faq" },
-                progress: { category: "progress", title: "Viewing Student Progress", icon: "faq" },
-                suggestions: { category: "suggestions", title: "Teaching Suggestions", icon: "teacher-hat" },
-                direct: { category: "direct", title: "One-to-One Support", icon: "teacher-hat"}
+                general: { category: "general", title: "Get started", icon: "faq" },
+                assignments: { category: "assignments", title: "Assign work", icon: "faq" },
+                progress: { category: "progress", title: "View student progress", icon: "faq" },
+                suggestions: { category: "suggestions", title: "Teaching suggestions", icon: "teacher-hat" },
+                partner: { category: "partner", title: "Partner with us", icon: "teacher-hat" },
+                direct: { category: "direct", title: "One-to-one support", icon: "teacher-hat"},
+                troubleshooting: {category: "troubleshooting", title: "Troubleshooting", icon: "faq"},
+                legal: { category: "legal", title: "Legal", icon: "faq"}
             }
         }
     },
@@ -112,7 +117,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         <Row>
             <Col className="pt-4 pb-5">
                 <Tabs
-                    activeTabOverride={categoryIndex + 1} activeTabChanged={activeTabChanged}
+                    activeTabOverride={categoryIndex + 1} onActiveTabChange={activeTabChanged}
                     tabTitleClass={tabTitleClass} tabContentClass="pt-4"
                 >
                     {fromPairs(Object.values(section.categories).map(category => {

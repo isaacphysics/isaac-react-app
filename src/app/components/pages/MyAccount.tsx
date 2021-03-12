@@ -16,10 +16,10 @@ import {
     TabPane,
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
-import {AdminUserGetState, AppState, ErrorState} from "../../state/reducers";
+import {AppState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
-    LoggedInUser,
+    PotentialUser,
     SubjectInterests,
     UserEmailPreferences,
     UserPreferencesDTO,
@@ -46,6 +46,8 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
+import {ErrorState} from "../../state/reducers/internalAppState";
+import {AdminUserGetState} from "../../state/reducers/adminState";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -53,7 +55,6 @@ const stateToProps = (state: AppState, props: any) => {
     return {
         errorMessage: state ? state.error : null,
         userAuthSettings: state ? state.userAuthSettings : null,
-        selectedUserAuthSettings: state ? state.selectedUserAuthSettings : null,
         userPreferences: state ? state.userPreferences : null,
         firstLogin: history.location && history.location.state && (history.location.state as any).firstLogin,
         hashAnchor: (hash && hash.slice(1)) || null,
@@ -71,17 +72,16 @@ const dispatchToProps = {
 };
 
 interface AccountPageProps {
-    user: LoggedInUser;
+    user: PotentialUser;
     errorMessage: ErrorState;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
-    selectedUserAuthSettings: UserAuthenticationSettingsDTO | null;
     getChosenUserAuthSettings: (userid: number) => void;
     userPreferences: UserPreferencesDTO | null;
     updateCurrentUser: (
         updatedUser: ValidationUser,
         updatedUserPreferences: UserPreferencesDTO,
         passwordCurrent: string | null,
-        currentUser: LoggedInUser
+        currentUser: PotentialUser
     ) => void;
     firstLogin: boolean;
     hashAnchor: string | null;

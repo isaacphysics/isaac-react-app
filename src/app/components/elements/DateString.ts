@@ -16,6 +16,13 @@ export function formatDate(date: number | Date | undefined) {
     return NUMERIC_DATE.format(dateObject);
 }
 
+// 2020-01-22
+export function formatISODateOnly(date: number | Date) {
+    const dateObject = new Date(date);
+    // ISO String looks like 2020-01-22T13:00:00.000Z so remove the time:
+    return dateObject.toISOString().split("T")[0];
+}
+
 export const DateString = ({children, defaultValue, formatter=FRIENDLY_DATE_AND_TIME}: {children: any; defaultValue?: any; formatter?: any}) => {
     const fallback = defaultValue || "NOT A VALID DATE";
     try {

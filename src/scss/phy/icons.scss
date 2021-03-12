@@ -9,3 +9,17 @@
 {
   background-image: url(/assets/phy/ru.png) !important;
 }
+
+svg {
+  &.physics-fill {
+    fill: $phy_purple;
+  }
+
+  &.maths-fill {
+    fill: $phy_maths;
+  }
+
+  &.chemistry-fill {
+    fill: $phy_chemistry;
+  }
+}

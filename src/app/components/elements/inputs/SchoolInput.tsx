@@ -4,6 +4,7 @@ import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
 import {api} from "../../../services/api";
 import {validateUserSchool} from "../../../services/validation";
+import {schoolNameWithPostcode} from "../../../services/user";
 import {throttle} from "lodash";
 import classNames from "classnames";
 
@@ -23,7 +24,7 @@ const getSchoolPromise = (schoolSearchText: string) =>
     new Promise(resolve => {
         resolve(api.schools.search(schoolSearchText).then(({data}) => {
             let temp: any = [];
-            data && data.length > 0 && data.map((item: any) => (temp.push({value: item, label: item.name + ", " + item.postcode})));
+            data && data.length > 0 && data.map((item) => (temp.push({value: item, label: schoolNameWithPostcode(item)})));
             return temp;
         }).catch((response) => {
             console.error("Error searching for schools. ", response);
@@ -77,7 +78,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     const schoolValue = (
         (selectedSchoolObject && selectedSchoolObject.urn ?
-            {value: selectedSchoolObject.urn, label: selectedSchoolObject.name + ", " + selectedSchoolObject.postcode} :
+            {value: selectedSchoolObject.urn, label: schoolNameWithPostcode(selectedSchoolObject)} :
             (userToUpdate.schoolOther ?
                 {value: "manually entered school", label: userToUpdate.schoolOther} :
                 undefined))

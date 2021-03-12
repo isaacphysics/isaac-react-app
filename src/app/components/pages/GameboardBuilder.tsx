@@ -17,7 +17,7 @@ import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful
 import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
-import {resourceFound} from "../../services/validation";
+import {resourceFound, isValidGameboardId} from "../../services/validation";
 import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
@@ -64,7 +64,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
         }
     }, [user, baseGameboard]);
 
-    const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "";
+    const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "" && isValidGameboardId(gameboardURL);
 
     const reorder = (result: DropResult) => {
         if (result.destination) {
@@ -123,14 +123,14 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                 { value: examBoardTagMap[EXAM_BOARD.OCR], label: 'OCR' },
                                 { value: 'ISAAC_BOARD', label: 'Created by Isaac' }]}
                             name="colors"
-                            className={SITE_SUBJECT === SITE.CS ? "basic-multi-select" : ""}
+                            className="basic-multi-select"
                             classNamePrefix="select"
                             placeholder="None"
                             onChange={multiSelectOnChange(setGameboardTags)}
                         />
                     </RS.Col>
                     <RS.Col>
-                        <RS.Label htmlFor="gameboard-builder-url">Gameboard URL</RS.Label>
+                        <RS.Label htmlFor="gameboard-builder-url">Gameboard ID</RS.Label>
                         <RS.Input id="gameboard-builder-url"
                             type="text"
                             placeholder="Optional"
@@ -138,6 +138,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setGameboardURL(e.target.value);
                             }}
+                            invalid={!isValidGameboardId(gameboardURL)}
                         />
                     </RS.Col>
                     <RS.Col>
@@ -190,9 +191,9 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                                             placeholder={<div className="text-center"><Spinner color="primary" /></div>}
                                                             until={!baseGameboardId || baseGameboard}
                                                         >
-                                                            <input
-                                                                type="image" src="/assets/add.svg" className="centre img-fluid"
-                                                                alt="Add questions" title="Add questions"
+                                                            <RS.Button
+                                                                className="plus-button"
+                                                                color="primary" outline
                                                                 onClick={() => {
                                                                     logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
                                                                     dispatch(openActiveModal({
@@ -208,7 +209,9 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                                                         />
                                                                     }))
                                                                 }}
-                                                            />
+                                                            >
+                                                                {{[SITE.CS]: "Add questions", [SITE.PHY]: "Add Questions"}[SITE_SUBJECT]}
+                                                            </RS.Button>
                                                         </ShowLoading>
                                                     </div>
                                                 </td>
@@ -220,63 +223,71 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                     </DragDropContext>
                 </div>
 
-                <RS.Input
-                    id="gameboard-save-button" type="button" value="Save gameboard" disabled={!canSubmit}
-                    className={"btn btn-block btn-secondary border-0 mt-2"} aria-describedby="gameboard-help"
-                    onClick={() => {
-                        // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
-                        let wildcard = undefined;
-                        if (wildcardId && resourceFound(wildcards) && wildcards.length > 0) {
-                            wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
-                        }
-
-                        let subjects = [];
-
-                        if (SITE_SUBJECT == SITE.CS) {
-                            subjects.push("computer_science");
-                        } else {
-                            const definedSubjects = ["physics", "maths", "chemistry"];
-                            selectedQuestions?.forEach((item) => {
-                                let tags = intersection(definedSubjects, item.tags || []);
-                                tags.forEach((tag: string) => subjects.push(tag));
+                <div className="text-center">
+                    <RS.Button
+                        id="gameboard-save-button" disabled={!canSubmit} color="secondary"
+                        className="mt-2" aria-describedby="gameboard-help"
+                        onClick={() => {
+                            // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
+                            let wildcard = undefined;
+                            if (wildcardId && resourceFound(wildcards) && wildcards.length > 0) {
+                                wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
                             }
-                            );
-                            // If none of the questions have a subject tag, default to physics
-                            if (subjects.length === 0) {
-                                subjects.push("physics");
+
+                            let subjects = [];
+
+                            if (SITE_SUBJECT == SITE.CS) {
+                                subjects.push("computer_science");
+                            } else {
+                                const definedSubjects = ["physics", "maths", "chemistry"];
+                                selectedQuestions?.forEach((item) => {
+                                        let tags = intersection(definedSubjects, item.tags || []);
+                                        tags.forEach((tag: string) => subjects.push(tag));
+                                    }
+                                );
+                                // If none of the questions have a subject tag, default to physics
+                                if (subjects.length === 0) {
+                                    subjects.push("physics");
+                                }
+                                subjects = Array.from(new Set(subjects));
                             }
-                            subjects = Array.from(new Set(subjects));
-                        }
 
-                        dispatch(createGameboard({
-                            id: gameboardURL,
-                            title: gameboardTitle,
-                            questions: questionOrder.map((questionId) => {
-                                const question = selectedQuestions.get(questionId);
-                                return question && convertContentSummaryToGameboardItem(question);
-                            }).filter((question) => question !== undefined) as GameboardItem[],
-                            wildCard: wildcard,
-                            wildCardPosition: 0,
-                            gameFilter: {subjects: subjects},
-                            tags: gameboardTags
-                        }, baseGameboardId));
+                            dispatch(createGameboard({
+                                id: gameboardURL,
+                                title: gameboardTitle,
+                                questions: questionOrder.map((questionId) => {
+                                    const question = selectedQuestions.get(questionId);
+                                    return question && convertContentSummaryToGameboardItem(question);
+                                }).filter((question) => question !== undefined) as GameboardItem[],
+                                wildCard: wildcard,
+                                wildCardPosition: 0,
+                                gameFilter: {subjects: subjects},
+                                tags: gameboardTags
+                            }, baseGameboardId));
 
-                        dispatch(openActiveModal({
-                            closeAction: () => {dispatch(closeActiveModal())},
-                            title: "Gameboard created",
-                            body: <GameboardCreatedModal/>
-                        }));
+                            dispatch(openActiveModal({
+                                closeAction: () => {dispatch(closeActiveModal())},
+                                title: "Gameboard created",
+                                body: <GameboardCreatedModal/>
+                            }));
 
-                        logEvent(eventLog, "SAVE_GAMEBOARD", {});
-                        dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
-                    }}
-                />
+                            logEvent(eventLog, "SAVE_GAMEBOARD", {});
+                            dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
+                        }}
+                    >
+                        {{[SITE.CS]: "Save gameboard", [SITE.PHY]: "Save Gameboard"}[SITE_SUBJECT]}
+                    </RS.Button>
+                </div>
 
                 {!canSubmit && <div
                     id="gameboard-help" color="light"
-                    className={`text-center mb-0 pt-3 pb-0 ${selectedQuestions.size <= 10 ? "text-muted" : "text-danger"}`}
+                    className={`text-center mb-0 pt-3 pb-0 ${selectedQuestions.size > 10 ? "text-danger" : ""}`}
                 >
                     Gameboards require both a title and between 1 and 10 questions.
+                    {!isValidGameboardId(gameboardURL) && <div className="text-danger">
+                        The gameboard ID should contain numbers, lowercase letters, underscores and hyphens only.<br />
+                        It should not be the full URL.
+                    </div>}
                 </div>}
 
             </RS.CardBody>

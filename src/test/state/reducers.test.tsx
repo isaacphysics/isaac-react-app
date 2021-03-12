@@ -1,21 +1,18 @@
-import {
-    boards,
-    BoardsState,
-    constants,
-    groups,
-    GroupsState,
-    questions,
-    rootReducer,
-    search,
-    toasts,
-    user
-} from "../../app/state/reducers";
-import {Action, AppGameBoard, AppGroupMembership, AppQuestionDTO, LoggedInUser, AppGroup} from "../../IsaacAppTypes";
+
+import {Action, AppGameBoard, AppGroupMembership, AppQuestionDTO, PotentialUser, AppGroup} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
 import {mapValues, union, without} from "lodash";
 import {selectors} from "../../app/state/selectors";
 import {UserGroupDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
+import {rootReducer} from "../../app/state/reducers";
+import {user} from "../../app/state/reducers/userState";
+import {questions} from "../../app/state/reducers/questionState";
+import {constants} from "../../app/state/reducers/staticState";
+import {toasts} from "../../app/state/reducers/notifiersState";
+import {groups} from "../../app/state/reducers/groupsState";
+import {search} from "../../app/state/reducers/searchState";
+import {boards, BoardsState} from "../../app/state/reducers/gameboardsState";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
@@ -51,7 +48,7 @@ describe("root reducer", () => {
 describe("user reducer", () => {
     const {profWheeler, dameShirley} = registeredUserDTOs;
 
-    const previousStates: (LoggedInUser | null)[] = [null, {loggedIn: false}, {...dameShirley, loggedIn: true}, {...profWheeler, loggedIn: true}];
+    const previousStates: (PotentialUser | null)[] = [null, {loggedIn: false}, {...dameShirley, loggedIn: true}, {...profWheeler, loggedIn: true}];
 
     it("returns null as an initial value", () => {
         const actualState = user(undefined, ignoredTestAction);

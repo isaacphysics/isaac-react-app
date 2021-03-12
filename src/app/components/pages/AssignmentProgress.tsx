@@ -183,11 +183,14 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
             if (studentProgress.tickCount == questions.length) {
                 studentsCorrect++;
             }
-
         }
     }
 
-    const sortedProgress = orderBy(progress, (item) => {
+    const semiSortedProgress = orderBy(progress, (item) => {
+        return item.user.authorisedFullAccess && item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
+    }, [reverseOrder ? "desc" : "asc"]);
+
+    const sortedProgress = orderBy(semiSortedProgress, (item) => {
         switch (sortOrder) {
             case "name":
                 return (item.user.familyName + ", " + item.user.givenName).toLowerCase();
@@ -331,12 +334,16 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
                     <tbody>
                         {sortedProgress.map((studentProgress) => {
                             const fullAccess = studentProgress.user.authorisedFullAccess;
-                            return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " revoked"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
+                            return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
                                 <th className="student-name">
-                                    <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
-                                        {studentProgress.user.givenName}
-                                        <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
-                                    </Link>
+                                    {fullAccess ?
+                                        <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
+                                            {studentProgress.user.givenName}
+                                            <span
+                                                className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                        </Link> :
+                                        <span>{studentProgress.user.givenName} {studentProgress.user.familyName}</span>
+                                    }
                                 </th>
                                 {questions.map((q, index) =>
                                     <td key={q.id} className={markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestion(index)}>
@@ -491,7 +498,6 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
     function openGroupDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
-        //showDownloadModal(event.currentTarget.href);
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
@@ -542,10 +548,15 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
         <Container>
             <TitleAndBreadcrumb
                 currentPageTitle={{[SITE.PHY]: "Assignment Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
-                subTitle="Track your class performance"
+                subTitle="Track your group performance by question"
                 help="Click on your groups to see the assignments you have set. View your students' progress by question."
             />
             <Row className="align-items-center d-none d-md-flex">
+                {/*<Col>*/}
+                {/*    <a href="/group_progress">*/}
+                {/*        View group progress summary*/}
+                {/*    </a>*/}
+                {/*</Col>*/}
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">

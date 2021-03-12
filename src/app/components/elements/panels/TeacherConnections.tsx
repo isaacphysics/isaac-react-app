@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
-import {LoggedInUser} from "../../../../IsaacAppTypes";
+import {PotentialUser} from "../../../../IsaacAppTypes";
 import {
     authenticateWithTokenAfterPrompt,
     changeMyMembershipStatus,
@@ -13,14 +13,15 @@ import {
     revokeAuthorisationAfterPrompt
 } from "../../../state/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {AdminUserGetState, AppState} from "../../../state/reducers";
+import {AppState} from "../../../state/reducers";
 import classnames from "classnames";
 import {MEMBERSHIP_STATUS} from "../../../services/constants";
 import {extractTeacherName} from "../../../services/user";
+import {AdminUserGetState} from "../../../state/reducers/adminState";
 
 
 interface TeacherConnectionsProps {
-    user: LoggedInUser;
+    user: PotentialUser;
     authToken: string | null;
     editingOtherUser: boolean;
     userToEdit: AdminUserGetState;

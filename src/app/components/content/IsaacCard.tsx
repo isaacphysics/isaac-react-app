@@ -21,7 +21,7 @@ export const IsaacCard = ({doc, imageClassName}: IsaacCardProps) => {
 
     return verticalContent ?
         <Card className={classes}>
-            {image && <Row>
+            {image && <Row className={imageClassName}>
                 <Col className="justify-content-md-center">
                     <img className={[classes, imageClassName].join(" ")} src={imgSrc} alt={image.altText}/>
                 </Col>

@@ -10,7 +10,7 @@ import {AppState} from "../../state/reducers";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
-import {DOCUMENT_TYPE, documentDescription} from "../../services/constants";
+import {DOCUMENT_TYPE, documentDescription, SEARCH_CHAR_LENGTH_LIMIT} from "../../services/constants";
 import {pushSearchToHistory, searchResultIsPublic} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
@@ -112,6 +112,7 @@ export const Search = withRouter((props: {history: History; location: Location})
                             type="search" value={queryState}
                             placeholder="Search"
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setQueryState(e.target.value)}
+                            maxLength={SEARCH_CHAR_LENGTH_LIMIT}
                         />
                     </Form>
                 </Col>
@@ -120,27 +121,28 @@ export const Search = withRouter((props: {history: History; location: Location})
                 <Col className="py-4">
                     <RS.Card>
                         <RS.CardHeader className="search-header">
-                            <RS.Col md={5} xs={12}>
+                            <RS.Col md={5} sm={12}>
                                 <h3>
                                     <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
                                 </h3>
                             </RS.Col>
-                            <RS.Col md={7} xs={12}>
+                            <RS.Col md={7} sm={12}>
                                 <RS.Form inline className="search-filters">
-                                    <RS.Label htmlFor="document-filter" className="d-none d-md-inline-block mr-1">
-                                        Filter:
+                                    <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block mr-1">
+                                        {`Filter${{[SITE.CS]: "s", [SITE.PHY]: ""}[SITE_SUBJECT]}:`}
                                     </RS.Label>
                                     <Select
                                         inputId="document-filter" isMulti
-                                        placeholder="No filter"
+                                        placeholder="No page type filter"
                                         defaultValue={filtersState}
                                         options={Object.values(DOCUMENT_TYPE)
+                                            .filter(documentType => documentType !== DOCUMENT_TYPE.FAST_TRACK_QUESTION)
                                             .filter(documentType =>
                                                 !(documentType == DOCUMENT_TYPE.TOPIC_SUMMARY
                                                     && SITE_SUBJECT == SITE.PHY))
                                             .map(itemise)
                                         }
-                                        className="basic-multi-select w-100 w-md-50"
+                                        className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"
                                         classNamePrefix="select"
                                         onChange={unwrapValue(setFiltersState)}
                                         styles={selectStyle}

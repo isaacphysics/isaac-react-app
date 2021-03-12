@@ -4,7 +4,7 @@ import queryString from "query-string";
 import {fetchTopicSummary, loadGameboard} from "../state/actions";
 import {useDispatch, useSelector} from 'react-redux'
 import {determineGameboardHistory, determineNextGameboardItem, determinePreviousGameboardItem} from "./gameboards";
-import {fastTrackProgressEnabledBoards, NOT_FOUND, TAG_ID} from "./constants";
+import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, NOT_FOUND, TAG_ID} from "./constants";
 import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopicHistory} from "./topics";
 import {useCurrentExamBoard} from "./examBoard";
 import {ContentDTO} from "../../IsaacApiTypes";
@@ -42,7 +42,7 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
         return defaultPageNavigation;
     }
 
-    if (doc.type === "isaacFastTrackQuestionPage" && fastTrackProgressEnabledBoards.includes(currentGameboard?.id || "")) {
+    if (doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION && fastTrackProgressEnabledBoards.includes(currentGameboard?.id || "")) {
         const gameboardHistory = (currentGameboard && queryParams.board === currentGameboard.id) ?
             determineGameboardHistory(currentGameboard) :
             [];
@@ -91,7 +91,7 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
 };
 
 export const ifKeyIsEnter = (action: () => void) => (event: React.KeyboardEvent) => {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 || event.charCode === 13) {
         action();
     }
 };

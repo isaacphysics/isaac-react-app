@@ -1,28 +1,41 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
 import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import ReactGA from "react-ga";
 import {WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {FallbackProps} from "react-error-boundary";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
+import {logAction} from "../../state/actions";
 
-export const ClientError = ({resetErrorBoundary, error, componentStack}: FallbackProps) => {
+export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
+    const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
     ReactGA.exception({
         description: `client_error: ${error?.message || 'unknown'}`,
         fatal: true
     });
-
     const usefulInformation = {
-        "User ID": user?.loggedIn && user.id || "Not currently logged in",
-        "Location": window.location.href,
-        "User Agent": window.navigator.userAgent,
-        "Error Details": "\n" + error?.stack || "",
+        userId: user?.loggedIn && user.id || "Not currently logged in",
+        location: window.location.href,
+        userAgent: window.navigator.userAgent,
+        errorDetails: "\n" + error?.stack || "",
     }
+    const usefulInformationLabels: {[k in keyof typeof usefulInformation]: string} = {
+        userId: "User ID",
+        location: "Location",
+        userAgent: "User Agent",
+        errorDetails: "Error Details",
+    }
+
+    useEffect(() => {
+        const {userId, ...informationNotIncludingUserId} = usefulInformation;
+        dispatch(logAction({...informationNotIncludingUserId, type: "CLIENT_SIDE_ERROR"}));
+    }, []);
+
     const plainTextUsefulInformation = "\n\n---- Useful Error Information ----\n\n" + Object.entries(usefulInformation)
-        .map(([label, value]) => `${label}: ${value}`).join("\n\n")
+        .map(([key, value]) => `${usefulInformationLabels[key as keyof typeof usefulInformation]}: ${value}`).join("\n\n")
 
     return <Container>
         <div>
@@ -60,8 +73,8 @@ export const ClientError = ({resetErrorBoundary, error, componentStack}: Fallbac
                         <div className="alert alert-info small overflow-auto">
                             <h4>Useful information to include in your email</h4>
                             <small>
-                                {Object.entries(usefulInformation).map(([label, value]) => (
-                                    <p><strong>{label}: </strong>{value}</p>
+                                {Object.entries(usefulInformation).map(([key, value]) => (
+                                    <p><strong>{usefulInformationLabels[key as keyof typeof usefulInformation]}: </strong>{value}</p>
                                 ))}
                             </small>
                         </div>

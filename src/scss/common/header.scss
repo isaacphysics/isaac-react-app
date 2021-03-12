@@ -60,6 +60,9 @@ header {
   cursor: help;
   font-size: 1.25rem;
   line-height: 1.2;
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .h-subtitle {
@@ -134,7 +137,7 @@ header {
     justify-content: flex-end !important;
 
     @include respond-below(xs) {
-      padding-right: 33% !important;
+      padding-right: 20% !important;
     }
     @include respond-above(xs){
       padding-right: 28% !important;

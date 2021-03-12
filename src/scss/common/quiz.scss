@@ -1,0 +1,31 @@
+.quiz-list {
+  font-family: $secondary-font-medium;
+  background-color: $white;
+  border: 1px solid $gray-107;
+  border-bottom: 1px solid $gray-107;
+  font-size: 1.25rem;
+
+  > li {
+    display: flex;
+    border-bottom: 1px solid $gray-107;
+
+    .quiz-list-separator {
+      border-left: 1px solid $gray-107;
+    }
+
+    > :last-child {
+      &:after {
+        @include pseudo-element;
+        background-image: url('/assets/chevron_right.svg');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position-y: center;
+        height: 100%;
+        right: 10px;
+        top: 0;
+        bottom: 0;
+        width: 9px;
+      }
+    }
+  }
+}

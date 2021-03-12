@@ -3,7 +3,6 @@ import {RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE} from "../services/constants";
 import {getUserId, setUserId} from "./userConsistencyCheckerCurrentUser";
 import {changePage} from "./actions";
-import {closeWebSocket} from "../services/websockets";
 
 // Generic log action:
 // This is not imported from actions to avoid a circular dependency through store.
@@ -55,13 +54,13 @@ const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
 const clearCurrentUser = () => {
     clearTimeout(timeoutHandle);
     setUserId(undefined);
-    closeWebSocket();
     changePage("/");
 };
 
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
+        case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
             clearCurrentUser();
             break;
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:

@@ -32,6 +32,13 @@
   font-size: 1.2rem !important;
 }
 
+.progress-gauge {
+  display: inline-block;
+  position: relative;
+  height: 150px;
+  width: 150px;
+}
+
 .teacher-achievement {
   .teacher-badge {
     min-width: 6em;

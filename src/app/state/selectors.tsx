@@ -1,8 +1,11 @@
-import {AppState, ProgressState} from "./reducers";
+import {AppState} from "./reducers";
 import {sortBy} from "lodash";
 import {NOT_FOUND} from "../services/constants";
-import {AppGroup} from "../../IsaacAppTypes";
+import {AppGroup, AppQuizAssignment} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
+import {GroupProgressState, ProgressState} from "./reducers/assignmentsState";
+import {isDefined} from "../services/miscUtils";
+import {QuizAssignmentDTO} from "../../IsaacApiTypes";
 
 export const selectors = {
     groups: {
@@ -35,6 +38,11 @@ export const selectors = {
                 active: selectors.groups.active(state),
                 archived: selectors.groups.archived(state)
             }
+        },
+        progress: (state: AppState) => {
+            if (!state) return null;
+            if (!state.groupProgress) return null;
+            return load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.groupProgress(state.groupProgress) : state.groupProgress;
         }
     },
 
@@ -124,8 +132,27 @@ export const selectors = {
 
     assignments: {
         progress: (state: AppState) => state?.progress && load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.progressState(state?.progress) : state?.progress
-    }
+    },
+
+    quizzes: {
+        available: (state: AppState) => state?.quizzes?.quizzes,
+        assignments: (state: AppState) => augmentWithGroupNameIfInCache(state, state?.quizAssignments),
+    },
 };
+
+function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAssignmentDTO[] | null | undefined): AppQuizAssignment[] | null {
+    if (!isDefined(quizAssignments)) {
+        return null;
+    }
+    const groupCache = state?.groups?.cache ?? {};
+    return quizAssignments.map(assignment => {
+        const groupName = groupCache[assignment.groupId as number]?.groupName;
+        return {
+            ...assignment,
+            groupName,
+        } as AppQuizAssignment;
+    });
+}
 
 export const anonymisationFunctions = {
     appGroup: (appGroup: AppGroup): AppGroup => {
@@ -157,6 +184,23 @@ export const anonymisationFunctions = {
             })
         });
         return anonymousProgress;
+    },
+    groupProgress: (groupProgress: GroupProgressState): GroupProgressState => {
+        if (!groupProgress) return null;
+        const anonymousGroupProgress: GroupProgressState = {};
+        Object.keys(groupProgress).forEach(groupId => {
+            anonymousGroupProgress[Number(groupId)] = (groupProgress[Number(groupId)] || []).map((userProgressSummary, i) => {
+                return {
+                    ...userProgressSummary,
+                    user : {
+                        ...userProgressSummary.user,
+                        familyName: "",
+                        givenName: `Test Student ${i + 1}`,
+                    }
+                }
+            })
+        });
+        return anonymousGroupProgress;
     }
 }
 

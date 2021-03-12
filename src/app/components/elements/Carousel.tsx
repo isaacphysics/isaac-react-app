@@ -91,7 +91,7 @@ const ControlledCarouselInstance = ({children, collectionTag}: any) => {
     );
 };
 
-export const ResponsiveCarousel = ({groupingLimit, children, collectionTag = 'div'}: any) => {
+export const ResponsiveCarousel = ({groupingLimit, children, collectionTag = 'div', className}: any) => {
     const tuple: any = [];
 
     if (!groupingLimit || groupingLimit == 0) {
@@ -107,12 +107,12 @@ export const ResponsiveCarousel = ({groupingLimit, children, collectionTag = 'di
 
     return (
         <React.Fragment>
-            <div className="d-md-none">
+            <div className={`d-md-none ${className ?? ""}`}>
                 <ControlledCarouselInstance collectionTag={collectionTag}>
                     {children}
                 </ControlledCarouselInstance>
             </div>
-            <div className="d-none d-md-block">
+            <div className={`d-none d-md-block ${className ?? ""}`}>
                 <ControlledCarouselInstance collectionTag={collectionTag}>
                     {tuple}
                 </ControlledCarouselInstance>

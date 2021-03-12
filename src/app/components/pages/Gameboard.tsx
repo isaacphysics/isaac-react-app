@@ -5,14 +5,26 @@ import {loadGameboard, logAction} from "../../state/actions";
 import * as RS from "reactstrap"
 import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
-import {GameboardDTO, GameboardItem} from "../../../IsaacApiTypes";
+import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {NOT_FOUND, TAG_ID} from "../../services/constants";
+import {NOT_FOUND, TAG_ID, TAG_LEVEL} from "../../services/constants";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
+import {showWildcard} from "../../services/gameboards";
+import queryString from "query-string";
+
+function extractFilterQueryString(gameboard: GameboardDTO): string {
+    const csvQuery: {[key: string]: string} = {}
+    if (gameboard.gameFilter) {
+        Object.entries(gameboard.gameFilter).forEach(([key, values]) => {
+            csvQuery[key] = values.join(",");
+        });
+    }
+    return queryString.stringify(csvQuery, {encode: false});
+}
 
 function getTags(docTags?: string[]) {
     if (SITE_SUBJECT !== SITE.PHY) {
@@ -20,38 +32,52 @@ function getTags(docTags?: string[]) {
     }
     if (!docTags) return [];
 
-    return tags.getByIdsAsHeirarchy(docTags as TAG_ID[]);
+    return tags.getByIdsAsHierarchy(docTags as TAG_ID[]);
 }
 
 const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
-    let icon = <img src="/assets/question.svg" alt=""/>;
-    let tryAgain = false;
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
+    const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
+    let iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/question-hex.svg#icon` : "/assets/question.svg";
+    let message = "";
+    let messageClasses = "";
 
     switch (question.state) {
         case "PERFECT":
             itemClasses += " bg-success";
-            icon = <img src="/assets/tick-rp.svg" alt=""/>;
+            message = "perfect!"
+            iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/tick-rp-hex.svg#icon` : "/assets/tick-rp.svg";
             break;
         case "PASSED":
         case "IN_PROGRESS":
-            icon = <img src="/assets/incomplete.svg" alt=""/>;
+            message = "in progress"
+            iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/incomplete-hex.svg#icon` : "/assets/incomplete.svg";
             break;
         case "FAILED":
-            tryAgain = true;
-            icon = <img src="/assets/cross-rp.svg" alt=""/>;
+            message = "try again!"
+            iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/cross-rp-hex.svg#icon` : "/assets/cross-rp.svg";
             break;
     }
 
-    const tags = getTags(question.tags);
+    const questionTags = getTags(question.tags);
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
-            <span>{icon}</span>
-            <div className="flex-grow-1">{question.title}
-                {tryAgain && <span className="try-again">try again!</span>}
-                {tags && <div className="gameboard-tags">
-                    {tags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
+            <span>
+                {/* TODO bh412 come up with a nicer way of differentiating site icons and also above */}
+                {SITE_SUBJECT === SITE.PHY ?
+                    <svg className={iconClasses}>
+                        <use href={iconHref} xlinkHref={iconHref}/>
+                    </svg> :
+                    <img src={iconHref} alt=""/>
+                }
+            </span>
+            <div className={"flex-grow-1 " + itemSubject?.id || (SITE_SUBJECT === SITE.PHY ? "physics" : "")}>
+                <span className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""}>{question.title}</span>
+                {message && <span className={"gameboard-item-message" + (SITE_SUBJECT === SITE.PHY ? "-phy " : " ") + messageClasses}>{message}</span>}
+                {questionTags && <div className="gameboard-tags">
+                    {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
                 </div>}
             </div>
             {/*TODO CS Level*/}
@@ -61,11 +87,31 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
     </RS.ListGroupItem>;
 };
 
+export const Wildcard = (wildcard: IsaacWildcard) => {
+    const itemClasses = "p-3 content-summary-link text-info bg-transparent";
+    const icon = <img src="/assets/wildcard.svg" alt="Optional extra information icon"/>;
+    return <RS.ListGroupItem key={wildcard.id} className={itemClasses}>
+        <a href={wildcard.url} className="align-items-center">
+            <span className="gameboard-item-icon">{icon}</span>
+            <div className={"flex-grow-1"}>
+                <span>{wildcard.title}</span>
+                {wildcard.description && <div className="gameboard-tags">
+                    <span className="gameboard-tag">{wildcard.description}</span>
+                </div>}
+            </div>
+        </a>
+    </RS.ListGroupItem>
+}
+
 export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => {
+
     return <RS.Row className={className}>
         <RS.Col lg={{size: 10, offset: 1}}>
             <RS.ListGroup className="link-list list-group-links list-gameboard">
-                {gameboard && gameboard.questions && gameboard.questions.map(
+                {gameboard?.wildCard && showWildcard(gameboard) &&
+                    Wildcard(gameboard.wildCard)
+                }
+                {gameboard?.questions && gameboard.questions.map(
                     gameboardItem.bind(null, gameboard)
                 )}
             </RS.ListGroup>
@@ -73,11 +119,19 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
     </RS.Row>;
 };
 
-export const Gameboard = withRouter(({location: {hash}}: {location: {hash: string}}) => {
+export const Gameboard = withRouter(({location}: {location: Location}) => {
     const dispatch = useDispatch();
     const gameboard = useSelector(selectors.board.currentGameboardOrNotFound);
     const user = useSelector(selectors.user.orNull);
-    let gameboardId = hash ? hash.slice(1) : null;
+    const gameboardId = location.hash ? location.hash.slice(1) : null;
+
+    // Show filter
+    const {filter} = queryString.parse(location.search);
+    let showFilter = false;
+    if (filter) {
+        const filterValue = filter instanceof Array ? filter[0] : filter;
+        showFilter = filterValue.toLowerCase() === "true";
+    }
 
     useEffect(() => {dispatch(loadGameboard(gameboardId))}, [dispatch, gameboardId]);
 
@@ -92,12 +146,12 @@ export const Gameboard = withRouter(({location: {hash}}: {location: {hash: strin
         <RS.Row className="col-8 offset-2">
             <RS.Col className="mt-4">
                 <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                    Set as assignment
+                    {{[SITE.PHY]: "Set as Assignment", [SITE.CS]: "Set as assignment"}[SITE_SUBJECT]}
                 </RS.Button>
             </RS.Col>
             <RS.Col className="mt-4">
                 <RS.Button tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}} color="primary" block outline>
-                    Duplicate and edit
+                    {{[SITE.PHY]: "Duplicate and Edit", [SITE.CS]: "Duplicate and edit"}[SITE_SUBJECT]}
                 </RS.Button>
             </RS.Col>
         </RS.Row>
@@ -105,7 +159,7 @@ export const Gameboard = withRouter(({location: {hash}}: {location: {hash: strin
         <RS.Row className="col-4 offset-2 offset-md-4">
             <RS.Col className="mt-4">
                 <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                    Save to My gameboards
+                    {{[SITE.PHY]: "Save to My Gameboards", [SITE.CS]: "Save to My gameboards"}[SITE_SUBJECT]}
                 </RS.Button>
             </RS.Col>
         </RS.Row>;
@@ -128,11 +182,16 @@ export const Gameboard = withRouter(({location: {hash}}: {location: {hash: strin
         <RS.Container className="mb-5">
             <ShowLoading
                 until={gameboard}
-                thenRender={gameboard => <React.Fragment>
-                    <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
-                    <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
-                    {userButtons}
-                </React.Fragment>}
+                thenRender={gameboard => {
+                    if (showFilter) {
+                        return <Redirect to={`/gameboards/new?${extractFilterQueryString(gameboard)}#${gameboardId}`} />
+                    }
+                    return <React.Fragment>
+                        <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
+                        <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
+                        {userButtons}
+                    </React.Fragment>
+                }}
                 ifNotFound={notFoundComponent}
             />
         </RS.Container>

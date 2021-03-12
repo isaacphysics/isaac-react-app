@@ -1,0 +1,13 @@
+@import "../common/featured-profile";
+
+@include media-breakpoint-up(md) {
+  .featured-profile {
+    padding-bottom: 1rem;
+  }
+}
+
+.profile-description {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+}

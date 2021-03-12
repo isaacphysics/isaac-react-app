@@ -192,3 +192,20 @@ a.btn {
     }
   }
 }
+
+.btn.plus-button {
+  position: relative;
+  padding-right: 52px;
+  &::after {
+    @include pseudo-element();
+    background-image: url("/assets/add.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position-y: center;
+    height: 100%;
+    right: 26px;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+  }
+}

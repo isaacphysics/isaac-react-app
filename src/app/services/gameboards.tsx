@@ -1,10 +1,10 @@
 import {GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
-import {CurrentGameboardState} from "../state/reducers";
 import {NOT_FOUND} from "./constants";
 import React from "react";
 import countBy from "lodash/countBy"
 import intersection from "lodash/intersection"
 import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {CurrentGameboardState} from "../state/reducers/gameboardsState";
 
 enum boardCompletions {
     "any" = "Any",
@@ -83,6 +83,11 @@ export const generateGameboardSubjectHexagons = (boardSubjects: string[]) => {
     return boardSubjects.map((subject, i) =>
         <div key={subject} className={`board-subject-hexagon subject-${subject} z${i}`} />
     );
+};
+
+export const showWildcard = (board: GameboardDTO) => {
+    const re = new RegExp('(phys_book_gcse_ch.*|pre_uni_maths.*)');
+    return board?.id && re.test(board.id)
 };
 
 export const determineGameboardSubjects = (board: GameboardDTO) => {
