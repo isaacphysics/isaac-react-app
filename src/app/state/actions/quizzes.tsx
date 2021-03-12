@@ -130,3 +130,16 @@ export const loadQuizAssignmentFeedback = (quizAssignmentId: number) => async (d
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
+
+export const markQuizAsCancelled = (quizAssignmentId: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_REQUEST, quizAssignmentId});
+    try {
+        await api.quizzes.cancelQuizAssignment(quizAssignmentId);
+        dispatch({type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_SUCCESS, quizAssignmentId});
+        return true;
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_FAILURE, quizAssignmentId});
+        dispatch(showErrorToastIfNeeded("Failed to cancel quiz", e));
+        return false;
+    }
+};
