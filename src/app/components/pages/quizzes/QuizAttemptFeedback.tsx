@@ -7,11 +7,15 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {loadQuizAttemptFeedback} from "../../../state/actions/quizzes";
 import {isDefined} from "../../../services/miscUtils";
 import {useCurrentQuizAttempt} from "../../../services/quiz";
-import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizAttemptComponent";
+import {
+    myQuizzesCrumbs,
+    QuizAttemptComponent,
+    QuizAttemptProps,
+    QuizPagination
+} from "../../elements/quiz/QuizAttemptComponent";
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {deregisterQuestion, registerQuestion} from "../../../state/actions";
 
 
 interface QuizAttemptFeedbackProps {
