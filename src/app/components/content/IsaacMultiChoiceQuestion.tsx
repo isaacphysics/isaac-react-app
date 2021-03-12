@@ -10,8 +10,9 @@ import {selectQuestionPart} from "../../services/questions";
 interface IsaacMultiChoiceQuestionProps {
     doc: IsaacMultiChoiceQuestionDTO;
     questionId: string;
+    readonly?: boolean;
 }
-export const IsaacMultiChoiceQuestion = ({doc, questionId}: IsaacMultiChoiceQuestionProps) => {
+export const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacMultiChoiceQuestionProps) => {
     const dispatch = useDispatch();
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
@@ -30,6 +31,7 @@ export const IsaacMultiChoiceQuestion = ({doc, questionId}: IsaacMultiChoiceQues
                         id={`${questionId}${index}`} color="secondary" type="radio"
                         checked={currentAttemptValue == choice.value}
                         onChange={() => dispatch(setCurrentAttempt(questionId, choice))}
+                        disabled={readonly}
                     />
                     <div className="flex-fill">
                         <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} />

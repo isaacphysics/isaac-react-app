@@ -541,5 +541,20 @@ export const api = {
         assignments: (): AxiosPromise<ApiTypes.QuizAssignmentDTO[]> => {
             return endpoint.get(`/quiz/assigned`);
         },
+        assignedToMe: (): AxiosPromise<ApiTypes.QuizAssignmentDTO[]> => {
+            return endpoint.get(`/quiz/assignments`);
+        },
+        loadQuizAssignmentAttempt: (quizAssignmentId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
+            return endpoint.post(`/quiz/assignment/${quizAssignmentId}/attempt`);
+        },
+        answer: (quizAttemptId: number, questionId: string, attempt: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
+            return endpoint.post(`/quiz/attempt/${quizAttemptId}/answer/${questionId}`, attempt);
+        },
+        markQuizAttemptAsComplete: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
+            return endpoint.post(`/quiz/attempt/${quizAttemptId}/complete`);
+        },
+        loadQuizAttemptFeedback: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
+            return endpoint.get(`/quiz/attempt/${quizAttemptId}/feedback`);
+        },
     },
 };

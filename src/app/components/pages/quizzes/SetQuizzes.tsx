@@ -11,6 +11,7 @@ import {Spacer} from "../../elements/Spacer";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {loadGroups} from "../../../state/actions";
+import {NOT_FOUND} from "../../../services/constants";
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -72,8 +73,8 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle="Set quizzes" help={pageHelp} />
-        <ShowLoading until={quizAssignments}>
-            {quizAssignments && <>
+        <ShowLoading until={quizAssignments} ifNotFound={<RS.Alert color="warning">Quizzes you have assigned have failed to load, please try refreshing the page.</RS.Alert>}>
+            {quizAssignments && quizAssignments !== NOT_FOUND && <>
                 <h2>Quizzes you have set</h2>
                 {quizAssignments.length === 0 && <p>You have not set any quizzes to your groups yet.</p>}
                 {quizAssignments.length > 0 && <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
@@ -84,6 +85,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
         <ShowLoading until={quizzes}>
             {quizzes && <>
                 <h2>Available quizzes</h2>
+                {quizzes.length === 0 && <p><em>There are no quizzes you can set.</em></p>}
                 <RS.ListGroup className="mb-3 quiz-list">
                     {quizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                         <div className="flex-grow-1 p-2 d-flex">
@@ -99,7 +101,8 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                         </div>
                     </RS.ListGroupItem>)}
                 </RS.ListGroup>
-            </>}</ShowLoading>
+            </>}
+        </ShowLoading>
     </RS.Container>;
 };
 

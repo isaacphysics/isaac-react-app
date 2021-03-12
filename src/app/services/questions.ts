@@ -10,6 +10,7 @@ import {IsaacSymbolicChemistryQuestion} from "../components/content/IsaacSymboli
 import {IsaacGraphSketcherQuestion} from "../components/content/IsaacGraphSketcherQuestion";
 import {AppQuestionDTO} from "../../IsaacAppTypes";
 import {REVERSE_GREEK_LETTERS_MAP} from '../services/constants';
+import {ContentDTO} from "../../IsaacApiTypes";
 
 // @ts-ignore as TypeScript is struggling to infer common type for questions
 export const QUESTION_TYPES = new Map([
@@ -39,6 +40,11 @@ export const HUMAN_QUESTION_TYPES = new Map([
     ["isaacGraphSketcherQuestion", "Graph Sketcher"],
     ["default", "Multiple choice"]
 ]);
+
+
+export function isQuestion(doc: ContentDTO) {
+    return QUESTION_TYPES.has(doc.type as string);
+}
 
 export const HUMAN_QUESTION_TAGS = new Map([
     ["maths_book", "Pre-University Mathematics for Sciences"],
