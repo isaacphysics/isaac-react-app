@@ -2,10 +2,17 @@ import {useEffect, useMemo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 import {isDefined} from "./miscUtils";
-import {isQuestion} from "./questions";
 import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
 import {selectors} from "../state/selectors";
 import {deregisterQuestion, registerQuestion} from "../state/actions";
+
+
+// FIXME - this wasn't supposed to be hardcoded here, but circular dependency issues mean we cannot import ./questions!
+function isQuestion(doc: ContentDTO) {
+    return ["isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
+        "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion", "isaacStringMatchQuestion", "isaacFreeTextQuestion",
+        "isaacSymbolicLogicQuestion", "isaacGraphSketcherQuestion"].indexOf(doc.type as string) >= 0;
+}
 
 export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
     const qs: QuestionDTO[] = [];
