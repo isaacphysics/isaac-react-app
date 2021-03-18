@@ -16,7 +16,6 @@ import {
 } from "../../services/fastTrack";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
-import {AppState} from "../../state/reducers";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQuestionBaseDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
