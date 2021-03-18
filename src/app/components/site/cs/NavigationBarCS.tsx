@@ -3,6 +3,7 @@ import {LinkItem, NavigationBar, NavigationSection, useAssignmentBadge} from "..
 import {useSelector} from "react-redux";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
 import {selectors} from "../../../state/selectors";
+import {QUIZ_FEATURE} from "../../../services/constants";
 
 export const NavigationBarCS = () => {
     const user = useSelector(selectors.user.orNull);
@@ -13,6 +14,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/assignments">My assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
+            {QUIZ_FEATURE && <LinkItem to="/quizzes">My quizzes</LinkItem>}
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
@@ -21,6 +23,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/set_assignments">Set assignments</LinkItem>
             <LinkItem to="/groups">Manage groups</LinkItem>
             <LinkItem to="/assignment_progress">Markbook</LinkItem>
+            {QUIZ_FEATURE && <LinkItem to="/set_quizzes">Set quizzes</LinkItem>}
         </NavigationSection>}
 
         <NavigationSection title="Topics">
@@ -33,6 +36,7 @@ export const NavigationBarCS = () => {
         </NavigationSection>
 
         <NavigationSection title="Events">
+            {isTeacher(user) && <LinkItem to="/events?show_reservations_only=true">My Event Reservations</LinkItem>}
             <LinkItem to="/events?types=student">Student events</LinkItem>
             <LinkItem to="/events?types=teacher">Teacher events</LinkItem>
             <LinkItem to="/pages/2020_student_mentoring_cohort2">Student mentoring</LinkItem>

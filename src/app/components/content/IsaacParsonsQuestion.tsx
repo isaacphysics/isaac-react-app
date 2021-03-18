@@ -28,6 +28,7 @@ interface IsaacParsonsQuestionProps {
     questionId: string;
     currentAttempt?: ParsonsChoiceDTO;
     setCurrentAttempt: (questionId: string, attempt: ParsonsChoiceDTO) => void;
+    readonly?: boolean;
 }
 
 interface IsaacParsonsQuestionState {
@@ -294,6 +295,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                             key={item.id}
                                             draggableId={`${item.id || index}|parsons-item-available`}
                                             index={index}
+                                            isDragDisabled={this.props.readonly}
                                         >
                                             {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
                                                 return <div
@@ -325,6 +327,7 @@ class IsaacParsonsQuestionComponent extends React.Component<IsaacParsonsQuestion
                                             key={item.id}
                                             draggableId={`${item.id || index}|parsons-item-choice`}
                                             index={index}
+                                            isDragDisabled={this.props.readonly}
                                         >
                                             {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
                                                 // eslint-disable-next-line jsx-a11y/no-static-element-interactions

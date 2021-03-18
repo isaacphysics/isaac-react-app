@@ -2,7 +2,25 @@ import React from "react";
 import {addHexagonKeyPoints, svgLine, svgMoveTo} from "../../../services/svg";
 import {HexagonProportions} from "./Hexagon";
 
-function connectionLine(hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
+function rightAngledConnectionLine(hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
+    const hexagon = addHexagonKeyPoints(hexagonProperties);
+    let result = '';
+    const hexagonWidth = 2 * (hexagon.halfWidth + hexagon.padding);
+    const sourceHexagonX = (sourceIndex - 1) * hexagonWidth;
+    const targetHexagonX = (targetIndex - 1) * hexagonWidth;
+
+    // First stroke
+    result += svgMoveTo(sourceHexagonX + hexagon.x.right + hexagon.padding, hexagon.y.top + hexagon.quarterHeight);
+    result += svgLine(sourceHexagonX + hexagon.x.right + hexagon.padding, hexagon.y.center);
+    // Horizontal connection
+    result += svgLine(targetHexagonX + hexagon.x.right + hexagon.padding, hexagon.y.center);
+    // Last stroke
+    result += svgLine(targetHexagonX + hexagon.x.right + hexagon.padding, hexagon.y.bottom - hexagon.quarterHeight);
+
+    return result;
+}
+
+function fastTrackConnectionLine(hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
     const hexagon = addHexagonKeyPoints(hexagonProperties);
     let result = '';
     const hexagonWidth = 2 * (hexagon.halfWidth + hexagon.padding);
@@ -74,20 +92,30 @@ interface HexagonConnectionProps {
     targetIndices: number[];
     hexagonProportions: HexagonProportions;
     connectionProperties: React.SVGProps<SVGPathElement> & {optionStrokeColour?: string;};
+    className?: string;
     mobile?: boolean;
+    fastTrack?: boolean;
     rowIndex?: number;
 }
-export function HexagonConnection({sourceIndex, targetIndices, hexagonProportions, connectionProperties, optionIndices=[], mobile=false, rowIndex}: HexagonConnectionProps) {
+export function HexagonConnection({
+    sourceIndex, targetIndices, optionIndices=[], hexagonProportions,
+    connectionProperties, className, fastTrack=false, mobile=false, rowIndex
+}: HexagonConnectionProps) {
     const filteredTargetIndices = targetIndices.filter(i => ![sourceIndex, i].includes(-1)); // Filter "not found" selections
     const {optionStrokeColour, ...pathProperties} = connectionProperties;
-    const connectionFunction = !mobile ? connectionLine : mobileConnectionLine.bind(null, rowIndex);
+    const connectionFunction =
+        fastTrack ? fastTrackConnectionLine :
+        mobile ? mobileConnectionLine.bind(null, rowIndex) :
+        rightAngledConnectionLine;
 
     return <g>
         {optionIndices.filter(o => !targetIndices.includes(o)).map(optionIndex => <path
+            className={`${className ?? ""}`}
             d={connectionFunction(hexagonProportions, sourceIndex, optionIndex)}
             {...{...pathProperties, stroke: optionStrokeColour}} key={`${sourceIndex}->${optionIndex}`}
         />)}
         {filteredTargetIndices.map(targetIndex => <path
+            className={`active ${className ?? ""}`}
             d={connectionFunction(hexagonProportions, sourceIndex, targetIndex)}
             {...pathProperties} key={`${sourceIndex}->${targetIndex}`}
         />)}

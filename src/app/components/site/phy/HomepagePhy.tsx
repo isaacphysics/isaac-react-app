@@ -6,78 +6,93 @@ import {NewsCarousel} from "../../elements/NewsCarousel";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 import {WarningBanner} from "../../navigation/WarningBanner";
+import {above, useDeviceSize} from "../../../services/device";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
     const user = useSelector(selectors.user.orNull);
+    const deviceSize = useDeviceSize();
 
-    return <div id="homepage" className="pb-5">
+    return <div id="homepage" className="pb-5 px-2 px-sm-5 mx-md-5 px-lg-0">
         <WarningBanner/>
         <section id="call-to-action" className="homepageHero">
             <Container className="pt-4">
-                <Row className="mt-3">
-                    <Col className="d-none d-md-flex mb-1" lg={9}>
-                        <span className="physics-strapline">Master Physics by Solving Problems<span className="d-none d-md-inline">: from School to University!</span></span>
+                <Row className="mt-sm-4">
+                    <Col lg={5} className="physics-site-intro">
+                        <h1 className={`physics-strapline ${above["lg"](deviceSize) ? "h2" : ""} mb-lg-3`}>
+                            {above["sm"](deviceSize) ?
+                                <>Master Physics by Solving Problems:<br /><small>from School to University!</small></> :
+                                <>Master Physics by Solving Problems</>}
+                        </h1>
+                        <p>Welcome to Isaac Physics, the free platform for teachers and students.</p>
+                        <ul>
+                            <li>Use it in the <strong>classroom</strong></li>
+                            <li>Use it for <strong>homework</strong></li>
+                            <li>Use it for <strong>revision</strong></li>
+                        </ul>
                     </Col>
-                    <Col lg={3}>
-                        {!(user && user.loggedIn) && <Row>
-                            <Col size={6} className="text-center">
-                                <Button size="sm" tag={Link} to="/login" color="primary" outline block>
+                    <Col lg={7} className={above["lg"](deviceSize) ? `align-items-stretch d-flex flex-column` : ""}>
+                        {!(user && user.loggedIn) && <Row className="align-self-end mt-2 mt-lg-0 mb-1 mb-lg-0">
+                            <Col className="col-6 col-lg-auto pl-lg-0 pr-1 pr-sm-2">
+                                <Button size={above['lg'](deviceSize) || deviceSize === "xs" ? "sm" : ""} tag={Link} to="/login" color="primary" outline className="btn-block">
                                     Log in
                                 </Button>
                             </Col>
-                            <Col size={6} className="text-center">
-                                <Button size="sm" tag={Link} to="/register" color="secondary" block>
+                            <Col className="col-6 col-lg-auto pl-lg-0 pl-1 pl-sm-2">
+                                <Button size={above['lg'](deviceSize) || deviceSize === "xs" ? "sm" : ""} tag={Link} to="/register" color="secondary" className="btn-block">
                                     Sign up
                                 </Button>
                             </Col>
                         </Row>}
+                        <div className={`h-100 pl-lg-4 ${user?.loggedIn ? "pt-1 pt-sm-2 pt-lg-5" : "pt-4 pt-lg-3"}`}>
+                            <div className="yt-video-container">
+                                <iframe
+                                    title="Isaac Physics introduction video"
+                                    src="https://www.youtube-nocookie.com/embed/kWA2AISiHXQ?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
+                                    frameBorder="0" allowFullScreen className="mw-100"
+                                />
+                            </div>
+                        </div>
                     </Col>
                 </Row>
-                <Row className="py-4">
-                    <Col xs={12} md={6}>
-                        <table className="homepagePhyTable homepageLearn"><tbody>
-                            <tr>
-                                <th rowSpan={3}><span>Learn</span></th>
-                                <td className="h5"><Link to="/gcse">GCSE</Link></td>
-                            </tr>
-                            <tr>
-                                <td className="h5"><Link to="/alevel">A Level</Link></td>
-                            </tr>
-                            <tr>
-                                <td className="h5"><Link to="/support/student">Student FAQs</Link></td>
-                            </tr>
-                        </tbody></table>
-                    </Col>
-                    <Col xs={12} md={6}>
-                        <table className="homepagePhyTable homepageTeach"><tbody>
-                            <tr>
-                                <th rowSpan={3}><span>Teach</span></th>
-                                <td className="h5"><Link to="/teacher_features">Teacher Features</Link></td>
-                            </tr>
-                            <tr>
-                                <td className="h5"><Link to="/pages/teacher_cpd">Teacher CPD</Link></td>
-                            </tr>
-                            <tr>
-                                <td className="h5"><Link to="/support/teacher">Teacher FAQs</Link></td>
-                            </tr>
-                        </tbody></table>
-                    </Col>
-                </Row>
+
+                <div className="physics-site-intro mt-4 mt-lg-2">
+                    <strong>Show me resources for...</strong>
+                    <Row className="mt-2">
+                        <Col xs={4} className="pr-1 pr-sm-2">
+                            <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/gcse" className="h-100 d-inline-flex align-items-center justify-content-center">
+                                GCSE
+                            </Button>
+                        </Col>
+                        <Col xs={4} className="px-1 px-sm-2">
+                            <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/alevel" className="h-100 d-inline-flex align-items-center justify-content-center">
+                                {above["md"](deviceSize) ?
+                                    "A\u00A0Level or\u00A0equivalent" :
+                                    "A\u00A0Level"}
+                            </Button>
+                        </Col>
+                        <Col xs={4} className="pl-1 pl-sm-2">
+                            <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/teacher_features" className="h-100 d-inline-flex align-items-center justify-content-center">
+                                teachers
+                            </Button>
+                        </Col>
+                    </Row>
+                </div>
             </Container>
         </section>
 
         <section id="news">
             <Container>
+                <h2 className="h-title mb-4 mt-4 pt-2 mt-sm-5 pt-sm-0">News and features</h2>
                 <Row className="eventList pt-1 pattern-03-reverse">
                     <Col>
-                        <NewsCarousel showTitle={true} descending={false} subject="physics" />
+                        <NewsCarousel showTitle={true} descending={false} subject="physics" className={`mx-sm-n4`} />
                     </Col>
                 </Row>
             </Container>
         </section>
 
-        {!(user && user.loggedIn) && <section className="row">
+        {!(user && user.loggedIn) && <section className="row mb-4">
             <Container>
                 <Col className="mt-4 py-4 px-5 d-flex align-items-center flex-column flex-md-row border bg-white">
                     <h3 className="text-center text-md-left mr-md-4 mr-lg-0 mb-3 mb-md-0">

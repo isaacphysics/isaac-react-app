@@ -75,13 +75,14 @@ import {atLeastOne} from "../services/validation";
 import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
+import {isDefined} from "../services/miscUtils";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
     return 'isAxiosError' in e && (e as AxiosError).isAxiosError;
 }
 
-function extractMessage(e: Error) {
+export function extractMessage(e: Error) {
     if (isAxiosError(e) && e.response && e.response.data && e.response.data.errorMessage) {
         return e.response.data.errorMessage;
     }
@@ -114,7 +115,7 @@ export const showToast = (toast: Toast) => (dispatch: any) => {
     return toastId;
 };
 
-function showErrorToastIfNeeded(error: string, e: any) {
+export function showErrorToastIfNeeded(error: string, e: any) {
     if (e) {
         if (e.response) {
             if (e.response.status < 500) {
@@ -361,13 +362,33 @@ export const updateCurrentUser = (
 
 export const setTempExamBoard = (examBoard: EXAM_BOARD) => ({type: ACTION_TYPE.EXAM_BOARD_SET_TEMP, examBoard});
 
-export const getProgress = (userIdOfInterest?: string) => async (dispatch: Dispatch<Action>) => {
+export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.MY_PROGRESS_REQUEST});
+    try {
+        const response = await api.users.getProgress();
+        dispatch({type: ACTION_TYPE.MY_PROGRESS_RESPONSE_SUCCESS, myProgress: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.MY_PROGRESS_RESPONSE_FAILURE});
+    }
+};
+
+export const getUserProgress = (userIdOfInterest?: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PROGRESS_REQUEST});
     try {
         const response = await api.users.getProgress(userIdOfInterest);
-        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, progress: response.data});
+        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, userProgress: response.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE});
+    }
+};
+
+export const getSnapshot = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_SNAPSHOT_REQUEST});
+    try {
+        const response = await api.users.getSnapshot();
+        dispatch({type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_SUCCESS, snapshot: response.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_FAILURE});
     }
 };
 
@@ -923,14 +944,25 @@ export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: []});
 };
 
-export const getAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST});
+export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST});
     try {
-        const answeredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
-        dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, answeredQuestionsByDate: answeredQuestionsByDate.data});
+        const myAnsweredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
+        dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, myAnsweredQuestionsByDate: myAnsweredQuestionsByDate.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE})
-        dispatch(showErrorToastIfNeeded("Failed to get answered question activity data", e));
+        dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get my answered question activity data", e));
+    }
+};
+
+export const getUserAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST});
+    try {
+        const userAnsweredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
+        dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, userAnsweredQuestionsByDate: userAnsweredQuestionsByDate.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to get user answered question activity data", e));
     }
 };
 
@@ -1020,15 +1052,17 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
     }
 };
 
-export const addGameboard = (gameboardId: string, user: PotentialUser) => async (dispatch: Dispatch<Action>) => {
+export const addGameboard = (gameboardId: string, user: PotentialUser, redirectOnSuccess?: boolean) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST});
         await api.gameboards.save(gameboardId);
-        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS});
-        if (isTeacher(user)) {
-            history.push(`/set_assignments#${gameboardId}`);
-        } else {
-            history.push(`/my_gameboards#${gameboardId}`);
+        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS, gameboardId: gameboardId});
+        if (redirectOnSuccess) {
+            if (isTeacher(user)) {
+                history.push(`/set_assignments#${gameboardId}`);
+            } else {
+                history.push(`/my_gameboards#${gameboardId}`);
+            }
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
@@ -1585,10 +1619,11 @@ export const getEventsList = (startIndex: number, eventsPerPage: number, typeFil
     const filterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
     const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
     const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
+    const showReservedOnly = statusFilter === EventStatusFilter["My event reservations"];
     const showInactiveOnly = false;
     try {
         dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
-        const response = await api.events.getEvents(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly);
+        const response = await api.events.getEvents(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly, showReservedOnly);
         const augmentedEvents = response.data.results.map(event => augmentEvent(event));
         dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: response.data.totalResults});
     } catch (e) {
@@ -1683,7 +1718,18 @@ export const getEventBookingsForGroup = (eventId: string, groupId: number) => as
         dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
     }
-}
+};
+
+export const getEventBookingsForAllGroups = (eventId: string) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_REQUEST});
+        const response = await api.eventBookings.getEventBookingsForAllGroups(eventId);
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_SUCCESS, eventBookingsForAllGroups: response.data});
+    } catch (error) {
+        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Failed to load event bookings", error) as any);
+    }
+};
 
 export const getEventBookingCSV = (eventId: string) => async (dispatch: Dispatch<Action>) => {
     try {
@@ -1729,11 +1775,15 @@ export const reserveUsersOnEvent = (eventId: string, userIds: number[], groupId:
     }
 };
 
-export const cancelReservationsOnEvent = (eventId: string, userIds: number[], groupId: number) => async (dispatch: Dispatch<Action>) => {
+export const cancelReservationsOnEvent = (eventId: string, userIds: number[], groupId: number | undefined) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_REQUEST});
         await api.eventBookings.cancelUsersReservationsOnEvent(eventId, userIds);
-        await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
+        if (isDefined(groupId)) {
+            await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
+        } else {
+            await dispatch(getEventBookingsForAllGroups(eventId) as any);
+        }
         await dispatch(getEvent(eventId) as any);
         dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_SUCCESS});
         dispatch(showToast({

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {ReactElement} from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
@@ -8,12 +8,12 @@ import {
     ContentSummaryDTO,
     GameboardDTO,
     GameboardItem,
+    RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
-    TOTPSharedSecretDTO
+    TOTPSharedSecretDTO, UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
 import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
-import {FasttrackConceptsState} from "./app/state/reducers";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -75,9 +75,15 @@ export type Action =
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.MY_PROGRESS_REQUEST}
+    | {type: ACTION_TYPE.MY_PROGRESS_RESPONSE_SUCCESS; myProgress: UserProgress}
+    | {type: ACTION_TYPE.MY_PROGRESS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.USER_PROGRESS_REQUEST}
-    | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS; progress: UserProgress}
+    | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS; userProgress: UserProgress}
     | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.USER_SNAPSHOT_REQUEST}
+    | {type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_SUCCESS; snapshot: UserSnapshot}
+    | {type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
     | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
@@ -97,10 +103,10 @@ export type Action =
     | {type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS; users: {}[]}
+    | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS; users: UserSummaryForAdminUsersDTO[]}
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.ADMIN_USER_GET_REQUEST}
-    | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS; getUsers: {}}
+    | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS; getUsers: RegisteredUserDTO}
     | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS}
@@ -209,9 +215,13 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; answeredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
-    | {type: ACTION_TYPE.QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST}
+    | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; myAnsweredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
+    | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST}
+    | {type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; userAnsweredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
+    | {type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
@@ -339,6 +349,10 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS; eventBookingsForGroup: ApiTypes.EventBookingDTO[]}
     | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_REQUEST}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_SUCCESS; eventBookingsForAllGroups: ApiTypes.EventBookingDTO[]}
+    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_SUCCESS; eventBookingCSV: any}
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_FAILURE}
@@ -391,7 +405,7 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
 
     | {type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS; gameboardId: string}
     | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST}
@@ -425,7 +439,30 @@ export type Action =
     | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
 
     | {type: ACTION_TYPE.SET_MAIN_CONTENT_ID; id: string}
-;
+
+    | {type: ACTION_TYPE.QUIZZES_REQUEST}
+    | {type: ACTION_TYPE.QUIZZES_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS; quizzes: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
+
+    | {type: ACTION_TYPE.QUIZ_SET_REQUEST; assignment: ApiTypes.QuizAssignmentDTO}
+    | {type: ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS; newAssignment: ApiTypes.QuizAssignmentDTO}
+
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_REQUEST}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_REQUEST}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST; quizAssignmentId: number}
+    | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST; quizAttemptId: number}
+    | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
+    | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE; error: string}
+
+    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST; quizAttemptId: number}
+    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
+    ;
 
 export type NOT_FOUND_TYPE = 404;
 
@@ -531,6 +568,7 @@ export interface Toast {
     body?: string;
     timeout?: number;
     closable?: boolean;
+    buttons?: ReactElement[];
 
     // For internal use
     id?: string;
@@ -561,6 +599,17 @@ export type ActualBoardLimit = number | "ALL";
 
 export type AppGameBoard = ApiTypes.GameboardDTO & {assignedGroups?: ApiTypes.UserGroupDTO[]};
 
+export interface Boards {
+    boards: GameboardDTO[];
+    totalResults: number;
+}
+
+export interface BoardAssignees {
+    boardAssignees?: {[key: string]: number[]};
+}
+
+
+
 // Admin Content Errors:
 export interface ContentErrorItem {
     listOfErrors: string[];
@@ -588,7 +637,9 @@ export interface AdminStatsResponse {
 
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
-export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string}>({id: undefined, clientId: "unknown"});
+export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string, open: boolean | null}>(
+    {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
+);
 export const QuestionContext = React.createContext<string | undefined>(undefined);
 
 export interface AppAssignmentProgress {
@@ -819,4 +870,10 @@ export interface SingleProgressDetailsProps {
     assignment: SingleEnhancedAssignment;
     progress: AppAssignmentProgress[];
     pageSettings: PageSettings;
+}
+
+export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;
+
+export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
+    groupName?: string;
 }

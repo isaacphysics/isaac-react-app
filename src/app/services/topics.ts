@@ -1,9 +1,9 @@
 import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, documentTypePathPrefix, EXAM_BOARD, NOT_FOUND} from "./constants";
-import {CurrentTopicState} from "../state/reducers";
 import {LinkInfo} from "./navigation";
 import {filterOnExamBoard} from "./examBoard";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {CurrentTopicState} from "../state/reducers/topicState";
 
 const filterForConcepts = (contents: ContentSummaryDTO[]) => {
     return contents.filter(content => content.type === DOCUMENT_TYPE.CONCEPT);

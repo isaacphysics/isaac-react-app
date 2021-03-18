@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
+import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {AuthenticationProvider, EventBookingDTO, GameboardDTO, TestCaseDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, EventBookingDTO, GameboardDTO, ResultsWrapper, TestCaseDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
@@ -20,6 +20,7 @@ import {
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
+import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -61,7 +62,7 @@ export const apiHelper = {
 export const api = {
     search: {
         get: (query: string, types: string | undefined): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
-            return endpoint.get(`/search/` + encodeURIComponent(query), {params: {types}});
+            return endpoint.get(`/search`, {params: {query, types}});
         }
     },
     users: {
@@ -95,6 +96,9 @@ export const api = {
         },
         getProgress: (userIdOfInterest = "current_user"): AxiosPromise<AppTypes.UserProgress> => {
             return endpoint.get(`users/${userIdOfInterest}/progress`);
+        },
+        getSnapshot: (): AxiosPromise<AppTypes.UserSnapshot> => {
+            return endpoint.get(`users/current_user/snapshot`);
         }
     },
     authentication: {
@@ -307,6 +311,10 @@ export const api = {
             return endpoint.get(`gameboards/wildcards`);
         },
         generateTemporary: (params: {[key: string]: string}): AxiosPromise<ApiTypes.GameboardDTO> => {
+            // TODO FILTER: Temporarily force physics to search for problem solving questions
+            if (SITE_SUBJECT === SITE.PHY) {
+                params['questionCategories'] = QUESTION_CATEGORY.PROBLEM_SOLVING;
+            }
             return endpoint.get(`/gameboards`, {params});
         }
     },
@@ -423,11 +431,11 @@ export const api = {
         },
         getEvents: (
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
-            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
+            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean, showReservedOnly: boolean
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
             return endpoint.get(`/events`, {params: {
                 start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
-                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
+                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, show_reservations_only: showReservedOnly, tags: filterEventsByType
             }});
         },
         getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
@@ -468,6 +476,9 @@ export const api = {
         },
         getEventBookingsForGroup: (eventId: string, groupId: number): AxiosPromise<EventBookingDTO[]> => {
             return endpoint.get(`/events/${eventId}/bookings/for_group/${groupId}`);
+        },
+        getEventBookingsForAllGroups: (eventId: string): AxiosPromise<EventBookingDTO[]> => {
+            return endpoint.get(`/events/${eventId}/groups_bookings`);
         },
         bookUserOnEvent: (eventId: string, userId: number, additionalInformation: AdditionalInformation) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}`, additionalInformation);
@@ -519,5 +530,31 @@ export const api = {
                 return new WebSocket(window.location.origin.replace(/^http/, "ws") + API_PATH + userAlertsURI);
             }
         }
-    }
+    },
+    quizzes: {
+        available: (): AxiosPromise<ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+            return endpoint.get(`/quiz/available`);
+        },
+        createQuizAssignment: (assignment: ApiTypes.QuizAssignmentDTO): AxiosPromise<ApiTypes.QuizAssignmentDTO> => {
+            return endpoint.post(`/quiz/assignment`, assignment);
+        },
+        assignments: (): AxiosPromise<ApiTypes.QuizAssignmentDTO[]> => {
+            return endpoint.get(`/quiz/assigned`);
+        },
+        assignedToMe: (): AxiosPromise<ApiTypes.QuizAssignmentDTO[]> => {
+            return endpoint.get(`/quiz/assignments`);
+        },
+        loadQuizAssignmentAttempt: (quizAssignmentId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
+            return endpoint.post(`/quiz/assignment/${quizAssignmentId}/attempt`);
+        },
+        answer: (quizAttemptId: number, questionId: string, attempt: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
+            return endpoint.post(`/quiz/attempt/${quizAttemptId}/answer/${questionId}`, attempt);
+        },
+        markQuizAttemptAsComplete: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
+            return endpoint.post(`/quiz/attempt/${quizAttemptId}/complete`);
+        },
+        loadQuizAttemptFeedback: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
+            return endpoint.get(`/quiz/attempt/${quizAttemptId}/feedback`);
+        },
+    },
 };

@@ -356,7 +356,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             {conceptConnections.map(conceptConnection => (<React.Fragment key={JSON.stringify(conceptConnection)}>
                 <title>{conceptConnection.message}</title>
                 <HexagonConnection
-                    {...conceptConnection}
+                    fastTrack {...conceptConnection}
                     hexagonProportions={hexagon}
                     connectionProperties={conceptConnectionProperties}
                 />

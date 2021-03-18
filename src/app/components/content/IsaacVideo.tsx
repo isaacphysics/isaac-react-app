@@ -1,10 +1,11 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useContext} from 'react';
 import {VideoDTO} from "../../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
 import {selectors} from "../../state/selectors";
 import {NOT_FOUND} from "../../services/constants";
 import ReactGA from "react-ga";
+import {AccordionSectionContext} from "../../../IsaacAppTypes";
 
 interface IsaacVideoProps {
     doc: VideoDTO;
@@ -12,12 +13,14 @@ interface IsaacVideoProps {
 
 function rewrite(src: string) {
     const possibleVideoId = /(v=|\/embed\/|\/)([^?&/.]{11})/.exec(src);
-    const possibleStartTime = /[?&]t=([0-9]+)/.exec(src);
+    const possibleStartTime = /[?&](t|start)=([0-9]+)/.exec(src);
+    const possibleEndTime = /[?&]end=([0-9]+)/.exec(src);
     if (possibleVideoId) {
         const videoId = possibleVideoId[2];
-        const optionalStart = possibleStartTime ? `&start=${possibleStartTime[1]}` : "";
+        const optionalStart = possibleStartTime ? `&start=${possibleStartTime[2]}` : "";
+        const optionalEnd = possibleEndTime ? `&end=${possibleEndTime[1]}` : "";
         return `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&rel=0&fs=1&modestbranding=1` +
-               `${optionalStart}&origin=${window.location.origin}`
+               `${optionalStart}${optionalEnd}&origin=${window.location.origin}`
     }
 }
 
@@ -88,6 +91,14 @@ export function IsaacVideo(props: IsaacVideoProps) {
             }
         }
     }, [dispatch, pageId]);
+
+
+    // Exit early if a parent accordion section is closed (for the sake of pages containing many videos)
+    const accordionSectionContext = useContext(AccordionSectionContext);
+    const videoInAnAccordionSection = accordionSectionContext.open !== null;
+    if (videoInAnAccordionSection && !accordionSectionContext.open) {
+        return null;
+    }
 
     return <div>
         <div className="no-print content-value text-center">

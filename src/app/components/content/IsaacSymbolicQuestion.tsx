@@ -59,9 +59,10 @@ interface IsaacSymbolicQuestionProps {
     questionId: string;
     currentAttempt?: FormulaDTO | null;
     setCurrentAttempt: (questionId: string, attempt: FormulaDTO) => void;
+    readonly?: boolean;
 }
 const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt} = props;
+    const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
     const [textInput, setTextInput] = useState('');
@@ -216,8 +217,8 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
             </div>
             {/* TODO Accessibility */}
             <div
-                role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={0}
-                onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
+                role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
+                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
                 dangerouslySetInnerHTML={{ __html: !inputState.valid ? "Click to replace your typed answer" :
                     previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
             />
@@ -234,7 +235,8 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <RS.InputGroup className="my-2">
                     <RS.Input type="text" onChange={updateEquation} value={textInput}
-                        placeholder="or type your formula here"/>
+                              readOnly={readonly}
+                              placeholder="or type your formula here"/>
                     <RS.InputGroupAddon addonType="append">
                         <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</RS.Button>
                         <RS.UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
