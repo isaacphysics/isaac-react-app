@@ -23,7 +23,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
     const accordion = useContext(AccordionSectionContext);
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const currentGameboard = useSelector(selectors.board.currentGameboard);
-    const currentUser = useSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
+    const currentUser = useSelector(selectors.user.orNull);
     const questionPart = selectQuestionPart(pageQuestions, doc.id);
     const validationResponse = questionPart?.validationResponse;
     const correct = validationResponse?.correct || false;
