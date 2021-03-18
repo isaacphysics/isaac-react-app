@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
+import {addGameboard, attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
@@ -21,6 +21,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
     const dispatch = useDispatch();
     const accordion = useContext(AccordionSectionContext);
     const pageQuestions = useSelector(selectors.questions.getQuestions);
+    const currentGameboard = useSelector(selectors.board.currentGameboard);
+    const currentUser = useSelector(selectors.user.orNull);
     const questionPart = selectQuestionPart(pageQuestions, doc.id);
     const validationResponse = questionPart?.validationResponse;
     const correct = validationResponse?.correct || false;
@@ -51,6 +53,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
         if (event) {event.preventDefault();}
         if (questionPart?.currentAttempt) {
             dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt));
+            if (currentUser && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
+                dispatch(addGameboard(currentGameboard.id, currentUser));
+            }
         }
     }}>
         <div className={`question-component p-md-5 ${doc.type} ${doc.type === 'isaacParsonsQuestion' ? "parsons-layout" : ""}`}>

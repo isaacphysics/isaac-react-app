@@ -15,7 +15,7 @@ const AddGameboardComponent = (props: AddGameboardProps) => {
     const {user, match: {params: {gameboardId}}} = props;
     const dispatch = useDispatch();
 
-    useEffect(() => {dispatch(addGameboard(gameboardId, user))}, [dispatch, gameboardId]);
+    useEffect(() => {dispatch(addGameboard(gameboardId, user, true))}, [dispatch, gameboardId]);
 
     return <ShowLoading until={false}>
         {/* FIXME - why did the line below exist? It was shown every time you added a gameboard, briefly>? */}
