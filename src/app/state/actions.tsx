@@ -82,7 +82,7 @@ function isAxiosError(e: Error): e is AxiosError {
     return 'isAxiosError' in e && (e as AxiosError).isAxiosError;
 }
 
-function extractMessage(e: Error) {
+export function extractMessage(e: Error) {
     if (isAxiosError(e) && e.response && e.response.data && e.response.data.errorMessage) {
         return e.response.data.errorMessage;
     }
@@ -115,7 +115,7 @@ export const showToast = (toast: Toast) => (dispatch: any) => {
     return toastId;
 };
 
-function showErrorToastIfNeeded(error: string, e: any) {
+export function showErrorToastIfNeeded(error: string, e: any) {
     if (e) {
         if (e.response) {
             if (e.response.status < 500) {
@@ -1052,15 +1052,17 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
     }
 };
 
-export const addGameboard = (gameboardId: string, user: PotentialUser) => async (dispatch: Dispatch<Action>) => {
+export const addGameboard = (gameboardId: string, user: PotentialUser, redirectOnSuccess?: boolean) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST});
         await api.gameboards.save(gameboardId);
-        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS});
-        if (isTeacher(user)) {
-            history.push(`/set_assignments#${gameboardId}`);
-        } else {
-            history.push(`/my_gameboards#${gameboardId}`);
+        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS, gameboardId: gameboardId});
+        if (redirectOnSuccess) {
+            if (isTeacher(user)) {
+                history.push(`/set_assignments#${gameboardId}`);
+            } else {
+                history.push(`/my_gameboards#${gameboardId}`);
+            }
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});

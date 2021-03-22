@@ -4,6 +4,9 @@ import {invert} from "lodash";
 import {BookingStatus} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
+// Temporary Feature Flags
+export const QUIZ_FEATURE = ENV_QUIZ_FEATURE_FLAG || false;
+
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
@@ -45,8 +48,6 @@ export const MARKDOWN_RENDERER = new Remarkable({
     linkify: true,
     html: true,
 });
-
-export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_jan20_aqa', 'class_test_jan20_ocr'];
 
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
@@ -483,7 +484,31 @@ export enum ACTION_TYPE {
 
     LOG_EVENT = "LOG_EVENT",
 
-    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID"
+    SET_MAIN_CONTENT_ID = "SET_MAIN_CONTENT_ID",
+
+    QUIZZES_REQUEST = "QUIZZES_REQUEST",
+    QUIZZES_RESPONSE_SUCCESS = "QUIZZES_RESPONSE_SUCCESS",
+    QUIZZES_RESPONSE_FAILURE = "QUIZZES_RESPONSE_FAILURE",
+
+    QUIZ_SET_REQUEST = "QUIZ_SET_REQUEST",
+    QUIZ_SET_RESPONSE_SUCCESS = "QUIZ_SET_RESPONSE_SUCCESS",
+
+    QUIZ_ASSIGNMENTS_REQUEST = "QUIZ_ASSIGNMENTS_REQUEST",
+    QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS = "QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS",
+    QUIZ_ASSIGNMENTS_RESPONSE_FAILURE = "QUIZ_ASSIGNMENTS_RESPONSE_FAILURE",
+
+    QUIZ_ASSIGNED_TO_ME_REQUEST = "QUIZ_ASSIGNED_TO_ME_REQUEST",
+    QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS = "QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS",
+    QUIZ_ASSIGNED_TO_ME_RESPONSE_FAILURE = "QUIZ_ASSIGNED_TO_ME_RESPONSE_FAILURE",
+
+    // Different ways of loading attempts, but ultimately either an attempt is loaded or it isn't
+    QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST = "QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST",
+    QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST = "QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST",
+    QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS = "QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS",
+    QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE = "QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE",
+
+    QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST = "QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST",
+    QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS = "QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS",
 }
 
 export enum EXAM_BOARD {
@@ -654,6 +679,7 @@ export enum DOCUMENT_TYPE {
     EVENT = "isaacEventPage",
     TOPIC_SUMMARY = "isaacTopicSummaryPage",
     GENERIC = "page",
+    QUIZ = "isaacQuiz",
 }
 export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 
@@ -663,7 +689,8 @@ export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "Questions",
     [DOCUMENT_TYPE.EVENT]: "Events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
-    [DOCUMENT_TYPE.GENERIC]: "Other pages"
+    [DOCUMENT_TYPE.GENERIC]: "Other pages",
+    [DOCUMENT_TYPE.QUIZ]: "Quizzes",
 };
 
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
@@ -672,7 +699,8 @@ export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} =
     [DOCUMENT_TYPE.QUESTION]: "questions",
     [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "questions",
     [DOCUMENT_TYPE.EVENT]: "events",
-    [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics"
+    [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics",
+    [DOCUMENT_TYPE.QUIZ]: "quiz",
 };
 
 export enum ContentVersionUpdatingStatus {

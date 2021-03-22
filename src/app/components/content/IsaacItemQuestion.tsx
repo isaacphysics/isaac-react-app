@@ -10,9 +10,10 @@ import {selectQuestionPart} from "../../services/questions";
 interface IsaacItemQuestionProps {
     doc: IsaacItemQuestionDTO;
     questionId: string;
+    readonly?: boolean;
 }
 
-export const IsaacItemQuestion = ({doc, questionId}: IsaacItemQuestionProps) => {
+export const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacItemQuestionProps) => {
     const dispatch = useDispatch();
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
@@ -52,6 +53,7 @@ export const IsaacItemQuestion = ({doc, questionId}: IsaacItemQuestionProps) => 
                             type="checkbox"
                             checked={!!(currentAttempt && currentAttempt.items && currentAttempt.items.filter(i => i.id == item.id).length == 1)}
                             onChange={(changeEvent: ChangeEvent<HTMLInputElement>) => updateItems(changeEvent, item)}
+                            disabled={readonly}
                         />
                         <div className="flex-fill">
                             <IsaacContentValueOrChildren value={item.value} encoding={doc.encoding} />

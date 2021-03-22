@@ -1,4 +1,4 @@
-import React from "react";
+import React, {ReactElement} from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
@@ -7,7 +7,8 @@ import {
     ContentBase,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardItem, RegisteredUserDTO,
+    GameboardItem,
+    RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
     TOTPSharedSecretDTO, UserSummaryForAdminUsersDTO
@@ -404,7 +405,7 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
 
     | {type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS; gameboardId: string}
     | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST}
@@ -438,7 +439,30 @@ export type Action =
     | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
 
     | {type: ACTION_TYPE.SET_MAIN_CONTENT_ID; id: string}
-;
+
+    | {type: ACTION_TYPE.QUIZZES_REQUEST}
+    | {type: ACTION_TYPE.QUIZZES_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS; quizzes: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
+
+    | {type: ACTION_TYPE.QUIZ_SET_REQUEST; assignment: ApiTypes.QuizAssignmentDTO}
+    | {type: ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS; newAssignment: ApiTypes.QuizAssignmentDTO}
+
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_REQUEST}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_REQUEST}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST; quizAssignmentId: number}
+    | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST; quizAttemptId: number}
+    | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
+    | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE; error: string}
+
+    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST; quizAttemptId: number}
+    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
+    ;
 
 export type NOT_FOUND_TYPE = 404;
 
@@ -544,6 +568,7 @@ export interface Toast {
     body?: string;
     timeout?: number;
     closable?: boolean;
+    buttons?: ReactElement[];
 
     // For internal use
     id?: string;
@@ -848,3 +873,7 @@ export interface SingleProgressDetailsProps {
 }
 
 export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;
+
+export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
+    groupName?: string;
+}

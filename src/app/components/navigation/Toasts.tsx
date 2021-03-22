@@ -17,7 +17,10 @@ export const Toasts = () => {
                 toggle={toast.closable ? (() => toast.id && dispatch(hideToast(toast.id))): undefined}>
                 <span className={`pl-1 toast-heading text-${toast.color}`}>{toast.title}</span>
             </RS.ToastHeader>
-            {toast.body && <RS.ToastBody className="p-3">{toast.body}</RS.ToastBody>}
+            {toast.body && <RS.ToastBody className="p-3">
+                {toast.body}
+                {toast.buttons && <div className="text-right">{toast.buttons}</div>}
+            </RS.ToastBody>}
         </RS.Toast>)
     }</div>;
 };

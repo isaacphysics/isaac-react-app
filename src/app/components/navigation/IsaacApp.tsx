@@ -49,7 +49,7 @@ import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
 import {Support} from "../pages/Support";
 import {AddGameboard} from "../handlers/AddGameboard";
-import {isTest} from "../../services/constants";
+import {isTest, QUIZ_FEATURE} from "../../services/constants";
 import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
 import {RedirectToEvent} from "./RedirectToEvent";
@@ -57,7 +57,6 @@ import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardBuilder} from "../pages/GameboardBuilder";
-import {Quiz} from "../pages/Quiz";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MyProgress} from "../pages/MyProgress";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
@@ -73,6 +72,10 @@ import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ClientError} from "../pages/ClientError";
 import {checkForWebSocket, closeWebSocket} from "../../services/websockets";
+import {SetQuizzes} from "../pages/quizzes/SetQuizzes";
+import {MyQuizzes} from "../pages/quizzes/MyQuizzes";
+import {QuizDoAsssignment} from "../pages/quizzes/QuizDoAssignment";
+import {QuizAttemptFeedback} from "../pages/quizzes/QuizAttemptFeedback";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -141,7 +144,6 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                     <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                     <TrackedRoute exact path="/questions/:questionId" component={Question} />
-                    <TrackedRoute exact path="/quizzes/:quizId" ifUser={isLoggedIn} component={Quiz} />
 
                     <TrackedRoute exact path="/gameboards" component={Gameboard} />
                     <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
@@ -153,14 +155,22 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path='/events/:eventId' component={EventDetails}/>
                     <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />
 
+                    {/* Quiz pages */}
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAsssignment} />}
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAsssignment} />}
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />}
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />}
+
                     {/* Student pages */}
                     <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
                     <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                     <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quizzes" ifUser={isLoggedIn} component={MyQuizzes} />}
 
                     {/* Teacher pages */}
                     <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
                     <TrackedRoute exact path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/set_quizzes" ifUser={isTeacher} component={SetQuizzes} />}
 
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />

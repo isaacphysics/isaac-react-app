@@ -1,7 +1,7 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {AuthenticationProvider, EventBookingDTO, GameboardDTO, TestCaseDTO} from "../../IsaacApiTypes";
+import {AuthenticationProvider, EventBookingDTO, GameboardDTO, ResultsWrapper, TestCaseDTO} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
@@ -530,5 +530,31 @@ export const api = {
                 return new WebSocket(window.location.origin.replace(/^http/, "ws") + API_PATH + userAlertsURI);
             }
         }
-    }
+    },
+    quizzes: {
+        available: (): AxiosPromise<ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+            return endpoint.get(`/quiz/available`);
+        },
+        createQuizAssignment: (assignment: ApiTypes.QuizAssignmentDTO): AxiosPromise<ApiTypes.QuizAssignmentDTO> => {
+            return endpoint.post(`/quiz/assignment`, assignment);
+        },
+        assignments: (): AxiosPromise<ApiTypes.QuizAssignmentDTO[]> => {
+            return endpoint.get(`/quiz/assigned`);
+        },
+        assignedToMe: (): AxiosPromise<ApiTypes.QuizAssignmentDTO[]> => {
+            return endpoint.get(`/quiz/assignments`);
+        },
+        loadQuizAssignmentAttempt: (quizAssignmentId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
+            return endpoint.post(`/quiz/assignment/${quizAssignmentId}/attempt`);
+        },
+        answer: (quizAttemptId: number, questionId: string, attempt: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
+            return endpoint.post(`/quiz/attempt/${quizAttemptId}/answer/${questionId}`, attempt);
+        },
+        markQuizAttemptAsComplete: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
+            return endpoint.post(`/quiz/attempt/${quizAttemptId}/complete`);
+        },
+        loadQuizAttemptFeedback: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
+            return endpoint.get(`/quiz/attempt/${quizAttemptId}/feedback`);
+        },
+    },
 };

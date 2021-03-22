@@ -50,5 +50,6 @@ module.exports = {
     ],
     "globals": {
         REACT_APP_API_VERSION: "any",
+        ENV_QUIZ_FEATURE_FLAG: false,
     }
 };
