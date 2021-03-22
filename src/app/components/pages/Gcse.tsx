@@ -26,8 +26,8 @@ export const Gcse = () => {
             }}/>
         </Row>
         <Row className="card-deck isaac-cards-body my-3">
-            <IsaacCard doc={{title: "COVID-19 Lessons", subtitle: "Virtual lessons following the Mastering Essential GCSE Physics book.",
-                clickUrl: "/pages/covid19_gcse", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
+            <IsaacCard doc={{title: "Virtual Lessons", subtitle: "Learn and practise physics.",
+                clickUrl: "/pages/gcse_topic_index", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
             <IsaacCard doc={{title: "Quick Quizzes", subtitle: "Revise the equations needed at GCSE with our quick quizzes.",
                 clickUrl: "/pages/gcse_quizzes", image: {src: "/assets/phy/key_stage_sprite.svg#lightning"}
