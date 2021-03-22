@@ -7,10 +7,11 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {loadQuizAssignmentFeedback} from "../../../state/actions/quizzes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {GameboardItemState, IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
+import {IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend, formatMark} from '../AssignmentProgress';
 import {usePageSettings} from "../../../services/progress";
-import {AppAssignmentProgress, PageSettings} from "../../../../IsaacAppTypes";
+import {PageSettings} from "../../../../IsaacAppTypes";
+import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
 
 interface QuizTeacherFeedbackProps {
     match: {params: {quizAssignmentId: string}}
@@ -19,7 +20,6 @@ interface QuizTeacherFeedbackProps {
 const pageHelp = <span>
     See the feedback for your students for this quiz assignment.
 </span>;
-export const teacherQuizzesCrumbs = [{title: "Set quizzes", to: `/set_quizzes`}];
 
 interface ResultsTableProps {
     assignment: QuizAssignmentDTO;

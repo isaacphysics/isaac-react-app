@@ -562,5 +562,8 @@ export const api = {
         cancelQuizAssignment: (quizAssignmentId: number): AxiosPromise<never> => {
             return endpoint.delete(`/quiz/assignment/${quizAssignmentId}`);
         },
+        loadQuizPreview: (quizId: string): AxiosPromise<ApiTypes.IsaacQuizDTO> => {
+            return endpoint.get(`/quiz/${quizId}/preview`);
+        }
     },
 };

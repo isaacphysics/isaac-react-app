@@ -143,3 +143,14 @@ export const markQuizAsCancelled = (quizAssignmentId: number) => async (dispatch
         return false;
     }
 };
+
+export const loadQuizPreview = (quizId: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_REQUEST, quizId});
+    try {
+        const quiz = await api.quizzes.loadQuizPreview(quizId);
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_SUCCESS, quiz: quiz.data});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Loading quiz preview failed", e));
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_FAILURE, error: extractMessage(e)});
+    }
+};

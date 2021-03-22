@@ -1,6 +1,6 @@
 import {Action, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
-import {ContentSummaryDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../../IsaacApiTypes";
 
 type QuizState = {quizzes: ContentSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {
@@ -107,3 +107,20 @@ export const quizAssignment = (possibleAssignment: QuizAssignmentState = null, a
             return possibleAssignment;
     }
 };
+
+type QuizPreviewState = {quiz: IsaacQuizDTO} | {error: string} | null;
+export const quizPreview = (quizPreview: QuizPreviewState = null, action: Action): QuizPreviewState => {
+    switch (action.type) {
+        case ACTION_TYPE.QUIZ_LOAD_PREVIEW_REQUEST:
+            if (quizPreview && 'quiz' in quizPreview && quizPreview.quiz.id === action.quizId) {
+                return quizPreview;
+            }
+            return null;
+        case ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_FAILURE:
+            return {error: action.error};
+        case ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_SUCCESS:
+            return {quiz: action.quiz};
+        default:
+            return quizPreview;
+    }
+}

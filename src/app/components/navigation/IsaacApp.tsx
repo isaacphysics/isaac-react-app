@@ -77,6 +77,7 @@ import {MyQuizzes} from "../pages/quizzes/MyQuizzes";
 import {QuizDoAsssignment} from "../pages/quizzes/QuizDoAssignment";
 import {QuizAttemptFeedback} from "../pages/quizzes/QuizAttemptFeedback";
 import {QuizTeacherFeedback} from "../pages/quizzes/QuizTeacherFeedback";
+import {QuizPreview} from "../pages/quizzes/QuizPreview";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -162,6 +163,8 @@ export const IsaacApp = () => {
                     {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />}
                     {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />}
                     {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/feedback" ifUser={isTeacher} component={QuizTeacherFeedback} />}
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/preview/:quizId" ifUser={isTeacher} component={QuizPreview} />}
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/preview/:quizId/page/:page" ifUser={isTeacher} component={QuizPreview} />}
 
                     {/* Student pages */}
                     <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />

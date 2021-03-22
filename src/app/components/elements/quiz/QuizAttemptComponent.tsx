@@ -20,6 +20,7 @@ export interface QuizAttemptProps {
     sections: { [id: string]: IsaacQuizSectionDTO };
     pageLink: PageLinkCreator;
     pageHelp: React.ReactElement;
+    preview?: boolean;
 }
 
 function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
@@ -76,9 +77,11 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
     }
 }
 
-function QuizHeader({attempt}: QuizAttemptProps) {
+function QuizHeader({attempt, preview}: QuizAttemptProps) {
     const assignment = attempt.quizAssignment;
-    if (isDefined(assignment)) {
+    if (preview) {
+        return <p>You are previewing this quiz.</p>
+    } else if (isDefined(assignment)) {
         return <p className="d-flex">
             <span>
                 Set by: {extractTeacherName(assignment.assignerSummary ?? null)}
@@ -104,20 +107,25 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
 }
 
 export const myQuizzesCrumbs = [{title: "My quizzes", to: `/quizzes`}];
-const QuizTitle = ({attempt, page, pageLink, pageHelp}: QuizAttemptProps) => {
+export const teacherQuizzesCrumbs = [{title: "Set quizzes", to: `/set_quizzes`}];
+const QuizTitle = ({attempt, page, pageLink, pageHelp, preview}: QuizAttemptProps) => {
     let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Quiz";
     if (isDefined(attempt.completedDate)) {
         quizTitle += " Feedback";
     }
+    if (preview) {
+        quizTitle += " Preview";
+    }
+    const crumbs = preview ? teacherQuizzesCrumbs : myQuizzesCrumbs;
     if (page === null) {
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
-                                   intermediateCrumbs={myQuizzesCrumbs}/>;
+                                   intermediateCrumbs={crumbs}/>;
     } else {
         const sections = attempt.quiz?.children;
         const section = sections && sections[page - 1] as IsaacQuizSectionDTO;
         const sectionTitle = section?.title ?? "Section " + page;
         return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
-                                   intermediateCrumbs={[...myQuizzesCrumbs, {title: quizTitle, to: pageLink(attempt)}]}/>;
+                                   intermediateCrumbs={[...crumbs, {title: quizTitle, to: pageLink(attempt)}]}/>;
     }
 };
 
