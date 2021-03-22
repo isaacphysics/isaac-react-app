@@ -86,13 +86,6 @@ function ResultsTable({assignment, pageSettings}: ResultsTableProps) {
                 </>}
             </tr>;
         })}
-        <tr>
-            <td className="student-name">Out of</td>
-            {sections.map(section =>
-                <th key={section.id}>{quiz?.sectionTotals?.[section.id as string]}</th>
-            )}
-            <td className="total-column">{quiz?.total}</td>
-        </tr>
         </tbody>
     </table>;
 }
