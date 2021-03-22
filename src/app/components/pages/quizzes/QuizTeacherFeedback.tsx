@@ -75,7 +75,7 @@ function ResultsTable({assignment, pageSettings}: ResultsTableProps) {
             return <tr key={row?.user?.id} className={`${row.user?.authorisedFullAccess ? "" : " not-authorised"}`} title={`${row.user?.givenName + " " + row.user?.familyName}`}>
                 <th className="student-name">{row.user?.givenName} <span
                     className="d-none d-lg-inline"> {row.user?.familyName}</span></th>
-                {!valid && <td colSpan={sections.length + 1}>No access granted</td>}
+                {!valid && <td colSpan={sections.length + 1}>{message}</td>}
                 {valid && <>
                     {sections.map(section => {
                         const mark = row.feedback?.sectionMarks?.[section.id as string];
