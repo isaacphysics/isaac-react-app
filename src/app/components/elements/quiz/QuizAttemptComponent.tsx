@@ -1,4 +1,4 @@
-import {IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../../../IsaacApiTypes";
+import {IsaacQuizDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import React from "react";
 import {isDefined} from "../../../services/miscUtils";
 import {extractTeacherName} from "../../../services/user";
@@ -10,6 +10,8 @@ import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
+import {showQuizSettingModal} from "../../../state/actions/quizzes";
+import {useDispatch} from "react-redux";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number) => string;
 
@@ -78,9 +80,14 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
 }
 
 function QuizHeader({attempt, preview}: QuizAttemptProps) {
+    const dispatch = useDispatch();
     const assignment = attempt.quizAssignment;
     if (preview) {
-        return <p>You are previewing this quiz.</p>
+        return <p className="d-flex">
+            <span>You are previewing this quiz.</span>
+            <Spacer />
+            <RS.Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Quiz</RS.Button>
+        </p>;
     } else if (isDefined(assignment)) {
         return <p className="d-flex">
             <span>

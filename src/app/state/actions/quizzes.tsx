@@ -3,7 +3,7 @@ import {Action} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services/constants";
 import {api} from "../../services/api";
 import {closeActiveModal, extractMessage, loadGroups, openActiveModal, showErrorToastIfNeeded} from "../actions";
-import {ContentSummaryDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
 import {AppDispatch} from "../store";
 import {WithLoadedSelector} from "../../components/handlers/ShowLoading";
 import {selectors} from "../selectors";
@@ -32,7 +32,7 @@ export const setQuiz = (assignment: QuizAssignmentDTO) => async (dispatch: Dispa
     }
 };
 
-export const showQuizSettingModal = (quiz: ContentSummaryDTO, dueDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) => (dispatch: AppDispatch) => {
+export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, dueDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) => (dispatch: AppDispatch) => {
     dispatch(openActiveModal({
         closeAction: () => {
             dispatch(closeActiveModal())
