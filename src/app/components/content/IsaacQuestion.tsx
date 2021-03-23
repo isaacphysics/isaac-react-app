@@ -16,6 +16,7 @@ import {
 } from "../../services/fastTrack";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
+import {isLoggedIn} from "../../services/user";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQuestionBaseDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -53,7 +54,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
         if (event) {event.preventDefault();}
         if (questionPart?.currentAttempt) {
             dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt));
-            if (currentUser && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
+            if (isLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
                 dispatch(addGameboard(currentGameboard.id, currentUser));
             }
         }
