@@ -101,6 +101,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
     }, [dispatch, quizAssignmentId]);
 
     const assignment = assignmentState && 'assignment' in assignmentState ? assignmentState.assignment : null;
+    const error = assignmentState && 'error' in assignmentState ? assignmentState.error : null;
     const quizTitle = (assignment?.quiz?.title || assignment?.quiz?.id || "Quiz") + " results";
 
     return <RS.Container>
@@ -112,7 +113,13 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                     <ResultsTable assignment={assignment} pageSettings={pageSettings} />
                 </div>
             </>}
-
+            {error && <>
+                <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
+                <RS.Alert color="danger">
+                    <h4 className="alert-heading">Error loading quiz feedback</h4>
+                    <p>{error}</p>
+                </RS.Alert>
+            </>}
         </ShowLoading>
     </RS.Container>;
 };
