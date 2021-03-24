@@ -97,7 +97,7 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
             {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}&nbsp;{formatDate(assignment.dueDate)}</>}
         </p>;
     } else {
-        return <p>You are freely attempting this quiz.</p>
+        return <p>You {attempt.completedDate ? "freely attempted" : "are freely attempting"} this quiz.</p>
     }
 }
 

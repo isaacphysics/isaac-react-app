@@ -564,6 +564,12 @@ export const api = {
         },
         loadQuizPreview: (quizId: string): AxiosPromise<ApiTypes.IsaacQuizDTO> => {
             return endpoint.get(`/quiz/${quizId}/preview`);
-        }
+        },
+        loadFreeQuizAttempt: (quizId: string): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
+            return endpoint.post(`/quiz/${quizId}/attempt`);
+        },
+        loadAttemptedFreelyByMe: (): AxiosPromise<ApiTypes.QuizAttemptDTO[]> => {
+            return endpoint.get(`/quiz/free_attempts`);
+        },
     },
 };

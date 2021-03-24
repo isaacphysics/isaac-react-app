@@ -172,6 +172,7 @@ export const selectors = {
         assignment: function (state: AppState) {
             return state?.quizAssignment;
         },
+        attemptedFreelyByMe: (state: AppState) => state?.quizAttemptedFreelyByMe,
     },
 };
 

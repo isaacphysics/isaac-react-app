@@ -154,3 +154,25 @@ export const loadQuizPreview = (quizId: string) => async (dispatch: Dispatch<Act
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
+
+export const loadFreeQuizAttempt = (quizId: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST, quizId});
+    try {
+        const attempt = await api.quizzes.loadFreeQuizAttempt(quizId);
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Loading quiz failed", e));
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
+    }
+};
+
+export const loadQuizzesAttemptedFreelyByMe = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_REQUEST});
+    try {
+        const attempts = await api.quizzes.loadAttemptedFreelyByMe();
+        dispatch({type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_SUCCESS, attempts: attempts.data});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Loading freely attempted quizzes failed", e));
+        dispatch({type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_FAILURE});
+    }
+};
