@@ -571,5 +571,8 @@ export const api = {
         loadAttemptedFreelyByMe: (): AxiosPromise<ApiTypes.QuizAttemptDTO[]> => {
             return endpoint.get(`/quiz/free_attempts`);
         },
+        markQuizAttemptAsIncomplete: (quizAssignmentId: number, userId: number): AxiosPromise<ApiTypes.QuizUserFeedbackDTO> => {
+            return endpoint.post(`/quiz/assignment/${quizAssignmentId}/${userId}/incomplete`);
+        },
     },
 };

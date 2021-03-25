@@ -130,6 +130,20 @@ export const quizAssignment = (possibleAssignment: QuizAssignmentState = null, a
             return {assignment: action.assignment};
         case ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_FAILURE:
             return {error: action.error};
+        case ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_RESPONSE_SUCCESS:
+            if (possibleAssignment && 'assignment' in possibleAssignment && possibleAssignment.assignment.id === action.quizAssignmentId) {
+                return {assignment: {
+                    ...possibleAssignment.assignment,
+                    userFeedback: possibleAssignment.assignment.userFeedback?.map(feedback => {
+                        if (feedback.user?.id === action.feedback.user?.id) {
+                            return action.feedback;
+                        } else {
+                            return feedback;
+                        }
+                    }),
+                }};
+            }
+            return possibleAssignment;
         default:
             return possibleAssignment;
     }
