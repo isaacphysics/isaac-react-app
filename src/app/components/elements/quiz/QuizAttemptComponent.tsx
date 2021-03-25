@@ -132,7 +132,7 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview}: QuizAttemptProp
         const section = sections && sections[page - 1] as IsaacQuizSectionDTO;
         const sectionTitle = section?.title ?? "Section " + page;
         return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
-                                   intermediateCrumbs={[...crumbs, {title: quizTitle, to: pageLink(attempt)}]}/>;
+                                   intermediateCrumbs={[...crumbs, {title: quizTitle, replace: true, to: pageLink(attempt)}]}/>;
     }
 };
 
