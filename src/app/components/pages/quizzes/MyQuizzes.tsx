@@ -88,7 +88,7 @@ function QuizGrid({quizzes, title, empty}: AssignmentGridProps) {
         <h2>{title}</h2>
         {quizzes.length === 0 && <p>{empty}</p>}
         {quizzes.length > 0 && <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
-            {quizzes.map(item => <QuizItem key={item.id} item={item}/>)}
+            {quizzes.map(item => <QuizItem key={(isAttempt(item) ? 'at' : 'as') + item.id} item={item}/>)}
         </div>}
     </>;
 }
