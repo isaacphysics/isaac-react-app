@@ -136,6 +136,13 @@ export const selectors = {
     },
 
     quizzes: {
+        preview: (state: AppState) => {
+            const qp = state?.quizPreview;
+            return {
+                quiz: qp && 'quiz' in qp ? qp.quiz : null,
+                error: qp && 'error' in qp ? qp.error : null,
+            };
+        },
         assignedToMe: (state: AppState) => state?.quizAssignedToMe,
         available: (state: AppState) => state?.quizzes?.quizzes,
         assignments: (state: AppState) => augmentWithGroupNameIfInCache(state, state?.quizAssignments),
@@ -165,6 +172,7 @@ export const selectors = {
         assignment: function (state: AppState) {
             return state?.quizAssignment;
         },
+        attemptedFreelyByMe: (state: AppState) => state?.quizAttemptedFreelyByMe,
     },
 };
 

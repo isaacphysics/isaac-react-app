@@ -1,4 +1,4 @@
-import {ContentSummaryDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
+import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {AppGroup} from "../../../../IsaacAppTypes";
 import {AppDispatch} from "../../../state/store";
 import {useDispatch} from "react-redux";
@@ -33,7 +33,7 @@ const feedbackOptionsMap = feedbackOptionsList.reduce((obj, option) => {
 type ControlName = 'group' | 'dueDate' | 'feedbackMode';
 
 interface QuizSettingModalProps {
-    quiz: ContentSummaryDTO;
+    quiz: ContentSummaryDTO | IsaacQuizDTO;
     groups: AppGroup[];
     dueDate?: Date | null;
     feedbackMode?: QuizFeedbackMode | null;

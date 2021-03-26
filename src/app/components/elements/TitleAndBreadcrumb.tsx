@@ -17,7 +17,7 @@ interface BreadcrumbTrailProps {
 // link which needs to skip all static navigational elements (i.e. breadcrumbs).
 // We manage the ID of the "main content" with the mainContentId reducer.
 const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionType}: BreadcrumbTrailProps) => {
-    const breadcrumbHistory = [HOME_CRUMB, ...intermediateCrumbs];
+    const breadcrumbHistory = [HOME_CRUMB as LinkInfo, ...intermediateCrumbs];
 
     // Copy and mask collection type title
     if (collectionType === "Gameboard") {
@@ -30,7 +30,7 @@ const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionT
         {breadcrumbHistory.map((breadcrumb) => (
             <BreadcrumbItem key={breadcrumb.title}>
                 {breadcrumb.to ?
-                    <Link to={breadcrumb.to}><TrustedHtml html={breadcrumb.title} span /></Link>
+                    <Link to={breadcrumb.to} replace={breadcrumb.replace}><TrustedHtml html={breadcrumb.title} span /></Link>
                     :
                     <TrustedHtml html={breadcrumb.title} span />
                 }

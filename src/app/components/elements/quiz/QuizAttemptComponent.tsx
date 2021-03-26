@@ -1,4 +1,4 @@
-import {IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../../../IsaacApiTypes";
+import {IsaacQuizDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import React from "react";
 import {isDefined} from "../../../services/miscUtils";
 import {extractTeacherName} from "../../../services/user";
@@ -10,6 +10,8 @@ import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
+import {showQuizSettingModal} from "../../../state/actions/quizzes";
+import {useDispatch} from "react-redux";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number) => string;
 
@@ -20,6 +22,7 @@ export interface QuizAttemptProps {
     sections: { [id: string]: IsaacQuizSectionDTO };
     pageLink: PageLinkCreator;
     pageHelp: React.ReactElement;
+    preview?: boolean;
 }
 
 function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
@@ -76,9 +79,16 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
     }
 }
 
-function QuizHeader({attempt}: QuizAttemptProps) {
+function QuizHeader({attempt, preview}: QuizAttemptProps) {
+    const dispatch = useDispatch();
     const assignment = attempt.quizAssignment;
-    if (isDefined(assignment)) {
+    if (preview) {
+        return <p className="d-flex">
+            <span>You are previewing this quiz.</span>
+            <Spacer />
+            <RS.Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Quiz</RS.Button>
+        </p>;
+    } else if (isDefined(assignment)) {
         return <p className="d-flex">
             <span>
                 Set by: {extractTeacherName(assignment.assignerSummary ?? null)}
@@ -87,7 +97,7 @@ function QuizHeader({attempt}: QuizAttemptProps) {
             {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}&nbsp;{formatDate(assignment.dueDate)}</>}
         </p>;
     } else {
-        return <p>You are freely attempting this quiz.</p>
+        return <p>You {attempt.completedDate ? "freely attempted" : "are freely attempting"} this quiz.</p>
     }
 }
 
@@ -104,20 +114,25 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
 }
 
 export const myQuizzesCrumbs = [{title: "My quizzes", to: `/quizzes`}];
-const QuizTitle = ({attempt, page, pageLink, pageHelp}: QuizAttemptProps) => {
+export const teacherQuizzesCrumbs = [{title: "Set quizzes", to: `/set_quizzes`}];
+const QuizTitle = ({attempt, page, pageLink, pageHelp, preview}: QuizAttemptProps) => {
     let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Quiz";
     if (isDefined(attempt.completedDate)) {
         quizTitle += " Feedback";
     }
+    if (preview) {
+        quizTitle += " Preview";
+    }
+    const crumbs = preview ? teacherQuizzesCrumbs : myQuizzesCrumbs;
     if (page === null) {
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
-                                   intermediateCrumbs={myQuizzesCrumbs}/>;
+                                   intermediateCrumbs={crumbs}/>;
     } else {
         const sections = attempt.quiz?.children;
         const section = sections && sections[page - 1] as IsaacQuizSectionDTO;
         const sectionTitle = section?.title ?? "Section " + page;
         return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
-                                   intermediateCrumbs={[...myQuizzesCrumbs, {title: quizTitle, to: pageLink(attempt)}]}/>;
+                                   intermediateCrumbs={[...crumbs, {title: quizTitle, replace: true, to: pageLink(attempt)}]}/>;
     }
 };
 

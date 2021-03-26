@@ -3,7 +3,7 @@ import {Action} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services/constants";
 import {api} from "../../services/api";
 import {closeActiveModal, extractMessage, loadGroups, openActiveModal, showErrorToastIfNeeded} from "../actions";
-import {ContentSummaryDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
 import {AppDispatch} from "../store";
 import {WithLoadedSelector} from "../../components/handlers/ShowLoading";
 import {selectors} from "../selectors";
@@ -32,7 +32,7 @@ export const setQuiz = (assignment: QuizAssignmentDTO) => async (dispatch: Dispa
     }
 };
 
-export const showQuizSettingModal = (quiz: ContentSummaryDTO, dueDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) => (dispatch: AppDispatch) => {
+export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, dueDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) => (dispatch: AppDispatch) => {
     dispatch(openActiveModal({
         closeAction: () => {
             dispatch(closeActiveModal())
@@ -140,6 +140,64 @@ export const markQuizAsCancelled = (quizAssignmentId: number) => async (dispatch
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_FAILURE, quizAssignmentId});
         dispatch(showErrorToastIfNeeded("Failed to cancel quiz", e));
+        return false;
+    }
+};
+
+export const loadQuizPreview = (quizId: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_REQUEST, quizId});
+    try {
+        const quiz = await api.quizzes.loadQuizPreview(quizId);
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_SUCCESS, quiz: quiz.data});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Loading quiz preview failed", e));
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_FAILURE, error: extractMessage(e)});
+    }
+};
+
+export const loadFreeQuizAttempt = (quizId: string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST, quizId});
+    try {
+        const attempt = await api.quizzes.loadFreeQuizAttempt(quizId);
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Loading quiz failed", e));
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
+    }
+};
+
+export const loadQuizzesAttemptedFreelyByMe = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_REQUEST});
+    try {
+        const attempts = await api.quizzes.loadAttemptedFreelyByMe();
+        dispatch({type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_SUCCESS, attempts: attempts.data});
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Loading freely attempted quizzes failed", e));
+        dispatch({type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_FAILURE});
+    }
+};
+
+export const returnQuizToStudent = (quizAssignmentId: number, studentId: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_REQUEST});
+    try {
+        const feedback = await api.quizzes.markQuizAttemptAsIncomplete(quizAssignmentId, studentId);
+        dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_RESPONSE_SUCCESS, quizAssignmentId, feedback: feedback.data});
+        return true;
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Failed to return work to the student", e));
+        return false;
+    }
+};
+
+export const updateQuizAssignmentFeedbackMode = (quizAssignmentId: number, quizFeedbackMode: QuizFeedbackMode) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_REQUEST});
+    try {
+        const update = {quizFeedbackMode};
+        await api.quizzes.updateQuizAssignment(quizAssignmentId, update);
+        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS, quizAssignmentId, update});
+        return true;
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Failed to update feedback mode", e));
         return false;
     }
 };
