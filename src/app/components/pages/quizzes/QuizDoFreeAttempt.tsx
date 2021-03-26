@@ -4,7 +4,7 @@ import {withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {loadQuizAssignmentAttempt} from "../../../state/actions/quizzes";
+import {loadFreeQuizAttempt} from "../../../state/actions/quizzes";
 import {isDefined} from "../../../services/miscUtils";
 import {useCurrentQuizAttempt} from "../../../services/quiz";
 import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps} from "../../elements/quiz/QuizAttemptComponent";
@@ -12,31 +12,31 @@ import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
 
-interface QuizDoAsssignmentProps {
-    match: {params: {quizAssignmentId: string, page: string}}
+interface QuizDoFreeAttemptProps {
+    match: {params: {quizId: string, page: string}}
 }
 
 const pageLink = (attempt: QuizAttemptDTO, page?: number) => {
     if (page !== undefined) {
-        return `/quiz/assignment/${attempt.quizAssignmentId}/page/${page}`;
+        return `/quiz/attempt/${attempt.quizId}/page/${page}`;
     } else {
-        return `/quiz/assignment/${attempt.quizAssignmentId}`;
+        return `/quiz/attempt/${attempt.quizId}`;
     }
 };
 
 
 const pageHelp = <span>
-    Answer the questions on each section of the quiz, then mark the quiz as complete when you are finished.
+    Answer the questions on each section of the quiz, then mark the quiz as complete to see your feedback.
 </span>;
 
-const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}: QuizDoAsssignmentProps) => {
+const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFreeAttemptProps) => {
     const {attempt, questions, sections, error} = useCurrentQuizAttempt();
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(loadQuizAssignmentAttempt(parseInt(quizAssignmentId, 10)));
-    }, [dispatch, quizAssignmentId]);
+        dispatch(loadFreeQuizAttempt(quizId));
+    }, [dispatch, quizId]);
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 
@@ -51,7 +51,7 @@ const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}:
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle="Quiz" intermediateCrumbs={myQuizzesCrumbs} />
                 <RS.Alert color="danger">
-                    <h4 className="alert-heading">Error loading assignment!</h4>
+                    <h4 className="alert-heading">Error loading quiz!</h4>
                     <p>{error}</p>
                 </RS.Alert>
             </>}
@@ -59,4 +59,4 @@ const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}:
     </RS.Container>;
 };
 
-export const QuizDoAsssignment = withRouter(QuizDoAsssignmentComponent);
+export const QuizDoFreeAttempt = withRouter(QuizDoFreeAttemptComponent);

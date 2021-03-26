@@ -70,6 +70,27 @@ export const quizAssignedToMe = (quizAssignments: QuizAssignedToMeState = null, 
     }
 };
 
+type QuizAttemptedFreelyByMeState = QuizAttemptDTO[] | NOT_FOUND_TYPE | null;
+export const quizAttemptedFreelyByMe = (quizAttempts: QuizAttemptedFreelyByMeState = null, action: Action): QuizAttemptedFreelyByMeState => {
+    switch (action.type) {
+        case ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_REQUEST:
+            return null;
+        case ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_SUCCESS:
+            return action.attempts;
+        case ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_FAILURE:
+            return NOT_FOUND;
+        case ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS:
+            return (quizAttempts !== NOT_FOUND && quizAttempts?.map(attempt => {
+                if (attempt?.id === action.attempt.id) {
+                    return action.attempt;
+                }
+                return attempt;
+            })) || null;
+        default:
+            return quizAttempts;
+    }
+};
+
 type QuizAttemptState = {attempt: QuizAttemptDTO} | {error: string} | null;
 export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Action): QuizAttemptState => {
     switch (action.type) {
@@ -85,6 +106,12 @@ export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Ac
             return null;
         case ACTION_TYPE.QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST:
             if (possibleAttempt && 'attempt' in possibleAttempt && possibleAttempt.attempt.id === action.quizAttemptId) {
+                // Optimistically keep current attempt
+                return possibleAttempt;
+            }
+            return null;
+        case ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST:
+            if (possibleAttempt && 'attempt' in possibleAttempt && possibleAttempt.attempt.quizId === action.quizId) {
                 // Optimistically keep current attempt
                 return possibleAttempt;
             }
