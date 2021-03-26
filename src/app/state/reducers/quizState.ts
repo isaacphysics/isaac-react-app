@@ -41,6 +41,13 @@ export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, ac
             return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.filter(assignment => {
                 return assignment.id !== action.quizAssignmentId;
             }) : quizAssignments;
+        case ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS:
+            return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.map(assignment => {
+                if (assignment.id === action.quizAssignmentId) {
+                    return {...assignment, ...action.update};
+                }
+                return assignment;
+            }) : quizAssignments;
         default:
             return quizAssignments;
     }
@@ -141,6 +148,14 @@ export const quizAssignment = (possibleAssignment: QuizAssignmentState = null, a
                             return feedback;
                         }
                     }),
+                }};
+            }
+            return possibleAssignment;
+        case ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS:
+            if (possibleAssignment && 'assignment' in possibleAssignment && possibleAssignment.assignment.id === action.quizAssignmentId) {
+                return {assignment: {
+                    ...possibleAssignment.assignment,
+                    ...action.update,
                 }};
             }
             return possibleAssignment;
