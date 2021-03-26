@@ -22,15 +22,15 @@ export const DowntimeWarningBanner = () => {
         Cookies.set(DOWNTIME_COOKIE, "1", {expires: 30 /* days*/});
     }
 
-    let inDateRange = false; // new Date(1595840400000) <= new Date() && new Date() <= new Date(1596272400000);
+    const inDateRange = new Date(1617177600000) <= new Date() && new Date() <= new Date(1617436800000);
 
     return inDateRange && noCookie ? <div className="banner d-print-none" id="downtime-banner">
         <Alert color="danger" className="mb-0">
             <RS.Container>
                 <RS.Row style={{alignItems: "center"}}>
                     <RS.Col xs={12} md={9}>
-                        <span>Please note Isaac {SITE_SUBJECT_TITLE} will be unavailable during the morning of 1<sup>st</sup> August for planned maintenance.
-                            <a href={twitterLink} target="_blank" rel="noopener noreferrer">Check our Twitter feed for more information.</a>
+                        <span>Please note Isaac {SITE_SUBJECT_TITLE} will be unavailable for several hours on 3<sup>rd</sup> April for planned maintenance.
+                            <a href={twitterLink} target="_blank" rel="noopener noreferrer">Check our Twitter feed</a> for updates on the day.
                         </span>
                     </RS.Col>
                     <RS.Col xs={12} md={3} className="text-center">

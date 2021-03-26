@@ -7,6 +7,14 @@ import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../.
 import {selectors} from "../state/selectors";
 import {deregisterQuestion, registerQuestion} from "../state/actions";
 
+
+// FIXME - this wasn't supposed to be hardcoded here, but circular dependency issues mean we cannot import ./questions!
+function isQuestion(doc: ContentDTO) {
+    return ["isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
+        "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion", "isaacStringMatchQuestion", "isaacFreeTextQuestion",
+        "isaacSymbolicLogicQuestion", "isaacGraphSketcherQuestion"].indexOf(doc.type as string) >= 0;
+}
+
 export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
     const qs: QuestionDTO[] = [];
 

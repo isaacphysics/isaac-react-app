@@ -49,8 +49,6 @@ export const MARKDOWN_RENDERER = new Remarkable({
     html: true,
 });
 
-export const ACCEPTED_QUIZ_IDS = ['quiz_test', 'class_test_jan20_aqa', 'class_test_jan20_ocr'];
-
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
 

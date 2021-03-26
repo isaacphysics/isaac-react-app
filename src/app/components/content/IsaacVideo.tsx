@@ -103,7 +103,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
     return <div>
         <div className="no-print content-value text-center">
             { embedSrc ?
-                <iframe ref={videoRef} className="mw-100" title={altText} width="614" height="390" src={embedSrc} frameBorder="0" allowFullScreen/>
+                <div className="content-video-container"><iframe ref={videoRef} className="mw-100" title={altText} src={embedSrc} frameBorder="0" allowFullScreen/></div>
                 : altText
             }
         </div>

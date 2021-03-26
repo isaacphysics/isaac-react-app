@@ -64,7 +64,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     <Card className="board-card card-neat">
                         <CardBody className="pb-4 pt-4">
                             <CardTitle>Gameboards</CardTitle>
-                            <p>You can work through the individual questions above or try a group of questions by clicking on the topic gameboards below.</p>
+                            <p>You can work through individual questions or try a group of questions by clicking on the topic gameboards below.</p>
                             <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
                                 {user?.loggedIn && user?.role !== "STUDENT" &&
                                     <li>
