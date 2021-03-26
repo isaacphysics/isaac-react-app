@@ -4,7 +4,7 @@ import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {loadQuizAttemptFeedback} from "../../../state/actions/quizzes";
+import {clearQuizAttempt, loadQuizAttemptFeedback} from "../../../state/actions/quizzes";
 import {isDefined} from "../../../services/miscUtils";
 import {useCurrentQuizAttempt} from "../../../services/quiz";
 import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizAttemptComponent";
@@ -60,6 +60,10 @@ const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page}}}: 
 
     useEffect(() => {
         dispatch(loadQuizAttemptFeedback(parseInt(quizAttemptId, 10)));
+
+        return () => {
+            dispatch(clearQuizAttempt());
+        };
     }, [dispatch, quizAttemptId]);
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;

@@ -4,7 +4,7 @@ import {withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {loadFreeQuizAttempt} from "../../../state/actions/quizzes";
+import {clearQuizAttempt, loadFreeQuizAttempt} from "../../../state/actions/quizzes";
 import {isDefined} from "../../../services/miscUtils";
 import {useCurrentQuizAttempt} from "../../../services/quiz";
 import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps} from "../../elements/quiz/QuizAttemptComponent";
@@ -36,6 +36,10 @@ const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFre
 
     useEffect(() => {
         dispatch(loadFreeQuizAttempt(quizId));
+
+        return () => {
+            dispatch(clearQuizAttempt());
+        };
     }, [dispatch, quizId]);
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
