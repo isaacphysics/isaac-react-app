@@ -188,3 +188,16 @@ export const returnQuizToStudent = (quizAssignmentId: number, studentId: number)
         return false;
     }
 };
+
+export const updateQuizAssignmentFeedbackMode = (quizAssignmentId: number, quizFeedbackMode: QuizFeedbackMode) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_REQUEST});
+    try {
+        const update = {quizFeedbackMode};
+        await api.quizzes.updateQuizAssignment(quizAssignmentId, update);
+        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS, quizAssignmentId, update});
+        return true;
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Failed to update feedback mode", e));
+        return false;
+    }
+};

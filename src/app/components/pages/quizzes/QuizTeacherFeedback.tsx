@@ -4,14 +4,18 @@ import {withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {loadQuizAssignmentFeedback, returnQuizToStudent} from "../../../state/actions/quizzes";
+import {loadQuizAssignmentFeedback, returnQuizToStudent, updateQuizAssignmentFeedbackMode} from "../../../state/actions/quizzes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {IsaacQuizDTO, IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
+import {IsaacQuizDTO, IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizFeedbackMode, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend, formatMark} from '../AssignmentProgress';
 import {usePageSettings} from "../../../services/progress";
-import {PageSettings} from "../../../../IsaacAppTypes";
+import {PageSettings, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
+import {extractTeacherName} from "../../../services/user";
+import {isDefined} from "../../../services/miscUtils";
+import {formatDate} from "../../elements/DateString";
+import {Spacer} from "../../elements/Spacer";
 
 interface QuizTeacherFeedbackProps {
     match: {params: {quizAssignmentId: string}}
@@ -141,15 +145,36 @@ function ResultsTable({assignment, pageSettings}: ResultsTableProps) {
     </table>;
 }
 
+const feedbackNames: Record<QuizFeedbackMode, string> = {
+    NONE: "No feedback for students",
+    OVERALL_MARK: "Overall mark only",
+    SECTION_MARKS: "Section-by-section mark breakdown",
+    DETAILED_FEEDBACK: "Detailed feedback on each question",
+};
+
 const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: QuizTeacherFeedbackProps) => {
     const pageSettings = usePageSettings();
     const assignmentState = useSelector(selectors.quizzes.assignment);
 
     const dispatch = useDispatch();
 
+    const numericQuizAssignmentId = parseInt(quizAssignmentId, 10);
     useEffect(() => {
-        dispatch(loadQuizAssignmentFeedback(parseInt(quizAssignmentId, 10)));
-    }, [dispatch, quizAssignmentId]);
+        dispatch(loadQuizAssignmentFeedback(numericQuizAssignmentId));
+    }, [dispatch, numericQuizAssignmentId]);
+
+    const [settingFeedbackMode, setSettingFeedbackMode] = useState(false);
+    const setFeedbackMode = async (mode: QuizFeedbackMode) => {
+        if (mode === assignment?.quizFeedbackMode) {
+            return;
+        }
+        try {
+            setSettingFeedbackMode(true);
+            await dispatch(updateQuizAssignmentFeedbackMode(numericQuizAssignmentId, mode));
+        } finally {
+            setSettingFeedbackMode(false);
+        }
+    };
 
     const assignment = assignmentState && 'assignment' in assignmentState ? assignmentState.assignment : null;
     const error = assignmentState && 'error' in assignmentState ? assignmentState.error : null;
@@ -159,6 +184,31 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
         <ShowLoading until={assignmentState}>
             {assignment && <>
                 <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
+                <p className="d-flex">
+                    <span>
+                        Set by: {extractTeacherName(assignment.assignerSummary ?? null)} on {formatDate(assignment.creationDate)}
+                    </span>
+                    {isDefined(assignment.dueDate) && <><Spacer/>Due: {formatDate(assignment.dueDate)}</>}
+                </p>
+                <p>
+                    <RS.Label for="feedbackMode" className="pr-1">Feedback mode:</RS.Label>
+                    <RS.UncontrolledDropdown className="d-inline-block">
+                        <RS.DropdownToggle caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
+                            {settingFeedbackMode ?
+                                <>Saving <RS.Spinner size="sm" className="quizFeedbackModeSpinner" /></>
+                            :   feedbackNames[assignment.quizFeedbackMode as QuizFeedbackMode]}
+                        </RS.DropdownToggle>
+                        <RS.DropdownMenu>
+                            {QuizFeedbackModes.map(mode =>
+                                <RS.DropdownItem key={mode}
+                                                 onClick={() => setFeedbackMode(mode)}
+                                                 active={mode === assignment?.quizFeedbackMode}>
+                                    {feedbackNames[mode]}
+                                </RS.DropdownItem>
+                            )}
+                        </RS.DropdownMenu>
+                    </RS.UncontrolledDropdown>
+                </p>
                 <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
                     <AssignmentProgressLegend pageSettings={pageSettings} />
                     <ResultsTable assignment={assignment} pageSettings={pageSettings} />

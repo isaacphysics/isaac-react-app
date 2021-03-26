@@ -574,5 +574,8 @@ export const api = {
         markQuizAttemptAsIncomplete: (quizAssignmentId: number, userId: number): AxiosPromise<ApiTypes.QuizUserFeedbackDTO> => {
             return endpoint.post(`/quiz/assignment/${quizAssignmentId}/${userId}/incomplete`);
         },
+        updateQuizAssignment: (quizAssignmentId: number, update: ApiTypes.QuizAssignmentDTO): AxiosPromise<never> => {
+            return endpoint.post(`/quiz/assignment/${quizAssignmentId}`, update);
+        }
     },
 };

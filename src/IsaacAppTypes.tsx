@@ -7,7 +7,7 @@ import {
     ContentBase,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardItem,
+    GameboardItem, QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
@@ -482,6 +482,9 @@ export type Action =
 
     | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_REQUEST}
     | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_RESPONSE_SUCCESS; quizAssignmentId: number; feedback: ApiTypes.QuizUserFeedbackDTO}
+
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_REQUEST}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS; quizAssignmentId: number; update: ApiTypes.QuizAssignmentDTO}
     ;
 
 export type NOT_FOUND_TYPE = 404;
@@ -897,3 +900,5 @@ export type FasttrackConceptsState = {gameboardId: string; concept: string; item
 export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
     groupName?: string;
 }
+
+export const QuizFeedbackModes: QuizFeedbackMode[] = ["NONE", "OVERALL_MARK", "SECTION_MARKS", "DETAILED_FEEDBACK"];
