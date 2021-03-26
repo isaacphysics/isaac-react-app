@@ -100,7 +100,7 @@ services:
   $PG_CONTAINER_NAME:
     container_name: $PG_CONTAINER_NAME
     restart: unless-stopped
-    image: postgres:12
+    image: postgres:13
     environment:
       POSTGRES_USER: rutherford
       POSTGRES_PASSWORD: rutherf0rd
