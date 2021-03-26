@@ -12,6 +12,9 @@ import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {showQuizSettingModal} from "../../../state/actions/quizzes";
 import {useDispatch} from "react-redux";
+import {Col, Row} from "reactstrap";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {TempExamBoardPicker} from "../inputs/TempExamBoardPicker";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number) => string;
 
@@ -105,9 +108,14 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
     const sections = attempt.quiz?.children;
     const section = sections && sections[page - 1];
     return section ?
-        <WithFigureNumbering doc={section}>
-            <IsaacContent doc={section}/>
-        </WithFigureNumbering>
+        <Row className="question-content-container">
+            <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
+                <TempExamBoardPicker className="no-print text-right"/>
+                <WithFigureNumbering doc={section}>
+                    <IsaacContent doc={section}/>
+                </WithFigureNumbering>
+            </Col>
+        </Row>
     :
         <RS.Alert color="danger">Quiz section {page} not found</RS.Alert>
     ;
