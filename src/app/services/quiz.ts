@@ -2,7 +2,6 @@ import {useEffect, useMemo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 import {isDefined} from "./miscUtils";
-import {isQuestion} from "./questions";
 import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
 import {selectors} from "../state/selectors";
 import {deregisterQuestion, registerQuestion} from "../state/actions";
