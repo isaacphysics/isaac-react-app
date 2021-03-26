@@ -176,3 +176,15 @@ export const loadQuizzesAttemptedFreelyByMe = () => async (dispatch: Dispatch<Ac
         dispatch({type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_FAILURE});
     }
 };
+
+export const returnQuizToStudent = (quizAssignmentId: number, studentId: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_REQUEST});
+    try {
+        const feedback = await api.quizzes.markQuizAttemptAsIncomplete(quizAssignmentId, studentId);
+        dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_RESPONSE_SUCCESS, quizAssignmentId, feedback: feedback.data});
+        return true;
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Failed to return work to the student", e));
+        return false;
+    }
+};
