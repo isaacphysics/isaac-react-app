@@ -96,8 +96,8 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
     const currentAttempt = questionPart?.currentAttempt as QuantityDTO;
     const currentAttemptValue = currentAttempt?.value;
     const currentAttemptUnits = currentAttempt?.units;
-    const currentAttemptValueWrong = validationResponse && !validationResponse.correctValue;
-    const currentAttemptUnitsWrong = validationResponse && !validationResponse.correctUnits;
+    const currentAttemptValueWrong = validationResponse && validationResponse.correctValue === false;
+    const currentAttemptUnitsWrong = validationResponse && validationResponse.correctUnits === false;
 
     useEffect((): void => {dispatch(requestConstantsUnits());}, [dispatch]);
     const selectedUnits = selectUnits(doc, questionId, units, userId);
