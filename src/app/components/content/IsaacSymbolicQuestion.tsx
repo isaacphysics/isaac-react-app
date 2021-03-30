@@ -231,11 +231,10 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 editorMode='maths'
                 questionDoc={doc}
             />}
-            <div className="eqn-editor-input">
+            {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <RS.InputGroup className="my-2">
                     <RS.Input type="text" onChange={updateEquation} value={textInput}
-                              readOnly={readonly}
                               placeholder="or type your formula here"/>
                     <RS.InputGroupAddon addonType="append">
                         <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</RS.Button>
@@ -257,7 +256,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 {symbolList && <div className="eqn-editor-symbols">
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}
-            </div>
+            </div>}
         </div>
     );
 };

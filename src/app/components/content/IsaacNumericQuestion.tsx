@@ -96,8 +96,8 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
     const currentAttempt = questionPart?.currentAttempt as QuantityDTO;
     const currentAttemptValue = currentAttempt?.value;
     const currentAttemptUnits = currentAttempt?.units;
-    const currentAttemptValueWrong = validationResponse && !validationResponse.correctValue;
-    const currentAttemptUnitsWrong = validationResponse && !validationResponse.correctUnits;
+    const currentAttemptValueWrong = validationResponse && validationResponse.correctValue === false;
+    const currentAttemptUnitsWrong = validationResponse && validationResponse.correctUnits === false;
 
     useEffect((): void => {dispatch(requestConstantsUnits());}, [dispatch]);
     const selectedUnits = selectUnits(doc, questionId, units, userId);
@@ -140,7 +140,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                                 <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong || undefined}
                                        onChange={updateValue} readOnly={readonly}
                                 />
-                                <InputGroupAddon addonType="append">
+                                {!readonly && <InputGroupAddon addonType="append">
                                     <Button type="button" className="numeric-help" size="sm" id={helpTooltipId}>?</Button>
                                     <UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
                                         Here are some examples of numbers you can write:<br /><br />
@@ -149,7 +149,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                                         2.8e12<br /><br />
                                         Do not use commas or spaces.
                                     </UncontrolledTooltip>
-                                </InputGroupAddon>
+                                </InputGroupAddon>}
                             </InputGroup>
                         </Label>
                     </div>
@@ -157,7 +157,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                         <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-5">
                             Units <br/>
                             <Dropdown disabled={readonly} isOpen={isOpen} toggle={() => {setIsOpen(!isOpen);}}>
-                                <DropdownToggle caret className="px-2 py-1" color={currentAttemptUnitsWrong ? "danger" : undefined}>
+                                <DropdownToggle caret disabled={readonly} className="px-2 py-1" color={currentAttemptUnitsWrong ? "danger" : undefined}>
                                     <TrustedHtml span html={wrapUnitForSelect(currentAttemptUnits)}/>
                                 </DropdownToggle>
                                 <DropdownMenu right>

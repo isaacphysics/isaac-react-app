@@ -79,6 +79,10 @@ export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (di
     }
 };
 
+export const clearQuizAttempt = () => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: {}});
+};
+
 export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     // Get current answer
     const state = getState();

@@ -66,7 +66,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps) {
             </>;
         } else {
             prequel = <p>Click &lsquo;{primaryButton}&rsquo; when you are ready to {primaryDescription} the quiz.</p>;
-            if (totalCompleted > 0) {
+            if (anyAnswered) {
                 controls = <>
                     <div className="text-center">
                         {totalCompleted} / {sectionCount} sections complete<br/>
