@@ -252,6 +252,13 @@ export interface GlossaryTermDTO extends ContentDTO {
     examBoard: string;
 }
 
+export interface CodeSnippetDTO extends ContentDTO {
+    language?: string;
+    code?: string;
+    disableHighlighting?: boolean;
+    url?: string;
+}
+
 export interface ContentBaseDTO {
     id?: string;
     type?: string;
@@ -483,6 +490,13 @@ export interface ExternalReference {
 export interface GlossaryTerm extends Content {
     explanation?: Content;
     examBoard: string;
+}
+
+export interface CodeSnippet extends Content {
+    language?: string;
+    code?: string;
+    disableHighlighting?: boolean;
+    url?: string
 }
 
 export interface ContentBase {
