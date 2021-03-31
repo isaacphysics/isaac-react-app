@@ -357,7 +357,7 @@ export interface FreeTextRuleDTO extends ChoiceDTO {
 
 export interface GlossaryTermDTO extends ContentDTO {
     explanation?: ContentDTO;
-    examBoard: string;
+    examBoard: EXAM_BOARD;
 }
 
 export interface CodeSnippetDTO extends ContentDTO {
