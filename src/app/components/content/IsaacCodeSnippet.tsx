@@ -18,7 +18,7 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     return <div className="tabbed-code mt-2 mb-3">
         <Row>
             <Col className="code-block">
-                <pre className="line-numbers">
+                <pre>
                     <code className={doc.disableHighlighting ? 'plaintext' : doc.language}>
                         {doc.code}
                     </code>
