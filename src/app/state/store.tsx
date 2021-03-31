@@ -1,7 +1,7 @@
-import {applyMiddleware, compose, createStore, Middleware} from "redux";
-import thunk from "redux-thunk";
+import {AnyAction, applyMiddleware, compose, createStore, Middleware} from "redux";
+import thunk, {ThunkDispatch} from "redux-thunk";
 import * as reduxLogger from "redux-logger";
-import {rootReducer} from "./reducers";
+import {AppState, rootReducer} from "./reducers";
 import {userConsistencyCheckerMiddleware} from "./userConsistencyChecker";
 import {notificationCheckerMiddleware} from "../services/notificationManager";
 
@@ -31,3 +31,4 @@ const storeFactory = (initialState: object) => {
 };
 
 export const store = storeFactory({});
+export type AppDispatch = ThunkDispatch<AppState, never, AnyAction>;

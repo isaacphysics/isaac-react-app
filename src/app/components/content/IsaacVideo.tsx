@@ -13,12 +13,14 @@ interface IsaacVideoProps {
 
 function rewrite(src: string) {
     const possibleVideoId = /(v=|\/embed\/|\/)([^?&/.]{11})/.exec(src);
-    const possibleStartTime = /[?&]t=([0-9]+)/.exec(src);
+    const possibleStartTime = /[?&](t|start)=([0-9]+)/.exec(src);
+    const possibleEndTime = /[?&]end=([0-9]+)/.exec(src);
     if (possibleVideoId) {
         const videoId = possibleVideoId[2];
-        const optionalStart = possibleStartTime ? `&start=${possibleStartTime[1]}` : "";
+        const optionalStart = possibleStartTime ? `&start=${possibleStartTime[2]}` : "";
+        const optionalEnd = possibleEndTime ? `&end=${possibleEndTime[1]}` : "";
         return `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&rel=0&fs=1&modestbranding=1` +
-               `${optionalStart}&origin=${window.location.origin}`
+               `${optionalStart}${optionalEnd}&origin=${window.location.origin}`
     }
 }
 
@@ -101,7 +103,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
     return <div>
         <div className="no-print content-value text-center">
             { embedSrc ?
-                <iframe ref={videoRef} className="mw-100" title={altText} width="614" height="390" src={embedSrc} frameBorder="0" allowFullScreen/>
+                <div className="content-video-container"><iframe ref={videoRef} className="mw-100" title={altText} src={embedSrc} frameBorder="0" allowFullScreen/></div>
                 : altText
             }
         </div>

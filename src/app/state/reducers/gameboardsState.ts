@@ -12,6 +12,12 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
             return action.gameboard;
         case ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS:
             return {id: action.gameboardId};
+        case ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS:
+            if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.id === action.gameboardId) {
+                return {...currentGameboard, savedToCurrentUser: true};
+            } else { // It was not the currentGameboard that got added
+                return currentGameboard;
+            }
         case ACTION_TYPE.GAMEBOARD_RESPONSE_NO_CONTENT:
         case ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE:
             return NOT_FOUND;

@@ -3,6 +3,9 @@ import {Spinner} from "reactstrap";
 import {NOT_FOUND} from "../../services/constants";
 import {NotFound} from "../pages/NotFound";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {isDefined} from "../../services/miscUtils";
+import {AppState} from "../../state/reducers";
+import {useSelector} from "react-redux";
 
 interface ShowLoadingProps<T> {
     until: T | NOT_FOUND_TYPE | null | undefined;
@@ -47,4 +50,24 @@ export const ShowLoading = <T extends {}>({until, children, thenRender, placehol
         default:
             return children || (thenRender && thenRender(until));
     }
+};
+
+interface WithLoadedSelectorProps<T> extends Omit<ShowLoadingProps<T>, 'until'> {
+    selector: (state: AppState) => T | NOT_FOUND_TYPE | null | undefined;
+    loadingThunk: () => void;
+}
+
+export const WithLoadedSelector = <T extends {}>({selector, loadingThunk, ...rest}: WithLoadedSelectorProps<T>) => {
+    const value = useSelector(selector);
+    useEffect(() => {
+        if (loadingThunk) {
+            if (!isDefined(value)) {
+                loadingThunk();
+            }
+        }
+        // Only run the loading thunk once, so no deps on until
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loadingThunk]);
+
+    return <ShowLoading {...rest} until={value} />;
 };

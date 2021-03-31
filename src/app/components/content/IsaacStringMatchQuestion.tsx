@@ -8,7 +8,7 @@ import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
 
 
-export const IsaacStringMatchQuestion = ({doc, questionId}: {doc: IsaacStringMatchQuestionDTO; questionId: string}) => {
+export const IsaacStringMatchQuestion = ({doc, questionId, readonly}: {doc: IsaacStringMatchQuestionDTO; questionId: string; readonly?: boolean}) => {
     const dispatch = useDispatch();
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
@@ -28,6 +28,7 @@ export const IsaacStringMatchQuestion = ({doc, questionId}: {doc: IsaacStringMat
             onChange={event =>
                 dispatch(setCurrentAttempt(questionId, {type: "stringChoice", value: event.target.value}))
             }
+            readOnly={readonly}
         />
     </div>;
 };

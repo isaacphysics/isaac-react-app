@@ -803,7 +803,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     // math sad, therefore ROUND EVERYTHING OR FACE MADNESS
 
     private onMouseDown(e: MouseEvent) {
-        if ((e.target as any).id === 'numeric-input') return; // this works but a cast to any is probably not an acceptable solution.
         // preventDefault here to stop selection on desktop
         e.preventDefault();
         if (!this.state.sketch) {
@@ -818,7 +817,6 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
     }
 
     private onTouchStart(e: TouchEvent) {
-        if ((e.target as any).id === 'numeric-input') return; // this works but a cast to any is probably not an acceptable solution.
         // DO NOT preventDefault here
         if (!this.state.sketch) {
             return;
@@ -1098,6 +1096,7 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                                 data-item={JSON.stringify({ type: 'Num', properties: { significand: n } })}
                                 dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(n) }}
                                 onClick={() => this.updateNumberInputValue(parseInt(n))}
+                                onTouchEnd={() => this.updateNumberInputValue(parseInt(n))}
                                 onKeyUp={() => this.updateNumberInputValue(parseInt(n))}
                             >
                             </div>)}
@@ -1107,12 +1106,14 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                                 data-item={JSON.stringify({ type: 'Num', properties: { significand: n } })}
                                 dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString(n) }}
                                 onClick={() => this.updateNumberInputValue(parseInt(n))}
+                                onTouchEnd={() => this.updateNumberInputValue(parseInt(n))}
                                 onKeyUp={() => this.updateNumberInputValue(parseInt(n))}
                             />)}
                             <div className="key plus-minus" role="button" tabIndex={0}
                                 // data-item={JSON.stringify({ type: 'Num', properties: { significand: n } })}
                                 dangerouslySetInnerHTML={{ __html: this._vHexagon + katex.renderToString('\\pm') }}
                                 onClick={() => this.updateNumberInputValue(-1)}
+                                onTouchEnd={() => this.updateNumberInputValue(-1)}
                                 onKeyUp={() => this.updateNumberInputValue(-1)}
                             />
                         </div>

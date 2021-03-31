@@ -18,8 +18,8 @@ export const Alevel = () => {
             <IsaacCard doc={{title: "Physics Skills Mastery Book", subtitle: "Interactive questions from our Mastering Essential Pre-University Physics book.",
                 clickUrl: "/books/physics_skills_19", image: {src: "/assets/phy/key_stage_sprite.svg#skills-book-cover"}
             }}/>
-            <IsaacCard doc={{title: "COVID-19 Lessons", subtitle: "Virtual lessons following the Mastering Essential Pre-University Physics book.",
-                clickUrl: "/pages/covid19_alevel_archive", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
+            <IsaacCard doc={{title: "Virtual Lessons", subtitle: "Learn and practise physics.",
+                clickUrl: "/pages/a_level_topic_index", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
         </Row>
         <Row className="card-deck isaac-cards-body my-3">
